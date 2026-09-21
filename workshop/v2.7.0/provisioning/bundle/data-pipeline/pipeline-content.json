@@ -1,0 +1,113 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "dependsOn": [],
+        "name": "Copy data1",
+        "policy": {
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false,
+          "timeout": "0.12:00:00"
+        },
+        "type": "Copy",
+        "typeProperties": {
+          "enableStaging": false,
+          "sink": {
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "{{name.kqlDatabase}}",
+                "properties": {
+                  "annotations": [],
+                  "type": "KustoDatabase",
+                  "typeProperties": {
+                    "database": "{{item.kqlDatabase.id}}",
+                    "endpoint": "{{item.kqlDatabase.queryServiceUri}}",
+                    "workspaceId": "{{workspace.id}}"
+                  }
+                }
+              },
+              "schema": [],
+              "type": "KustoDatabaseTable",
+              "typeProperties": {
+                "table": "DonationEvents"
+              }
+            },
+            "ingestionMappingName": "DonationEvents_IncrementCsvMap",
+            "type": "KustoDatabaseSink"
+          },
+          "source": {
+            "datasetSettings": {
+              "annotations": [],
+              "linkedService": {
+                "name": "{{name.lakehouse}}",
+                "properties": {
+                  "annotations": [],
+                  "type": "Lakehouse",
+                  "typeProperties": {
+                    "artifactId": "{{item.lakehouse.id}}",
+                    "rootFolder": "Files",
+                    "workspaceId": "{{workspace.id}}"
+                  }
+                }
+              },
+              "schema": [],
+              "type": "DelimitedText",
+              "typeProperties": {
+                "columnDelimiter": ",",
+                "escapeChar": "\\",
+                "firstRowAsHeader": true,
+                "location": {
+                  "fileName": {
+                    "type": "Expression",
+                    "value": "@if(empty(pipeline().parameters.Subject), pipeline().parameters.IncrementFileName, last(split(pipeline().parameters.Subject, '/')))"
+                  },
+                  "folderPath": "increment",
+                  "type": "LakehouseLocation"
+                },
+                "quoteChar": "\""
+              }
+            },
+            "formatSettings": {
+              "type": "DelimitedTextReadSettings"
+            },
+            "storeSettings": {
+              "enablePartitionDiscovery": false,
+              "recursive": true,
+              "type": "LakehouseReadSettings"
+            },
+            "type": "DelimitedTextSource"
+          },
+          "translator": {
+            "type": "TabularTranslator",
+            "typeConversion": true,
+            "typeConversionSettings": {
+              "allowDataTruncation": true,
+              "treatBooleanAsNumber": false
+            }
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "IncrementFileName": {
+        "defaultValue": "donation_events_001.csv",
+        "type": "String"
+      },
+      "Type": {
+        "defaultValue": "",
+        "type": "String"
+      },
+      "Subject": {
+        "defaultValue": "",
+        "type": "String"
+      },
+      "Source": {
+        "defaultValue": "",
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "furusato-reference-source-contract/v1",
+  "instructions": {
+    "lakehouse": {
+      "file": "lakehouse-instructions.txt",
+      "sha256": "9329542792a258ae5178548fb0b6f774ce656f9744d4ddc46a6e224d6cfd7634"
+    },
+    "kusto": {
+      "file": "kusto-instructions.txt",
+      "sha256": "6b55644a088b350cb1fa6a16afc94085b0311c5c75cb8172e73a664b02753279"
+    }
+  },
+  "sourceDescriptions": {
+    "lakehouse_tables": "Static 2025 Furusato snapshot. Municipality means the Donation recipient; donor residence is modeled only at Prefecture. Unqualified popularity means DonationCount across recipient Municipalities in the nationwide Static 2025 UTC snapshot. Prefer MunicipalityStatic for ranking, MunicipalityById for exact Municipality lookup, and DonationTraceById for one-call exact Donation plus all registered Suppliers. Original selected dbo facts and dimensions remain available for full Core and zero-population coverage. This source has no August 2026 operational observations and proves no manufacture, shipment, fulfillment, approval, wealth or income.",
+    "kusto": "Curated August 2026 operational observations. AgentRawObservationTotals returns one-row raw totals; AgentMunicipalityLeaders returns zero to two unique MunicipalityID rows with IsCountLeader and IsAmountLeader flags; AgentFileRunSummary returns file/run/alias aggregates with true UTC extrema. All three read only DonationObservationSummaryForAgent. Use the materialized view directly for hourly or explicitly requested custom breakdowns. EventMinute bounds filter minute buckets, observed extrema are separate, and raw observations may include duplicates. No EventID or unique-event metric is exposed.",
+    "ontology": "Path-only Furusato Ontology for executed connectivity, path, neighbourhood, membership and containment across 10 canonical entities and 15 canonical relationships. Entity description fields are metadata-inventory CSVs of the 21 retained stable-key/name/display properties, not free-form instructions. Executed relationship or membership COUNT at the requested relationship grain and BigInt keys are valid Ontology results. The model has no monetary, date or time-series attributes. Lakehouse owns static Donation business metrics; Eventhouse owns August 2026 operational metrics."
+  },
+  "objectDescriptions": {
+    "MunicipalityStatic": "Preferred nationwide Static 2025 Municipality reference view. One row per Municipality including zero-Donation municipalities. DonationCount is the explicit default popularity metric; stored amount ranks and derived count rank remain distinct with rank-scope metadata.",
+    "MunicipalityById": "Preferred exact MunicipalityId TVF. Call with the exact six-ASCII-digit MunicipalityID literal returned by the current request. Returns request echo, exact-ID RetrievalMode, actual ID, static metrics and scope; malformed or unknown IDs return no row."
+  }
+}

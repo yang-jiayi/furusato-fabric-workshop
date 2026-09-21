@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="d6-title d6-desc" preserveAspectRatio="xMidYMid meet">
+<title id="d6-title">Ontology と Data Agent の PoC から本番運用へ — 4 つのゲート (v2.7.0)</title>
+<desc id="d6-desc">Ontology と Data Agent に限定した PoC から本番運用への 4 ゲート図。ゲート 1 は Ontology 設計の承認で、業務質問、粒度、エンティティ境界、関係の方向と意味境界を確定する。出口条件は概念モデルと意味境界レジスタの承認である。ゲート 2 はバインディングとメタデータの整合で、静的バインディングと時系列バインディング、キー解決、件数照合、セマンティックメタデータの適用を行う。出口条件はノード数とエッジ数と定義の一致である。ゲート 3 は Data Agent の構成と評価で、3 ソースの層別ルーティング、用語、境界、安全方針を設定し、held-out の評価に合格することが出口条件である。ゲート 4 は公開と運用で、発行版、最小権限共有、鮮度確認、スモークテスト、1 ページの Runbook を用意し、ロールバックが実行可能であることが出口条件である。各ゲートには担当ロールと最小成果物が示され、下部にはゲートを戻すフォールバック経路と、直前の発行版へ戻すロールバックが赤の破線で示されている。対象は Ontology と Data Agent に限定し、全社的な容量管理や詳細な体制設計は含めない。</desc>
+<defs>
+<marker id="d6-ar-04352C" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#04352C"/></marker>
+<marker id="d6-ar-B3261E" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#B3261E"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="900" fill="#FFFFFF"/>
+<g font-family="Yu Gothic UI, Meiryo, Segoe UI, sans-serif" fill="#12211D" stroke-linejoin="round">
+<rect x="56.0" y="20.0" width="7.0" height="46.0" rx="3.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="76.0" y="54.0" font-size="28" font-weight="bold" fill="#04352C" text-anchor="start">PoC から本番運用へ — Ontology と Data Agent の 4 ゲート</text>
+<text x="76.0" y="81.0" font-size="14.5" font-weight="normal" fill="#5A6570" text-anchor="start">Four gates only — scope is limited to Ontology and Data Agent (no enterprise-wide capacity or governance build-out)</text>
+<rect x="1483.4" y="24.0" width="60.6" height="26.0" rx="13" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.2"/>
+<text x="1513.7" y="42.0" font-size="12.5" font-weight="bold" fill="#0E8A54" text-anchor="middle">v2.7.0</text>
+<rect x="56.0" y="128.0" width="350.0" height="456.0" rx="16" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.4"/>
+<rect x="56.0" y="128.0" width="350.0" height="62.0" rx="16" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<rect x="56.0" y="168.0" width="350.0" height="22.0" rx="0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<circle cx="88.0" cy="159.0" r="16.0" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="88.0" y="165.0" font-size="15" font-weight="bold" fill="#0E8A54" text-anchor="middle">1</text>
+<text x="114.0" y="155.0" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="start">GATE 1</text>
+<text x="114.0" y="174.0" font-size="13.6" font-weight="bold" fill="#FFFFFF" text-anchor="start">Ontology 設計の承認</text>
+<text x="74.0" y="212.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Ontology design approved</text>
+<circle cx="82.0" cy="234.0" r="4.0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="94.0" y="238.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">業務質問と意思決定から概念モデルを作る</text>
+<circle cx="82.0" cy="256.0" r="4.0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="94.0" y="260.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">粒度・エンティティ境界・プロパティを確定</text>
+<circle cx="82.0" cy="278.0" r="4.0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="94.0" y="282.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">関係の方向・カーディナリティ・否定的意味を記述</text>
+<rect x="72.0" y="368.0" width="318.0" height="58.0" rx="10" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.4"/>
+<text x="86.0" y="390.0" font-size="10.8" font-weight="bold" fill="#0E8A54" text-anchor="start">✓ 出口条件</text>
+<text x="86.0" y="408.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">概念モデルと意味境界レジスタが承認済み</text>
+<line x1="72.0" y1="448.0" x2="390.0" y2="448.0" stroke="#E6EBEE" stroke-width="1.2" stroke-linecap="round"/>
+<text x="78.0" y="472.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">担当 Roles</text>
+<text x="78.0" y="490.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Domain SME + Ontology Designer</text>
+<text x="78.0" y="528.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">最小成果物 Minimum assets</text>
+<text x="78.0" y="546.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">資産: 概念モデル / 意味境界レジスタ</text>
+<line x1="409.0" y1="318.0" x2="433.0" y2="318.0" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#d6-ar-04352C)"/>
+<rect x="438.0" y="128.0" width="350.0" height="456.0" rx="16" fill="#FFFFFF" stroke="#2E5FA3" stroke-width="2.4"/>
+<rect x="438.0" y="128.0" width="350.0" height="62.0" rx="16" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<rect x="438.0" y="168.0" width="350.0" height="22.0" rx="0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<circle cx="470.0" cy="159.0" r="16.0" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="470.0" y="165.0" font-size="15" font-weight="bold" fill="#2E5FA3" text-anchor="middle">2</text>
+<text x="496.0" y="155.0" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="start">GATE 2</text>
+<text x="496.0" y="174.0" font-size="13.6" font-weight="bold" fill="#FFFFFF" text-anchor="start">バインディングとメタデータの整合</text>
+<text x="456.0" y="212.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Bindings and metadata reconciled</text>
+<circle cx="464.0" cy="234.0" r="4.0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="476.0" y="238.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">静的バインディング + 必要な時系列バインディング</text>
+<circle cx="464.0" cy="256.0" r="4.0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="476.0" y="260.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">キー解決・件数照合・方向とカーディナリティの検証</text>
+<circle cx="464.0" cy="278.0" r="4.0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="476.0" y="282.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">定義とセマンティックメタデータを適用</text>
+<rect x="454.0" y="368.0" width="318.0" height="58.0" rx="10" fill="#E9EFF8" stroke="#2E5FA3" stroke-width="1.4"/>
+<text x="468.0" y="390.0" font-size="10.8" font-weight="bold" fill="#2E5FA3" text-anchor="start">✓ 出口条件</text>
+<text x="468.0" y="408.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">ノード / エッジ数と定義が設計と一致</text>
+<line x1="454.0" y1="448.0" x2="772.0" y2="448.0" stroke="#E6EBEE" stroke-width="1.2" stroke-linecap="round"/>
+<text x="460.0" y="472.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">担当 Roles</text>
+<text x="460.0" y="490.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Data Engineer + Ontology Designer</text>
+<text x="460.0" y="528.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">最小成果物 Minimum assets</text>
+<text x="460.0" y="546.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">資産: 定義とメタデータ / 検証結果</text>
+<line x1="791.0" y1="318.0" x2="815.0" y2="318.0" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#d6-ar-04352C)"/>
+<rect x="820.0" y="128.0" width="350.0" height="456.0" rx="16" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2.4"/>
+<rect x="820.0" y="128.0" width="350.0" height="62.0" rx="16" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<rect x="820.0" y="168.0" width="350.0" height="22.0" rx="0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<circle cx="852.0" cy="159.0" r="16.0" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="852.0" y="165.0" font-size="15" font-weight="bold" fill="#2AAC94" text-anchor="middle">3</text>
+<text x="878.0" y="155.0" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="start">GATE 3</text>
+<text x="878.0" y="174.0" font-size="13.6" font-weight="bold" fill="#FFFFFF" text-anchor="start">Data Agent の構成と評価</text>
+<text x="838.0" y="212.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Agent configuration and evaluation passed</text>
+<circle cx="846.0" cy="234.0" r="4.0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="858.0" y="238.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">3 ソースを層として構成し役割を分離</text>
+<circle cx="846.0" cy="256.0" r="4.0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="858.0" y="260.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">用語・曖昧語・境界・安全方針を 1 か所に集約</text>
+<circle cx="846.0" cy="278.0" r="4.0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="858.0" y="282.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">held-out の質問で評価し、拒否の正しさも採点</text>
+<rect x="836.0" y="368.0" width="318.0" height="58.0" rx="10" fill="#E6F6F3" stroke="#2AAC94" stroke-width="1.4"/>
+<text x="850.0" y="390.0" font-size="10.8" font-weight="bold" fill="#2AAC94" text-anchor="start">✓ 出口条件</text>
+<text x="850.0" y="408.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">評価に合格 (経路・数値・境界・拒否)</text>
+<line x1="836.0" y1="448.0" x2="1154.0" y2="448.0" stroke="#E6EBEE" stroke-width="1.2" stroke-linecap="round"/>
+<text x="842.0" y="472.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">担当 Roles</text>
+<text x="842.0" y="490.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Data Agent Designer + 独立テスター</text>
+<text x="842.0" y="528.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">最小成果物 Minimum assets</text>
+<text x="842.0" y="546.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">資産: エージェント構成 / テスト結果</text>
+<line x1="1173.0" y1="318.0" x2="1197.0" y2="318.0" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#d6-ar-04352C)"/>
+<rect x="1202.0" y="128.0" width="350.0" height="456.0" rx="16" fill="#FFFFFF" stroke="#04352C" stroke-width="2.4"/>
+<rect x="1202.0" y="128.0" width="350.0" height="62.0" rx="16" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<rect x="1202.0" y="168.0" width="350.0" height="22.0" rx="0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<circle cx="1234.0" cy="159.0" r="16.0" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="1234.0" y="165.0" font-size="15" font-weight="bold" fill="#04352C" text-anchor="middle">4</text>
+<text x="1260.0" y="155.0" font-size="11" font-weight="bold" fill="#FFFFFF" text-anchor="start">GATE 4</text>
+<text x="1260.0" y="174.0" font-size="13.6" font-weight="bold" fill="#FFFFFF" text-anchor="start">公開と運用</text>
+<text x="1220.0" y="212.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Publish, permissions, freshness, rollback ready</text>
+<circle cx="1228.0" cy="234.0" r="4.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1240.0" y="238.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">発行版を作成し最小権限で共有</text>
+<circle cx="1228.0" cy="256.0" r="4.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1240.0" y="260.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">鮮度確認とスモークテストを定例化</text>
+<circle cx="1228.0" cy="278.0" r="4.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1240.0" y="282.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">更新・再発行・ロールバックを 1 ページに記述</text>
+<rect x="1218.0" y="368.0" width="318.0" height="58.0" rx="10" fill="#E7EFEC" stroke="#04352C" stroke-width="1.4"/>
+<text x="1232.0" y="390.0" font-size="10.8" font-weight="bold" fill="#04352C" text-anchor="start">✓ 出口条件</text>
+<text x="1232.0" y="408.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">ロールバック手順が実行可能</text>
+<line x1="1218.0" y1="448.0" x2="1536.0" y2="448.0" stroke="#E6EBEE" stroke-width="1.2" stroke-linecap="round"/>
+<text x="1224.0" y="472.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">担当 Roles</text>
+<text x="1224.0" y="490.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">運用者 (Operator) + Data Agent Designer</text>
+<text x="1224.0" y="528.0" font-size="10.4" font-weight="bold" fill="#5A6570" text-anchor="start">最小成果物 Minimum assets</text>
+<text x="1224.0" y="546.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">資産: 発行版 / 1 ページ Runbook</text>
+<rect x="56.0" y="614.0" width="1488.0" height="108.0" rx="16" fill="#FAEAE9" stroke="#B3261E" stroke-width="1.8" stroke-dasharray="9 5"/>
+<text x="78.0" y="642.0" font-size="13.4" font-weight="bold" fill="#B3261E" text-anchor="start">フォールバック — ゲートは戻れる  Fallback: every gate can send work back</text>
+<line x1="613.0" y1="670.0" x2="231.0" y2="670.0" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 4" marker-end="url(#d6-ar-B3261E)"/>
+<line x1="995.0" y1="670.0" x2="613.0" y2="670.0" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 4" marker-end="url(#d6-ar-B3261E)"/>
+<line x1="1377.0" y1="670.0" x2="995.0" y2="670.0" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 4" marker-end="url(#d6-ar-B3261E)"/>
+<rect x="346.9" y="662.0" width="150.2" height="15.9" rx="6" fill="#FAEAE9" opacity="1" stroke="none" stroke-width="1"/>
+<text x="422.0" y="673.8" font-size="10.6" font-weight="bold" fill="#B3261E" text-anchor="middle">設計へ戻す — 意味境界の修正</text>
+<rect x="695.9" y="662.0" width="216.3" height="15.9" rx="6" fill="#FAEAE9" opacity="1" stroke="none" stroke-width="1"/>
+<text x="804.0" y="673.8" font-size="10.6" font-weight="bold" fill="#B3261E" text-anchor="middle">バインディングへ戻す — キー / 件数の修正</text>
+<rect x="1084.4" y="662.0" width="203.2" height="15.9" rx="6" fill="#FAEAE9" opacity="1" stroke="none" stroke-width="1"/>
+<text x="1186.0" y="673.8" font-size="10.6" font-weight="bold" fill="#B3261E" text-anchor="middle">構成へ戻す — ルーティングと境界の修正</text>
+<text x="78.0" y="706.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">ロールバック: 直前の発行版へ戻し、原因のゲートまで差し戻す。運用中は最新版とロールバック先の 2 版のみを維持する。</text>
+<rect x="56.0" y="744.0" width="980.0" height="84.0" rx="14" fill="#FFFFFF" stroke="#5A6570" stroke-width="1.6"/>
+<text x="78.0" y="770.0" font-size="12.4" font-weight="bold" fill="#04352C" text-anchor="start">適用範囲  Scope</text>
+<text x="78.0" y="792.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">対象は Ontology と Data Agent のみ。全社的な容量計画、詳細な体制表、組織横断の統制設計は本書の範囲外とする。ロールは 5 つ、成果物は 7 点までに絞る。</text>
+<rect x="1060.0" y="744.0" width="484.0" height="84.0" rx="14" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.6"/>
+<text x="1082.0" y="770.0" font-size="12.4" font-weight="bold" fill="#0E8A54" text-anchor="start">最小ロール  Minimal roles (5)</text>
+<text x="1082.0" y="792.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Domain SME / Ontology Designer / Data Engineer / Data Agent Designer / 独立したテ</text>
+<text x="1082.0" y="806.8" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">スター兼運用者</text>
+<line x1="56.0" y1="856.0" x2="1544.0" y2="856.0" stroke="#B7C0C7" stroke-width="1" stroke-linecap="round"/>
+<text x="56.0" y="878.0" font-size="11.5" font-weight="normal" fill="#5A6570" text-anchor="start">Furusato Fabric IQ Ontology Workshop v2.7.0 — PoC から本番運用へ。実線の矢印 = 前進、赤の破線 = 差し戻しとロールバック。各ゲートは出口条件で判定する。</text>
+</g>
+</svg>

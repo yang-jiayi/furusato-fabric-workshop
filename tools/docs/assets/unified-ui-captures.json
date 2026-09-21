@@ -1,0 +1,62 @@
+{
+  "schemaVersion": "furusato-real-ui-captures/v1",
+  "documentEdition": "unified-20260914",
+  "captureDateJst": "2026-09-15",
+  "method": "Authenticated Fabric Web UI operated with official Playwright MCP; native iframe/dialog element screenshots",
+  "instructionRevision": 6,
+  "globalInstructionsSha256": "fa528c90a8626e8a61edb4b82aee14435e15682687cd48be100962415b261359",
+  "pixelsEdited": false,
+  "usage": {
+    "mode": "ci-illustration-only",
+    "activeTags": ["17-40"],
+    "retainedOnlyTags": ["16-30", "18-30"],
+    "currentConfigurationCaptured": false,
+    "ciInstructionsSha256": "e5b80c07e654efb844541652105cc2afc498ed09aceb0a6f31689a180e9c5342",
+    "reason": "Keep the genuine prior capture provenance. Omit obsolete visible instructions; reuse only the CI interaction illustration because its instruction component is unchanged."
+  },
+  "privacy": "Outer account/address/licence UI excluded by native element screenshots; no subsequent pixel changes, relabelling or reconstruction",
+  "limitations": [
+    "Visible UI screenshots do not establish universal answer-quality acceptance.",
+    "The retained CI image is an interaction illustration, not evidence of the current Agent configuration or a new evaluation.",
+    "New configuration captures require normal user authentication; previous instruction images are not relabelled as current.",
+    "Known glyph and ancillary code-export limitations are not erased by this visible chart."
+  ],
+  "captures": {
+    "16-30": {
+      "path": "screenshots/16-30.png",
+      "stage": "Draft",
+      "shows": "Current revision6 instructions, evidence footer, Preview runtime and Code Interpreter",
+      "capturedAtUtc": "2026-09-15T09:11:21.081227+00:00",
+      "sha256": "c4c34f7d8f0624951d31c1f58e5d90a9c08fdb02f67165612835535cb78e5a51",
+      "originalSha256": "c4c34f7d8f0624951d31c1f58e5d90a9c08fdb02f67165612835535cb78e5a51",
+      "dimensions": [
+        1532,
+        1152
+      ]
+    },
+    "18-30": {
+      "path": "screenshots/18-30.png",
+      "stage": "Published",
+      "shows": "Published revision6, three actual sources, Preview runtime and current instructions",
+      "capturedAtUtc": "2026-09-15T09:14:24.269090+00:00",
+      "sha256": "133600536e5660260bad5a2d9f4e1772573754726f8e28bc0109d8f05811c15a",
+      "originalSha256": "133600536e5660260bad5a2d9f4e1772573754726f8e28bc0109d8f05811c15a",
+      "dimensions": [
+        1532,
+        1152
+      ]
+    },
+    "17-40": {
+      "path": "screenshots/17-40.png",
+      "stage": "Published",
+      "shows": "Actual same-Agent CI execution detail, generated raw-observation chart and Succeeded",
+      "capturedAtUtc": "2026-09-15T09:24:55.638214+00:00",
+      "sha256": "d0614951a16526b99ef889d7effe3f74c4b3cbee183e596345be213d85e15290",
+      "originalSha256": "d0614951a16526b99ef889d7effe3f74c4b3cbee183e596345be213d85e15290",
+      "dimensions": [
+        1392,
+        800
+      ]
+    }
+  }
+}

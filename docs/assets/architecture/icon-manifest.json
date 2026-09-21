@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Furusato Fabric Workshop architecture diagrams and training documentation",
+  "checkedAt": "2026-09-21",
+  "sourceRepository": "https://github.com/yang-jiayi/AzureDiagarm",
+  "userSuppliedCollection": "https://github.com/yang-jiayi/AzureDiagarm/tree/main/Azure_Public_Service_Icons/Icons",
+  "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+  "upstreamTreeTruncated": false,
+  "discoveredFabricSvgCount": 83,
+  "downloadedIconCount": 13,
+  "officialSupplementalIconsDownloaded": 0,
+  "upstreamDeclaredPackage": {
+    "name": "@fabric-msft/svg-icons",
+    "version": "8.2.0",
+    "packageSha256": "78bccf79e68ba3656456b99d4f643cf7e30f1c262f62c8d78f31367d5d00dbb0",
+    "attribution": "Copyright (c) Microsoft Corporation.",
+    "note": "Package lineage is declared by the pinned collection manifest. Every downloaded icon matches that manifest."
+  },
+  "usage": {
+    "basis": "Microsoft permits copying, distribution and display for architecture diagrams, training materials and documentation.",
+    "fabricTerms": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
+    "azureTerms": "https://learn.microsoft.com/en-us/azure/architecture/icons/",
+    "trademarkGuidance": "https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general",
+    "copyright": "Microsoft Corporation. All rights reserved.",
+    "repositoryMitDoesNotRelicenseMicrosoftMarks": true,
+    "treatment": "Unmodified SVGs, proportional scaling, nearby product labels; no cropping, flipping, rotation, recoloring or distortion.",
+    "endorsement": "Independent workshop documentation; no Microsoft sponsorship or endorsement is implied."
+  },
+  "neutralRepresentations": [
+    {
+      "component": "Activator (Reflex)",
+      "reason": "No Activator or Reflex SVG is present in the pinned supplied Icons tree.",
+      "rendering": "Text-labeled neutral rounded rectangle, not a substitute Azure icon."
+    },
+    {
+      "component": "Code Interpreter",
+      "reason": "No dedicated Code Interpreter SVG is present in the pinned supplied Icons tree.",
+      "rendering": "Text-labeled neutral optional-tool panel, not another data-source logo."
+    },
+    {
+      "component": "CSV, FileCreated, SQL helpers, quality gates and medallion schemas",
+      "reason": "Concepts, data surfaces or controls rather than additional Fabric items.",
+      "rendering": "Text and neutral shapes."
+    }
+  ],
+  "licensingEvidence": [
+    {
+      "localPath": "upstream/LICENSE.txt",
+      "upstreamPath": "LICENSE",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/LICENSE",
+      "sha256": "7df20dcdf9197e9945c14858d41c60f11b52b93e5b69e2b63416b874d598d322",
+      "bytes": 1074
+    },
+    {
+      "localPath": "upstream/NOTICE.txt",
+      "upstreamPath": "NOTICE",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/NOTICE",
+      "sha256": "6aafa533aaea18eebc0825fe234d3bc734e5ca9d87bfb2e62f96e086956ab585",
+      "bytes": 4903
+    },
+    {
+      "localPath": "upstream/Microsoft_Terms_of_Use.pdf",
+      "upstreamPath": "Azure_Public_Service_Icons/Microsoft_Terms_of_Use.pdf",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Microsoft_Terms_of_Use.pdf",
+      "sha256": "983e83cef1a8f85164760b076a96df54cb50af345861cb1d8344040037d0531c",
+      "bytes": 63859
+    },
+    {
+      "localPath": "upstream/fabric-manifest.json",
+      "upstreamPath": "Azure_Public_Service_Icons/fabric-manifest.json",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/fabric-manifest.json",
+      "sha256": "3b43f3a38964312f37a21152af62d8679bc02f18f782c2c90fcf96c1b0cbce7c",
+      "bytes": 17214
+    }
+  ],
+  "icons": [
+    {
+      "component": "Microsoft Fabric",
+      "localPath": "icons/microsoft-fabric.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/microsoft-fabric.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/microsoft-fabric.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/microsoft-fabric.svg",
+      "sha256": "b4ceb91647e4bc87b85940dcfe4764c9405d72f11047f6b191134f54ff3a6822",
+      "bytes": 4510,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "fabric_32_color.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "OneLake",
+      "localPath": "icons/onelake.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/onelake.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/onelake.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/onelake.svg",
+      "sha256": "20f75443218411ccfeb647ac6822073b2b5e4fec04d81ed543ca491fa8091c93",
+      "bytes": 3374,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "one_lake_32_color.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Lakehouse",
+      "localPath": "icons/fabric-lakehouse.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-lakehouse.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-lakehouse.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-lakehouse.svg",
+      "sha256": "1630fadbbf7df3f8846e0b7f0f3384b2c72465efa66e2cac22051ad0791c7114",
+      "bytes": 3398,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "lakehouse_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Fabric Notebook (01, 04, 05)",
+      "localPath": "icons/fabric-notebook.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-notebook.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-notebook.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-notebook.svg",
+      "sha256": "a2e8443a91903c33ccae48fe12e1c94cb2dae8a3cd0c6e8b43a26ab958e45734",
+      "bytes": 2433,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "notebook_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Ontology",
+      "localPath": "icons/fabric-item-ontology.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-item-ontology.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-item-ontology.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-item-ontology.svg",
+      "sha256": "a45bf0e16c07483e00876e80eba13c7f292f2f87724e39a297d196853de05cda",
+      "bytes": 2494,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "ontology_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Data Pipeline",
+      "localPath": "icons/fabric-data-pipeline.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-data-pipeline.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-data-pipeline.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-data-pipeline.svg",
+      "sha256": "9986f9ce8b9db9f107fd2c9efaf9330b3959686f2ba6095831899188525f5894",
+      "bytes": 1764,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "pipeline_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Eventhouse",
+      "localPath": "icons/fabric-eventhouse.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-eventhouse.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-eventhouse.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-eventhouse.svg",
+      "sha256": "7636610f022b3e0263b7ad04866063c7272a4af9edda6b9f7668fd27f6cdb5b4",
+      "bytes": 3275,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "event_house_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "KQL Database",
+      "localPath": "icons/fabric-kql-database.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-kql-database.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-kql-database.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-kql-database.svg",
+      "sha256": "24b4eed27ebd2bf3c59219b8dac0df08ed52db59f7d0fffd0b0e10ec56e38239",
+      "bytes": 3669,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "kql_database_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Data Agent",
+      "localPath": "icons/fabric-data-agent.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-data-agent.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-data-agent.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-data-agent.svg",
+      "sha256": "f7c80158677ad158b26365668ffb87b1db6519644a9ed2553761ea0c51c885e6",
+      "bytes": 2641,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "data_agent_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Semantic model",
+      "localPath": "icons/fabric-semantic-model.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-semantic-model.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-semantic-model.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-semantic-model.svg",
+      "sha256": "380816dc004f984ba6a2f9db984d91f9e3e8da2a841290bca3ceb4fc7753a083",
+      "bytes": 2658,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "semantic_model_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Power BI report",
+      "localPath": "icons/fabric-power-bi-report.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-power-bi-report.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-power-bi-report.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-power-bi-report.svg",
+      "sha256": "9ba6102dd7db9c9843e09ea2201848ff48b18f62b057aea91da3b2823cfd1637",
+      "bytes": 2295,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "report_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "Variable Library (optional)",
+      "localPath": "icons/fabric-item-variable-library.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-item-variable-library.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-item-variable-library.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-item-variable-library.svg",
+      "sha256": "6f73ac8ca27b412e5c146925ddc4656bce5f2c43e49ea4379fa6c267e4ed18ff",
+      "bytes": 2503,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "variable_library_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    },
+    {
+      "component": "User data functions (optional)",
+      "localPath": "icons/fabric-item-user-data-function.svg",
+      "upstreamPath": "Azure_Public_Service_Icons/Icons/fabric/fabric-item-user-data-function.svg",
+      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
+      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-item-user-data-function.svg",
+      "downloadUrl": "https://raw.githubusercontent.com/yang-jiayi/AzureDiagarm/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Icons/fabric/fabric-item-user-data-function.svg",
+      "sha256": "6374b26353a30f0ae4e54bf02e8663ae7159c184a7a86cbca91ee73dbe46240d",
+      "bytes": 2424,
+      "originalViewBox": null,
+      "upstreamPackageAsset": "user_data_function_32_item.svg",
+      "upstreamManifestSha256Matches": true,
+      "modifications": "None. Original SVG bytes, colors, gradients and geometry retained."
+    }
+  ]
+}

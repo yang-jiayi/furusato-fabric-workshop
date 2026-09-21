@@ -1,0 +1,113 @@
+// Furusato Fabric Workshop v2.7.0 - Eventhouse setup
+// Run each management command once, in order, inside your own KQL database
+// (EH_Furusato_<PID>). Do not run these against a shared database.
+//
+// The only supported ingestion path is the Data Pipeline that copies
+// Files/increment/donation_events_*.csv into DonationEvents with
+// DonationEvents_IncrementCsvMap.
+
+// ---------------------------------------------------------------- table -----
+.create-merge table DonationEvents (
+    EventID:string,
+    DonationID:long,
+    DonorID:long,
+    MunicipalityID:string,
+    GiftID:long,
+    DonationAmountYen:long,
+    DonatedAt:datetime,
+    PaymentMethod:string,
+    WorkshopRunId:string,
+    ParticipantAlias:string,
+    PublishedAtUtc:datetime,
+    SourceFile:string
+)
+
+// -------------------------------------------------------------- mapping -----
+// Twelve-ordinal mapping for the packaged donation_events_*.csv increment files.
+// The packaged header places SourceFile before PublishedAtUtc, so the ordinals
+// below are intentionally not in table-definition order.
+.create-or-alter table DonationEvents ingestion csv mapping 'DonationEvents_IncrementCsvMap'
+'[{"Properties":{"Ordinal":"0"},"column":"EventID","datatype":""},'
+'{"Properties":{"Ordinal":"1"},"column":"DonationID","datatype":""},'
+'{"Properties":{"Ordinal":"2"},"column":"DonorID","datatype":""},'
+'{"Properties":{"Ordinal":"3"},"column":"MunicipalityID","datatype":""},'
+'{"Properties":{"Ordinal":"4"},"column":"GiftID","datatype":""},'
+'{"Properties":{"Ordinal":"5"},"column":"DonationAmountYen","datatype":""},'
+'{"Properties":{"Ordinal":"6"},"column":"DonatedAt","datatype":""},'
+'{"Properties":{"Ordinal":"7"},"column":"PaymentMethod","datatype":""},'
+'{"Properties":{"Ordinal":"8"},"column":"WorkshopRunId","datatype":""},'
+'{"Properties":{"Ordinal":"9"},"column":"ParticipantAlias","datatype":""},'
+'{"Properties":{"Ordinal":"10"},"column":"SourceFile","datatype":""},'
+'{"Properties":{"Ordinal":"11"},"column":"PublishedAtUtc","datatype":""}]'
+
+// ------------------------------------------------- agent-safe summary -----
+.create-or-alter materialized-view DonationObservationSummaryForAgent
+on table DonationEvents {
+    DonationEvents
+    | summarize
+        ObservationCount=count(),
+        ObservedAmountYen=sum(DonationAmountYen),
+        FirstObservedAt=min(DonatedAt),
+        LastObservedAt=max(DonatedAt),
+        LastPublishedAtUtc=max(PublishedAtUtc)
+      by
+        MunicipalityID,
+        EventMinute=bin(DonatedAt, 1m),
+        WorkshopRunId,
+        ParticipantAlias,
+        SourceFile
+}
+
+// ------------------------------------------------------------- policies -----
+.alter table DonationEvents policy retention
+@'{"SoftDeletePeriod":"90.00:00:00","Recoverability":"Enabled"}'
+
+.alter table DonationEvents policy caching hot = 7d
+
+// Pipeline ingestion verification.
+// The four blocks below are queries, not management commands: they start with a
+// table name, never with a leading dot, so the file still creates exactly five
+// management objects. Run them after the Pipeline has copied at least one file.
+// Replace the literal <SourceFile> placeholder in the first block with the
+// increment file the Pipeline copied, for example donation_events_001.csv, and
+// keep the surrounding double quotes. Each packaged file contains exactly 5,000
+// rows.
+let targetSourceFile = "<SourceFile>";
+DonationEvents
+| where SourceFile == targetSourceFile
+| summarize
+    Rows=count(),
+    DistinctEventIDs=count_distinct(EventID),
+    MissingEventIDs=countif(isempty(EventID)),
+    DistinctDonationIDs=count_distinct(DonationID),
+    TotalDonationAmountYen=sum(DonationAmountYen),
+    FirstDonatedAtUtc=min(DonatedAt),
+    LatestDonatedAtUtc=max(DonatedAt)
+
+// After all three increment files the raw table holds 15,000 rows and 14,900
+// distinct EventIDs, because the last 100 rows of file 001 reappear in 002.
+DonationEvents
+| summarize
+    RawRows=count(),
+    DistinctEventIDs=count_distinct(EventID),
+    DuplicateEventIDs=count() - count_distinct(EventID),
+    ObservationWindowStartUtc=min(DonatedAt),
+    ObservationWindowEndUtc=max(DonatedAt)
+
+// The materialized view must reconcile to the same raw totals.
+DonationObservationSummaryForAgent
+| summarize
+    ObservationCount=sum(ObservationCount),
+    ObservedAmountYen=sum(ObservedAmountYen),
+    FirstObservedAt=min(FirstObservedAt),
+    LastObservedAt=max(LastObservedAt)
+
+// Daily distribution in UTC. Thirty-one calendar days from 2026-08-01 to
+// 2026-08-31 with no gap, 450 to 582 raw rows per day. The 2026-08-11 peak is
+// the day that carries the 100 duplicated EventIDs, so this query is also the
+// quickest way to see that duplicates were retained rather than dropped.
+// This is byte-for-byte the query printed in section 13.3 of the guide, so the
+// daily amount table there can be reconciled without retyping it.
+DonationEvents
+| summarize Rows=count(), TotalYen=sum(DonationAmountYen) by UtcDay=bin(DonatedAt, 1d)
+| order by UtcDay asc

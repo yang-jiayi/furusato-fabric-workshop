@@ -1,0 +1,44 @@
+# Credentials and local authentication
+.env
+.env.*
+!.env.example
+*.token
+*.secret
+*.pfx
+*.pem
+.azure/
+
+# Generated and temporary files
+tmp/
+temp/
+artifacts/
+*.log
+*.tmp
+~$*
+
+# Raw Fabric snapshots can contain execution/session identifiers.
+WorkspaceReport/Evidence/
+worker/
+.private/
+local-evidence/
+
+# Internal evaluation corpora are maintained outside the distributable repository.
+tools/qa/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# PowerShell
+TestResults/
+
+# Office generation scratch files
+build/
+
+# Review and translation scratch dumps
+chunk*.txt
+trans_check.txt
+.audit-scratch/
+.review-scratch/
+.closure/

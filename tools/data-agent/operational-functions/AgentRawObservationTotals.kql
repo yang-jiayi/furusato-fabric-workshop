@@ -1,0 +1,54 @@
+.create function with (
+    folder = "Agent",
+    docstring = "Atomic raw operational totals from the approved observation summary materialized view. Caller must reject WindowIsValid=false; zero metrics on an invalid window are not a valid result."
+) AgentRawObservationTotals(
+    StartUtc:datetime = datetime(null),
+    EndUtc:datetime = datetime(null)
+)
+{
+    let WindowIsValid =
+        isnull(StartUtc)
+        or isnull(EndUtc)
+        or StartUtc < EndUtc;
+    DonationObservationSummaryForAgent
+    | where WindowIsValid
+    | where isnull(StartUtc) or EventMinute >= StartUtc
+    | where isnull(EndUtc) or EventMinute < EndUtc
+    | summarize
+        RawObservationCount = sum(ObservationCount),
+        RawObservedAmountYen = sum(ObservedAmountYen),
+        TrueFirstObservedAt = min(FirstObservedAt),
+        TrueLastObservedAt = max(LastObservedAt)
+    | extend
+        RawObservationCount = coalesce(RawObservationCount, long(0)),
+        RawObservedAmountYen = coalesce(RawObservedAmountYen, long(0)),
+        RequestedStartUtc = StartUtc,
+        RequestedEndUtc = EndUtc,
+        WindowIsValid = WindowIsValid,
+        Scope = iff(
+            isnull(StartUtc) and isnull(EndUtc),
+            "FullAvailableApprovedData",
+            "RequestedHalfOpenUtcWindow"
+        ),
+        SourceSystem = "Eventhouse",
+        SourceObject = "DonationObservationSummaryForAgent",
+        CountUnit = "raw observations",
+        AmountUnit = "JPY",
+        RawDuplicateCaveat = "The totals may include duplicate raw observations; the approved aggregate exposes no event identifier or unique-event metric.",
+        TimeZoneNotice = "All timestamps are UTC."
+    | project
+        RequestedStartUtc,
+        RequestedEndUtc,
+        WindowIsValid,
+        TrueFirstObservedAt,
+        TrueLastObservedAt,
+        RawObservationCount,
+        RawObservedAmountYen,
+        Scope,
+        SourceSystem,
+        SourceObject,
+        CountUnit,
+        AmountUnit,
+        RawDuplicateCaveat,
+        TimeZoneNotice
+}

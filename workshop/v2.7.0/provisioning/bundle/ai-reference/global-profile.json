@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "furusato-reference-global/v1",
+  "sha256": "e52c3acf2578f180ff8a78576e3fb1f9ddb9563dac92b9ca49acae6bfbcaefb4",
+  "status": "candidate",
+  "statusProvenance": "Explicit operator declaration; packaging is not an evaluation or acceptance proof."
+}

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "furusato-unified-agent-runtime/v1",
+  "teachingOntologyShape": [
+    10,
+    72,
+    1,
+    15
+  ],
+  "referenceContractSha256": "1833c380117b01c33a5395ce5d7ee5ce3c32e821d8602f035c1ebec7ae8057c4",
+  "coreOntologySourcePath": "data-agent/Files/Config/published/ontology-{{name.ontology}}/datasource.json",
+  "coreOntologySourceSha256": "3ccc8f6b13e30c2244982dee893bf09f3119d0b155854d975b39524ede058c73",
+  "codeInterpreterEnabled": true,
+  "agentNameTemplate": "DA_Furusato_<PID>",
+  "createsAIPath": false,
+  "acceptanceClaimed": false,
+  "files": {
+    "unified-agent/inputs/global-instructions.txt": "e0459607ed3bb4b075d8f0d59f0e70506c5cd17ec6c4e61d1520ca09e28dbe3d",
+    "unified-agent/inputs/kusto-fewshots.json": "e33c7f09e3df31e4dde46cf8b1fd68c705e56daea0fb670e9784793a8d4de44c",
+    "unified-agent/inputs/kusto-instructions.txt": "d3a0961ba1106bdf946481fdd294718788fffbbdd415895679d99f16f472964d",
+    "unified-agent/inputs/lakehouse-instructions.txt": "b8313897d65fa3331ccd4e28f905b58ec380e622d56b0d7cdb8ee189dbcec56e",
+    "unified-agent/inputs/manifest.json": "a546984c2ee4a2bf817ce5db909816114c3b812b7ce720fddfc823082053af8d",
+    "unified-agent/modules/unified_agent.py": "6a11fc67bbc0f33feb669ede907d53f0e2b2c63c67e77171e81c3a83823dfbac",
+    "unified-agent/profile.json": "20f00aaec612aa4c3f336f35e8942503edf18cac158a0453f9900a433a32c88a"
+  }
+}

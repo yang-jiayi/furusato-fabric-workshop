@@ -1,0 +1,20 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/fewShots/1.0.0/schema.json",
+  "fewShots": [
+    {
+      "id": "e675c2b9-6983-5ae9-ba98-6ca4a6b7a41c",
+      "question": "Return raw operational totals across all available approved observations, preserving source and scope metadata and rendering observation extrema and bounds as ISO-8601 UTC text.",
+      "query": "let StartUtc = datetime(null);\nlet EndUtc = datetime(null);\nAgentRawObservationTotals(StartUtc, EndUtc)\n| extend RequestedStartUtc = iff(isnull(RequestedStartUtc), \"\", strcat(replace_string(format_datetime(RequestedStartUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    RequestedEndUtc = iff(isnull(RequestedEndUtc), \"\", strcat(replace_string(format_datetime(RequestedEndUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    TrueFirstObservedAt = iff(isnull(TrueFirstObservedAt), \"\", strcat(replace_string(format_datetime(TrueFirstObservedAt, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    TrueLastObservedAt = iff(isnull(TrueLastObservedAt), \"\", strcat(replace_string(format_datetime(TrueLastObservedAt, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\"))\n"
+    },
+    {
+      "id": "00db77f6-75b3-54b6-b90c-11d100956fd6",
+      "question": "Return all available approved file/run detail with each source-file, workshop-run and participant-alias key, raw metrics and true observation extrema rendered as ISO-8601 UTC text.",
+      "query": "let StartUtc = datetime(null);\nlet EndUtc = datetime(null);\nAgentFileRunSummary(StartUtc, EndUtc)\n| extend FirstObservedAtUtc = iff(isnull(FirstObservedAtUtc), \"\", strcat(replace_string(format_datetime(FirstObservedAtUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    LastObservedAtUtc = iff(isnull(LastObservedAtUtc), \"\", strcat(replace_string(format_datetime(LastObservedAtUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    RequestedStartUtc = iff(isnull(RequestedStartUtc), \"\", strcat(replace_string(format_datetime(RequestedStartUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    RequestedEndUtc = iff(isnull(RequestedEndUtc), \"\", strcat(replace_string(format_datetime(RequestedEndUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\"))\n"
+    },
+    {
+      "id": "0decd43f-3597-5b35-a392-c0990a9e7c27",
+      "question": "Return the count and amount leaders across all available approved operational observations, preserving both flags, raw metrics and source metadata with ISO-8601 UTC bounds.",
+      "query": "let StartUtc = datetime(null);\nlet EndUtc = datetime(null);\nAgentMunicipalityLeaders(StartUtc, EndUtc)\n| extend RequestedStartUtc = iff(isnull(RequestedStartUtc), \"\", strcat(replace_string(format_datetime(RequestedStartUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\")),\n    RequestedEndUtc = iff(isnull(RequestedEndUtc), \"\", strcat(replace_string(format_datetime(RequestedEndUtc, \"yyyy-MM-dd HH:mm:ss.fffffff\"), \" \", \"T\"), \"Z\"))\n"
+    }
+  ]
+}

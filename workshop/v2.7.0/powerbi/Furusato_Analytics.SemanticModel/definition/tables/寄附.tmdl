@@ -1,0 +1,136 @@
+/// 静的seed寄附と重複排除済み増分イベントを統合した1寄附1行のファクト。金額・件数・時系列分析の基点です。
+table 寄附
+	lineageTag: bf6c34fa-2f0c-4ba0-9296-ed5906d905e6
+
+	/// 現在のフィルター条件に含まれる寄附金額の合計（日本円）。
+	measure 寄附総額 = SUM('寄附'[寄附金額])
+		formatString: ¥#,##0
+		displayFolder: 主要KPI
+		lineageTag: 8c63fefe-17ca-485a-9419-febd9e21750b
+
+	/// 現在のフィルター条件に含まれる寄附件数。静的seedと重複排除済み増分イベントを含みます。
+	measure 寄附件数 = COUNTROWS('寄附')
+		formatString: #,##0
+		displayFolder: 主要KPI
+		lineageTag: 15c07149-6a74-442d-863e-f23f9813a3b1
+
+	/// 寄附総額を寄附件数で安全に除算した1件当たりの平均寄附額。
+	measure 平均寄附額 = DIVIDE([寄附総額], [寄附件数])
+		formatString: ¥#,##0
+		displayFolder: 主要KPI
+		lineageTag: ce429f6f-f9e6-4c6e-a1a1-e06f3ce6634f
+
+	/// 現在選択された日付範囲と同じ前年期間の寄附総額。日付フィルターが必要です。
+	measure '寄附総額 前年同期間' = CALCULATE([寄附総額], SAMEPERIODLASTYEAR('日付'[日付]))
+		formatString: ¥#,##0
+		displayFolder: 時系列
+		lineageTag: b3a3994d-91fe-4a01-b784-426617f32e9f
+
+	/// 選択中の期間・寄附者・返礼品条件を維持したまま、自治体フィルターだけを除いた寄附総額に対するシェア。
+	measure '自治体別シェア (%)' = DIVIDE([寄附総額], CALCULATE([寄附総額], REMOVEFILTERS('自治体')))
+		formatString: 0.0%
+		displayFolder: 比較
+		lineageTag: a4de618c-5eef-41b0-9328-b4d072ed1117
+
+	/// Notebook 05 がゴールド層で 57,000 円を超える寄附に付与する IsHighValue フラグに基づく件数。Optional の分析用区分であり、通知ルールではありません。
+	measure 高額寄附件数 = CALCULATE([寄附件数], KEEPFILTERS('寄附'[高額寄附フラグ] = TRUE()))
+		formatString: #,##0
+		displayFolder: 主要KPI
+		lineageTag: d8a44f49-3aa5-4e86-b5c4-e9b89def7650
+
+	/// 寄附を一意に識別する技術キー。
+	column 寄附ID
+		dataType: int64
+		isHidden
+		isNullable: false
+		lineageTag: 1c9acb38-1367-4f85-9978-32f1dc8d6531
+		summarizeBy: none
+		sourceColumn: DonationId
+
+	/// 1件の寄附金額（日本円）。集計には明示メジャーを使用します。
+	column 寄附金額
+		dataType: int64
+		isHidden
+		isNullable: false
+		formatString: ¥#,##0
+		lineageTag: 2b4bc90f-a2f7-40bb-9c78-c0d009e97003
+		summarizeBy: sum
+		sourceColumn: DonationAmountYen
+
+	/// 寄附が発生したUTC日時。詳細調査用です。
+	column '寄附日時 UTC'
+		dataType: dateTime
+		isHidden
+		isNullable: false
+		lineageTag: 46234977-1119-40bc-9f8e-792ee9c8362d
+		summarizeBy: none
+		sourceColumn: DonatedAtUtc
+
+	/// 日本標準時に変換した寄附日。日付ディメンションとの関係に使用します。
+	column 寄附日
+		dataType: dateTime
+		isHidden
+		isNullable: false
+		lineageTag: 3d91c38b-c9a5-469d-aaed-410208b68805
+		dataCategory: Time
+		summarizeBy: none
+		sourceColumn: DonationDate
+
+	/// 寄附時に選択された決済方法。
+	column 決済方法
+		dataType: string
+		isNullable: false
+		lineageTag: 0fdc98d4-b53a-4fc9-9043-cd7206a02a6a
+		summarizeBy: none
+		sourceColumn: PaymentMethod
+
+	/// StaticSeedまたはRealtimeIncrement。静的スナップショットと増分イベントを区別します。
+	column データソース
+		dataType: string
+		isNullable: false
+		lineageTag: 4707e1e7-a3cd-4ac6-8aa8-41b6adfcd342
+		summarizeBy: none
+		sourceColumn: DataSource
+
+	/// Notebook 05 がゴールド層で 57,000 円を超える寄附に付与する IsHighValue フラグ。Optional の分析用区分であり、通知ルールではありません。
+	column 高額寄附フラグ
+		dataType: boolean
+		isHidden
+		isNullable: false
+		lineageTag: c71a26a2-0cea-4e9d-9622-cf6e0d45f01a
+		summarizeBy: none
+		sourceColumn: IsHighValue
+
+	/// 寄附者ディメンションへの外部キー。
+	column 寄附者ID
+		dataType: int64
+		isHidden
+		isNullable: false
+		lineageTag: 763d8b07-e670-4473-969a-4847e11732f1
+		summarizeBy: none
+		sourceColumn: DonorId
+
+	/// 寄附先自治体ディメンションへの外部キー。
+	column 自治体ID
+		dataType: string
+		isHidden
+		isNullable: false
+		lineageTag: a3bd3949-a1e1-47c7-a0c9-847a34a47a67
+		summarizeBy: none
+		sourceColumn: MunicipalityId
+
+	/// 返礼品ディメンションへの外部キー。
+	column 返礼品ID
+		dataType: int64
+		isHidden
+		isNullable: false
+		lineageTag: 35dc47bf-2737-4fa3-abfa-9e5370347814
+		summarizeBy: none
+		sourceColumn: GiftId
+
+	partition 寄附 = entity
+		mode: directLake
+		source
+			entityName: donations
+			schemaName: gold
+			expressionSource: 'DirectLake - Furusato Analytics'

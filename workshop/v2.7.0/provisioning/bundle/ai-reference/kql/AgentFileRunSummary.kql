@@ -1,0 +1,57 @@
+.create function with (
+    folder = "Agent",
+    docstring = "File and workshop-run detail from approved raw observation metrics. Invalid windows return no rows; use AgentRawObservationTotals for whole-window totals."
+) AgentFileRunSummary(
+    StartUtc:datetime = datetime(null),
+    EndUtc:datetime = datetime(null)
+)
+{
+    let WindowIsValid =
+        isnull(StartUtc)
+        or isnull(EndUtc)
+        or StartUtc < EndUtc;
+    DonationObservationSummaryForAgent
+    | where WindowIsValid
+    | where isnull(StartUtc) or EventMinute >= StartUtc
+    | where isnull(EndUtc) or EventMinute < EndUtc
+    | summarize
+        RawObservationCount = sum(ObservationCount),
+        RawObservedAmountYen = sum(ObservedAmountYen),
+        FirstObservedAtUtc = min(FirstObservedAt),
+        LastObservedAtUtc = max(LastObservedAt)
+      by SourceFile, WorkshopRunId, ParticipantAlias
+    | extend
+        RequestedStartUtc = StartUtc,
+        RequestedEndUtc = EndUtc,
+        WindowIsValid = WindowIsValid,
+        Scope = case(
+            isnull(StartUtc) and isnull(EndUtc),
+            "FullAvailableApprovedData",
+            "RequestedHalfOpenUtcWindow"
+        ),
+        SourceSystem = "Eventhouse",
+        SourceObject = "DonationObservationSummaryForAgent",
+        CountUnit = "raw observations",
+        AmountUnit = "JPY",
+        RawDuplicateCaveat = "The totals may include duplicate raw observations; the approved aggregate exposes no event identifier or unique-event metric.",
+        TimeZoneNotice = "All timestamps are UTC."
+    | project
+        SourceFile,
+        WorkshopRunId,
+        ParticipantAlias,
+        RawObservationCount,
+        RawObservedAmountYen,
+        FirstObservedAtUtc,
+        LastObservedAtUtc,
+        RequestedStartUtc,
+        RequestedEndUtc,
+        WindowIsValid,
+        Scope,
+        SourceSystem,
+        SourceObject,
+        CountUnit,
+        AmountUnit,
+        RawDuplicateCaveat,
+        TimeZoneNotice
+    | order by SourceFile asc, WorkshopRunId asc, ParticipantAlias asc
+}

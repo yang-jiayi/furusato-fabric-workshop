@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="Explore the current Furusato Fabric Workshop architecture in Japanese and English: one Agent, three sources, and quality-gated analytics.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; script-src 'self' file:; style-src 'self' file: 'unsafe-inline'; img-src 'self' file: data:; connect-src 'none'; font-src 'self' file:; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>Furusato Fabric Workshop · Architecture</title>
+  <link rel="stylesheet" href="architecture.css">
+  <script src="architecture.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#details" data-i18n="skip">解説へ移動</a>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <div>
+        <p class="eyebrow">FURUSATO WORKSHOP</p>
+        <h1 data-i18n="appTitle">アーキテクチャを読み解く</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="local-badge" data-i18n="localBadge">合成データ · ローカル解説</span>
+      <div class="language-switch" role="group" aria-label="Language / 言語">
+        <button type="button" id="lang-ja" lang="ja" aria-pressed="true">日本語</button>
+        <button type="button" id="lang-en" lang="en" aria-pressed="false">English</button>
+      </div>
+      <button type="button" id="expand" class="subtle-button" aria-pressed="false" data-i18n="expand">図を広く表示</button>
+    </div>
+  </header>
+
+  <nav class="flow-nav" aria-label="Architecture flows / アーキテクチャの経路" id="flow-nav">
+    <button type="button" data-flow="overview" aria-pressed="true"><span class="nav-number">◉</span><span data-i18n="navOverview">全体像</span></button>
+    <button type="button" data-flow="static" aria-pressed="false"><span class="nav-number">01</span><span data-i18n="navStatic">事実と意味</span></button>
+    <button type="button" data-flow="events" aria-pressed="false"><span class="nav-number">02</span><span data-i18n="navEvents">運用の観測</span></button>
+    <button type="button" data-flow="agent" aria-pressed="false"><span class="nav-number">03</span><span data-i18n="navAgent">1 件の Agent</span></button>
+    <button type="button" data-flow="analytics" aria-pressed="false"><span class="nav-number">04</span><span data-i18n="navAnalytics">品質と BI</span></button>
+    <button type="button" data-flow="control" aria-pressed="false"><span class="nav-number">00</span><span data-i18n="navControl">承認付き構築</span></button>
+    <button type="button" data-flow="outcomes" aria-pressed="false"><span class="nav-number">✓</span><span data-i18n="navOutcomes">学びのまとめ</span></button>
+  </nav>
+
+  <main class="layout" id="main">
+    <section class="diagram-panel" aria-label="Architecture diagram / アーキテクチャ図">
+      <div class="diagram-toolbar">
+        <span id="focus-label" data-i18n="focusOverview">全体像 · クリックして経路を選択</span>
+        <span class="download-links">
+          <a id="svg-link" href="../assets/architecture/furusato-architecture.ja.svg" download>SVG</a>
+          <a id="png-link" href="../assets/architecture/furusato-architecture.ja.png" download>PNG · QHD</a>
+        </span>
+      </div>
+      <div class="canvas-scroll" tabindex="0" aria-label="Scrollable diagram / スクロールできる図">
+        <div id="diagram" class="diagram"></div>
+      </div>
+      <p class="diagram-hint" data-i18n="diagramHint">経路とカードをクリック。Tab / Enter / Space で操作できます。</p>
+    </section>
+    <aside id="details" class="details-panel" tabindex="-1" aria-labelledby="detail-title">
+      <div id="details-content" aria-live="polite" aria-atomic="true"></div>
+      <div class="detail-links">
+        <a id="guide-link" href="overview.ja.md" data-i18n="fullGuide">詳しい解説</a>
+        <a href="sources.md" data-i18n="sourceLink">実装の根拠</a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="app-footer">
+    <span data-i18n="footerScope">現行 v2.7.0 · 説明用の構成図 · サービスへの接続なし</span>
+    <div>
+      <a href="icons.md" data-i18n="iconLink">アイコン出典・利用条件</a>
+      <a href="README.md" data-i18n="helpLink">使い方</a>
+      <span class="shortcut-hint" data-i18n="shortcuts">0–6: 経路 · J/E: 言語 · Esc: 全体像</span>
+    </div>
+  </footer>
+  <noscript>
+    <div class="noscript-notice">
+      <p>JavaScript を有効にすると経路の選択と言語切替を使えます。解説と画像は下記から読めます。</p>
+      <p>Enable JavaScript for flow focus and language switching. The guides and diagrams also work independently.</p>
+      <a href="overview.ja.md">日本語の解説</a> · <a href="overview.en.md">English guide</a> ·
+      <a href="../assets/architecture/furusato-architecture.ja.png">日本語 PNG</a> ·
+      <a href="../assets/architecture/furusato-architecture.en.png">English PNG</a>
+    </div>
+  </noscript>
+</body>
+</html>

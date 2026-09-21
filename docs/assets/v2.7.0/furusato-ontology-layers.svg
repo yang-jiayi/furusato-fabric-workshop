@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="d3-title d3-desc" preserveAspectRatio="xMidYMid meet">
+<title id="d3-title">Furusato Ontology の全体像 — 10 エンティティ型と 15 リレーションシップ (v2.7.0)</title>
+<desc id="d3-desc">Furusato ワークショップの Ontology 全体図。基幹エンティティは 7 種類で、マスタ 6 種類の Prefecture、Municipality、Donor、GiftCategory、Gift、Supplier と、トランザクション 1 種類の Donation から成る。集計層のメトリック/フローエンティティは MunicipalityCategoryMetric、PrefectureCategoryMetric、PrefectureDonationFlow の 3 種類。15 のリレーションシップは、MunicipalityInPrefecture が Municipality から Prefecture へ、DonorLivesInPrefecture が Donor から Prefecture へ、SupplierInPrefecture が Supplier から Prefecture へ、GiftInCategory が Gift から GiftCategory へ、SupplierProvidesGift が Supplier から Gift へ、DonorMadeDonation が Donor から Donation へ、DonationToMunicipality が Donation から Municipality へ、DonationSelectedGift が Donation から Gift へ、MunicipalityCatalogsGift が Municipality から Gift へ、MunHasCategoryMetric が Municipality から MunicipalityCategoryMetric へ、MunMetricForCategory が MunicipalityCategoryMetric から GiftCategory へ、PrefHasCategoryMetric が Prefecture から PrefectureCategoryMetric へ、PrefMetricForCategory が PrefectureCategoryMetric から GiftCategory へ、ResidencePrefHasFlow が Prefecture から PrefectureDonationFlow へ、FlowToRecipientPref が PrefectureDonationFlow から Prefecture へ向かう。Municipality だけが Eventhouse からの時系列バインディングを持ち、橙の破線で示す。Donor と Supplier を直接つなぐ関係は存在せず、赤い破線とバツ印で否定している。正しい経路は Supplier から Gift へ、Donation から Gift へ、Donor から Donation へ、である。</desc>
+<defs>
+<marker id="d3-ar-0E8A54" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#0E8A54"/></marker>
+<marker id="d3-ar-2AAC94" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#2AAC94"/></marker>
+<marker id="d3-ar-C2571A" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#C2571A"/></marker>
+<marker id="d3-ar-B3261E" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#B3261E"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1100" fill="#FFFFFF"/>
+<g font-family="Yu Gothic UI, Meiryo, Segoe UI, sans-serif" fill="#12211D" stroke-linejoin="round">
+<rect x="56.0" y="20.0" width="7.0" height="46.0" rx="3.5" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="76.0" y="54.0" font-size="28" font-weight="bold" fill="#04352C" text-anchor="start">Furusato Ontology — 10 エンティティ型 / 15 リレーションシップ</text>
+<text x="76.0" y="81.0" font-size="14.5" font-weight="normal" fill="#5A6570" text-anchor="start">Core entities, metric &amp; flow entities, relationship names and directions, time-series sidecar and semantic boundaries</text>
+<rect x="1483.4" y="24.0" width="60.6" height="26.0" rx="13" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.2"/>
+<text x="1513.7" y="42.0" font-size="12.5" font-weight="bold" fill="#0E8A54" text-anchor="middle">v2.7.0</text>
+<rect x="60.0" y="128.0" width="1064.0" height="668.0" rx="18" fill="#FBFDFC" stroke="#DDE6E2" stroke-width="1.2"/>
+<text x="78.0" y="152.0" font-size="13" font-weight="bold" fill="#0E8A54" text-anchor="start">基幹エンティティ  Core entities (7)</text>
+<text x="78.0" y="172.0" font-size="11.5" font-weight="normal" fill="#5A6570" text-anchor="start">マスタ 6 + トランザクション 1 / 6 masters + 1 transaction</text>
+<rect x="60.0" y="812.0" width="1064.0" height="232.0" rx="18" fill="#F5FBFA" stroke="#2AAC94" stroke-width="1.3" stroke-dasharray="10 6"/>
+<text x="400.0" y="925.0" font-size="13" font-weight="bold" fill="#2AAC94" text-anchor="start">集計層  Metric / Flow entities (3)</text>
+<text x="400.0" y="945.0" font-size="11.5" font-weight="normal" fill="#2AAC94" text-anchor="start">複合粒度の二重集計を防ぐ</text>
+<line x1="522.0" y1="740.0" x2="352.0" y2="740.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="368.1" y="725.0" width="137.9" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="437.0" y="739.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">MunicipalityInPrefecture</text>
+<text x="437.0" y="752.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1  受領地の行政的包含</text>
+<line x1="250.0" y1="503.0" x2="250.0" y2="703.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="183.3" y="584.0" width="133.4" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="250.0" y="598.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">DonorLivesInPrefecture</text>
+<text x="250.0" y="611.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1  居住地</text>
+<path d="M 152.0 250.0 L 108.0 250.0 L 108.0 740.0 L 148.0 740.0" fill="none" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="91.0" y="675.0" width="118.0" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="150.0" y="689.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">SupplierInPrefecture</text>
+<text x="150.0" y="702.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1  登録拠点</text>
+<line x1="1010.0" y1="283.0" x2="1010.0" y2="703.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="960.5" y="328.0" width="98.9" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="1010.0" y="342.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">GiftInCategory</text>
+<text x="1010.0" y="355.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1  カタログ分類</text>
+<path d="M 348.0 250.0 Q 630.0 96.0 908.0 250.0" fill="none" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="545.5" y="158.0" width="167.0" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="629.0" y="172.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">SupplierProvidesGift</text>
+<text x="629.0" y="185.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : m  カタログ登録 (配送ではない)</text>
+<line x1="220.0" y1="437.0" x2="518.0" y2="262.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="374.6" y="300.0" width="112.0" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="430.6" y="314.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">DonorMadeDonation</text>
+<text x="430.6" y="327.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">1 : n  寄付の実行</text>
+<line x1="620.0" y1="283.0" x2="620.0" y2="703.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="553.3" y="418.0" width="133.4" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="620.0" y="432.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">DonationToMunicipality</text>
+<text x="620.0" y="445.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1  受領自治体</text>
+<line x1="718.0" y1="250.0" x2="908.0" y2="264.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="735.1" y="286.0" width="167.7" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="819.0" y="300.0" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">DonationSelectedGift</text>
+<text x="819.0" y="313.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1  返礼品の選択 (購入ではない)</text>
+<line x1="718.0" y1="740.0" x2="970.0" y2="287.0" stroke="#0E8A54" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-0E8A54)"/>
+<rect x="785.7" y="497.4" width="138.7" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="855.0" y="511.4" font-size="11.2" font-weight="bold" fill="#0E8A54" text-anchor="middle">MunicipalityCatalogsGift</text>
+<text x="855.0" y="524.4" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">1 : n  掲載自治体</text>
+<line x1="660.0" y1="773.0" x2="698.0" y2="852.0" stroke="#2AAC94" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-2AAC94)"/>
+<rect x="588.7" y="797.2" width="126.6" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="652.0" y="811.2" font-size="11.2" font-weight="bold" fill="#2AAC94" text-anchor="middle">MunHasCategoryMetric</text>
+<text x="652.0" y="824.2" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">1 : n</text>
+<line x1="938.0" y1="860.0" x2="1050.0" y2="777.0" stroke="#2AAC94" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-2AAC94)"/>
+<rect x="955.5" y="805.4" width="124.2" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="1017.6" y="819.4" font-size="11.2" font-weight="bold" fill="#2AAC94" text-anchor="middle">MunMetricForCategory</text>
+<text x="1017.6" y="832.4" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1</text>
+<line x1="348.0" y1="766.0" x2="888.0" y2="995.0" stroke="#2AAC94" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-2AAC94)"/>
+<rect x="467.6" y="834.9" width="128.0" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="531.6" y="848.9" font-size="11.2" font-weight="bold" fill="#2AAC94" text-anchor="middle">PrefHasCategoryMetric</text>
+<text x="531.6" y="861.9" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">1 : n</text>
+<line x1="1010.0" y1="957.0" x2="1010.0" y2="777.0" stroke="#2AAC94" stroke-width="2.1" stroke-linecap="round" marker-end="url(#d3-ar-2AAC94)"/>
+<rect x="947.2" y="846.0" width="125.7" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="1010.0" y="860.0" font-size="11.2" font-weight="bold" fill="#2AAC94" text-anchor="middle">PrefMetricForCategory</text>
+<text x="1010.0" y="873.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">n : 1</text>
+<path d="M 204.0 773.0 Q 120.0 865.0 204.0 953.0" fill="none" stroke="#2AAC94" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#d3-ar-2AAC94)"/>
+<rect x="91.5" y="849.0" width="128.9" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="156.0" y="863.0" font-size="11.2" font-weight="bold" fill="#2AAC94" text-anchor="middle">ResidencePrefHasFlow</text>
+<text x="156.0" y="876.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">居住地側 1 : n</text>
+<path d="M 302.0 957.0 Q 396.0 865.0 302.0 777.0" fill="none" stroke="#2AAC94" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#d3-ar-2AAC94)"/>
+<rect x="302.0" y="851.0" width="118.1" height="30.0" rx="6" fill="#FFFFFF" stroke="none" stroke-width="1.6" opacity="0.93"/>
+<text x="361.0" y="865.0" font-size="11.2" font-weight="bold" fill="#2AAC94" text-anchor="middle">FlowToRecipientPref</text>
+<text x="361.0" y="878.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="middle">受領地側 n : 1</text>
+<rect x="316.0" y="512.0" width="226.0" height="104.0" rx="12" fill="#FBEEE6" stroke="#C2571A" stroke-width="2.0" stroke-dasharray="8 5"/>
+<text x="332.0" y="538.0" font-size="13" font-weight="bold" fill="#C2571A" text-anchor="start">∿ Eventhouse</text>
+<text x="332.0" y="558.0" font-size="12.5" font-weight="bold" fill="#12211D" text-anchor="start">時系列バインディング</text>
+<text x="332.0" y="578.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Time-series binding</text>
+<text x="332.0" y="592.6" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Municipality のみ (静的 + 時系列)</text>
+<line x1="542.0" y1="574.0" x2="554.0" y2="701.0" stroke="#C2571A" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="7 4" marker-end="url(#d3-ar-C2571A)"/>
+<line x1="296.0" y1="433.0" x2="296.0" y2="289.0" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 5" marker-end="url(#d3-ar-B3261E)"/>
+<line x1="284.0" y1="372.0" x2="308.0" y2="348.0" stroke="#B3261E" stroke-width="3.0" stroke-linecap="round"/>
+<line x1="284.0" y1="348.0" x2="308.0" y2="372.0" stroke="#B3261E" stroke-width="3.0" stroke-linecap="round"/>
+<rect x="193.5" y="395.4" width="205.0" height="17.1" rx="8" fill="#FFFFFF" opacity="0.94" stroke="#B3261E" stroke-width="1"/>
+<text x="296.0" y="408.1" font-size="11.4" font-weight="bold" fill="#B3261E" text-anchor="middle">直接関係なし  No direct relationship</text>
+<rect x="178.1" y="416.2" width="235.7" height="15.6" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="296.0" y="427.7" font-size="10.4" font-weight="600" fill="#B3261E" text-anchor="middle">正しい経路: Supplier → Gift ← Donation ← Donor</text>
+<rect x="152.0" y="217.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.0"/>
+<text x="250.0" y="248.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">Supplier</text>
+<text x="250.0" y="265.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">事業者 (返礼品提供元)</text>
+<rect x="522.0" y="217.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#04352C" stroke-width="2.0"/>
+<text x="620.0" y="248.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">Donation</text>
+<text x="620.0" y="265.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">寄付 (取引エンティティ)</text>
+<rect x="647.8" y="208.0" width="64.2" height="18.0" rx="9" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="679.9" y="221.0" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">80,000 件</text>
+<rect x="912.0" y="217.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.0"/>
+<text x="1010.0" y="248.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">Gift</text>
+<text x="1010.0" y="265.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">返礼品</text>
+<rect x="152.0" y="437.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.0"/>
+<text x="250.0" y="468.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">Donor</text>
+<text x="250.0" y="485.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">寄付者</text>
+<rect x="152.0" y="707.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.0"/>
+<text x="250.0" y="738.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">Prefecture</text>
+<text x="250.0" y="755.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">都道府県</text>
+<rect x="522.0" y="707.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.0"/>
+<text x="620.0" y="738.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">Municipality</text>
+<text x="620.0" y="755.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">自治体</text>
+<rect x="632.6" y="698.0" width="79.4" height="18.0" rx="9" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="672.3" y="711.0" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">静的 + 時系列</text>
+<rect x="912.0" y="707.0" width="196.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.0"/>
+<text x="1010.0" y="738.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">GiftCategory</text>
+<text x="1010.0" y="755.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">返礼品カテゴリ</text>
+<rect x="697.0" y="822.0" width="246.0" height="76.0" rx="16" fill="none" stroke="#2AAC94" stroke-width="1.3"/>
+<rect x="702.0" y="827.0" width="236.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2.0"/>
+<text x="820.0" y="858.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">MunicipalityCategoryMetric</text>
+<text x="820.0" y="875.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">自治体 × カテゴリ 集計</text>
+<rect x="887.0" y="952.0" width="246.0" height="76.0" rx="16" fill="none" stroke="#2AAC94" stroke-width="1.3"/>
+<rect x="892.0" y="957.0" width="236.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2.0"/>
+<text x="1010.0" y="988.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">PrefectureCategoryMetric</text>
+<text x="1010.0" y="1005.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">都道府県 × カテゴリ 集計</text>
+<rect x="127.0" y="952.0" width="246.0" height="76.0" rx="16" fill="none" stroke="#2AAC94" stroke-width="1.3"/>
+<rect x="132.0" y="957.0" width="236.0" height="66.0" rx="12" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2.0"/>
+<text x="250.0" y="988.0" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="middle">PrefectureDonationFlow</text>
+<text x="250.0" y="1005.2" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="middle">居住地 → 受領地 フロー</text>
+<rect x="1156.0" y="140.0" width="388.0" height="118.0" rx="16" fill="#E7EFEC" stroke="#04352C" stroke-width="1.4"/>
+<rect x="1174.0" y="127.0" width="210.6" height="26.0" rx="13" fill="#E7EFEC" stroke="#04352C" stroke-width="1.4"/>
+<text x="1279.3" y="144.5" font-size="13.5" font-weight="bold" fill="#04352C" text-anchor="middle">規模 Scale (静的インスタンス)</text>
+<text x="1178.0" y="190.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">エンティティ型 Entity types</text>
+<text x="1178.0" y="209.0" font-size="16" font-weight="bold" fill="#04352C" text-anchor="start">10</text>
+<text x="1364.0" y="190.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">リレーションシップ Relationships</text>
+<text x="1364.0" y="209.0" font-size="16" font-weight="bold" fill="#04352C" text-anchor="start">15</text>
+<text x="1178.0" y="230.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">ノード Nodes</text>
+<text x="1178.0" y="249.0" font-size="16" font-weight="bold" fill="#04352C" text-anchor="start">109,592</text>
+<text x="1364.0" y="230.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">エッジ Edges</text>
+<text x="1364.0" y="249.0" font-size="16" font-weight="bold" fill="#04352C" text-anchor="start">297,303</text>
+<rect x="1156.0" y="292.0" width="388.0" height="358.0" rx="16" fill="#FFFFFF" stroke="#B3261E" stroke-width="1.4"/>
+<rect x="1174.0" y="279.0" width="221.9" height="26.0" rx="13" fill="#FFFFFF" stroke="#B3261E" stroke-width="1.4"/>
+<text x="1285.0" y="296.5" font-size="13.5" font-weight="bold" fill="#B3261E" text-anchor="middle">意味の境界 Semantic boundaries</text>
+<circle cx="1184.0" cy="328.0" r="4.5" fill="#B3261E" stroke="none" stroke-width="1.6"/>
+<text x="1196.0" y="332.0" font-size="11.6" font-weight="bold" fill="#B3261E" text-anchor="start">SupplierProvidesGift</text>
+<text x="1196.0" y="349.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">カタログ登録であり、配送・購買・売上配分ではない。</text>
+<circle cx="1184.0" cy="370.0" r="4.5" fill="#B3261E" stroke="none" stroke-width="1.6"/>
+<text x="1196.0" y="374.0" font-size="11.6" font-weight="bold" fill="#B3261E" text-anchor="start">DonationSelectedGift</text>
+<text x="1196.0" y="391.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">選択された返礼品であり、購入ではない。</text>
+<circle cx="1184.0" cy="412.0" r="4.5" fill="#B3261E" stroke="none" stroke-width="1.6"/>
+<text x="1196.0" y="416.0" font-size="11.6" font-weight="bold" fill="#B3261E" text-anchor="start">居住地 vs 受領地</text>
+<text x="1196.0" y="433.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Donor → Prefecture は居住地。受領地は Donation →</text>
+<text x="1196.0" y="448.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Municipality → Prefecture の別経路・別プロパティ。</text>
+<circle cx="1184.0" cy="469.0" r="4.5" fill="#B3261E" stroke="none" stroke-width="1.6"/>
+<text x="1196.0" y="473.0" font-size="11.6" font-weight="bold" fill="#B3261E" text-anchor="start">メトリック/フロー</text>
+<text x="1196.0" y="490.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">複合粒度の事前集計。基幹エンティティの金額と足し合わせない。</text>
+<circle cx="1184.0" cy="511.0" r="4.5" fill="#B3261E" stroke="none" stroke-width="1.6"/>
+<text x="1196.0" y="515.0" font-size="11.6" font-weight="bold" fill="#B3261E" text-anchor="start">Donor – Supplier</text>
+<text x="1196.0" y="532.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">直接の関係は存在しない。Supplier → Gift ← Donation ← Donor</text>
+<text x="1196.0" y="547.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">を辿る。</text>
+<rect x="1156.0" y="684.0" width="388.0" height="226.0" rx="16" fill="#FFFFFF" stroke="#5A6570" stroke-width="1.4"/>
+<rect x="1174.0" y="671.0" width="99.1" height="26.0" rx="13" fill="#FFFFFF" stroke="#5A6570" stroke-width="1.4"/>
+<text x="1223.5" y="688.5" font-size="13.5" font-weight="bold" fill="#5A6570" text-anchor="middle">凡例 Legend</text>
+<text x="1180.0" y="718.0" font-size="13" font-weight="bold" fill="#04352C" text-anchor="start"></text>
+<rect x="1182.0" y="725.0" width="48.0" height="22.0" rx="7" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2"/>
+<text x="1242.0" y="740.0" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">角丸 = 基幹エンティティ (7): マスタ 6 + トランザ</text>
+<text x="1242.0" y="756.2" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">クション 1</text>
+<rect x="1180.0" y="765.2" width="52.0" height="26.0" rx="9" fill="none" stroke="#2AAC94" stroke-width="1.2"/>
+<rect x="1183.0" y="768.2" width="46.0" height="20.0" rx="7" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2"/>
+<text x="1242.0" y="782.2" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">二重枠 = メトリック / フロー エンティティ (3)</text>
+<line x1="1182.0" y1="804.2" x2="1220.0" y2="804.2" stroke="#0E8A54" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="1220.0,799.2 1230.0,804.2 1220.0,809.2" fill="#0E8A54" stroke="none" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1242.0" y="808.2" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">実線矢印 = リレーションシップ (向き = 定義された</text>
+<text x="1242.0" y="824.4" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">方向)</text>
+<line x1="1182.0" y1="846.4" x2="1220.0" y2="846.4" stroke="#C2571A" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="8 5"/>
+<polygon points="1220.0,841.4 1230.0,846.4 1220.0,851.4" fill="#C2571A" stroke="none" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1242.0" y="850.4" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">橙の破線 = Eventhouse 時系列バインディング</text>
+<line x1="1182.0" y1="872.4" x2="1230.0" y2="872.4" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 5"/>
+<line x1="1200.0" y1="863.4" x2="1212.0" y2="881.4" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="1212.0" y1="863.4" x2="1200.0" y2="881.4" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round"/>
+<text x="1242.0" y="876.4" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">赤の破線 + ✕ = 存在しない関係</text>
+<line x1="56.0" y1="1056.0" x2="1544.0" y2="1056.0" stroke="#B7C0C7" stroke-width="1" stroke-linecap="round"/>
+<text x="56.0" y="1078.0" font-size="11.5" font-weight="normal" fill="#5A6570" text-anchor="start">Furusato Fabric IQ Ontology Workshop v2.7.0 — Ontology 全体像。逆方向の探索でも宣言された方向は保持される。数値の権威は SQL / KQL にあり、Ontology は関係と意味を担う。</text>
+</g>
+</svg>

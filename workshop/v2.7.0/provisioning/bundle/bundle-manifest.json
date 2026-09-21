@@ -1,0 +1,268 @@
+{
+  "bundleRelativePath": "workshop/v2.7.0/provisioning/bundle",
+  "contracts": {
+    "dataAgent": {
+      "adversarialIdTerminologyPresent": true,
+      "ambiguousMetricTerminologyPresent": true,
+      "codeInterpreterEnabled": false,
+      "coreRuntime": "Preview",
+      "draftEqualsPublished": true,
+      "enabledExperimentalFlagCount": 1,
+      "experimental": {
+        "codeInterpreterEnabled": false,
+        "enableExperimentalFeatures": true
+      },
+      "globalInstructionsBytes": 14586,
+      "globalInstructionsCharLimit": 15000,
+      "globalInstructionsChars": 14440,
+      "globalInstructionsSha256": "fc4efb234dd3a30b5fba4c0a58af04e836dc3d80f15dd9b051cd9c36f58e1384",
+      "kustoExampleDelivery": "The legacy Core bundle carries fewshots.json for lakehouse_tables only; its 3 KQL query shapes are encoded in kusto dataSourceInstructions. Unified profiles may also register native KQL examples.",
+      "kustoFewShotsSupported": false,
+      "kustoQueryShapeCount": 3,
+      "lakehouseFewShotsSha256": "4ea09b26ae207be7ffea69d43619a8244625710c8a6998d8c5cd594cb83ba03e",
+      "maxSourcesPerAnswer": 3,
+      "multiSourceRoutingSupported": true,
+      "portableStageTemplateSha256": "fc4efb234dd3a30b5fba4c0a58af04e836dc3d80f15dd9b051cd9c36f58e1384",
+      "terminologyRuleCount": 6,
+      "wealthWordingRulePresent": true
+    },
+    "pipeline": {
+      "activityCount": 1,
+      "automaticRun": false,
+      "destinationTable": "DonationEvents",
+      "fileNameExpression": "@if(empty(pipeline().parameters.Subject), pipeline().parameters.IncrementFileName, last(split(pipeline().parameters.Subject, '/')))",
+      "ingestionMapping": "DonationEvents_IncrementCsvMap",
+      "parameters": [
+        "IncrementFileName",
+        "Source",
+        "Subject",
+        "Type"
+      ],
+      "sourceFolder": "increment"
+    },
+    "reflex": {
+      "eventType": "Microsoft.Fabric.OneLake.FileCreated",
+      "externalNotificationsEnabled": false,
+      "initialState": "Off",
+      "ruleCount": 1,
+      "subjectBeginsWith": "/Files/increment",
+      "subjectEndsWith": ".csv",
+      "targetItemType": "Pipeline"
+    },
+    "aiReference": {
+      "enabledByDefault": false,
+      "contractSha256": "1833c380117b01c33a5395ce5d7ee5ce3c32e821d8602f035c1ebec7ae8057c4",
+      "sqlObjectCount": 6,
+      "kqlFunctionCount": 3,
+      "globalProfileRequired": true,
+      "acceptanceClaimed": false
+    },
+    "unifiedAgent": {
+      "enabledByDefault": false,
+      "contractSha256": "57f3e095ac878b99b4d8d13929d11331742e15eabc4099b8f8114ceaeb83655b",
+      "agentCount": 1,
+      "teachingOntologyShape": [
+        10,
+        72,
+        1,
+        15
+      ],
+      "codeInterpreterEnabled": true,
+      "acceptanceClaimed": false
+    }
+  },
+  "counts": {
+    "dataAgentDefinitionParts": 13,
+    "dataAgentSources": 3,
+    "files": 45,
+    "lakehouseFewShots": {
+      "draft": 3,
+      "published": 3
+    }
+  },
+  "files": [
+    {
+      "path": "ai-reference/contract.json",
+      "sha256": "1833c380117b01c33a5395ce5d7ee5ce3c32e821d8602f035c1ebec7ae8057c4"
+    },
+    {
+      "path": "ai-reference/global-instructions.txt",
+      "sha256": "e52c3acf2578f180ff8a78576e3fb1f9ddb9563dac92b9ca49acae6bfbcaefb4"
+    },
+    {
+      "path": "ai-reference/global-profile.json",
+      "sha256": "d0306eda8300fee972c44165c9b709741bb1a9677eff57d2f38c634b6fd134ad"
+    },
+    {
+      "path": "ai-reference/kql/AgentFileRunSummary.kql",
+      "sha256": "6fc7dbd4585bf173a5df3c40c2ac7f8292e08e8b49bbf0e80c3aceec7b58710c"
+    },
+    {
+      "path": "ai-reference/kql/AgentMunicipalityLeaders.kql",
+      "sha256": "15fb15307a776a1166054a1506a9203f6d4fe101c03a7bda8510333e4a8dbf02"
+    },
+    {
+      "path": "ai-reference/kql/AgentRawObservationTotals.kql",
+      "sha256": "7c20841873764424fe3970469a9e15e3dc128bf78f03b727f9a4f3bb2a2e2dd5"
+    },
+    {
+      "path": "ai-reference/modules/reference_agent.py",
+      "sha256": "69ea2c50266d073bee8d879bb0a6e303bc3254773ee7ca8b5a8a46466e4921b2"
+    },
+    {
+      "path": "ai-reference/modules/reference_kql.py",
+      "sha256": "6e83d0c3cc67f138a22f7b789fd8f7bafd5f6e0804e9f1a8a550b6a6d2dc6ae0"
+    },
+    {
+      "path": "ai-reference/modules/reference_models.py",
+      "sha256": "4c3f5515344299fd28016ff2ac5e6bcb1b40c0bd6579c26a2ccdc8f0acbed4dd"
+    },
+    {
+      "path": "ai-reference/modules/reference_ontology.py",
+      "sha256": "020faf06ecaf2e6d531627430400ea7d75a4df7468ce45c5db24fa393a2d6bf6"
+    },
+    {
+      "path": "ai-reference/modules/reference_sql.py",
+      "sha256": "a3b2e3c5b9088cde5dc7e6e23169f8850b580ad5950bbdf4a5df65614582b6f2"
+    },
+    {
+      "path": "ai-reference/ontology-template.json",
+      "sha256": "0e63ab94a4a12471ff5a1fbfc5afbf0d582b506b82ccc1888e8f63d6c3e3fb1a"
+    },
+    {
+      "path": "ai-reference/source-metadata.json",
+      "sha256": "49307fc20dc05be7a00ebf59500ac4c3488b57a51ab6e032766171438ebdcd57"
+    },
+    {
+      "path": "ai-reference/sql/001_create_schema.sql",
+      "sha256": "98999b83e8ea577d8b6e040101fcbb5d5ae5219502d2c8b963c6e9e537381385"
+    },
+    {
+      "path": "ai-reference/sql/010_municipality_static.sql",
+      "sha256": "ef4fa30b60f2aa082b3aa90cf960c4b033337b369f0ff3be36171d04352d6608"
+    },
+    {
+      "path": "ai-reference/sql/020_donation_attributes.sql",
+      "sha256": "12bda3c3553c5af92afaa3919d801ca1bcd6cd54c037d1b39f0f28440bc9cca2"
+    },
+    {
+      "path": "ai-reference/sql/030_gift_catalog_suppliers.sql",
+      "sha256": "13d6463f0b06f39fb4752ffe4747d2eec2f59b17cfa7062b8f54971ab2c3a2e0"
+    },
+    {
+      "path": "ai-reference/sql/040_municipality_by_id.sql",
+      "sha256": "921e2efd5e57028e2932ef89aabe3bfb54e67084a5837276fc55c82c7063ab39"
+    },
+    {
+      "path": "ai-reference/sql/050_donation_by_id.sql",
+      "sha256": "5d0889e16af02076c527daa2ae52606eeb0f74dc50f605261906cb3f87b7b699"
+    },
+    {
+      "path": "ai-reference/sql/060_donation_trace_by_id.sql",
+      "sha256": "dacf09eebdfef1b3ff676caad399b9de588069f9e483ec8f80ec3ac55e8284fe"
+    },
+    {
+      "path": "data-agent/.platform",
+      "sha256": "058f57b2de97adfed11688db677a6edc09f86fa12ee39124de6177a400d86235"
+    },
+    {
+      "path": "data-agent/Files/Config/data_agent.json",
+      "sha256": "ed96874dc5b13e1e0bc1396399a3a31f1ba209c3cbd4199c46e91c6ae62a9b3e"
+    },
+    {
+      "path": "data-agent/Files/Config/draft/kusto-{{name.kqlDatabase}}/datasource.json",
+      "sha256": "5fef5ac672fc6fc47bb16db0fab588c84764afba4dcac98e2b333abf58c3da1d"
+    },
+    {
+      "path": "data-agent/Files/Config/draft/lakehouse-tables-{{name.lakehouse}}/datasource.json",
+      "sha256": "96f7be02deda561a98966b9468de16c85202154e2f48331e5ac897a6655e0d99"
+    },
+    {
+      "path": "data-agent/Files/Config/draft/lakehouse-tables-{{name.lakehouse}}/fewshots.json",
+      "sha256": "b297681453f1eaceeb7a8d8491d74b91e1da80fef75b393333851c299cce46fd"
+    },
+    {
+      "path": "data-agent/Files/Config/draft/ontology-{{name.ontology}}/datasource.json",
+      "sha256": "3ccc8f6b13e30c2244982dee893bf09f3119d0b155854d975b39524ede058c73"
+    },
+    {
+      "path": "data-agent/Files/Config/draft/stage_config.json",
+      "sha256": "27c3a72ce61f9f73f2ffc58d119cdda1180f373b0071b999efadb536ec25bdb7"
+    },
+    {
+      "path": "data-agent/Files/Config/publish_info.json",
+      "sha256": "65047672ff2785a93fed4e782e49c6fef5e6fb927dbfdfac8214873767355d42"
+    },
+    {
+      "path": "data-agent/Files/Config/published/kusto-{{name.kqlDatabase}}/datasource.json",
+      "sha256": "5fef5ac672fc6fc47bb16db0fab588c84764afba4dcac98e2b333abf58c3da1d"
+    },
+    {
+      "path": "data-agent/Files/Config/published/lakehouse-tables-{{name.lakehouse}}/datasource.json",
+      "sha256": "96f7be02deda561a98966b9468de16c85202154e2f48331e5ac897a6655e0d99"
+    },
+    {
+      "path": "data-agent/Files/Config/published/lakehouse-tables-{{name.lakehouse}}/fewshots.json",
+      "sha256": "b297681453f1eaceeb7a8d8491d74b91e1da80fef75b393333851c299cce46fd"
+    },
+    {
+      "path": "data-agent/Files/Config/published/ontology-{{name.ontology}}/datasource.json",
+      "sha256": "3ccc8f6b13e30c2244982dee893bf09f3119d0b155854d975b39524ede058c73"
+    },
+    {
+      "path": "data-agent/Files/Config/published/stage_config.json",
+      "sha256": "27c3a72ce61f9f73f2ffc58d119cdda1180f373b0071b999efadb536ec25bdb7"
+    },
+    {
+      "path": "data-pipeline/.platform",
+      "sha256": "82a1b8d5eb5b88a0d440d65ef8cd00eff0af85fa3bb3e41cc34b7fd743ed607c"
+    },
+    {
+      "path": "data-pipeline/pipeline-content.json",
+      "sha256": "11771e143cc3578fc7aa18ce9cec5ae5f41700b89ae5c2db97a5362465ecc377"
+    },
+    {
+      "path": "reflex/.platform",
+      "sha256": "67162a7fc6732d783c94d7f2e94186e0cd060b9c8679f0798babf81b2611bd83"
+    },
+    {
+      "path": "reflex/ReflexEntities.json",
+      "sha256": "57d661d3d9a741104ed4bf32f029ddd525db88e5a967af5e9aa2ec983c1831ab"
+    },
+    {
+      "path": "unified-agent/contract.json",
+      "sha256": "57f3e095ac878b99b4d8d13929d11331742e15eabc4099b8f8114ceaeb83655b"
+    },
+    {
+      "path": "unified-agent/inputs/global-instructions.txt",
+      "sha256": "e0459607ed3bb4b075d8f0d59f0e70506c5cd17ec6c4e61d1520ca09e28dbe3d"
+    },
+    {
+      "path": "unified-agent/inputs/kusto-fewshots.json",
+      "sha256": "e33c7f09e3df31e4dde46cf8b1fd68c705e56daea0fb670e9784793a8d4de44c"
+    },
+    {
+      "path": "unified-agent/inputs/kusto-instructions.txt",
+      "sha256": "d3a0961ba1106bdf946481fdd294718788fffbbdd415895679d99f16f472964d"
+    },
+    {
+      "path": "unified-agent/inputs/lakehouse-instructions.txt",
+      "sha256": "b8313897d65fa3331ccd4e28f905b58ec380e622d56b0d7cdb8ee189dbcec56e"
+    },
+    {
+      "path": "unified-agent/inputs/manifest.json",
+      "sha256": "a546984c2ee4a2bf817ce5db909816114c3b812b7ce720fddfc823082053af8d"
+    },
+    {
+      "path": "unified-agent/modules/unified_agent.py",
+      "sha256": "6a11fc67bbc0f33feb669ede907d53f0e2b2c63c67e77171e81c3a83823dfbac"
+    },
+    {
+      "path": "unified-agent/profile.json",
+      "sha256": "20f00aaec612aa4c3f336f35e8942503edf18cac158a0453f9900a433a32c88a"
+    }
+  ],
+  "hashAlgorithm": "SHA-256 of raw file bytes; semantic hashes use canonical compact JSON",
+  "packageVersion": "2.7.0",
+  "schemaVersion": "1.0"
+}

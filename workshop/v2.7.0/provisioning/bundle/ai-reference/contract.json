@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "furusato-ai-reference-runtime/v1",
+  "enabledByDefault": false,
+  "globalProfileRequired": true,
+  "agentNameTemplate": "DA_Furusato_AIReference_<PID>",
+  "agentOntologyNameTemplate": "ONT_Furusato_AIPath_<PID>",
+  "sqlDdlOrder": [
+    "001_create_schema.sql",
+    "010_municipality_static.sql",
+    "020_donation_attributes.sql",
+    "030_gift_catalog_suppliers.sql",
+    "040_municipality_by_id.sql",
+    "050_donation_by_id.sql",
+    "060_donation_trace_by_id.sql"
+  ],
+  "sqlObjects": {
+    "MunicipalityStatic": "VIEW",
+    "DonationAttributes": "VIEW",
+    "GiftCatalogSuppliers": "VIEW",
+    "MunicipalityById": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+    "DonationById": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+    "DonationTraceById": "SQL_INLINE_TABLE_VALUED_FUNCTION"
+  },
+  "selectedSqlObjects": {
+    "MunicipalityStatic": "View",
+    "MunicipalityById": "Function",
+    "DonationTraceById": "Function"
+  },
+  "kqlFunctions": [
+    "AgentRawObservationTotals",
+    "AgentFileRunSummary",
+    "AgentMunicipalityLeaders"
+  ],
+  "kqlBaseManagementCommandCount": 5,
+  "kqlReferenceManagementCommandCount": 8,
+  "modules": [
+    "reference_models",
+    "reference_sql",
+    "reference_kql",
+    "reference_ontology",
+    "reference_agent"
+  ],
+  "nativeSchemaProvenance": "SQL sys catalog and KQL .show function / getschema are separate from Agent metadata. Empty serialized SQL data types remain empty. KQL functions are discovered Available Function leaves with hasSubElements=false.",
+  "files": {
+    "ai-reference/kql/AgentFileRunSummary.kql": "6fc7dbd4585bf173a5df3c40c2ac7f8292e08e8b49bbf0e80c3aceec7b58710c",
+    "ai-reference/kql/AgentMunicipalityLeaders.kql": "15fb15307a776a1166054a1506a9203f6d4fe101c03a7bda8510333e4a8dbf02",
+    "ai-reference/kql/AgentRawObservationTotals.kql": "7c20841873764424fe3970469a9e15e3dc128bf78f03b727f9a4f3bb2a2e2dd5",
+    "ai-reference/modules/reference_agent.py": "69ea2c50266d073bee8d879bb0a6e303bc3254773ee7ca8b5a8a46466e4921b2",
+    "ai-reference/modules/reference_kql.py": "6e83d0c3cc67f138a22f7b789fd8f7bafd5f6e0804e9f1a8a550b6a6d2dc6ae0",
+    "ai-reference/modules/reference_models.py": "4c3f5515344299fd28016ff2ac5e6bcb1b40c0bd6579c26a2ccdc8f0acbed4dd",
+    "ai-reference/modules/reference_ontology.py": "020faf06ecaf2e6d531627430400ea7d75a4df7468ce45c5db24fa393a2d6bf6",
+    "ai-reference/modules/reference_sql.py": "a3b2e3c5b9088cde5dc7e6e23169f8850b580ad5950bbdf4a5df65614582b6f2",
+    "ai-reference/ontology-template.json": "0e63ab94a4a12471ff5a1fbfc5afbf0d582b506b82ccc1888e8f63d6c3e3fb1a",
+    "ai-reference/source-metadata.json": "49307fc20dc05be7a00ebf59500ac4c3488b57a51ab6e032766171438ebdcd57",
+    "ai-reference/sql/001_create_schema.sql": "98999b83e8ea577d8b6e040101fcbb5d5ae5219502d2c8b963c6e9e537381385",
+    "ai-reference/sql/010_municipality_static.sql": "ef4fa30b60f2aa082b3aa90cf960c4b033337b369f0ff3be36171d04352d6608",
+    "ai-reference/sql/020_donation_attributes.sql": "12bda3c3553c5af92afaa3919d801ca1bcd6cd54c037d1b39f0f28440bc9cca2",
+    "ai-reference/sql/030_gift_catalog_suppliers.sql": "13d6463f0b06f39fb4752ffe4747d2eec2f59b17cfa7062b8f54971ab2c3a2e0",
+    "ai-reference/sql/040_municipality_by_id.sql": "921e2efd5e57028e2932ef89aabe3bfb54e67084a5837276fc55c82c7063ab39",
+    "ai-reference/sql/050_donation_by_id.sql": "5d0889e16af02076c527daa2ae52606eeb0f74dc50f605261906cb3f87b7b699",
+    "ai-reference/sql/060_donation_trace_by_id.sql": "dacf09eebdfef1b3ff676caad399b9de588069f9e483ec8f80ec3ac55e8284fe"
+  }
+}

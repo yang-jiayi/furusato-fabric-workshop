@@ -1,0 +1,41 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/variableLibrary/definition/variables/1.0.0/schema.json",
+  "variables": [
+    {
+      "name": "WorkshopVersion",
+      "note": "Workshop package version. Keep this aligned with the imported assets.",
+      "type": "String",
+      "value": "2.7.0"
+    },
+    {
+      "name": "ParticipantId",
+      "note": "Three-digit participant identifier. Override in the active value set.",
+      "type": "String",
+      "value": "001"
+    },
+    {
+      "name": "EnvironmentName",
+      "note": "Logical environment label. This is not a Fabric workspace identifier.",
+      "type": "String",
+      "value": "development"
+    },
+    {
+      "name": "ExpectedWorkspaceName",
+      "note": "Optional fail-closed workspace display-name check for interactive notebooks.",
+      "type": "String",
+      "value": ""
+    },
+    {
+      "name": "IncrementFileName",
+      "note": "Diagnostics and fallback only. The participant flow uses the OneLake FileCreated trigger, which supplies Subject; this value is read only by a manual Pipeline run outside that flow.",
+      "type": "String",
+      "value": "donation_events_001.csv"
+    },
+    {
+      "name": "StrictSyntheticContract",
+      "note": "Require the packaged deterministic row-count and duplicate-event contract.",
+      "type": "Boolean",
+      "value": true
+    }
+  ]
+}

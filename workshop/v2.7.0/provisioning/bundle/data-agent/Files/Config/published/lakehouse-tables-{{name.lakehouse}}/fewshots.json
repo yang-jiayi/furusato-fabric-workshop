@@ -1,0 +1,20 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/fewShots/1.0.0/schema.json",
+  "fewShots": [
+    {
+      "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a11",
+      "question": "福岡県について、受入（県内の自治体が受け取った寄付）と在住（県内在住の寄付者が行った寄付）の件数・金額・金額ランクを、両方の読み方に分けて示してください。",
+      "query": "SELECT\n    p.PrefectureId,\n    p.PrefectureName,\n    p.PrefReceivedStaticCount,\n    p.PrefReceivedTotalYen,\n    p.PrefReceivedAmountRank,\n    p.PrefResidentStaticCount,\n    p.PrefResidentTotalYen,\n    p.PrefResidentAmountRank\nFROM dbo.ot_prefecture AS p\nWHERE p.PrefectureName = N'福岡県';"
+    },
+    {
+      "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a12",
+      "question": "2025年12月の寄付を支払い方法ごとに集計してください。",
+      "query": "SELECT\n    d.DonationYearMonthJst,\n    d.DonationPaymentMethod,\n    COUNT_BIG(*) AS DonationCount,\n    SUM(d.DonationAmountYen) AS TotalDonationAmountYen\nFROM dbo.ot_donation AS d\nWHERE d.DonationYearMonthJst = N'2025-12'\nGROUP BY d.DonationYearMonthJst, d.DonationPaymentMethod\nORDER BY TotalDonationAmountYen DESC;"
+    },
+    {
+      "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a13",
+      "question": "新潟県の返礼品カテゴリ別の寄付件数と寄付金額を、カテゴリの安定 ID と県内金額ランク付きで、金額の多い順に示してください。",
+      "query": "SELECT\n    m.PrefCategoryMetricId,\n    m.PrefectureId,\n    p.PrefectureName,\n    m.CategoryId,\n    c.CategoryName,\n    m.PrefCategoryStaticCount,\n    m.PrefCategoryTotalYen,\n    m.PrefCategoryAmountRank\nFROM dbo.ot_pref_category_metric AS m\nINNER JOIN dbo.ot_prefecture AS p\n    ON m.PrefectureId = p.PrefectureId\nINNER JOIN dbo.ot_gift_category AS c\n    ON m.CategoryId = c.CategoryId\nWHERE p.PrefectureName = N'新潟県'\nORDER BY m.PrefCategoryTotalYen DESC;"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="750" viewBox="0 0 1600 750" role="img" aria-labelledby="ol-title ol-desc" preserveAspectRatio="xMidYMid meet">
+<title id="ol-title">Ontology 変更を提案する生成 AI を評価するときのライフサイクル (v2.7.0)</title>
+<desc id="ol-desc">Ontology の変更を提案する生成 AI を評価するための一般的なライフサイクル図。左から右へ 5 つの工程が並ぶ。工程 1 は証拠の発見とスコープ確定で、業務の問いと利用できるソースを洗い出し、対象範囲と粒度を人の言葉で固定し、既存の意味の境界を読み直す。出口条件はスコープと粒度が文章で書かれていること。工程 2 はドメイン設計と意味の境界で、エンティティ・関係・キーを人が決め、安定した識別子と明示的な外部キーを選び、生成された提案を素案として扱う。出口条件は意味の境界の所有者が人であること。工程 3 は構造とグラウンディングの検証で、キー・方向・件数を実データで照合し、どのソースに基づく回答かを明示し、セマンティックモデルの参照とオントロジーの束縛を区別する。出口条件は件数と方向が期待値と一致すること。工程 4 は読み取り専用プレビューと確認で、変更案を読み取り専用で提示させ、承認するまで既存の定義を変えず、未適用の下書きが残る前提を置かない。出口条件は設計者以外の人が内容を読んでいること。工程 5 は明示的な書き込みゲートで適用し、人が明示的に許可したときだけ適用し、適用後に件数と契約を再検証し、既存の識別子を保持して差分適用を選ぶ。出口条件は適用前後の状態が記録されていること。下部の帯は人による確認が自動化できないことを示し、工程 4 から工程 2 へ戻る赤い破線の差し戻し経路が描かれている。さらに下部には、本ワークショップでの位置づけとして Core の手順が第 8 章から第 9 章の手動作成のままであること、およびここで固定しない事項として画面名・上限値・保持期間・機能別の準拠範囲・課金条件を最新の公式ドキュメントで確認することが示されている。</desc>
+<defs>
+<marker id="ar-forward" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#04352C"/></marker>
+<marker id="ar-back" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#C2571A"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="750" fill="#FFFFFF"/>
+<g font-family="Yu Gothic UI, Meiryo, Segoe UI, sans-serif" fill="#12211D" stroke-linejoin="round">
+<rect x="56" y="20" width="7" height="46" rx="3.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="76" y="54" font-size="27" font-weight="bold" fill="#04352C" text-anchor="start">Ontology 変更を提案する生成 AI を評価するときのライフサイクル</text>
+<text x="76" y="81" font-size="13.5" font-weight="normal" fill="#5A6570" text-anchor="start">Generic evaluation lifecycle for an assistant that proposes ontology changes — reference only, not a workshop exercise</text>
+<rect x="1483.4" y="24" width="60.6" height="26" rx="13" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.2"/>
+<text x="1513.7" y="42" font-size="12.5" font-weight="bold" fill="#0E8A54" text-anchor="middle">v2.7.0</text>
+<rect x="56" y="120" width="272" height="288" rx="16" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.4"/>
+<rect x="56" y="120" width="272" height="66" rx="16" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<rect x="56" y="160" width="272" height="26" rx="0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<circle cx="86" cy="153" r="15" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="86" y="159" font-size="15" font-weight="bold" fill="#0E8A54" text-anchor="middle">1</text>
+<text x="110" y="147" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">PHASE 1</text>
+<text x="110" y="170" font-size="12.4" font-weight="bold" fill="#FFFFFF" text-anchor="start">証拠の発見とスコープ確定</text>
+<circle cx="78" cy="212" r="4" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="90" y="216" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">業務の問いと利用できる</text>
+<text x="90" y="231" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">ソースを先に洗い出す</text>
+<circle cx="78" cy="253" r="4" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="90" y="257" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">対象範囲と粒度を人の</text>
+<text x="90" y="272" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">言葉で固定する</text>
+<circle cx="78" cy="294" r="4" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="90" y="298" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">既存の意味の境界を</text>
+<text x="90" y="313" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">先に読み直す</text>
+<rect x="72" y="328" width="240" height="64" rx="10" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.4"/>
+<text x="86" y="350" font-size="10.8" font-weight="bold" fill="#0E8A54" text-anchor="start">✓ 人が確認すること</text>
+<text x="86" y="368" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">スコープと粒度が</text>
+<text x="86" y="382" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">文章で書かれている</text>
+<line x1="331" y1="264" x2="357" y2="264" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#ar-forward)"/>
+<rect x="360" y="120" width="272" height="288" rx="16" fill="#FFFFFF" stroke="#2E5FA3" stroke-width="2.4"/>
+<rect x="360" y="120" width="272" height="66" rx="16" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<rect x="360" y="160" width="272" height="26" rx="0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<circle cx="390" cy="153" r="15" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="390" y="159" font-size="15" font-weight="bold" fill="#2E5FA3" text-anchor="middle">2</text>
+<text x="414" y="147" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">PHASE 2</text>
+<text x="414" y="170" font-size="12.4" font-weight="bold" fill="#FFFFFF" text-anchor="start">ドメイン設計と意味の境界</text>
+<circle cx="382" cy="212" r="4" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="394" y="216" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">エンティティ・関係・キーは</text>
+<text x="394" y="231" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">人が決める</text>
+<circle cx="382" cy="253" r="4" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="394" y="257" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">安定した識別子と明示的な</text>
+<text x="394" y="272" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">外部キーを選ぶ</text>
+<circle cx="382" cy="294" r="4" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="394" y="298" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">生成された提案は素案</text>
+<text x="394" y="313" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">として扱う</text>
+<rect x="376" y="328" width="240" height="64" rx="10" fill="#E9EFF8" stroke="#2E5FA3" stroke-width="1.4"/>
+<text x="390" y="350" font-size="10.8" font-weight="bold" fill="#2E5FA3" text-anchor="start">✓ 人が確認すること</text>
+<text x="390" y="368" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">意味の境界の所有者が</text>
+<text x="390" y="382" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">人であること</text>
+<line x1="635" y1="264" x2="661" y2="264" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#ar-forward)"/>
+<rect x="664" y="120" width="272" height="288" rx="16" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2.4"/>
+<rect x="664" y="120" width="272" height="66" rx="16" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<rect x="664" y="160" width="272" height="26" rx="0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<circle cx="694" cy="153" r="15" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="694" y="159" font-size="15" font-weight="bold" fill="#2AAC94" text-anchor="middle">3</text>
+<text x="718" y="147" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">PHASE 3</text>
+<text x="718" y="170" font-size="12.4" font-weight="bold" fill="#FFFFFF" text-anchor="start">構造とグラウンディングの検証</text>
+<circle cx="686" cy="212" r="4" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="698" y="216" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">キー・方向・件数を実データ</text>
+<text x="698" y="231" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">で照合する</text>
+<circle cx="686" cy="253" r="4" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="698" y="257" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">どのソースに基づく回答か</text>
+<text x="698" y="272" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">を明示する</text>
+<circle cx="686" cy="294" r="4" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="698" y="298" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">セマンティックモデルの参照と</text>
+<text x="698" y="313" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">オントロジーの束縛は別物</text>
+<rect x="680" y="328" width="240" height="64" rx="10" fill="#E6F6F3" stroke="#2AAC94" stroke-width="1.4"/>
+<text x="694" y="350" font-size="10.8" font-weight="bold" fill="#2AAC94" text-anchor="start">✓ 人が確認すること</text>
+<text x="694" y="368" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">件数と方向が期待値と</text>
+<text x="694" y="382" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">一致している</text>
+<line x1="939" y1="264" x2="965" y2="264" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#ar-forward)"/>
+<rect x="968" y="120" width="272" height="288" rx="16" fill="#FFFFFF" stroke="#C2571A" stroke-width="2.4"/>
+<rect x="968" y="120" width="272" height="66" rx="16" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<rect x="968" y="160" width="272" height="26" rx="0" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<circle cx="998" cy="153" r="15" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="998" y="159" font-size="15" font-weight="bold" fill="#C2571A" text-anchor="middle">4</text>
+<text x="1022" y="147" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">PHASE 4</text>
+<text x="1022" y="170" font-size="12.4" font-weight="bold" fill="#FFFFFF" text-anchor="start">読み取り専用プレビューと確認</text>
+<circle cx="990" cy="212" r="4" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="1002" y="216" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">変更案は読み取り専用で</text>
+<text x="1002" y="231" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">提示させる</text>
+<circle cx="990" cy="253" r="4" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="1002" y="257" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">承認するまで既存の定義は</text>
+<text x="1002" y="272" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">変えない</text>
+<circle cx="990" cy="294" r="4" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="1002" y="298" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">未適用の下書きが残る前提</text>
+<text x="1002" y="313" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">を置かない</text>
+<rect x="984" y="328" width="240" height="64" rx="10" fill="#FBEEE6" stroke="#C2571A" stroke-width="1.4"/>
+<text x="998" y="350" font-size="10.8" font-weight="bold" fill="#C2571A" text-anchor="start">✓ 人が確認すること</text>
+<text x="998" y="368" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">設計者以外の人が内容を</text>
+<text x="998" y="382" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">読んでいる</text>
+<line x1="1243" y1="264" x2="1269" y2="264" stroke="#04352C" stroke-width="3.0" stroke-linecap="round" marker-end="url(#ar-forward)"/>
+<rect x="1272" y="120" width="272" height="288" rx="16" fill="#FFFFFF" stroke="#04352C" stroke-width="2.4"/>
+<rect x="1272" y="120" width="272" height="66" rx="16" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<rect x="1272" y="160" width="272" height="26" rx="0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<circle cx="1302" cy="153" r="15" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="1302" y="159" font-size="15" font-weight="bold" fill="#04352C" text-anchor="middle">5</text>
+<text x="1326" y="147" font-size="10.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">PHASE 5</text>
+<text x="1326" y="170" font-size="12.4" font-weight="bold" fill="#FFFFFF" text-anchor="start">明示的な書き込みゲートで適用</text>
+<circle cx="1294" cy="212" r="4" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1306" y="216" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">適用は人が明示的に許可</text>
+<text x="1306" y="231" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">したときだけ</text>
+<circle cx="1294" cy="253" r="4" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1306" y="257" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">適用後に件数と契約を</text>
+<text x="1306" y="272" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">再検証する</text>
+<circle cx="1294" cy="294" r="4" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1306" y="298" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">既存の識別子を保持し差分</text>
+<text x="1306" y="313" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">適用を選ぶ</text>
+<rect x="1288" y="328" width="240" height="64" rx="10" fill="#E7EFEC" stroke="#04352C" stroke-width="1.4"/>
+<text x="1302" y="350" font-size="10.8" font-weight="bold" fill="#04352C" text-anchor="start">✓ 人が確認すること</text>
+<text x="1302" y="368" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">適用前後の状態が記録</text>
+<text x="1302" y="382" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">されている</text>
+<rect x="56" y="436" width="1488" height="96" rx="16" fill="#FBEEE6" stroke="#C2571A" stroke-width="1.8" stroke-dasharray="9 5"/>
+<text x="78" y="462" font-size="13.4" font-weight="bold" fill="#C2571A" text-anchor="start">人による確認は自動化できない  Human confirmation is not automated</text>
+<line x1="1104" y1="492" x2="496" y2="492" stroke="#C2571A" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 4" marker-end="url(#ar-back)"/>
+<rect x="680" y="484" width="240" height="16" rx="6" fill="#FBEEE6" stroke="none" stroke-width="1.6"/>
+<text x="800" y="496" font-size="10.8" font-weight="bold" fill="#C2571A" text-anchor="middle">差し戻し — 設計と境界の見直しへ</text>
+<text x="78" y="524" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">適用より前の段階で人が読み、承認しないかぎり書き込みは起きない。プレビューの結果をそれだけで根拠にしない。</text>
+<rect x="56" y="556" width="880" height="104" rx="14" fill="#FFFFFF" stroke="#5A6570" stroke-width="1.6"/>
+<text x="78" y="582" font-size="12.4" font-weight="bold" fill="#04352C" text-anchor="start">本ワークショップでの位置づけ  Scope in this workshop</text>
+<text x="78" y="604" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">Core の手順は第 8〜9 章の手動作成のままです。この図は評価の観点を示す読み物であり、</text>
+<text x="78" y="622" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">実施対象ではありません。Core の判定・数値契約・第 17 章の結果には影響しません。</text>
+<rect x="968" y="556" width="576" height="104" rx="14" fill="#F4F7F8" stroke="#5A6570" stroke-width="1.6"/>
+<text x="990" y="582" font-size="12.4" font-weight="bold" fill="#04352C" text-anchor="start">ここで固定しない事項  Claims not pinned here</text>
+<text x="990" y="604" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">画面名・上限値・保持期間・機能別の準拠範囲・</text>
+<text x="990" y="622" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">課金条件は変わりうるため、本書では数値を書かず、</text>
+<text x="990" y="640" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">最新の公式ドキュメントで確認します。</text>
+<line x1="56" y1="690" x2="1544" y2="690" stroke="#B7C0C7" stroke-width="1" stroke-linecap="round"/>
+<text x="56" y="714" font-size="11.5" font-weight="normal" fill="#5A6570" text-anchor="start">Furusato Fabric IQ Ontology Workshop v2.7.0 — 実線は前進、破線は人による差し戻し。図中の語はすべて一般的な工程名であり、特定製品の画面名ではありません。</text>
+</g>
+</svg>

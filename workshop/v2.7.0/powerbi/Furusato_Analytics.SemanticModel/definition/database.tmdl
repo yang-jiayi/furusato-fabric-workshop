@@ -1,0 +1,4 @@
+/// Furusato Fabric Workshop optional Direct Lake semantic model over the gold Lakehouse schema.
+database SM_Furusato_Analytics
+	compatibilityLevel: 1702
+	language: 1041

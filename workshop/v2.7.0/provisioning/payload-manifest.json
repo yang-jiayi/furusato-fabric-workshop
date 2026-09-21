@@ -1,0 +1,36 @@
+{
+  "assetHashDerivation": {
+    "bundleAssets": "SHA-256 of the canonical compact JSON [{path,sha256-of-file-text}] sorted by bundle-relative POSIX path (dataAgent, pipeline, reflex)",
+    "fileAssets": "SHA-256 of the committed file bytes (bundleManifest, datasetManifest, notebook01, ontologyTemplate)",
+    "itemSpecs": "lakehouseSpec and eventhouseSpec are stable creation-spec digests for unchanged simple items",
+    "kqlSchema": "SHA-256 of the canonical compact JSON list of extracted management commands",
+    "runtimeHashes": "SHA-256 of the Notebook 04 cell source plus one trailing newline"
+  },
+  "assetHashes": {
+    "aiReference": "6465bd67c54c7b273e41c3cdd75975b93f4cc3fd373779a2db7680901062e8da",
+    "unifiedAgent": "723bbb71a74657279fd5f6edfafccd1f232f90fac502e365fb1861b799bdc868",
+    "bundleManifest": "0a89d5bfbc43662f6d2d8c438870d2e4067b8ab21b97e2e46cadacc6cced9877",
+    "dataAgent": "912e2b5d02040d25042edec5f5b86ba47e89fd7ec1af2003ea1e1c9f4daa8406",
+    "datasetManifest": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+    "eventhouseSpec": "f8cd5867e0da0ddf77afc8c51fd7d216552735f40ee5508108b20476968f23a7",
+    "kqlSchema": "2473ffd2177fa90bffb4c4f8f3fb5b53038c9b1a367458bbde706bf3cb898c03",
+    "lakehouseSpec": "da82a0f8b2f0f4ba691c4d2b276b1595df693cddb8293001c3e88008e0cb79c2",
+    "notebook01": "968b78ca0664b353ccb1639a9b4711b42dbe15abaad24423915c217f2ef28fa6",
+    "ontologyTemplate": "3848f430eb39a6024341d298631baf4d2e63030b5fd03a37b9263bf3696ff319",
+    "pipeline": "ca00316c3bc9952e37ec36132b904e459916650cea9d9ccf08c68398c538e2d3",
+    "reflex": "adee2a0402d2153a2783427595c3602ad38ffb4d446bb31cdea3e9c76dda0653"
+  },
+  "bundleFiles": 46,
+  "datasetFiles": 11,
+  "embeddedGzipBase64Bytes": 3141968,
+  "kqlManagementCommands": 5,
+  "notebook": "workshop/v2.7.0/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
+  "ontologyDefinitionParts": 54,
+  "payloadBytes": 3998460,
+  "payloadSha256": "71717e94877900d665d6a40fd375909907801a3862034c6b3d57c865b2ad0a6e",
+  "runtimeHashes": {
+    "ontologyCreatorCore": "5f0f91f906ae742b7392b0fa3968856179d8184e51a29c1b0a5bea2239f3ddce",
+    "provisionerCore": "2a7dce51cd59228ba1198b1508771c47c6bd62dceb9a0c4bfa29596144aa3718"
+  },
+  "schemaVersion": "furusato-workshop-provisioner-payload/v1"
+}

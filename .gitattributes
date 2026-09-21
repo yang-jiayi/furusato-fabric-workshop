@@ -1,0 +1,31 @@
+# The seed CSVs and the notebook must stay byte-identical to the published
+# SHA-256 values, so Git must never rewrite their line endings.
+* text=auto
+
+*.csv   -text
+*.py    -text
+*.kql   -text
+*.sql   -text
+*.json  -text
+*.txt   -text
+*.md    -text
+*.html  -text
+*.svg   -text
+*.css   -text
+*.js    -text
+*.ps1   -text
+*.psm1  -text
+*.ipynb -text
+*.tmdl  -text
+*.platform -text
+*.pbip  -text
+*.pbir  -text
+*.pbism -text
+*.ttl   -text
+*.rdf   -text
+*.owl   -text
+
+*.docx  binary
+*.xlsx  binary
+*.pptx  binary
+*.png   binary

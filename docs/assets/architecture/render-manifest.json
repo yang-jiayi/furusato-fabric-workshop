@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "workshopBaseline": "32d296ebd673df4f180ac56670542cc0eaf350db",
+  "iconManifest": "icon-manifest.json",
+  "renderer": "Microsoft Edge / Chromium via Playwright; device scale factor 1",
+  "dimensions": {
+    "width": 2560,
+    "height": 1440
+  },
+  "source": "../../architecture/architecture.js",
+  "pngInput": "matching self-contained architecture SVG",
+  "fontStack": [
+    "Segoe UI",
+    "Yu Gothic UI",
+    "Meiryo",
+    "sans-serif"
+  ],
+  "fontNote": "PNGs freeze the validated rendering. Live SVG/HTML uses locally installed fonts.",
+  "artifacts": [
+    {
+      "file": "furusato-architecture.ja.svg",
+      "sha256": "4b71337f92d35c945d0b513e4c50662a6ba7cd7ffcc6be7bd195befd58815960",
+      "bytes": 79454
+    },
+    {
+      "file": "furusato-architecture.ja.png",
+      "sha256": "7917085fa7b5102293e3f47546e49653a82e4a63c32fffbda554f2a565bf4084",
+      "bytes": 479877
+    },
+    {
+      "file": "furusato-architecture.en.svg",
+      "sha256": "0ef534246f3d47ccb7c208918b2884e7cc592289dbf5c1ca1c088bbd5b906c3c",
+      "bytes": 79248
+    },
+    {
+      "file": "furusato-architecture.en.png",
+      "sha256": "d6a7edebe2ea3229d3400a853a1b0223542b099cee8e5df4295612704db6f3b7",
+      "bytes": 432623
+    }
+  ]
+}

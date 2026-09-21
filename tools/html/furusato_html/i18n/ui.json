@@ -1,0 +1,366 @@
+{
+  "app.title": {
+    "ja": "Fabric IQ Ontology ハンズオン（ふるさと納税）",
+    "en": "Fabric IQ Ontology hands-on (Furusato hometown-tax donations)"
+  },
+  "app.subtitle": {
+    "ja": "参加者用ハンズオンガイド（日本語 / English）",
+    "en": "Participant hands-on guide (Japanese / English)"
+  },
+  "app.brand": {
+    "ja": "Microsoft Fabric IQ Workshop FY27",
+    "en": "Microsoft Fabric IQ Workshop FY27"
+  },
+  "app.skip": {
+    "ja": "本文へスキップ",
+    "en": "Skip to main content"
+  },
+  "app.progress.label": {
+    "ja": "読み進み状況",
+    "en": "Reading progress"
+  },
+  "nav.label": {
+    "ja": "目次",
+    "en": "Table of contents"
+  },
+  "nav.toggle.open": {
+    "ja": "目次を開く",
+    "en": "Open the table of contents"
+  },
+  "nav.toggle.close": {
+    "ja": "目次を閉じる",
+    "en": "Close the table of contents"
+  },
+  "nav.current": {
+    "ja": "現在の章",
+    "en": "Current section"
+  },
+  "nav.jump": {
+    "ja": "この章へ移動",
+    "en": "Go to this section"
+  },
+  "lang.label": {
+    "ja": "表示言語",
+    "en": "Display language"
+  },
+  "lang.ja": {
+    "ja": "日本語",
+    "en": "Japanese"
+  },
+  "lang.en": {
+    "ja": "English",
+    "en": "English"
+  },
+  "lang.switched.ja": {
+    "ja": "表示言語を日本語に切り替えました。",
+    "en": "Display language switched to Japanese."
+  },
+  "lang.switched.en": {
+    "ja": "表示言語を英語に切り替えました。",
+    "en": "Display language switched to English."
+  },
+  "search.label": {
+    "ja": "本文を検索",
+    "en": "Search the guide"
+  },
+  "search.placeholder": {
+    "ja": "本文を検索（Ctrl + K）",
+    "en": "Search the guide (Ctrl + K)"
+  },
+  "search.clear": {
+    "ja": "検索条件をクリア",
+    "en": "Clear the search"
+  },
+  "search.results": {
+    "ja": "検索結果",
+    "en": "Search results"
+  },
+  "search.hint": {
+    "ja": "↑ ↓ で結果を移動し、Enter で開きます。Esc で閉じます。",
+    "en": "Use the up and down arrows to move through results, Enter to open, Esc to close."
+  },
+  "search.none": {
+    "ja": "一致する項目はありません。",
+    "en": "No matching content."
+  },
+  "search.count.suffix": {
+    "ja": "件の一致",
+    "en": "matches"
+  },
+  "search.short": {
+    "ja": "2 文字以上を入力してください。",
+    "en": "Type at least two characters."
+  },
+  "checklist.label": {
+    "ja": "進捗チェックリスト",
+    "en": "Progress checklist"
+  },
+  "checklist.step": {
+    "ja": "この手順を完了にする",
+    "en": "Mark this step complete"
+  },
+  "checklist.done": {
+    "ja": "完了",
+    "en": "Done"
+  },
+  "checklist.summary": {
+    "ja": "完了した手順",
+    "en": "Steps completed"
+  },
+  "checklist.reset": {
+    "ja": "進捗をリセット",
+    "en": "Reset progress"
+  },
+  "checklist.reset.confirm": {
+    "ja": "保存されている進捗をすべて削除します。よろしいですか。",
+    "en": "This clears every saved step. Continue?"
+  },
+  "checklist.reset.done": {
+    "ja": "進捗をリセットしました。",
+    "en": "Progress has been reset."
+  },
+  "checklist.saved": {
+    "ja": "進捗はこのブラウザーにのみ保存されます。",
+    "en": "Progress is stored only in this browser."
+  },
+  "checklist.announce.on": {
+    "ja": "手順を完了にしました。",
+    "en": "Step marked complete."
+  },
+  "checklist.announce.off": {
+    "ja": "手順を未完了に戻しました。",
+    "en": "Step marked not complete."
+  },
+  "copy.label": {
+    "ja": "コピー",
+    "en": "Copy"
+  },
+  "copy.aria": {
+    "ja": "このブロックをクリップボードにコピー",
+    "en": "Copy this block to the clipboard"
+  },
+  "copy.done": {
+    "ja": "コピーしました",
+    "en": "Copied"
+  },
+  "copy.failed": {
+    "ja": "コピーできませんでした",
+    "en": "Copy failed"
+  },
+  "print.label": {
+    "ja": "印刷",
+    "en": "Print"
+  },
+  "print.aria": {
+    "ja": "表示中の言語だけを印刷する",
+    "en": "Print the active language only"
+  },
+  "top.label": {
+    "ja": "先頭へ戻る",
+    "en": "Back to top"
+  },
+  "details.expand": {
+    "ja": "すべて展開",
+    "en": "Expand all"
+  },
+  "details.collapse": {
+    "ja": "すべて折りたたむ",
+    "en": "Collapse all"
+  },
+  "details.optional": {
+    "ja": "Optional の詳細",
+    "en": "Optional detail"
+  },
+  "details.show": {
+    "ja": "表示する",
+    "en": "Show"
+  },
+  "details.hide": {
+    "ja": "隠す",
+    "en": "Hide"
+  },
+  "lightbox.open": {
+    "ja": "画像を拡大表示",
+    "en": "Enlarge the image"
+  },
+  "lightbox.label": {
+    "ja": "拡大画像",
+    "en": "Enlarged image"
+  },
+  "lightbox.close": {
+    "ja": "閉じる",
+    "en": "Close"
+  },
+  "lightbox.hint": {
+    "ja": "Esc キーで閉じます。",
+    "en": "Press Esc to close."
+  },
+  "table.scroll": {
+    "ja": "横スクロールできる表",
+    "en": "Horizontally scrollable table"
+  },
+  "figure.label": {
+    "ja": "図",
+    "en": "Figure"
+  },
+  "table.label": {
+    "ja": "表",
+    "en": "Table"
+  },
+  "cover.tagline": {
+    "ja": "RDB・BI から Ontology への設計転換を、実際に手を動かして体験する 1 日のハンズオン。",
+    "en": "A one-day hands-on workshop that walks you through the design shift from RDB and BI to an Ontology."
+  },
+  "cover.classification": {
+    "ja": "分類: General",
+    "en": "Classification: General"
+  },
+  "cover.downloads": {
+    "ja": "配布ファイル",
+    "en": "Downloads"
+  },
+  "cover.download.guide": {
+    "ja": "参加者用ハンズオンガイド（Word）",
+    "en": "Participant hands-on guide (Word)"
+  },
+  "cover.download.tests": {
+    "ja": "Data Agent 10 問テスト記録（Word）",
+    "en": "Data Agent ten-test record (Word)"
+  },
+  "cover.download.workbook": {
+    "ja": "Notebook 01–05 処理仕様（Excel）",
+    "en": "Notebook 01-05 processing specification (Excel)"
+  },
+  "cover.download.note": {
+    "ja": "同じフォルダーに置かれている場合にのみ開けます。この HTML 自体はオフラインで完結します。",
+    "en": "These open only when the files sit in the same folder. This HTML itself works fully offline."
+  },
+  "howto.title": {
+    "ja": "このガイドの使い方",
+    "en": "How to use this guide"
+  },
+  "howto.lead": {
+    "ja": "このページは Word 版参加者ガイド v2.7.0 の全内容を日本語と英語で収録した、単一ファイルの HTML です。外部のスクリプト・フォント・画像を一切参照しないため、オフラインでもそのまま利用できます。",
+    "en": "This page is a single-file HTML mirror that carries the complete content of the v2.7.0 Word participant guide in both Japanese and English. It references no external script, font or image, so it works offline exactly as it is."
+  },
+  "howto.item.lang": {
+    "ja": "ヘッダーの言語切り替えで、見出し・本文・表・図の説明・操作ラベルまで含めて表示言語が切り替わります。選択はこのブラウザーに保存されます。",
+    "en": "The language switch in the header changes headings, body text, tables, figure descriptions and control labels together. Your choice is stored in this browser."
+  },
+  "howto.item.search": {
+    "ja": "検索は表示中の言語の本文だけを対象にします。Ctrl + K で検索ボックスに移動し、↑ ↓ と Enter で結果をたどれます。",
+    "en": "Search covers the active language only. Press Ctrl + K to focus the search box, then use the arrow keys and Enter to move through results."
+  },
+  "howto.item.checklist": {
+    "ja": "第 5 章から第 18 章までの各手順にはチェックボックスがあります。完了状況はこのブラウザーに保存され、ヘッダーに完了数と割合が表示されます。",
+    "en": "Every step from chapter 5 to chapter 18 has a checkbox. Completion is stored in this browser and the header shows the count and percentage."
+  },
+  "howto.item.figures": {
+    "ja": "図とスクリーンショットはクリックまたは Enter で拡大できます。拡大表示は Esc で閉じます。",
+    "en": "Click or press Enter on a figure or screenshot to enlarge it. Press Esc to close the enlarged view."
+  },
+  "howto.item.copy": {
+    "ja": "コード・KQL・設定ブロックの右上のボタンで、貼り付ける内容をそのままコピーできます。",
+    "en": "The button at the top right of a code, KQL or configuration block copies the exact text you need to paste."
+  },
+  "howto.item.print": {
+    "ja": "印刷すると、折りたたまれた Optional も展開され、操作パーツを除いた表示中の言語だけが出力されます。",
+    "en": "Printing expands collapsed Optional content and outputs only the active language, without the interactive controls."
+  },
+  "howto.scope.title": {
+    "ja": "Core と Optional",
+    "en": "Core and Optional"
+  },
+  "howto.scope.core": {
+    "ja": "Core は第 1 章から第 18 章までです。ノートブックは Notebook 01 と Notebook 02 だけを使います。",
+    "en": "Core runs from chapter 1 to chapter 18. It uses Notebook 01 and Notebook 02 only."
+  },
+  "howto.scope.optional": {
+    "ja": "Notebook 03 / 04 / 05、Power BI、User data functions、Code Interpreter は Optional で、付録 D にまとめてあります。",
+    "en": "Notebook 03, 04 and 05, Power BI, User data functions and Code Interpreter are Optional and collected in Appendix D."
+  },
+  "toc.title": {
+    "ja": "目次",
+    "en": "Contents"
+  },
+  "toc.lead": {
+    "ja": "19 章と 5 つの付録で構成されています。章番号は Word 版と一致します。",
+    "en": "Nineteen chapters and five appendices. The chapter numbers match the Word edition."
+  },
+  "toc.core": {
+    "ja": "Core",
+    "en": "Core"
+  },
+  "toc.optional": {
+    "ja": "Optional",
+    "en": "Optional"
+  },
+  "toc.reference": {
+    "ja": "リファレンス",
+    "en": "Reference"
+  },
+  "callout.note": {
+    "ja": "ポイント",
+    "en": "Key point"
+  },
+  "callout.gate": {
+    "ja": "ゲート",
+    "en": "Gate"
+  },
+  "callout.stop": {
+    "ja": "注意",
+    "en": "Caution"
+  },
+  "callout.design": {
+    "ja": "設計判断",
+    "en": "Design decision"
+  },
+  "footer.version": {
+    "ja": "Furusato Fabric Workshop v2.7.0 参加者用ハンズオンガイド（HTML 版）",
+    "en": "Furusato Fabric Workshop v2.7.0 participant hands-on guide (HTML edition)"
+  },
+  "footer.classification": {
+    "ja": "分類: General",
+    "en": "Classification: General"
+  },
+  "footer.synthetic": {
+    "ja": "本教材のデータは合成データです。寄付者・事業者・返礼品・寄付明細はすべて架空であり、実在の個人・団体・取引とは関係ありません。自治体名と自治体コードのみ、実在の参照ラベルとして使用しています。",
+    "en": "The data in this material is synthetic. Donors, suppliers, return gifts and donation records are all fictitious and bear no relation to any real person, organization or transaction. Only municipality names and municipality codes are used as real-world reference labels."
+  },
+  "footer.legal": {
+    "ja": "本教材は学習目的で提供され、税務・法務・投資の助言ではありません。ふるさと納税制度の実務判断には必ず一次情報を参照してください。Microsoft 製品名は各社の商標です。",
+    "en": "This material is provided for learning purposes and is not tax, legal or investment advice. Always consult primary sources for real decisions about the hometown-tax donation program. Microsoft product names are trademarks of their respective owners."
+  },
+  "footer.fingerprint": {
+    "ja": "ビルド指紋",
+    "en": "Build fingerprint"
+  },
+  "footer.runtime": {
+    "ja": "ランタイム指紋",
+    "en": "Runtime fingerprint"
+  },
+  "footer.source": {
+    "ja": "生成元",
+    "en": "Generated by"
+  },
+  "footer.mirrored": {
+    "ja": "このページが対訳の対象とした配布ファイル（SHA-256）:",
+    "en": "Office deliverables this page mirrors (SHA-256):"
+  },
+  "meta.description": {
+    "ja": "Microsoft Fabric IQ Ontology ハンズオン（ふるさと納税）v2.7.0 参加者用ガイドの日英対訳・単一ファイル HTML 版。",
+    "en": "Bilingual single-file HTML edition of the Microsoft Fabric IQ Ontology hands-on (Furusato hometown-tax donations) v2.7.0 participant guide."
+  },
+  "chapters.label": {
+    "ja": "章",
+    "en": "chapters"
+  },
+  "status.ready": {
+    "ja": "ガイドを読み込みました。",
+    "en": "The guide is ready."
+  },
+  "agent.integrity.label": {
+    "ja": "貼り付け本文の照合値（末尾改行なし）",
+    "en": "Verification values for the pasted text (no trailing newline)"
+  }
+}

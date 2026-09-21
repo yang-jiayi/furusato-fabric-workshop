@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "furusato-atomic-donation-trace/v1",
+  "object": {
+    "schema": "agent_ref",
+    "name": "DonationTraceById",
+    "type": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+    "parameter": ["@RequestedDonationId", "bigint"],
+    "grain": "one DonationId x SupplierId registration; one null-Supplier row when no registration exists",
+    "amountSemantics": "DonationAmountYen repeats for each Supplier registration and is non-additive across function rows"
+  },
+  "fields": [
+    ["RequestedDonationId", "bigint"],
+    ["RetrievalMode", "varchar(32)"],
+    ["DonationId", "bigint"],
+    ["DonationDisplayName", "varchar"],
+    ["DonationAmountYen", "bigint"],
+    ["DonorId", "bigint"],
+    ["DonorName", "varchar"],
+    ["DonorDisplayName", "varchar"],
+    ["DonorResidencePrefectureId", "bigint"],
+    ["DonorResidencePrefectureName", "varchar"],
+    ["MunicipalityId", "varchar(6)"],
+    ["MunicipalityName", "varchar"],
+    ["MunicipalityDisplayName", "varchar"],
+    ["RecipientPrefectureId", "bigint"],
+    ["RecipientPrefectureName", "varchar"],
+    ["GiftId", "bigint"],
+    ["GiftName", "varchar"],
+    ["GiftDisplayName", "varchar"],
+    ["CategoryId", "bigint"],
+    ["CategoryName", "varchar"],
+    ["SupplierId", "bigint"],
+    ["SupplierName", "varchar"],
+    ["SupplierDisplayName", "varchar"],
+    ["SupplierType", "varchar"],
+    ["SupplierTypeEn", "varchar"],
+    ["DatasetName", "varchar(64)"],
+    ["SourceSystem", "varchar(64)"],
+    ["DatasetScope", "varchar(64)"],
+    ["DonationAmountUnit", "varchar(8)"],
+    ["RowGrain", "varchar(96)"]
+  ]
+}

@@ -1,0 +1,47 @@
+/// 寄附先自治体1団体1行。自治体と寄附先都道府県による分析軸です。
+table 自治体
+	lineageTag: e883d4d5-059e-4041-8037-8d34bcc53965
+
+	/// 自治体を一意に識別する6桁キー。
+	column 自治体ID
+		dataType: string
+		isHidden
+		isUnique
+		isKey
+		isNullable: false
+		lineageTag: eee17510-5fb7-4816-93ec-1b3fc049f2ef
+		summarizeBy: none
+		sourceColumn: MunicipalityId
+
+	/// 寄附先の合成自治体名。
+	column 自治体名
+		dataType: string
+		isNullable: false
+		lineageTag: ad68c08b-1477-4bc9-b289-70aee72aaeda
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: MunicipalityName
+
+	/// 自治体名と都道府県名を組み合わせた表示名。
+	column 自治体表示名
+		dataType: string
+		isNullable: false
+		lineageTag: dd3f169e-a901-4345-931a-1945208fc173
+		summarizeBy: none
+		sourceColumn: MunicipalityDisplayName
+
+	/// 自治体が所属する都道府県。寄附者の居住都道府県とは異なります。
+	column 寄附先都道府県
+		dataType: string
+		isNullable: false
+		lineageTag: 8d7b00ef-6dcc-4223-82c5-a532ed7a0f35
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: PrefectureName
+
+	partition 自治体 = entity
+		mode: directLake
+		source
+			entityName: municipality
+			schemaName: gold
+			expressionSource: 'DirectLake - Furusato Analytics'

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="d5-title d5-desc" preserveAspectRatio="xMidYMid meet">
+<title id="d5-title">Data Agent のソースルーティング — 口語の質問から合成された回答まで (v2.7.0)</title>
+<desc id="d5-desc">Data Agent が口語の質問に答えるまでの経路図。まず口語の質問を受け取り、意図と粒度で分解する。指標の定義、時間範囲、受領地か居住地か、必要な安定 ID、必要な関係経路を明示する。次に 3 つのソースへ個別に問い合わせる。Lakehouse には SQL で 2025 年の静的な件数、金額、順位、安定 ID を照会する。Eventhouse には KQL でキュレーテッドなマテリアライズドビューに対し 2026 年 8 月の観測数と観測金額をUTC の時間窓、SourceFile、WorkshopRunId ごとに照会する。Ontology には GQL で関係、方向、多段経路、カーディナリティを照会する。結果は安定 ID でのみ突き合わせて合成し、出典、時間範囲、指標、関係経路、安定 ID を明示して回答する。禁止事項として、層をまたぐ加算、ソース間の JOIN の発明、キュレーテッドビューからの一意 EventID の証明があり、これらは赤いバツ印で示している。できないことは、近い値で代用せず、できないと明示する。</desc>
+<defs>
+<marker id="d5-ar-04352C" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#04352C"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1100" fill="#FFFFFF"/>
+<g font-family="Yu Gothic UI, Meiryo, Segoe UI, sans-serif" fill="#12211D" stroke-linejoin="round">
+<rect x="56.0" y="20.0" width="7.0" height="46.0" rx="3.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="76.0" y="54.0" font-size="28" font-weight="bold" fill="#04352C" text-anchor="start">Data Agent のソースルーティング — 分解 → 個別照会 → 安定IDで合成</text>
+<text x="76.0" y="81.0" font-size="14.5" font-weight="normal" fill="#5A6570" text-anchor="start">Colloquial question → decompose by intent &amp; grain → SQL / KQL / GQL → compose by stable ID</text>
+<rect x="1483.4" y="24.0" width="60.6" height="26.0" rx="13" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.2"/>
+<text x="1513.7" y="42.0" font-size="12.5" font-weight="bold" fill="#0E8A54" text-anchor="middle">v2.7.0</text>
+<rect x="56.0" y="128.0" width="386.0" height="214.0" rx="16" fill="#F2F5F7" stroke="#5A6570" stroke-width="2"/>
+<circle cx="86.0" cy="158.0" r="14.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="86.0" y="163.0" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+<text x="110.0" y="156.0" font-size="15.5" font-weight="bold" fill="#04352C" text-anchor="start">口語の質問</text>
+<text x="110.0" y="174.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Colloquial / adversarial question</text>
+<rect x="78.0" y="196.0" width="342.0" height="36.0" rx="8" fill="#FFFFFF" stroke="#D8DEE2" stroke-width="1.2"/>
+<text x="94.0" y="219.0" font-size="12.4" font-weight="normal" fill="#12211D" text-anchor="start">「一番人気の自治体は?」</text>
+<rect x="78.0" y="240.0" width="342.0" height="36.0" rx="8" fill="#FFFFFF" stroke="#D8DEE2" stroke-width="1.2"/>
+<text x="94.0" y="263.0" font-size="12.4" font-weight="normal" fill="#12211D" text-anchor="start">「東京の寄付ってどれくらい?」</text>
+<rect x="78.0" y="284.0" width="342.0" height="36.0" rx="8" fill="#FFFFFF" stroke="#D8DEE2" stroke-width="1.2"/>
+<text x="94.0" y="307.0" font-size="12.4" font-weight="normal" fill="#12211D" text-anchor="start">「8月に一番動いたのは?」</text>
+<line x1="442.0" y1="235.0" x2="494.0" y2="235.0" stroke="#04352C" stroke-width="2.6" stroke-linecap="round" marker-end="url(#d5-ar-04352C)"/>
+<rect x="500.0" y="128.0" width="452.0" height="214.0" rx="16" fill="#FFFFFF" stroke="#04352C" stroke-width="2.4"/>
+<circle cx="530.0" cy="158.0" r="14.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="530.0" y="163.0" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="554.0" y="156.0" font-size="15.5" font-weight="bold" fill="#04352C" text-anchor="start">意図と粒度で分解する</text>
+<text x="554.0" y="174.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Decompose by intent and grain — before any query</text>
+<text x="522.0" y="200.0" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="535.3" y="200.0" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">指標を明示: 件数か金額か (「人気」は指標ではない)</text>
+<text x="522.0" y="221.1" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="535.3" y="221.1" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">時間範囲を明示: 2025 静的 か 2026 年 8 月 観測 か</text>
+<text x="522.0" y="242.2" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="535.3" y="242.2" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">「東京」は受領地か居住地か — 不明なら確認する</text>
+<text x="522.0" y="263.2" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="535.3" y="263.2" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">必要な安定ID と関係経路を先に決める</text>
+<rect x="1010.0" y="128.0" width="534.0" height="214.0" rx="16" fill="#FFFFFF" stroke="#04352C" stroke-width="2"/>
+<circle cx="1040.0" cy="158.0" r="14.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="1040.0" y="163.0" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+<text x="1064.0" y="156.0" font-size="15.5" font-weight="bold" fill="#04352C" text-anchor="start">ソースごとに個別照会する</text>
+<text x="1064.0" y="174.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">Query each source separately — never invent a cross-source JOIN</text>
+<text x="1032.0" y="200.0" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="1045.3" y="200.0" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">各ソースは自分の粒度と時間範囲にのみ責任を持つ</text>
+<text x="1032.0" y="221.1" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="1045.3" y="221.1" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">同じ質問を 3 回投げるのではなく、下位質問を割り当てる</text>
+<text x="1032.0" y="242.2" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="1045.3" y="242.2" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">答えられないソースには問い合わせない</text>
+<text x="1032.0" y="263.2" font-size="10.44" font-weight="bold" fill="#04352C" text-anchor="start">▸</text>
+<text x="1045.3" y="263.2" font-size="11.6" font-weight="normal" fill="#12211D" text-anchor="start">取得できなかった事実は「取得できない」として持ち帰る</text>
+<line x1="952.0" y1="235.0" x2="1004.0" y2="235.0" stroke="#04352C" stroke-width="2.6" stroke-linecap="round" marker-end="url(#d5-ar-04352C)"/>
+<rect x="56.0" y="436.0" width="468.0" height="236.0" rx="14" fill="#FFFFFF" stroke="#2E5FA3" stroke-width="2.2"/>
+<rect x="56.0" y="436.0" width="468.0" height="38.0" rx="14" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<rect x="56.0" y="458.0" width="468.0" height="16.0" rx="0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="74.0" y="462.0" font-size="14.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">Lakehouse</text>
+<rect x="467.5" y="445.0" width="40.5" height="21.0" rx="10" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="487.8" y="460.0" font-size="11" font-weight="bold" fill="#2E5FA3" text-anchor="middle">SQL</text>
+<text x="74.0" y="496.0" font-size="12" font-weight="bold" fill="#12211D" text-anchor="start">2025 静的スナップショット (権威)</text>
+<text x="74.0" y="520.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">件数・金額・順位・安定ID</text>
+<text x="74.0" y="537.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">受領地と居住地を別列で保持</text>
+<text x="74.0" y="554.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">事前集計テーブルの粒度に注意</text>
+<rect x="74.0" y="608.0" width="432.0" height="46.0" rx="8" fill="#F4F7F8" stroke="#E1E7EA" stroke-width="1"/>
+<text x="84.0" y="626.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="start">SELECT COUNT(*), SUM(DonationAmountYen) ... GROUP BY MunicipalityId</text>
+<rect x="566.0" y="436.0" width="468.0" height="236.0" rx="14" fill="#FFFFFF" stroke="#C2571A" stroke-width="2.2"/>
+<rect x="566.0" y="436.0" width="468.0" height="38.0" rx="14" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<rect x="566.0" y="458.0" width="468.0" height="16.0" rx="0" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="584.0" y="462.0" font-size="14.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">Eventhouse</text>
+<rect x="977.5" y="445.0" width="40.5" height="21.0" rx="10" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="997.8" y="460.0" font-size="11" font-weight="bold" fill="#C2571A" text-anchor="middle">KQL</text>
+<text x="584.0" y="496.0" font-size="12" font-weight="bold" fill="#12211D" text-anchor="start">2026 年 8 月の運用観測 (MV のみ)</text>
+<text x="584.0" y="520.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">sum(ObservationCount) / sum(ObservedAmountYen)</text>
+<text x="584.0" y="537.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">UTC の時間窓で絞る</text>
+<text x="584.0" y="554.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">SourceFile / WorkshopRunId で集約</text>
+<rect x="584.0" y="608.0" width="432.0" height="46.0" rx="8" fill="#F4F7F8" stroke="#E1E7EA" stroke-width="1"/>
+<text x="594.0" y="626.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="start">MV | where ObservedAtUtc between (...) | summarize sum(ObservationCount)</text>
+<rect x="1076.0" y="436.0" width="468.0" height="236.0" rx="14" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2.2"/>
+<rect x="1076.0" y="436.0" width="468.0" height="38.0" rx="14" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<rect x="1076.0" y="458.0" width="468.0" height="16.0" rx="0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="1094.0" y="462.0" font-size="14.5" font-weight="bold" fill="#FFFFFF" text-anchor="start">Ontology</text>
+<rect x="1487.5" y="445.0" width="40.5" height="21.0" rx="10" fill="#FFFFFF" stroke="none" stroke-width="1.6"/>
+<text x="1507.8" y="460.0" font-size="11" font-weight="bold" fill="#0E8A54" text-anchor="middle">GQL</text>
+<text x="1094.0" y="496.0" font-size="12" font-weight="bold" fill="#12211D" text-anchor="start">関係・方向・多段経路</text>
+<text x="1094.0" y="520.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">宣言された方向を保持して逆探索</text>
+<text x="1094.0" y="537.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">カーディナリティと否定的意味</text>
+<text x="1094.0" y="554.0" font-size="11.2" font-weight="normal" fill="#12211D" text-anchor="start">数値の権威ではない</text>
+<rect x="1094.0" y="608.0" width="432.0" height="46.0" rx="8" fill="#F4F7F8" stroke="#E1E7EA" stroke-width="1"/>
+<text x="1104.0" y="626.0" font-size="9.8" font-weight="normal" fill="#5A6570" text-anchor="start">MATCH (d:Donation)-[:DonationToMunicipality]-&gt;(m:Municipality) ...</text>
+<line x1="1277.0" y1="346.0" x2="290.0" y2="430.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 4" marker-end="url(#d5-ar-04352C)"/>
+<line x1="1277.0" y1="346.0" x2="800.0" y2="430.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 4" marker-end="url(#d5-ar-04352C)"/>
+<line x1="1277.0" y1="346.0" x2="1310.0" y2="430.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="6 4" marker-end="url(#d5-ar-04352C)"/>
+<rect x="435.6" y="388.1" width="248.7" height="15.9" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="560.0" y="399.8" font-size="10.6" font-weight="bold" fill="#04352C" text-anchor="middle">分解した下位質問を配る  dispatch sub-questions</text>
+<line x1="290.0" y1="672.0" x2="290.0" y2="726.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d5-ar-04352C)"/>
+<line x1="800.0" y1="672.0" x2="800.0" y2="726.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d5-ar-04352C)"/>
+<line x1="1310.0" y1="672.0" x2="1310.0" y2="726.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d5-ar-04352C)"/>
+<rect x="56.0" y="730.0" width="1488.0" height="118.0" rx="16" fill="#E7EFEC" stroke="#04352C" stroke-width="2.4"/>
+<circle cx="88.0" cy="762.0" r="14.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="88.0" y="767.0" font-size="12" font-weight="bold" fill="#FFFFFF" text-anchor="middle">4</text>
+<text x="112.0" y="760.0" font-size="15.5" font-weight="bold" fill="#04352C" text-anchor="start">安定IDでのみ突き合わせて合成する  Compose only by stable ID</text>
+<text x="112.0" y="780.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">MunicipalityId / PrefectureId / DonationId / GiftId を鍵に比較する。値の足し算ではなく、粒度と時間範囲を保ったまま並置する。</text>
+<text x="112.0" y="802.0" font-size="11.4" font-weight="normal" fill="#12211D" text-anchor="start">回答に必ず含める: 出典ソース / 時間範囲 / 指標の定義 / 関係経路 / 関連する安定ID。根拠を示せない場合は「示せない」と明示する。</text>
+<text x="112.0" y="826.0" font-size="10.6" font-weight="normal" fill="#5A6570" text-anchor="start">State the source, time scope, metric, relationship path and stable IDs. Never substitute a near-miss value.</text>
+<text x="56.0" y="890.0" font-size="14" font-weight="bold" fill="#B3261E" text-anchor="start">境界 — 越えてはならない線  Hard boundaries</text>
+<rect x="56.0" y="906.0" width="468.0" height="106.0" rx="12" fill="#FAEAE9" stroke="#B3261E" stroke-width="1.8" stroke-dasharray="8 5"/>
+<line x1="76.0" y1="930.0" x2="92.0" y2="946.0" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round"/>
+<line x1="92.0" y1="930.0" x2="76.0" y2="946.0" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round"/>
+<text x="104.0" y="944.0" font-size="12.6" font-weight="bold" fill="#B3261E" text-anchor="start">層をまたぐ加算</text>
+<text x="76.0" y="968.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">80,000 (静的) + 15,000 (8月観測) を 1 つの合計にしない。粒度も時間範囲も異なる。</text>
+<rect x="566.0" y="906.0" width="468.0" height="106.0" rx="12" fill="#FAEAE9" stroke="#B3261E" stroke-width="1.8" stroke-dasharray="8 5"/>
+<line x1="586.0" y1="930.0" x2="602.0" y2="946.0" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round"/>
+<line x1="602.0" y1="930.0" x2="586.0" y2="946.0" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round"/>
+<text x="614.0" y="944.0" font-size="12.6" font-weight="bold" fill="#B3261E" text-anchor="start">一意 EventID の証明</text>
+<text x="586.0" y="968.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">キュレーテッド MV からは 14,900 件の一意 EventID や重複 100 件を証明できない。</text>
+<text x="586.0" y="982.5" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">できないと明示する。</text>
+<rect x="1076.0" y="906.0" width="468.0" height="106.0" rx="12" fill="#FAEAE9" stroke="#B3261E" stroke-width="1.8" stroke-dasharray="8 5"/>
+<line x1="1096.0" y1="930.0" x2="1112.0" y2="946.0" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round"/>
+<line x1="1112.0" y1="930.0" x2="1096.0" y2="946.0" stroke="#B3261E" stroke-width="2.6" stroke-linecap="round"/>
+<text x="1124.0" y="944.0" font-size="12.6" font-weight="bold" fill="#B3261E" text-anchor="start">関係の発明</text>
+<text x="1096.0" y="968.0" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">Donor と Supplier をつなぐ直接の関係はない。Supplier → Gift ← Donation ← Donor を</text>
+<text x="1096.0" y="982.5" font-size="11" font-weight="normal" fill="#12211D" text-anchor="start">辿る。</text>
+<line x1="56.0" y1="1056.0" x2="1544.0" y2="1056.0" stroke="#B7C0C7" stroke-width="1" stroke-linecap="round"/>
+<text x="56.0" y="1078.0" font-size="11.5" font-weight="normal" fill="#5A6570" text-anchor="start">Furusato Fabric IQ Ontology Workshop v2.7.0 — Data Agent のソースルーティング。青 = Lakehouse / SQL、橙 = Eventhouse / KQL、緑 = Ontology / GQL、赤の破線と ✕ = 越えてはならない境界。</text>
+</g>
+</svg>

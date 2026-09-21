@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" role="img" aria-labelledby="title description">
+  <title id="title">Furusato - Fabric IQ Ontology Workshop</title>
+  <desc id="description">A hands-on workshop connecting Lakehouse SQL, Eventhouse KQL and the full teaching Ontology to one Data Agent. Code Interpreter is an additional tool, not a fourth source. The ontology has 10 entities, 72 static properties, one time-series property and 15 relationships.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#091827"/>
+      <stop offset="0.58" stop-color="#102b38"/>
+      <stop offset="1" stop-color="#103c40"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#62e8ca"/>
+      <stop offset="1" stop-color="#82c9ff"/>
+    </linearGradient>
+    <linearGradient id="agent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1a605e"/>
+      <stop offset="1" stop-color="#19404f"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#b3e3df" opacity="0.1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="440" rx="24" fill="url(#background)"/>
+  <rect x="632" y="20" width="624" height="338" rx="20" fill="url(#dots)"/>
+  <path d="M584 0 458 362M618 0 492 362" stroke="#b3e3df" stroke-opacity="0.04" stroke-width="40"/>
+  <circle cx="1204" cy="50" r="96" fill="#5ce7c3" opacity="0.035"/>
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <rect x="48" y="44" width="4" height="19" rx="2" fill="#62e8ca"/>
+    <text x="66" y="59" fill="#a9cbd3" font-size="15" font-weight="600" letter-spacing="3">FURUSATO / FABRIC IQ</text>
+    <text x="48" y="138" fill="#f2f8fc" font-size="52" font-weight="700" letter-spacing="-1.5">Follow the data.</text>
+    <text x="48" y="197" fill="url(#accent)" font-size="46" font-weight="700" letter-spacing="-1.3">Connect the meaning.</text>
+    <text x="50" y="241" fill="#b7ccd7" font-size="19">A hands-on journey from synthetic donation data</text>
+    <text x="50" y="270" fill="#b7ccd7" font-size="19">to relationships, native queries and AI.</text>
+
+    <rect x="48" y="304" width="106" height="32" rx="16" fill="#1b464b" stroke="#387c77"/>
+    <text x="101" y="325" text-anchor="middle" fill="#b6ffdf" font-size="15" font-weight="600">v2.7.0</text>
+    <rect x="166" y="304" width="139" height="32" rx="16" fill="#142b3b" stroke="#345163"/>
+    <text x="235.5" y="325" text-anchor="middle" fill="#d6e6f1" font-size="15">Hands-on lab</text>
+    <rect x="317" y="304" width="100" height="32" rx="16" fill="#142b3b" stroke="#345163"/>
+    <text x="367" y="325" text-anchor="middle" fill="#d6e6f1" font-size="15">JP / EN</text>
+
+    <g fill="none" stroke="#6ab7b7" stroke-width="2">
+      <path d="M898 104H922Q946 104 946 128V174Q946 194 968 194H990" opacity="0.8"/>
+      <path d="M898 192H990" opacity="0.8"/>
+      <path d="M898 280H922Q946 280 946 256V216Q946 194 968 194" opacity="0.8"/>
+    </g>
+    <circle cx="946" cy="194" r="5" fill="#70e8cc"/>
+
+    <rect x="660" y="68" width="238" height="72" rx="14" fill="#112a39" stroke="#385970"/>
+    <rect x="660" y="156" width="238" height="72" rx="14" fill="#112a39" stroke="#385970"/>
+    <rect x="660" y="244" width="238" height="72" rx="14" fill="#112a39" stroke="#3f7976"/>
+    <g fill="#e5f0f7" font-size="21" font-weight="600">
+      <text x="681" y="98">Lakehouse</text>
+      <text x="681" y="186">Eventhouse</text>
+      <text x="681" y="274">Ontology</text>
+    </g>
+    <g fill="#a9c0cd" font-size="15">
+      <text x="682" y="123">Static snapshot</text>
+      <text x="682" y="211">Operational observations</text>
+      <text x="682" y="299">Full teaching model</text>
+    </g>
+    <g font-family="Consolas, monospace" font-size="14" font-weight="600" text-anchor="middle">
+      <rect x="834" y="82" width="48" height="24" rx="7" fill="#21455c"/>
+      <text x="858" y="99" fill="#a2d9ff">SQL</text>
+      <rect x="834" y="170" width="48" height="24" rx="7" fill="#343d60"/>
+      <text x="858" y="187" fill="#c9c7ff">KQL</text>
+      <rect x="834" y="258" width="48" height="24" rx="7" fill="#21534e"/>
+      <text x="858" y="275" fill="#94efd5">GQL</text>
+    </g>
+
+    <rect x="990" y="110" width="242" height="150" rx="20" fill="url(#agent)" stroke="#69cdbb" stroke-width="1.5"/>
+    <rect x="1012" y="130" width="94" height="22" rx="11" fill="#8ef3d3" opacity="0.12"/>
+    <text x="1059" y="145" text-anchor="middle" fill="#b8ffe6" font-size="11" font-weight="700" letter-spacing="1">ONE AGENT</text>
+    <g fill="#93ecd8" stroke="#93ecd8" stroke-width="1.5">
+      <path d="M1171 136 1196 145 1185 168 1171 136 1158 162 1185 168" fill="none" opacity="0.7"/>
+      <circle cx="1171" cy="136" r="4"/>
+      <circle cx="1196" cy="145" r="4"/>
+      <circle cx="1185" cy="168" r="4"/>
+      <circle cx="1158" cy="162" r="4"/>
+    </g>
+    <text x="1012" y="204" fill="#f0fffa" font-size="30" font-weight="700">Data Agent</text>
+    <text x="1013" y="231" fill="#b7ded7" font-size="16">Three native sources</text>
+    <path d="M1111 260V286" stroke="#8bcfc4" stroke-width="2" stroke-dasharray="4 4"/>
+    <rect x="990" y="286" width="242" height="50" rx="12" fill="#122f3a" stroke="#416671"/>
+    <text x="1010" y="317" fill="#c7dbe4" font-size="17">Code Interpreter</text>
+    <text x="1212" y="317" text-anchor="end" fill="#85afbc" font-size="12" font-weight="600">TOOL</text>
+
+    <path d="M48 372H1232" stroke="#537e88" stroke-opacity="0.4"/>
+    <g fill="#c3d7e0" font-size="16">
+      <text x="48" y="410"><tspan fill="#86e7cd" font-weight="700">10</tspan> entities</text>
+      <text x="240" y="410"><tspan fill="#86e7cd" font-weight="700">72</tspan> static + <tspan fill="#86e7cd" font-weight="700">1</tspan> time-series property</text>
+      <text x="651" y="410"><tspan fill="#86e7cd" font-weight="700">15</tspan> relationships</text>
+      <text x="994" y="410">Synthetic data. Real learning.</text>
+    </g>
+  </g>
+</svg>

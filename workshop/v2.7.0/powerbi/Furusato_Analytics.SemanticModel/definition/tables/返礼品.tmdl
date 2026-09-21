@@ -1,0 +1,45 @@
+/// 返礼品1品1行。返礼品名とカテゴリによる寄附分析を提供します。
+table 返礼品
+	lineageTag: 088f8404-24d9-4e5b-9b44-d20ffddc010a
+
+	/// 返礼品を一意に識別するキー。
+	column 返礼品ID
+		dataType: int64
+		isHidden
+		isUnique
+		isKey
+		isNullable: false
+		lineageTag: d12b3421-2176-4992-b409-d5fe8985c0db
+		summarizeBy: none
+		sourceColumn: GiftId
+
+	/// 合成返礼品名。
+	column 返礼品名
+		dataType: string
+		isNullable: false
+		lineageTag: 6f195149-f573-4527-b024-c8aa4d3c024f
+		summarizeBy: none
+		sourceColumn: GiftName
+
+	/// IDを含み同名を識別できる返礼品表示名。
+	column 返礼品表示名
+		dataType: string
+		isNullable: false
+		lineageTag: 824773a0-866f-410f-ae7f-107c9eca83dd
+		summarizeBy: none
+		sourceColumn: GiftDisplayName
+
+	/// 返礼品の合成カテゴリ。
+	column カテゴリ
+		dataType: string
+		isNullable: false
+		lineageTag: 1d2ee3b3-eecd-44da-b3d0-6a8f8299fe22
+		summarizeBy: none
+		sourceColumn: CategoryName
+
+	partition 返礼品 = entity
+		mode: directLake
+		source
+			entityName: gift
+			schemaName: gold
+			expressionSource: 'DirectLake - Furusato Analytics'

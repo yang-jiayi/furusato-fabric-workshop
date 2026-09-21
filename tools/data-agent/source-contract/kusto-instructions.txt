@@ -1,0 +1,55 @@
+ATOMIC OPERATIONAL ENTRYPOINTS
+Prefer `AgentRawObservationTotals` for one-row raw totals and deduplication preflight, `AgentMunicipalityLeaders` for unique Municipality winner rows, and `AgentFileRunSummary` for file/run/participant-alias rows. Supply the actual requested StartUtc and EndUtc values as the only optional parameters; no illustrative placeholder call is executable guidance. All three functions filter half-open over EventMinute minute-bucket keys and read only DonationObservationSummaryForAgent. Require WindowIsValid=true before using numeric values; false is invalid input, not a valid zero. Preserve the function-returned exact RawDuplicateCaveat: `The totals may include duplicate raw observations; the approved aggregate exposes no event identifier or unique-event metric.`
+
+V10 FILE/RUN FUNCTION CONTRACT
+For every file/run request invoke `AgentFileRunSummary`. Never query DonationObservationSummaryForAgent directly for this mode.
+The function returns exactly 17 fields in this order: SourceFile, WorkshopRunId, ParticipantAlias, RawObservationCount, RawObservedAmountYen, FirstObservedAtUtc, LastObservedAtUtc, RequestedStartUtc, RequestedEndUtc, WindowIsValid, Scope, SourceSystem, SourceObject, CountUnit, AmountUnit, RawDuplicateCaveat, TimeZoneNotice.
+The returned grain is one row per SourceFile, WorkshopRunId and ParticipantAlias. Never reaggregate the function output, derive EventMinuteGrainSeconds or another grain field, perform time-span arithmetic, rename the extrema, or drop an essential field.
+The function returns no TOTAL row. Never add a TOTAL union, `iff` label, synthetic group, or blank WorkshopRunId. If the user separately requests whole-window totals, invoke AgentRawObservationTotals and keep its scalar result separate.
+
+DIRECT MV QUERY PROJECTION
+Direct queries against `DonationObservationSummaryForAgent` are reserved for hourly or explicitly requested custom breakdowns. They never replace a raw-total, Municipality-leader, or file/run function. Aggregate `RawObservationCount=sum(ObservationCount)` and `RawObservedAmountYen=sum(ObservedAmountYen)`; retain MunicipalityID when grouped by Municipality; return direct-query aliases WindowStartUtc, WindowEndUtc, RawObservationUnit, RawAmountUnit and TimeZoneNotice. Add StoredBucketRows=count() only when bucket rows are explicitly requested. For atomic functions, preserve their returned fields instead of fabricating direct-MV aliases.
+
+OUTPUT SEMANTIC CONTRACT
+For direct custom MV queries, return TimeZoneNotice='All timestamps are UTC.', requested WindowStartUtc/exclusive WindowEndUtc, direct-query units and separate StoredBucketRows only when requested. Those bounds describe EventMinute bucket filtering, not true observation extrema.
+For AgentRawObservationTotals and AgentMunicipalityLeaders, preserve the function-returned RequestedStartUtc, RequestedEndUtc, CountUnit, AmountUnit, RawDuplicateCaveat and TimeZoneNotice exactly.
+AgentMunicipalityLeaders returns exactly 15 fields: MunicipalityID, IsCountLeader, IsAmountLeader, RawObservationCount, RawObservedAmountYen, RequestedStartUtc, RequestedEndUtc, WindowIsValid, Scope, SourceSystem, SourceObject, CountUnit, AmountUnit, RawDuplicateCaveat, and TimeZoneNotice.
+For AgentFileRunSummary, preserve all 17 returned fields exactly. FirstObservedAtUtc and LastObservedAtUtc already represent true source extrema; never recompute them from EventMinute or requested bounds.
+Never invent WindowStartUtc, WindowEndUtc, RawObservationUnit, RawAmountUnit, EventMinuteGrainSeconds, duration, or time-span-derived grain from any function result.
+
+RESULT COMPLETENESS AND RESPONSE METADATA
+For operational uniqueness/deduplication questions, first invoke `AgentRawObservationTotals` for one scalar row over the requested EventMinute window, with no Municipality breakdown unless requested. Require WindowIsValid=true, preserve RequestedStartUtc, RequestedEndUtc, both raw totals, units and exact returned RawDuplicateCaveat, then explain the absent event-identifier boundary without computing a unique figure.
+For file/run reconciliation, invoke `AgentFileRunSummary`, require WindowIsValid=true, and preserve every returned file/run/alias row with all 17 native fields. Do not reaggregate or fabricate a TOTAL row. When a separate whole-window total was requested, invoke AgentRawObservationTotals and show that scalar row separately.
+The native answer must end with the exact untranslated sentence `All timestamps are UTC.`; metadata alone is insufficient.
+The stored view row is a bucket; sum(ObservationCount) counts underlying raw observations, not bucket rows. For timestamp windows use >= start and < end. KQL join predicates use supported equalities with AND; place an OR alternative in a subsequent where clause, not join on.
+
+Approved query surfaces are `DonationObservationSummaryForAgent`, `AgentRawObservationTotals`, `AgentMunicipalityLeaders` and `AgentFileRunSummary`. The functions read only the approved materialized view. `AgentObservationLeaders` is legacy and unselected; never request it.
+
+- This source is the numeric authority for every August 2026 operational observation metric. No other approved source may be used to state, correct or confirm an observation count or observed amount, and the Ontology time-series mirror is never a substitute for it.
+- Every direct materialized-view row is an aggregate bucket, not one observation. Direct MV queries use sum(ObservationCount) and sum(ObservedAmountYen); count() counts buckets. Atomic functions already return approved aggregates.
+- Direct MV queries filter/group on EventMinute and may rebin it for coarser periods. Atomic function parameters also filter EventMinute bucket keys. True observation range comes from FirstObservedAt/LastObservedAt, never requested bounds.
+- `FirstObservedAt` and `LastObservedAt` are source columns used by the approved functions. AgentFileRunSummary returns their extrema as the native headers `FirstObservedAtUtc` and `LastObservedAtUtc`; never relabel those values as JST.
+- All timestamps are UTC. Convert with `datetime_utc_to_local(..., "Asia/Tokyo")` only when the question asks for Japan time, and label the timezone either way.
+- File/run questions invoke AgentFileRunSummary. Keep every SourceFile, WorkshopRunId and ParticipantAlias row. Never infer or construct a run identifier.
+- Direct MV Municipality breakdowns retain MunicipalityID. AgentMunicipalityLeaders returns MunicipalityID, both flags and both raw metrics. A missing display name is expected; resolve the exact returned ID in Lakehouse before Ontology traversal.
+- `MunicipalityID` is recipient context only. Donor, Gift, Supplier, payment method, approval, fulfillment and lifecycle state are not available here; say so instead of substituting a static fact.
+
+DEDUPLICATION LIMIT
+- MANDATORY FIRST STEP for every duplicate, unique-event or deduplication question: invoke `AgentRawObservationTotals`, require WindowIsValid=true, and report its one-row RawObservationCount and RawObservedAmountYen before explaining the limit. Do not group by Municipality unless requested, and do not use the all-sources-failed fallback after a valid result.
+- EventID is the only valid deduplication identity, and no approved Agent source exposes it: it is absent from this materialized view, from the Lakehouse snapshot and from the Ontology. State that scope exactly; do not imply that another approved source could prove it.
+- Never use EventMinute, MunicipalityID, SourceFile, WorkshopRunId, a materialized-view row, or any composite of those fields as a surrogate deduplication key. Never invent `UniqueObservationCount` or `UniqueObservedAmountYen`.
+- Report only the raw aggregates and the missing-identity limit. Never print, estimate, approximate or imply a deduplicated count or deduplicated amount, and never present the raw aggregate as if it were one.
+- ObservationCount is a raw aggregate and may include duplicates. Never label it `重複なし`, unique, deduplicated, confirmed, or exact distinct.
+
+GRAIN AND COMPOSITION
+- The observations are append-only and independent of the static snapshot. Never add these totals to static donation totals and never describe them as pending, unconfirmed, approved or corrected.
+- Never calculate or display a combined total with Lakehouse static metrics, even as a reference value.
+- In a top-Municipality comparison, use `AgentMunicipalityLeaders` and require WindowIsValid=true. For count select IsCountLeader=true; for amount select IsAmountLeader=true. For both metrics retain the zero-to-two unique MunicipalityID rows and both flags. If both flags are true on one row, it is one Municipality result. Never duplicate or re-SUM one ID; preserve both raw metrics. Sum distinct IDs only when explicitly requested and never call it EventID deduplication.
+- AgentFileRunSummary grain is only the returned SourceFile x WorkshopRunId x ParticipantAlias grouping. Never derive a numeric grain or duration.
+
+One supported direct-MV shape plus the preferred atomic functions:
+
+- Hourly or explicitly requested custom breakdown:
+  query DonationObservationSummaryForAgent directly, filter EventMinute to the actual requested window, summarize the approved raw metrics by the requested bucket/dimensions, and order deterministically. Preserve MunicipalityID when grouped by Municipality.
+- File/run summary uses `AgentFileRunSummary`; preserve all 17 returned fields and every row. If requested, obtain whole-window totals separately from AgentRawObservationTotals.
+- Recipient-Municipality leaders use `AgentMunicipalityLeaders`; no ad-hoc winner query is an approved alternative. Require WindowIsValid=true, filter on the requested leader flag, and preserve unique MunicipalityID rows, both flags, both raw metrics, requested bounds, units, exact duplicate caveat and TimeZoneNotice.

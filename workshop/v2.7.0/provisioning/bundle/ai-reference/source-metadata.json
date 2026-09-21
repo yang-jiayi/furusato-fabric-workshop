@@ -1,0 +1,2363 @@
+{
+  "lakehouse_tables": {
+    "instructions": "ATOMIC REFERENCE ENTRYPOINTS\nPrefer `agent_ref.MunicipalityStatic` for nationwide recipient-Municipality ranking; invoke `agent_ref.MunicipalityById` with the actual returned MunicipalityID as its sole argument for exact lookup; invoke `agent_ref.DonationTraceById` with the actual requested DonationId as its sole argument for one-query Donation, owner and every registered Supplier trace. DonationAttributes, DonationById and GiftCatalogSuppliers are unselected direct surfaces but remain valid internal function dependencies. The original selected dbo facts/dimensions remain available for broader Core and zero-population coverage.\nBOUNDED WILDCARD EXCEPTION: `SELECT *` is permitted only from the two versioned bounded approved TVFs: DonationTraceById has exactly 30 returned fields and MunicipalityById has exactly 22 returned fields. This exception prevents required bounded-function fields from being dropped. Wildcards remain forbidden for MunicipalityStatic, every dbo table, every join, every other view and every other function. Never use a ranking query as exact lookup or sum repeated DonationAmountYen across DonationId x SupplierId trace rows.\n\nV10 STATIC RESULT AND LITERAL-HANDOFF CONTRACT\nSTATIC RANKING FINAL TUPLE: every winner retains MunicipalityId, MunicipalityName, MunicipalityStaticCount, MunicipalityStaticTotalYen, rank, RankScope and DatasetScope. For full-snapshot reference ranking, return the actual NationwideRankScope as RankScope. For filtered dbo ranking, derive and return an explicit filtered RankScope. Never return a winner name without its SQL-returned stable ID.\nCROSS-SOURCE LOOKUP: invoke `agent_ref.MunicipalityById` with each actual quoted MunicipalityID returned by Eventhouse. Request all 22 approved fields as `m.*`, then append literal schema metadata `'MunicipalityId' AS ReconciliationKey` and `'Stable key for matching independently retrieved Eventhouse, Lakehouse and Ontology rows.' AS ReconciliationRule`. Build the request with the concrete ID already returned. Never substitute a ranking query, placeholder, pronoun or variable.\nReturn RequestedMunicipalityId, RetrievalMode, actual MunicipalityId, MunicipalityName, MunicipalityDisplayName, PrefectureId, PrefectureName, PrefectureNameEn, MunicipalityStaticCount, MunicipalityStaticTotalYen, MunicipalityStoredNationwideAmountRank, MunicipalityStoredPrefectureAmountRank, MunicipalityDerivedNationwideCountRank, DefaultPopularityMetric, DefaultPopularityValue, DatasetName, SourceSystem, DatasetScope, CountUnit, AmountUnit, NationwideRankScope and PrefectureRankScope. Alias MunicipalityStoredNationwideAmountRank AS MunicipalityAmountRank and MunicipalityStoredPrefectureAmountRank AS MunicipalityPrefAmountRank only when the logical result contract requires those names.\nReconciliationKey and ReconciliationRule are truthful schema-level computed metadata. They define a stable matching rule; their SQL presence never claims that Eventhouse or Ontology executed. The root may claim three-source reconciliation only after all three independently returned results.\nFor a MunicipalityById cross-source result, MunicipalityStoredNationwideAmountRank AS MunicipalityAmountRank remains required even when Eventhouse selected by RawObservationCount. MunicipalityDerivedNationwideCountRank is distinct supporting evidence and never substitutes for the amount-rank alias.\n\nREQUIRED SQL RESULT TUPLES — KEEP THROUGH FINAL RESULT\nMUNICIPALITY RANKING/CROSS-SOURCE: reference full-snapshot results project MunicipalityId, MunicipalityName, both static metrics, the actual stored or derived reference rank, NationwideRankScope AS RankScope and DatasetScope. Filtered dbo queries derive their requested rank and explicit filtered RankScope. A single requested ranking metric still retains both static count and total.\n- For legacy dbo nationwide queries, ot_municipality is zero-inclusive and its stored MunicipalityAmountRank is amount-only; derive a count rank with count descending then MunicipalityId ascending. For the preferred full-snapshot reference view/TVF, reuse its definition-computed MunicipalityDerivedNationwideCountRank and never substitute an amount rank.\n- For a filtered scope requiring raw aggregation, use `COUNT_BIG(*)` only on unjoined Donation rows. After joins count non-null donation-grain IDs with `COUNT_BIG(d.DonationId) AS MunicipalityStaticCount`, and compute `SUM(d.DonationAmountYen) AS MunicipalityStaticTotalYen`. Preserve zero-donation dimension members when requested, and never multiply Donation facts through Supplier or another many-side join. Derive rank inside that filtered result with the requested metric descending and stable ID ascending. Never apply a nationwide stored amount rank to a subset or sum/reaggregate overlapping pre-aggregated metrics.\nEXACT DONATION TRACE: invoke `agent_ref.DonationTraceById` with the concrete bigint DonationId and request its complete bounded result using `SELECT *`. Keep every Supplier row, verify RequestedDonationId equals actual DonationId, and infer no manufacture, delivery, shipment or fulfillment. A query against only dbo.ot_donation is not the complete attribute contract.\nThe 30 fields are RequestedDonationId, RetrievalMode, DonationId, DonationDisplayName, DonationAmountYen, DonorId, DonorName, DonorDisplayName, DonorResidencePrefectureId, DonorResidencePrefectureName, MunicipalityId, MunicipalityName, MunicipalityDisplayName, RecipientPrefectureId, RecipientPrefectureName, GiftId, GiftName, GiftDisplayName, CategoryId, CategoryName, SupplierId, SupplierName, SupplierDisplayName, SupplierType, SupplierTypeEn, DatasetName, SourceSystem, DatasetScope, DonationAmountUnit and RowGrain.\nAny other optional attribute must be projected from its claimed approved owner or omitted; Graph-only presence does not make it Lakehouse SQL evidence. Relationship and Traversal are Ontology evidence, never SQL fields.\nUse explicit useful column lists and exact-key joins everywhere except the two bounded approved TVFs.\n\nEVERY STATIC RESULT\nCarry DatasetScope='Static 2025 UTC snapshot', the actual aggregation/ranking scope, metric grain and JPY units where applicable as metadata alongside computed results. This applies to filtered lookups and rankings as well as overall totals; do not invent a new date filter from the snapshot label.\nFor named-entity lookup/ranking rows, project the stable ID AND its stored display/name column from the same SQL row. Municipality results include MunicipalityId and MunicipalityName. Preserve zero-participation dimension rows when the question includes them. Never derive names or numeric results from instructions.\n\nSNAPSHOT RESPONSE METADATA\nThe complete approved ot_* dataset is the static 2025 UTC snapshot. Its label does not imply a DonationDateJst calendar-year filter.\nFor whole-snapshot totals, keep the actual COUNT_BIG/SUM query and return DatasetScope='Static 2025 UTC snapshot', MetricGrain='one Donation row per donation', Currency='JPY' as source metadata alongside computed values. Never replace computed values with expected constants. Preserve these returned labels in the answer.\n\n- Mandatory exact-Donation SQL request: use `SELECT *` only from `agent_ref.DonationTraceById` with the actual requested bigint DonationId as its sole argument. Its bounded 30-field contract includes the request echo, Donation amount, all required Donor/residence/recipient/Gift/Category attributes, every Supplier and source/grain metadata. Never use only dbo.ot_donation, another Supplier query, or an arbitrary single Supplier.\nUse the dbo schema for base-table static facts and filtered aggregations. This base-table guidance does not prohibit the preferred agent_ref view and TVF entrypoints above.\n\n- Always return the stable ID next to every named row: PrefectureId, MunicipalityId, DonorId, GiftId, CategoryId, SupplierId, DonationId. Resolve names to IDs before filtering, and never exact-match a partial or non-unique display name.\n- `ot_prefecture` carries both readings side by side. `PrefReceived*` is donation received by municipalities in that prefecture; `PrefResident*` is donation made by residents of that prefecture. Choose deliberately and say which reading you used. For a bare place phrase such as `Xの寄付`, issue one query that selects both column families and report both, or ask the user which meaning they intend; never choose one silently.\n- For an unqualified popularity or ranking question, return both the count and amount metrics, the stable ID, and the nationwide or filtered scope. Never choose only one metric and call it popularity.\n- `ot_donation` is the only transaction grain. `ot_donor`, `ot_gift`, `ot_municipality`, `ot_gift_category` and `ot_prefecture` carry pre-aggregated static counts and totals for their own grain, and `ot_mun_category_metric`, `ot_pref_category_metric` and `ot_pref_donation_flow` are already summarized pairs. Never re-aggregate a pre-aggregated column across a different grain, and never sum a rank.\n- `ot_supplier_gift` is a many-to-many registration bridge. Never use it in a donation count or amount aggregation.\n- `DonationSelectedGift` means the donation selected that return gift; `SupplierProvidesGift` means the supplier registered that gift in the catalog. Neither proves purchase, delivery or allocation of a donation to one supplier. `ot_pref_donation_flow` origin is residence and destination is recipient; they are not interchangeable.\n- In dbo base tables, use DonorResidenceAmountRank only inside a residence Prefecture and DonorOverallAmountRank only nationwide; likewise MunicipalityPrefAmountRank versus MunicipalityAmountRank. Print the rank scope.\n- In dbo pre-aggregated tables, MunicipalityAmountRank, MunicipalityPrefAmountRank and the other *AmountRank columns are amount ranks; no dbo stored column ranks by record count. A filtered dbo count rank must be derived by ordering its count and labeled derived. The preferred MunicipalityStatic view and MunicipalityById TVF already return MunicipalityDerivedNationwideCountRank computed by their definition; reuse that field for nationwide count rank and never substitute an amount rank.\n- Month filters use `DonationYearMonthJst` (`yyyy-MM`) or `DonationDateJst` (`yyyy-MM-dd`); both are Asia/Tokyo, while `DonatedAtUtc` is UTC.\n- Lakehouse relationship-key columns support SQL joins; Ontology owns modeled connectivity. For a multi-source Prefecture relationship question, return MunicipalityId, MunicipalityName and static metrics from SQL, and label them Lakehouse. Return the Prefecture relationship from Ontology separately; do not label Graph-only attributes as SQL output.\n- Membership or containment questions - which Municipalities belong to, sit under, hang from, 属する or ぶら下がる a Prefecture - belong to Ontology. Do not answer them by counting or grouping `ot_municipality.PrefectureId`; return static metrics only and let Ontology return the relationship-backed total.\n- When MunicipalityID comes from Eventhouse, invoke agent_ref.MunicipalityById with that actual ID as its sole argument. Request the bounded `m.*` result plus ReconciliationKey and ReconciliationRule. Require matching RequestedMunicipalityId/actual MunicipalityId, RetrievalMode, MunicipalityName, both static metrics, MunicipalityStoredNationwideAmountRank AS MunicipalityAmountRank, MunicipalityStoredPrefectureAmountRank AS MunicipalityPrefAmountRank, NationwideRankScope, PrefectureRankScope and DatasetScope. Never replace this exact lookup with an ot_municipality ranking query.\n- This source is independent of the Eventhouse observations. Never add its rows or amounts to Eventhouse observation totals and never call its rows approved, confirmed or finalized.\n- For an exact Donation trace, use only `agent_ref.DonationTraceById`, preserving its complete 30-field result and every Supplier row. Never invent a direct Donor-to-Supplier relationship.\n- For purely static place metrics, do not add Ontology unless a relationship/path is requested. This never suppresses a required Ontology step in cross-source operational reconciliation: return SQL facts and let the root obtain current Ontology instance-path proof. Never invent received/resident overlap or reconciliation values.\n- Static snapshot is a dataset label, not proof of deduplication, approval, confirmation or finality. Never add its metrics to Eventhouse observations, even as a reference value.\n- Canonical Gift category relationship name: `Gift -GiftInCategory-> GiftCategory`. Use that exact name in every Donation trace.\n- `_WorkshopGenerationId` is an opaque publication generation, never a calendar year. The `ot_*` tables already represent the static 2025 snapshot. Never filter `_WorkshopGenerationId` to 2025 or to any year; for a current static query, omit that filter.\n- MunicipalityId is a string key; preserve leading zeros. For cross-source comparison, use the exact MunicipalityById result and its bounded 22-field contract plus the two truthful computed reconciliation aliases. Do not request nonexistent native function fields or substitute a generation filter.\n- Donation-trace Suppliers come from `agent_ref.DonationTraceById` only. Keep every returned registration and never substitute Suppliers for another Gift in the same Municipality.\n- Return every ID/name pair from the same SQL row. For an exact Donation trace, never infer MunicipalityName from PrefectureName or MunicipalityId. Use Lakehouse for attributes and Ontology only for modeled paths.\n",
+    "description": "Static 2025 Furusato snapshot. Municipality means the Donation recipient; donor residence is modeled only at Prefecture. Unqualified popularity means DonationCount across recipient Municipalities in the nationwide Static 2025 UTC snapshot. Prefer MunicipalityStatic for ranking, MunicipalityById for exact Municipality lookup, and DonationTraceById for one-call exact Donation plus all registered Suppliers. Original selected dbo facts and dimensions remain available for full Core and zero-population coverage. This source has no August 2026 operational observations and proves no manufacture, shipment, fulfillment, approval, wealth or income.",
+    "elements": [
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ]
+        ],
+        "description": "Japanese prefecture (都道府県) used in two separate geography paths: recipient geography through Municipality and donor-residence geography through Donor. It is a reference dimension, not a Donation fact grain."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefectureId"
+          ]
+        ],
+        "description": "Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefectureName"
+          ]
+        ],
+        "description": "Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefectureNameEn"
+          ]
+        ],
+        "description": "Canonical English label of the prefecture. Use it for English lookup and display; PrefectureId remains the identity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefReceivedStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated count of static Donations received by municipalities in this Prefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefReceivedTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated JPY amount received by municipalities in this Prefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefReceivedAmountRank"
+          ]
+        ],
+        "description": "Received-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefReceivedTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefResidentStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated count of static Donations made by Donors who live in this Prefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefResidentTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated JPY amount donated by Donors who live in this Prefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_prefecture"
+          ],
+          [
+            "Column",
+            "PrefResidentAmountRank"
+          ]
+        ],
+        "description": "Resident-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefResidentTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ]
+        ],
+        "description": "Japanese municipality (自治体／市区町村) that may receive zero or more Donations. It also keys operational time-series observations; those observations are not Donation entities and have no Donor, Gift, or Supplier identity. SQL joins: PrefectureId supports MunicipalityInPrefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityId"
+          ]
+        ],
+        "description": "Stable identifier for one Municipality entity. Preserve leading zeros if present and use it as the relationship key; do not aggregate it."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityName"
+          ]
+        ],
+        "description": "Japanese municipality name (自治体名／市区町村名) without a prefecture qualifier. Names are not globally unique, so include MunicipalityId or MunicipalityDisplayName when ambiguity is possible."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityDisplayName"
+          ]
+        ],
+        "description": "Display-only composite label in the format MunicipalityName, PrefectureName, and MunicipalityId. Use MunicipalityId as the identity and this property only for unambiguous human-readable output."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated count of static Donations received by this Municipality."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityStaticTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation amount received by this Municipality in JPY."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityAmountRank"
+          ]
+        ],
+        "description": "Received-amount rank of this Municipality across all Municipalities. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc: equal amounts never share a rank because MunicipalityId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "MunicipalityPrefAmountRank"
+          ]
+        ],
+        "description": "Received-amount rank of this Municipality inside its containing Prefecture. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc within each PrefectureId: equal amounts never share a rank because MunicipalityId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_municipality"
+          ],
+          [
+            "Column",
+            "PrefectureId"
+          ]
+        ],
+        "description": "Foreign key used by MunicipalityInPrefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ]
+        ],
+        "description": "Synthetic workshop donor (寄付者／寄附者) who may make zero or more Donations. Residence is defined only by DonorLivesInPrefecture and must never be interpreted as recipient geography. SQL joins: PrefectureId supports DonorLivesInPrefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorId"
+          ]
+        ],
+        "description": "Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorName"
+          ]
+        ],
+        "description": "Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorDisplayName"
+          ]
+        ],
+        "description": "Display-only composite of DonorName and DonorId. Use DonorId for identity and this property for human-readable output."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorAge"
+          ]
+        ],
+        "description": "Whole-year age of the synthetic donor (年齢) in the static donor record. It is not derived from the Donation timestamp and must not be summed."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorOccupation"
+          ]
+        ],
+        "description": "Japanese controlled occupation or job label (職業／職種／仕事) for the synthetic donor. It describes the donor's job category, not employer, recipient, or Supplier type."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorOccupationEn"
+          ]
+        ],
+        "description": "Canonical English occupation label for DonorOccupation. Use it for English filtering and grouping; preserve DonorOccupation when returning the stored Japanese label."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated number of static Donations made by this Donor."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorStaticTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated cumulative static Donation amount made by this Donor in JPY."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorStaticMaxYen"
+          ]
+        ],
+        "description": "Maximum single static Donation amount made by this Donor in JPY; it is not the cumulative amount."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorOverallAmountRank"
+          ]
+        ],
+        "description": "Cumulative static donation-amount rank of this Donor nationwide. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc: equal amounts never share a rank because DonorId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "DonorResidenceAmountRank"
+          ]
+        ],
+        "description": "Cumulative static donation-amount rank of this Donor inside the residence Prefecture. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc within each PrefectureId: equal amounts never share a rank because DonorId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donor"
+          ],
+          [
+            "Column",
+            "PrefectureId"
+          ]
+        ],
+        "description": "Foreign key used by DonorLivesInPrefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ]
+        ],
+        "description": "Controlled classification of return-gift options (返礼品カテゴリ). Category counts and amounts must be aggregated from Donation through DonationSelectedGift and GiftInCategory; the category itself is not a transaction fact."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategoryId"
+          ]
+        ],
+        "description": "Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategoryName"
+          ]
+        ],
+        "description": "Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategoryNameEn"
+          ]
+        ],
+        "description": "Canonical English return-gift category label paired one-to-one with CategoryName. Use it for English filtering, grouping, and display; CategoryId remains the identity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategorySearchTerms"
+          ]
+        ],
+        "description": "Lowercase pipe-delimited Japanese and English aliases with leading and trailing boundary pipes, used only to resolve colloquial return-gift category wording such as 海鮮系, 魚介, seafood, or equivalent bounded terms. If CategoryName does not match, query this alias index before claiming no category data. Never display, group, count, or treat this property as the category identity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategoryStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation count for this GiftCategory across the full snapshot."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategoryStaticTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation amount for this GiftCategory across the full snapshot."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift_category"
+          ],
+          [
+            "Column",
+            "CategoryAmountRank"
+          ]
+        ],
+        "description": "Static donation-amount rank of this GiftCategory across all GiftCategories. Deterministic row-number rank (row_number) over CategoryStaticTotalYen desc, CategoryId asc: equal amounts never share a rank because CategoryId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ]
+        ],
+        "description": "Synthetic return-gift option selected by a Donation (返礼品／お礼品／商品). It is a catalog dimension, not the donated money and not a transaction fact. If a Municipality is named, resolve that Municipality and traverse MunicipalityCatalogsGift before applying a GiftName CONTAINS candidate filter. Resolve exactly one stable GiftId before Supplier or Donation traversal. SQL joins: CategoryId supports GiftInCategory; MunicipalityId supports MunicipalityCatalogsGift."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftId"
+          ]
+        ],
+        "description": "Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftName"
+          ]
+        ],
+        "description": "Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftDisplayName"
+          ]
+        ],
+        "description": "Canonical human-readable municipality-qualified catalog label copied from the source Gift name before the core GiftName is derived. Use it for exact full-label resolution and GiftId as the stable identity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftSearchTerms"
+          ]
+        ],
+        "description": "Normalized search-only text for resolving shortened or colloquial Gift wording. It contains the Gift name, catalog Municipality, Prefecture, and GiftId with whitespace and punctuation removed. Filter it with every distinctive noun and numeric token supplied by the user; never display, group, count, or treat it as Gift identity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftNotes"
+          ]
+        ],
+        "description": "Japanese free-text note, notes, remarks, or description for the return-gift option (備考／注意事項／説明). Notes are descriptive only and do not define Supplier, recipient geography, category, or monetary amount."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftStaticCount"
+          ]
+        ],
+        "description": "Authoritative pre-aggregated count of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift count; do not join Suppliers or recount Donation detail."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftStaticTotalYen"
+          ]
+        ],
+        "description": "Authoritative pre-aggregated JPY amount of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift total; do not join Suppliers or use SUM(DISTINCT DonationAmountYen)."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "GiftAmountRank"
+          ]
+        ],
+        "description": "Static donation-amount rank of this Gift across all Gifts. Deterministic row-number rank (row_number) over GiftStaticTotalYen desc, GiftId asc: equal amounts never share a rank because GiftId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "CategoryId"
+          ]
+        ],
+        "description": "Foreign key used by GiftInCategory."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_gift"
+          ],
+          [
+            "Column",
+            "MunicipalityId"
+          ]
+        ],
+        "description": "Foreign key used by MunicipalityCatalogsGift."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ]
+        ],
+        "description": "Synthetic workshop business that may provide zero or more return-gift options (返礼品提供事業者). It is neither the Donation recipient nor a Donor; location is defined by SupplierInPrefecture. SQL joins: PrefectureId supports SupplierInPrefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "SupplierId"
+          ]
+        ],
+        "description": "Stable numeric identifier for one synthetic registered Supplier entity. It identifies a catalog provider, not an actual fulfillment event."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "SupplierName"
+          ]
+        ],
+        "description": "Synthetic Japanese organization-style name of the Supplier or vendor (事業者名／提供事業者名). It is not a Donation recipient."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "SupplierDisplayName"
+          ]
+        ],
+        "description": "Display-only composite of SupplierName and SupplierId. Use SupplierId for identity and this property for human-readable output."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "SupplierType"
+          ]
+        ],
+        "description": "Japanese controlled supplier classification or business-type label (事業者種別／事業者区分) for the Supplier or vendor. It describes the provider, not the Gift category or Donation recipient."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "SupplierTypeEn"
+          ]
+        ],
+        "description": "Canonical English business-type label for SupplierType. Use it for English filtering and grouping; it describes the provider and not the Gift category or Donation recipient."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "SupplierProvidedGiftCount"
+          ]
+        ],
+        "description": "Count of distinct Gifts linked to this Supplier in the registered catalog; it is not a Donation or fulfillment metric."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier"
+          ],
+          [
+            "Column",
+            "PrefectureId"
+          ]
+        ],
+        "description": "Foreign key used by SupplierInPrefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ]
+        ],
+        "description": "Synthetic static baseline hometown-tax Donation row (ふるさと納税の寄付／寄附) and the only static fact grain for transaction counts and JPY amounts. It is an independent snapshot, not an approved, promoted, deduplicated, or finalized form of an Eventhouse observation. Each entity links to exactly one Donor, one recipient Municipality, and one selected Gift option in this dataset. SQL joins: DonorId supports DonorMadeDonation; MunicipalityId supports DonationToMunicipality; GiftId supports DonationSelectedGift."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationId"
+          ]
+        ],
+        "description": "Stable numeric identifier for one static Donation transaction. When a user says 寄付ID or Donation ID followed by a number, filter this property for exact identity; never reinterpret that number as DonationAmountYen. It is the transaction key and must not be used as a grouping dimension for an overall aggregate."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationDisplayName"
+          ]
+        ],
+        "description": "Display-only label in the format Donation followed by DonationId. Use DonationId for identity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationAmountYen"
+          ]
+        ],
+        "description": "Completed donation amount (寄付金額／寄附金額／納税額) in whole Japanese yen for exactly one static Donation. SUM this property for donation totals and never sum IDs or Municipality time-series observations into the same result."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonatedAtUtc"
+          ]
+        ],
+        "description": "Canonical UTC timestamp of the static baseline Donation. Use it for exact sorting, filtering, minimum, maximum, and deterministic latest-record selection."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonatedAtJstText"
+          ]
+        ],
+        "description": "Display-only representation of DonatedAtUtc in Japan Standard Time (日本時間). Do not use this string for chronological sorting when DonatedAtUtc is available."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationDateJst"
+          ]
+        ],
+        "description": "Japan Standard Time calendar date of the Donation (寄付日／寄附日). Use it for local-day filtering and grouping, not for exact timestamp ordering."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationYearMonthJst"
+          ]
+        ],
+        "description": "Japan Standard Time calendar year and month of the Donation (寄付年月／寄附年月). Use it for local-month filtering and grouping. Normalize an unambiguous Japanese two-digit Gregorian year such as 25年 to 2025 before matching the stored yyyy-MM value."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationYearMonthJaShort"
+          ]
+        ],
+        "description": "Japanese short Gregorian year-month label for the Donation, formatted yyyy年M月, such as 2025年1月. Use it only when the user supplies that short Japanese month wording; DonationYearMonthJst remains the canonical yyyy-MM calendar key."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationPaymentMethod"
+          ]
+        ],
+        "description": "Stored payment method, payment channel, checkout channel, or tender label (支払方法／決済方法／決済手段) for the completed Donation. It is a controlled Japanese-or-brand label and must not be interpreted as a Supplier."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationPaymentMethodEn"
+          ]
+        ],
+        "description": "Canonical English payment-method label for DonationPaymentMethod. Use it for English filtering and grouping; return both labels when the user asks for a translation."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonationDataLayer"
+          ]
+        ],
+        "description": "Canonical layer label for this detail entity. Its only value is StaticSyntheticSnapshot, which is not a payment method or time-series event type."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "DonorId"
+          ]
+        ],
+        "description": "Foreign key used by DonorMadeDonation."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "MunicipalityId"
+          ]
+        ],
+        "description": "Foreign key used by DonationToMunicipality."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_donation"
+          ],
+          [
+            "Column",
+            "GiftId"
+          ]
+        ],
+        "description": "Foreign key used by DonationSelectedGift."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ]
+        ],
+        "description": "Pre-aggregated current-static-snapshot metric for one Municipality and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain. SQL joins: MunicipalityId supports MunHasCategoryMetric; CategoryId supports MunMetricForCategory."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ],
+          [
+            "Column",
+            "MunCategoryMetricId"
+          ]
+        ],
+        "description": "Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row. The measure values are separate properties on this entity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ],
+          [
+            "Column",
+            "MunCategoryStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation count for one Municipality x GiftCategory pair."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ],
+          [
+            "Column",
+            "MunCategoryTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation amount for one Municipality x GiftCategory pair."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ],
+          [
+            "Column",
+            "MunCategoryAmountRank"
+          ]
+        ],
+        "description": "Amount rank of this GiftCategory inside one Municipality. Deterministic row-number rank (row_number) over MunCategoryTotalYen desc, CategoryId asc within each MunicipalityId: equal amounts never share a rank because CategoryId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ],
+          [
+            "Column",
+            "MunicipalityId"
+          ]
+        ],
+        "description": "Foreign key used by MunHasCategoryMetric."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_mun_category_metric"
+          ],
+          [
+            "Column",
+            "CategoryId"
+          ]
+        ],
+        "description": "Foreign key used by MunMetricForCategory."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ]
+        ],
+        "description": "Pre-aggregated current-static-snapshot metric for one recipient Prefecture and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain. SQL joins: PrefectureId supports PrefHasCategoryMetric; CategoryId supports PrefMetricForCategory."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ],
+          [
+            "Column",
+            "PrefCategoryMetricId"
+          ]
+        ],
+        "description": "Synthetic stable identifier for one recipient Prefecture x GiftCategory snapshot metric row. The measure values are separate properties on this entity."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ],
+          [
+            "Column",
+            "PrefCategoryStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation count for one recipient Prefecture x GiftCategory pair."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ],
+          [
+            "Column",
+            "PrefCategoryTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated static Donation amount for one recipient Prefecture x GiftCategory pair."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ],
+          [
+            "Column",
+            "PrefCategoryAmountRank"
+          ]
+        ],
+        "description": "Amount rank of this GiftCategory inside one recipient Prefecture. Deterministic row-number rank (row_number) over PrefCategoryTotalYen desc, CategoryId asc within each PrefectureId: equal amounts never share a rank because CategoryId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ],
+          [
+            "Column",
+            "PrefectureId"
+          ]
+        ],
+        "description": "Foreign key used by PrefHasCategoryMetric."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_category_metric"
+          ],
+          [
+            "Column",
+            "CategoryId"
+          ]
+        ],
+        "description": "Foreign key used by PrefMetricForCategory."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ]
+        ],
+        "description": "Pre-aggregated current-static-snapshot flow from Donor residence Prefecture to Donation recipient Prefecture. Origin and destination are not interchangeable. It excludes time-series observations and Suppliers. SQL joins: ResidencePrefectureId supports ResidencePrefHasFlow; RecipientPrefectureId supports FlowToRecipientPref."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "PrefDonationFlowId"
+          ]
+        ],
+        "description": "Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row. Directional measures are separate properties."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "PrefFlowStaticCount"
+          ]
+        ],
+        "description": "Pre-aggregated count of static Donations from one residence Prefecture to one recipient Prefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "PrefFlowTotalYen"
+          ]
+        ],
+        "description": "Pre-aggregated JPY amount from one residence Prefecture to one recipient Prefecture."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "PrefFlowOriginRank"
+          ]
+        ],
+        "description": "Amount rank of this recipient Prefecture among the destinations of one donor-residence Prefecture: the window is partitioned by the origin, so rank 1 is the destination that received the most from that origin. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, RecipientPrefectureId asc within each ResidencePrefectureId: equal amounts never share a rank because RecipientPrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "PrefFlowDestinationRank"
+          ]
+        ],
+        "description": "Amount rank of this donor-residence Prefecture among the origins of one recipient Prefecture: the window is partitioned by the destination, so rank 1 is the origin that sent the most to that destination. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, ResidencePrefectureId asc within each RecipientPrefectureId: equal amounts never share a rank because ResidencePrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "ResidencePrefectureId"
+          ]
+        ],
+        "description": "Foreign key used by ResidencePrefHasFlow."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_pref_donation_flow"
+          ],
+          [
+            "Column",
+            "RecipientPrefectureId"
+          ]
+        ],
+        "description": "Foreign key used by FlowToRecipientPref."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier_gift"
+          ]
+        ],
+        "description": "Many-to-many registered Supplier-to-Gift bridge. Never use it in Donation count or amount aggregation."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier_gift"
+          ],
+          [
+            "Column",
+            "SupplierId"
+          ]
+        ],
+        "description": "Registered Supplier identifier; joins to ot_supplier.SupplierId."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "dbo"
+          ],
+          [
+            "Table",
+            "ot_supplier_gift"
+          ],
+          [
+            "Column",
+            "GiftId"
+          ]
+        ],
+        "description": "Registered Gift identifier; joins to ot_gift.GiftId."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "agent_ref"
+          ],
+          [
+            "View",
+            "MunicipalityStatic"
+          ]
+        ],
+        "description": "Preferred nationwide Static 2025 Municipality reference view. One row per Municipality including zero-Donation municipalities. DonationCount is the explicit default popularity metric; stored amount ranks and derived count rank remain distinct with rank-scope metadata."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "agent_ref"
+          ],
+          [
+            "Function",
+            "MunicipalityById"
+          ]
+        ],
+        "description": "Preferred exact MunicipalityId TVF. Call with the exact six-ASCII-digit MunicipalityID literal returned by the current request. Returns request echo, exact-ID RetrievalMode, actual ID, static metrics and scope; malformed or unknown IDs return no row."
+      },
+      {
+        "path": [
+          [
+            "Schema",
+            "agent_ref"
+          ],
+          [
+            "Function",
+            "DonationTraceById"
+          ]
+        ],
+        "description": "Preferred one-call exact Donation trace. Returns Donation, Donor, residence Prefecture, recipient Municipality and Prefecture, selected Gift and Category, plus every registered Supplier at DonationId x SupplierId registration grain. DonationAmountYen repeats and is non-additive across Supplier rows."
+      }
+    ],
+    "referenceObjects": {
+      "MunicipalityStatic": {
+        "type": "View",
+        "fields": [
+          [
+            "MunicipalityId",
+            "varchar"
+          ],
+          [
+            "MunicipalityName",
+            "varchar"
+          ],
+          [
+            "MunicipalityDisplayName",
+            "varchar"
+          ],
+          [
+            "PrefectureId",
+            "bigint"
+          ],
+          [
+            "PrefectureName",
+            "varchar"
+          ],
+          [
+            "PrefectureNameEn",
+            "varchar"
+          ],
+          [
+            "MunicipalityStaticCount",
+            "bigint"
+          ],
+          [
+            "MunicipalityStaticTotalYen",
+            "bigint"
+          ],
+          [
+            "MunicipalityStoredNationwideAmountRank",
+            "bigint"
+          ],
+          [
+            "MunicipalityStoredPrefectureAmountRank",
+            "bigint"
+          ],
+          [
+            "MunicipalityDerivedNationwideCountRank",
+            "bigint"
+          ],
+          [
+            "DefaultPopularityMetric",
+            "varchar"
+          ],
+          [
+            "DefaultPopularityValue",
+            "bigint"
+          ],
+          [
+            "DatasetName",
+            "varchar"
+          ],
+          [
+            "SourceSystem",
+            "varchar"
+          ],
+          [
+            "DatasetScope",
+            "varchar"
+          ],
+          [
+            "CountUnit",
+            "varchar"
+          ],
+          [
+            "AmountUnit",
+            "varchar"
+          ],
+          [
+            "NationwideRankScope",
+            "varchar"
+          ],
+          [
+            "PrefectureRankScope",
+            "varchar"
+          ]
+        ],
+        "fieldDescriptions": {
+          "MunicipalityId": "Actual six-digit Municipality stable ID returned by the source.",
+          "MunicipalityName": "Actual Municipality name from the source row.",
+          "MunicipalityDisplayName": "Municipality display label from the source row.",
+          "PrefectureId": "Prefecture stable ID for the Municipality.",
+          "PrefectureName": "Prefecture name for the Municipality.",
+          "PrefectureNameEn": "English Prefecture name for the Municipality.",
+          "MunicipalityStaticCount": "Donation-row count for this Municipality in the Static 2025 UTC snapshot.",
+          "MunicipalityStaticTotalYen": "DonationAmountYen total for this Municipality in the Static 2025 UTC snapshot; unit JPY.",
+          "MunicipalityStoredNationwideAmountRank": "Stored nationwide rank by MunicipalityStaticTotalYen; this is an amount rank, not a count rank.",
+          "MunicipalityStoredPrefectureAmountRank": "Stored within-Prefecture rank by MunicipalityStaticTotalYen.",
+          "MunicipalityDerivedNationwideCountRank": "Derived nationwide Donation-count rank ordered count descending then MunicipalityId ascending.",
+          "DefaultPopularityMetric": "Explicit default static popularity metric name: DonationCount.",
+          "DefaultPopularityValue": "Value of the explicit default static popularity metric; equals MunicipalityStaticCount.",
+          "DatasetName": "Static source dataset identifier.",
+          "SourceSystem": "Source system identifier for this SQL result.",
+          "DatasetScope": "Static 2025 UTC snapshot scope; it does not impose an extra date filter.",
+          "CountUnit": "Unit label for MunicipalityStaticCount: Donation rows.",
+          "AmountUnit": "Currency unit label: JPY.",
+          "NationwideRankScope": "Population and scope used by nationwide Municipality ranks, including zero-Donation municipalities.",
+          "PrefectureRankScope": "Population and scope used by within-Prefecture Municipality ranks."
+        },
+        "parameter": null,
+        "parameterDescription": null
+      },
+      "MunicipalityById": {
+        "type": "Function",
+        "fields": [
+          [
+            "RequestedMunicipalityId",
+            "varchar"
+          ],
+          [
+            "RetrievalMode",
+            "varchar"
+          ],
+          [
+            "MunicipalityId",
+            "varchar"
+          ],
+          [
+            "MunicipalityName",
+            "varchar"
+          ],
+          [
+            "MunicipalityDisplayName",
+            "varchar"
+          ],
+          [
+            "PrefectureId",
+            "bigint"
+          ],
+          [
+            "PrefectureName",
+            "varchar"
+          ],
+          [
+            "PrefectureNameEn",
+            "varchar"
+          ],
+          [
+            "MunicipalityStaticCount",
+            "bigint"
+          ],
+          [
+            "MunicipalityStaticTotalYen",
+            "bigint"
+          ],
+          [
+            "MunicipalityStoredNationwideAmountRank",
+            "bigint"
+          ],
+          [
+            "MunicipalityStoredPrefectureAmountRank",
+            "bigint"
+          ],
+          [
+            "MunicipalityDerivedNationwideCountRank",
+            "bigint"
+          ],
+          [
+            "DefaultPopularityMetric",
+            "varchar"
+          ],
+          [
+            "DefaultPopularityValue",
+            "bigint"
+          ],
+          [
+            "DatasetName",
+            "varchar"
+          ],
+          [
+            "SourceSystem",
+            "varchar"
+          ],
+          [
+            "DatasetScope",
+            "varchar"
+          ],
+          [
+            "CountUnit",
+            "varchar"
+          ],
+          [
+            "AmountUnit",
+            "varchar"
+          ],
+          [
+            "NationwideRankScope",
+            "varchar"
+          ],
+          [
+            "PrefectureRankScope",
+            "varchar"
+          ]
+        ],
+        "fieldDescriptions": {
+          "RequestedMunicipalityId": "Source-generated echo of the exact Municipality lookup input.",
+          "RetrievalMode": "Source-generated lookup lineage; exact-ID lookup for these TVFs.",
+          "MunicipalityId": "Actual six-digit Municipality stable ID returned by the source.",
+          "MunicipalityName": "Actual Municipality name from the source row.",
+          "MunicipalityDisplayName": "Municipality display label from the source row.",
+          "PrefectureId": "Prefecture stable ID for the Municipality.",
+          "PrefectureName": "Prefecture name for the Municipality.",
+          "PrefectureNameEn": "English Prefecture name for the Municipality.",
+          "MunicipalityStaticCount": "Donation-row count for this Municipality in the Static 2025 UTC snapshot.",
+          "MunicipalityStaticTotalYen": "DonationAmountYen total for this Municipality in the Static 2025 UTC snapshot; unit JPY.",
+          "MunicipalityStoredNationwideAmountRank": "Stored nationwide rank by MunicipalityStaticTotalYen; this is an amount rank, not a count rank.",
+          "MunicipalityStoredPrefectureAmountRank": "Stored within-Prefecture rank by MunicipalityStaticTotalYen.",
+          "MunicipalityDerivedNationwideCountRank": "Derived nationwide Donation-count rank ordered count descending then MunicipalityId ascending.",
+          "DefaultPopularityMetric": "Explicit default static popularity metric name: DonationCount.",
+          "DefaultPopularityValue": "Value of the explicit default static popularity metric; equals MunicipalityStaticCount.",
+          "DatasetName": "Static source dataset identifier.",
+          "SourceSystem": "Source system identifier for this SQL result.",
+          "DatasetScope": "Static 2025 UTC snapshot scope; it does not impose an extra date filter.",
+          "CountUnit": "Unit label for MunicipalityStaticCount: Donation rows.",
+          "AmountUnit": "Currency unit label: JPY.",
+          "NationwideRankScope": "Population and scope used by nationwide Municipality ranks, including zero-Donation municipalities.",
+          "PrefectureRankScope": "Population and scope used by within-Prefecture Municipality ranks."
+        },
+        "parameter": "@RequestedMunicipalityId",
+        "parameterDescription": "Exact Municipality lookup input. Supply one six-ASCII-digit MunicipalityId literal; malformed or unknown values return no row."
+      },
+      "DonationTraceById": {
+        "type": "Function",
+        "fields": [
+          [
+            "RequestedDonationId",
+            "bigint"
+          ],
+          [
+            "RetrievalMode",
+            "varchar(32)"
+          ],
+          [
+            "DonationId",
+            "bigint"
+          ],
+          [
+            "DonationDisplayName",
+            "varchar"
+          ],
+          [
+            "DonationAmountYen",
+            "bigint"
+          ],
+          [
+            "DonorId",
+            "bigint"
+          ],
+          [
+            "DonorName",
+            "varchar"
+          ],
+          [
+            "DonorDisplayName",
+            "varchar"
+          ],
+          [
+            "DonorResidencePrefectureId",
+            "bigint"
+          ],
+          [
+            "DonorResidencePrefectureName",
+            "varchar"
+          ],
+          [
+            "MunicipalityId",
+            "varchar(6)"
+          ],
+          [
+            "MunicipalityName",
+            "varchar"
+          ],
+          [
+            "MunicipalityDisplayName",
+            "varchar"
+          ],
+          [
+            "RecipientPrefectureId",
+            "bigint"
+          ],
+          [
+            "RecipientPrefectureName",
+            "varchar"
+          ],
+          [
+            "GiftId",
+            "bigint"
+          ],
+          [
+            "GiftName",
+            "varchar"
+          ],
+          [
+            "GiftDisplayName",
+            "varchar"
+          ],
+          [
+            "CategoryId",
+            "bigint"
+          ],
+          [
+            "CategoryName",
+            "varchar"
+          ],
+          [
+            "SupplierId",
+            "bigint"
+          ],
+          [
+            "SupplierName",
+            "varchar"
+          ],
+          [
+            "SupplierDisplayName",
+            "varchar"
+          ],
+          [
+            "SupplierType",
+            "varchar"
+          ],
+          [
+            "SupplierTypeEn",
+            "varchar"
+          ],
+          [
+            "DatasetName",
+            "varchar(64)"
+          ],
+          [
+            "SourceSystem",
+            "varchar(64)"
+          ],
+          [
+            "DatasetScope",
+            "varchar(64)"
+          ],
+          [
+            "DonationAmountUnit",
+            "varchar(8)"
+          ],
+          [
+            "RowGrain",
+            "varchar(96)"
+          ]
+        ],
+        "fieldDescriptions": {
+          "RequestedDonationId": "Source-generated echo of the requested DonationId.",
+          "RetrievalMode": "Source-generated exact-ID lookup lineage.",
+          "DonationId": "Actual Donation stable ID.",
+          "DonationDisplayName": "Donation display label from Lakehouse.",
+          "DonationAmountYen": "Donation fact amount in JPY; repeated and non-additive across Supplier-registration rows.",
+          "DonorId": "Stable ID of the Donor associated with the Donation.",
+          "DonorName": "Donor name returned by Lakehouse.",
+          "DonorDisplayName": "Donor display label returned by Lakehouse.",
+          "DonorResidencePrefectureId": "Stable ID of the Donor residence Prefecture; not recipient geography.",
+          "DonorResidencePrefectureName": "Name of the Donor residence Prefecture.",
+          "MunicipalityId": "Stable ID of the recipient Municipality.",
+          "MunicipalityName": "Name of the recipient Municipality.",
+          "MunicipalityDisplayName": "Display label of the recipient Municipality.",
+          "RecipientPrefectureId": "Stable ID of the recipient Municipality's Prefecture.",
+          "RecipientPrefectureName": "Name of the recipient Municipality's Prefecture.",
+          "GiftId": "Stable ID of the Gift selected by the Donation.",
+          "GiftName": "Name of the selected Gift.",
+          "GiftDisplayName": "Display label of the selected Gift.",
+          "CategoryId": "Stable ID of the selected Gift's Category.",
+          "CategoryName": "Name of the selected Gift's Category.",
+          "SupplierId": "Stable ID of one Supplier registered for the selected Gift.",
+          "SupplierName": "Name of one registered Supplier returned by Lakehouse.",
+          "SupplierDisplayName": "Display label of one registered Supplier returned by Lakehouse.",
+          "SupplierType": "Registered Supplier type.",
+          "SupplierTypeEn": "English registered Supplier type.",
+          "DatasetName": "Static source dataset identifier.",
+          "SourceSystem": "Source system identifier returned by the selected function.",
+          "DatasetScope": "Static 2025 UTC snapshot scope.",
+          "DonationAmountUnit": "Currency unit for DonationAmountYen: JPY.",
+          "RowGrain": "DonationId x SupplierId registration; DonationAmountYen is non-additive across rows."
+        },
+        "parameter": "@RequestedDonationId",
+        "parameterDescription": "Exact bigint DonationId supplied as the sole function argument."
+      }
+    },
+    "fewShots": {
+      "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/fewShots/1.0.0/schema.json",
+      "fewShots": [
+        {
+          "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a11",
+          "question": "福岡県について、受入（県内の自治体が受け取った寄付）と在住（県内在住の寄付者が行った寄付）の件数・金額・金額ランクを、両方の読み方に分けて示してください。",
+          "query": "SELECT\n    p.PrefectureId,\n    p.PrefectureName,\n    p.PrefReceivedStaticCount,\n    p.PrefReceivedTotalYen,\n    p.PrefReceivedAmountRank,\n    p.PrefResidentStaticCount,\n    p.PrefResidentTotalYen,\n    p.PrefResidentAmountRank\nFROM dbo.ot_prefecture AS p\nWHERE p.PrefectureName = N'福岡県';"
+        },
+        {
+          "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a12",
+          "question": "2025年12月の寄付を支払い方法ごとに集計してください。",
+          "query": "SELECT\n    d.DonationYearMonthJst,\n    d.DonationPaymentMethod,\n    COUNT_BIG(*) AS DonationCount,\n    SUM(d.DonationAmountYen) AS TotalDonationAmountYen\nFROM dbo.ot_donation AS d\nWHERE d.DonationYearMonthJst = N'2025-12'\nGROUP BY d.DonationYearMonthJst, d.DonationPaymentMethod\nORDER BY TotalDonationAmountYen DESC;"
+        },
+        {
+          "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a13",
+          "question": "新潟県の返礼品カテゴリ別の寄付件数と寄付金額を、カテゴリの安定 ID と県内金額ランク付きで、金額の多い順に示してください。",
+          "query": "SELECT\n    m.PrefCategoryMetricId,\n    m.PrefectureId,\n    p.PrefectureName,\n    m.CategoryId,\n    c.CategoryName,\n    m.PrefCategoryStaticCount,\n    m.PrefCategoryTotalYen,\n    m.PrefCategoryAmountRank\nFROM dbo.ot_pref_category_metric AS m\nINNER JOIN dbo.ot_prefecture AS p\n    ON m.PrefectureId = p.PrefectureId\nINNER JOIN dbo.ot_gift_category AS c\n    ON m.CategoryId = c.CategoryId\nWHERE p.PrefectureName = N'新潟県'\nORDER BY m.PrefCategoryTotalYen DESC;"
+        }
+      ]
+    }
+  },
+  "kusto": {
+    "instructions": "ATOMIC OPERATIONAL ENTRYPOINTS\nPrefer `AgentRawObservationTotals` for one-row raw totals and deduplication preflight, `AgentMunicipalityLeaders` for unique Municipality winner rows, and `AgentFileRunSummary` for file/run/participant-alias rows. Supply the actual requested StartUtc and EndUtc values as the only optional parameters; no illustrative placeholder call is executable guidance. All three functions filter half-open over EventMinute minute-bucket keys and read only DonationObservationSummaryForAgent. Require WindowIsValid=true before using numeric values; false is invalid input, not a valid zero. Preserve the function-returned exact RawDuplicateCaveat: `The totals may include duplicate raw observations; the approved aggregate exposes no event identifier or unique-event metric.`\n\nV10 FILE/RUN FUNCTION CONTRACT\nFor every file/run request invoke `AgentFileRunSummary`. Never query DonationObservationSummaryForAgent directly for this mode.\nThe function returns exactly 17 fields in this order: SourceFile, WorkshopRunId, ParticipantAlias, RawObservationCount, RawObservedAmountYen, FirstObservedAtUtc, LastObservedAtUtc, RequestedStartUtc, RequestedEndUtc, WindowIsValid, Scope, SourceSystem, SourceObject, CountUnit, AmountUnit, RawDuplicateCaveat, TimeZoneNotice.\nThe returned grain is one row per SourceFile, WorkshopRunId and ParticipantAlias. Never reaggregate the function output, derive EventMinuteGrainSeconds or another grain field, perform time-span arithmetic, rename the extrema, or drop an essential field.\nThe function returns no TOTAL row. Never add a TOTAL union, `iff` label, synthetic group, or blank WorkshopRunId. If the user separately requests whole-window totals, invoke AgentRawObservationTotals and keep its scalar result separate.\n\nDIRECT MV QUERY PROJECTION\nDirect queries against `DonationObservationSummaryForAgent` are reserved for hourly or explicitly requested custom breakdowns. They never replace a raw-total, Municipality-leader, or file/run function. Aggregate `RawObservationCount=sum(ObservationCount)` and `RawObservedAmountYen=sum(ObservedAmountYen)`; retain MunicipalityID when grouped by Municipality; return direct-query aliases WindowStartUtc, WindowEndUtc, RawObservationUnit, RawAmountUnit and TimeZoneNotice. Add StoredBucketRows=count() only when bucket rows are explicitly requested. For atomic functions, preserve their returned fields instead of fabricating direct-MV aliases.\n\nOUTPUT SEMANTIC CONTRACT\nFor direct custom MV queries, return TimeZoneNotice='All timestamps are UTC.', requested WindowStartUtc/exclusive WindowEndUtc, direct-query units and separate StoredBucketRows only when requested. Those bounds describe EventMinute bucket filtering, not true observation extrema.\nFor AgentRawObservationTotals and AgentMunicipalityLeaders, preserve the function-returned RequestedStartUtc, RequestedEndUtc, CountUnit, AmountUnit, RawDuplicateCaveat and TimeZoneNotice exactly.\nAgentMunicipalityLeaders returns exactly 15 fields: MunicipalityID, IsCountLeader, IsAmountLeader, RawObservationCount, RawObservedAmountYen, RequestedStartUtc, RequestedEndUtc, WindowIsValid, Scope, SourceSystem, SourceObject, CountUnit, AmountUnit, RawDuplicateCaveat, and TimeZoneNotice.\nFor AgentFileRunSummary, preserve all 17 returned fields exactly. FirstObservedAtUtc and LastObservedAtUtc already represent true source extrema; never recompute them from EventMinute or requested bounds.\nNever invent WindowStartUtc, WindowEndUtc, RawObservationUnit, RawAmountUnit, EventMinuteGrainSeconds, duration, or time-span-derived grain from any function result.\n\nRESULT COMPLETENESS AND RESPONSE METADATA\nFor operational uniqueness/deduplication questions, first invoke `AgentRawObservationTotals` for one scalar row over the requested EventMinute window, with no Municipality breakdown unless requested. Require WindowIsValid=true, preserve RequestedStartUtc, RequestedEndUtc, both raw totals, units and exact returned RawDuplicateCaveat, then explain the absent event-identifier boundary without computing a unique figure.\nFor file/run reconciliation, invoke `AgentFileRunSummary`, require WindowIsValid=true, and preserve every returned file/run/alias row with all 17 native fields. Do not reaggregate or fabricate a TOTAL row. When a separate whole-window total was requested, invoke AgentRawObservationTotals and show that scalar row separately.\nThe native answer must end with the exact untranslated sentence `All timestamps are UTC.`; metadata alone is insufficient.\nThe stored view row is a bucket; sum(ObservationCount) counts underlying raw observations, not bucket rows. For timestamp windows use >= start and < end. KQL join predicates use supported equalities with AND; place an OR alternative in a subsequent where clause, not join on.\n\nApproved query surfaces are `DonationObservationSummaryForAgent`, `AgentRawObservationTotals`, `AgentMunicipalityLeaders` and `AgentFileRunSummary`. The functions read only the approved materialized view. `AgentObservationLeaders` is legacy and unselected; never request it.\n\n- This source is the numeric authority for every August 2026 operational observation metric. No other approved source may be used to state, correct or confirm an observation count or observed amount, and the Ontology time-series mirror is never a substitute for it.\n- Every direct materialized-view row is an aggregate bucket, not one observation. Direct MV queries use sum(ObservationCount) and sum(ObservedAmountYen); count() counts buckets. Atomic functions already return approved aggregates.\n- Direct MV queries filter/group on EventMinute and may rebin it for coarser periods. Atomic function parameters also filter EventMinute bucket keys. True observation range comes from FirstObservedAt/LastObservedAt, never requested bounds.\n- `FirstObservedAt` and `LastObservedAt` are source columns used by the approved functions. AgentFileRunSummary returns their extrema as the native headers `FirstObservedAtUtc` and `LastObservedAtUtc`; never relabel those values as JST.\n- All timestamps are UTC. Convert with `datetime_utc_to_local(..., \"Asia/Tokyo\")` only when the question asks for Japan time, and label the timezone either way.\n- File/run questions invoke AgentFileRunSummary. Keep every SourceFile, WorkshopRunId and ParticipantAlias row. Never infer or construct a run identifier.\n- Direct MV Municipality breakdowns retain MunicipalityID. AgentMunicipalityLeaders returns MunicipalityID, both flags and both raw metrics. A missing display name is expected; resolve the exact returned ID in Lakehouse before Ontology traversal.\n- `MunicipalityID` is recipient context only. Donor, Gift, Supplier, payment method, approval, fulfillment and lifecycle state are not available here; say so instead of substituting a static fact.\n\nDEDUPLICATION LIMIT\n- MANDATORY FIRST STEP for every duplicate, unique-event or deduplication question: invoke `AgentRawObservationTotals`, require WindowIsValid=true, and report its one-row RawObservationCount and RawObservedAmountYen before explaining the limit. Do not group by Municipality unless requested, and do not use the all-sources-failed fallback after a valid result.\n- EventID is the only valid deduplication identity, and no approved Agent source exposes it: it is absent from this materialized view, from the Lakehouse snapshot and from the Ontology. State that scope exactly; do not imply that another approved source could prove it.\n- Never use EventMinute, MunicipalityID, SourceFile, WorkshopRunId, a materialized-view row, or any composite of those fields as a surrogate deduplication key. Never invent `UniqueObservationCount` or `UniqueObservedAmountYen`.\n- Report only the raw aggregates and the missing-identity limit. Never print, estimate, approximate or imply a deduplicated count or deduplicated amount, and never present the raw aggregate as if it were one.\n- ObservationCount is a raw aggregate and may include duplicates. Never label it `重複なし`, unique, deduplicated, confirmed, or exact distinct.\n\nGRAIN AND COMPOSITION\n- The observations are append-only and independent of the static snapshot. Never add these totals to static donation totals and never describe them as pending, unconfirmed, approved or corrected.\n- Never calculate or display a combined total with Lakehouse static metrics, even as a reference value.\n- In a top-Municipality comparison, use `AgentMunicipalityLeaders` and require WindowIsValid=true. For count select IsCountLeader=true; for amount select IsAmountLeader=true. For both metrics retain the zero-to-two unique MunicipalityID rows and both flags. If both flags are true on one row, it is one Municipality result. Never duplicate or re-SUM one ID; preserve both raw metrics. Sum distinct IDs only when explicitly requested and never call it EventID deduplication.\n- AgentFileRunSummary grain is only the returned SourceFile x WorkshopRunId x ParticipantAlias grouping. Never derive a numeric grain or duration.\n\nOne supported direct-MV shape plus the preferred atomic functions:\n\n- Hourly or explicitly requested custom breakdown:\n  query DonationObservationSummaryForAgent directly, filter EventMinute to the actual requested window, summarize the approved raw metrics by the requested bucket/dimensions, and order deterministically. Preserve MunicipalityID when grouped by Municipality.\n- File/run summary uses `AgentFileRunSummary`; preserve all 17 returned fields and every row. If requested, obtain whole-window totals separately from AgentRawObservationTotals.\n- Recipient-Municipality leaders use `AgentMunicipalityLeaders`; no ad-hoc winner query is an approved alternative. Require WindowIsValid=true, filter on the requested leader flag, and preserve unique MunicipalityID rows, both flags, both raw metrics, requested bounds, units, exact duplicate caveat and TimeZoneNotice.\n",
+    "description": "Curated August 2026 operational observations. AgentRawObservationTotals returns one-row raw totals; AgentMunicipalityLeaders returns zero to two unique MunicipalityID rows with IsCountLeader and IsAmountLeader flags; AgentFileRunSummary returns file/run/alias aggregates with true UTC extrema. All three read only DonationObservationSummaryForAgent. Use the materialized view directly for hourly or explicitly requested custom breakdowns. EventMinute bounds filter minute buckets, observed extrema are separate, and raw observations may include duplicates. No EventID or unique-event metric is exposed.",
+    "elements": [
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ]
+        ],
+        "description": "Curated operational aggregates that exclude Donation, Donor, Gift, Supplier, payment, fulfillment, approval, deduplication, and lifecycle identifiers or state."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "MunicipalityID"
+          ]
+        ],
+        "description": "Recipient Municipality identifier for the grouped operational observations."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "EventMinute"
+          ]
+        ],
+        "description": "One-minute time bucket for the grouped operational observations."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "WorkshopRunId"
+          ]
+        ],
+        "description": "Unique workshop publication run identifier."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "ParticipantAlias"
+          ]
+        ],
+        "description": "Short participant alias for the workshop run."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "SourceFile"
+          ]
+        ],
+        "description": "Workshop publisher or source-file label."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "ObservationCount"
+          ]
+        ],
+        "description": "Number of operational observations represented by this aggregate row; sum this column for observation totals."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "ObservedAmountYen"
+          ]
+        ],
+        "description": "Total incoming observed amount in Japanese yen represented by this aggregate row; sum this column for amount totals."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "FirstObservedAt"
+          ]
+        ],
+        "description": "Earliest operational event timestamp represented by this aggregate row."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "LastObservedAt"
+          ]
+        ],
+        "description": "Latest operational event timestamp represented by this aggregate row."
+      },
+      {
+        "path": [
+          [
+            "MaterializedView",
+            "DonationObservationSummaryForAgent"
+          ],
+          [
+            "Column",
+            "LastPublishedAtUtc"
+          ]
+        ],
+        "description": "Latest UTC timestamp when the workshop publisher sent an observation represented by this aggregate row."
+      },
+      {
+        "path": [
+          [
+            "Function",
+            "AgentRawObservationTotals"
+          ]
+        ],
+        "description": "Preferred one-row raw operational totals function over optional UTC EventMinute bucket bounds. WindowIsValid must be true before numeric values are used; false is invalid input, not a valid zero."
+      },
+      {
+        "path": [
+          [
+            "Function",
+            "AgentFileRunSummary"
+          ]
+        ],
+        "description": "File and workshop-run detail from approved raw observation metrics. Invalid windows return no rows; use AgentRawObservationTotals for whole-window totals."
+      },
+      {
+        "path": [
+          [
+            "Function",
+            "AgentMunicipalityLeaders"
+          ]
+        ],
+        "description": "Unique Municipality leader rows for approved raw observation metrics. Invalid windows return no rows; each MunicipalityID appears at most once."
+      }
+    ]
+  },
+  "ontology": {
+    "instructions": null,
+    "description": "Path-only Furusato Ontology for executed connectivity, path, neighbourhood, membership and containment across 10 canonical entities and 15 canonical relationships. Entity description fields are metadata-inventory CSVs of the 21 retained stable-key/name/display properties, not free-form instructions. Executed relationship or membership COUNT at the requested relationship grain and BigInt keys are valid Ontology results. The model has no monetary, date or time-series attributes. Lakehouse owns static Donation business metrics; Eventhouse owns August 2026 operational metrics.",
+    "elements": [
+      {
+        "path": [
+          [
+            "Entity",
+            "Prefecture"
+          ]
+        ],
+        "description": "PrefectureId,PrefectureName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "Municipality"
+          ]
+        ],
+        "description": "MunicipalityId,MunicipalityName,MunicipalityDisplayName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "Donor"
+          ]
+        ],
+        "description": "DonorId,DonorName,DonorDisplayName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "GiftCategory"
+          ]
+        ],
+        "description": "CategoryId,CategoryName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "Gift"
+          ]
+        ],
+        "description": "GiftId,GiftName,GiftDisplayName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "Supplier"
+          ]
+        ],
+        "description": "SupplierId,SupplierName,SupplierDisplayName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "Donation"
+          ]
+        ],
+        "description": "DonationId,DonationDisplayName"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "MunicipalityCategoryMetric"
+          ]
+        ],
+        "description": "MunCategoryMetricId"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "PrefectureCategoryMetric"
+          ]
+        ],
+        "description": "PrefCategoryMetricId"
+      },
+      {
+        "path": [
+          [
+            "Entity",
+            "PrefectureDonationFlow"
+          ]
+        ],
+        "description": "PrefDonationFlowId"
+      }
+    ]
+  }
+}

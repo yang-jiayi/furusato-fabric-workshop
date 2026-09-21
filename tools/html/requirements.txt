@@ -1,0 +1,7 @@
+# Requires python-docx / openpyxl / Pillow through tools/docs; the HTML build
+# itself only needs Pillow. Playwright is optional and used by the interaction
+# tests in tools/html/tests.
+Pillow>=10.0
+python-docx>=1.1
+playwright>=1.44 ; extra == "test"
+pypdf>=4.0 ; extra == "test"

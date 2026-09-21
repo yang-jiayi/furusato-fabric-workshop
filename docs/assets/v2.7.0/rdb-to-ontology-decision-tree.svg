@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1100" viewBox="0 0 1600 1100" role="img" aria-labelledby="d2-title d2-desc" preserveAspectRatio="xMidYMid meet">
+<title id="d2-title">RDB / BI のソース構造から Ontology 構成要素を選ぶ判定木 (v2.7.0)</title>
+<desc id="d2-desc">既存のテーブル、ファクト、中間表、ログを Ontology の構成要素へ対応させる 7 段の判定木。判定1 監査・制御・技術メタデータ専用なら除外する。判定2 既存エンティティに対して1件1値ならプロパティにする。判定3 2つの外部キーだけの純粋な中間表ならリレーションシップの文脈化にする。判定4 独自の属性やライフサイクルを持つ中間表なら連関エンティティにする。判定5 複合粒度の事前集計ならメトリックまたはフローエンティティにする。判定6 安定した識別子と金額と時刻と状態を持つ取引なら取引エンティティにする。判定7 既存エンティティへの時刻付き観測なら、その事象自体を業務対象として問い合わせる場合はイベントエンティティ、そうでなければ時系列バインディングにする。すべてに当てはまらない独立した業務識別子を持つマスターやディメンションはエンティティ型にする。判定は菱形、結論は角丸の箱、除外は赤の破線枠、集計専用は二重枠、時系列と事象は橙で示している。</desc>
+<defs>
+<marker id="d2-ar-04352C" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#04352C"/></marker>
+<marker id="d2-ar-B3261E" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#B3261E"/></marker>
+<marker id="d2-ar-2E5FA3" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#2E5FA3"/></marker>
+<marker id="d2-ar-2AAC94" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#2AAC94"/></marker>
+<marker id="d2-ar-0E8A54" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#0E8A54"/></marker>
+<marker id="d2-ar-C2571A" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" markerUnits="userSpaceOnUse" orient="auto"><path d="M0.5,0.8 L11.5,6 L0.5,11.2 L3,6 Z" fill="#C2571A"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1100" fill="#FFFFFF"/>
+<g font-family="Yu Gothic UI, Meiryo, Segoe UI, sans-serif" fill="#12211D" stroke-linejoin="round">
+<rect x="56.0" y="20.0" width="7.0" height="46.0" rx="3.5" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="76.0" y="54.0" font-size="28" font-weight="bold" fill="#04352C" text-anchor="start">判定木 — ソース構造から Ontology 構成要素へ</text>
+<text x="76.0" y="81.0" font-size="14.5" font-weight="normal" fill="#5A6570" text-anchor="start">Decision tree: RDB table / BI fact / bridge / log → Ontology construct</text>
+<rect x="1483.4" y="24.0" width="60.6" height="26.0" rx="13" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.2"/>
+<text x="1513.7" y="42.0" font-size="12.5" font-weight="bold" fill="#0E8A54" text-anchor="middle">v2.7.0</text>
+<rect x="170.0" y="112.0" width="520.0" height="66.0" rx="14" fill="#F2F5F7" stroke="#5A6570" stroke-width="2"/>
+<text x="194.0" y="141.0" font-size="15" font-weight="bold" fill="#04352C" text-anchor="start">候補となるソース構造を1つ取り上げる</text>
+<text x="194.0" y="163.0" font-size="11.2" font-weight="normal" fill="#5A6570" text-anchor="start">One candidate table / fact / bridge / log at a time</text>
+<line x1="430.0" y1="178.0" x2="430.0" y2="208.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<polygon points="430.0,208.0 690.0,250.0 430.0,292.0 170.0,250.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="250.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="255.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">1</text>
+<text x="456.0" y="246.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">監査・制御・技術メタデータ専用か?</text>
+<text x="456.0" y="265.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Audit / control / technical metadata only?</text>
+<line x1="690.0" y1="250.0" x2="796.0" y2="250.0" stroke="#B3261E" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-B3261E)"/>
+<rect x="710.8" y="226.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="743.0" y="239.0" font-size="11" font-weight="bold" fill="#B3261E" text-anchor="middle">Yes / はい</text>
+<rect x="800.0" y="206.2" width="400.0" height="87.5" rx="12" fill="#FAEAE9" stroke="#B3261E" stroke-width="2.2" stroke-dasharray="8 5"/>
+<circle cx="826.0" cy="234.2" r="13.0" fill="#B3261E" stroke="none" stroke-width="1.6"/>
+<text x="826.0" y="239.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">✕</text>
+<text x="848.0" y="233.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">除外 Exclude</text>
+<text x="848.0" y="251.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Ontology に持ち込まない</text>
+<text x="818.0" y="272.2" font-size="11.3" font-weight="normal" fill="#B3261E" text-anchor="start">処理ログ・制御テーブル・ETL 補助列は対象外</text>
+<line x1="430.0" y1="292.0" x2="430.0" y2="306.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="441.3" y="290.8" width="69.4" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="476.0" y="303.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">No / いいえ</text>
+<polygon points="430.0,306.0 690.0,348.0 430.0,390.0 170.0,348.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="348.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="353.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">2</text>
+<text x="456.0" y="344.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">既存エンティティに対し1件1値か?</text>
+<text x="456.0" y="363.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Exactly one value per existing entity?</text>
+<line x1="690.0" y1="348.0" x2="796.0" y2="348.0" stroke="#2E5FA3" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-2E5FA3)"/>
+<rect x="710.8" y="324.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="743.0" y="337.0" font-size="11" font-weight="bold" fill="#2E5FA3" text-anchor="middle">Yes / はい</text>
+<rect x="800.0" y="304.2" width="400.0" height="87.5" rx="12" fill="#E9EFF8" stroke="#2E5FA3" stroke-width="2.2"/>
+<circle cx="826.0" cy="332.2" r="13.0" fill="#2E5FA3" stroke="none" stroke-width="1.6"/>
+<text x="826.0" y="337.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">●</text>
+<text x="848.0" y="331.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">プロパティ Property</text>
+<text x="848.0" y="349.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">既存 Entity Type の属性として定義</text>
+<text x="818.0" y="370.2" font-size="11.3" font-weight="normal" fill="#2E5FA3" text-anchor="start">例: PrefectureName / DonationAmountYen / PaymentMethod</text>
+<line x1="430.0" y1="390.0" x2="430.0" y2="404.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="441.3" y="388.8" width="69.4" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="476.0" y="401.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">No / いいえ</text>
+<polygon points="430.0,404.0 690.0,446.0 430.0,488.0 170.0,446.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="446.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="451.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">3</text>
+<text x="456.0" y="442.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">2つのFKだけの純粋な中間表か?</text>
+<text x="456.0" y="461.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Pure two-FK bridge with no own attributes?</text>
+<line x1="690.0" y1="446.0" x2="796.0" y2="446.0" stroke="#2AAC94" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-2AAC94)"/>
+<rect x="710.8" y="422.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="743.0" y="435.0" font-size="11" font-weight="bold" fill="#2AAC94" text-anchor="middle">Yes / はい</text>
+<rect x="800.0" y="402.2" width="400.0" height="87.5" rx="12" fill="#E6F6F3" stroke="#2AAC94" stroke-width="2.2"/>
+<circle cx="826.0" cy="430.2" r="13.0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="826.0" y="435.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">⬡</text>
+<text x="848.0" y="429.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">リレーションシップの文脈化</text>
+<text x="848.0" y="447.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Relationship contextualization — 実体化しない</text>
+<text x="818.0" y="468.2" font-size="11.3" font-weight="normal" fill="#2AAC94" text-anchor="start">例: business_gifts → SupplierProvidesGift の文脈として使う</text>
+<line x1="430.0" y1="488.0" x2="430.0" y2="502.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="441.3" y="486.8" width="69.4" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="476.0" y="499.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">No / いいえ</text>
+<polygon points="430.0,502.0 690.0,544.0 430.0,586.0 170.0,544.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="544.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="549.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">4</text>
+<text x="456.0" y="540.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">独自の属性・ライフサイクルを持つ中間表か?</text>
+<text x="456.0" y="559.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Bridge with its own attributes or lifecycle?</text>
+<line x1="690.0" y1="544.0" x2="796.0" y2="544.0" stroke="#0E8A54" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-0E8A54)"/>
+<rect x="710.8" y="520.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="743.0" y="533.0" font-size="11" font-weight="bold" fill="#0E8A54" text-anchor="middle">Yes / はい</text>
+<rect x="800.0" y="500.2" width="400.0" height="87.5" rx="12" fill="#E6F4ED" stroke="#0E8A54" stroke-width="2.2"/>
+<circle cx="826.0" cy="528.2" r="13.0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="826.0" y="533.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">◆</text>
+<text x="848.0" y="527.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">連関エンティティ Associative Entity</text>
+<text x="848.0" y="545.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">関係そのものを実体として扱う</text>
+<text x="818.0" y="566.2" font-size="11.3" font-weight="normal" fill="#0E8A54" text-anchor="start">状態・期間・独自の識別子を持つ関係はエンティティ化する</text>
+<line x1="430.0" y1="586.0" x2="430.0" y2="600.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="441.3" y="584.8" width="69.4" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="476.0" y="597.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">No / いいえ</text>
+<polygon points="430.0,600.0 690.0,642.0 430.0,684.0 170.0,642.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="642.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="647.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">5</text>
+<text x="456.0" y="638.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">複合粒度の事前集計か?</text>
+<text x="456.0" y="657.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Pre-aggregated across a composite grain?</text>
+<line x1="690.0" y1="642.0" x2="796.0" y2="642.0" stroke="#2AAC94" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-2AAC94)"/>
+<rect x="710.8" y="618.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="743.0" y="631.0" font-size="11" font-weight="bold" fill="#2AAC94" text-anchor="middle">Yes / はい</text>
+<rect x="795.0" y="585.5" width="410.0" height="113.0" rx="16" fill="none" stroke="#2AAC94" stroke-width="1.3"/>
+<rect x="800.0" y="590.5" width="400.0" height="103.0" rx="12" fill="#E6F6F3" stroke="#2AAC94" stroke-width="2.2"/>
+<circle cx="826.0" cy="618.5" r="13.0" fill="#2AAC94" stroke="none" stroke-width="1.6"/>
+<text x="826.0" y="623.5" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">Σ</text>
+<text x="848.0" y="617.5" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">メトリック / フロー エンティティ</text>
+<text x="848.0" y="635.5" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Metric / Flow Entity — 二重集計を防ぐ</text>
+<text x="818.0" y="656.5" font-size="11.3" font-weight="normal" fill="#2AAC94" text-anchor="start">例: MunicipalityCategoryMetric / PrefectureCategoryMetric /</text>
+<text x="818.0" y="672.0" font-size="11.3" font-weight="normal" fill="#2AAC94" text-anchor="start">PrefectureDonationFlow</text>
+<line x1="430.0" y1="684.0" x2="430.0" y2="698.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="441.3" y="682.8" width="69.4" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="476.0" y="695.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">No / いいえ</text>
+<polygon points="430.0,698.0 690.0,740.0 430.0,782.0 170.0,740.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="740.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="745.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">6</text>
+<text x="456.0" y="736.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">安定ID・金額・時刻・状態を持つ取引か?</text>
+<text x="456.0" y="755.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Transaction with stable ID, amount, time and state?</text>
+<line x1="690.0" y1="740.0" x2="796.0" y2="740.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="710.8" y="716.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="743.0" y="729.0" font-size="11" font-weight="bold" fill="#04352C" text-anchor="middle">Yes / はい</text>
+<rect x="800.0" y="696.2" width="400.0" height="87.5" rx="12" fill="#E7EFEC" stroke="#04352C" stroke-width="2.2"/>
+<circle cx="826.0" cy="724.2" r="13.0" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="826.0" y="729.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">≡</text>
+<text x="848.0" y="723.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">取引エンティティ Transaction Entity</text>
+<text x="848.0" y="741.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">識別子を持つ業務トランザクション</text>
+<text x="818.0" y="762.2" font-size="11.3" font-weight="normal" fill="#04352C" text-anchor="start">例: Donation (寄付ID・金額・日時・支払方法・選択返礼品)</text>
+<line x1="430.0" y1="782.0" x2="430.0" y2="820.0" stroke="#04352C" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-04352C)"/>
+<rect x="441.3" y="792.8" width="69.4" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="476.0" y="805.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">No / いいえ</text>
+<polygon points="430.0,820.0 690.0,862.0 430.0,904.0 170.0,862.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="312.0" cy="862.0" r="13.5" fill="#04352C" stroke="none" stroke-width="1.6"/>
+<text x="312.0" y="867.0" font-size="12.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">7</text>
+<text x="456.0" y="858.0" font-size="14" font-weight="bold" fill="#12211D" text-anchor="middle">既存エンティティへの時刻付き観測か?</text>
+<text x="456.0" y="877.0" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="middle">Timestamped observation of an existing entity?</text>
+<line x1="690.0" y1="862.0" x2="828.0" y2="862.0" stroke="#C2571A" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-C2571A)"/>
+<rect x="735.8" y="838.8" width="64.5" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="768.0" y="851.0" font-size="11" font-weight="bold" fill="#C2571A" text-anchor="middle">Yes / はい</text>
+<polygon points="1000.0,816.0 1170.0,862.0 1000.0,908.0 830.0,862.0" fill="#FFFFFF" stroke="#C2571A" stroke-width="2.2" stroke-linejoin="round"/>
+<circle cx="922.0" cy="862.0" r="13.5" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="922.0" y="867.0" font-size="11.5" font-weight="bold" fill="#FFFFFF" text-anchor="middle">7b</text>
+<text x="1020.0" y="854.0" font-size="12.5" font-weight="bold" fill="#12211D" text-anchor="middle">その事象自体を業務対象として</text>
+<text x="1020.0" y="871.0" font-size="12.5" font-weight="bold" fill="#12211D" text-anchor="middle">問い合わせるか?</text>
+<text x="1020.0" y="889.0" font-size="10.2" font-weight="normal" fill="#5A6570" text-anchor="middle">Queried as its own business object?</text>
+<line x1="1136.0" y1="838.0" x2="1236.0" y2="806.0" stroke="#C2571A" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-C2571A)"/>
+<rect x="1173.5" y="803.8" width="28.9" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="1188.0" y="816.0" font-size="11" font-weight="bold" fill="#C2571A" text-anchor="middle">Yes</text>
+<line x1="1136.0" y1="886.0" x2="1236.0" y2="930.0" stroke="#C2571A" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-C2571A)"/>
+<rect x="1176.6" y="915.8" width="22.9" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="1188.0" y="928.0" font-size="11" font-weight="bold" fill="#C2571A" text-anchor="middle">No</text>
+<rect x="1240.0" y="762.2" width="320.0" height="87.5" rx="12" fill="#FBEEE6" stroke="#C2571A" stroke-width="2.2"/>
+<circle cx="1266.0" cy="790.2" r="13.0" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="1266.0" y="795.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">▣</text>
+<text x="1288.0" y="789.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">イベントエンティティ</text>
+<text x="1288.0" y="807.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Event Entity — 事象を実体化</text>
+<text x="1258.0" y="828.2" font-size="11.3" font-weight="normal" fill="#C2571A" text-anchor="start">その事象自体に業務質問が向く場合のみ</text>
+<rect x="1240.0" y="892.2" width="320.0" height="87.5" rx="12" fill="#FBEEE6" stroke="#C2571A" stroke-width="2.2"/>
+<circle cx="1266.0" cy="920.2" r="13.0" fill="#C2571A" stroke="none" stroke-width="1.6"/>
+<text x="1266.0" y="925.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">∿</text>
+<text x="1288.0" y="919.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">時系列バインディング</text>
+<text x="1288.0" y="937.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">Time-series binding — 既存 Entity に付与</text>
+<text x="1258.0" y="958.2" font-size="11.3" font-weight="normal" fill="#C2571A" text-anchor="start">例: Municipality の観測値 (Eventhouse)</text>
+<line x1="430.0" y1="904.0" x2="430.0" y2="948.0" stroke="#0E8A54" stroke-width="2.4" stroke-linecap="round" marker-end="url(#d2-ar-0E8A54)"/>
+<rect x="450.9" y="917.8" width="106.1" height="16.5" rx="6" fill="#FFFFFF" opacity="0.94" stroke="none" stroke-width="1"/>
+<text x="504.0" y="930.0" font-size="11" font-weight="bold" fill="#5A6570" text-anchor="middle">すべて No / いいえ</text>
+<rect x="170.0" y="948.2" width="520.0" height="87.5" rx="12" fill="#E6F4ED" stroke="#0E8A54" stroke-width="2.2"/>
+<circle cx="196.0" cy="976.2" r="13.0" fill="#0E8A54" stroke="none" stroke-width="1.6"/>
+<text x="196.0" y="981.2" font-size="13" font-weight="bold" fill="#FFFFFF" text-anchor="middle">○</text>
+<text x="218.0" y="975.2" font-size="14.5" font-weight="bold" fill="#12211D" text-anchor="start">エンティティ型 Entity Type</text>
+<text x="218.0" y="993.2" font-size="10.8" font-weight="normal" fill="#5A6570" text-anchor="start">独立した業務識別子を持つマスター / ディメンション</text>
+<text x="188.0" y="1014.2" font-size="11.3" font-weight="normal" fill="#0E8A54" text-anchor="start">例: Prefecture / Municipality / Donor / GiftCategory / Gift / Supplier</text>
+<rect x="1240.0" y="140.0" width="320.0" height="178.0" rx="16" fill="#E7EFEC" stroke="#04352C" stroke-width="1.4"/>
+<rect x="1258.0" y="127.0" width="207.1" height="26.0" rx="13" fill="#E7EFEC" stroke="#04352C" stroke-width="1.4"/>
+<text x="1361.5" y="144.5" font-size="13.5" font-weight="bold" fill="#04352C" text-anchor="middle">判定の前提 Before you decide</text>
+<text x="1262.0" y="186.0" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="186.0" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">テーブルではなく業務質問と意思決定から始める</text>
+<text x="1262.0" y="209.0" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="209.0" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">候補概念ごとに粒度 grain を宣言する</text>
+<text x="1262.0" y="232.1" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="232.1" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">安定した業務識別子と表示ラベルを分離する</text>
+<text x="1262.0" y="255.1" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="255.1" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">業務的に意味のある FK 経路だけを関係にする</text>
+<rect x="1240.0" y="356.0" width="320.0" height="232.0" rx="16" fill="#FFFFFF" stroke="#5A6570" stroke-width="1.4"/>
+<rect x="1258.0" y="343.0" width="99.1" height="26.0" rx="13" fill="#FFFFFF" stroke="#5A6570" stroke-width="1.4"/>
+<text x="1307.5" y="360.5" font-size="13.5" font-weight="bold" fill="#5A6570" text-anchor="middle">凡例 Legend</text>
+<text x="1264.0" y="392.0" font-size="13" font-weight="bold" fill="#04352C" text-anchor="start"></text>
+<polygon points="1290.0,398.0 1314.0,410.0 1290.0,422.0 1266.0,410.0" fill="#FFFFFF" stroke="#04352C" stroke-width="2" stroke-linejoin="round"/>
+<text x="1326.0" y="414.0" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">菱形 = 判定 Decision</text>
+<rect x="1266.0" y="425.0" width="48.0" height="22.0" rx="7" fill="#FFFFFF" stroke="#0E8A54" stroke-width="2"/>
+<text x="1326.0" y="440.0" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">角丸 = 結論 Ontology 構成要素</text>
+<rect x="1266.0" y="451.0" width="48.0" height="22.0" rx="7" fill="#FFFFFF" stroke="#B3261E" stroke-width="2" stroke-dasharray="7 4"/>
+<text x="1326.0" y="466.0" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">赤の破線枠 = モデル化しない Exclude</text>
+<rect x="1264.0" y="475.0" width="52.0" height="26.0" rx="9" fill="none" stroke="#2AAC94" stroke-width="1.2"/>
+<rect x="1267.0" y="478.0" width="46.0" height="20.0" rx="7" fill="#FFFFFF" stroke="#2AAC94" stroke-width="2"/>
+<text x="1326.0" y="492.0" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">二重枠 = 集計専用 Metric / Flow</text>
+<line x1="1266.0" y1="514.0" x2="1304.0" y2="514.0" stroke="#C2571A" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="1304.0,509.0 1314.0,514.0 1304.0,519.0" fill="#C2571A" stroke="none" stroke-width="1.6" stroke-linejoin="round"/>
+<text x="1326.0" y="518.0" font-size="12" font-weight="normal" fill="#5A6570" text-anchor="start">橙 = 時系列 / 事象 Time-oriented</text>
+<rect x="1240.0" y="610.0" width="320.0" height="138.0" rx="16" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.4"/>
+<rect x="1258.0" y="597.0" width="206.7" height="26.0" rx="13" fill="#E6F4ED" stroke="#0E8A54" stroke-width="1.4"/>
+<text x="1361.3" y="614.5" font-size="13.5" font-weight="bold" fill="#0E8A54" text-anchor="middle">Furusato での適用結果 Result</text>
+<text x="1262.0" y="654.0" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="654.0" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">エンティティ型 10 (基幹 7 + メトリック/フロー</text>
+<text x="1275.6" y="670.0" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">3)</text>
+<text x="1262.0" y="693.1" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="693.1" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">リレーションシップ 15 / 静的プロパティ 72</text>
+<text x="1262.0" y="716.1" font-size="10.620000000000001" font-weight="bold" fill="#0E8A54" text-anchor="start">▸</text>
+<text x="1275.6" y="716.1" font-size="11.8" font-weight="normal" fill="#12211D" text-anchor="start">時系列プロパティ 1 (Municipality のみ)</text>
+<line x1="56.0" y1="1056.0" x2="1544.0" y2="1056.0" stroke="#B7C0C7" stroke-width="1" stroke-linecap="round"/>
+<text x="56.0" y="1078.0" font-size="11.5" font-weight="normal" fill="#5A6570" text-anchor="start">Furusato Fabric IQ Ontology Workshop v2.7.0 — ソース構造から Ontology 構成要素への判定木。概念モデルが安定してから物理ソースへバインドする。判定は形状・番号・線種でも区別できる。</text>
+</g>
+</svg>

@@ -1,0 +1,28 @@
+{
+  "remove": [
+    "第 17 章と Test 10 記録票",
+    "Data Agent の評価は、10 問の口語・敵対的な質問で行います。すべて 1 問 1 会話（fresh conversation）で実施し、質問文をそのまま貼り付けます。答えは事前に Agent へ教えません。記録は別冊の Test 10 記録票を使用します。",
+    "ここまでで原因が特定できない場合は、サービス側の要因を疑う。実行エラー・タイムアウト・応答なしは、権限・参照先・構成の誤りでも起こりうる。一時障害かを切り分ける間は設定を変えずに同じ質問を最大 2 回まで再実行し、3 回目も失敗したら時刻・質問 ID・エラー本文と確認済み事項を記録してエスカレーションする。これは Test 10 記録票の切り分け表の最終行と同じ手順である。",
+    "全 50 パラメーターは、このガイドと同じ配布版の処理仕様ワークブックの `Parameters` シートに 1 枚でまとまっています。Core で参加者が変更するものだけを抜き出した `Parameters_Core` シートもあります。"
+  ],
+  "add": {
+    "公開文書の範囲": "Scope of the public documents",
+    "公開文書は、参加者ガイド Word 1 点と同じ版の HTML 1 点です。検証記録票 Word と処理仕様 XLSX は任意の内部補助資料であり、公開セットには含めません。評価基準と記録方法は第 17 章、全パラメーターの仕様表への索引は付録 B にあります。実習用 Notebook・コード・データはこの文書ペアには同梱しません。実習前に別途提供方法を確認してください。": "The public document set is one participant Word guide and one HTML guide of the same edition. The validation-record Word and processing-specification XLSX are optional internal companions, not part of the public set. Chapter 17 contains the evaluation criteria and recording instructions; Appendix B indexes the specifications for every parameter. Workshop notebooks, code and data are not bundled with this document pair. Confirm their separate delivery before starting the hands-on work.",
+    "第 17 章の評価基準とガイド内の記録方法": "Chapter 17 evaluation criteria and in-guide recording instructions",
+    "Data Agent の評価は、10 問の口語・敵対的な質問で行います。すべて 1 問 1 会話（fresh conversation）で実施し、質問文をそのまま貼り付けます。答えは事前に Agent へ教えません。公開版では本章の評価基準と次の記録方法を使用します。": "Data Agent evaluation uses 10 colloquial and adversarial questions. Ask each question in a fresh conversation and paste the question text unchanged. Do not teach the Agent the answers in advance. In the public edition, use this chapter's evaluation criteria and the recording instructions below.",
+    "公開版の記録方法": "Recording results with the public edition",
+    "別冊のダウンロードは不要です。ご自身の非公開の記録に、実施日時・実施者・対象 Workspace / Folder・Data Agent の実 ID・構成版・runtime・Draft / Published・Core / Optional・追加ツール・未実施 / ブロックの理由を残します。各問の ID と質問原文、実際の回答、使用ソース、安定 ID、数値、粒度・期間・境界・拒否理由、実行詳細の参照先、判定と所見を記録し、4 判定の件数を集計します。Core の判定と任意の比較は別に記録します。修正内容・再実施日時・再実行回数・残課題も残します。回答原本は保持し、公開用の画面写真だけでアカウント・URL・内部 ID を切り抜きまたは伏せ字にして、加工範囲を明記します。回答を編集して PASS に変えてはいけません。質問・期待値・実行結果を Agent の設定へ転記しません。": "No separate record download is required. In your own private record, note the time, operator, target Workspace / Folder, actual Data Agent ID, configuration edition, runtime, Draft / Published, Core / Optional, additional tools, and reasons for any unrun or blocked steps. For each question record its ID and original wording, actual answer, sources used, stable IDs, numbers, grain, period, boundaries, refusal reasons, execution-detail references, verdict and observations. Count all four verdicts. Keep Core verdicts separate from optional comparisons. Also record changes, retest times, retry counts and remaining issues. Preserve the original answers. Crop or redact accounts, URLs and internal IDs only in copies of screenshots intended for publication, and disclose the edited regions. Never edit an answer to turn it into PASS. Do not copy questions, expected values or results into the Agent configuration.",
+    "ここまでで原因が特定できない場合は、サービス側の要因を疑う。実行エラー・タイムアウト・応答なしは、権限・参照先・構成の誤りでも起こりうる。一時障害かを切り分ける間は設定を変えずに同じ質問を最大 2 回まで再実行し、3 回目も失敗したら時刻・質問 ID・エラー本文と確認済み事項を記録してエスカレーションする。内部の任意の Test 10 記録票を使う場合も、同じ手順に従います。": "If the cause is still not identified, suspect a service-side factor. Execution errors, timeouts, and missing responses can also result from incorrect permissions, referenced targets, or configuration. While checking whether the failure is transient, retry the same question at most 2 times without changing settings. If the 3rd attempt also fails, record the time, question ID, error text, and checks already performed, then escalate. Follow the same procedure if using the optional internal Test 10 record sheet.",
+    "全パラメーターの完全な仕様表は、この付録の索引が示す第 6.4 節・第 15.2 節・付録 D.1〜D.3 にあります。このガイドだけで既定値・変更条件・安全ゲートを確認できます。処理仕様ワークブックは任意の内部補助資料であり、公開版の実施に XLSX のダウンロードは不要です。": "Complete specifications for every parameter are in sections 6.4 and 15.2 and Appendices D.1-D.3, as indexed here. This guide contains their defaults, change conditions and safety gates. The processing-specification workbook is an optional internal companion; no XLSX download is required to follow the public edition."
+  },
+  "ui": {
+    "cover.download.note": {
+      "ja": "公開文書は、この HTML と同じ版の参加者 Word の 2 ファイルだけです。リンク先の Word は同じフォルダーに置きます。HTML 自体はオフラインで閲覧できます。内部補助資料や実習用コード・データは含みません。",
+      "en": "The public documents are exactly this HTML and the participant Word of the same edition. Keep the linked Word in the same folder. This HTML itself works fully offline. Internal companions and workshop code/data are not included."
+    },
+    "footer.mirrored": {
+      "ja": "このページに対応する参加者 Word（実ファイルの SHA-256）:",
+      "en": "Matching participant Word (SHA-256 of the actual file):"
+    }
+  }
+}

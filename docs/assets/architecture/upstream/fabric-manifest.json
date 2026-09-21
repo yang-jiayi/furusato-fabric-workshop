@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "sourcePage": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
+  "officialZipUrl": "https://github.com/microsoft/fabric-samples/blob/main/docs-samples/Icons.zip",
+  "packageName": "@fabric-msft/svg-icons",
+  "packageVersion": "8.2.0",
+  "packageUrl": "https://registry.npmjs.org/@fabric-msft/svg-icons/-/svg-icons-8.2.0.tgz",
+  "packageIntegrity": "sha512-0mp+BNc2V7kviToEcXzpo+ZGb143hw/FSMlexh2S5P6oP3uuH2nCIiiBsatH54qgw15xgbrzALBYoQKBxv/dug==",
+  "packageSha256": "78bccf79e68ba3656456b99d4f643cf7e30f1c262f62c8d78f31367d5d00dbb0",
+  "packageSvgCount": 1658,
+  "officialFamilyCount": 82,
+  "localIconCount": 1,
+  "paletteIconCount": 83,
+  "excludedGeneralUiSvgCount": 1576,
+  "categories": {
+    "item": 59,
+    "item-special": 2,
+    "navigation": 7,
+    "workload": 14
+  },
+  "files": [
+    {
+      "sourceAsset": "add_pipeline_32_non-item.svg",
+      "path": "fabric/fabric-navigation-add-pipeline.svg",
+      "sha256": "1ba4f3d96eecda88e3d5fab1d60e531503df6c807830fb0498c09354f4d76c3c"
+    },
+    {
+      "sourceAsset": "apps_32_item.svg",
+      "path": "fabric/fabric-item-apps.svg",
+      "sha256": "7ed0d0ce1d0833bc1233333b8b93339bc8d735305b43f13949c832208c181199"
+    },
+    {
+      "sourceAsset": "cohort_32_item.svg",
+      "path": "fabric/fabric-item-cohort.svg",
+      "sha256": "aa5f4e8878aa3a33afce45192e0cf953adbb7d3d5f96f0a6fe8c78ad5aee9e53"
+    },
+    {
+      "sourceAsset": "copilot_32_color.svg",
+      "path": "fabric/fabric-workload-copilot.svg",
+      "sha256": "920b3924f0285c3051a590006ded8b9937395b5a98988a2086c8fc6d87374fae"
+    },
+    {
+      "sourceAsset": "copy_job_32_item.svg",
+      "path": "fabric/fabric-item-copy-job.svg",
+      "sha256": "aaccc264b89c61ddaece2ccdbf8c4bfdeae4c9804ddc9cf54244d7c9a04f4ee9"
+    },
+    {
+      "sourceAsset": "custom_streaming_connector_32_item.svg",
+      "path": "fabric/fabric-item-custom-streaming-connector.svg",
+      "sha256": "38f4a58942520a43e33559183ef78cc66a7fca5bbae54bc2acf103897c1756f7"
+    },
+    {
+      "sourceAsset": "dashboard_32_item.svg",
+      "path": "fabric/fabric-item-dashboard.svg",
+      "sha256": "dbfcd2ebc475d05019e36adc84e8c3013435018ef8e63eb081ccf6530e54e520"
+    },
+    {
+      "sourceAsset": "data_agent_32_item.svg",
+      "path": "fabric/fabric-data-agent.svg",
+      "sha256": "f7c80158677ad158b26365668ffb87b1db6519644a9ed2553761ea0c51c885e6"
+    },
+    {
+      "sourceAsset": "data_engineering_32_color.svg",
+      "path": "fabric/fabric-workload-data-engineering.svg",
+      "sha256": "279ee319e905b9b9a88e634341f88edfbe4716a1105b75d45e53790d1d3f0029"
+    },
+    {
+      "sourceAsset": "data_factory_32_color.svg",
+      "path": "fabric/fabric-workload-data-factory.svg",
+      "sha256": "098716827b2e457ce69229a3dbad3c2e8d20daf19a3a2623b6caef8ccb23a692"
+    },
+    {
+      "sourceAsset": "data_factory_32_item.svg",
+      "path": "fabric/fabric-data-factory.svg",
+      "sha256": "d496a0b29c9d176936150ebd3f7475454acf05f3a0792eb087f3aafc17703267"
+    },
+    {
+      "sourceAsset": "data_quality_32_item.svg",
+      "path": "fabric/fabric-item-data-quality.svg",
+      "sha256": "5d20d14475d12a86fc31556570959f5919620324f85995bdb6b85977cf5f640a"
+    },
+    {
+      "sourceAsset": "data_science_32_color.svg",
+      "path": "fabric/fabric-workload-data-science.svg",
+      "sha256": "ed18bf155c6ded23247475bf3782087d961c18f09d8d906ecd2fdf24d1466274"
+    },
+    {
+      "sourceAsset": "data_warehouse_32_color.svg",
+      "path": "fabric/fabric-workload-data-warehouse.svg",
+      "sha256": "9f03a8e66e1802498bf2949191c27a1752fd28a53f136b3f4bee6904748d3579"
+    },
+    {
+      "sourceAsset": "data_warehouse_32_item.svg",
+      "path": "fabric/fabric-warehouse.svg",
+      "sha256": "d61cdc5b832ab2e751a31a604d8b3f272841851bae6ee8da091eda911aa5b39d"
+    },
+    {
+      "sourceAsset": "databases_32_color.svg",
+      "path": "fabric/fabric-workload-databases.svg",
+      "sha256": "f7ebe972fc51bae637929093ad6422c9082c5463e609b6c245b8e9f989375605"
+    },
+    {
+      "sourceAsset": "dataflow_32_item.svg",
+      "path": "fabric/fabric-item-dataflow.svg",
+      "sha256": "e5565309c9d32cb5f914331de05e1fa56d65baa722d86a50a5a1d51b26d262b0"
+    },
+    {
+      "sourceAsset": "dataflow_gen2_32_item.svg",
+      "path": "fabric/fabric-dataflow-gen2.svg",
+      "sha256": "a6fafcec3a8591681679f1f6fd13a345e557df20af96f6c3f03b43446a42044b"
+    },
+    {
+      "sourceAsset": "datamart_32_item.svg",
+      "path": "fabric/fabric-datamart.svg",
+      "sha256": "9da78546b3544d39e1d75ce21057e5255185236fb754e3ac90d43d8704d14bef"
+    },
+    {
+      "sourceAsset": "environment_32_item.svg",
+      "path": "fabric/fabric-item-environment.svg",
+      "sha256": "28a9950d7760b032e066c61a5889b88d559455f31db14e3d9cebf6578b336df1"
+    },
+    {
+      "sourceAsset": "event_house_32_item.svg",
+      "path": "fabric/fabric-eventhouse.svg",
+      "sha256": "7636610f022b3e0263b7ad04866063c7272a4af9edda6b9f7668fd27f6cdb5b4"
+    },
+    {
+      "sourceAsset": "event_house_32_non-item.svg",
+      "path": "fabric/fabric-navigation-eventhouse.svg",
+      "sha256": "4e246229f7b5ea5ccdebf0c5a06555b383e7daef77628b843d826237581dff65"
+    },
+    {
+      "sourceAsset": "eventstream_32_item.svg",
+      "path": "fabric/fabric-eventstream.svg",
+      "sha256": "2320e9f2eaaffab7c1eeded5fe7e9145043d8ff9827e58819270885acd89edee"
+    },
+    {
+      "sourceAsset": "experiments_32_item.svg",
+      "path": "fabric/fabric-item-experiments.svg",
+      "sha256": "89f6273f7f24903f8180e4c85568330095ccad61b23bca0a06952ae5ef058a21"
+    },
+    {
+      "sourceAsset": "exploration_32_item.svg",
+      "path": "fabric/fabric-item-exploration.svg",
+      "sha256": "d03e986d1b20797d66c8098d9b2693399112d4e59b80699c1addb6dcff718355"
+    },
+    {
+      "sourceAsset": "external_dataflow_32_item.svg",
+      "path": "fabric/fabric-item-external-dataflow.svg",
+      "sha256": "c90aaf35dbbb696b54f99461efead0cc8cc00283dd8d1a6c5ab6eab119caa658"
+    },
+    {
+      "sourceAsset": "external_datamart_32_item.svg",
+      "path": "fabric/fabric-item-external-datamart.svg",
+      "sha256": "e9fa00c37d6db0f8134b9d08d281df5b0f9ff319d28606bee732c89094d1ac0f"
+    },
+    {
+      "sourceAsset": "external_semantic_model_32_item.svg",
+      "path": "fabric/fabric-item-external-semantic-model.svg",
+      "sha256": "6a8392396b7b3e5983d4ea87fad71be567718feca84cc320862a11b54a4c621c"
+    },
+    {
+      "sourceAsset": "fabric_32_color.svg",
+      "path": "fabric/microsoft-fabric.svg",
+      "sha256": "b4ceb91647e4bc87b85940dcfe4764c9405d72f11047f6b191134f54ff3a6822"
+    },
+    {
+      "sourceAsset": "folder_32_non-item.svg",
+      "path": "fabric/fabric-navigation-folder.svg",
+      "sha256": "1c680a813b6ceff23fb1cafd68fc9c9fa8bfb801fa0ffdacf02194820c390f5e"
+    },
+    {
+      "sourceAsset": "function_set_32_item.svg",
+      "path": "fabric/fabric-item-function-set.svg",
+      "sha256": "eb61502858897b350cd8af7821ef128f638b9706b53c55207e30ce846107358f"
+    },
+    {
+      "sourceAsset": "generic_placeholder_32_item.svg",
+      "path": "fabric/fabric-item-generic-placeholder.svg",
+      "sha256": "085576b1d72400121bf3fa5b74d11e03f27128d9b0b9b14e9beec33ba8074fbb"
+    },
+    {
+      "sourceAsset": "graph_intelligence_32_color.svg",
+      "path": "fabric/fabric-workload-graph-intelligence.svg",
+      "sha256": "ae3622f656e15934fe99594e2036fc5205bf47730cdb04e073cbf62354c6b48d"
+    },
+    {
+      "sourceAsset": "graph_model_32.svg",
+      "path": "fabric/fabric-item-graph-model.svg",
+      "sha256": "e208c6028fe5ceb80a1944540c589da2ded4253e4c91fc7f469b05042452e380"
+    },
+    {
+      "sourceAsset": "graph_queryset_32.svg",
+      "path": "fabric/fabric-item-graph-queryset.svg",
+      "sha256": "69b27f8cdd3a4978e68b2373846ccb86b1180cd5dd089c22e22a7377a283fb24"
+    },
+    {
+      "sourceAsset": "group_workspace_32_non-item.svg",
+      "path": "fabric/fabric-navigation-group-workspace.svg",
+      "sha256": "024235cee102ba96c05511f07b7b7a400d3fb12970c4d07c72e2c6a9dd5a8a7b"
+    },
+    {
+      "sourceAsset": "healthcare_32_item.svg",
+      "path": "fabric/fabric-item-healthcare.svg",
+      "sha256": "cc368f3b74b822efe4f073a04dd0790859617f048d8f6274fde2e0211a58b20d"
+    },
+    {
+      "sourceAsset": "import_notebook_32_non-item.svg",
+      "path": "fabric/fabric-navigation-import-notebook.svg",
+      "sha256": "2edce780c6558f09c7497ddbe3a21e446a8dd19622284dc704331e6dd30d6140"
+    },
+    {
+      "sourceAsset": "industry_solutions_32_color.svg",
+      "path": "fabric/fabric-workload-industry-solutions.svg",
+      "sha256": "33d20ef874f06b7edc6a93a53a76341bdfe1aa897dabb4772f433a1221682c42"
+    },
+    {
+      "sourceAsset": "kql_database_32_item.svg",
+      "path": "fabric/fabric-kql-database.svg",
+      "sha256": "24b4eed27ebd2bf3c59219b8dac0df08ed52db59f7d0fffd0b0e10ec56e38239"
+    },
+    {
+      "sourceAsset": "kql_queryset_32_item.svg",
+      "path": "fabric/fabric-item-kql-queryset.svg",
+      "sha256": "ec53e9d28ef055c5e957b5eb7bea808dd75c5c9f75b0220e5879b3d170c12d42"
+    },
+    {
+      "sourceAsset": "kql_script_32_item.svg",
+      "path": "fabric/fabric-item-kql-script.svg",
+      "sha256": "a2bda42df9aad91fbd4324a52e6119cb0a29ed1fd38c59f3381bf798b1afb188"
+    },
+    {
+      "sourceAsset": "lakehouse_32_item.svg",
+      "path": "fabric/fabric-lakehouse.svg",
+      "sha256": "1630fadbbf7df3f8846e0b7f0f3384b2c72465efa66e2cac22051ad0791c7114"
+    },
+    {
+      "sourceAsset": "links_32_item.svg",
+      "path": "fabric/fabric-item-links.svg",
+      "sha256": "acc451e6fe314286cfdb2ffcda42c0fce74866ba086617b789b72d4e77ab831c"
+    },
+    {
+      "sourceAsset": "metric_sets_32_item.svg",
+      "path": "fabric/fabric-item-metric-sets.svg",
+      "sha256": "92c6abf95fb9319de3465dc5ab3f2c92fcd052ceeae2c3815f582fbb595c2953"
+    },
+    {
+      "sourceAsset": "mirrored_catalog_32_item.svg",
+      "path": "fabric/fabric-item-mirrored-catalog.svg",
+      "sha256": "5a5217fc393ec5fcad4d23a15d46b59624f6c42d4b1ade878d53959dd1c5f560"
+    },
+    {
+      "sourceAsset": "mirrored_generic_database_32_item.svg",
+      "path": "fabric/fabric-mirrored-database.svg",
+      "sha256": "b48a518f9b24dc29fe223cb74f2e48be22fc9308b5ea90873c55ad3bdff35625"
+    },
+    {
+      "sourceAsset": "mirrored_generic_storage_32_item.svg",
+      "path": "fabric/fabric-item-mirrored-generic-storage.svg",
+      "sha256": "341bfff73ed62db3525011a23cf5836759c7b32f72d115066e777073cc506047"
+    },
+    {
+      "sourceAsset": "mobile_report_32_item.svg",
+      "path": "fabric/fabric-item-mobile-report.svg",
+      "sha256": "9844c867d7ec7dfe097b71b201f838bedbe00b2c02fc803d88fe713a79e360ea"
+    },
+    {
+      "sourceAsset": "model_32_item.svg",
+      "path": "fabric/fabric-item-model.svg",
+      "sha256": "d6f4d02b97ef483f897bc3878cd4914035dd08e7b53f1b8ecaf936dcbefefe5e"
+    },
+    {
+      "sourceAsset": "my_workspace_32_non-item.svg",
+      "path": "fabric/fabric-navigation-my-workspace.svg",
+      "sha256": "7cff702f8e54ef215db3f5adc3130e629e640ffae2d80ebd70b1e13256cb0c8d"
+    },
+    {
+      "sourceAsset": "no_access_semantic_model_32_item.svg",
+      "path": "fabric/fabric-item-no-access-semantic-model.svg",
+      "sha256": "f16390cf9c04689a2c4da48bf3a6bf385a520572e13fd84a5db2a1d135ac6cb9"
+    },
+    {
+      "sourceAsset": "notebook_32_item.svg",
+      "path": "fabric/fabric-notebook.svg",
+      "sha256": "a2e8443a91903c33ccae48fe12e1c94cb2dae8a3cd0c6e8b43a26ab958e45734"
+    },
+    {
+      "sourceAsset": "one_lake_32_color.svg",
+      "path": "fabric/onelake.svg",
+      "sha256": "20f75443218411ccfeb647ac6822073b2b5e4fec04d81ed543ca491fa8091c93"
+    },
+    {
+      "sourceAsset": "ontology_32_item.svg",
+      "path": "fabric/fabric-item-ontology.svg",
+      "sha256": "a45bf0e16c07483e00876e80eba13c7f292f2f87724e39a297d196853de05cda"
+    },
+    {
+      "sourceAsset": "operations_agent_32_item.svg",
+      "path": "fabric/fabric-item-operations-agent.svg",
+      "sha256": "0ee681c56806e80048de2e3af6641979d43d4c4879226fcf3355e07be7566150"
+    },
+    {
+      "sourceAsset": "paginated_report_32_item.svg",
+      "path": "fabric/fabric-item-paginated-report.svg",
+      "sha256": "6c8d2fc925d740f5d12c5012ecafd30b9d97c1c4928c4bc3191649a9b2de22cd"
+    },
+    {
+      "sourceAsset": "pipeline_32_item.svg",
+      "path": "fabric/fabric-data-pipeline.svg",
+      "sha256": "9986f9ce8b9db9f107fd2c9efaf9330b3959686f2ba6095831899188525f5894"
+    },
+    {
+      "sourceAsset": "planning_32_item.svg",
+      "path": "fabric/fabric-item-planning.svg",
+      "sha256": "e0dfd8f1018d665647ecaa34f7c82f5921f93abc7fb97ea5a4fc3a92fba75f81"
+    },
+    {
+      "sourceAsset": "power_bi_32_color.svg",
+      "path": "fabric/fabric-workload-power-bi.svg",
+      "sha256": "450b90aa86ee62efe3d513fee43dac3b4386e5792fd985319a02088430eb3fbe"
+    },
+    {
+      "sourceAsset": "purview_32_color.svg",
+      "path": "fabric/fabric-workload-purview.svg",
+      "sha256": "606550b0013cfe6a09a87e437d7a382216501627b06f5f0a8af52353bcb3ab52"
+    },
+    {
+      "sourceAsset": "rdl_report_32_item.svg",
+      "path": "fabric/fabric-item-rdl-report.svg",
+      "sha256": "fe05d120462cce34324e65c7ec1ad80576186dc9906149bab10fc1e8937fae3f"
+    },
+    {
+      "sourceAsset": "real_time_dashboard_32_item.svg",
+      "path": "fabric/fabric-real-time-dashboard.svg",
+      "sha256": "c297d124e3ef6b0e9019e45edcddb3d71a502f5fe82593a8a11b6ccb71124970"
+    },
+    {
+      "sourceAsset": "real_time_intelligence_32_color.svg",
+      "path": "fabric/fabric-workload-real-time-intelligence.svg",
+      "sha256": "064db35739acd776076c474f766b4cdf30008c59cb0ea743f46f0e936d7ba7ca"
+    },
+    {
+      "sourceAsset": "report_32_item.svg",
+      "path": "fabric/fabric-power-bi-report.svg",
+      "sha256": "9ba6102dd7db9c9843e09ea2201848ff48b18f62b057aea91da3b2823cfd1637"
+    },
+    {
+      "sourceAsset": "restricted_report_32_item.svg",
+      "path": "fabric/fabric-item-restricted-report.svg",
+      "sha256": "74323b1ea82f9190cdd3c929ef6c187f5654009c2bf0b50af7d74c751c2c8c07"
+    },
+    {
+      "sourceAsset": "restricted_scorecard_32_item.svg",
+      "path": "fabric/fabric-item-restricted-scorecard.svg",
+      "sha256": "f68048f88bde0231e69fd2ac4a8d1a39d8df2f1ebc2f0f609805f1e234ef6b18"
+    },
+    {
+      "sourceAsset": "retail_32_item.svg",
+      "path": "fabric/fabric-item-retail.svg",
+      "sha256": "83be7f28b5dfa2088e926e7f145054e1835609aa228cdf1239449c6eed2ab194"
+    },
+    {
+      "sourceAsset": "runtime_lineage_32_item.svg",
+      "path": "fabric/fabric-item-runtime-lineage.svg",
+      "sha256": "b9b17a0560815257d3cd2d8b8ab10bc6b95c54badd74490542d085f7cea36316"
+    },
+    {
+      "sourceAsset": "sample_32_non-item.svg",
+      "path": "fabric/fabric-sample-item.svg",
+      "sha256": "6b6ca91b61e428df649e04043a70e8af2eac882987d1bc7e2d1159c157c0ef23"
+    },
+    {
+      "sourceAsset": "sample_workload_32_color.svg",
+      "path": "fabric/fabric-sample-workload.svg",
+      "sha256": "4302630191b70845a5809042be11ef96b567f561532ca17846976ddfd945c518"
+    },
+    {
+      "sourceAsset": "schema_model_32_item.svg",
+      "path": "fabric/fabric-item-schema-model.svg",
+      "sha256": "bda53f58c74d2c405c62aee7b9aa50e4c00dd0b219189f6f2ea2f585d3ce7e7e"
+    },
+    {
+      "sourceAsset": "scorecard_32_item.svg",
+      "path": "fabric/fabric-item-scorecard.svg",
+      "sha256": "c25e13076e56304f2a8af1bc76837e9449d07d9935815c47f09048707438818b"
+    },
+    {
+      "sourceAsset": "semantic_model_32_item.svg",
+      "path": "fabric/fabric-semantic-model.svg",
+      "sha256": "380816dc004f984ba6a2f9db984d91f9e3e8da2a841290bca3ceb4fc7753a083"
+    },
+    {
+      "sourceAsset": "shared_semantic_model_32_item.svg",
+      "path": "fabric/fabric-item-shared-semantic-model.svg",
+      "sha256": "a0d998d3e133f7b7a71f401f9ef8e634005f1706a8a36a84fa2e60b8186143e3"
+    },
+    {
+      "sourceAsset": "spark_job_direction_32_item.svg",
+      "path": "fabric/fabric-spark-job.svg",
+      "sha256": "fadeecb1a046b5b76e956ea9e6aa988c2f69d38da212dba6042ceb3c375fd8fe"
+    },
+    {
+      "sourceAsset": "sql_database_32_item.svg",
+      "path": "fabric/fabric-sql-database.svg",
+      "sha256": "31681819c577c69a6ed5514a1ff0c3326b2fb7d2c4773657648223374514dc62"
+    },
+    {
+      "sourceAsset": "streaming_dataflow_32_item.svg",
+      "path": "fabric/fabric-item-streaming-dataflow.svg",
+      "sha256": "40674487a8ea72bda8d1d683d48bd690aff732fb60b442a23a62e7109c72396f"
+    },
+    {
+      "sourceAsset": "streaming_semantic_model_32_item.svg",
+      "path": "fabric/fabric-item-streaming-semantic-model.svg",
+      "sha256": "47e70ca0cd9bd4dc780d877a44c14a119b20edd9e1c802e4c23403b6e47d75d5"
+    },
+    {
+      "sourceAsset": "sustainability_32_item.svg",
+      "path": "fabric/fabric-item-sustainability.svg",
+      "sha256": "12a00e0426d7e3f99511b33b57df8eaabf55a4a3bf8f2c43d59baa01e209fcd6"
+    },
+    {
+      "sourceAsset": "user_data_function_32_item.svg",
+      "path": "fabric/fabric-item-user-data-function.svg",
+      "sha256": "6374b26353a30f0ae4e54bf02e8663ae7159c184a7a86cbca91ee73dbe46240d"
+    },
+    {
+      "sourceAsset": "variable_library_32_item.svg",
+      "path": "fabric/fabric-item-variable-library.svg",
+      "sha256": "6f73ac8ca27b412e5c146925ddc4656bce5f2c43e49ea4379fa6c267e4ed18ff"
+    }
+  ]
+}

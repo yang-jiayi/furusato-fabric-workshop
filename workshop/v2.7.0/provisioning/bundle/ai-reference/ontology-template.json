@@ -1,0 +1,1943 @@
+{
+  "schemaVersion": "furusato-ai-reference-runtime/v1",
+  "ontologyDisplayNameTemplate": "ONT_Furusato_AIPath_<PID>",
+  "derivation": {
+    "sourceTemplateSha256": "3848f430eb39a6024341d298631baf4d2e63030b5fd03a37b9263bf3696ff319",
+    "transformerSha256": "544c592420f406255660d99d357007cd71083b861ca5089924cbe35c25ce38cc",
+    "contextualizationsPreserved": true,
+    "relationshipIdsAndEndpointsPreserved": true,
+    "acceptanceClaimed": false
+  },
+  "expectedContract": {
+    "definitionParts": 52,
+    "entityTypes": 10,
+    "staticProperties": 21,
+    "timeseriesProperties": 0,
+    "dataBindings": 10,
+    "relationshipTypes": 15,
+    "contextualizations": 15,
+    "overviews": 0
+  },
+  "definitionTemplateSha256": "97e80ff825745169f6822e52e5644a257ae88586c321a35bb1fe43030786f57c",
+  "parts": [
+    {
+      "path": "definition.json",
+      "content": {}
+    },
+    {
+      "path": "EntityTypes/264514858427221/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "3906732945075224848",
+        "entityIdParts": [
+          "3906732946430141805"
+        ],
+        "id": "264514858427221",
+        "name": "Prefecture",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "3906732946430141805",
+            "name": "PrefectureId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable entity identifier",
+                "defaultAggregation": "none",
+                "format": "integer ID",
+                "grain": "one Prefecture"
+              },
+              "description": "Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality."
+            },
+            "valueType": "BigInt"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "3906732945075224848",
+            "name": "PrefectureName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "Japanese label",
+                "defaultAggregation": "none",
+                "format": "Japanese text",
+                "grain": "one value per Prefecture",
+                "language": "ja-JP",
+                "sensitivity": "Public"
+              },
+              "description": "Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "reference geography dimension",
+            "geographyRoles": "recipient prefecture and donor-residence prefecture",
+            "grain": "one entity per Japanese prefecture",
+            "language": "ja-JP,en",
+            "sensitivity": "Public"
+          },
+          "description": "Candidate-only path representation for Prefecture. Use relationship traversal and exact lookup by PrefectureId; return PrefectureName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "prefecture",
+            "prefectures",
+            "Japanese prefecture",
+            "recipient prefecture",
+            "donor residence prefecture",
+            "都道府県",
+            "都府県"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/264514858427221/DataBindings/a1273afe-a89a-45f5-88a3-0247e9705740.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "PrefectureId",
+              "targetPropertyId": "3906732946430141805"
+            },
+            {
+              "sourceColumnName": "PrefectureName",
+              "targetPropertyId": "3906732945075224848"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_prefecture",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "a1273afe-a89a-45f5-88a3-0247e9705740"
+      }
+    },
+    {
+      "path": "EntityTypes/57727254480397/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "5318995285645577870",
+        "entityIdParts": [
+          "5318995285286504502"
+        ],
+        "id": "57727254480397",
+        "name": "Municipality",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5318995285286504502",
+            "name": "MunicipalityId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable entity identifier",
+                "defaultAggregation": "none",
+                "format": "string ID",
+                "grain": "one Municipality"
+              },
+              "description": "Stable identifier for one Municipality entity. Preserve leading zeros if present and use it as the relationship key; do not aggregate it."
+            },
+            "valueType": "String"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5318995282168547313",
+            "name": "MunicipalityName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "Japanese label",
+                "defaultAggregation": "none",
+                "format": "Japanese text",
+                "grain": "one value per Municipality",
+                "language": "ja-JP",
+                "sensitivity": "Public"
+              },
+              "description": "Japanese municipality name (自治体名／市区町村名) without a prefecture qualifier. Names are not globally unique, so include MunicipalityId or MunicipalityDisplayName when ambiguity is possible."
+            },
+            "valueType": "String"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5318995285645577870",
+            "name": "MunicipalityDisplayName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "display label",
+                "defaultAggregation": "none",
+                "format": "{MunicipalityName} / {PrefectureName}",
+                "grain": "one value per Municipality",
+                "language": "ja-JP",
+                "sensitivity": "Public"
+              },
+              "description": "Display-only composite label in the format {MunicipalityName} / {PrefectureName}. It does not contain MunicipalityId, so use MunicipalityId as the identity and this property only for human-readable output."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "recipient geography dimension",
+            "factPolicy": "Donation is the transaction fact",
+            "grain": "one entity per Japanese municipality",
+            "sensitivity": "Public",
+            "timeSeriesRole": "context key only"
+          },
+          "description": "Candidate-only path representation for Municipality. Use relationship traversal and exact lookup by MunicipalityId; return MunicipalityDisplayName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "municipality",
+            "municipalities",
+            "recipient municipality",
+            "donation destination",
+            "local government",
+            "local authority",
+            "city",
+            "town",
+            "village",
+            "ward",
+            "自治体",
+            "市区町村",
+            "受入自治体",
+            "寄付先自治体",
+            "寄附先自治体"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/57727254480397/DataBindings/dd4b367d-8eac-4861-b06a-1912756ad70b.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "MunicipalityId",
+              "targetPropertyId": "5318995285286504502"
+            },
+            {
+              "sourceColumnName": "MunicipalityName",
+              "targetPropertyId": "5318995282168547313"
+            },
+            {
+              "sourceColumnName": "MunicipalityDisplayName",
+              "targetPropertyId": "5318995285645577870"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_municipality",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "dd4b367d-8eac-4861-b06a-1912756ad70b"
+      }
+    },
+    {
+      "path": "EntityTypes/244579893085159/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "5348862124906866269",
+        "entityIdParts": [
+          "5348862125606558677"
+        ],
+        "id": "244579893085159",
+        "name": "Donor",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5348862125606558677",
+            "name": "DonorId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable entity identifier",
+                "defaultAggregation": "none",
+                "format": "integer ID",
+                "grain": "one Donor",
+                "sensitivity": "Synthetic workshop data"
+              },
+              "description": "Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people."
+            },
+            "valueType": "BigInt"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5348862127378029795",
+            "name": "DonorName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "Japanese label",
+                "defaultAggregation": "none",
+                "format": "synthetic Japanese name",
+                "grain": "one value per Donor",
+                "language": "ja-JP",
+                "sensitivity": "Synthetic-Personal"
+              },
+              "description": "Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person."
+            },
+            "valueType": "String"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5348862124906866269",
+            "name": "DonorDisplayName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "display label",
+                "defaultAggregation": "none",
+                "format": "{DonorName} / Donor {DonorId}",
+                "grain": "one value per Donor",
+                "language": "ja-JP",
+                "sensitivity": "Synthetic-Personal"
+              },
+              "description": "Display-only composite in the format {DonorName} / Donor {DonorId}. Use DonorId for identity and this property for human-readable output."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "actor dimension",
+            "dataNature": "synthetic, no real PII",
+            "geographyRole": "donor residence only",
+            "grain": "one synthetic donor",
+            "sensitivity": "Synthetic-Personal"
+          },
+          "description": "Candidate-only path representation for Donor. Use relationship traversal and exact lookup by DonorId; return DonorDisplayName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "donor",
+            "donors",
+            "contributor",
+            "contributors",
+            "supporter",
+            "supporters",
+            "hometown tax donor",
+            "taxpayer",
+            "寄付者",
+            "寄附者",
+            "支援者",
+            "納税者"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/244579893085159/DataBindings/c8ee4eab-4c98-4b3e-9b11-8ede83cd6cb6.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "DonorId",
+              "targetPropertyId": "5348862125606558677"
+            },
+            {
+              "sourceColumnName": "DonorName",
+              "targetPropertyId": "5348862127378029795"
+            },
+            {
+              "sourceColumnName": "DonorDisplayName",
+              "targetPropertyId": "5348862124906866269"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_donor",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "c8ee4eab-4c98-4b3e-9b11-8ede83cd6cb6"
+      }
+    },
+    {
+      "path": "EntityTypes/135818208486705/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "5394698401700544536",
+        "entityIdParts": [
+          "5394698403364015417"
+        ],
+        "id": "135818208486705",
+        "name": "GiftCategory",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5394698403364015417",
+            "name": "CategoryId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable entity identifier",
+                "defaultAggregation": "none",
+                "format": "integer ID",
+                "grain": "one GiftCategory"
+              },
+              "description": "Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it."
+            },
+            "valueType": "BigInt"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5394698401700544536",
+            "name": "CategoryName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "Japanese controlled label",
+                "defaultAggregation": "none",
+                "format": "controlled text, 30 values",
+                "grain": "one value per GiftCategory",
+                "language": "ja-JP",
+                "sensitivity": "Public-Synthetic-Catalog"
+              },
+              "description": "Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "catalog classification dimension",
+            "grain": "one controlled return-gift category",
+            "metricPolicy": "aggregate at Donation grain",
+            "sensitivity": "Public-Synthetic-Catalog"
+          },
+          "description": "Candidate-only path representation for GiftCategory. Use relationship traversal and exact lookup by CategoryId; return CategoryName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "gift category",
+            "return-gift category",
+            "reward category",
+            "benefit category",
+            "product category",
+            "genre",
+            "返礼品カテゴリ",
+            "返礼品分類",
+            "お礼品カテゴリ",
+            "特典カテゴリ",
+            "ジャンル"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/135818208486705/DataBindings/4db00816-a3c8-491f-9fb2-6349614b8a58.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "CategoryId",
+              "targetPropertyId": "5394698403364015417"
+            },
+            {
+              "sourceColumnName": "CategoryName",
+              "targetPropertyId": "5394698401700544536"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_gift_category",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "4db00816-a3c8-491f-9fb2-6349614b8a58"
+      }
+    },
+    {
+      "path": "EntityTypes/21065477330866/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "5416054540626218197",
+        "entityIdParts": [
+          "5416054538545251650"
+        ],
+        "id": "21065477330866",
+        "name": "Gift",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5416054538545251650",
+            "name": "GiftId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable entity identifier",
+                "defaultAggregation": "none",
+                "format": "integer ID",
+                "grain": "one Gift"
+              },
+              "description": "Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers."
+            },
+            "valueType": "BigInt"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5416054537989576852",
+            "name": "GiftName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "Japanese label",
+                "defaultAggregation": "none",
+                "format": "Japanese text",
+                "grain": "one value per Gift",
+                "language": "ja-JP",
+                "sensitivity": "Public-Synthetic-Catalog"
+              },
+              "description": "Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal."
+            },
+            "valueType": "String"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5416054540626218197",
+            "name": "GiftDisplayName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "display label",
+                "defaultAggregation": "none",
+                "format": "{GiftName} / Gift {GiftId}",
+                "grain": "one value per Gift",
+                "language": "ja-JP",
+                "sensitivity": "Public-Synthetic-Catalog"
+              },
+              "description": "Display-only composite in the format {GiftName} / Gift {GiftId}. Use it for unambiguous human-readable output and GiftId as the stable identity."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "catalog item dimension",
+            "grain": "one return-gift option",
+            "monetaryRole": "none",
+            "recipientPath": "DonationToMunicipality only",
+            "sensitivity": "Public-Synthetic-Catalog"
+          },
+          "description": "Candidate-only path representation for Gift. Use relationship traversal and exact lookup by GiftId; return GiftDisplayName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "gift",
+            "return gift",
+            "return gifts",
+            "thank-you gift",
+            "reward",
+            "benefit",
+            "perk",
+            "gift option",
+            "hometown tax gift",
+            "返礼品",
+            "お礼品",
+            "商品",
+            "特典",
+            "返礼品オプション"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/21065477330866/DataBindings/e6799770-bdef-4f21-b261-750e52de1364.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "GiftId",
+              "targetPropertyId": "5416054538545251650"
+            },
+            {
+              "sourceColumnName": "GiftName",
+              "targetPropertyId": "5416054537989576852"
+            },
+            {
+              "sourceColumnName": "GiftDisplayName",
+              "targetPropertyId": "5416054540626218197"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_gift",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "e6799770-bdef-4f21-b261-750e52de1364"
+      }
+    },
+    {
+      "path": "EntityTypes/193544498857107/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "5445377801538082911",
+        "entityIdParts": [
+          "5445377799988794015"
+        ],
+        "id": "193544498857107",
+        "name": "Supplier",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5445377799988794015",
+            "name": "SupplierId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable entity identifier",
+                "defaultAggregation": "none",
+                "format": "integer ID",
+                "fulfillmentRole": "none",
+                "grain": "one Supplier"
+              },
+              "description": "Stable numeric identifier for one synthetic registered Supplier entity. It identifies a catalog provider, not an actual fulfillment event."
+            },
+            "valueType": "BigInt"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5445377802529702386",
+            "name": "SupplierName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "Japanese label",
+                "defaultAggregation": "none",
+                "format": "synthetic Japanese organization name",
+                "grain": "one value per Supplier",
+                "language": "ja-JP",
+                "sensitivity": "Synthetic-Organization"
+              },
+              "description": "Synthetic Japanese organization-style name of the Supplier or vendor (事業者名／提供事業者名). It is not a Donation recipient."
+            },
+            "valueType": "String"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5445377801538082911",
+            "name": "SupplierDisplayName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "display label",
+                "defaultAggregation": "none",
+                "format": "{SupplierName} / Supplier {SupplierId}",
+                "grain": "one value per Supplier",
+                "language": "ja-JP",
+                "sensitivity": "Synthetic-Organization"
+              },
+              "description": "Display-only composite in the format {SupplierName} / Supplier {SupplierId}. Use SupplierId for identity and this property for human-readable output."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "provider dimension",
+            "grain": "one synthetic supplier",
+            "locationRole": "supplier base prefecture",
+            "metricPolicy": "supplier allocation is not defined",
+            "sensitivity": "Synthetic-Organization"
+          },
+          "description": "Candidate-only path representation for Supplier. Use relationship traversal and exact lookup by SupplierId; return SupplierDisplayName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "supplier",
+            "suppliers",
+            "vendor",
+            "vendors",
+            "provider",
+            "providers",
+            "merchant",
+            "local business",
+            "return-gift provider",
+            "gift supplier",
+            "事業者",
+            "提供事業者",
+            "返礼品事業者",
+            "ベンダー",
+            "加盟店"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/193544498857107/DataBindings/38af81f7-b6dc-4c04-b3af-c17e05283a57.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "SupplierId",
+              "targetPropertyId": "5445377799988794015"
+            },
+            {
+              "sourceColumnName": "SupplierName",
+              "targetPropertyId": "5445377802529702386"
+            },
+            {
+              "sourceColumnName": "SupplierDisplayName",
+              "targetPropertyId": "5445377801538082911"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_supplier",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "38af81f7-b6dc-4c04-b3af-c17e05283a57"
+      }
+    },
+    {
+      "path": "EntityTypes/25626978028784/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "5483655106008901287",
+        "entityIdParts": [
+          "5483655105060091170"
+        ],
+        "id": "25626978028784",
+        "name": "Donation",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5483655105060091170",
+            "name": "DonationId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "stable transaction identifier",
+                "defaultAggregation": "none",
+                "format": "integer ID",
+                "grain": "one static Donation"
+              },
+              "description": "Stable numeric identifier for one static Donation transaction. When a user says 寄付ID or Donation ID followed by a number, filter this property for exact identity. It is the transaction key and must not be used as a grouping dimension for an overall aggregate."
+            },
+            "valueType": "BigInt"
+          },
+          {
+            "baseTypeNamespaceType": null,
+            "id": "5483655106008901287",
+            "name": "DonationDisplayName",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "display label",
+                "defaultAggregation": "none",
+                "format": "Donation {DonationId}",
+                "grain": "one value per Donation",
+                "language": "en",
+                "sensitivity": "Synthetic-Transaction"
+              },
+              "description": "Display-only label in the format Donation followed by DonationId. Use DonationId for identity."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "transaction fact",
+            "currency": "JPY",
+            "factPolicy": "only source for transaction counts and donation amounts",
+            "grain": "one static baseline donation",
+            "sensitivity": "Synthetic-Transaction",
+            "timeSeriesPolicy": "Municipality time-series observations are excluded"
+          },
+          "description": "Candidate-only path representation for Donation. Use relationship traversal and exact lookup by DonationId; return DonationDisplayName as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "donation",
+            "donations",
+            "contribution",
+            "contributions",
+            "donation record",
+            "contribution record",
+            "donation transaction",
+            "donation order",
+            "completed donation",
+            "hometown tax donation",
+            "Furusato Nozei donation",
+            "Furusato tax contribution",
+            "寄付",
+            "寄附",
+            "寄付申込",
+            "寄附申込",
+            "ふるさと納税"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/25626978028784/DataBindings/b0a994b3-8dbc-4397-9205-29e9a1d0eaa3.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "DonationId",
+              "targetPropertyId": "5483655105060091170"
+            },
+            {
+              "sourceColumnName": "DonationDisplayName",
+              "targetPropertyId": "5483655106008901287"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_donation",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "b0a994b3-8dbc-4397-9205-29e9a1d0eaa3"
+      }
+    },
+    {
+      "path": "EntityTypes/231502701063348/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "7160099244503547189",
+        "entityIdParts": [
+          "7160099244503547189"
+        ],
+        "id": "231502701063348",
+        "name": "MunicipalityCategoryMetric",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "7160099244503547189",
+            "name": "MunCategoryMetricId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "composite metric-row identifier",
+                "defaultAggregation": "none",
+                "format": "string ID",
+                "grain": "one Municipality x GiftCategory pair",
+                "keyAmbiguity": "the same NN-NN text may exist in another metric entity type; qualify by entity type",
+                "keyEncoding": "{MunicipalityId}-{CategoryId:02}",
+                "keyExample": "452025-01"
+              },
+              "description": "Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row, encoded as {MunicipalityId}-{CategoryId:02}, for example 452025-01. The measure values are separate properties on this entity. The same NN-NN text can also occur as a PrefCategoryMetricId or a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a MunicipalityCategoryMetric identifier."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "semantic metric entity",
+            "defaultAggregation": "none",
+            "grain": "one Municipality x GiftCategory pair",
+            "identityProperty": "MunCategoryMetricId",
+            "keyType": "String",
+            "snapshotScope": "current static Donation only",
+            "supplierPolicy": "excluded"
+          },
+          "description": "Candidate-only path representation for MunicipalityCategoryMetric. Use relationship traversal and exact lookup by MunCategoryMetricId; return MunCategoryMetricId as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "municipality category metric",
+            "municipality category summary",
+            "自治体別カテゴリ指標",
+            "自治体別返礼品カテゴリ実績"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/231502701063348/DataBindings/4018b372-9ae7-45fa-864a-809f0cdeb132.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "MunCategoryMetricId",
+              "targetPropertyId": "7160099244503547189"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_mun_category_metric",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "4018b372-9ae7-45fa-864a-809f0cdeb132"
+      }
+    },
+    {
+      "path": "EntityTypes/163897307576802/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "7191319631107882540",
+        "entityIdParts": [
+          "7191319631107882540"
+        ],
+        "id": "163897307576802",
+        "name": "PrefectureCategoryMetric",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "7191319631107882540",
+            "name": "PrefCategoryMetricId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "composite metric-row identifier",
+                "defaultAggregation": "none",
+                "format": "string ID",
+                "grain": "one recipient Prefecture x GiftCategory pair",
+                "keyAmbiguity": "the same NN-NN text may exist in another metric entity type; qualify by entity type",
+                "keyEncoding": "{PrefectureId:02}-{CategoryId:02}",
+                "keyExample": "13-01"
+              },
+              "description": "Synthetic stable identifier for one recipient Prefecture x GiftCategory snapshot metric row, encoded as {PrefectureId:02}-{CategoryId:02}, for example 13-01. The measure values are separate properties on this entity. The identical NN-NN text can also be a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureCategoryMetric identifier."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "semantic metric entity",
+            "defaultAggregation": "none",
+            "grain": "one recipient Prefecture x GiftCategory pair",
+            "identityProperty": "PrefCategoryMetricId",
+            "keyType": "String",
+            "snapshotScope": "current static Donation only",
+            "supplierPolicy": "excluded"
+          },
+          "description": "Candidate-only path representation for PrefectureCategoryMetric. Use relationship traversal and exact lookup by PrefCategoryMetricId; return PrefCategoryMetricId as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "prefecture category metric",
+            "prefecture category summary",
+            "都道府県別カテゴリ指標",
+            "都道府県別返礼品カテゴリ実績"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/163897307576802/DataBindings/c4542b9b-a0e3-472a-990f-0b5a5e59cddf.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "PrefCategoryMetricId",
+              "targetPropertyId": "7191319631107882540"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_pref_category_metric",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "c4542b9b-a0e3-472a-990f-0b5a5e59cddf"
+      }
+    },
+    {
+      "path": "EntityTypes/111782498358526/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/entityType/1.0.0/schema.json",
+        "baseEntityTypeId": null,
+        "displayNamePropertyId": "7214061228093989738",
+        "entityIdParts": [
+          "7214061228093989738"
+        ],
+        "id": "111782498358526",
+        "name": "PrefectureDonationFlow",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "properties": [
+          {
+            "baseTypeNamespaceType": null,
+            "id": "7214061228093989738",
+            "name": "PrefDonationFlowId",
+            "redefines": null,
+            "semanticEnrichment": {
+              "customAttributes": {
+                "businessRole": "origin-destination metric-row identifier",
+                "defaultAggregation": "none",
+                "format": "string ID",
+                "grain": "one residence Prefecture x recipient Prefecture pair",
+                "keyAmbiguity": "the same NN-NN text may exist in another metric entity type; qualify by entity type",
+                "keyEncoding": "{ResidencePrefectureId:02}-{RecipientPrefectureId:02}",
+                "keyExample": "13-01 = residence Prefecture 13 to recipient Prefecture 01"
+              },
+              "description": "Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row, encoded as {ResidencePrefectureId:02}-{RecipientPrefectureId:02}, for example 13-01, which reads as residence 13 to recipient 01. Directional measures are separate properties. The identical NN-NN text can also be a PrefCategoryMetricId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureDonationFlow identifier."
+            },
+            "valueType": "String"
+          }
+        ],
+        "semanticEnrichment": {
+          "customAttributes": {
+            "businessRole": "semantic flow metric entity",
+            "defaultAggregation": "none",
+            "direction": "origin residence to destination recipient",
+            "grain": "one residence Prefecture x recipient Prefecture pair",
+            "identityProperty": "PrefDonationFlowId",
+            "keyType": "String",
+            "snapshotScope": "current static Donation only",
+            "supplierPolicy": "excluded"
+          },
+          "description": "Candidate-only path representation for PrefectureDonationFlow. Use relationship traversal and exact lookup by PrefDonationFlowId; return PrefDonationFlowId as the endpoint label. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and return the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. Use the separately governed SQL or KQL source for other attributes, dates, and business donation or operational measures. This structural guidance does not guarantee Data Agent routing or answer compliance.",
+          "synonyms": [
+            "prefecture donation flow",
+            "origin destination donation flow",
+            "居住地から寄付先への寄付フロー",
+            "都道府県間寄付フロー"
+          ]
+        },
+        "timeseriesProperties": [],
+        "untypedProperties": [],
+        "visibility": "Visible"
+      }
+    },
+    {
+      "path": "EntityTypes/111782498358526/DataBindings/f23bec8d-16a9-43bc-a4ec-3e92913a26c2.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+        "dataBindingConfiguration": {
+          "dataBindingType": "NonTimeSeries",
+          "propertyBindings": [
+            {
+              "sourceColumnName": "PrefDonationFlowId",
+              "targetPropertyId": "7214061228093989738"
+            }
+          ],
+          "sourceTableProperties": {
+            "itemId": "{{source.lakehouse.id}}",
+            "sourceSchema": "dbo",
+            "sourceTableName": "ot_pref_donation_flow",
+            "sourceType": "LakehouseTable",
+            "workspaceId": "{{workspace.id}}"
+          }
+        },
+        "id": "f23bec8d-16a9-43bc-a4ec-3e92913a26c2"
+      }
+    },
+    {
+      "path": "RelationshipTypes/5527213886080774913/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5527213886080774913",
+        "name": "MunicipalityInPrefecture",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "count and sum Donation entities, not edges",
+            "businessRole": "recipient administrative containment",
+            "cardinality": "many-to-one, exactly one Prefecture per Municipality",
+            "direction": "Municipality -> Prefecture",
+            "grain": "one edge per Municipality",
+            "sensitivity": "Public",
+            "sourceParticipation": "mandatory - every Municipality carries exactly one edge",
+            "targetParticipation": "optional - a Prefecture may have zero Municipality rows"
+          },
+          "description": "Connects each recipient Municipality to its containing Prefecture. Follow Municipality to Prefecture for recipient geography; do not use this relationship to infer donor residence or to count Donations. Candidate-only directed path from Municipality to Prefecture. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "57727254480397"
+        },
+        "target": {
+          "entityTypeId": "264514858427221"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5527213886080774913/Contextualizations/144822b1-aff0-43f6-925c-8575ad696883.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_municipality",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "144822b1-aff0-43f6-925c-8575ad696883",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "MunicipalityId",
+            "targetPropertyId": "5318995285286504502"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefectureId",
+            "targetPropertyId": "3906732946430141805"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5534818874484272204/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5534818874484272204",
+        "name": "DonorLivesInPrefecture",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "use DonorMadeDonation before aggregating Donation facts",
+            "businessRole": "donor residence geography",
+            "cardinality": "many-to-one, exactly one Prefecture per Donor",
+            "direction": "Donor -> Prefecture",
+            "grain": "one edge per Donor",
+            "sensitivity": "Synthetic-Personal",
+            "sourceParticipation": "mandatory - every Donor carries exactly one edge",
+            "targetParticipation": "optional - a Prefecture may have zero Donor rows"
+          },
+          "description": "Connects a synthetic Donor to the Prefecture of donor residence. This relationship defines donor-origin geography only and must never be treated as the Donation recipient. Candidate-only directed path from Donor to Prefecture. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "244579893085159"
+        },
+        "target": {
+          "entityTypeId": "264514858427221"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5534818874484272204/Contextualizations/1500f62f-ee77-439b-ab6f-faa097d71535.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_donor",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "1500f62f-ee77-439b-ab6f-faa097d71535",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "DonorId",
+            "targetPropertyId": "5348862125606558677"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefectureId",
+            "targetPropertyId": "3906732946430141805"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5538623819003650898/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5538623819003650898",
+        "name": "SupplierInPrefecture",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "do not infer Donation recipient from Supplier location",
+            "businessRole": "supplier base geography",
+            "cardinality": "many-to-one, exactly one Prefecture per Supplier",
+            "direction": "Supplier -> Prefecture",
+            "grain": "one edge per Supplier",
+            "sensitivity": "Synthetic-Organization",
+            "sourceParticipation": "mandatory - every Supplier carries exactly one edge",
+            "targetParticipation": "optional - a Prefecture may have zero Supplier rows"
+          },
+          "description": "Connects a synthetic Supplier to its registered Prefecture. Registered Supplier location is neither donor residence, Donation recipient geography, fulfillment location, service location, nor shipping origin. Candidate-only directed path from Supplier to Prefecture. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "193544498857107"
+        },
+        "target": {
+          "entityTypeId": "264514858427221"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5538623819003650898/Contextualizations/818a3d10-42ab-48ee-963f-a180e3260519.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_supplier",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "818a3d10-42ab-48ee-963f-a180e3260519",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "SupplierId",
+            "targetPropertyId": "5445377799988794015"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefectureId",
+            "targetPropertyId": "3906732946430141805"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5541717777652180049/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5541717777652180049",
+        "name": "GiftInCategory",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "aggregate Donation facts, not Gift or edge counts",
+            "businessRole": "catalog classification",
+            "cardinality": "many-to-one, exactly one GiftCategory per Gift",
+            "direction": "Gift -> GiftCategory",
+            "grain": "one edge per Gift",
+            "sensitivity": "Public-Synthetic-Catalog",
+            "sourceParticipation": "mandatory - every Gift carries exactly one edge",
+            "targetParticipation": "optional - a GiftCategory may have zero Gift rows"
+          },
+          "description": "Classifies a Gift in exactly one GiftCategory. Category-level donation metrics must traverse DonationSelectedGift first and aggregate donation amounts from the governed SQL source from Donation. Candidate-only directed path from Gift to GiftCategory. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "21065477330866"
+        },
+        "target": {
+          "entityTypeId": "135818208486705"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5541717777652180049/Contextualizations/175cce33-8815-4673-9753-4a7c0a59daf9.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_gift",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "175cce33-8815-4673-9753-4a7c0a59daf9",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "GiftId",
+            "targetPropertyId": "5416054538545251650"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "CategoryId",
+            "targetPropertyId": "5394698403364015417"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5548279086455910756/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5548279086455910756",
+        "name": "SupplierProvidesGift",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "No allocation of donation amounts to Suppliers is defined. Multi-supplier catalog paths can duplicate attribution; do not derive supplier donation totals from them.",
+            "businessRole": "catalog supply relationship",
+            "cardinality": "many-to-many, zero-to-many on both sides by contract",
+            "direction": "Supplier -> Gift",
+            "grain": "one unique Supplier-Gift pair",
+            "sensitivity": "Public-Synthetic-Catalog",
+            "sourceParticipation": "optional by contract; total in this dataset - 0 Suppliers without a Gift",
+            "targetParticipation": "optional by contract; total in this dataset - 0 Gifts without a Supplier"
+          },
+          "description": "Connects a Supplier, provider, vendor, 事業者, 業者, or 会社 to a Gift for which it is a registered provider. It does not prove an actual fulfillment, service, shipment, or physical origin. For a Gift-centered provider question, resolve the GiftId first and traverse this relationship in reverse from Gift to every registered Supplier, then use SupplierInPrefecture for registered location. The registration contract is many-to-many and optional on both sides: a Gift may have zero, one or many Suppliers and a Supplier may register zero, one or many Gifts. In this dataset every one of the 2,500 Suppliers and all 6,000 Gifts participate, across 14,514 unique pairs, so no orphan appears at run time. No allocation of donation amounts from the governed SQL source among Suppliers is defined. Candidate-only directed path from Supplier to Gift. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "193544498857107"
+        },
+        "target": {
+          "entityTypeId": "21065477330866"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5548279086455910756/Contextualizations/2803853a-f228-4fca-84a7-ae632c4218e8.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_supplier_gift",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "2803853a-f228-4fca-84a7-ae632c4218e8",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "SupplierId",
+            "targetPropertyId": "5445377799988794015"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "GiftId",
+            "targetPropertyId": "5416054538545251650"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5557170605401875447/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5557170605401875447",
+        "name": "DonorMadeDonation",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "Traversal identifies Donation endpoints. Query governed SQL for donation totals and monetary amounts at Donation grain; count graph endpoints only for explicit relationship evidence.",
+            "businessRole": "transaction actor",
+            "cardinality": "zero-to-many from Donor, exactly one Donor per Donation",
+            "direction": "Donor -> Donation",
+            "grain": "one edge per Donation",
+            "sensitivity": "Synthetic-Transaction",
+            "sourceParticipation": "optional - 18 Donors have no Donation",
+            "targetParticipation": "mandatory - every Donation has exactly one Donor"
+          },
+          "description": "Connects the Donor associated with a static baseline Donation to that Donation. Every static Donation has exactly one Donor, and a Donor may have zero, one or many static Donations: 18 of the 12,000 Donors made none. Candidate-only directed path from Donor to Donation. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "244579893085159"
+        },
+        "target": {
+          "entityTypeId": "25626978028784"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5557170605401875447/Contextualizations/72fc6fa4-db44-4e79-892a-69c8371cabbc.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_donation",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "72fc6fa4-db44-4e79-892a-69c8371cabbc",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "DonorId",
+            "targetPropertyId": "5348862125606558677"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "DonationId",
+            "targetPropertyId": "5483655105060091170"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5560796095305786107/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5560796095305786107",
+        "name": "DonationToMunicipality",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "authoritative recipient path for Donation counts and amounts",
+            "businessRole": "recipient geography",
+            "cardinality": "many-to-one, exactly one Municipality per Donation",
+            "direction": "Donation -> Municipality",
+            "grain": "one edge per Donation",
+            "sensitivity": "Synthetic-Transaction",
+            "sourceParticipation": "mandatory - every Donation carries exactly one edge",
+            "targetParticipation": "optional - a Municipality may have zero Donation rows"
+          },
+          "description": "Connects each static baseline Donation to exactly one recipient Municipality. This is the authoritative path for received-by geography and must not be replaced by Gift or Supplier location. Candidate-only directed path from Donation to Municipality. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "25626978028784"
+        },
+        "target": {
+          "entityTypeId": "57727254480397"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5560796095305786107/Contextualizations/7f97c6e6-5226-4cc4-9f38-92b481401b2d.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_donation",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "7f97c6e6-5226-4cc4-9f38-92b481401b2d",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "DonationId",
+            "targetPropertyId": "5483655105060091170"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "MunicipalityId",
+            "targetPropertyId": "5318995285286504502"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/5563661610079505158/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "5563661610079505158",
+        "name": "DonationSelectedGift",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "Donation amounts are SQL-owned at Donation grain, not Gift or catalog-registration grain; do not aggregate money in this path-only Ontology.",
+            "businessRole": "transaction selection",
+            "cardinality": "many-to-one, exactly one Gift option per Donation in this dataset",
+            "direction": "Donation -> Gift",
+            "grain": "one edge per Donation",
+            "sensitivity": "Synthetic-Transaction",
+            "sourceParticipation": "mandatory - every Donation carries exactly one edge",
+            "targetParticipation": "optional - a Gift may have zero Donation rows"
+          },
+          "description": "Connects each static baseline Donation to the selected Gift option. A no-return-gift choice is represented by a Gift option in the no-return-gift category, not by a missing Donation. Candidate-only directed path from Donation to Gift. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "25626978028784"
+        },
+        "target": {
+          "entityTypeId": "21065477330866"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/5563661610079505158/Contextualizations/13e5e6f9-510b-42c4-acf7-fa41d51e10a5.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_donation",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "13e5e6f9-510b-42c4-acf7-fa41d51e10a5",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "DonationId",
+            "targetPropertyId": "5483655105060091170"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "GiftId",
+            "targetPropertyId": "5416054538545251650"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7242420920535939500/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7242420920535939500",
+        "name": "MunicipalityCatalogsGift",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "never count or sum Donation facts through this relationship; use DonationToMunicipality for received-by geography",
+            "businessRole": "gift catalog association",
+            "cardinality": "one-to-many from Municipality, exactly one catalog Municipality per Gift",
+            "dataCoincidenceWarning": "in this dataset the forbidden catalog path can return the same total as the correct recipient path; the guard protects future divergence, not this sample",
+            "direction": "Municipality -> Gift",
+            "grain": "one edge per Gift",
+            "sensitivity": "Public-Synthetic-Catalog",
+            "sourceParticipation": "mandatory - every one of the 1,741 Municipalities catalogs at least one Gift",
+            "targetParticipation": "mandatory - every Gift has exactly one catalog Municipality"
+          },
+          "description": "Connects a Municipality to each Gift registered in that Municipality's Workshop catalog. This is catalog geography, not Donation recipient geography, Supplier location, fulfillment location, or shipping origin. In this synthetic dataset every Donation happens to select a Gift catalogued by its own recipient Municipality, so a forbidden count taken through this edge can coincidentally return the same number as the correct DonationToMunicipality count. That coincidence is a property of the sample data, not of the model: the rule stays, because real catalogues diverge and the two paths answer different questions. Candidate-only directed path from Municipality to Gift. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "57727254480397"
+        },
+        "target": {
+          "entityTypeId": "21065477330866"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7242420920535939500/Contextualizations/a6af19c0-92d8-4b2c-9179-5dbcc99cc3f0.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_gift",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "a6af19c0-92d8-4b2c-9179-5dbcc99cc3f0",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "MunicipalityId",
+            "targetPropertyId": "5318995285286504502"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "GiftId",
+            "targetPropertyId": "5416054538545251650"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7253105300430015676/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7253105300430015676",
+        "name": "MunHasCategoryMetric",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "read metric values once and do not traverse to Donation detail for the same total",
+            "businessRole": "recipient Municipality to pre-aggregated category metric",
+            "cardinality": "zero-to-many from Municipality, exactly one Municipality per MunicipalityCategoryMetric row",
+            "direction": "Municipality -> MunicipalityCategoryMetric",
+            "grain": "one edge per metric row",
+            "sensitivity": "Public",
+            "sourceParticipation": "optional - 10 Municipalities have no metric row",
+            "targetParticipation": "mandatory - every metric row has exactly one Municipality"
+          },
+          "description": "Connects a Municipality to each MunicipalityCategoryMetric row for that recipient Municipality. A Municipality that received no Donation has no metric row at all: 10 of the 1,741 Municipalities have none. Candidate-only directed path from Municipality to MunicipalityCategoryMetric. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "57727254480397"
+        },
+        "target": {
+          "entityTypeId": "231502701063348"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7253105300430015676/Contextualizations/7d61e8a2-b9a1-43b6-8348-774d10c52583.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_mun_category_metric",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "7d61e8a2-b9a1-43b6-8348-774d10c52583",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "MunicipalityId",
+            "targetPropertyId": "5318995285286504502"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "MunCategoryMetricId",
+            "targetPropertyId": "7160099244503547189"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7257127959125760568/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7257127959125760568",
+        "name": "MunMetricForCategory",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "metric is already aggregated at Municipality x GiftCategory grain",
+            "businessRole": "pre-aggregated category metric to its GiftCategory",
+            "cardinality": "many-to-one, exactly one GiftCategory per MunicipalityCategoryMetric row",
+            "direction": "MunicipalityCategoryMetric -> GiftCategory",
+            "grain": "one edge per metric row",
+            "sensitivity": "Public",
+            "sourceParticipation": "mandatory - every MunicipalityCategoryMetric carries exactly one edge",
+            "targetParticipation": "optional - a GiftCategory may have zero MunicipalityCategoryMetric rows"
+          },
+          "description": "Connects a MunicipalityCategoryMetric row to its GiftCategory. Candidate-only directed path from MunicipalityCategoryMetric to GiftCategory. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "231502701063348"
+        },
+        "target": {
+          "entityTypeId": "135818208486705"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7257127959125760568/Contextualizations/bf3c5624-ce6b-44c3-b7da-a12f957e47c9.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_mun_category_metric",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "bf3c5624-ce6b-44c3-b7da-a12f957e47c9",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "MunCategoryMetricId",
+            "targetPropertyId": "7160099244503547189"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "CategoryId",
+            "targetPropertyId": "5394698403364015417"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7259716242712179469/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7259716242712179469",
+        "name": "PrefHasCategoryMetric",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "read metric values once and do not traverse to Donation detail for the same total",
+            "businessRole": "recipient Prefecture to pre-aggregated category metric",
+            "cardinality": "one-to-many from Prefecture, exactly one recipient Prefecture per PrefectureCategoryMetric row",
+            "direction": "Prefecture -> PrefectureCategoryMetric",
+            "geographyRole": "recipient",
+            "grain": "one edge per metric row",
+            "sensitivity": "Public",
+            "sourceParticipation": "mandatory - every one of the 47 Prefectures has at least one metric row",
+            "targetParticipation": "mandatory - every metric row has exactly one recipient Prefecture"
+          },
+          "description": "Connects a recipient Prefecture to each PrefectureCategoryMetric row for that Prefecture. Candidate-only directed path from Prefecture to PrefectureCategoryMetric. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "264514858427221"
+        },
+        "target": {
+          "entityTypeId": "163897307576802"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7259716242712179469/Contextualizations/028b3cd7-ac68-4a77-b464-b24158f8040c.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_pref_category_metric",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "028b3cd7-ac68-4a77-b464-b24158f8040c",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefectureId",
+            "targetPropertyId": "3906732946430141805"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefCategoryMetricId",
+            "targetPropertyId": "7191319631107882540"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7263097399627767080/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7263097399627767080",
+        "name": "PrefMetricForCategory",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "metric is already aggregated at recipient Prefecture x GiftCategory grain",
+            "businessRole": "pre-aggregated category metric to its GiftCategory",
+            "cardinality": "many-to-one, exactly one GiftCategory per PrefectureCategoryMetric row",
+            "direction": "PrefectureCategoryMetric -> GiftCategory",
+            "grain": "one edge per metric row",
+            "sensitivity": "Public",
+            "sourceParticipation": "mandatory - every PrefectureCategoryMetric carries exactly one edge",
+            "targetParticipation": "optional - a GiftCategory may have zero PrefectureCategoryMetric rows"
+          },
+          "description": "Connects a PrefectureCategoryMetric row to its GiftCategory. Candidate-only directed path from PrefectureCategoryMetric to GiftCategory. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "163897307576802"
+        },
+        "target": {
+          "entityTypeId": "135818208486705"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7263097399627767080/Contextualizations/c65f388d-7328-4de7-84bd-81c237e2f909.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_pref_category_metric",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "c65f388d-7328-4de7-84bd-81c237e2f909",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefCategoryMetricId",
+            "targetPropertyId": "7191319631107882540"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "CategoryId",
+            "targetPropertyId": "5394698403364015417"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7265812375370015816/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7265812375370015816",
+        "name": "ResidencePrefHasFlow",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "flow rows are already aggregated at residence x recipient Prefecture grain",
+            "businessRole": "donor-residence origin of a pre-aggregated prefecture flow",
+            "cardinality": "one-to-many from Prefecture, exactly one residence Prefecture per PrefectureDonationFlow row",
+            "direction": "residence Prefecture -> PrefectureDonationFlow",
+            "geographyRole": "origin donor residence",
+            "grain": "one edge per flow row",
+            "sensitivity": "Public",
+            "sourceParticipation": "mandatory - every one of the 47 Prefectures originates at least one flow row",
+            "targetParticipation": "mandatory - every flow row has exactly one residence Prefecture"
+          },
+          "description": "Connects the Donor-residence Prefecture to an origin-destination PrefectureDonationFlow row. Candidate-only directed path from Prefecture to PrefectureDonationFlow. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "264514858427221"
+        },
+        "target": {
+          "entityTypeId": "111782498358526"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7265812375370015816/Contextualizations/42e33025-9699-4603-8235-23e84a31477a.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_pref_donation_flow",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "42e33025-9699-4603-8235-23e84a31477a",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "ResidencePrefectureId",
+            "targetPropertyId": "3906732946430141805"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefDonationFlowId",
+            "targetPropertyId": "7214061228093989738"
+          }
+        ]
+      }
+    },
+    {
+      "path": "RelationshipTypes/7285378347920053125/definition.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/relationshipType/1.0.0/schema.json",
+        "id": "7285378347920053125",
+        "name": "FlowToRecipientPref",
+        "namespace": "usertypes",
+        "namespaceType": "Custom",
+        "semanticEnrichment": {
+          "customAttributes": {
+            "aggregationGuard": "flow rows are already aggregated at residence x recipient Prefecture grain",
+            "businessRole": "Donation-recipient destination of a pre-aggregated prefecture flow",
+            "cardinality": "many-to-one, exactly one recipient Prefecture per PrefectureDonationFlow row",
+            "direction": "PrefectureDonationFlow -> recipient Prefecture",
+            "geographyRole": "destination recipient",
+            "grain": "one edge per flow row",
+            "sensitivity": "Public",
+            "sourceParticipation": "mandatory - every PrefectureDonationFlow carries exactly one edge",
+            "targetParticipation": "optional - a Prefecture may have zero PrefectureDonationFlow rows"
+          },
+          "description": "Connects a PrefectureDonationFlow row to the Donation-recipient Prefecture. Candidate-only directed path from PrefectureDonationFlow to Prefecture. Use the declared relationship and contextualization keys for traversal, resolve endpoint keys exactly, and return entity display labels. For explicit relationship membership/count questions, execute graph COUNT over the matching entity keys at the requested grain and report the key, count and scope. Do not add count enrichments to an exact-instance trace unless requested. This representation exposes no monetary or operational time-series attributes; business donation metrics remain owned by the governed SQL or KQL source. Metadata descriptions alone are not evidence of executed counts or paths."
+        },
+        "source": {
+          "entityTypeId": "111782498358526"
+        },
+        "target": {
+          "entityTypeId": "264514858427221"
+        }
+      }
+    },
+    {
+      "path": "RelationshipTypes/7285378347920053125/Contextualizations/ddb36817-4917-41f4-ab67-8cbb0f820cbb.json",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+        "dataBindingTable": {
+          "itemId": "{{source.lakehouse.id}}",
+          "sourceSchema": "dbo",
+          "sourceTableName": "ot_pref_donation_flow",
+          "sourceType": "LakehouseTable",
+          "workspaceId": "{{workspace.id}}"
+        },
+        "id": "ddb36817-4917-41f4-ab67-8cbb0f820cbb",
+        "sourceKeyRefBindings": [
+          {
+            "sourceColumnName": "PrefDonationFlowId",
+            "targetPropertyId": "7214061228093989738"
+          }
+        ],
+        "targetKeyRefBindings": [
+          {
+            "sourceColumnName": "RecipientPrefectureId",
+            "targetPropertyId": "3906732946430141805"
+          }
+        ]
+      }
+    },
+    {
+      "path": ".platform",
+      "content": {
+        "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+        "config": {
+          "version": "2.0"
+        },
+        "metadata": {
+          "displayName": "{{ontology.displayName}}",
+          "type": "Ontology"
+        }
+      }
+    }
+  ]
+}

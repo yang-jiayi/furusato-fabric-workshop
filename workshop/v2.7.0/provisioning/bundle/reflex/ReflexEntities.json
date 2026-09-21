@@ -1,0 +1,99 @@
+[
+  {
+    "payload": {
+      "description": "Container Description",
+      "name": "{{name.lakehouse}}",
+      "type": "rthSubscriptions"
+    },
+    "type": "container-v1",
+    "uniqueIdentifier": "3f2c66bd-4e6e-4b1c-b243-480e5268e9c1"
+  },
+  {
+    "payload": {
+      "fabricItem": {
+        "itemId": "{{item.pipeline.id}}",
+        "itemType": "Pipeline",
+        "workspaceId": "{{workspace.id}}"
+      },
+      "jobType": "Pipeline",
+      "name": "Fabric item action",
+      "parentContainer": {
+        "targetUniqueIdentifier": "3f2c66bd-4e6e-4b1c-b243-480e5268e9c1"
+      }
+    },
+    "type": "fabricItemAction-v1",
+    "uniqueIdentifier": "c86cf58f-a014-4164-803c-c112f8d4175c"
+  },
+  {
+    "payload": {
+      "connection": {
+        "artifactId": "{{item.lakehouse.id}}",
+        "eventGroupType": "Microsoft.Fabric.OneLakeEvents",
+        "scope": "Artifact",
+        "tenantId": "{{tenant.id}}",
+        "workspaceId": "{{workspace.id}}"
+      },
+      "filterSettings": {
+        "eventTypes": [
+          {
+            "name": "Microsoft.Fabric.OneLake.FileCreated"
+          }
+        ],
+        "filters": [
+          {
+            "key": "subject",
+            "operatorType": "StringEndsWith",
+            "values": [
+              ".csv"
+            ]
+          },
+          {
+            "key": "subject",
+            "operatorType": "StringBeginsWith",
+            "values": [
+              "/Files/increment"
+            ]
+          }
+        ]
+      },
+      "name": "Fabric IQ Workshop event",
+      "parentContainer": {
+        "targetUniqueIdentifier": "3f2c66bd-4e6e-4b1c-b243-480e5268e9c1"
+      }
+    },
+    "type": "realTimeHubSource-v1",
+    "uniqueIdentifier": "2c12a3f1-e532-4ee8-9d29-09cf1c14b675"
+  },
+  {
+    "payload": {
+      "definition": {
+        "instance": "{\"steps\":[{\"id\":\"678d748a-c1ba-4d62-abc3-42b5de2112ff\",\"name\":\"SourceEventStep\",\"rows\":[{\"arguments\":[{\"name\":\"entityId\",\"type\":\"string\",\"value\":\"2c12a3f1-e532-4ee8-9d29-09cf1c14b675\"}],\"kind\":\"SourceReference\",\"name\":\"SourceSelector\"}]}],\"templateId\":\"SourceEvent\",\"templateVersion\":\"1.3.0\"}",
+        "type": "Event"
+      },
+      "name": "Fabric IQ Workshop event",
+      "parentContainer": {
+        "targetUniqueIdentifier": "3f2c66bd-4e6e-4b1c-b243-480e5268e9c1"
+      }
+    },
+    "type": "timeSeriesView-v1",
+    "uniqueIdentifier": "076140c3-e787-4384-8ffb-7e636238e92b"
+  },
+  {
+    "payload": {
+      "definition": {
+        "instance": "{\"steps\":[{\"id\":\"4875c0fc-18dd-44ef-a011-fea2014ea2e5\",\"name\":\"FieldsDefaultsStep\",\"rows\":[{\"arguments\":[{\"arguments\":[{\"name\":\"entityId\",\"type\":\"string\",\"value\":\"076140c3-e787-4384-8ffb-7e636238e92b\"}],\"kind\":\"EventReference\",\"name\":\"event\",\"type\":\"complex\"}],\"kind\":\"Event\",\"name\":\"EventSelector\"}]},{\"id\":\"5cbab7b5-f726-43fd-bacd-a72bd9b55431\",\"name\":\"EventDetectStep\",\"rows\":[{\"arguments\":[],\"kind\":\"OnEveryValue\",\"name\":\"OnEveryValue\"}]},{\"id\":\"97b882ff-4c98-4173-bf63-fe4ece80c246\",\"name\":\"ActStep\",\"rows\":[{\"arguments\":[{\"name\":\"workspaceId\",\"type\":\"string\",\"value\":\"{{workspace.id}}\"},{\"name\":\"itemId\",\"type\":\"string\",\"value\":\"{{item.pipeline.id}}\"},{\"name\":\"itemType\",\"type\":\"string\",\"value\":\"Pipeline\"},{\"name\":\"jobType\",\"type\":\"string\",\"value\":\"Pipeline\"},{\"name\":\"fabricJobConnectionDocumentId\",\"type\":\"string\",\"value\":\"c86cf58f-a014-4164-803c-c112f8d4175c\"},{\"name\":\"parameters\",\"type\":\"array\",\"values\":[{\"arguments\":[{\"name\":\"parameterName\",\"type\":\"string\",\"value\":\"Type\"},{\"name\":\"parameterValue\",\"type\":\"complexArray\",\"values\":[{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"___type\"}],\"kind\":\"EventFieldReference\",\"type\":\"complexReference\"}]},{\"name\":\"parameterType\",\"type\":\"string\",\"value\":\"String\"}],\"kind\":\"FabricItemParameter\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"parameterName\",\"type\":\"string\",\"value\":\"Subject\"},{\"name\":\"parameterValue\",\"type\":\"complexArray\",\"values\":[{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"___subject\"}],\"kind\":\"EventFieldReference\",\"type\":\"complexReference\"}]},{\"name\":\"parameterType\",\"type\":\"string\",\"value\":\"String\"}],\"kind\":\"FabricItemParameter\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"parameterName\",\"type\":\"string\",\"value\":\"Source\"},{\"name\":\"parameterValue\",\"type\":\"complexArray\",\"values\":[{\"arguments\":[{\"name\":\"fieldName\",\"type\":\"string\",\"value\":\"___source\"}],\"kind\":\"EventFieldReference\",\"type\":\"complexReference\"}]},{\"name\":\"parameterType\",\"type\":\"string\",\"value\":\"String\"}],\"kind\":\"FabricItemParameter\",\"type\":\"complex\"},{\"arguments\":[{\"name\":\"parameterName\",\"type\":\"string\",\"value\":\"IncrementFileName\"},{\"name\":\"parameterValue\",\"type\":\"complexArray\",\"values\":[{\"type\":\"string\",\"value\":\"donation_events_001.csv\"}]},{\"name\":\"parameterType\",\"type\":\"string\",\"value\":\"String\"}],\"kind\":\"FabricItemParameter\",\"type\":\"complex\"}]},{\"name\":\"additionalInformation\",\"type\":\"array\",\"values\":[]}],\"kind\":\"FabricItemInvocation\",\"name\":\"FabricItemBinding\"}]}],\"templateId\":\"EventTrigger\",\"templateVersion\":\"1.3.0\"}",
+        "settings": {
+          "shouldApplyRuleOnUpdate": false,
+          "shouldRun": false
+        },
+        "type": "Rule"
+      },
+      "name": "TR_OneLake_FileCreated_IngestDonationEvents_001",
+      "parentContainer": {
+        "targetUniqueIdentifier": "3f2c66bd-4e6e-4b1c-b243-480e5268e9c1"
+      }
+    },
+    "type": "timeSeriesView-v1",
+    "uniqueIdentifier": "7acaadca-93ee-4563-ac3c-dd541f842f8a"
+  }
+]

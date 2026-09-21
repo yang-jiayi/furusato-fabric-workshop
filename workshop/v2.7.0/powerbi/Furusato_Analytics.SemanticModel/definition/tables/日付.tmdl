@@ -1,0 +1,74 @@
+/// 寄附日の連続した日付ディメンション。時間インテリジェンスと年月フィルターに使用します。
+table 日付
+	lineageTag: b2419ac0-5b92-4928-a7dc-1b74b7633172
+	dataCategory: Time
+
+	/// YYYYMMDD形式の日付キー。
+	column 日付キー
+		dataType: int64
+		isHidden
+		isUnique
+		isNullable: false
+		lineageTag: 4d1ba6fa-6272-4f57-84f5-5dbc736f1c92
+		summarizeBy: none
+		sourceColumn: DateKey
+
+	/// 日本標準時の暦日。
+	column 日付
+		dataType: dateTime
+		isUnique
+		isKey
+		isNullable: false
+		lineageTag: b5e4fa36-5315-4c28-8e3c-7a58700b7886
+		dataCategory: Time
+		summarizeBy: none
+		sourceColumn: Date
+
+	/// 西暦年。
+	column 年
+		dataType: int64
+		isNullable: false
+		lineageTag: 7fecf1d0-fd12-4357-8280-687575884e3d
+		summarizeBy: none
+		sourceColumn: Year
+
+	/// 暦年の四半期（Q1からQ4）。
+	column 四半期
+		dataType: string
+		isNullable: false
+		lineageTag: fce7e03c-b11b-45b9-aa45-418086e58c94
+		summarizeBy: none
+		sourceColumn: Quarter
+
+	/// 1から12の月番号。月名の並べ替えに使用します。
+	column 月番号
+		dataType: int64
+		isHidden
+		isNullable: false
+		lineageTag: c557a422-d3e8-43f8-8b0d-84e3390b17bf
+		summarizeBy: none
+		sourceColumn: MonthNumber
+
+	/// 日本語の月表示。月番号順に並べ替えます。
+	column 月
+		dataType: string
+		isNullable: false
+		lineageTag: 66092475-5a4c-426d-b466-b5515014b916
+		summarizeBy: none
+		sourceColumn: MonthNameJa
+		sortByColumn: 月番号
+
+	/// YYYY-MM形式の年月。
+	column 年月
+		dataType: string
+		isNullable: false
+		lineageTag: 98626445-6a11-4489-bb8d-b8a49ca207d5
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+	partition 日付 = entity
+		mode: directLake
+		source
+			entityName: date
+			schemaName: gold
+			expressionSource: 'DirectLake - Furusato Analytics'

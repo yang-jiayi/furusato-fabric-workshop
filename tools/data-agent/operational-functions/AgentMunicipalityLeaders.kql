@@ -1,0 +1,73 @@
+.create function with (
+    folder = "Agent",
+    docstring = "Unique Municipality leader rows for approved raw observation metrics. Invalid windows return no rows; each MunicipalityID appears at most once."
+) AgentMunicipalityLeaders(
+    StartUtc:datetime = datetime(null),
+    EndUtc:datetime = datetime(null)
+)
+{
+    let WindowIsValid =
+        isnull(StartUtc)
+        or isnull(EndUtc)
+        or StartUtc < EndUtc;
+    let PerMunicipality = materialize(
+        DonationObservationSummaryForAgent
+        | where WindowIsValid
+        | where isnull(StartUtc) or EventMinute >= StartUtc
+        | where isnull(EndUtc) or EventMinute < EndUtc
+        | summarize
+            RawObservationCount = sum(ObservationCount),
+            RawObservedAmountYen = sum(ObservedAmountYen)
+          by MunicipalityID
+    );
+    let CountLeaderId =
+        toscalar(
+            PerMunicipality
+            | order by RawObservationCount desc, MunicipalityID asc
+            | take 1
+            | project MunicipalityID
+        );
+    let AmountLeaderId =
+        toscalar(
+            PerMunicipality
+            | order by RawObservedAmountYen desc, MunicipalityID asc
+            | take 1
+            | project MunicipalityID
+        );
+    PerMunicipality
+    | where MunicipalityID == CountLeaderId or MunicipalityID == AmountLeaderId
+    | extend
+        IsCountLeader = MunicipalityID == CountLeaderId,
+        IsAmountLeader = MunicipalityID == AmountLeaderId,
+        RequestedStartUtc = StartUtc,
+        RequestedEndUtc = EndUtc,
+        WindowIsValid = WindowIsValid,
+        Scope = case(
+            isnull(StartUtc) and isnull(EndUtc),
+            "FullAvailableApprovedData",
+            "RequestedHalfOpenUtcWindow"
+        ),
+        SourceSystem = "Eventhouse",
+        SourceObject = "DonationObservationSummaryForAgent",
+        CountUnit = "raw observations",
+        AmountUnit = "JPY",
+        RawDuplicateCaveat = "The totals may include duplicate raw observations; the approved aggregate exposes no event identifier or unique-event metric.",
+        TimeZoneNotice = "All timestamps are UTC."
+    | project
+        MunicipalityID,
+        IsCountLeader,
+        IsAmountLeader,
+        RawObservationCount,
+        RawObservedAmountYen,
+        RequestedStartUtc,
+        RequestedEndUtc,
+        WindowIsValid,
+        Scope,
+        SourceSystem,
+        SourceObject,
+        CountUnit,
+        AmountUnit,
+        RawDuplicateCaveat,
+        TimeZoneNotice
+    | order by MunicipalityID asc
+}

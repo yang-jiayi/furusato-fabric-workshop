@@ -1,0 +1,3 @@
+de5f458f4fa21719fc567bf4015a7c9d8425890f9b09c1c6763179802b9cc104  furusato-ontology.owl
+de5f458f4fa21719fc567bf4015a7c9d8425890f9b09c1c6763179802b9cc104  furusato-ontology.rdf
+1e225be41e27dc51ea1ece225f8fa0ed5f66b00a8b21db4b9ee5869ec1a5f64b  furusato-ontology.ttl

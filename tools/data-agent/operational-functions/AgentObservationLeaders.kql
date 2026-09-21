@@ -1,0 +1,74 @@
+.create function with (
+    folder = "Agent",
+    docstring = "Deterministic count and amount leaders from approved raw observation metrics. Caller must reject WindowIsValid=false; an invalid window has no valid leader result."
+) AgentObservationLeaders(
+    StartUtc:datetime = datetime(null),
+    EndUtc:datetime = datetime(null)
+)
+{
+    let WindowIsValid =
+        isnull(StartUtc)
+        or isnull(EndUtc)
+        or StartUtc < EndUtc;
+    let PerMunicipality = materialize(
+        DonationObservationSummaryForAgent
+        | where WindowIsValid
+        | where isnull(StartUtc) or EventMinute >= StartUtc
+        | where isnull(EndUtc) or EventMinute < EndUtc
+        | summarize
+            RawObservationCount = sum(ObservationCount),
+            RawObservedAmountYen = sum(ObservedAmountYen)
+          by MunicipalityID
+    );
+    let CountLeader =
+        PerMunicipality
+        | order by
+            RawObservationCount desc,
+            MunicipalityID asc
+        | take 1
+        | extend
+            LeaderMetric = "RawObservationCount",
+            LeaderValue = RawObservationCount;
+    let AmountLeader =
+        PerMunicipality
+        | order by
+            RawObservedAmountYen desc,
+            MunicipalityID asc
+        | take 1
+        | extend
+            LeaderMetric = "RawObservedAmountYen",
+            LeaderValue = RawObservedAmountYen;
+    union CountLeader, AmountLeader
+    | extend
+        RequestedStartUtc = StartUtc,
+        RequestedEndUtc = EndUtc,
+        WindowIsValid = WindowIsValid,
+        Scope = iff(
+            isnull(StartUtc) and isnull(EndUtc),
+            "FullAvailableApprovedData",
+            "RequestedHalfOpenUtcWindow"
+        ),
+        SourceSystem = "Eventhouse",
+        SourceObject = "DonationObservationSummaryForAgent",
+        CountUnit = "raw observations",
+        AmountUnit = "JPY",
+        RawDuplicateCaveat = "The totals may include duplicate raw observations; the approved aggregate exposes no event identifier or unique-event metric.",
+        TimeZoneNotice = "All timestamps are UTC."
+    | project
+        LeaderMetric,
+        LeaderValue,
+        MunicipalityID,
+        RawObservationCount,
+        RawObservedAmountYen,
+        RequestedStartUtc,
+        RequestedEndUtc,
+        WindowIsValid,
+        Scope,
+        SourceSystem,
+        SourceObject,
+        CountUnit,
+        AmountUnit,
+        RawDuplicateCaveat,
+        TimeZoneNotice
+    | order by LeaderMetric asc
+}

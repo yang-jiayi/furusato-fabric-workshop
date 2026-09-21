@@ -1,0 +1,1468 @@
+{
+  "schemaVersion": "1.0",
+  "packageVersion": "2.7.0",
+  "participantNames": {
+    "lakehouse": "LH_Furusato_<PID>",
+    "notebook": "Notebook_01_Furusato_Prepare_Ontology_Data",
+    "ontologyMetadataNotebook": "Notebook_02_Furusato_Apply_Ontology_Metadata",
+    "ontologyCreatorNotebook": "Notebook_03_Furusato_Create_Complete_Ontology",
+    "workshopProvisionerNotebook": "Notebook_04_Furusato_Provision_Complete_Workshop",
+    "analyticsNotebook": "Notebook_05_Furusato_Analytics_Quality_and_BI",
+    "analyticsSemanticModel": "SM_Furusato_Analytics_<PID>",
+    "analyticsReport": "RPT_Furusato_Analytics_<PID>",
+    "variableLibrary": "VL_Furusato_<PID>",
+    "legacyNotebookDoNotUse": "Notebook_01_Furusato_Prepare_Ontology_Data_001",
+    "ontology": "ONT_Furusato_<PID>",
+    "eventhouse": "EH_Furusato_<PID>",
+    "pipeline": "PL_Furusato_<PID>",
+    "dataAgent": "DA_Furusato_<PID>",
+    "activator": "My activator_<PID>",
+    "agent_ontology": "ONT_Furusato_AIPath_<PID>",
+    "referenceDataAgent": "DA_Furusato_AIReference_<PID>"
+  },
+  "workshopProvisioningAutomation": {
+    "notebookName": "Notebook_04_Furusato_Provision_Complete_Workshop",
+    "notebookPath": "notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
+    "payloadManifestPath": "provisioning/payload-manifest.json",
+    "bundleManifestPath": "provisioning/bundle/bundle-manifest.json",
+    "defaultMode": "preview-only",
+    "notebookSha256": "e179edc16e59eef31332fe4860e2134da65309ca779490deecd7f1401011250f",
+    "payloadManifestSha256": "3b6af2f750ad46779ee70f7f7241381c8878255caababfc47921e917efeefba9",
+    "bundleManifestSha256": "0a89d5bfbc43662f6d2d8c438870d2e4067b8ab21b97e2e46cadacc6cced9877",
+    "payloadSha256": "71717e94877900d665d6a40fd375909907801a3862034c6b3d57c865b2ad0a6e",
+    "datasetFileCount": 11,
+    "portableBundleFileCount": 46,
+    "kqlManagementCommandCount": 5,
+    "ontologyDefinitionPartCount": 54,
+    "dataAgentDefinitionPartCount": 13,
+    "dataAgentSourceCount": 3,
+    "lakehouseFewShotCount": 3,
+    "resultingFunctionalItemCount": 8,
+    "generatedGraphModelCount": 1,
+    "requiredApplyFlags": [
+      "EXECUTE_NOTEBOOK_01",
+      "CREATE_PIPELINE",
+      "REFRESH_GRAPH",
+      "CREATE_DATA_AGENT",
+      "CREATE_REFLEX"
+    ],
+    "applyGates": [
+      "APPLY_CHANGES=True",
+      "CONFIRMED_PLAN_SHA256=<exact preview PLAN_SHA256>",
+      "EXCLUSIVE_CREATE_WINDOW_CONFIRMED=True",
+      "interactive Fabric Notebook execution",
+      "all five component flags=True"
+    ],
+    "safety": "Run only from the target capacity-backed Fabric Folder. The first run is read-only preview. Item identity and generated-child discovery are scoped to the current target Folder, so matching display names in other Folders do not collide while duplicates inside the target Folder stop fail-closed. A complete apply requires the exact regenerated plan hash, all five component flags, an exclusive create window, and interactive execution. Existing target-Folder items and OneLake files are reused only when their authored semantic content is exact; conflicts stop without overwrite. The Lakehouse Files root is obtained from the workload API, GUID addressing omits the item-type suffix, and transient OneLake 400/404 path propagation is retried only within the bounded operation timeout. Fabric long-running operations and jobs are bounded and verified, the Reflex rule ships disabled with no external notification target, and no capacity, permission, or external notification change is performed.",
+    "limitations": [
+      "The Data Pipeline item is created but never run by Notebook 04. The participant flow is to enable the OneLake FileCreated Reflex trigger and then upload the increment files sequentially; each upload fires the trigger, which starts the Pipeline with Type, Subject, and Source and derives the file name from Subject. The IncrementFileName parameter is a diagnostics and fallback path only and is not part of the participant flow.",
+      "The Reflex rule is the OneLake FileCreated pipeline trigger only. It ships disabled, carries no notification target, and must be enabled by the participant.",
+      "A complete apply and the Core Test 10 were validated in a capacity-backed Microsoft Fabric folder on 2026-08-15. Tenant-neutral offline tests and source parity remain required release evidence because future Fabric UI and service builds can still drift."
+    ],
+    "kustoFewShotCount": 0,
+    "kustoExampleDelivery": "The legacy Core bundle carries fewshots.json for lakehouse_tables only; its three KQL query shapes are encoded in kusto dataSourceInstructions. Unified profiles may also register native KQL examples.",
+    "participantIncrementFlow": "Enable the OneLake FileCreated Reflex trigger, then upload donation_events_001.csv, donation_events_002.csv, and donation_events_003.csv to Files/increment one after another. Each upload fires the trigger, which starts the Pipeline; no Pipeline run is started by hand.",
+    "dataAgentExperimentalFlagCount": 1,
+    "dataAgentRuntime": "Preview",
+    "kustoQueryShapeCount": 3
+  },
+  "analyticsExtension": {
+    "optional": true,
+    "compatibility": "The extension preserves every released stg_* and ot_* table, existing Ontology binding, the released Data Agent definition, and its three Lakehouse few-shots. It is run only after Notebook 01 or Notebook 04 has completed.",
+    "notebook": {
+      "name": "Notebook_05_Furusato_Analytics_Quality_and_BI",
+      "path": "notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb",
+      "sha256": "22bed8314d7800e049fabe813fac83902408a33b9254c390e887b6ee70b565cb",
+      "defaultMode": "preview-only",
+      "applyGates": [
+        "APPLY_CHANGES=True",
+        "CONFIRMED_PLAN_SHA256=<exact preview PLAN_SHA256>",
+        "EXCLUSIVE_APPLY_WINDOW_CONFIRMED=True",
+        "interactive Fabric Notebook execution"
+      ],
+      "recoveryGate": "Set OPERATOR_RECOVER_INTERRUPTED_RUN=True and INTERRUPTED_RUN_ID to the exact persisted RunId only when the control table proves an interrupted generation.",
+      "sourceRequirements": [
+        "Schema-enabled LH_Furusato_<PID>",
+        "Completed Notebook 01 source tables",
+        "Files/increment/donation_events_*.csv"
+      ],
+      "schemas": [
+        "bronze",
+        "silver",
+        "gold",
+        "ops",
+        "quarantine"
+      ],
+      "managedOutputTableCount": 29,
+      "controlTable": "ops.analytics_publish_control",
+      "publicationState": "The control row is persisted as Preparing before candidate materialization, advances to Publishing before final replacement, and permits consumers only after Ready for one complete AnalyticsGenerationId."
+    },
+    "dataQuality": {
+      "incrementRawRows": 15000,
+      "acceptedDistinctEventIds": 14900,
+      "quarantinedDuplicateRows": 100,
+      "rules": [
+        "increment.raw_rows",
+        "increment.duplicate_event_id",
+        "increment.invalid_amount",
+        "increment.outside_synthetic_window",
+        "increment.unknown_donor",
+        "increment.unknown_municipality",
+        "increment.unknown_gift"
+      ],
+      "quarantineTable": "quarantine.donation_events_rejected",
+      "ruleResultTable": "ops.dq_rule_results",
+      "runTelemetryTable": "ops.run_telemetry",
+      "timeRuleContract": "STRICT_SYNTHETIC_CONTRACT=True validates DonatedAt against the approved synthetic observation window in dataset-manifest.json and reports increment.outside_synthetic_window. STRICT_SYNTHETIC_CONTRACT=False keeps the wall-clock future-time guard and reports increment.invalid_or_future_time.",
+      "observationWindowUtc": {
+        "from": "2026-08-01T00:02:47Z",
+        "to": "2026-08-31T23:58:20Z"
+      }
+    },
+    "powerBi": {
+      "projectPath": "powerbi/Furusato_Analytics.pbip",
+      "projectSha256": "16dcb478fbbf4ae69281131f0b5c74a357dd38d2fc846227cf4ba5c2c74b27ca",
+      "semanticModelPath": "powerbi/Furusato_Analytics.SemanticModel",
+      "semanticModelTreeSha256": "c7bc2d6417f689e8b36d75fcdf8af3261e548f18388cf1ec978389fca0f84436",
+      "reportPath": "powerbi/Furusato_Analytics.Report",
+      "reportTreeSha256": "a14bcfa97d8d70ccf6231a0fef698d28fe70834b19c85c8d688a21d359c4ff3c",
+      "treeHashContract": "SHA-256 of UTF-8 compact JSON [{path,sha256}] sorted by relative POSIX path; object keys sorted and separators are comma/colon.",
+      "mode": "Direct Lake",
+      "tableCount": 5,
+      "relationshipCount": 4,
+      "measureCount": 6,
+      "reportPageCount": 1,
+      "reportVisualCount": 9,
+      "placeholders": [
+        "{{workspace.id}}",
+        "{{item.lakehouse.id}}"
+      ],
+      "liveGate": "Run Notebook 05 to Ready, preview tools/powerbi/Deploy-FurusatoPowerBI.ps1, then apply the Fabric REST deployment and validate Direct Lake connectivity and DAX in Fabric. Do not use Power BI Desktop Publish for this portable byPath project.",
+      "deploymentTool": "tools/powerbi/Deploy-FurusatoPowerBI.ps1",
+      "deploymentToolSha256": "595aa8ca5c0cae1d0929578688e16f5e577b8710e8df705a72ccb65c4c34621c"
+    },
+    "dataAgentGrounding": {
+      "fewShotCountChange": 0,
+      "optionalTable": "gold.donation_agent",
+      "activation": "Add the table only in a separate optional evaluation configuration after Notebook 05 is Ready, keeping the released baseline and few-shots unchanged. Core ot_* tables remain the static 2025 snapshot, Eventhouse remains the August 2026 curated observation surface with raw observation counts, and Ontology remains modeled traversal. gold.donation_agent is mixed curated analytics: filter the physical DataSource column to 'StaticSeed' for static questions or 'RealtimeIncrement' for accepted, deduplicated increments. Do not describe all Gold rows as static or equate accepted increments with raw Eventhouse observations. Run the same category-level questions before and after activation, recording actual queries, source boundaries, and answer quality separately.",
+      "evaluationCategories": [
+        "exact_static_aggregation",
+        "relationship_traversal",
+        "realtime_observation",
+        "cross_source_boundary",
+        "ambiguity",
+        "empty_result_and_source_failure"
+      ]
+    },
+    "variableLibraryTemplate": {
+      "path": "variable-library-template",
+      "treeSha256": "b24365d47703fcdf6db5829a088dab7bd607d481cfb28aadf57d8afa627d35ef",
+      "definitionFormat": "VariableLibraryV1",
+      "basicTypesOnly": true,
+      "containsPlatformPart": false,
+      "containsTenantIdentifiers": false,
+      "manualSteps": [
+        "Create VL_Furusato_<PID> in the participant workspace.",
+        "Import variables.json, settings.json, and valueSets/*.json.",
+        "Select the active value set in the workspace.",
+        "Override ParticipantId and ExpectedWorkspaceName without committing tenant-specific IDs."
+      ],
+      "referenceSyntax": "$(/**/libraryName/variableName); the literal /**/ prefix is required by NotebookUtils.",
+      "limitations": "The active value set is environment state, not part of the committed definition. ItemReference and ConnectionReference values are excluded because their static IDs do not auto-bind across environments.",
+      "declaredVariables": [
+        "WorkshopVersion",
+        "ParticipantId",
+        "EnvironmentName",
+        "ExpectedWorkspaceName",
+        "IncrementFileName",
+        "StrictSyntheticContract"
+      ]
+    },
+    "operations": {
+      "pipelineManualParameter": "IncrementFileName",
+      "pipelineManualDefault": "donation_events_001.csv",
+      "pipelineFileExpression": "@if(empty(pipeline().parameters.Subject), pipeline().parameters.IncrementFileName, last(split(pipeline().parameters.Subject, '/')))",
+      "pipelineAutomaticRun": false,
+      "participantFlow": "Enable the OneLake FileCreated Reflex trigger, then upload donation_events_001.csv, donation_events_002.csv, and donation_events_003.csv to Files/increment one after another. Each upload fires the trigger, which starts the Pipeline; no Pipeline run is started by hand.",
+      "pipelineManualParameterPurpose": "Diagnostics and fallback only, for a manual Pipeline run when the trigger is unavailable. It is not part of the participant flow."
+    },
+    "liveWritesPerformedByRepositoryValidation": false
+  },
+  "ontology": {
+    "entityCount": 10,
+    "relationshipCount": 15,
+    "staticPropertyCount": 72,
+    "timeseriesPropertyCount": 1,
+    "metadataAutomation": {
+      "notebookName": "Notebook_02_Furusato_Apply_Ontology_Metadata",
+      "notebookPath": "notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb",
+      "manifestPath": "ontology/ontology-semantic-metadata.json",
+      "transport": "Fabric Ontology REST getDefinition/updateDefinition",
+      "mcpWriteUsed": false,
+      "defaultMode": "preview-only",
+      "applyConfirmation": "APPLY ONTOLOGY METADATA",
+      "exclusiveApplyWindowRequired": true,
+      "entityTypeMetadataCount": 10,
+      "propertyMetadataCount": 73,
+      "relationshipTypeMetadataCount": 15,
+      "totalMetadataObjectCount": 98,
+      "manifestSha256": "a24145d5e1d717f7513840d9e6ed59dc96b6e1be51c56665cc5578d4d2672d5a",
+      "safety": "Resolve the current workspace and exact Ontology name at runtime, fetch the full current definition, preserve every ID/binding/unrelated part, preview semanticEnrichment-only changes, reject pre-submit drift, require an exclusive apply window because the API exposes no documented conditional update precondition, poll the Fabric-host LRO, and verify the post-write definition.",
+      "manifestHashConvention": "SHA-256 of the canonical compact JSON of the whole manifest object (separators=(',',':'), sort_keys, ensure_ascii=False); it is not the SHA-256 of the file bytes"
+    },
+    "creationAutomation": {
+      "notebookName": "Notebook_03_Furusato_Create_Complete_Ontology",
+      "notebookPath": "notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb",
+      "templatePath": "ontology/ontology-full-definition-template.json",
+      "transport": "Fabric createItem plus Ontology getDefinition",
+      "defaultMode": "preview-only",
+      "createConfirmation": "yes",
+      "exclusiveCreateWindowRequired": true,
+      "entityTypeCount": 10,
+      "staticPropertyCount": 72,
+      "timeseriesPropertyCount": 1,
+      "dataBindingCount": 11,
+      "relationshipTypeCount": 15,
+      "contextualizationCount": 15,
+      "definitionPartCount": 54,
+      "templateSha256": "df89c307c28f3da104daf5815f186f2ad59dde5a571ccadb8358dab9ec612338",
+      "sourceItems": [
+        "LH_Furusato_<PID>",
+        "EH_Furusato_<PID> Eventhouse",
+        "EH_Furusato_<PID> KQL Database"
+      ],
+      "safety": "Resolve the current workspace, target Folder, Lakehouse, Eventhouse, KQL Database, parent Eventhouse, and query service URI at runtime; validate all 54 parts; render a complete greenfield preview; permit only one interactive createItem submission after literal yes confirmation; never overwrite a different existing Ontology; poll the Fabric-host LRO; and verify every resulting definition part.",
+      "templateHashConvention": "SHA-256 of the canonical compact JSON of the template's parts array (separators=(',',':'), sort_keys, ensure_ascii=False), which is the value the template carries as definitionTemplateSha256; it is not the SHA-256 of the file bytes"
+    },
+    "entities": [
+      {
+        "name": "Donation",
+        "properties": [
+          {
+            "name": "DonationId",
+            "type": "BigInt",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "DonationDisplayName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "DonationAmountYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonatedAtUtc",
+            "type": "DateTime",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonatedAtJstText",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonationDateJst",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonationYearMonthJst",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonationYearMonthJaShort",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonationPaymentMethod",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonationPaymentMethodEn",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonationDataLayer",
+            "type": "String",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_donation",
+            "columns": [
+              "DonationId",
+              "DonationDisplayName",
+              "DonationAmountYen",
+              "DonatedAtUtc",
+              "DonatedAtJstText",
+              "DonationDateJst",
+              "DonationYearMonthJst",
+              "DonationYearMonthJaShort",
+              "DonationPaymentMethod",
+              "DonationPaymentMethodEn",
+              "DonationDataLayer"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Donor",
+        "properties": [
+          {
+            "name": "DonorId",
+            "type": "BigInt",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "DonorName",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorDisplayName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "DonorAge",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorOccupation",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorOccupationEn",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorStaticTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorStaticMaxYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorOverallAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "DonorResidenceAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_donor",
+            "columns": [
+              "DonorId",
+              "DonorName",
+              "DonorDisplayName",
+              "DonorAge",
+              "DonorOccupation",
+              "DonorOccupationEn",
+              "DonorStaticCount",
+              "DonorStaticTotalYen",
+              "DonorStaticMaxYen",
+              "DonorOverallAmountRank",
+              "DonorResidenceAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Gift",
+        "properties": [
+          {
+            "name": "GiftId",
+            "type": "BigInt",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "GiftName",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "GiftDisplayName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "GiftSearchTerms",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "GiftNotes",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "GiftStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "GiftStaticTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "GiftAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_gift",
+            "columns": [
+              "GiftId",
+              "GiftName",
+              "GiftDisplayName",
+              "GiftSearchTerms",
+              "GiftNotes",
+              "GiftStaticCount",
+              "GiftStaticTotalYen",
+              "GiftAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "GiftCategory",
+        "properties": [
+          {
+            "name": "CategoryId",
+            "type": "BigInt",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "CategoryName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "CategoryNameEn",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "CategorySearchTerms",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "CategoryStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "CategoryStaticTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "CategoryAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_gift_category",
+            "columns": [
+              "CategoryId",
+              "CategoryName",
+              "CategoryNameEn",
+              "CategorySearchTerms",
+              "CategoryStaticCount",
+              "CategoryStaticTotalYen",
+              "CategoryAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Municipality",
+        "properties": [
+          {
+            "name": "MunicipalityId",
+            "type": "String",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "MunicipalityName",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "MunicipalityDisplayName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "MunicipalityStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "MunicipalityStaticTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "MunicipalityAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "MunicipalityPrefAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [
+          {
+            "name": "IncomingDonationAmountYen",
+            "type": "BigInt"
+          }
+        ],
+        "bindings": [
+          {
+            "type": "TimeSeries",
+            "table": "DonationEvents",
+            "columns": [
+              "DonationAmountYen",
+              "MunicipalityID"
+            ]
+          },
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_municipality",
+            "columns": [
+              "MunicipalityId",
+              "MunicipalityName",
+              "MunicipalityDisplayName",
+              "MunicipalityStaticCount",
+              "MunicipalityStaticTotalYen",
+              "MunicipalityAmountRank",
+              "MunicipalityPrefAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "MunicipalityCategoryMetric",
+        "properties": [
+          {
+            "name": "MunCategoryMetricId",
+            "type": "String",
+            "key": true,
+            "display": true
+          },
+          {
+            "name": "MunCategoryStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "MunCategoryTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "MunCategoryAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_mun_category_metric",
+            "columns": [
+              "MunCategoryMetricId",
+              "MunCategoryStaticCount",
+              "MunCategoryTotalYen",
+              "MunCategoryAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Prefecture",
+        "properties": [
+          {
+            "name": "PrefectureId",
+            "type": "BigInt",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "PrefectureName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "PrefectureNameEn",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefReceivedStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefReceivedTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefReceivedAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefResidentStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefResidentTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefResidentAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_prefecture",
+            "columns": [
+              "PrefectureId",
+              "PrefectureName",
+              "PrefectureNameEn",
+              "PrefReceivedStaticCount",
+              "PrefReceivedTotalYen",
+              "PrefReceivedAmountRank",
+              "PrefResidentStaticCount",
+              "PrefResidentTotalYen",
+              "PrefResidentAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "PrefectureCategoryMetric",
+        "properties": [
+          {
+            "name": "PrefCategoryMetricId",
+            "type": "String",
+            "key": true,
+            "display": true
+          },
+          {
+            "name": "PrefCategoryStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefCategoryTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefCategoryAmountRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_pref_category_metric",
+            "columns": [
+              "PrefCategoryMetricId",
+              "PrefCategoryStaticCount",
+              "PrefCategoryTotalYen",
+              "PrefCategoryAmountRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "PrefectureDonationFlow",
+        "properties": [
+          {
+            "name": "PrefDonationFlowId",
+            "type": "String",
+            "key": true,
+            "display": true
+          },
+          {
+            "name": "PrefFlowStaticCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefFlowTotalYen",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefFlowOriginRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "PrefFlowDestinationRank",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_pref_donation_flow",
+            "columns": [
+              "PrefDonationFlowId",
+              "PrefFlowStaticCount",
+              "PrefFlowTotalYen",
+              "PrefFlowOriginRank",
+              "PrefFlowDestinationRank"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Supplier",
+        "properties": [
+          {
+            "name": "SupplierId",
+            "type": "BigInt",
+            "key": true,
+            "display": false
+          },
+          {
+            "name": "SupplierName",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "SupplierDisplayName",
+            "type": "String",
+            "key": false,
+            "display": true
+          },
+          {
+            "name": "SupplierType",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "SupplierTypeEn",
+            "type": "String",
+            "key": false,
+            "display": false
+          },
+          {
+            "name": "SupplierProvidedGiftCount",
+            "type": "BigInt",
+            "key": false,
+            "display": false
+          }
+        ],
+        "timeseriesProperties": [],
+        "bindings": [
+          {
+            "type": "NonTimeSeries",
+            "table": "ot_supplier",
+            "columns": [
+              "SupplierId",
+              "SupplierName",
+              "SupplierDisplayName",
+              "SupplierType",
+              "SupplierTypeEn",
+              "SupplierProvidedGiftCount"
+            ]
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "MunicipalityInPrefecture",
+        "source": "Municipality",
+        "target": "Prefecture",
+        "cardinality": "many-to-one, exactly one Prefecture per Municipality",
+        "binding": {
+          "table": "ot_municipality",
+          "sourceColumns": [
+            "MunicipalityId"
+          ],
+          "targetColumns": [
+            "PrefectureId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every Municipality carries exactly one edge",
+        "targetParticipation": "optional - a Prefecture may have zero Municipality rows"
+      },
+      {
+        "name": "DonorLivesInPrefecture",
+        "source": "Donor",
+        "target": "Prefecture",
+        "cardinality": "many-to-one, exactly one Prefecture per Donor",
+        "binding": {
+          "table": "ot_donor",
+          "sourceColumns": [
+            "DonorId"
+          ],
+          "targetColumns": [
+            "PrefectureId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every Donor carries exactly one edge",
+        "targetParticipation": "optional - a Prefecture may have zero Donor rows"
+      },
+      {
+        "name": "SupplierInPrefecture",
+        "source": "Supplier",
+        "target": "Prefecture",
+        "cardinality": "many-to-one, exactly one Prefecture per Supplier",
+        "binding": {
+          "table": "ot_supplier",
+          "sourceColumns": [
+            "SupplierId"
+          ],
+          "targetColumns": [
+            "PrefectureId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every Supplier carries exactly one edge",
+        "targetParticipation": "optional - a Prefecture may have zero Supplier rows"
+      },
+      {
+        "name": "GiftInCategory",
+        "source": "Gift",
+        "target": "GiftCategory",
+        "cardinality": "many-to-one, exactly one GiftCategory per Gift",
+        "binding": {
+          "table": "ot_gift",
+          "sourceColumns": [
+            "GiftId"
+          ],
+          "targetColumns": [
+            "CategoryId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every Gift carries exactly one edge",
+        "targetParticipation": "optional - a GiftCategory may have zero Gift rows"
+      },
+      {
+        "name": "SupplierProvidesGift",
+        "source": "Supplier",
+        "target": "Gift",
+        "cardinality": "many-to-many, zero-to-many on both sides by contract",
+        "binding": {
+          "table": "ot_supplier_gift",
+          "sourceColumns": [
+            "SupplierId"
+          ],
+          "targetColumns": [
+            "GiftId"
+          ]
+        },
+        "sourceParticipation": "optional by contract; total in this dataset - 0 Suppliers without a Gift",
+        "targetParticipation": "optional by contract; total in this dataset - 0 Gifts without a Supplier"
+      },
+      {
+        "name": "DonorMadeDonation",
+        "source": "Donor",
+        "target": "Donation",
+        "cardinality": "zero-to-many from Donor, exactly one Donor per Donation",
+        "binding": {
+          "table": "ot_donation",
+          "sourceColumns": [
+            "DonorId"
+          ],
+          "targetColumns": [
+            "DonationId"
+          ]
+        },
+        "sourceParticipation": "optional - 18 Donors have no Donation",
+        "targetParticipation": "mandatory - every Donation has exactly one Donor"
+      },
+      {
+        "name": "DonationToMunicipality",
+        "source": "Donation",
+        "target": "Municipality",
+        "cardinality": "many-to-one, exactly one Municipality per Donation",
+        "binding": {
+          "table": "ot_donation",
+          "sourceColumns": [
+            "DonationId"
+          ],
+          "targetColumns": [
+            "MunicipalityId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every Donation carries exactly one edge",
+        "targetParticipation": "optional - a Municipality may have zero Donation rows"
+      },
+      {
+        "name": "DonationSelectedGift",
+        "source": "Donation",
+        "target": "Gift",
+        "cardinality": "many-to-one, exactly one Gift option per Donation in this dataset",
+        "binding": {
+          "table": "ot_donation",
+          "sourceColumns": [
+            "DonationId"
+          ],
+          "targetColumns": [
+            "GiftId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every Donation carries exactly one edge",
+        "targetParticipation": "optional - a Gift may have zero Donation rows"
+      },
+      {
+        "name": "MunicipalityCatalogsGift",
+        "source": "Municipality",
+        "target": "Gift",
+        "cardinality": "one-to-many from Municipality, exactly one catalog Municipality per Gift",
+        "binding": {
+          "table": "ot_gift",
+          "sourceColumns": [
+            "MunicipalityId"
+          ],
+          "targetColumns": [
+            "GiftId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every one of the 1,741 Municipalities catalogs at least one Gift",
+        "targetParticipation": "mandatory - every Gift has exactly one catalog Municipality"
+      },
+      {
+        "name": "MunHasCategoryMetric",
+        "source": "Municipality",
+        "target": "MunicipalityCategoryMetric",
+        "cardinality": "zero-to-many from Municipality, exactly one Municipality per MunicipalityCategoryMetric row",
+        "binding": {
+          "table": "ot_mun_category_metric",
+          "sourceColumns": [
+            "MunicipalityId"
+          ],
+          "targetColumns": [
+            "MunCategoryMetricId"
+          ]
+        },
+        "sourceParticipation": "optional - 10 Municipalities have no metric row",
+        "targetParticipation": "mandatory - every metric row has exactly one Municipality"
+      },
+      {
+        "name": "MunMetricForCategory",
+        "source": "MunicipalityCategoryMetric",
+        "target": "GiftCategory",
+        "cardinality": "many-to-one, exactly one GiftCategory per MunicipalityCategoryMetric row",
+        "binding": {
+          "table": "ot_mun_category_metric",
+          "sourceColumns": [
+            "MunCategoryMetricId"
+          ],
+          "targetColumns": [
+            "CategoryId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every MunicipalityCategoryMetric carries exactly one edge",
+        "targetParticipation": "optional - a GiftCategory may have zero MunicipalityCategoryMetric rows"
+      },
+      {
+        "name": "PrefHasCategoryMetric",
+        "source": "Prefecture",
+        "target": "PrefectureCategoryMetric",
+        "cardinality": "one-to-many from Prefecture, exactly one recipient Prefecture per PrefectureCategoryMetric row",
+        "binding": {
+          "table": "ot_pref_category_metric",
+          "sourceColumns": [
+            "PrefectureId"
+          ],
+          "targetColumns": [
+            "PrefCategoryMetricId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every one of the 47 Prefectures has at least one metric row",
+        "targetParticipation": "mandatory - every metric row has exactly one recipient Prefecture"
+      },
+      {
+        "name": "PrefMetricForCategory",
+        "source": "PrefectureCategoryMetric",
+        "target": "GiftCategory",
+        "cardinality": "many-to-one, exactly one GiftCategory per PrefectureCategoryMetric row",
+        "binding": {
+          "table": "ot_pref_category_metric",
+          "sourceColumns": [
+            "PrefCategoryMetricId"
+          ],
+          "targetColumns": [
+            "CategoryId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every PrefectureCategoryMetric carries exactly one edge",
+        "targetParticipation": "optional - a GiftCategory may have zero PrefectureCategoryMetric rows"
+      },
+      {
+        "name": "ResidencePrefHasFlow",
+        "source": "Prefecture",
+        "target": "PrefectureDonationFlow",
+        "cardinality": "one-to-many from Prefecture, exactly one residence Prefecture per PrefectureDonationFlow row",
+        "binding": {
+          "table": "ot_pref_donation_flow",
+          "sourceColumns": [
+            "ResidencePrefectureId"
+          ],
+          "targetColumns": [
+            "PrefDonationFlowId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every one of the 47 Prefectures originates at least one flow row",
+        "targetParticipation": "mandatory - every flow row has exactly one residence Prefecture"
+      },
+      {
+        "name": "FlowToRecipientPref",
+        "source": "PrefectureDonationFlow",
+        "target": "Prefecture",
+        "cardinality": "many-to-one, exactly one recipient Prefecture per PrefectureDonationFlow row",
+        "binding": {
+          "table": "ot_pref_donation_flow",
+          "sourceColumns": [
+            "PrefDonationFlowId"
+          ],
+          "targetColumns": [
+            "RecipientPrefectureId"
+          ]
+        },
+        "sourceParticipation": "mandatory - every PrefectureDonationFlow carries exactly one edge",
+        "targetParticipation": "optional - a Prefecture may have zero PrefectureDonationFlow rows"
+      }
+    ],
+    "relationshipCardinalityCoverage": {
+      "declared": 15,
+      "total": 15,
+      "requiredAttributes": [
+        "direction",
+        "cardinality",
+        "grain",
+        "sourceParticipation",
+        "targetParticipation"
+      ],
+      "derivedFrom": "Default actual-data mode: the packaged seed CSVs are streamed and every node count, edge count and participation figure is recomputed from the rows, the dataset manifest is checked against that recomputation, and only then is cardinality derived. One edge is emitted per binding-table row, so the side whose instance count equals the edge count carries the unique key. Optionality is decided separately by counting source instances that emit no edge: none means one-to-many from the source, one or more means zero-to-many from it.",
+      "validator": "tools/ontology/Test-OntologyCardinality.ps1",
+      "validatorSha256": "7018aecadb5b7325a7fc2705469881b1d5ce4cc4e7f62bc8c31b1f9ade97755d",
+      "validatorHashConvention": "SHA-256 of the raw validator file bytes",
+      "derivationMode": "actual data (default)",
+      "declaredCountFallback": "Test-OntologyCardinality.ps1 -FromData:$false derives the same shapes from dataset-manifest expected.nodeCounts and expected.edgeCounts instead. Those are declared values, so the fallback proves only that the ontology agrees with the manifest; it cannot detect a manifest that disagrees with the CSVs, and it accepts either optionality word because participation is not recomputed."
+    }
+  },
+  "eventhouse": {
+    "table": "DonationEvents",
+    "tableColumns": [
+      "EventID",
+      "DonationID",
+      "DonorID",
+      "MunicipalityID",
+      "GiftID",
+      "DonationAmountYen",
+      "DonatedAt",
+      "PaymentMethod",
+      "WorkshopRunId",
+      "ParticipantAlias",
+      "PublishedAtUtc",
+      "SourceFile"
+    ],
+    "incrementCsvMapping": "DonationEvents_IncrementCsvMap",
+    "materializedView": "DonationObservationSummaryForAgent",
+    "retentionDays": 90,
+    "hotCacheDays": 7,
+    "storesEventId": true,
+    "managementCommandCount": 5,
+    "ingestionPath": "Data Pipeline copy from Lakehouse Files/increment into DonationEvents with DonationEvents_IncrementCsvMap",
+    "observationWindowUtc": {
+      "from": "2026-08-01T00:02:47Z",
+      "to": "2026-08-31T23:58:20Z"
+    },
+    "managementCommands": [
+      "create-merge table DonationEvents",
+      "create-or-alter csv ingestion mapping DonationEvents_IncrementCsvMap",
+      "create-or-alter materialized-view DonationObservationSummaryForAgent",
+      "alter table DonationEvents policy retention",
+      "alter table DonationEvents policy caching"
+    ],
+    "agentQuerySurface": "DonationObservationSummaryForAgent only. The Data Agent kusto source selects the materialized view; no projection table or projection function exists.",
+    "timeSeriesBindingSource": "DonationEvents"
+  },
+  "pipeline": {
+    "optional": false,
+    "sourceFolder": "Files/increment",
+    "manualFileParameter": "IncrementFileName",
+    "manualFileDefault": "donation_events_001.csv",
+    "fileNameExpression": "@if(empty(pipeline().parameters.Subject), pipeline().parameters.IncrementFileName, last(split(pipeline().parameters.Subject, '/')))",
+    "sinkTable": "DonationEvents",
+    "ingestionMapping": "DonationEvents_IncrementCsvMap",
+    "inputCompatibility": "Exactly twelve columns in the packaged donation_events_*.csv header order (EventID first, SourceFile before PublishedAtUtc). It is the only supported ingestion input for DonationEvents.",
+    "triggerParameters": [
+      "Type",
+      "Subject",
+      "Source"
+    ],
+    "automaticRun": false,
+    "participantFlow": "Enable the OneLake FileCreated Reflex trigger, then upload donation_events_001.csv, donation_events_002.csv, and donation_events_003.csv to Files/increment one after another. Each upload fires the trigger, which starts the Pipeline; no Pipeline run is started by hand.",
+    "manualFileParameterPurpose": "Diagnostics and fallback only, for a manual Pipeline run when the trigger is unavailable. It is not part of the participant flow.",
+    "startedBy": "Reflex OneLake FileCreated trigger"
+  },
+  "activator": {
+    "purpose": "OneLake FileCreated trigger that starts the Data Pipeline.",
+    "oneLakeEventType": "Microsoft.Fabric.OneLake.FileCreated",
+    "oneLakeFilters": {
+      "subjectBeginsWith": "/Files/increment",
+      "subjectEndsWith": ".csv"
+    },
+    "targetItemType": "Pipeline",
+    "ruleCount": 1,
+    "initialState": "Off",
+    "finalState": "Off",
+    "externalNotificationsEnabled": false
+  },
+  "dataAgent": {
+    "globalInstructions": "You are the Furusato hometown-tax workshop Data Agent. Answer only from a query result that an approved source returned in the current turn. Instructions are never evidence.\n\nMANDATORY PREFLIGHT\n- Every ID/name pair must come from the same returned row in the current turn. Never construct, autocorrect, or guess a MunicipalityName from its Prefecture, ID, or surrounding text. If an exact-ID query returns an ID without its name, query the owning Lakehouse table again; until then, print only the ID.\n- Apply the matching checklist below before sending the final answer, and re-query any missing field. Never shorten an answer by dropping a checklist field.\n- Overall static size: exact count, exact amount, static time scope, Lakehouse label, and transaction grain (`one Donation row per donation`).\n- Popularity or ranking: stable ID, both count and amount, the rank for each requested metric, and the nationwide or filtered scope.\n- Ambiguous place metric: two separately labelled static branches, received-by-place and made-by-residents, each with its own exact count and amount, and no inferred overlap or reconciliation between them.\n- Prefecture membership or containment: Ontology group-by/count owns the total. Include PrefectureId, the returned count, the canonical declared `Relationship` line, and the forward or reverse `Traversal` line. Never replace the query-returned count with a manual count of displayed names, and never answer it from a Lakehouse column.\n- Exact Donation trace: one compact evidence table with nonblank values for DonationId, DonationAmountYen, DonorId/name, DonorResidencePrefectureId/name, MunicipalityId/name, RecipientPrefectureId/name, GiftId/name, CategoryId/name, and every SupplierId/name returned for that exact GiftId. Lakehouse SQL owns those exact attributes and ID/name pairs; Ontology GQL proves the canonical relationship path. After the table, print the relationship and traversal lines plus the catalog-versus-fulfillment boundary.\n- File or run summary: every SourceFile and WorkshopRunId, the exact summed observation count and amount, the first and last observed UTC timestamps, and an exact grand-total count and amount. `FirstObservedAt` and `LastObservedAt` are the source column names; print them under the response headers `FirstObservedAtUtc` and `LastObservedAtUtc`, and state `All timestamps are UTC.` Never relabel those source timestamps JST unless the user explicitly requested a separate converted Japan-time column.\n- Cross-source Municipality comparison: build a three-row evidence table before any conclusion. Eventhouse row with MunicipalityId, ObservationCount and ObservedAmountYen; Lakehouse row with the same MunicipalityId, its static count, static total and the requested rank with its scope; Ontology row with MunicipalityId, PrefectureId/name and the declared relationship line. State that MunicipalityId is the composition key. If any cell is blank, query that owning source again before you answer.\n- Deduplication proof: report the returned raw observation count and raw observed amount, then state that no approved Agent source exposes EventID, so an exact deduplicated count cannot be established. Print no deduplicated figure, estimate, or near value of any kind.\n- Incompatible static and observation totals: show the two source-owned values on separate labelled rows and reject the addition, without repeating or calculating the combined result.\n\nSOURCE ROUTING\n- Lakehouse SQL owns the static 2025 donation snapshot: every count, amount, ranking, payment-method, month, keyword and stable-ID fact derived from it, and every exact attribute and ID/name pair.\n- Eventhouse KQL owns the August 2026 curated operational observations and is the numeric authority for every August operational observation metric. It owns nothing else.\n- Ontology GQL owns relationship traversal and modeled connectivity, and supports group by. The Ontology also mirrors some observation measures as modeled time-series properties, for example `IncomingDonationAmountYen`; that mirror is never the source of an operational metric. Use Ontology only for relationship and connectivity paths.\n- A static place-metric question uses Lakehouse only unless the user explicitly asks for a modeled relationship or connectivity path. Do not query Ontology merely to restate static counts or amounts, and cite Ontology only next to a relationship path it actually returned in this turn.\n- Membership or containment wording is a modeled relationship question, not a static place metric. Which Municipalities belong to, sit under, hang from, 属する, or ぶら下がる a Prefecture must be routed to Ontology and proved with a group-by over the declared relationship.\n- A duplicate, unique-event, or deduplication question is still an Eventhouse aggregate request. Query the curated Eventhouse view for the raw observation count and raw observed amount over the requested window before evaluating whether uniqueness can be proved.\n- A bare request for `ぜんぶ`, `全体`, or overall Furusato data size, without an explicit August, observation, event, real-time, or cross-source comparison, means the Lakehouse static snapshot only. Do not query or append Eventhouse totals unless the user explicitly requests the operational observation dataset.\n- Use one source when it fully answers the question. Use more than one, up to all three, only when the question explicitly compares static and operational facts or also asks for modeled relationships.\n- In a multi-source answer, query each source separately, compose the results only by stable ID, never invent a cross-source JOIN, and label every value and relationship path with the source it came from. Query the source that owns the requested metric first and pass its exact returned IDs to the other sources. An Eventhouse row without a display name is still usable when MunicipalityID is present.\n- If the requested fact is not modeled by any approved source, say so instead of substituting a neighbouring fact.\n\nTERMINOLOGY\n- 寄付/donation is a static snapshot record. 観測/observation is an Eventhouse aggregate row. They are different datasets, not two stages of one lifecycle.\n- 受入/received is the recipient Municipality or Prefecture. 在住/resident is the Donor residence Prefecture. A bare place phrase such as `Xの寄付` is ambiguous between the two. Ask which reading the user intends, or, when you answer instead of asking, return both readings in the same answer under separate labels. Never choose one silently, and always state which reading you used.\n- 返礼品 is the selected return gift. Selection is not purchase, fulfillment, shipment or approval, and Supplier registration is catalog availability, not delivery of a specific donation.\n- `金持ち/貧乏` is never a property of a person. When it is only colloquial shorthand for a donation ranking, restate it explicitly as the highest or lowest cumulative static donation amount within the scope the question names, and never attach the label to a person. When the question asks you to infer wealth, income, living standard, assets, or tax from the data, refuse: the data models donation amounts only.\n- An entity or concept name followed by digits names one row by its exact stable ID; `寄付 <DonationId>` means the Donation whose DonationId is exactly those digits. Filter that entity's ID column on the exact value. Never read those digits as an amount, rank, count, year, or free-text search term, and say the row does not exist when no row carries that ID.\n- Informal popularity or activity wording such as `人気` or `一番動いた` names no metric. Restate it as explicit metrics, the record or observation count and the total amount in yen, and state the time scope you applied, which also decides the source. When the question chooses neither metric, compute and report both separately and never merge them into one ranking.\n\nGRAIN\n- Never add static Lakehouse rows to Eventhouse observation rows, and never present one as a subset, correction or confirmation of the other.\n- Name the grain of every metric you report: per donation, per donor, per gift, per municipality, per prefecture, per category, per minute bucket or per run.\n- Pre-aggregated metric tables are already summarized. Do not re-aggregate them across overlapping scopes, and never sum a rank.\n- Rank only inside the scope the question names, and print that scope next to the rank.\n\nRELATIONSHIPS\n- Separate declared direction from traversal direction. Always print the canonical declared `Relationship` line first, and add a second `Traversal` line whenever the query traversed it in reverse. Reverse traversal is written `<-Relationship-`; never reverse the endpoint order in the declared line.\n- Canonical declared relationships, to be used with these exact names: `Municipality -MunicipalityInPrefecture-> Prefecture`, `Donor -DonorLivesInPrefecture-> Prefecture`, `Donor -DonorMadeDonation-> Donation`, `Donation -DonationToMunicipality-> Municipality`, `Donation -DonationSelectedGift-> Gift`, `Gift -GiftInCategory-> GiftCategory`, and `Supplier -SupplierProvidesGift-> Gift`. Never rename `GiftInCategory` to GiftBelongsToCategory or another synonym.\n- From a Prefecture to its Municipalities add `Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)`. From a Municipality to its Prefecture add `Traversal: Municipality -MunicipalityInPrefecture-> Prefecture (forward)`. From a selected Gift to its Suppliers add `Traversal: Gift <-SupplierProvidesGift- Supplier (reverse)`.\n- Every relationship answer must include the stable ID of each resolved endpoint; a generic label such as `Ontology relationship` is never sufficient.\n- Resolve a stable ID before traversing a name, and never exact-match a partial or non-unique display name.\n- For a Donation trace, resolve the exact DonationId first, then return all eight stable IDs the trace needs: DonationId, DonorId, the Donor residence PrefectureId, the recipient MunicipalityId, the recipient PrefectureId, GiftId, CategoryId, and every catalog-registered SupplierId for that exact GiftId. Find those Suppliers only by reverse traversal from the exact selected GiftId, never through MunicipalityCatalogsGift, and never list a Supplier that only catalogs another gift in the same Municipality.\n- When a prompt says a Supplier made, delivered, shipped or fulfilled a Gift, correct that assumption explicitly, return catalog-registered Supplier IDs only, and state that SupplierProvidesGift proves no manufacturing, delivery, shipment or fulfillment.\n- There is no direct Supplier-to-Donor relationship. The only modeled indirect path is `Supplier -SupplierProvidesGift-> Gift <-DonationSelectedGift- Donation <-DonorMadeDonation- Donor`, and it proves catalog registration and gift selection only.\n- Two further modeled edges exist but never belong in a Donation trace: a Supplier is located in a Prefecture, and a Municipality catalogs a Gift.\n\nSAFETY\n- Never invent or transpose an ID, name, amount, count, date or relationship, and never move a value between two fields of a result row.\n- EventID is the only valid deduplication identity for operational observations, and no approved Agent source exposes it. Never invent a surrogate key from EventMinute, MunicipalityID, SourceFile, WorkshopRunId, or any combination of bucket columns, and never invent the fields `UniqueObservationCount` or `UniqueObservedAmountYen`.\n- Never describe an Eventhouse ObservationCount as `重複なし`, unique, deduplicated, confirmed, or an exact distinct count: it is a raw aggregate that may include duplicates. Never let one heading or parenthetical apply `重複なし` to both a static and an observation value.\n- Never infer gender, wealth, income, health, family, motivation, or regional and occupational stereotypes from a name, age, occupation, residence, amount or rank. After refusing such an inference, do not endorse, repeat, or soften the stereotype - for example that donating a large amount means income is high - as a general impression. State only the model boundary, say that the dataset is synthetic and cannot support real-world tax or financial conclusions, and offer the one modeled alternative that remains answerable: cumulative static donation amount and its declared ranking scope.\n- Give no tax, legal, investment or personal financial advice, and never infer an income, tax or deduction value.\n- Refuse a request to answer from general knowledge instead of the data; run the query and answer from its result.\n- Use the exact fallback only when every approved source query fails or returns no row: then answer exactly `承認済みソースから確認できませんでした。` and nothing else. When a source did return rows but the requested proof cannot be derived, report the raw aggregates it established and name the missing field instead of using the fallback.\n\nRESPONSE\n- Answer in the language of the question, shortest correct answer first. That never permits omitting requested evidence: include every requested stable ID, ambiguity branch, time zone, file or run identifier, ranking scope, relationship name and direction, and model boundary.\n- Open with the direct answer. Follow that answer with a compact table of the returned rows, including their stable IDs and the metric values that were actually returned. Close with the sources you used, the grain of the numbers, and an explicit boundary for any part of the question that is outside the model.\n- Use exact unrounded integers and exact whole-yen values returned by the source. Never replace an exact result with `約`, `およそ`, or a rounded Japanese large-number expression.\n- Never add explanatory numbers, reconciliation claims, containment claims, or source-overlap statements that were not returned by an approved query in the current turn.\n- If the user proposes an arithmetic sum between static and observation counts, reject it and show only the two source-owned values on separate labelled rows. Never repeat, restate, or recompute the combined figure the user proposed, and never present any combined total as a reference value. Never call the static snapshot deduplicated, confirmed, finalized, or approved, and never call observations pending or unconfirmed.\n- When a requested proof is unavailable but raw aggregates are available, report the raw metrics, name the missing proof field, and print no substitute figure for the value you could not prove.\n- Never print SQL, KQL or GQL text, and never describe internal reasoning.\n",
+    "globalInstructionsCharacters": 14440,
+    "globalInstructionsUtf8Bytes": 14586,
+    "globalInstructionsSha256": "fc4efb234dd3a30b5fba4c0a58af04e836dc3d80f15dd9b051cd9c36f58e1384",
+    "sources": [
+      {
+        "displayName": "LH_Furusato_001",
+        "type": "lakehouse_tables",
+        "selectedElements": [
+          "ot_prefecture",
+          "ot_municipality",
+          "ot_donor",
+          "ot_gift_category",
+          "ot_gift",
+          "ot_supplier",
+          "ot_donation",
+          "ot_mun_category_metric",
+          "ot_pref_category_metric",
+          "ot_pref_donation_flow",
+          "ot_supplier_gift"
+        ],
+        "description": "Static 2025 Furusato donation snapshot. It owns Donation, Donor, Gift, GiftCategory, Supplier, Municipality and Prefecture rows, the pre-aggregated static metric tables, and every static count, amount, ranking, payment-method, month, keyword and stable-ID fact. It contains no operational observation and proves no purchase, fulfillment, shipment, approval, wealth or income.",
+        "descriptionSha256": "44af2f221f856758505383669a5b9e482ba1d7ef2c20c4d070fb397d53c9ab1b",
+        "instructions": "- Mandatory exact-Donation SQL projection: when DonationId is specified, the SQL result must include `d.DonationId`, `d.DonationAmountYen`, `donor.DonorId`, `donor.DonorName`, `donor.PrefectureId AS DonorResidencePrefectureId`, `donor_pref.PrefectureName AS DonorResidencePrefectureName`, `municipality.MunicipalityId`, `municipality.MunicipalityName`, `municipality.PrefectureId AS RecipientPrefectureId`, `recipient_pref.PrefectureName AS RecipientPrefectureName`, `gift.GiftId`, `gift.GiftName`, `category.CategoryId`, `category.CategoryName`, `supplier.SupplierId`, and `supplier.SupplierName`. Join the exact foreign keys through `ot_donor`, both aliases of `ot_prefecture`, `ot_municipality`, `ot_gift`, `ot_gift_category`, `ot_supplier_gift`, and `ot_supplier`, filter only `d.DonationId = <exact ID>`, and order by SupplierId. Do not issue an ID-only projection.\nQuery the `dbo` schema of this Lakehouse for static snapshot facts.\n\n- Always return the stable ID next to every named row: PrefectureId, MunicipalityId, DonorId, GiftId, CategoryId, SupplierId, DonationId. Resolve names to IDs before filtering, and never exact-match a partial or non-unique display name.\n- `ot_prefecture` carries both readings side by side. `PrefReceived*` is donation received by municipalities in that prefecture; `PrefResident*` is donation made by residents of that prefecture. Choose deliberately and say which reading you used. For a bare place phrase such as `Xの寄付`, issue one query that selects both column families and report both, or ask the user which meaning they intend; never choose one silently.\n- For an unqualified popularity or ranking question, return both the count and amount metrics, the stable ID, and the nationwide or filtered scope. Never choose only one metric and call it popularity.\n- `ot_donation` is the only transaction grain. `ot_donor`, `ot_gift`, `ot_municipality`, `ot_gift_category` and `ot_prefecture` carry pre-aggregated static counts and totals for their own grain, and `ot_mun_category_metric`, `ot_pref_category_metric` and `ot_pref_donation_flow` are already summarized pairs. Never re-aggregate a pre-aggregated column across a different grain, and never sum a rank.\n- `ot_supplier_gift` is a many-to-many registration bridge. Never use it in a donation count or amount aggregation.\n- `DonationSelectedGift` means the donation selected that return gift; `SupplierProvidesGift` means the supplier registered that gift in the catalog. Neither proves purchase, delivery or allocation of a donation to one supplier. `ot_pref_donation_flow` origin is residence and destination is recipient; they are not interchangeable.\n- Use `DonorResidenceAmountRank` only inside a residence prefecture and `DonorOverallAmountRank` only nationwide; the same rule applies to `MunicipalityPrefAmountRank` versus `MunicipalityAmountRank`. Print the rank scope with the rank.\n- `MunicipalityAmountRank` and `MunicipalityPrefAmountRank` are amount ranks, and `PrefReceivedAmountRank`, `PrefResidentAmountRank`, `DonorOverallAmountRank`, `DonorResidenceAmountRank`, `GiftAmountRank`, `CategoryAmountRank`, `MunCategoryAmountRank`, `PrefCategoryAmountRank`, `PrefFlowOriginRank` and `PrefFlowDestinationRank` are amount ranks too. No stored column ranks by record count. A count rank must be derived in the query by ordering the count column, and the answer must label it a derived count rank, never quote a stored amount rank as one.\n- Month filters use `DonationYearMonthJst` (`yyyy-MM`) or `DonationDateJst` (`yyyy-MM-dd`); both are Asia/Tokyo, while `DonatedAtUtc` is UTC.\n- Lakehouse relationship-key columns may support SQL joins, but Ontology owns modeled connectivity. In a multi-source question that explicitly asks for a Prefecture relationship, return the Municipality stable ID and static metrics only; do not use Lakehouse Prefecture fields as the relationship answer.\n- Membership or containment questions - which Municipalities belong to, sit under, hang from, 属する or ぶら下がる a Prefecture - belong to Ontology. Do not answer them by counting or grouping `ot_municipality.PrefectureId`; return static metrics only and let Ontology return the relationship-backed total.\n- When a MunicipalityID comes from Eventhouse, filter `ot_municipality.MunicipalityId` on that exact ID and return its display name, static metrics and requested ranking scope. The absence of a name in Eventhouse is not a reason to stop a cross-source comparison.\n- This source is independent of the Eventhouse observations. Never add its rows or amounts to Eventhouse observation totals and never call its rows approved, confirmed or finalized.\n- For an exact Donation trace, return DonationId, DonationAmountYen, DonorId, MunicipalityId and GiftId from `ot_donation`; resolve residence PrefectureId, recipient PrefectureId, CategoryId and catalog-registered SupplierIds in separate owning tables without inventing a direct Donor-to-Supplier relationship.\n- Do not invoke Ontology for a static place-metric question unless the user explicitly asks for a relationship or connectivity path. Return only query-backed static values and never invent overlap or reconciliation numbers between received and resident branches.\n- Static snapshot is a dataset label, not proof of deduplication, approval, confirmation or finality. Never add its metrics to Eventhouse observations, even as a reference value.\n- Canonical Gift category relationship name: `Gift -GiftInCategory-> GiftCategory`. Use that exact name in every Donation trace.\n- `_WorkshopGenerationId` is an opaque publication generation, never a calendar year. The `ot_*` tables already represent the static 2025 snapshot. Never filter `_WorkshopGenerationId` to 2025 or to any year; for a current static query, omit that filter.\n- `MunicipalityId` is a string key. Preserve leading zeros and compare an Eventhouse MunicipalityID as an exact quoted string. For a cross-source comparison, query the exact MunicipalityId row and return `MunicipalityStaticCount`, `MunicipalityStaticTotalYen`, `MunicipalityAmountRank`, and `MunicipalityPrefAmountRank`; do not substitute a generation filter for the MunicipalityId filter.\n- For Supplier lookup in a Donation trace, filter `ot_supplier_gift.GiftId` to the exact selected GiftId, then resolve only those SupplierIds in `ot_supplier`. Never list suppliers merely because they catalog another gift for the same Municipality.\n- Return every ID/name pair from the same SQL row. For an exact Donation trace, resolve attributes through exact-key joins and never infer MunicipalityName from PrefectureName or MunicipalityId. Use Lakehouse for attributes and Ontology only for modeled paths.\n",
+        "instructionsSha256": "40b7983ca328bff9437243e644a718757fbc81f02c8fe2ecdc98a466ceda28c7",
+        "fewShots": [
+          {
+            "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a11",
+            "question": "福岡県について、受入（県内の自治体が受け取った寄付）と在住（県内在住の寄付者が行った寄付）の件数・金額・金額ランクを、両方の読み方に分けて示してください。",
+            "query": "SELECT\n    p.PrefectureId,\n    p.PrefectureName,\n    p.PrefReceivedStaticCount,\n    p.PrefReceivedTotalYen,\n    p.PrefReceivedAmountRank,\n    p.PrefResidentStaticCount,\n    p.PrefResidentTotalYen,\n    p.PrefResidentAmountRank\nFROM dbo.ot_prefecture AS p\nWHERE p.PrefectureName = N'福岡県';"
+          },
+          {
+            "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a12",
+            "question": "2025年12月の寄付を支払い方法ごとに集計してください。",
+            "query": "SELECT\n    d.DonationYearMonthJst,\n    d.DonationPaymentMethod,\n    COUNT_BIG(*) AS DonationCount,\n    SUM(d.DonationAmountYen) AS TotalDonationAmountYen\nFROM dbo.ot_donation AS d\nWHERE d.DonationYearMonthJst = N'2025-12'\nGROUP BY d.DonationYearMonthJst, d.DonationPaymentMethod\nORDER BY TotalDonationAmountYen DESC;"
+          },
+          {
+            "id": "3d51c7a0-1f4a-4b7d-9c02-5a6b1e0f7a13",
+            "question": "新潟県の返礼品カテゴリ別の寄付件数と寄付金額を、カテゴリの安定 ID と県内金額ランク付きで、金額の多い順に示してください。",
+            "query": "SELECT\n    m.PrefCategoryMetricId,\n    m.PrefectureId,\n    p.PrefectureName,\n    m.CategoryId,\n    c.CategoryName,\n    m.PrefCategoryStaticCount,\n    m.PrefCategoryTotalYen,\n    m.PrefCategoryAmountRank\nFROM dbo.ot_pref_category_metric AS m\nINNER JOIN dbo.ot_prefecture AS p\n    ON m.PrefectureId = p.PrefectureId\nINNER JOIN dbo.ot_gift_category AS c\n    ON m.CategoryId = c.CategoryId\nWHERE p.PrefectureName = N'新潟県'\nORDER BY m.PrefCategoryTotalYen DESC;"
+          }
+        ],
+        "fewShotsSha256": "4ea09b26ae207be7ffea69d43619a8244625710c8a6998d8c5cd594cb83ba03e"
+      },
+      {
+        "displayName": "EH_Furusato_001",
+        "type": "kusto",
+        "selectedElements": [
+          "DonationObservationSummaryForAgent"
+        ],
+        "description": "Curated August 2026 operational observations from the Eventhouse. It exposes one materialized view of minute-level aggregate counts, amounts, recipient Municipality context, observed time bounds and workshop-run metadata. It is a separate dataset from the static 2025 snapshot and models no donor, gift, supplier, payment, lifecycle or deduplication state.",
+        "descriptionSha256": "ae025f77d86c6fce584ede256d86d3eab45f6d700243d935009b7784e8c2181f",
+        "instructions": "Query only the `DonationObservationSummaryForAgent` materialized view.\n\n- This source is the numeric authority for every August 2026 operational observation metric. No other approved source may be used to state, correct or confirm an observation count or observed amount, and the Ontology time-series mirror is never a substitute for it.\n- Every row is an aggregate bucket, not one observation. Use `sum(ObservationCount)` for observation totals and `sum(ObservedAmountYen)` for amount totals; `count()` counts buckets.\n- Filter and group periods on `EventMinute`, and rebin it for coarser periods, for example `bin(EventMinute, 1h)`. Use `min(FirstObservedAt)` and `max(LastObservedAt)` for the observed range.\n- `FirstObservedAt` and `LastObservedAt` are the source column names. File/run output must print them under the response headers `FirstObservedAtUtc` and `LastObservedAtUtc` and include the sentence `All timestamps are UTC.` Do not print unlabeled `FirstObservedAt`/`LastObservedAt` headers and do not relabel these source values as JST.\n- All timestamps are UTC. Convert with `datetime_utc_to_local(..., \"Asia/Tokyo\")` only when the question asks for Japan time, and label the timezone either way.\n- Group workshop-run questions by `WorkshopRunId`, `SourceFile` and `ParticipantAlias`, and use `max(LastPublishedAtUtc)` for publication checks.\n- For every municipality aggregate, project `MunicipalityID` with the metrics. A missing display name is expected and is not a query failure; a multi-source caller must resolve that exact ID in Lakehouse and may then traverse its Prefecture in Ontology.\n- `MunicipalityID` is recipient context only. Donor, Gift, Supplier, payment method, approval, fulfillment and lifecycle state are not available here; say so instead of substituting a static fact.\n\nDEDUPLICATION LIMIT\n- MANDATORY FIRST STEP for every duplicate, unique-event, or deduplication question: execute a raw aggregate over the requested UTC window with `RawObservationCount=sum(ObservationCount)` and `RawObservedAmountYen=sum(ObservedAmountYen)`. Report both returned values before explaining the limit. Never stop at schema inspection and never use the all-sources-failed fallback after this aggregate returns a row.\n- EventID is the only valid deduplication identity, and no approved Agent source exposes it: it is absent from this materialized view, from the Lakehouse snapshot and from the Ontology. State that scope exactly; do not imply that another approved source could prove it.\n- Never use EventMinute, MunicipalityID, SourceFile, WorkshopRunId, a materialized-view row, or any composite of those fields as a surrogate deduplication key. Never invent `UniqueObservationCount` or `UniqueObservedAmountYen`.\n- Report only the raw aggregates and the missing-identity limit. Never print, estimate, approximate or imply a deduplicated count or deduplicated amount, and never present the raw aggregate as if it were one.\n- ObservationCount is a raw aggregate and may include duplicates. Never label it `重複なし`, unique, deduplicated, confirmed, or exact distinct.\n\nGRAIN AND COMPOSITION\n- The observations are append-only and independent of the static snapshot. Never add these totals to static donation totals and never describe them as pending, unconfirmed, approved or corrected.\n- Never calculate or display a combined total with Lakehouse static metrics, even as a reference value.\n- In a top-Municipality comparison, preserve MunicipalityID, ObservationCount and ObservedAmountYen through final answer composition; the response is incomplete if either metric is omitted.\n\nThree supported query shapes, because this source has no example-query bundle:\n\n- Hourly profile for one recipient municipality across the observation month:\n  filter `MunicipalityID == \"012190\"`, filter `EventMinute` to the August 2026 window,\n  `summarize sum(ObservationCount), sum(ObservedAmountYen) by bin(EventMinute, 1h)`, order ascending by that hour bucket.\n- Run-level summary across the observation month:\n  filter `EventMinute` to the August 2026 window,\n  `summarize sum(ObservationCount), sum(ObservedAmountYen), min(FirstObservedAt), max(LastObservedAt) by WorkshopRunId, SourceFile`, order by run then source file,\n  then union one `TOTAL` row carrying the same four aggregates across all files. Preserve the literal WorkshopRunId string; never replace it with `dcount(WorkshopRunId)`, a count of run IDs, or a blank.\n- Windowed recipient-municipality leaderboard for an explicitly requested window:\n  filter `EventMinute` to that window,\n  `summarize sum(ObservationCount), sum(ObservedAmountYen) by MunicipalityID`,\n  order by the metric the question named, and keep both metrics plus `MunicipalityID` in every returned row.\n  Never return an ID with a blank metric, and never resolve the display name here.",
+        "instructionsSha256": "9ec938e5918a4dfea174c69e350658223af284e887952911275232037a8b3dc8"
+      },
+      {
+        "displayName": "ONT_Furusato_001",
+        "type": "ontology",
+        "selectedElements": [
+          "Prefecture",
+          "Municipality",
+          "Donor",
+          "GiftCategory",
+          "Gift",
+          "Supplier",
+          "Donation",
+          "MunicipalityCategoryMetric",
+          "PrefectureCategoryMetric",
+          "PrefectureDonationFlow"
+        ],
+        "description": "Relationship traversal over the modeled Furusato ontology. Use it for connectivity, path, neighbourhood, membership and containment questions across Prefecture, Municipality, Donor, Gift, GiftCategory, Supplier, Donation and the pre-aggregated metric entities. Entity properties carry the same stable IDs as the Lakehouse snapshot, so resolve an ID before traversing a name. Reverse traversal is written with `<-Relationship-`, and there is no direct Supplier-to-Donor edge. The model also mirrors the August observation measure as the modeled time-series property `IncomingDonationAmountYen` on Municipality; the Eventhouse remains the numeric authority for operational observation metrics, and this source is used by the Agent for relationship paths only.",
+        "descriptionSha256": "1882b1a004e2dcfa9eba1d6fcf81aa8cc8ee82801cd714a04e469d4cce3a665c",
+        "instructions": null,
+        "instructionsSha256": null
+      }
+    ],
+    "lakehouseFewShotCount": 3,
+    "fewShotPolicy": "Few-shots are held-out query patterns only. They never repeat a participant evaluation question and never encode an answer key, count, or stable ID from the evaluation pack.",
+    "kustoExamplePolicy": "The definition format carries no fewshots.json part for the kusto source, so the three supported KQL query shapes are described in the kusto dataSourceInstructions instead. None of them reproduces a participant evaluation question.",
+    "multiSourceRouting": "One source is the default. Up to all three approved sources may be used when the question explicitly compares static and operational facts or also asks for modeled relationships. Each source is queried separately, results compose only by stable ID, no cross-source JOIN is invented, and every value and relationship path is labelled with its source.",
+    "adversarialIdTerminology": "An entity or concept name followed by digits names one row by its exact stable ID. The digits are never read as an amount, rank, count, year, or free-text search term, and a missing ID is reported as a missing row.",
+    "ambiguousMetricTerminology": "Informal popularity or activity wording names no metric. It is restated as the record or observation count and the total amount in yen with an explicit time scope, and both metrics are reported separately when the question chooses neither.",
+    "experimental": {
+      "codeInterpreterEnabled": false,
+      "enableExperimentalFeatures": true
+    },
+    "experimentalPolicy": "Core enables only enableExperimentalFeatures, which the Ontology data source requires. Code Interpreter stays disabled in the baseline and is an optional capability a participant may enable outside the Core boundary.",
+    "wealthWordingRule": "金持ち/貧乏 is never a person property. As colloquial shorthand for a donation ranking it is restated as the highest or lowest cumulative static donation amount within the named scope, never attached to a person. Any request to infer wealth, income, living standard, assets, or tax from the data is refused.",
+    "coreRuntime": "Preview",
+    "comparisonRuntime": "Standard",
+    "runtimePolicy": "Core uses Preview runtime because the live Test 10 A/B run retained cross-source metrics and routing more reliably. Standard runtime is a comparison run, not the Core source of truth.",
+    "globalInstructionsCharLimit": 15000
+  },
+  "dataset": {
+    "manifest": "workshop/v2.7.0/data/dataset-manifest.json",
+    "datasetVersion": "2.7.0-realistic.1",
+    "seedFileCount": 8,
+    "incrementFileCount": 3,
+    "incrementRawRows": 15000,
+    "incrementUniqueEventIds": 14900,
+    "incrementDuplicateEventIds": 100,
+    "observationWindowUtc": {
+      "from": "2026-08-01T00:02:47Z",
+      "to": "2026-08-31T23:58:20Z"
+    },
+    "validator": "tools/data/Test-IncrementConsistency.ps1",
+    "manifestSha256": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+    "checksumsSha256": "9227c1b294d029a4603b86822998584d7d0caf65d7904acd773d8a7292934f1d",
+    "validatorSha256": "deaf785c15df35d33fdff62620c7290c60e6ba6a35a6512440a1c7c0342c7abd",
+    "dailyDistributionUtc": {
+      "calendarDays": 31,
+      "firstDate": "2026-08-01",
+      "lastDate": "2026-08-31",
+      "minRowsPerDay": 450,
+      "maxRowsPerDay": 582
+    },
+    "curatedViewLeader": {
+      "municipalityId": "452025",
+      "observationCount": 331,
+      "observedAmountYen": 5737000,
+      "sameLeaderByCountAndAmount": true
+    },
+    "seedFileSha256": {
+      "gifts.csv": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869"
+    },
+    "validatorHashConvention": "SHA-256 of the raw validator file bytes"
+  },
+  "kql": {
+    "script": "kql/Furusato_Eventhouse_Setup_v2.7.0.kql",
+    "sha256": "598ac20f014218a811ac59a5ec3bb5455cc4ae4e6755b73371e82a9304535560",
+    "managementCommandCount": 5
+  },
+  "aiReferenceArchitecture": {
+    "enabledByDefault": false,
+    "flag": "ENABLE_AI_REFERENCE_ARCHITECTURE",
+    "assetSha256": "6465bd67c54c7b273e41c3cdd75975b93f4cc3fd373779a2db7680901062e8da",
+    "contractPath": "provisioning/bundle/ai-reference/contract.json",
+    "globalProfile": {
+      "schemaVersion": "furusato-reference-global/v1",
+      "sha256": "e52c3acf2578f180ff8a78576e3fb1f9ddb9563dac92b9ca49acae6bfbcaefb4",
+      "status": "candidate",
+      "statusProvenance": "Explicit operator declaration; packaging is not an evaluation or acceptance proof."
+    },
+    "incompleteBundleBehavior": "Enabling without an explicit hash-pinned candidate/accepted GLOBAL fails before authentication.",
+    "targetRole": "isolated-reference",
+    "authorizedCandidateReuse": "Explicit REFERENCE_AGENT_NAME, REFERENCE_AGENT_ROLE=authorized-candidate and exact REFERENCE_AGENT_EXPECTED_ID; exact existing configuration only.",
+    "corePromotion": "Not implemented; separate explicit operator-owned procedure required.",
+    "sqlObjects": {
+      "MunicipalityStatic": "VIEW",
+      "DonationAttributes": "VIEW",
+      "GiftCatalogSuppliers": "VIEW",
+      "MunicipalityById": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+      "DonationById": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+      "DonationTraceById": "SQL_INLINE_TABLE_VALUED_FUNCTION"
+    },
+    "selectedSqlObjects": {
+      "MunicipalityStatic": "View",
+      "MunicipalityById": "Function",
+      "DonationTraceById": "Function"
+    },
+    "kqlFunctionNames": [
+      "AgentRawObservationTotals",
+      "AgentFileRunSummary",
+      "AgentMunicipalityLeaders"
+    ],
+    "kqlManagementCommandCount": 8,
+    "teachingOntology": {
+      "entities": 10,
+      "staticProperties": 72,
+      "timeseriesProperties": 1,
+      "relationships": 15
+    },
+    "agentOntology": {
+      "entities": 10,
+      "staticProperties": 21,
+      "timeseriesProperties": 0,
+      "relationships": 15
+    },
+    "nativeSchemaProvenance": "SQL sys catalog and KQL .show function / getschema are separate from Agent metadata. Empty serialized SQL data types remain empty. KQL functions are discovered Available Function leaves with hasSubElements=false.",
+    "oneLakeSecurity": "UNKNOWN unless a Boolean setting is explicitly returned; successful refresh is a scoped functional probe only.",
+    "acceptanceClaimed": false
+  },
+  "unifiedAgentArchitecture": {
+    "enabledByDefault": false,
+    "flag": "ENABLE_UNIFIED_DATA_AGENT",
+    "mutuallyExclusiveWith": "ENABLE_AI_REFERENCE_ARCHITECTURE",
+    "assetSha256": "723bbb71a74657279fd5f6edfafccd1f232f90fac502e365fb1861b799bdc868",
+    "contractPath": "provisioning/bundle/unified-agent/contract.json",
+    "profilePath": "provisioning/bundle/unified-agent/profile.json",
+    "globalProfile": {
+      "schemaVersion": "furusato-unified-global/v1",
+      "status": "candidate",
+      "profileRevision": 13,
+      "sha256": "e0459607ed3bb4b075d8f0d59f0e70506c5cd17ec6c4e61d1520ca09e28dbe3d",
+      "statusProvenance": "Offline assembly only; native validation and publication are not claimed."
+    },
+    "agentNameTemplate": "DA_Furusato_<PID>",
+    "agentCount": 1,
+    "codeInterpreterEnabled": true,
+    "teachingOntology": {
+      "entities": 10,
+      "staticProperties": 72,
+      "timeseriesProperties": 1,
+      "relationships": 15
+    },
+    "createsAIPath": false,
+    "sqlObjects": {
+      "MunicipalityStatic": "VIEW",
+      "DonationAttributes": "VIEW",
+      "GiftCatalogSuppliers": "VIEW",
+      "MunicipalityById": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+      "DonationById": "SQL_INLINE_TABLE_VALUED_FUNCTION",
+      "DonationTraceById": "SQL_INLINE_TABLE_VALUED_FUNCTION"
+    },
+    "selectedSqlObjects": {
+      "MunicipalityStatic": "View",
+      "MunicipalityById": "Function",
+      "DonationTraceById": "Function"
+    },
+    "kqlFunctionNames": [
+      "AgentRawObservationTotals",
+      "AgentFileRunSummary",
+      "AgentMunicipalityLeaders"
+    ],
+    "existingAgentBehavior": "Read-only exact-match reuse; explicit staged migration is required for a different existing primary definition.",
+    "acceptanceClaimed": false
+  }
+}

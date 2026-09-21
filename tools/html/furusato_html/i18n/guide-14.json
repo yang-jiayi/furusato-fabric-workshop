@@ -1,0 +1,11 @@
+{
+ "参照構文": "Reference syntax",
+ "制約": "Constraints",
+ "参照構文の `/**/` は NotebookUtils が要求する固定の接頭辞であり、省略できません。アクティブな値セットは環境の状態であって、コミットされる定義には含まれません。ItemReference と ConnectionReference は、静的 ID が環境をまたいで自動バインドされないため除外しています。": "The `/**/` in the reference syntax is a fixed prefix required by NotebookUtils and cannot be omitted. The active value set is a state of the environment and is not included in committed definitions. ItemReference and ConnectionReference are excluded because static IDs are not automatically bound across environments.",
+ "`IncrementFileName` はファシリテーター向けの診断とフォールバック専用です。参加者の増分取り込みは、OneLake FileCreated トリガーが `Subject` を渡す経路だけを使います。この変数を手で設定して Pipeline を実行するのは、通常の参加者手順ではありません。": "`IncrementFileName` is reserved exclusively for facilitator diagnostics and fallback. Participant incremental ingestion uses only the path where the OneLake FileCreated trigger passes the `Subject`. Manually setting this variable and running the Pipeline is not a standard participant procedure.",
+ "付録 E　参考リンク": "Appendix E Reference links",
+ "必ず最新の公式ドキュメントを参照してください。": "Always refer to the latest official documentation.",
+ "公式ドキュメントへのリンク": "Links to official documentation",
+ "トピック": "Topic",
+ "一部の URL は、公開リージョン・言語設定・プレビュー機能の有効化状況によりリダイレクトや閲覧制限が発生する場合があります。": "Some URLs may be redirected or access-restricted depending on the public region, language settings, or the enabled status of preview features."
+}

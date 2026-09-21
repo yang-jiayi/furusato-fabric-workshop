@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "furusato-unified-profile/v1",
+  "profileRevision": 13,
+  "status": "candidate",
+  "validationStatus": "offline-only",
+  "enabledByDefault": false,
+  "acceptanceClaimed": false,
+  "instructionCharacterLimit": 15000,
+  "ontologyInstructionPolicy": "preserve-null-use-global",
+  "files": {
+    "global-instructions.txt": {
+      "characters": 14964,
+      "sha256": "e0459607ed3bb4b075d8f0d59f0e70506c5cd17ec6c4e61d1520ca09e28dbe3d"
+    },
+    "lakehouse-instructions.txt": {
+      "characters": 9606,
+      "sha256": "b8313897d65fa3331ccd4e28f905b58ec380e622d56b0d7cdb8ee189dbcec56e"
+    },
+    "kusto-instructions.txt": {
+      "characters": 11969,
+      "sha256": "d3a0961ba1106bdf946481fdd294718788fffbbdd415895679d99f16f472964d"
+    },
+    "kusto-fewshots.json": {
+      "sha256": "e33c7f09e3df31e4dde46cf8b1fd68c705e56daea0fb670e9784793a8d4de44c",
+      "canonicalSha256": "485bd66183416e94301c30754352b3ed7721e727dd1cda3f40d2469086f8cc2f",
+      "exampleCount": 3
+    }
+  },
+  "referenceSelectionsSha256": {
+    "lakehouse_tables": "cf085b02416aeb654cbfe9bcc45ff3af5df184b44bed32b78228cf846f34fe94",
+    "kusto": "83396cc4aa9f53b9238855e3cb10f6c04f2331aa36e16445534e1e5e4fda72fc"
+  },
+  "teachingOntologySourceSha256": "b5e8f41ae4a1e60ce3836509cd230d40df5b0b702ac2ec5901ba0ad0cb69fa0d",
+  "expectedOntologyContract": {
+    "definitionParts": 54,
+    "entityTypes": 10,
+    "staticProperties": 72,
+    "timeseriesProperties": 1,
+    "dataBindings": 11,
+    "relationshipTypes": 15,
+    "contextualizations": 15,
+    "overviews": 1
+  },
+  "expectedSelections": {
+    "lakehouse_tables": {
+      "selectedObjects": 14,
+      "selectedLeaves": 162
+    },
+    "kusto": {
+      "selectedObjects": 4,
+      "selectedLeaves": 10
+    },
+    "ontology": {
+      "selectedObjects": 10,
+      "selectedLeaves": 0
+    }
+  }
+}

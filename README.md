@@ -1,33 +1,58 @@
 <a id="top"></a>
 
-# Fabric IQ Ontology Workshop — ふるさと納税
-
-![Furusato Workshop: Lakehouse SQL・Eventhouse KQL・Ontology GQL の3ソースを1つのData Agentへ。Code Interpreterは追加ツールです。](docs/assets/readme/furusato-hero.svg)
-
 <div align="center">
 
-[日本語](#日本語) | [English](#english)
+<p><strong>MICROSOFT FABRIC · HANDS-ON WORKSHOP</strong></p>
+<h1>Furusato × Fabric IQ</h1>
+<p><strong>データに意味を。問いに、根拠を。</strong></p>
+<p>ふるさと納税の合成データで学ぶ、Ontology・Data Agent・OneLake。</p>
 
-`v2.7.0` &nbsp; `unified-20260914` &nbsp; `Synthetic data` &nbsp; `MIT License`
+[日本語](#日本語) &nbsp; / &nbsp; [English](#english)
 
 </div>
 
-Microsoft Fabric の **Ontology・Data Agent・OneLake** を、ふるさと納税の合成データで学ぶハンズオン教材です。
-DBA・BI エンジニア向けに、リレーショナルモデルから業務の意味・同一性・関係経路を設計する考え方を扱います。
+![Furusato — Make data mean more. Lakehouse SQL・Eventhouse KQL・Ontology GQL を1つのData Agentにつなぎ、根拠を確認しながら学ぶWorkshop。](docs/assets/readme/furusato-hero.svg)
 
-分類・配布上の注意は [SECURITY.md](SECURITY.md)、利用条件は [MIT License](LICENSE) を参照してください。
+<div align="center">
+
+**[ガイドを読む ↗](#最新版を使う)** &nbsp; · &nbsp; **[実画面のデモを見る ↗](#workshop-videos-ja)** &nbsp; · &nbsp; **[デプロイする ↗](#ツール別のデプロイ手順)**
+
+`v2.7.0` &nbsp; `unified-20260914` &nbsp; `SQL · KQL · GQL` &nbsp; `JP / EN` &nbsp; `Synthetic data`
+
+</div>
+
+**データを準備し、業務の関係をモデル化し、AIの回答を実行結果までたどる。**
+DBA・BIエンジニアを中心に、リレーショナルモデルから業務の意味・同一性・関係経路を設計する考え方を、
+Microsoft Fabricのハンズオンで学びます。
 
 ---
 
 ## 日本語
 
-| **01 / LEARN** | **02 / BUILD** | **03 / EXPLORE** |
-| :--- | :--- | :--- |
-| **[ガイドを読む](#最新版を使う)**<br>Word・日英 HTML で実習を始める | **[環境をデプロイする](#ツール別のデプロイ手順)**<br>6ツールの入口と共通の承認ゲート | **[モデルを理解する](#ontology-schema-ja)**<br>Ontology の構成と RDF / OWL |
+<sub>START HERE / 学び方を選ぶ</sub>
 
-[全体アーキテクチャ](#workshop-architecture-ja) · [紹介動画](#workshop-videos-ja) · [実習の構成](#実習の構成) · [依頼プロンプト](#デプロイ依頼プロンプト) · [時間・費用の参考値](#reference-run-ja) · [前提と安全](#前提と安全上の境界) · [配布物の検証](#deployment-integrity-checks)
+| **01 &nbsp; READ** | **02 &nbsp; WATCH** | **03 &nbsp; BUILD** |
+| :--- | :--- | :--- |
+| **まずは、教材から。**<br>全19章・5付録。Wordと自己完結の日英HTMLで、手元から学習を始めます。<br><br>[最新版ガイド →](#最新版を使う) | **実際の操作を見る。**<br>口語の質問からSQL・KQL・GQLの結果まで。日本語・英語のQHDデモを用意しています。<br><br>[紹介動画 →](#workshop-videos-ja) | **自分の環境で構築する。**<br>6クライアントの入口から、共通のpreview・承認・実行・評価へ進みます。<br><br>[デプロイ手順 →](#ツール別のデプロイ手順) |
+
+**このページのナビゲーション**<br>
+[学べること](#learning-outcomes-ja) · [アーキテクチャ](#workshop-architecture-ja) · [実習の構成](#実習の構成) · [Ontology / RDF](#ontology-schema-ja) · [依頼プロンプト](#デプロイ依頼プロンプト) · [リポジトリ構成](#リポジトリ構成) · [時間・費用](#reference-run-ja) · [前提と安全](#前提と安全上の境界) · [配布物の検証](#deployment-integrity-checks)
+
+<a id="learning-outcomes-ja"></a>
+
+### このWorkshopで、何をつなぐか
+
+| **データをつくる** | **意味をつなぐ** |
+| :--- | :--- |
+| **OneLake · Lakehouse · Eventhouse**<br>静的スナップショットと運用観測を分け、CSVの準備からイベントを起点とする取り込みまでを学びます。 | **Ontology · SQL · KQL · GQL**<br>Entity・キー・プロパティ・関係を設計し、業務の言葉を実データの照会へつなぎます。 |
+| **根拠を確かめる**<br>**Data Agent · Code Interpreter**<br>自然な質問への回答を、使ったソース・実行したquery・返却値・実際の分析成果物まで確認します。 | **分析を届ける**<br>**Notebook 05 · Direct Lake · Power BI**<br>Optionalの分析枝では、品質処理と可視化を体験し、AI用の根拠とBI用の集計の役割を整理します。 |
+
+> **1つの主Agent、3つのソース。** Code Interpreterは同じAgentの追加ツールです。<br>
+> 読むだけでなく、構築・照会・検証までを一つの流れとして体験します。
 
 <a id="workshop-architecture-ja"></a>
+
+<sub>THE SYSTEM / 全体を見渡す</sub>
 
 ### 全体アーキテクチャ — 業務の問いから技術のつながりへ
 
@@ -47,6 +72,8 @@ Notebook 05 の品質処理から Direct Lake / Power BI へ向かう分析経�
 
 <a id="workshop-videos-ja"></a>
 
+<sub>WATCH IT WORK / 画面からつかむ</sub>
+
 ### 紹介動画 — 実画面で見る Workshop
 
 **第3版：業務シナリオ → 口語の質問3例 → 技術解説 → 全体アーキテクチャと学習成果。**
@@ -57,7 +84,7 @@ Ontology のキー・型・説明・バインディング・関係の向きを�
 
 | 日本語 | English |
 | :--- | :--- |
-| **[日本語版 MP4 を開く](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · 日本語ナレーション | **[English MP4](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration |
+| [<img src="docs/assets/readme/video-ja.svg" width="400" alt="日本語デモのイラストカバー — クリックして実画面のMP4を見る">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)<br>**[日本語版を再生・ダウンロード ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · 日本語ナレーション | [<img src="docs/assets/readme/video-en.svg" width="400" alt="Illustrated English video cover — open the recorded Fabric demo">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)<br>**[Watch or download in English ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration |
 
 `QHD 2560 × 1440` · `30 fps` · `字幕なし` · `男性AI音声 / 1.1倍速`
 
@@ -72,6 +99,8 @@ Ontology のキー・型・説明・バインディング・関係の向きを�
 > 各質問では実際に選ばれた SQL／KQL／GQL の経路を示し、Graph エディターの手動演習は別の確認として扱います。
 > 英語版では、回答の表示言語を整える追質問も紹介します。
 > 個別の照会例を手がかりに、下記の最新版ガイドで構築・検証・学習を進めてください。
+
+<sub>YOUR STARTING POINT / 手元に教材を</sub>
 
 ### 最新版を使う
 
@@ -91,6 +120,10 @@ Word と HTML を同じフォルダーへ保存すると、HTML 内の Word ダ�
 同じ URL から**新しく clone**してください。新しい GitHub repository ID に Secrets・Environments・
 認証や Fabric の権限は引き継がれません。
 [公開版のデプロイ・標準10問／84条件・非公開の追加評価の始め方](docs/public-onboarding/README.md)を参照してください。
+
+> [!TIP]
+> 初めての方は、**[公開版オンボーディング](docs/public-onboarding/README.md) → 上の参加者ガイド → [共通のデプロイ手順](#ツール別のデプロイ手順)**の順がおすすめです。
+> 配置をAIエージェントへ依頼する場合は、[コピペ用プロンプト](#デプロイ依頼プロンプト)から始められます。
 
 > [!IMPORTANT]
 > HTML はオフラインで読めますが、実習の実行には `workshop/v2.7.0` のデータ・Notebook・設定ファイルが必要です。
@@ -140,6 +173,8 @@ Notebook 04 の一括構築では、最終 preview 前に `ENABLE_UNIFIED_DATA_A
 これは **Fabric へ直接インポートする定義ではなく**、接続・時系列処理・カーディナリティ制約を
 OWL エンジンで実行するものでもありません。[変換規則と再生成方法](tools/ontology/README.md)を参照してください。
 Word / HTML の教材内容や、稼働中の Ontology / Agent の構成は変更しません。
+
+<sub>BUILD YOUR LAB / 同じ教材、選べる入口</sub>
 
 ### ツール別のデプロイ手順
 
@@ -381,6 +416,8 @@ Microsoft 365 Copilot ライセンス、組織での有効化、Cowork の従量
 
 </details>
 
+<sub>FROM PLAN TO PRACTICE / 確認してから実行する</sub>
+
 ### デプロイ依頼プロンプト
 
 次の文面の `<...>` を埋め、GitHub と Fabric を操作できる AI エージェントへ貼り付けてください。
@@ -531,6 +568,8 @@ Fabric 容量・ストレージ・Data Agent 側の CU 費用も含みません�
 
 </details>
 
+<sub>GUARDRAILS / 安全に、再現できる形で</sub>
+
 ### 前提と安全上の境界
 
 | 項目 | 要件 |
@@ -544,6 +583,7 @@ Fabric 容量・ストレージ・Data Agent 側の CU 費用も含みません�
 実行先の Workspace／Folder と利用者を確認し、preview がある操作は preview から始めてください。
 参加者 ID は 3 桁の `001`–`999` です。接続先や認証情報を配布物へ埋め込まないでください。
 詳細な機能条件・画面名称は変わり得るため、[Microsoft Learn](https://learn.microsoft.com/en-us/fabric/iq/overview)も確認します。
+分類・配布上の注意は [SECURITY.md](SECURITY.md)、利用条件は [MIT License](LICENSE) を参照してください。
 
 ### データと AI の境界
 
@@ -567,6 +607,8 @@ Agentに指示しています。訂正は再確認、取消は提案の解除と
 
 詳細は [DATASET.md](workshop/v2.7.0/data/DATASET.md) と
 [データ検証チェックリスト](docs/data-validation-checklist.md)を参照してください。
+
+<sub>INSIDE THE REPOSITORY / 必要なものを見つける</sub>
 
 ### リポジトリ構成
 
@@ -651,18 +693,36 @@ Word の描画には Microsoft Word、HTML の操作検査には Playwright／Ch
 
 ## English
 
-A hands-on workshop for Microsoft Fabric **Ontology, Data Agent and OneLake**,
-using synthetic Japanese hometown-tax donation data.
+**Give data meaning. Give answers evidence.**<br>
+A hands-on workshop for Microsoft Fabric **Ontology, Data Agent and OneLake**, using synthetic Japanese hometown-tax donation data.
+Build the data foundation, model business relationships, and trace AI answers back to executed queries.
 
 See [SECURITY.md](SECURITY.md) for distribution boundaries and [MIT License](LICENSE) for terms.
 
-| **01 / LEARN** | **02 / BUILD** | **03 / EXPLORE** |
-| :--- | :--- | :--- |
-| **[Read the guide](#current-documents)**<br>Start with Word or the bilingual HTML | **[Deploy the workshop](#deployment-by-client)**<br>Six client entry points, one gated workflow | **[Explore the model](#ontology-schema-en)**<br>Ontology structure and RDF / OWL |
+<sub>START HERE / CHOOSE YOUR PATH</sub>
 
-[Architecture](#workshop-architecture-en) · [Watch the workshop](#workshop-videos-en) · [Learning paths](#learning-paths) · [Deployment prompt](#copy-paste-deployment-prompt) · [Time and cost reference](#reference-run-en) · [Requirements and safety](#requirements-and-boundaries) · [Distribution checks](#deployment-integrity-checks)
+| **01 &nbsp; READ** | **02 &nbsp; WATCH** | **03 &nbsp; BUILD** |
+| :--- | :--- | :--- |
+| **Start with the guide.**<br>19 chapters and 5 appendices, available as Word and self-contained bilingual HTML.<br><br>[Get the current guide →](#current-documents) | **See the actual workflow.**<br>Conversational questions, SQL/KQL/GQL and returned results in narrated QHD demonstrations.<br><br>[Watch the videos →](#workshop-videos-en) | **Build your own lab.**<br>Six client entry points with one shared preview, approval, execution and evaluation workflow.<br><br>[Deploy the workshop →](#deployment-by-client) |
+
+**ON THIS PAGE**<br>
+[What you will learn](#learning-outcomes-en) · [Architecture](#workshop-architecture-en) · [Learning paths](#learning-paths) · [Ontology / RDF](#ontology-schema-en) · [Deployment prompt](#copy-paste-deployment-prompt) · [Repository map](#source-and-maintenance) · [Time and cost](#reference-run-en) · [Requirements and safety](#requirements-and-boundaries) · [Distribution checks](#deployment-integrity-checks)
+
+<a id="learning-outcomes-en"></a>
+
+### Four connected learning experiences
+
+| **Build the data** | **Connect the meaning** |
+| :--- | :--- |
+| **OneLake · Lakehouse · Eventhouse**<br>Separate static snapshots from operational observations, from CSV preparation to event-driven ingestion. | **Ontology · SQL · KQL · GQL**<br>Model entities, keys, properties and relationships, then connect business language to real data queries. |
+| **Trace the evidence**<br>**Data Agent · Code Interpreter**<br>Inspect source selection, executed queries, returned values and actual analysis artifacts behind natural-language answers. | **Deliver the analysis**<br>**Notebook 05 · Direct Lake · Power BI**<br>Explore the optional quality-processing and BI branch while keeping source authority and analytics roles clear. |
+
+> **One primary Agent. Three sources.** Code Interpreter is an additional tool on that same Agent.<br>
+> A connected workflow to build, query and verify—not just read about.
 
 <a id="workshop-architecture-en"></a>
+
+<sub>THE SYSTEM / SEE THE WHOLE WORKFLOW</sub>
 
 ### Overall architecture — from business questions to connected technologies
 
@@ -682,6 +742,8 @@ Icons come from the supplied [AzureDiagarm collection](https://github.com/yang-j
 
 <a id="workshop-videos-en"></a>
 
+<sub>WATCH IT WORK / FOLLOW THE REAL SCREENS</sub>
+
 ### Watch the workshop in action
 
 **Version 3: business scenario → three conversational questions → technical explanation → architecture and learning outcomes.**
@@ -692,7 +754,7 @@ through the icon-based architecture. Constant framing, focused highlights and fr
 
 | English | 日本語 |
 | :--- | :--- |
-| **[Open the English MP4](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration | **[日本語版 MP4](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · Japanese narration |
+| [<img src="docs/assets/readme/video-en.svg" width="400" alt="Illustrated English video cover — open the recorded Fabric demo">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)<br>**[Watch or download in English ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration | [<img src="docs/assets/readme/video-ja.svg" width="400" alt="日本語デモのイラストカバー — クリックして実画面のMP4を見る">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)<br>**[日本語版を再生・ダウンロード ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · Japanese narration |
 
 `QHD 2560 × 1440` · `30 fps` · `No subtitles` · `AI male narration at 1.1× pace`
 
@@ -708,6 +770,8 @@ committed to Git history. Videos inherit the repository's access permissions.
 > Each demonstration retains its actual SQL/KQL/GQL route; the manual Graph-editor exercise is a separate verification.
 > The English film also shows an explicit conversational follow-up to adjust the answer language.
 > Use these individual examples alongside the current guides below to build, verify and explore the workshop.
+
+<sub>YOUR STARTING POINT / TAKE THE GUIDE WITH YOU</sub>
 
 ### Current documents
 
@@ -727,6 +791,10 @@ This public distribution starts an independent history containing only current d
 **Clone the same URL afresh**; do not import the old private history. The new GitHub repository ID
 does not inherit Secrets, Environments, authentication or Fabric permissions.
 See [public deployment, standard 10/84 evaluation and separate private custom inputs](docs/public-onboarding/README.md).
+
+> [!TIP]
+> New here? Start with **[public onboarding](docs/public-onboarding/README.md) → the current guide → [shared deployment steps](#deployment-by-client)**.
+> Use the [copy-paste prompt](#copy-paste-deployment-prompt) when working with an AI coding agent.
 
 > [!IMPORTANT]
 > The HTML can be read offline. Running the exercises also requires the data,
@@ -777,6 +845,8 @@ The 11 bindings, 15 contextualizations, keys, business semantics and time-series
 Workspace/item identities remain portable template variables, not live deployment IDs.
 These files are **not a Fabric import format** and do not execute connectors, time-series processing or integrity constraints in OWL.
 See [mapping rules and regeneration](tools/ontology/README.md). The Word/HTML course and live Ontology/Agent configuration are unchanged.
+
+<sub>BUILD YOUR LAB / ONE COURSE, SIX ENTRY POINTS</sub>
 
 ### Deployment by client
 
@@ -1020,6 +1090,8 @@ require separate configuration and are not included as validated Fabric deployme
 
 </details>
 
+<sub>FROM PLAN TO PRACTICE / REVIEW BEFORE YOU RUN</sub>
+
 ### Copy-paste deployment prompt
 
 Fill every `<...>` placeholder and send this to an AI agent with GitHub and Fabric access.
@@ -1176,6 +1248,8 @@ Only the aggregate reference is published, not live environment IDs, answer logs
 
 </details>
 
+<sub>GUARDRAILS / SAFE, REPRODUCIBLE PRACTICE</sub>
+
 ### Requirements and boundaries
 
 Use an active Fabric capacity and a workspace with the required item creation,
@@ -1203,6 +1277,8 @@ inspect actual execution details as described in participant section 17.14.
 
 See [DATASET.md](workshop/v2.7.0/data/DATASET.md) and the
 [data checklist](docs/data-validation-checklist.md).
+
+<sub>INSIDE THE REPOSITORY / FIND YOUR NEXT STEP</sub>
 
 ### Source and maintenance
 

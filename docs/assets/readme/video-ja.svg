@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="360" viewBox="0 0 720 360" role="img" aria-labelledby="title description">
+  <title id="title">Watch the Japanese Furusato Workshop demonstration</title>
+  <desc id="description">Illustrated video cover, not a Fabric screenshot. Japanese narration. QHD. Approximately seven minutes and twelve seconds. Follow the link to watch the recorded demonstration.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#08242c"/>
+      <stop offset="1" stop-color="#143e3d"/>
+    </linearGradient>
+    <radialGradient id="light">
+      <stop stop-color="#84eed0" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#84eed0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="720" height="360" rx="20" fill="url(#bg)"/>
+  <ellipse cx="605" cy="153" rx="245" ry="218" fill="url(#light)"/>
+  <g fill="none" stroke="#89d6c5" stroke-opacity=".15">
+    <circle cx="581" cy="168" r="114"/>
+    <circle cx="581" cy="168" r="150" stroke-dasharray="3 9"/>
+    <path d="m457 91 124 77 89-60M485 251l96-83 90 92"/>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="40" y="53" fill="#b3d1ce" font-size="13" font-weight="650" letter-spacing="2.7">FURUSATO / IN ACTION</text>
+    <text x="37" y="126" fill="#f1fbf6" font-size="44" font-weight="700" letter-spacing="-1.2">SEE THE DATA.</text>
+    <text x="37" y="178" fill="#a9f5d6" font-size="44" font-weight="700" letter-spacing="-1.2">FOLLOW THE WHY.</text>
+    <text x="40" y="220" fill="#a6c5c7" font-size="16">Scenario / live queries / architecture</text>
+    <rect x="40" y="276" width="81" height="33" rx="16.5" fill="#c7f6df"/>
+    <text x="80.5" y="298" text-anchor="middle" fill="#0b342c" font-size="14" font-weight="700">JA</text>
+    <text x="140" y="298" fill="#d5eae5" font-size="15">07:12</text>
+    <text x="678" y="298" text-anchor="end" fill="#b0d4cd" font-size="13" letter-spacing="1.5">QHD / NARRATED DEMO</text>
+  </g>
+  <circle cx="591" cy="160" r="42" fill="#c6f8e3"/>
+  <path d="m581 141 29 19-29 19Z" fill="#0b3b33"/>
+</svg>

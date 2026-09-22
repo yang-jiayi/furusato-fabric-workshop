@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Microsoft Fabric product identification in independent workshop README documentation",
+  "sourceCollection": "https://github.com/yang-jiayi/AzureDiagarm/tree/main/Azure_Public_Service_Icons/Icons/fabric",
+  "verifiedSourceCommit": "55c907f08682e46549f588d17016a7a0244fe233",
+  "checkedAt": "2026-09-22",
+  "originalIconManifest": "../architecture/icon-manifest.json",
+  "iconOriginalsUnchanged": true,
+  "iconArtworkCopyright": "Microsoft Corporation. All rights reserved.",
+  "terms": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
+  "usage": "Documentation and training; product labels are adjacent. No cropping, rotation, recoloring, distortion or endorsement claims.",
+  "rendering": {
+    "renderer": "Microsoft Edge via Playwright, isolated headless browser",
+    "scale": 2,
+    "format": "PNG",
+    "compression": "Lossless; decoded pixels compared before and after PNG optimization."
+  },
+  "assets": [
+    {
+      "svg": "furusato-hero.svg",
+      "svgSha256": "c8e5b53d063bd4411dc3a94f6e465eef9487fb15a556e3d8451b134b3a059f95",
+      "png": "furusato-hero.png",
+      "pngSha256": "173988b5d103aa4176585bfb8b97903fcbc3bb189363fb861642b9ec38063d66",
+      "width": 2880,
+      "height": 1200,
+      "embeddedIcons": [
+        {
+          "original": "../architecture/icons/microsoft-fabric.svg",
+          "sha256": "b4ceb91647e4bc87b85940dcfe4764c9405d72f11047f6b191134f54ff3a6822",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        },
+        {
+          "original": "../architecture/icons/fabric-data-agent.svg",
+          "sha256": "f7c80158677ad158b26365668ffb87b1db6519644a9ed2553761ea0c51c885e6",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        },
+        {
+          "original": "../architecture/icons/fabric-lakehouse.svg",
+          "sha256": "1630fadbbf7df3f8846e0b7f0f3384b2c72465efa66e2cac22051ad0791c7114",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        },
+        {
+          "original": "../architecture/icons/fabric-eventhouse.svg",
+          "sha256": "7636610f022b3e0263b7ad04866063c7272a4af9edda6b9f7668fd27f6cdb5b4",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        },
+        {
+          "original": "../architecture/icons/fabric-item-ontology.svg",
+          "sha256": "a45bf0e16c07483e00876e80eba13c7f292f2f87724e39a297d196853de05cda",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        }
+      ]
+    },
+    {
+      "svg": "video-ja.svg",
+      "svgSha256": "dff060a851209cc6f6cc76634cdb662cb049c2ef1399d00a975a48235115120d",
+      "png": "video-ja.png",
+      "pngSha256": "7f4adfa6ade0a7c2dd4d940d7f7c6a3d31a4522d3b06b1fbbe3b648206dbf0e8",
+      "width": 1440,
+      "height": 720,
+      "embeddedIcons": [
+        {
+          "original": "../architecture/icons/microsoft-fabric.svg",
+          "sha256": "b4ceb91647e4bc87b85940dcfe4764c9405d72f11047f6b191134f54ff3a6822",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        }
+      ]
+    },
+    {
+      "svg": "video-en.svg",
+      "svgSha256": "02430691030930bb11a85581d18d62a66401ff1168b677ad1a275d54ea6cc713",
+      "png": "video-en.png",
+      "pngSha256": "cb770828cbeeefaf15cec782ee9c08a37ae8157eaa0c85261cacc3e27df872fb",
+      "width": 1440,
+      "height": 720,
+      "embeddedIcons": [
+        {
+          "original": "../architecture/icons/microsoft-fabric.svg",
+          "sha256": "b4ceb91647e4bc87b85940dcfe4764c9405d72f11047f6b191134f54ff3a6822",
+          "modification": "None; exact original SVG bytes, proportional scaling only."
+        }
+      ]
+    }
+  ],
+  "readmeDirectIcons": [
+    {
+      "file": "microsoft-fabric.svg",
+      "sha256": "b4ceb91647e4bc87b85940dcfe4764c9405d72f11047f6b191134f54ff3a6822",
+      "bytes": 4510,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "onelake.svg",
+      "sha256": "20f75443218411ccfeb647ac6822073b2b5e4fec04d81ed543ca491fa8091c93",
+      "bytes": 3374,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-lakehouse.svg",
+      "sha256": "1630fadbbf7df3f8846e0b7f0f3384b2c72465efa66e2cac22051ad0791c7114",
+      "bytes": 3398,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-eventhouse.svg",
+      "sha256": "7636610f022b3e0263b7ad04866063c7272a4af9edda6b9f7668fd27f6cdb5b4",
+      "bytes": 3275,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-item-ontology.svg",
+      "sha256": "a45bf0e16c07483e00876e80eba13c7f292f2f87724e39a297d196853de05cda",
+      "bytes": 2494,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-data-agent.svg",
+      "sha256": "f7c80158677ad158b26365668ffb87b1db6519644a9ed2553761ea0c51c885e6",
+      "bytes": 2641,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-notebook.svg",
+      "sha256": "a2e8443a91903c33ccae48fe12e1c94cb2dae8a3cd0c6e8b43a26ab958e45734",
+      "bytes": 2433,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-data-pipeline.svg",
+      "sha256": "9986f9ce8b9db9f107fd2c9efaf9330b3959686f2ba6095831899188525f5894",
+      "bytes": 1764,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-semantic-model.svg",
+      "sha256": "380816dc004f984ba6a2f9db984d91f9e3e8da2a841290bca3ceb4fc7753a083",
+      "bytes": 2658,
+      "unchangedAgainstProvidedCollection": true
+    },
+    {
+      "file": "fabric-power-bi-report.svg",
+      "sha256": "9ba6102dd7db9c9843e09ea2201848ff48b18f62b057aea91da3b2823cfd1637",
+      "bytes": 2295,
+      "unchangedAgainstProvidedCollection": true
+    }
+  ]
+}

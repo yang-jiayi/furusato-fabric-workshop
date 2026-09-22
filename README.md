@@ -2,6 +2,7 @@
 
 <div align="center">
 
+<p><img src="docs/assets/architecture/icons/microsoft-fabric.svg" width="64" height="64" alt="Microsoft Fabric"></p>
 <p><strong>MICROSOFT FABRIC · HANDS-ON WORKSHOP</strong></p>
 <h1>Furusato × Fabric IQ</h1>
 <p><strong>データに意味を。問いに、根拠を。</strong></p>
@@ -11,7 +12,7 @@
 
 </div>
 
-![Furusato — Make data mean more. Lakehouse SQL・Eventhouse KQL・Ontology GQL を1つのData Agentにつなぎ、根拠を確認しながら学ぶWorkshop。](docs/assets/readme/furusato-hero.svg)
+![Furusato — Make data mean more. Microsoft Fabricの製品アイコンで、Lakehouse SQL・Eventhouse KQL・Ontology GQLとData Agentを示すWorkshop紹介図。](docs/assets/readme/furusato-hero.png)
 
 <div align="center">
 
@@ -24,6 +25,25 @@
 **データを準備し、業務の関係をモデル化し、AIの回答を実行結果までたどる。**
 DBA・BIエンジニアを中心に、リレーショナルモデルから業務の意味・同一性・関係経路を設計する考え方を、
 Microsoft Fabricのハンズオンで学びます。
+
+<table align="center">
+<tr>
+<td align="center" width="33%"><img src="docs/assets/architecture/icons/onelake.svg" width="48" height="48" alt="OneLake"><br><strong>OneLake</strong><br><sub>Unified data foundation</sub></td>
+<td align="center" width="33%"><img src="docs/assets/architecture/icons/fabric-lakehouse.svg" width="48" height="48" alt="Lakehouse"><br><strong>Lakehouse</strong><br><sub>Static data · SQL</sub></td>
+<td align="center" width="33%"><img src="docs/assets/architecture/icons/fabric-eventhouse.svg" width="48" height="48" alt="Eventhouse"><br><strong>Eventhouse</strong><br><sub>Operational data · KQL</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="docs/assets/architecture/icons/fabric-item-ontology.svg" width="48" height="48" alt="Ontology"><br><strong>Ontology</strong><br><sub>Business meaning · GQL</sub></td>
+<td align="center"><img src="docs/assets/architecture/icons/fabric-data-agent.svg" width="48" height="48" alt="Data Agent"><br><strong>Data Agent</strong><br><sub>Questions · evidence</sub></td>
+<td align="center"><img src="docs/assets/architecture/icons/fabric-power-bi-report.svg" width="48" height="48" alt="Power BI report"><br><strong>Power BI</strong><br><sub>Optional analytics</sub></td>
+</tr>
+</table>
+
+<div align="center">
+
+<sub>Microsoft Fabric artwork from the supplied <a href="https://github.com/yang-jiayi/AzureDiagarm/tree/main/Azure_Public_Service_Icons/Icons/fabric">AzureDiagarm / fabric collection</a> · <a href="docs/architecture/icons.md#readme-icons">出典・利用条件 / Attribution</a> · <a href="docs/assets/readme/furusato-hero.svg">SVG source</a></sub>
+
+</div>
 
 ---
 
@@ -44,8 +64,8 @@ Microsoft Fabricのハンズオンで学びます。
 
 | **データをつくる** | **意味をつなぐ** |
 | :--- | :--- |
-| **OneLake · Lakehouse · Eventhouse**<br>静的スナップショットと運用観測を分け、CSVの準備からイベントを起点とする取り込みまでを学びます。 | **Ontology · SQL · KQL · GQL**<br>Entity・キー・プロパティ・関係を設計し、業務の言葉を実データの照会へつなぎます。 |
-| **根拠を確かめる**<br>**Data Agent · Code Interpreter**<br>自然な質問への回答を、使ったソース・実行したquery・返却値・実際の分析成果物まで確認します。 | **分析を届ける**<br>**Notebook 05 · Direct Lake · Power BI**<br>Optionalの分析枝では、品質処理と可視化を体験し、AI用の根拠とBI用の集計の役割を整理します。 |
+| <img src="docs/assets/architecture/icons/fabric-lakehouse.svg" width="32" height="32" alt="Lakehouse"> <img src="docs/assets/architecture/icons/fabric-data-pipeline.svg" width="32" height="32" alt="Data Pipeline"> <img src="docs/assets/architecture/icons/fabric-eventhouse.svg" width="32" height="32" alt="Eventhouse"><br>**OneLake · Lakehouse · Data Pipeline · Eventhouse**<br>静的スナップショットと運用観測を分け、CSVの準備からイベントを起点とする取り込みまでを学びます。 | <img src="docs/assets/architecture/icons/fabric-item-ontology.svg" width="40" height="40" alt="Ontology"><br>**Ontology · SQL · KQL · GQL**<br>Entity・キー・プロパティ・関係を設計し、業務の言葉を実データの照会へつなぎます。 |
+| <img src="docs/assets/architecture/icons/fabric-data-agent.svg" width="40" height="40" alt="Data Agent"><br>**根拠を確かめる**<br>**Data Agent · Code Interpreter**<br>自然な質問への回答を、使ったソース・実行したquery・返却値・実際の分析成果物まで確認します。 | <img src="docs/assets/architecture/icons/fabric-notebook.svg" width="32" height="32" alt="Notebook"> <img src="docs/assets/architecture/icons/fabric-semantic-model.svg" width="32" height="32" alt="Semantic model"> <img src="docs/assets/architecture/icons/fabric-power-bi-report.svg" width="32" height="32" alt="Power BI report"><br>**分析を届ける**<br>**Notebook 05 · Direct Lake semantic model · Power BI**<br>Optionalの分析枝では、品質処理と可視化を体験し、AI用の根拠とBI用の集計の役割を整理します。 |
 
 > **1つの主Agent、3つのソース。** Code Interpreterは同じAgentの追加ツールです。<br>
 > 読むだけでなく、構築・照会・検証までを一つの流れとして体験します。
@@ -84,7 +104,7 @@ Ontology のキー・型・説明・バインディング・関係の向きを�
 
 | 日本語 | English |
 | :--- | :--- |
-| [<img src="docs/assets/readme/video-ja.svg" width="400" alt="日本語デモのイラストカバー — クリックして実画面のMP4を見る">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)<br>**[日本語版を再生・ダウンロード ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · 日本語ナレーション | [<img src="docs/assets/readme/video-en.svg" width="400" alt="Illustrated English video cover — open the recorded Fabric demo">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)<br>**[Watch or download in English ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration |
+| [<img src="docs/assets/readme/video-ja.png" width="400" alt="Microsoft Fabricのロゴを使った日本語デモのイラストカバー">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)<br>**[日本語版を再生・ダウンロード ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · 日本語ナレーション | [<img src="docs/assets/readme/video-en.png" width="400" alt="Illustrated English demo cover with the Microsoft Fabric logo">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)<br>**[Watch or download in English ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration |
 
 `QHD 2560 × 1440` · `30 fps` · `字幕なし` · `男性AI音声 / 1.1倍速`
 
@@ -714,8 +734,8 @@ See [SECURITY.md](SECURITY.md) for distribution boundaries and [MIT License](LIC
 
 | **Build the data** | **Connect the meaning** |
 | :--- | :--- |
-| **OneLake · Lakehouse · Eventhouse**<br>Separate static snapshots from operational observations, from CSV preparation to event-driven ingestion. | **Ontology · SQL · KQL · GQL**<br>Model entities, keys, properties and relationships, then connect business language to real data queries. |
-| **Trace the evidence**<br>**Data Agent · Code Interpreter**<br>Inspect source selection, executed queries, returned values and actual analysis artifacts behind natural-language answers. | **Deliver the analysis**<br>**Notebook 05 · Direct Lake · Power BI**<br>Explore the optional quality-processing and BI branch while keeping source authority and analytics roles clear. |
+| <img src="docs/assets/architecture/icons/fabric-lakehouse.svg" width="32" height="32" alt="Lakehouse"> <img src="docs/assets/architecture/icons/fabric-data-pipeline.svg" width="32" height="32" alt="Data Pipeline"> <img src="docs/assets/architecture/icons/fabric-eventhouse.svg" width="32" height="32" alt="Eventhouse"><br>**OneLake · Lakehouse · Data Pipeline · Eventhouse**<br>Separate static snapshots from operational observations, from CSV preparation to event-driven ingestion. | <img src="docs/assets/architecture/icons/fabric-item-ontology.svg" width="40" height="40" alt="Ontology"><br>**Ontology · SQL · KQL · GQL**<br>Model entities, keys, properties and relationships, then connect business language to real data queries. |
+| <img src="docs/assets/architecture/icons/fabric-data-agent.svg" width="40" height="40" alt="Data Agent"><br>**Trace the evidence**<br>**Data Agent · Code Interpreter**<br>Inspect source selection, executed queries, returned values and actual analysis artifacts behind natural-language answers. | <img src="docs/assets/architecture/icons/fabric-notebook.svg" width="32" height="32" alt="Notebook"> <img src="docs/assets/architecture/icons/fabric-semantic-model.svg" width="32" height="32" alt="Semantic model"> <img src="docs/assets/architecture/icons/fabric-power-bi-report.svg" width="32" height="32" alt="Power BI report"><br>**Deliver the analysis**<br>**Notebook 05 · Direct Lake semantic model · Power BI**<br>Explore the optional quality-processing and BI branch while keeping source authority and analytics roles clear. |
 
 > **One primary Agent. Three sources.** Code Interpreter is an additional tool on that same Agent.<br>
 > A connected workflow to build, query and verify—not just read about.
@@ -754,7 +774,7 @@ through the icon-based architecture. Constant framing, focused highlights and fr
 
 | English | 日本語 |
 | :--- | :--- |
-| [<img src="docs/assets/readme/video-en.svg" width="400" alt="Illustrated English video cover — open the recorded Fabric demo">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)<br>**[Watch or download in English ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration | [<img src="docs/assets/readme/video-ja.svg" width="400" alt="日本語デモのイラストカバー — クリックして実画面のMP4を見る">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)<br>**[日本語版を再生・ダウンロード ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · Japanese narration |
+| [<img src="docs/assets/readme/video-en.png" width="400" alt="Illustrated English demo cover with the Microsoft Fabric logo">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)<br>**[Watch or download in English ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_EN_QHD.mp4)**<br>About 6:34 · English narration | [<img src="docs/assets/readme/video-ja.png" width="400" alt="Microsoft Fabricのロゴを使った日本語デモのイラストカバー">](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)<br>**[日本語版を再生・ダウンロード ↗](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v2.7.0-workshop-videos-v3-20260921/Furusato_Fabric_Workshop_JA_QHD.mp4)**<br>約7分12秒 · Japanese narration |
 
 `QHD 2560 × 1440` · `30 fps` · `No subtitles` · `AI male narration at 1.1× pace`
 

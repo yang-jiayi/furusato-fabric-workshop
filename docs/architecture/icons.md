@@ -104,3 +104,32 @@ so they do not depend on remote URLs or browser cross-file loading.
 The QHD PNGs are rasterized from those exported SVGs; Markdown uses PNG for reliable image display.
 The diagram layout, labels, connections and neutral shapes are workshop-authored content;
 the embedded Microsoft artwork retains the rights above.
+
+<a id="readme-icons"></a>
+
+## README product artwork / README の製品アイコン
+
+The README also uses these same original files for the Microsoft Fabric product
+identifier, the six-product overview, and the bilingual learning cards. Notebook,
+Data Pipeline and Semantic model icons appear next to their own product/item names.
+No new substitute artwork is used for Code Interpreter.
+
+The hero illustration and the two video covers embed the **unchanged original SVG
+bytes** as image resources. The README displays high-resolution PNG renders for
+reliable GitHub image loading; the editable SVG versions remain alongside them.
+The authored backgrounds, orbit lines and play buttons are decorative. They are
+not Fabric UI screenshots or evidence of query execution.
+
+On **2026-09-22**, the ten reused README icons were checked byte-for-byte against
+the same directory at source commit
+[`55c907f08682e46549f588d17016a7a0244fe233`](https://github.com/yang-jiayi/AzureDiagarm/tree/55c907f08682e46549f588d17016a7a0244fe233/Azure_Public_Service_Icons/Icons/fabric).
+They match the originals already recorded in the architecture icon manifest.
+The original icon files and existing architecture diagrams were not changed.
+
+README のヘッダー・製品一覧・日英の学習カードにも、指定された Fabric コレクションの
+原本を使用しています。各アイコンは Microsoft の製品・機能を識別するものであり、
+本 Workshop 独自のロゴや Microsoft の公認・協賛を示すものではありません。
+色・図形・グラデーションを変えず、縦横比を保った拡大縮小だけを行っています。
+
+See the [README artwork manifest](../assets/readme/branding-manifest.json)
+for the embedded originals and rendered image hashes.

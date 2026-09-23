@@ -4,8 +4,8 @@
 
 このコースでは、主 Agent **`DA_Furusato_<PID>` 1件**に3つのソースを接続し、
 同じ Agent の Code Interpreter を使います。手順の正本は
-[参加者 Word](Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)と
-[対応する日英 HTML](furusato-workshop-v2-7-0-complete_unified-20260914.html)です。
+[参加者 Word](Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)と
+[対応する日英 HTML](furusato-workshop-v2-7-0-complete_unified-20260923.html)です。
 
 ### ソースの役割
 
@@ -68,8 +68,8 @@ Office出力は明示的に必要な場合に限り、取得制限があれば�
 ## English
 
 Use **one primary `DA_Furusato_<PID>`**, three connected sources and Code Interpreter
-in that same Agent. Follow the [participant Word](Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)
-or its [matching bilingual HTML](furusato-workshop-v2-7-0-complete_unified-20260914.html).
+in that same Agent. Follow the [participant Word](Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
+or its [matching bilingual HTML](furusato-workshop-v2-7-0-complete_unified-20260923.html).
 
 | Source or tool | Purpose | Boundary |
 |---|---|---|

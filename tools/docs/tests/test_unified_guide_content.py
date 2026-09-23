@@ -556,7 +556,7 @@ class UnifiedGuideContentTests(unittest.TestCase):
         ui = mirrors.load_ui_strings(context=self.context, public_documents_only=True)
         self.assertIn("統合モードの Notebook 04", ui["howto.scope.core"]["ja"])
         self.assertIn("not use the legacy separate Agents", ui["howto.scope.optional"]["en"])
-        self.assertIn("unified-20260914", ui["meta.description"]["en"])
+        self.assertIn("unified-20260923", ui["meta.description"]["en"])
         self.assertNotIn("Code Interpreter are Optional", ui["howto.scope.optional"]["en"])
 
 

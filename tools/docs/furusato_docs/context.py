@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 
-UNIFIED_DOCUMENT_EDITION = "unified-20260914"
+UNIFIED_DOCUMENT_EDITION = "unified-20260923"
 
 
 def repo_root() -> Path:
@@ -800,7 +800,7 @@ def with_document_edition(
         return replace(context, document_edition=edition, unified_profile=None)
     if unified_assets is None:
         raise ValueError(
-            "unified-20260914 requires verified unified_assets from the sealed bundle; "
+            "unified-20260923 requires verified unified_assets from the sealed bundle; "
             "Core instructions are not a fallback."
         )
     _unified_builder(context.root).verify_unified_assets(unified_assets)

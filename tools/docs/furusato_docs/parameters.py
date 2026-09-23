@@ -77,7 +77,7 @@ UNIFIED_AGENT_DOC = ParameterDoc(
     "統合文書版では最終 preview 前に True",
     "主 Agent 1 件・教材用 full Ontology・共有 SQL/KQL・Code Interpreter の統合モード。"
     "ProvisioningConfig の enable_unified_data_agent に対応する。",
-    "False は旧呼び出し元との互換性を維持する。文書版 unified-20260914 は True を明示する。",
+    "False は旧呼び出し元との互換性を維持する。文書版 unified-20260923 は True を明示する。",
     "ENABLE_AI_REFERENCE_ARCHITECTURE と相互排他。固定済み profile・計画ハッシュ・排他作成を要求する。"
     "既存主 Agent は完全一致だけ再利用。不一致の旧 Core は別承認の段階的移行で扱い、自動上書き・自動 resume しない。",
 )

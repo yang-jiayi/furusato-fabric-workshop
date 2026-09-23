@@ -170,7 +170,7 @@ def chapter_06_lakehouse(builder: DocumentBuilder, context: RuntimeContext) -> N
         "`Files/increment` を先に作っておく理由は 2 つあります。"
         "第 12.2 節の OneLake FileCreated トリガーは、購読するフォルダーが既に存在していないと "
         "`/Files/increment` を選べません。"
-        "また、フォルダーを空のまま作っておくと、トリガーを Running にした直後に "
+        "また、フォルダーを空のまま作っておくと、正式な開始操作を終えた後に "
         "1 本目を置くだけで「アップロードしたファイルだけが取り込まれた」ことを確認できます。"
         "この時点で増分 CSV を置いてしまうと、トリガーがまだ無い状態でファイルだけが増え、"
         "第 12.4 節のゲートが成立しません。",
@@ -1100,21 +1100,59 @@ def chapter_12_pipeline(builder: DocumentBuilder, context: RuntimeContext) -> No
             f"OneLake catalog で {names['lakehouse']} を選択します。",
             "監視対象を `Files/increment` だけに絞ります。",
             "［Review + connect］で設定を確認し、作成します。",
-            "［View triggers］で rule を開いて変更を保存します。未起動なら［Start］を選び、"
-            "Running とアクションの実行状態を確認します。",
+            "［View triggers］で対象の既存 rule を開いて設定を保存し、［Start］で正式に開始します。"
+            "自動化では同じ rule ID に公式 MCP の `start_rule` を使います。Running 表示だけでは開始確認を省略しません。",
             f"自動作成された Activator を `{names['activator']}` にリネームします。",
         ),
         numbered=True,
     )
     builder.callout(
         "note",
-        "Notebook 04 などで定義から作成した Reflex は、UI で既存ルールを開いて保存し、［Start］で起動します。"
-        "定義の有効フラグだけで稼働したと判定しません。Run Pipeline のアクション引数に"
+        "Notebook 04 などで新規に作成した Reflex は、定義の `shouldRun=true` への変更だけを初回起動の代わりにしません。"
+        "公式 MCP の `start_rule`、またはポータルの正式な［Start］操作を使います。"
+        "MCP の `isRunning=true` と画面の Running も設定状態の確認であり、イベント配送の証明ではありません。"
+        "Run Pipeline のアクション引数に"
         f" `IncrementFileName` が必要な場合は、既定値 `{parameters['IncrementFileName']['defaultValue']}` を設定します。"
         "`Type`・`Subject`・`Source` は OneLake イベントからの動的な対応付けを保持します。"
         "ファイル選択は非空の Subject を使い、既定値だけの手動 run で代用しません。"
-        "保存・引数設定・Start をまとめて確認する手順であり、Start 単独の効果と断定しません。",
-        title="保存・Start とアクション引数を確認する",
+        "初回から正式な開始操作を使い、引数設定の確認と第 12.4 節の実行証拠の照合も行います。"
+        "設定フラグだけを変更済みで［Start］を選べない場合も、自動化では `start_rule` を省略しません。"
+        "UI だけを使う場合は実行中ジョブを確認し、対象ルールの［Stop］→［Start］で明示的に開始します。",
+        title="初回は正式な開始操作を行う",
+    )
+    builder.heading("12.2.1 自動化の開始・停止と稼働判定", 3)
+    builder.body(
+        "同梱の `tools/provisioning/manage_activation.py` は Workspace 名・Folder GUID・参加者 ID から"
+        "対象の Lakehouse、Pipeline、Activator と rule ID を発見し、イベント条件とアクションの参照を照合します。"
+        "作業記録はすべての Git checkout の外にある非公開ルートへ保存します。"
+        "start / stop は明示した `--apply` と一致する確認句がない限り読み取り専用の preview です。"
+    )
+    builder.code_block(
+        "python tools/provisioning/manage_activation.py doctor\n"
+        "python tools/provisioning/manage_activation.py start "
+        "--workspace-id <workspace-guid> --expected-workspace-name <workspace-name> "
+        "--folder-id <folder-guid> --participant-id <PID> "
+        "--private-root <absolute-private-root> --run start-001 "
+        '--apply --confirmation "START ACTIVATOR <PID>"',
+        language="CLI（値を実環境のものに置き換える。毎回新しい run 名を使う）",
+    )
+    builder.table(
+        ["状態", "確認できたこと", "次へ進む条件"],
+        [
+            ["構築済み", "Notebook 04 が停止状態の定義を作成した", "正式な start_rule / Start と対象照合を行う"],
+            ["armed_unverified", "正式な開始応答と Running を確認した", "まだ取り込み成功ではない。完成ファイルを 1 本だけ送る"],
+            ["automatic_delivery_verified", "実イベント・activation・新しい Completed Job が一致した", "Copy 出力と SourceFile 別 KQL 件数・金額まで照合する"],
+            ["stopped", "正式な stop_rule / Stop と停止状態を確認した", "既に作成された Job の終了と最終件数も確認する"],
+        ],
+        caption="設定状態・自動起動・データ取り込みを分ける",
+        widths=(1.6, 2.5, 2.5),
+    )
+    builder.callout(
+        "stop",
+        "開始・停止のタイムアウトや結果不明を、同じ要求の自動再送で解決しません。"
+        "実 ID・ルール状態・activation・Job・実データを調べてから、承認された復旧を行います。"
+        "`DataNotAvailable` や履歴の取得失敗は、activation 0 件という成功結果に置き換えません。"
+        "完成した診断用ファイルを使う試験でも、主データに書き込まない分離された対象を選びます。",
     )
     for tag, caption, alt in (
         ("11-16", "リボンの［Trigger］→［Add trigger］／［View triggers］。", "Data pipeline のリボンでトリガーの追加と表示のメニューを開いた画面。"),
@@ -1157,7 +1195,7 @@ def chapter_12_pipeline(builder: DocumentBuilder, context: RuntimeContext) -> No
 
     builder.heading("12.4 1 本目のアップロードで導出結果を確認する", 2)
     builder.body(
-        "トリガーが Running になったら、まず 1 本目だけをアップロードして、"
+        "正式な開始操作の後は、まだ `armed_unverified` の状態です。まず 1 本目だけをアップロードして、"
         "Pipeline が「アップロードしたファイル」を取り込んだことを確認します。"
         "ここを飛ばすと、誤ったファイルを 3 本ぶん取り込んでから気づくことになります。"
     )
@@ -1171,13 +1209,23 @@ def chapter_12_pipeline(builder: DocumentBuilder, context: RuntimeContext) -> No
         ),
         numbered=True,
     )
+    builder.callout(
+        "note",
+        "自動化のファイル送信は、完全な配布 CSV のバイト列を OneLake Blob API の `PutBlob` で 1 回だけ作成し、"
+        "`If-None-Match: *` で上書きを拒否します。同梱 `activation_runtime.put_complete_increment` を利用できます。"
+        "送信前の配布 SHA-256 と送信後の全バイト一致を確認しても、その時点では `uploaded_unverified` です。"
+        "監視先に空ファイルを CreateFile し、Append → FlushWithClose する方式では、"
+        "作成時と書き込み完了時に複数の FileCreated が生じることがあるため、この自動化経路では使いません。"
+        "UI でアップロードする場合も、完成した 1 ファイルと実イベントの対応を確認し、複数イベントなら停止します。",
+        title="完成ファイルを一度だけ作成する",
+    )
     builder.table(
         ["確認項目", "確認場所", "合格条件"],
         [
             [
                 "トリガーが発火した",
                 "Activator の受信イベント・アクション実行記録と Pipeline の［View run history］",
-                "対象ファイルの FileCreated とアクション実行が、正しい Subject を持つ 1 件の run に対応する",
+                "完全な対象ファイルの FileCreated 1 件・native activation 1 件・新しい Completed Job 1 件の ID と Type / Subject / Source が一致する",
             ],
             [
                 "`Subject` が空でない",
@@ -1251,7 +1299,7 @@ def chapter_13_increment(builder: DocumentBuilder, context: RuntimeContext, fact
         (
             f"{files[1]['file']} をアップロードし、Pipeline の実行が Succeeded になることを確認する。",
             f"{files[2]['file']} をアップロードし、同様に確認する。",
-            "［Stop］または Off 操作でルールを停止し、Stopped / Off を確認する。"
+            "公式 MCP の `stop_rule` またはポータルの［Stop］でルールを停止し、Stopped / Off を確認する。"
             "作成済みの run もすべて終了していることを確認し、実行記録を保持する。",
         ),
         numbered=True,
@@ -1281,6 +1329,12 @@ def chapter_13_increment(builder: DocumentBuilder, context: RuntimeContext, fact
         "stop",
         "同じファイルを再アップロードすると二重に取り込まれます。取り込み後は必ずトリガーを Off に戻し、"
         "`SourceFile` 単位で件数を確認してください。",
+    )
+    builder.body(
+        "自動化では `manage_activation.py stop` に同じ対象と新しい run 名を渡し、"
+        '`--apply --confirmation "STOP ACTIVATOR <PID>"` で正式に停止します。'
+        "定義の `shouldRun=false` への書換えだけで停止済みとは判断しません。"
+        "停止操作は既に走っている Pipeline を取り消す操作ではないため、Job と実件数の最終確認も残します。"
     )
 
     builder.heading("13.1 ファイル単位の期待値", 2)

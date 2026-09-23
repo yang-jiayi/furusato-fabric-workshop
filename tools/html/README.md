@@ -7,10 +7,14 @@
 ## 日本語
 
 最新版は
-[furusato-workshop-v2-7-0-complete_unified-20260914.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260914.html)
-です。[同じ版の参加者 Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)
+[furusato-workshop-v2-7-0-complete_unified-20260923.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html)
+です。[同じ版の参加者 Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
 を日英で完全にミラーした自己完結の 1 ファイルで、現行の文書配布対象はこの 2 点だけです。
 検証済みペアをこの名前で配置しています。
+
+`unified-20260923` はActivatorの正式な `start_rule`／`stop_rule`、完成ファイルの
+PutBlob、実イベント・activation・Completed JobとCopy／KQLを分ける確認を同期した修正版です。
+新しい成功率や診断環境の稼働状態を教材の事実として埋め込みません。
 
 統合プロファイルは revision 13 です。選択／受領と元の返却列・出典の保持、照会可能な質問への言い直し・同意待ち・再確認・取消と、
 出典・順位範囲・KQL / CI の確認手順を日英で同期します。古い設定画像は掲載せず、
@@ -30,7 +34,7 @@ HTML は同一のコンテンツモデル（すべての見出し、段落、リ
 以下の指定で HTML を同じ場所へ生成します。非ゼロ終了なら次へ進みません。
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 python .\tools\html\sync_i18n.py --public-documents-only --edition $Edition
 python .\tools\html\build_html.py --public-documents-only --edition $Edition --out $Stage
 python .\tools\html\validate_html.py --public-documents-only --edition $Edition --out $Stage
@@ -60,7 +64,7 @@ HTML が既にあるペアや配置済みペアの読み取り専用再検証に
 キャプチャの承認・伏せ字・原本保存の手順は [tools/docs](../docs/README.md) を参照してください。
 旧画面を新構成の証明に流用せず、既存の carrier / assets は承認前に変更しません。
 配布 Word／HTML は主 Agent 1 件、完全な教材用 Ontology、共有 SQL/KQL ヘルパー、
-同じ Agent の Code Interpreter 演習を同期した `unified-20260914` です。
+同じ Agent の Code Interpreter 演習を同期した `unified-20260923` です。
 古い指示が写る `13-12`・`13-33`・`16-30`・`18-30` は現行版から除外し、原本を保持します。
 `17-40` は互換性を検査したCI操作例で、新しい設定や評価の証拠ではありません。
 正常な本人認証による新規撮影なしに、旧画像の設定版やハッシュを現行版へ付け替えません。
@@ -127,7 +131,7 @@ runtime・図版・style carrier は保持します。旧 Office/HTML は非公�
 
 ### 最新版と内部編集用モードを分ける
 
-最新版は Word / HTML とも `--public-documents-only --edition unified-20260914` を使います。
+最新版は Word / HTML とも `--public-documents-only --edition unified-20260923` を使います。
 `source.downloadEdition` は版の混在を検出します。版名は識別子であり、Fabric の品質合格ではありません。
 版名なし・出力先なしの互換用既定コマンドは使わず、再 build は fresh stage から行います。
 
@@ -142,7 +146,7 @@ release HEAD へ戻して成立させません。新しい private HTML 出力�
 ### Build
 
 ```powershell
-python .\tools\html\build_html.py --public-documents-only --edition unified-20260914 --out $Stage --json
+python .\tools\html\build_html.py --public-documents-only --edition unified-20260923 --out $Stage --json
 ```
 
 `$Stage` には同じ版のレビュー済み参加者 Word だけを置き、既存 HTML がある場所へ再生成しません。
@@ -176,7 +180,7 @@ python .\tools\html\sync_i18n.py --public-documents-only
 ディレクトリです。`$WordSha` と `$Shape` は実 Word のレビューで確定した値です。
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 python .\tools\html\validate_html.py --public-documents-only --edition $Edition --out $PairCheck `
   --expect-source "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_${Edition}.docx=$WordSha" `
   --expect-shape "chapters=$($Shape.chapters)" --expect-shape "headings=$($Shape.headings)" `
@@ -196,7 +200,7 @@ HTML が古くないことを証明します。
 
 受入条件は `0 failed` です。検査数・実測値は今回の版から記録し、旧版の結果を転用しません。
 `--json` も指定できますが保存先はペア外です。`Finalize-Html.ps1` を新規生成の代わりに使うときは
-`-PublicDocumentsOnly -Edition unified-20260914 -Out $Stage -ParticipantSha $WordSha` と
+`-PublicDocumentsOnly -Edition unified-20260923 -Out $Stage -ParticipantSha $WordSha` と
 当該 Word の `-Chapters`・`-Headings`・`-Tables`・`-Figures`・`-Tests`、ペア外の `-Artifacts` を
 すべて明示します。既存ペアの再検証は上の validator を使います。
 
@@ -355,7 +359,7 @@ build レポートの `--json` は `contentFingerprint` を出力します。
 
 ```powershell
 python .\tools\html\tests\test_interaction.py `
-  --target (Join-Path $PairCheck 'furusato-workshop-v2-7-0-complete_unified-20260914.html') `
+  --target (Join-Path $PairCheck 'furusato-workshop-v2-7-0-complete_unified-20260923.html') `
   --artifacts $Review
 ```
 
@@ -443,9 +447,9 @@ WebP エンコードと英語図版のフォント計測のための `Pillow` �
 ## English
 
 The latest HTML is
-[furusato-workshop-v2-7-0-complete_unified-20260914.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260914.html),
+[furusato-workshop-v2-7-0-complete_unified-20260923.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html),
 a complete Japanese/English mirror of the
-[same-edition participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)
+[same-edition participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
 in one self-contained file. Only this pair is the current document download set.
 The validated pair is installed under these names.
 
@@ -470,7 +474,7 @@ First build the same-edition participant Word in fresh external PRIVATE `$Stage`
 generate HTML there. Stop on each nonzero exit:
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 python .\tools\html\sync_i18n.py --public-documents-only --edition $Edition
 python .\tools\html\build_html.py --public-documents-only --edition $Edition --out $Stage
 python .\tools\html\validate_html.py --public-documents-only --edition $Edition --out $Stage
@@ -501,7 +505,7 @@ sequence. Wait for configuration, results and
 captures to freeze before complete builds. Follow the [capture handoff](../docs/README.md)
 for private originals, disclosed crop/redaction and approval; do not reuse old screens
 as proof of a changed configuration or replace current assets before approval.
-The released `unified-20260914` pair synchronizes one primary Agent, the complete
+The released `unified-20260923` pair synchronizes one primary Agent, the complete
 teaching Ontology, shared SQL/KQL helpers and same-Agent Code Interpreter exercises.
 Two obsolete instruction screenshots are omitted; accurate existing captures are reused.
 Three required new views were captured through the authenticated Fabric Web UI
@@ -571,7 +575,7 @@ private archive/history, not back in release HEAD as a rebuild dependency.
 
 ### Separate latest-only and internal authoring modes
 
-Use `--public-documents-only --edition unified-20260914` for both latest Word and
+Use `--public-documents-only --edition unified-20260923` for both latest Word and
 HTML. `source.downloadEdition` rejects mixed editions. An edition identifies an artifact,
 not Fabric quality acceptance. Do not use edition-free/output-free compatibility
 defaults; rebuild in fresh staging.
@@ -589,7 +593,7 @@ Never pass `-TestRecordSha` / `-WorkbookSha` to the public path.
 ### Build
 
 ```powershell
-python .\tools\html\build_html.py --public-documents-only --edition unified-20260914 --out $Stage --json
+python .\tools\html\build_html.py --public-documents-only --edition unified-20260923 --out $Stage --json
 ```
 
 `$Stage` must hold only the reviewed same-edition participant Word; do not rebuild where
@@ -624,7 +628,7 @@ python .\tools\html\sync_i18n.py --public-documents-only
 established by reviewing the actual Word.
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 python .\tools\html\validate_html.py --public-documents-only --edition $Edition --out $PairCheck `
   --expect-source "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_${Edition}.docx=$WordSha" `
   --expect-shape "chapters=$($Shape.chapters)" --expect-shape "headings=$($Shape.headings)" `
@@ -645,7 +649,7 @@ the files to prove the HTML is not stale.
 Acceptance requires `0 failed`. Record counts and measurements for this edition;
 do not reuse historical results. Add `--json` if needed, keeping output outside the pair.
 As an alternative fresh build, `Finalize-Html.ps1` requires
-`-PublicDocumentsOnly -Edition unified-20260914 -Out $Stage -ParticipantSha $WordSha`,
+`-PublicDocumentsOnly -Edition unified-20260923 -Out $Stage -ParticipantSha $WordSha`,
 that Word's `-Chapters`, `-Headings`, `-Tables`, `-Figures`, `-Tests`, and external
 `-Artifacts`. Use the validator above for an existing pair's read-only revalidation.
 
@@ -815,7 +819,7 @@ stale mirror still fails. The build's `--json` report prints `contentFingerprint
 
 ```powershell
 python .\tools\html\tests\test_interaction.py `
-  --target (Join-Path $PairCheck 'furusato-workshop-v2-7-0-complete_unified-20260914.html') `
+  --target (Join-Path $PairCheck 'furusato-workshop-v2-7-0-complete_unified-20260923.html') `
   --artifacts $Review
 ```
 

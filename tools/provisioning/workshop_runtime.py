@@ -2420,6 +2420,32 @@ def wait_for_complete_ontology_definition(
     )
 
 
+def activation_handoff() -> dict[str, Any]:
+    """Provisioning ends before explicit lifecycle start and event verification."""
+    return {
+        "contract": "furusato-activation/v1",
+        "state": "requires_formal_start",
+        "definitionShouldRun": False,
+        "startOperation": "start_rule",
+        "stopOperation": "stop_rule",
+        "portalAlternative": "Save the scoped rule, then explicitly use Start / Stop.",
+        "definitionFlagIsExecutionProof": False,
+        "runningMetadataIsDeliveryProof": False,
+        "armedState": "armed_unverified",
+        "verifiedState": "automatic_delivery_verified",
+        "uploadApi": "PutBlob",
+        "uploadIfNoneMatch": "*",
+        "requiredEvidence": [
+            "exact complete-file FileCreated event",
+            "native activation with matching Type, Subject, Source and Pipeline",
+            "exactly one new Completed Pipeline job",
+            "native Copy output and per-file KQL count/amount",
+        ],
+        "manualFallbackRequiresSeparateApproval": True,
+        "operatorEntryPoint": "tools/provisioning/manage_activation.py",
+    }
+
+
 def execute_provisioning(
     config: ProvisioningConfig,
     payload: Mapping[str, Any],
@@ -2946,5 +2972,12 @@ def execute_provisioning(
             definition=reflex_definition,
         )
         result["items"]["reflex"] = {"id": reflex["id"], "state": state}
+        result["activationHandoff"] = activation_handoff()
+        print(
+            "ACTIVATOR_REQUIRES_FORMAL_START: use the official start_rule operation "
+            "or the portal Start control; definition shouldRun and Running metadata "
+            "are not delivery proof. Upload each complete file once with PutBlob / "
+            "If-None-Match: *, then correlate event, activation, Pipeline and Copy/data."
+        )
     save_phase("complete")
     return result

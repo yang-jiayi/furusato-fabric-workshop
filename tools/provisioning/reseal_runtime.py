@@ -897,6 +897,23 @@ def _reseal_in_place(root: Path, check: bool, reference_global: tuple[Path, str,
     if template["definitionTemplateSha256"] != sha_text(canonical(template["parts"])):
         raise SystemExit("ontology-full-definition-template.json definitionTemplateSha256 is stale")
     automation = contract["workshopProvisioningAutomation"]
+    import workshop_runtime
+    automation["activationLifecycle"] = workshop_runtime.activation_handoff()
+    automation["activationLifecycle"]["sourceSha256"] = {
+        relative: sha_bytes((root / relative).read_bytes())
+        for relative in (
+            "tools/provisioning/activation_runtime.py",
+            "tools/provisioning/manage_activation.py",
+        )
+    }
+    automation["participantIncrementFlow"] = (
+        "Explicitly start the scoped rule using official start_rule or the portal Start control; "
+        "setting shouldRun=true or reading Running is not execution proof. Upload each complete "
+        "released CSV once with OneLake Blob PutBlob and If-None-Match: *. Match the native "
+        "FileCreated event, activation Type/Subject/Source, exactly one Completed Pipeline job, "
+        "Copy output and per-file KQL totals before proceeding. Stop with stop_rule or portal Stop; "
+        "never silently substitute manual ingestion or re-upload an attempted file."
+    )
     automation["payloadSha256"] = digest
     automation["bundleManifestSha256"] = payload["assetHashes"]["bundleManifest"]
     automation["payloadManifestSha256"] = sha_bytes(manifest_path.read_bytes())

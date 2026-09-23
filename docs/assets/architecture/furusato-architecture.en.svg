@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 2560 1440" width="2560" height="1440" role="img" aria-labelledby="architecture-title architecture-desc" xml:lang="en">
 <title id="architecture-title">Furusato Fabric Workshop overall architecture</title><desc id="architecture-desc">One Lakehouse contains the static teaching data and optional analytics schemas. FileCreated, Activator and Pipeline ingest incremental CSVs into Eventhouse. One primary Data Agent queries SQL, KQL and the full teaching Ontology with GQL. Notebook 05 reads Lakehouse tables and CSV files directly and feeds Gold, Direct Lake and Power BI. Provisioning controls and optional Code Interpreter are shown separately.</desc>
-<metadata>{&quot;workshopBaseline&quot;: &quot;32d296ebd673df4f180ac56670542cc0eaf350db&quot;, &quot;iconSource&quot;: &quot;https://github.com/yang-jiayi/AzureDiagarm&quot;, &quot;iconCommit&quot;: &quot;c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37&quot;, &quot;iconManifest&quot;: &quot;icon-manifest.json&quot;, &quot;iconRights&quot;: &quot;Copyright Microsoft Corporation. Microsoft Fabric icon terms apply.&quot;, &quot;render&quot;: &quot;Exact original SVG bytes embedded without artwork modification.&quot;}</metadata>
 <defs><style>
     text{font-family:"Segoe UI","Yu Gothic UI",Meiryo,sans-serif;fill:#203348}
     .muted{fill:#506275}.teal{fill:#086f68}.purple{fill:#634892}.amber{fill:#8d5716}
@@ -34,8 +33,8 @@
 <text x="66" y="192" font-size="28" class="muted" >Static facts, business relationships and operational observations—each with the right engine.</text>
 <rect x="1982" y="42" width="504" height="46" rx="23" fill="#e8f3eb" stroke="none" class=""/>
 <text x="2006" y="74" font-size="26" class="bold" style="fill:#366342">Synthetic data · 1 Agent / 3 sources</text>
-<text x="2484" y="130" font-size="24" class="muted" text-anchor="end">v2.7.0 / unified-20260914</text>
-<text x="2484" y="169" font-size="24" class="muted" text-anchor="end">Implementation map · 2026-09-21</text>
+<text x="2484" y="130" font-size="24" class="muted" text-anchor="end">v2.7.0 / unified-20260923</text>
+<text x="2484" y="169" font-size="24" class="muted" text-anchor="end">Lifecycle updated · 2026-09-23</text>
 <g data-focus="control" data-flows="control">
 <title>Approved setup</title>
 <rect x="48" y="222" width="2464" height="106" rx="18" fill="#fff7eb" stroke="#e8d5b6" class="node-bg"/>
@@ -138,7 +137,7 @@
 <title>Activator / Reflex</title>
 <rect x="1326" y="714" width="236" height="116" rx="16" fill="#ffffff" stroke="#d8e2e8" class="node-bg"/>
 <text x="1348" y="757" font-size="34" class="bold" >Activator</text>
-<text x="1348" y="804" font-size="26" class="muted" >FileCreated rule</text>
+<text x="1348" y="804" font-size="26" class="muted" >Start → file signal</text>
 </g>
 <g data-focus="events" data-flows="events">
 <title>Data Pipeline / Copy</title>
@@ -259,7 +258,7 @@
 <title>Learning outcomes</title>
 <rect x="58" y="1282" width="2444" height="142" rx="16" fill="none" stroke="none" class="selection-band"/>
 <text x="80" y="1323" font-size="35" class="teal bold" >Connect data, meaning and analysis. Communicate with evidence.</text>
-<text x="80" y="1370" font-size="25" class="muted" >Design route shown · demo Activator stopped after ingestion verification · Gold / BI is a separate optional branch</text>
+<text x="80" y="1370" font-size="25" class="muted" >Design route · formal start → verify actual delivery → formal stop · Gold / BI is a separate optional branch</text>
 <text x="80" y="1410" font-size="21" class="muted" >Original Microsoft icons · source: AzureDiagarm · artwork, colors and proportions preserved</text>
 </g>
 </svg>

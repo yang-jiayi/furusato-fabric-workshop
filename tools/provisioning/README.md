@@ -79,9 +79,13 @@ runtime を意図的に変更したリリースでは、生成した payload と
 
 ### 実機回帰で守ること
 
+- 新規Activatorは `shouldRun` の定義更新で開始したことにせず、公式 `start_rule` / `stop_rule` を使う。
+  [ライフサイクルと配送検証](activation.md)の `manage_activation.py` は対象発見・preview・明示承認を行う。
+  Runningは `armed_unverified`、実イベント・activation・Completed Job照合後だけ
+  `automatic_delivery_verified`。Copy/KQLの合格はさらに別の確認である。
 - 生成した Notebook 01 の parameter cell に、選択した Participant ID を反映する。
 - 増分 CSV は `Files/_provisioning/furusato/<PID>/increment` に保管し、
-  `Files/increment` は空で用意する。FileCreated トリガーを Running にした後、
+  `Files/increment` は空で用意する。FileCreated トリガーを正式な開始操作で起動した後、
   参加者が監視フォルダーへ 1 本ずつアップロードする。
 - CSV の完全一致は一時 driver file への `fs.cp` と byte 比較で確認する。
   部分表示用 `fs.head` を全文検証として使わない。
@@ -176,6 +180,11 @@ Agent は materialized-view / table-valued-function の実際の型と階層を�
 FileCreated の検証では、原子的な OneLake Blob `PutBlob` 後の自動ジョブと
 実件数を確認します。DFS 書き込み成功だけをイベント配送の証拠にせず、
 手動 Pipeline 起動への無言の置換や重複アップロードはしません。
+`activation_runtime.py` は完成CSVのPutBlob1回・上書き拒否・全バイトreadbackと、
+nativeイベント／activation／Job照合の共通処理です。配布CSV、元10問／84条件、
+Ontology、Agent指示を変更しません。生応答と操作receiptはGit外に保存します。
+`test_activation_runtime.py` で初回正式開始、通知だけのMCP応答、認証前の拒否、
+対象違い、イベント／Job重複、履歴不明、手動制御の誤採点を検査します。
 
 ### AI 参照構成のソースと明示的な封印
 
@@ -230,6 +239,17 @@ notebook から呼びません。必要な SQL driver、token audience、接続�
 ---
 
 ## English
+
+### Explicit lifecycle and automatic-delivery evidence
+
+Use [the lifecycle procedure](activation.md) after Notebook 04, which intentionally
+ships the FileCreated rule stopped. `manage_activation.py` previews the exact scoped
+rule and uses official `start_rule` / `stop_rule` only after explicit approval.
+It does not equate a definition's `shouldRun` or Running metadata with execution.
+`activation_runtime.py` supplies single complete-file PutBlob with no-overwrite
+guards and a native event/activation/new Completed Job gate. Copy/KQL verification
+remains separate. `test_activation_runtime.py` covers these boundaries.
+No dataset, Ontology or Agent instruction changes are required by this correction.
 
 Recomputes the whole provisioning chain deterministically from the files on disk
 after any edit to the `workshop/v2.7.0` runtime.

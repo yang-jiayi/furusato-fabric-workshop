@@ -14,10 +14,16 @@ HEAD の旧ファイルを除くだけでは過去の情報は秘匿化されま
 
 ## Latest-only inventory / 最新版だけの文書一覧
 
-For version `2.7.0` and edition `unified-20260914`, the release document pair is:
+For version `2.7.0` and edition `unified-20260923`, the release document pair is:
 
-1. [Participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)
-2. [Matching bilingual HTML](../../docs/furusato-workshop-v2-7-0-complete_unified-20260914.html)
+1. [Participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
+2. [Matching bilingual HTML](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html)
+
+This correction synchronizes formal Activator first-start/stop, single complete-file
+PutBlob uploads and separate native event/activation/job/Copy/KQL checks across all
+public entry points. The dataset, full Ontology, Agent profile revision13 and original
+ten questions/84 conditions are unchanged. Historical private diagnostic evidence is
+not part of the release.
 
 The validated pair is installed under `docs`. The eight former HEAD Office/HTML artifacts
 and the immediately preceding Word/HTML pair were archived privately byte-for-byte;
@@ -86,7 +92,7 @@ checklist make it invalid. Do not relax the directory checks.
 `docs` を直接渡してはいけません。assets と checklist を含むため、ペアの検査に適合しません。
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 $Run = [guid]::NewGuid().ToString('N')
 $Stage = Join-Path $PrivateDocuments "stage-$Edition-$Run"
 $PublicPair = Join-Path $ExportRoot "$Edition-$Run"
@@ -251,7 +257,7 @@ the crop/redaction, and preserve relevant UI content. Never alter evaluated answ
 to produce PASS, fabricate captures or treat a previous screen as new evidence.
 Do not replace the current style carrier/assets until explicitly assigned.
 
-For `unified-20260914`, accurate captures are reused without pixel changes.
+For `unified-20260923`, accurate captures are reused without pixel changes.
 The obsolete visible instruction captures `13-12`, `13-33`, `16-30` and `18-30` are excluded from
 this edition, not relabelled as unified configuration evidence. Their originals
 remain in the carrier. `17-40` is an interaction illustration, not evidence of

@@ -2,7 +2,7 @@
 
 [日本語](overview.ja.md) · [English](overview.en.md) · [Interactive explorer](index.html)
 
-**The architecture of the existing `v2.7.0 / unified-20260914` workshop.**
+**The architecture of the existing `v2.7.0 / unified-20260923` workshop.**
 The diagrams describe the released implementation and its optional analytics extension.
 All donation, donor and supplier records are synthetic teaching data.
 
@@ -46,8 +46,8 @@ They are intended for the **ending** of each revised promo video.
 Recording, video assembly and publication remain separate steps.
 
 The language toggle updates diagram text, controls, details, accessible names and download links.
-The explorer makes no service calls and displays no live status. The diagram records the
-supplied demonstration state: **Activator stopped after ingestion verification**.
+The explorer makes no service calls and displays no live status. The diagram describes
+the intended lifecycle: **formal start → verify actual delivery → formal stop**.
 
 ## Evidence and icon rights / 根拠とアイコン利用条件
 
@@ -62,4 +62,6 @@ Microsoft icons retain their original artwork and applicable Microsoft terms.
 The workshop's MIT license does not relicense Microsoft marks.
 
 Documentation baseline: `32d296ebd673df4f180ac56670542cc0eaf350db` · reviewed 2026-09-21.
+Lifecycle update: 2026-09-23 · official `start_rule` / `stop_rule`, complete-file PutBlob
+and separate native event/activation/job/Copy/KQL gates. The data architecture is unchanged.
 The documentation uses logical names and `{PID}` placeholders; environment identifiers stay external.

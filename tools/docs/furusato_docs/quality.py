@@ -1412,7 +1412,7 @@ def check_unified_guide(context, text: str, report: Report) -> None:
     _require(
         text, report, "content.unifiedProfile",
         [
-            ("edition", "unified-20260914"),
+            ("edition", "unified-20260923"),
             ("primary agent", context.names["dataAgent"]),
             ("full ontology", context.names["ontology"]),
             ("full structure", "10 Entity / 72 static Property / 1 time-series Property / 15 Relationship"),

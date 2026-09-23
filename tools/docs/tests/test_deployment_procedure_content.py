@@ -152,7 +152,7 @@ class DeploymentProcedureContentTests(unittest.TestCase):
             "INCREMENTS_STAGED",
             "対象 Reflex が Off",
             "DonationEvents にまだ行がない",
-            "［Start］で起動して Running を確認",
+            "公式 MCP の `start_rule` またはポータルの［Start］で既存ルールを正式に開始",
             "対象 Pipeline の最新の実行履歴で run が 0 件",
             "配布原本と SHA-256 が一致する未取り込みファイル",
             "ファイルや履歴の削除・上書きはしません",
@@ -172,15 +172,32 @@ class DeploymentProcedureContentTests(unittest.TestCase):
     def test_trigger_proof_uses_activation_not_invocation_label(self) -> None:
         for marker in (
             "新規ルールを追加せず",
-            "UI で既存ルールを開いて保存し、［Start］で起動",
+            "公式 MCP の `start_rule`、またはポータルの正式な［Start］操作",
             "`Type`・`Subject`・`Source` は OneLake イベントからの動的な対応付けを保持",
             "`invokeType` が `Manual` と表示されても",
             "Activator の activation / アクション実行記録",
             "イベントの受信だけ、定義の有効フラグだけ",
             "実行履歴の集計グラフ",
-            "Start 単独の効果と断定しません",
-            "［Stop］または Off 操作",
+            "第 12.4 節の実行証拠の照合",
+            "公式 MCP の `stop_rule` またはポータルの［Stop］",
             "作成済みの run もすべて終了",
+        ):
+            with self.subTest(marker=marker):
+                self.assertIn(marker, self.guide)
+
+    def test_formal_first_start_and_complete_upload_are_distinct_gates(self) -> None:
+        for marker in (
+            "`shouldRun=true` への変更だけを初回起動の代わりにしません",
+            "`isRunning=true` と画面の Running も設定状態の確認",
+            "armed_unverified",
+            "automatic_delivery_verified",
+            "uploaded_unverified",
+            "`If-None-Match: *`",
+            "CreateFile し、Append → FlushWithClose",
+            "native activation 1 件・新しい Completed Job 1 件",
+            "`DataNotAvailable`",
+            "activation 0 件という成功結果に置き換えません",
+            "ACTIVATOR_REQUIRES_FORMAL_START",
         ):
             with self.subTest(marker=marker):
                 self.assertIn(marker, self.guide)

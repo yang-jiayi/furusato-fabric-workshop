@@ -82,6 +82,17 @@ class LiveProvisioningSafetyTests(unittest.TestCase):
             )
             self.assertFalse(path.startswith("increment/"))
 
+    def test_provisioning_hands_off_without_claiming_activation(self):
+        handoff = self.runtime.activation_handoff()
+        self.assertEqual(handoff["state"], "requires_formal_start")
+        self.assertEqual(handoff["startOperation"], "start_rule")
+        self.assertEqual(handoff["stopOperation"], "stop_rule")
+        self.assertFalse(handoff["definitionShouldRun"])
+        self.assertFalse(handoff["runningMetadataIsDeliveryProof"])
+        self.assertEqual(handoff["uploadApi"], "PutBlob")
+        self.assertEqual(handoff["uploadIfNoneMatch"], "*")
+        self.assertTrue(handoff["manualFallbackRequiresSeparateApproval"])
+
     def test_unexpected_dataset_path_fails_closed(self):
         with self.assertRaises(self.runtime.ProvisioningError):
             self.runtime.dataset_target_relative_path("other/donors.csv", "906")

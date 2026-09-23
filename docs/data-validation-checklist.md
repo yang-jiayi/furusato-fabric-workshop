@@ -7,7 +7,7 @@
 ## 日本語
 
 Core ハンズオンの各ゲートで、この表と実測値を照合します。
-**1 つでも一致しない場合は先へ進まず、その章の手順をやり直してください。**
+**1 つでも一致しない場合は先へ進まず、実行状態と証拠を確認してください。成功済み処理や結果不明の送信は再実行しません。**
 
 対象バージョン: **2.7.0** / データセット契約: **2.7.0-realistic.1**
 静的スナップショットは 2025 年、運用観測は 2026 年 8 月（UTC）です。
@@ -141,12 +141,19 @@ Node には数えません。`SupplierProvidesGift` の Edge 数にだけ使用�
 | Event type | `FileCreated` のみ |
 | 監視対象 | `Files/increment` のみ |
 | 自動生成された Activator の名前 | `My activator_<PID>` にリネーム済み |
+| 初回開始 | 公式 MCP `start_rule` またはポータル Start。定義フラグの変更だけで代用しない |
+| Running 表示の扱い | `armed_unverified`。MCP/UIの表示だけでは配送成功にしない |
+| 自動化のアップロード | 完成CSVをPutBlob1回、配布SHA-256一致、`If-None-Match: *`、全バイトreadback |
+| 自動配送の証跡 | 実イベント1件・native activation1件・新規Completed Job1件のIDとType/Subject/Source/対象Pipelineを照合 |
+| 終了時 | `stop_rule` / Stop、停止状態と既存Jobの終了・実件数を確認 |
 | 1 本目の実行の `Subject` | 空でないこと（`Files/increment/donation_events_001.csv` を含む） |
 | 導出されたファイル名 | アップロードしたファイルと一致すること |
 
 > `IncrementFileName`（既定値 `donation_events_001.csv`）はファシリテーター向けの
 > 診断・フォールバック専用です。`Subject` が空のまま実行されるとこの既定値が使われ、
 > 1 本目のファイルが繰り返し取り込まれます。
+> `DataNotAvailable` は0件成功ではありません。余分なイベント／Jobは停止条件です。
+> [配布ライフサイクルCLIと照合規則](../tools/provisioning/activation.md)を参照してください。
 
 #### 5.1 ファイル単位
 
@@ -357,8 +364,8 @@ Relationship のカーディナリティ 15 件もこの適用で登録されま
 ## English
 
 Reconcile the measured values against these tables at every gate of the Core
-hands-on. **If even one value does not match, do not continue: redo the steps in
-that chapter.**
+hands-on. **If even one value does not match, stop and inspect state/evidence.
+Never replay successful work or a submission with an uncertain outcome.**
 
 Target version: **2.7.0** / dataset contract: **2.7.0-realistic.1**
 The static snapshot is from 2025; the operational observations are from August
@@ -500,12 +507,19 @@ There is no projection table, function or update policy in v2.7.0.
 | Event type | `FileCreated` only |
 | Watched path | `Files/increment` only |
 | Name of the auto-created Activator | Renamed to `My activator_<PID>` |
+| First start | Official MCP `start_rule` or portal Start, not a definition-flag substitution |
+| Running metadata | `armed_unverified`; UI/MCP state alone does not establish delivery |
+| Automated upload | One complete-file PutBlob, released SHA-256, `If-None-Match: *`, full-byte readback |
+| Automatic-delivery proof | One native event, one activation and one new Completed job, matching IDs and Type/Subject/Source/target Pipeline |
+| Final state | `stop_rule` / Stop, stopped state, existing jobs finished and final totals checked |
 | `Subject` of the first run | Must not be empty (it contains `Files/increment/donation_events_001.csv`) |
 | Derived file name | Must match the uploaded file |
 
 > `IncrementFileName` (default `donation_events_001.csv`) is for facilitator
 > diagnostics and fallback only. If a run starts with an empty `Subject`, this
 > default is used and the first file is ingested repeatedly.
+> `DataNotAvailable` is not a successful zero count; duplicate events/jobs fail the gate.
+> See the [released lifecycle CLI and evidence rules](../tools/provisioning/activation.md).
 
 #### 5.1 Per file
 

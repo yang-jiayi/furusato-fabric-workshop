@@ -23,8 +23,8 @@ Furusato Fabric Workshop は、**主 Data Agent 1 件・選択ソース 3 件**�
 [原寸 PNG](../assets/architecture/furusato-architecture.ja.png) ·
 [拡大できる SVG](../assets/architecture/furusato-architecture.ja.svg)
 
-**対象:** 現行の `v2.7.0 / unified-20260914`。
-コミット `32d296ebd673df4f180ac56670542cc0eaf350db` の実装を読み取った構成図です。
+**対象:** 現行の `v2.7.0 / unified-20260923`。
+データ経路は初版の構成を維持し、2026-09-23にActivatorの正式な開始・停止と配送確認を追記しました。
 新規プラットフォームの配置提案ではなく、既存教材のつながりを示します。
 [根拠: S1–S10](sources.md)。
 
@@ -110,13 +110,19 @@ Agent は **ネイティブ GQL** でモデル上の経路・方向・関係に�
 出力先は Eventhouse の KQL Database にある `DonationEvents`、
 取り込みマッピングは `DonationEvents_IncrementCsvMap` です。[S2, S5]
 
-これはファイル到着を起点とする取り込み設計です。この文書に提供されたデモ環境の
-最終状態は、**取り込み確認後に Activator を停止済み**です。
-図は設計と学習経路を示し、ライブ監視画面としての状態表示は行いません。
+これはファイル到着を起点とする取り込み設計です。
+図は**正式開始 → 実配送の確認 → 正式停止**という設計と学習経路を示し、
+ライブ監視画面としての状態表示は行いません。
 参加者契約も、開始時・終了時のトリガー状態を `Off` と定義しています。
 各 Pipeline ジョブと実データ件数を確認してから、次のファイルに進みます。
 既存の実施記録には、別承認の手動 Pipeline 起動へ切り替えた事例もあります。
 その運用履歴と、設計上の FileCreated 経路は区別して読みます。[S5, S10]
+
+初回は `start_rule` / ポータルのStartで正式に開始します。
+`shouldRun=true` やRunning表示は `armed_unverified` であり、実配送の証明ではありません。
+自動化では完成CSVをPutBlob1回・`If-None-Match: *` で新規作成し、
+FileCreated・native activation・新しいCompleted Job・Copy／KQLを順に照合します。
+終了時は `stop_rule` / Stopを使います。[実行コードと判定規則](../../tools/provisioning/activation.md)を参照してください。[S11]
 
 ### Agent が選択する KQL のデータ面
 

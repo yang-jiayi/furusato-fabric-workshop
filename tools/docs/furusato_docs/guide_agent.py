@@ -2317,6 +2317,8 @@ def appendix_d_optional(builder: DocumentBuilder, context: RuntimeContext) -> No
             ["Data Agent のソース数", num(automation["dataAgentSourceCount"])],
             ["Lakehouse の例クエリ数", num(automation["lakehouseFewShotCount"])],
             ["適用ゲート", "／".join(automation["applyGates"])],
+            ["構築後の正式な開始 / 停止", "start_rule / stop_rule（またはポータルの Start / Stop）"],
+            ["開始確認と配送確認", "armed_unverified → automatic_delivery_verified → Copy / KQL 照合"],
         ],
         caption="Notebook 04 の構築契約",
         widths=(1.6, 4.4),
@@ -2348,9 +2350,12 @@ def appendix_d_optional(builder: DocumentBuilder, context: RuntimeContext) -> No
         "初回のトリガー検証では、配布原本を保持し、対象 Reflex が Off で、"
         "対象 KQL Database の DonationEvents にまだ行がないこと、対象 Pipeline の最新の実行履歴で run が 0 件であること、"
         "`Files/increment` が空であることを確認します。"
-        "その後に既存ルールを UI で保存し、［Start］で起動して Running を確認してから、"
-        "第 12.4〜13 章どおり配布された 3 CSV を 1 本ずつ新規アップロードします。"
-        "各ファイルの自動 run と取り込み件数を確認してから次へ進み、同じファイルを重ねて置きません。"
+        "その後に公式 MCP の `start_rule` またはポータルの［Start］で既存ルールを正式に開始します。"
+        "Notebook 04 の `ACTIVATOR_REQUIRES_FORMAL_START` は、この未実施工程を知らせる出力です。"
+        "`shouldRun=true` や Running の表示だけでは先へ進む条件を満たしません。"
+        "第 12.2.1・12.4〜13 章の手順で、完成した配布 CSV を PutBlob / `If-None-Match: *` により 1 本ずつ新規作成します。"
+        "実イベント・activation・新しい Completed Job・Copy・KQL の一致を確認してから次へ進み、"
+        "最後に `stop_rule` / ［Stop］で停止します。同じファイルを重ねて置きません。"
     )
     builder.body(
         "`Files/increment` に既存ファイルがある場合、Notebook 04 はそれを自動削除しません。"

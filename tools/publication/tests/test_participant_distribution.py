@@ -9,7 +9,7 @@ import unittest
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[3]
-EDITION = "unified-20260914"
+EDITION = "unified-20260923"
 RETIRED_REPORTS = {
     "core-baseline-upgrade-evaluation.md",
     "core-evidence-followup.md",

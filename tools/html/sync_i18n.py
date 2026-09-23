@@ -129,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.public_documents_only and (args.prune or args.rewrite):
         parser.error("public-mode drift is read-only; edit public-documents.json explicitly")
-    if args.edition == "unified-20260914" and (args.prune or args.rewrite):
+    if args.edition == "unified-20260923" and (args.prune or args.rewrite):
         parser.error("unified-mode drift is read-only; edit unified-documents.json explicitly")
 
     delta = collect(

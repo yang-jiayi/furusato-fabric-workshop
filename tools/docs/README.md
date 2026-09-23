@@ -20,8 +20,13 @@ HTML の動的な日英 UI に適用します。元の runtime、評価問題・
 
 ### 最新版の文書ペア
 
-release edition は `unified-20260914` です。現在の文書配布対象は次の 2 点だけです。
+release edition は `unified-20260923` です。現在の文書配布対象は次の 2 点だけです。
 検証済みペアをこの名前で配置しています。
+
+この修正版は、正式なActivator初回開始／停止、完成CSVのPutBlob1回送信、
+設定状態・実配送・Copy／KQLの段階別判定を第12〜13章・付録Dへ反映します。
+日英ミラー、READMEの依頼プロンプト、配布CLI、Notebook04の引継ぎ表示と参加者契約も同期します。
+公開化前の診断ログや実環境IDは収録せず、Agent指示・標準10問／84条件・合成データは保持します。
 
 現在のペアは profile revision 13 を反映した Word と対応 HTML です。
 照会可能な質問への言い直し・同意待ち・訂正時の再確認・取消を同期しています。
@@ -30,8 +35,8 @@ release edition は `unified-20260914` です。現在の文書配布対象は�
 
 | 文書 | 生成元 |
 |---|---|
-| [参加者 Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx) | `furusato_docs/participant_guide.py`（＋ `guide_content`、`guide_handson`、`guide_agent`、`guide_unified`） |
-| [対応する日英 HTML](../../docs/furusato-workshop-v2-7-0-complete_unified-20260914.html) | `tools/html`（同じ内容モデル） |
+| [参加者 Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx) | `furusato_docs/participant_guide.py`（＋ `guide_content`、`guide_handson`、`guide_agent`、`guide_unified`） |
+| [対応する日英 HTML](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html) | `tools/html`（同じ内容モデル） |
 
 別冊の検証票 Word と処理仕様 XLSX は現行ダウンロードではありません。内部編集用の全 Office
 build は、別の新しい外部 PRIVATE ステージングへ named edition を明示して生成する場合に限り
@@ -43,7 +48,7 @@ build は、別の新しい外部 PRIVATE ステージングへ named edition �
 
 ### 公開文書は Word + HTML の 2 ファイルだけ
 
-公開用には `--public-documents-only --edition unified-20260914 --out <外部の非公開ステージング>` を
+公開用には `--public-documents-only --edition unified-20260923 --out <外部の非公開ステージング>` を
 build / validation の両方へ指定します。PowerShell は
 `-PublicDocumentsOnly -Edition <版名> -OutputDirectory <外部パス>` です。
 このモードは参加者 Word だけを生成・検証し、別冊 Word と XLSX の生成・COM 処理・検査を行いません。
@@ -67,7 +72,7 @@ Word と HTML だけを複製し、必要なら SHA-256 manifest をペアの**�
 旧履歴を公開側へ merge／push せず、[SECURITY.md](../../SECURITY.md) に従ってください。
 構成・結果・画面写真のレビューが凍結するまで、新版の完全なバイナリ build は実行しないでください。
 配布 Word／HTML は主 Agent 1 件、完全な教材用 Ontology、SQL/KQL ヘルパーと同じ Agent の
-Code Interpreter 演習を同期した `unified-20260914` です。従来 Core の入力は保持しています。
+Code Interpreter 演習を同期した `unified-20260923` です。従来 Core の入力は保持しています。
 作業ログ・実環境のバックアップ・詳細な実行記録は配布リポジトリの外で管理します。
 Data Agent の品質合格はデプロイ・文書の準備完了と別であり、
 評価履歴は受講者向け資料に含めません。[Data Agent の回答確認](../../docs/single-agent-workshop.md)を参照してください。
@@ -186,13 +191,13 @@ python .\tools\docs\make_style_carrier.py --source $CarrierSource
 
 ### 版名と検証対象を固定する
 
-Word と HTML の build / validation / export に同じ `--edition unified-20260914` を渡します。
+Word と HTML の build / validation / export に同じ `--edition unified-20260923` を渡します。
 公開ペアの生成・描画・実 Word の SHA-256 と構造件数の pin は
 [公開ペアの手順](../publication/README.md)に従います。旧版のハッシュや構造件数を使いません。
 
 ```powershell
-python .\tools\docs\build_docs.py --public-documents-only --edition unified-20260914 --out $Stage
-python .\tools\html\build_html.py --public-documents-only --edition unified-20260914 --out $Stage
+python .\tools\docs\build_docs.py --public-documents-only --edition unified-20260923 --out $Stage
+python .\tools\html\build_html.py --public-documents-only --edition unified-20260923 --out $Stage
 ```
 
 `$Stage` は新しい外部 PRIVATE ディレクトリです。生成コマンドの非ゼロ終了で停止し、
@@ -201,7 +206,7 @@ HTML のダウンロード名と SHA-256 は同じ Word を指し、指定した
 edition は小文字英数字、ハイフン、アンダースコアの 40 文字以内です。版名は合格証明ではありません。
 
 `test_preview_material_gates.py`・`test_data_agent_practice_gates.py`・`test_capture_quality.py` は
-`--edition unified-20260914` で `docs` 内の参加者 Word を解決するため、配置後だけ実行します。
+`--edition unified-20260923` で `docs` 内の参加者 Word を解決するため、配置後だけ実行します。
 `test_workbook_print.py` と `compare_semantics.py` は内部の全 Office セット用で、公開ペアの検査ではありません。
 `test_deliverable_editions.py` の命名・保存・リンク検査は edition 引数を必要としません。
 
@@ -211,7 +216,7 @@ edition は小文字英数字、ハイフン、アンダースコアの 40 文�
 外部の絶対パス `$FullStage` を指定します。版名なし・出力先なしの互換用既定値は使いません。
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 if (Test-Path -LiteralPath $FullStage) { throw 'Choose a fresh external PRIVATE stage' }
 python .\tools\docs\build_docs.py --edition $Edition --out $FullStage --keep-legacy
 ```
@@ -297,7 +302,7 @@ build が書いたばかりのファイルを読むオンアクセス型ウイ�
 ハッシュ照合してコピーした新規外部ディレクトリを使い、`docs` は直接指定しません。
 
 ```powershell
-python .\tools\docs\validate_docs.py --public-documents-only --edition unified-20260914 --out $PairCheck --render --check-urls
+python .\tools\docs\validate_docs.py --public-documents-only --edition unified-20260923 --out $PairCheck --render --check-urls
 ```
 
 内部編集用の 3 Office 成果物は `--public-documents-only` を付けず、
@@ -412,7 +417,7 @@ the build fails instead of emitting a stale deliverable.
 
 ### Latest document pair
 
-The release edition is `unified-20260914`. Only these two documents are current
+The release edition is `unified-20260923`. Only these two documents are current
 downloads. The validated pair is installed under these names.
 
 The current Word/HTML pair uses profile revision13 and synchronizes answerable
@@ -423,8 +428,8 @@ and actual returned fields/provenance from authored labels.
 
 | Document | Built by |
 |---|---|
-| [Participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx) | `furusato_docs/participant_guide.py` (+ `guide_content`, `guide_handson`, `guide_agent`, `guide_unified`) |
-| [Matching bilingual HTML](../../docs/furusato-workshop-v2-7-0-complete_unified-20260914.html) | `tools/html` (the same content model) |
+| [Participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx) | `furusato_docs/participant_guide.py` (+ `guide_content`, `guide_handson`, `guide_agent`, `guide_unified`) |
+| [Matching bilingual HTML](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html) | `tools/html` (the same content model) |
 
 The separate validation Word and specification XLSX are not current downloads.
 Full Office authoring remains supported only with an explicit named edition in a
@@ -437,7 +442,7 @@ separate fresh external PRIVATE stage. In addition to participant Word,
 
 ### Public documents: exactly one Word and one matching HTML
 
-Pass `--public-documents-only --edition unified-20260914 --out <external-private-staging>`
+Pass `--public-documents-only --edition unified-20260923 --out <external-private-staging>`
 to both Python entry points, or use
 `Build-Docs.ps1 -PublicDocumentsOnly -Edition <edition> -OutputDirectory <path>`.
 Only the participant Word is built, refreshed and validated. The separate validation Word
@@ -465,7 +470,7 @@ not GitHub publication or authorization to change visibility/history/hosting.
 This distribution uses fresh public-only history without former private history or
 evidence. Never merge/push private archive history here; follow [SECURITY.md](../../SECURITY.md).
 Wait for the configuration, results and capture review to freeze before full binary builds.
-The released `unified-20260914` pair synchronizes one primary Agent, the full
+The released `unified-20260923` pair synchronizes one primary Agent, the full
 teaching Ontology, shared SQL/KQL helpers and same-Agent Code Interpreter exercises.
 Legacy Core inputs remain intact. Work logs, live backups and detailed execution records are maintained
 outside the distributable repository. Data Agent quality acceptance is separate from
@@ -594,7 +599,7 @@ underscores up to 40 characters. The name is not an acceptance certificate.
 
 `test_preview_material_gates.py`, `test_data_agent_practice_gates.py` and
 `test_capture_quality.py` resolve the participant Word under `docs` with
-`--edition unified-20260914`; run them only after installation.
+`--edition unified-20260923`; run them only after installation.
 `test_workbook_print.py` and `compare_semantics.py` require the internal full Office
 set, not the public pair. Naming/preservation/link checks in
 `test_deliverable_editions.py` need no edition argument.

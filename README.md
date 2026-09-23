@@ -18,7 +18,7 @@
 
 **[ガイドを読む ↗](#最新版を使う)** &nbsp; · &nbsp; **[実画面のデモを見る ↗](#workshop-videos-ja)** &nbsp; · &nbsp; **[デプロイする ↗](#ツール別のデプロイ手順)**
 
-`v2.7.0` &nbsp; `unified-20260914` &nbsp; `SQL · KQL · GQL` &nbsp; `JP / EN` &nbsp; `Synthetic data`
+`v2.7.0` &nbsp; `unified-20260923` &nbsp; `SQL · KQL · GQL` &nbsp; `JP / EN` &nbsp; `Synthetic data`
 
 </div>
 
@@ -119,18 +119,21 @@ Ontology のキー・型・説明・バインディング・関係の向きを�
 > 各質問では実際に選ばれた SQL／KQL／GQL の経路を示し、Graph エディターの手動演習は別の確認として扱います。
 > 英語版では、回答の表示言語を整える追質問も紹介します。
 > 個別の照会例を手がかりに、下記の最新版ガイドで構築・検証・学習を進めてください。
+> 動画は9月21日の記録です。9月23日版の正式なActivator開始・停止とPutBlob手順は最新版ガイドを参照してください。
 
 <sub>YOUR STARTING POINT / 手元に教材を</sub>
 
 ### 最新版を使う
 
-配布版は `v2.7.0 / unified-20260914` です。
+配布版は `v2.7.0 / unified-20260923` です。
+この版では、Activatorの正式な初回開始・停止、完成ファイルのPutBlob1回送信、
+実イベント／activation／Pipeline／Copy／KQLを区別する確認を、コード・Word・HTMLへ同期しました。
 Word と HTML を同じフォルダーへ保存すると、HTML 内の Word ダウンロードリンクも利用できます。
 
 | ファイル | 内容 |
 |---|---|
-| [参加者ガイド — Word](docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx) | 全 19 章・5 付録、元の 10 問・84 条件、同じ Agent の CI 演習、Notebook パラメーター |
-| [対応する日英 HTML](docs/furusato-workshop-v2-7-0-complete_unified-20260914.html) | 同じ教材。日英切替・検索・実習チェック・印刷に対応する自己完結 HTML |
+| [参加者ガイド — Word](docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx) | 全 19 章・5 付録、元の 10 問・84 条件、同じ Agent の CI 演習、Notebook パラメーター |
+| [対応する日英 HTML](docs/furusato-workshop-v2-7-0-complete_unified-20260923.html) | 同じ教材。日英切替・検索・実習チェック・印刷に対応する自己完結 HTML |
 
 配布ファイルは [RELEASE_SHA256SUMS.txt](RELEASE_SHA256SUMS.txt) で照合できます。
 文書を配布するときは、上の Word 1 本・HTML 1 本を同じフォルダーに置きます。
@@ -198,7 +201,7 @@ Word / HTML の教材内容や、稼働中の Ontology / Agent の構成は変�
 
 ### ツール別のデプロイ手順
 
-**確認日：2026-09-18。** 以下は同じ配布 Notebook を使う入口です。
+**クライアント情報の確認日：2026-09-18。Activator手順の更新日：2026-09-23。** 以下は同じ配布 Notebook を使う入口です。
 ツールごとに別のモデルや Notebook を生成させません。
 公式資料・配布コード・利用可能な CLI のヘルプを照合していますが、
 **6製品すべての実機デプロイを検証したものではありません**。
@@ -295,6 +298,8 @@ ALLOW_AUTOMATED_APPLY = False
    `EXCLUSIVE_CREATE_WINDOW_CONFIRMED=True` にして適用します。ほかの設定を変えた場合は preview を取り直します。
 4. Notebook 04 の完了だけで全演習を完了扱いにしません。後掲プロンプトの工程 4～8 に従い、
    FileCreated の有効化、3増分の個別検証、トリガー停止、Notebook 05、Power BI 配置、Agent 評価まで進めます。
+   初回起動には公式 MCP の `start_rule` またはポータルの［Start］を使います。
+   [開始・停止と実行証跡の照合](tools/provisioning/activation.md)で、Running 表示と実配送を区別します。
    自動取り込みが届かない場合の手動 Pipeline 起動は別承認です。
    Graph の復旧だけを目的に、成功した Notebook 01 や増分取り込みを再実行しません。
 
@@ -505,10 +510,20 @@ docs\data-validation-checklist.md と実測値を照合する。静的 Donation 
 運用観測は raw 15,000件・253,886,000円で、別母集団として扱う。期待値を Agent の指示や質問へ埋め込まない。
 
 5. 増分は FileCreated 経由で各1回だけ取り込む
-Files/increment が空であることを確認後、対象の FileCreated トリガーを有効にする。
+Files/increment が空であることを確認後、対象の FileCreated トリガーを正式に開始する。
+定義の shouldRun=true への書換えは開始操作の代わりにしない。公式 Activator MCP の start_rule、
+またはポータルの Start を使い、Workspace・Folder・PID・rule ID・対象Pipelineとイベントの引数を照合する。
+tools/provisioning/manage_activation.py の start は --apply と一致する確認句でだけ正式開始する。
+MCPの isRunning=true とUIのRunningも armed_unverified であり、配送成功とはしない。
 配布 donation_events_001.csv、donation_events_002.csv、donation_events_003.csv を順に各1回だけ配置する。
-毎回、実際の自動 Pipeline ジョブ・Copy 結果・Subject・ファイル名・件数・金額を確認してから次へ進む。
-アップロード成功や shouldRun=true だけで取り込み成功にしない。3本の検証後はトリガーを Off に戻す。
+自動化では配布SHA-256と一致する完成済みCSVをOneLake Blob PutBlobで1回だけ新規作成し、
+If-None-Match: *で上書きを拒否する。監視先のCreateFile→Append→FlushWithCloseは複数イベントの原因となるため使わない。
+毎回、完全なFileCreatedイベント1件・native activation1件・新しいCompleted Pipeline Job1件のIDと
+Type / Subject / Source / Pipeline IDを照合する。これをautomatic_delivery_verifiedとし、
+さらにCopy入力・出力・ファイル名・SourceFile別のKQL件数と金額を確認してから次へ進む。
+アップロード成功、Running、invokeType=Manualという表示だけで起動経路を判断しない。
+履歴取得のDataNotAvailableを0件成功へ読み替えず、重複イベントや重複Jobがあれば停止する。
+3本の検証後は公式stop_ruleまたはポータルのStopで停止し、停止状態と既存Jobの終了を確認する。
 イベントが届かない場合は、期限を設けて待ち、トリガーを停止して遅延ジョブと実データを確認したうえで報告する。
 無言で手動 Pipeline 起動へ切り替えず、代替実行は別承認とする。同じファイルの再アップロードはしない。
 
@@ -693,7 +708,7 @@ Word／HTML の生成は、外部の新しい非公開ステージングで行�
 既存の配布ファイルを直接上書きせず、検証後に最新版の 1 組を置き換えます。
 
 ```powershell
-$Edition = 'unified-20260914'
+$Edition = 'unified-20260923'
 $Stage = Join-Path $env:TEMP ("furusato-docs-" + [guid]::NewGuid().ToString('N'))
 python .\tools\docs\build_docs.py --public-documents-only --edition $Edition --out $Stage
 if ($LASTEXITCODE -ne 0) { throw 'Word build failed' }
@@ -790,18 +805,21 @@ committed to Git history. Videos inherit the repository's access permissions.
 > Each demonstration retains its actual SQL/KQL/GQL route; the manual Graph-editor exercise is a separate verification.
 > The English film also shows an explicit conversational follow-up to adjust the answer language.
 > Use these individual examples alongside the current guides below to build, verify and explore the workshop.
+> The films were recorded on September 21. Follow the September 23 guide for the updated formal Activator lifecycle and PutBlob procedure.
 
 <sub>YOUR STARTING POINT / TAKE THE GUIDE WITH YOU</sub>
 
 ### Current documents
 
-The edition is `v2.7.0 / unified-20260914`. Keep the two files in the same
+The edition is `v2.7.0 / unified-20260923`. Keep the two files in the same
 folder so the Word link in the HTML works.
+This edition synchronizes formal Activator first-start/stop, one complete-file PutBlob
+and separate event/activation/Pipeline/Copy/KQL gates across the code, Word and HTML.
 
 | File | Contents |
 |---|---|
-| [Participant Word](docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx) | 19 chapters, 5 appendices, the original 10 questions / 84 conditions, same-Agent CI exercises, and Notebook parameters |
-| [Matching bilingual HTML](docs/furusato-workshop-v2-7-0-complete_unified-20260914.html) | The same guide with search, language switching, exercise checklists and printing |
+| [Participant Word](docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx) | 19 chapters, 5 appendices, the original 10 questions / 84 conditions, same-Agent CI exercises, and Notebook parameters |
+| [Matching bilingual HTML](docs/furusato-workshop-v2-7-0-complete_unified-20260923.html) | The same guide with search, language switching, exercise checklists and printing |
 
 Verify it against [RELEASE_SHA256SUMS.txt](RELEASE_SHA256SUMS.txt).
 Distribute the one current Word and its matching HTML together in the same folder.
@@ -870,7 +888,7 @@ See [mapping rules and regeneration](tools/ontology/README.md). The Word/HTML co
 
 ### Deployment by client
 
-**Checked on 2026-09-18.** Each entry below uses the same released Notebook,
+**Client information checked on 2026-09-18; Activator procedure updated on 2026-09-23.** Each entry below uses the same released Notebook,
 not a newly generated model or runtime. Official documentation, repository code and
 available CLI help were cross-checked; this is **not an end-to-end deployment test of all six clients**.
 The common route has a prior execution record from a tool-configured Copilot app environment.
@@ -967,6 +985,8 @@ ALLOW_AUTOMATED_APPLY = False
    and `EXCLUSIVE_CREATE_WINDOW_CONFIRMED=True`. Re-preview if other settings change.
 4. Notebook 04 completion is not completion of every exercise. Follow steps 4–8 of the common prompt for FileCreated,
    individual verification of all three increments, stopping the trigger, Notebook 05, Power BI and Agent evaluation.
+   Use official MCP `start_rule` or portal Start for first activation. The [lifecycle and evidence procedure](tools/provisioning/activation.md)
+   distinguishes Running metadata from actual automatic delivery.
    Manual Pipeline fallback needs separate approval. Do not rerun a successful Notebook 01 or ingestion to recover only the Graph.
 
 The **eight provisioned items** are Lakehouse, Eventhouse, KQL Database, Notebook 01, Pipeline,
@@ -1180,10 +1200,21 @@ operational data is 15,000 raw observations/253,886,000 JPY. Keep these populati
 Never inject expected answers into Agent instructions or questions.
 
 5. Ingest each increment exactly once through FileCreated
-Verify Files/increment is empty before enabling the scoped FileCreated trigger.
+Verify Files/increment is empty before formally starting the scoped FileCreated trigger.
+Do not substitute a definition update setting shouldRun=true for the official Activator MCP start_rule operation
+or the portal Start control. Verify Workspace, Folder, PID, rule ID, target Pipeline and native event parameters.
+tools/provisioning/manage_activation.py start requires --apply and the matching explicit confirmation.
+MCP isRunning=true and UI Running mean armed_unverified, not successful delivery.
 Place the released donation_events_001.csv, donation_events_002.csv and donation_events_003.csv sequentially, once each.
-For each file, verify its actual automatic Pipeline job, Copy result, Subject, filename, count and amount before proceeding.
-Upload success or shouldRun=true is not ingestion proof. Turn the trigger Off after verifying all three files.
+For automation, create each complete CSV with one OneLake Blob PutBlob, after checking the released SHA-256;
+require If-None-Match: * to refuse overwriting. Do not use watched CreateFile/Append/FlushWithClose uploads,
+which can emit multiple FileCreated events.
+Correlate exactly one complete-file event, one native activation and one new Completed Pipeline Job,
+including their IDs and Type/Subject/Source/Pipeline ID. This establishes automatic_delivery_verified only.
+Then check native Copy input/output and per-SourceFile KQL row counts and amounts before the next file.
+Upload success, Running metadata and the generic invokeType=Manual label do not prove the execution path.
+Do not turn DataNotAvailable history errors into successful zero counts; stop on duplicate events or jobs.
+After all three files, explicitly stop_rule or use portal Stop, verify stopped state and finish monitoring existing jobs.
 If events do not arrive, wait only to a bounded deadline, stop the trigger, check late jobs and actual data, then report.
 Do not silently substitute a manual Pipeline run; fallback requires separate approval. Never re-upload an attempted file.
 

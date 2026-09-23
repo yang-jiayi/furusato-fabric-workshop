@@ -7,7 +7,7 @@
 
 ### 公開版で保持するもの
 
-`v2.7.0 / unified-20260914` の Word／HTML、合成 CSV、封印済み Notebook 01–05、
+`v2.7.0 / unified-20260923` の Word／HTML、合成 CSV、封印済み Notebook 01–05、
 bundle・契約、参照／統合プロファイル、再構築ソース、標準 **10問・84条件**と汎用評価エンジンを保持します。
 元の教材を短縮した評価や、内部の追加問題・正解・過去の回答ログへの置換は行いません。
 公開版のローカル検査は Fabric の新規デプロイや実回答の検証ではなく、全問正答・常時成功を保証しません。
@@ -23,8 +23,8 @@ bundle・契約、参照／統合プロファイル、再構築ソース、標�
    非公開の設定／証跡ルートを明示します。ID・資格情報は Git 外で管理し、配布 Notebook に固定しません。
    稼働中の capacity、権限、Ontology／Data Agent の提供条件を確認します。
    統合 SQL ヘルパーは Fabric Notebook driver 上の `pyodbc` と ODBC Driver 18 が必要です。
-3. [Word](../Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)と
-   [HTML](../furusato-workshop-v2-7-0-complete_unified-20260914.html)を同じフォルダーに置き、
+3. [Word](../Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)と
+   [HTML](../furusato-workshop-v2-7-0-complete_unified-20260923.html)を同じフォルダーに置き、
    [RELEASE_SHA256SUMS.txt](../../RELEASE_SHA256SUMS.txt) と
    [配布物の検証](../../README.md#deployment-integrity-checks)で照合します。
    `reseal_runtime.py --check` は書き換えを伴うため**捨てるためのコピー内だけ**で実行し、
@@ -36,6 +36,17 @@ bundle・契約、参照／統合プロファイル、再構築ソース、標�
    Jobs API の場合は `ALLOW_AUTOMATED_APPLY` と `EXPECTED_WORKSPACE_NAME` も明示します。
    既存 Item を上書きせず、FileCreated・各増分・Graph・Notebook 05／Power BI を別々に確認します。
    トリガー不達を無言で手動取り込みへ置換したり、成功済みの取り込みを再実行したりしません。
+
+### FileCreated の正式開始と配送確認
+
+Notebook 04 は停止状態のルールを作るため、構築後に `start_rule` / ポータルのStartで正式に開始します。
+定義の `shouldRun=true` やMCP/UIのRunningだけは `armed_unverified` で、稼働の証拠にはしません。
+自動化では [manage_activation.py](../../tools/provisioning/activation.md) のpreviewと明示承認を使い、
+配布SHA-256と一致する完成CSVをPutBlob1回・`If-None-Match: *` で作成します。
+実FileCreated・native activation・新しいCompleted Pipeline JobをIDとType/Subject/Sourceで対応付け、
+CopyとSourceFile別KQLの件数・金額も確認してから次のファイルへ進みます。
+履歴の `DataNotAvailable` や複数イベントは停止条件です。終了時は `stop_rule` / Stopを使い、
+遅延Jobと実データを確認します。手動代替・再アップロードの別承認という境界は変わりません。
 
 ### 標準評価と追加評価
 
@@ -56,7 +67,7 @@ bundle・契約、参照／統合プロファイル、再構築ソース、標�
 
 ### What the public distribution retains
 
-The `v2.7.0 / unified-20260914` Word/HTML pair, synthetic CSVs, sealed Notebooks 01–05,
+The `v2.7.0 / unified-20260923` Word/HTML pair, synthetic CSVs, sealed Notebooks 01–05,
 bundle/contracts, reference/unified profiles, rebuild sources, standard **10 questions /
 84 conditions**, and generic evaluator remain available. No shortened rubric or
 internal extra question/answer/result pack replaces the standard. Local packaging
@@ -76,8 +87,8 @@ neither universal execution success nor perfect answers.
    credentials outside Git, not hardcoded in distributed notebooks. Verify active
    capacity, permissions and feature availability. Unified SQL requires `pyodbc`
    and ODBC Driver 18 on the **Fabric Notebook driver**, not only your local PC.
-3. Keep the [Word](../Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260914.docx)
-   and [HTML](../furusato-workshop-v2-7-0-complete_unified-20260914.html) together.
+3. Keep the [Word](../Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
+   and [HTML](../furusato-workshop-v2-7-0-complete_unified-20260923.html) together.
    Check [release hashes](../../RELEASE_SHA256SUMS.txt) and follow the
    [distribution checks](../../README.md#deployment-integrity-checks).
    `reseal_runtime.py --check` mutates files: run it **only in a disposable copy**.
@@ -90,6 +101,17 @@ neither universal execution success nor perfect answers.
    and `EXPECTED_WORKSPACE_NAME`. Do not overwrite mismatched existing Items.
    Verify FileCreated, each increment, Graph, Notebook 05 and Power BI separately.
    Never silently replace a failed trigger with manual ingestion or replay accepted data.
+
+### Formal FileCreated lifecycle and delivery checks
+
+Notebook 04 leaves the rule stopped. Explicitly use `start_rule` / portal Start after
+provisioning; changing `shouldRun` or reading Running metadata is only `armed_unverified`.
+Use the [lifecycle CLI](../../tools/provisioning/activation.md) with preview and approval.
+Send a complete released CSV in one PutBlob with `If-None-Match: *`, then correlate
+its native file event, activation and new Completed Pipeline job using IDs and
+Type/Subject/Source. Verify Copy and per-SourceFile KQL totals before the next file.
+Treat unavailable history and multiple events as failures. Use `stop_rule` / Stop
+and check late jobs/data afterward. Manual fallback and replay still need separate approval.
 
 ### Standard evaluation and private additions
 

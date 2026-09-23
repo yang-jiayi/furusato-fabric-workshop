@@ -23,8 +23,8 @@ wealth, income or tax liability require different evidence.
 [Open full-size PNG](../assets/architecture/furusato-architecture.en.png) ·
 [Scalable SVG](../assets/architecture/furusato-architecture.en.svg)
 
-**Scope:** current `v2.7.0 / unified-20260914`, read at commit
-`32d296ebd673df4f180ac56670542cc0eaf350db`. This is an implementation map,
+**Scope:** current `v2.7.0 / unified-20260923`. The original data paths are retained;
+formal Activator lifecycle and delivery checks were updated on 2026-09-23. This is an implementation map,
 rather than a proposal to deploy a new platform. [Evidence: S1–S10](sources.md).
 
 ## How to read the diagram
@@ -110,13 +110,19 @@ The event carries the file reference; **the Pipeline reads the CSV bytes from On
 The sink is `DonationEvents` in the Eventhouse's KQL Database, using
 `DonationEvents_IncrementCsvMap`. [S2, S5]
 
-This is a file-triggered ingestion design. The final demonstration state supplied for this
-documentation is **Activator stopped after verified ingestion**; the diagram is a design
-and learning map, rather than a live monitoring display. The participant contract also
+This is a file-triggered ingestion design. The diagram presents **formal start →
+verify actual delivery → formal stop** as a design and learning map, rather than a
+live monitoring display. The participant contract also
 defines the trigger's initial and final state as `Off`.
 Verify each Pipeline job and its ingested rows before proceeding to the next file.
 The repository records a run that needed a separately approved manual Pipeline fallback;
 that operational history is distinct from the intended FileCreated route. [S5, S10]
+
+Use official `start_rule` / portal Start for first activation; `shouldRun=true` and
+Running metadata mean `armed_unverified`, not verified delivery. Automated uploads
+use one complete-file PutBlob with `If-None-Match: *`. Correlate the native file event,
+activation and new Completed Pipeline job, then verify Copy/KQL. Finish with
+`stop_rule` / Stop. See the [operator and evidence contract](../../tools/provisioning/activation.md). [S11]
 
 ### The selected KQL surface
 

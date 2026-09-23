@@ -125,7 +125,6 @@
  "`Files/furusato/seed` に静的 8 CSV をアップロードした状態。": "The state after uploading the static 8 CSV files to Files/furusato/seed.",
  "Lakehouse の Files 配下 furusato/seed フォルダーに 8 個の CSV ファイルが並んでいる一覧画面。": "A list view showing 8 CSV files arranged in the furusato/seed folder under Files in the Lakehouse.",
  "続けて、Files 直下に空のフォルダー `Files/increment` を作成します。ここには今は何も置きません。1 本目の `donation_events_001.csv` は第 12.4 節で、残りの `donation_events_002.csv` と `donation_events_003.csv` は第 13 章でアップロードします。": "Next, create an empty folder `Files/increment` directly under Files. Nothing goes there yet. The first file, `donation_events_001.csv`, is uploaded in Section 12.4; the remaining `donation_events_002.csv` and `donation_events_003.csv` are uploaded in Chapter 13.",
- "`Files/increment` を先に作っておく理由は 2 つあります。第 12.2 節の OneLake FileCreated トリガーは、購読するフォルダーが既に存在していないと `/Files/increment` を選べません。また、フォルダーを空のまま作っておくと、トリガーを Running にした直後に 1 本目を置くだけで「アップロードしたファイルだけが取り込まれた」ことを確認できます。この時点で増分 CSV を置いてしまうと、トリガーがまだ無い状態でファイルだけが増え、第 12.4 節のゲートが成立しません。": "There are two reasons to create `Files/increment` up front. The OneLake FileCreated trigger in Section 12.2 cannot select `/Files/increment` unless the folder it subscribes to already exists. And leaving the folder empty means that, immediately after the trigger goes Running, dropping in the first file alone proves that only the uploaded file was ingested. Putting increment CSVs there now would add files while no trigger exists, and the gate in Section 12.4 would no longer hold.",
  "Files/increment は空のまま作る": "Create Files/increment and leave it empty",
  "6.3 Notebook 01 を取り込んで実行する": "6.3 Import and run Notebook 01",
  "対象の Workspace / Folder で［Import］→［Notebook］→［From this computer］から Notebook 01 を取り込み、配置先を確認します。": "In the target Workspace / Folder, import Notebook 01 via ［Import］ → ［Notebook］ → ［From this computer］ and verify its location.",
@@ -148,5 +147,6 @@
  "実施節": "Implementation section",
  "変更しない": "Do not change",
  "Notebook が宣言する Workshop 契約バージョン。出力の READY 行と監査表に記録される。": "The workshop contract version declared by the Notebook. Recorded in the READY line of the output and in the audit table.",
- "パッケージ版数と一致した状態で検証と発行を実行する。": "Validation and publication are performed with the version matching the package version."
+ "パッケージ版数と一致した状態で検証と発行を実行する。": "Validation and publication are performed with the version matching the package version.",
+ "`Files/increment` を先に作っておく理由は 2 つあります。第 12.2 節の OneLake FileCreated トリガーは、購読するフォルダーが既に存在していないと `/Files/increment` を選べません。また、フォルダーを空のまま作っておくと、正式な開始操作を終えた後に 1 本目を置くだけで「アップロードしたファイルだけが取り込まれた」ことを確認できます。この時点で増分 CSV を置いてしまうと、トリガーがまだ無い状態でファイルだけが増え、第 12.4 節のゲートが成立しません。": "There are two reasons to create `Files/increment` first. The OneLake FileCreated trigger in section 12.2 cannot select `/Files/increment` until that folder exists. Keeping it empty lets you place the first file after the formal start operation and verify that only the uploaded file was ingested. Placing incremental CSVs now would add files before the trigger exists, so the gate in section 12.4 would not be satisfied."
 }

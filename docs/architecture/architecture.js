@@ -74,7 +74,7 @@
           "DonationObservationSummaryForAgent と 3 関数が、raw 件数・金額・UTC 期間・ファイル／実行を説明。",
           "Municipality の時系列は raw DonationEvents にバインド。静的 Donation と別の集団として扱います。",
         ],
-        note: "デモの最終状態は取り込み確認後に Activator を停止済み。図は設計上の経路を示します。手動 Pipeline fallback は別承認の操作です。",
+        note: "初回は start_rule / Start で正式開始。完成CSVをPutBlobで1回作成し、イベント・activation・Job・Copy/KQLを照合して stop_rule / Stop。図は設計経路で、手動fallbackは別承認です。",
         evidence: "S2 · S4 · S5 · S10",
       },
       agent: {
@@ -161,7 +161,7 @@
           "DonationObservationSummaryForAgent and three functions explain raw counts, JPY amounts, UTC windows and file/run provenance.",
           "The Municipality time series binds raw DonationEvents. Static Donation remains a separate population.",
         ],
-        note: "Demo end state: Activator stopped after ingestion verification. The diagram shows the design route. Manual Pipeline fallback is a separately approved action.",
+        note: "Formally start_rule / Start, create each complete CSV with one PutBlob, verify event, activation, Job and Copy/KQL, then stop_rule / Stop. This is a design view; manual fallback needs separate approval.",
         evidence: "S2 · S4 · S5 · S10",
       },
       agent: {
@@ -285,8 +285,8 @@
     txt(66, 192, choose("事実・業務のつながり・運用の観測を、目的に合うエンジンで読み解く。", "Static facts, business relationships and operational observations—each with the right engine."), 28, "muted");
     rect(1982, 42, 504, 46, "#e8f3eb", "none", 23);
     txt(2006, 74, choose("合成データ · 主 Agent 1 件 / 3 ソース", "Synthetic data · 1 Agent / 3 sources"), 26, "bold", 'style="fill:#366342"');
-    txt(2484, 130, "v2.7.0 / unified-20260914", 24, "muted", 'text-anchor="end"');
-    txt(2484, 169, choose("現行実装の構成図 · 2026-09-21", "Implementation map · 2026-09-21"), 24, "muted", 'text-anchor="end"');
+    txt(2484, 130, "v2.7.0 / unified-20260923", 24, "muted", 'text-anchor="end"');
+    txt(2484, 169, choose("制御手順を更新 · 2026-09-23", "Lifecycle updated · 2026-09-23"), 24, "muted", 'text-anchor="end"');
 
     // Provisioning has its own visual lane and uses control, not data, arrows.
     start("control", ui[lang].navControl);
@@ -383,7 +383,7 @@
     start("events", "Activator / Reflex");
     card(1326, 714, 236, 116);
     txt(1348, 757, "Activator", 34, "bold");
-    txt(1348, 804, choose("到着を通知", "FileCreated rule"), 26, "muted");
+    txt(1348, 804, choose("正式開始後に通知", "Start → file signal"), 26, "muted");
     end();
     start("events", "Data Pipeline / Copy");
     card(1640, 714, 232, 116);
@@ -488,7 +488,7 @@
     start("outcomes", ui[lang].navOutcomes);
     rect(58, 1282, 2444, 142, "none", "none", 16, "selection-band");
     txt(80, 1323, choose("データ・意味・分析をつなぎ、根拠をもって伝える。", "Connect data, meaning and analysis. Communicate with evidence."), 35, "teal bold");
-    txt(80, 1370, choose("設計上の取り込み経路を表示 · デモは取り込み確認後に Activator 停止済み · Gold / BI は任意の別経路", "Design route shown · demo Activator stopped after ingestion verification · Gold / BI is a separate optional branch"), 25, "muted");
+    txt(80, 1370, choose("設計上の取り込み経路 · 正式開始 → 実配送を確認 → 正式停止 · Gold / BI は任意の別経路", "Design route · formal start → verify actual delivery → formal stop · Gold / BI is a separate optional branch"), 25, "muted");
     txt(80, 1410, choose("Microsoft の元アイコンを使用 · 出典: AzureDiagarm · 原画・色・縦横比を保持", "Original Microsoft icons · source: AzureDiagarm · artwork, colors and proportions preserved"), 21, "muted");
     end();
     parts.push("</svg>");

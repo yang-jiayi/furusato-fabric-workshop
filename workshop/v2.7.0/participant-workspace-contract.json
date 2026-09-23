@@ -26,10 +26,10 @@
     "payloadManifestPath": "provisioning/payload-manifest.json",
     "bundleManifestPath": "provisioning/bundle/bundle-manifest.json",
     "defaultMode": "preview-only",
-    "notebookSha256": "e179edc16e59eef31332fe4860e2134da65309ca779490deecd7f1401011250f",
-    "payloadManifestSha256": "3b6af2f750ad46779ee70f7f7241381c8878255caababfc47921e917efeefba9",
+    "notebookSha256": "db5aa659bc0bb99d514cf5dd70f5220ecdc077d80314bd5aff7af473708d81aa",
+    "payloadManifestSha256": "c7c94273185f789ec9f1694051442bc6426e7fd9b19d2419d04cdccd365464fa",
     "bundleManifestSha256": "0a89d5bfbc43662f6d2d8c438870d2e4067b8ab21b97e2e46cadacc6cced9877",
-    "payloadSha256": "71717e94877900d665d6a40fd375909907801a3862034c6b3d57c865b2ad0a6e",
+    "payloadSha256": "8aa6eda00cfaa5985598bae0637d42866c07f667cd0fa8898df0f7221d5773de",
     "datasetFileCount": 11,
     "portableBundleFileCount": 46,
     "kqlManagementCommandCount": 5,
@@ -61,10 +61,36 @@
     ],
     "kustoFewShotCount": 0,
     "kustoExampleDelivery": "The legacy Core bundle carries fewshots.json for lakehouse_tables only; its three KQL query shapes are encoded in kusto dataSourceInstructions. Unified profiles may also register native KQL examples.",
-    "participantIncrementFlow": "Enable the OneLake FileCreated Reflex trigger, then upload donation_events_001.csv, donation_events_002.csv, and donation_events_003.csv to Files/increment one after another. Each upload fires the trigger, which starts the Pipeline; no Pipeline run is started by hand.",
+    "participantIncrementFlow": "Explicitly start the scoped rule using official start_rule or the portal Start control; setting shouldRun=true or reading Running is not execution proof. Upload each complete released CSV once with OneLake Blob PutBlob and If-None-Match: *. Match the native FileCreated event, activation Type/Subject/Source, exactly one Completed Pipeline job, Copy output and per-file KQL totals before proceeding. Stop with stop_rule or portal Stop; never silently substitute manual ingestion or re-upload an attempted file.",
     "dataAgentExperimentalFlagCount": 1,
     "dataAgentRuntime": "Preview",
-    "kustoQueryShapeCount": 3
+    "kustoQueryShapeCount": 3,
+    "activationLifecycle": {
+      "contract": "furusato-activation/v1",
+      "state": "requires_formal_start",
+      "definitionShouldRun": false,
+      "startOperation": "start_rule",
+      "stopOperation": "stop_rule",
+      "portalAlternative": "Save the scoped rule, then explicitly use Start / Stop.",
+      "definitionFlagIsExecutionProof": false,
+      "runningMetadataIsDeliveryProof": false,
+      "armedState": "armed_unverified",
+      "verifiedState": "automatic_delivery_verified",
+      "uploadApi": "PutBlob",
+      "uploadIfNoneMatch": "*",
+      "requiredEvidence": [
+        "exact complete-file FileCreated event",
+        "native activation with matching Type, Subject, Source and Pipeline",
+        "exactly one new Completed Pipeline job",
+        "native Copy output and per-file KQL count/amount"
+      ],
+      "manualFallbackRequiresSeparateApproval": true,
+      "operatorEntryPoint": "tools/provisioning/manage_activation.py",
+      "sourceSha256": {
+        "tools/provisioning/activation_runtime.py": "3c10837b6f002f06a140cc9efa195b88c46c9ea937a1108668152f44ebd9b738",
+        "tools/provisioning/manage_activation.py": "c004f983e491810de31ee860d8e7aa2f1da75c1811d43b74581ae16a661bff15"
+      }
+    }
   },
   "analyticsExtension": {
     "optional": true,

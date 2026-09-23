@@ -27,10 +27,10 @@
   "notebook": "workshop/v2.7.0/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
   "ontologyDefinitionParts": 54,
   "payloadBytes": 3998460,
-  "payloadSha256": "71717e94877900d665d6a40fd375909907801a3862034c6b3d57c865b2ad0a6e",
+  "payloadSha256": "8aa6eda00cfaa5985598bae0637d42866c07f667cd0fa8898df0f7221d5773de",
   "runtimeHashes": {
     "ontologyCreatorCore": "5f0f91f906ae742b7392b0fa3968856179d8184e51a29c1b0a5bea2239f3ddce",
-    "provisionerCore": "2a7dce51cd59228ba1198b1508771c47c6bd62dceb9a0c4bfa29596144aa3718"
+    "provisionerCore": "4788f8cc3e2959435bad66e539e2b2d5c288243769cbb8ee0baa71c76c67d549"
   },
   "schemaVersion": "furusato-workshop-provisioner-payload/v1"
 }

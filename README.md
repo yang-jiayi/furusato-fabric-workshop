@@ -4,6 +4,7 @@
 > **[Word・205ページ](docs/v3-preview/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx) ·
 > [対応する日英HTML](docs/v3-preview/guide/furusato-workshop-v3-0-0-preview-complete.html) ·
 > [評価結果](docs/v3-preview/reports/evaluation-report.md) · [進捗・制約](docs/v3-preview/reports/progress-report.md)**
+> **[Previewリリース・一括ZIP](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/tag/v3.0.0-preview.1-20260930)**
 >
 > 全24章・5付録、実画面、Copilot添付演習、可搬デプロイ資産を収録しています。
 > 元10問・84条件の最終実機評価は **48 PASS／36 FAIL**。主Agentへは昇格せず、
@@ -17,6 +18,7 @@
 > **[205-page Word](docs/v3-preview/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx) ·
 > [Matching bilingual HTML](docs/v3-preview/guide/furusato-workshop-v3-0-0-preview-complete.html) ·
 > [Evaluation](docs/v3-preview/reports/evaluation-report.md) · [Progress and limits](docs/v3-preview/reports/progress-report.md)**
+> **[Preview release and ZIP bundle](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/tag/v3.0.0-preview.1-20260930)**
 >
 > Includes all 24 chapters, five appendices, actual UI captures, Copilot attachments and portable deployment assets.
 > The unchanged ten-question/84-condition native-UI run scored **48 PASS / 36 FAIL**; the main Agent was not promoted.

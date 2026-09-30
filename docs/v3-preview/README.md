@@ -9,6 +9,8 @@
 [対応する日英HTML](guide/furusato-workshop-v3-0-0-preview-complete.html) ·
 [SHA-256](guide/SHA256SUMS.txt)**。HTMLはダウンロードしてローカルで開いてください。
 Wordを同じフォルダーに置くと、HTML内のWordリンクも利用できます。
+**[公開Previewリリース](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/tag/v3.0.0-preview.1-20260930)**には、
+一括ZIPと単体ファイル、公開ダウンロードの一致を確認したチェックサムを掲載しています。
 
 Wordと日英HTMLは同じ共有原稿から実ファイルを生成します。v2.7の全19章・5付録の本文、
 表、コード、元の10問・84条件は、比較・移行参考として保持します。元の合成データも変更しません。
@@ -98,12 +100,15 @@ together when downloading the individual files.
 | Full 24-chapter Word | [Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx) |
 | Matching JA/EN HTML | [furusato-workshop-v3-0-0-preview-complete.html](guide/furusato-workshop-v3-0-0-preview-complete.html) |
 | Pair integrity | [SHA256SUMS.txt](guide/SHA256SUMS.txt) |
-| Preview bundle, visibly DRAFT where strict gates require | `Furusato_Workshop_v3.0.0-preview_DRAFT.zip`: guide pair, four exercise attachments and public reports |
+| Preview bundle, visibly DRAFT where strict gates require | [Furusato_Workshop_v3.0.0-preview_DRAFT.zip](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/download/v3.0.0-preview.1-20260930/Furusato_Workshop_v3.0.0-preview_DRAFT.zip): guide pair, four exercise attachments and public reports |
 | Source-owned public reports | [evaluation](reports/evaluation-report.md), [progress](reports/progress-report.md), [aggregate JSON](reports/evaluation-summary.json) |
 | Portable deployment assets | [v3 runtime, notebooks and explicit optional compatibility handoff](../../workshop/v3.0.0-preview/README-runtime.md) |
 
 The builder and QA procedures below reproduce the pair from the approved public
 source projection. Stable v2.7 files/links are not repointed or overwritten.
+The evaluation/progress reports retain their pre-publication freeze state; the
+[published prerelease](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/tag/v3.0.0-preview.1-20260930)
+is the current distribution record. It does not change the recorded quality verdict.
 
 ### 教材と実ファイル
 

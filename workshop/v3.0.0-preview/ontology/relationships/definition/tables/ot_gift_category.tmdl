@@ -1,0 +1,53 @@
+table ot_gift_category
+	lineageTag: c19fcb31-6cfb-5044-8db0-c9e45adff2a9
+
+	column CategoryId
+		dataType: int64
+		sourceColumn: CategoryId
+
+	column CategoryName
+		dataType: string
+		sourceColumn: CategoryName
+
+	column CategoryNameEn
+		dataType: string
+		sourceColumn: CategoryNameEn
+
+	column CategorySearchTerms
+		dataType: string
+		sourceColumn: CategorySearchTerms
+
+	column CategoryStaticCount
+		dataType: int64
+		sourceColumn: CategoryStaticCount
+
+	column CategoryStaticTotalYen
+		dataType: int64
+		sourceColumn: CategoryStaticTotalYen
+
+	column CategoryAmountRank
+		dataType: int64
+		sourceColumn: CategoryAmountRank
+
+	partition ot_gift_category = entity
+		mode: directLake
+		source
+			entityName: ot_gift_category
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

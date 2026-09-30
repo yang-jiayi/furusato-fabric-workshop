@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "config": {
+    "logicalId": "00000000-0000-0000-0000-000000000000",
+    "version": "2.0"
+  },
+  "metadata": {
+    "description": "Optional Furusato workshop Direct Lake analytics model over Notebook 05 Gold tables.",
+    "displayName": "SM_Furusato_Analytics",
+    "type": "SemanticModel"
+  }
+}

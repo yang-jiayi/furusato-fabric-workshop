@@ -1,0 +1,232 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.153.json",
+  "name": "FurusatoCivicLab-63fefe32a4.json",
+  "dataColors": [
+    "#304FFE",
+    "#00897B",
+    "#1E88E5",
+    "#F9A825",
+    "#7C3AED",
+    "#D32F2F",
+    "#64748B",
+    "#0F766E"
+  ],
+  "good": "#00897B",
+  "neutral": "#F9A825",
+  "bad": "#D32F2F",
+  "maximum": "#304FFE",
+  "center": "#1E88E5",
+  "minimum": "#DCE7FF",
+  "null": "#94A3B8",
+  "foreground": "#1F2937",
+  "background": "#FFFFFF",
+  "tableAccent": "#304FFE",
+  "textClasses": {
+    "callout": {
+      "fontSize": 28,
+      "fontFace": "Yu Gothic UI Semibold",
+      "color": "#1F2937"
+    },
+    "title": {
+      "fontSize": 14,
+      "fontFace": "Yu Gothic UI Semibold",
+      "color": "#1F2937"
+    },
+    "header": {
+      "fontSize": 12,
+      "fontFace": "Yu Gothic UI Semibold",
+      "color": "#1F2937"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Yu Gothic UI",
+      "color": "#475569"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "border": [
+          {
+            "show": true,
+            "color": {
+              "solid": {
+                "color": "#DCE3EC"
+              }
+            },
+            "radius": 10,
+            "width": 1
+          }
+        ],
+        "dropShadow": [
+          {
+            "show": false
+          }
+        ],
+        "padding": [
+          {
+            "top": 12,
+            "bottom": 12,
+            "left": 12,
+            "right": 12
+          }
+        ]
+      }
+    },
+    "textbox": {
+      "*": {
+        "padding": [
+          {
+            "top": 0,
+            "bottom": 0,
+            "left": 0,
+            "right": 0
+          }
+        ],
+        "background": [
+          {
+            "show": false
+          }
+        ],
+        "border": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "cardVisual": {
+      "*": {
+        "value": [
+          {
+            "bold": true,
+            "fontFamily": "Yu Gothic UI Semibold",
+            "$id": "default"
+          }
+        ],
+        "label": [
+          {
+            "show": true,
+            "fontFamily": "Yu Gothic UI",
+            "$id": "default"
+          }
+        ],
+        "cardCalloutArea": [
+          {
+            "paddingUniform": 0
+          }
+        ],
+        "title": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "lineChart": {
+      "*": {
+        "labels": [
+          {
+            "show": false
+          }
+        ],
+        "categoryAxis": [
+          {
+            "show": true,
+            "fontSize": 10,
+            "labelColor": {
+              "solid": {
+                "color": "#475569"
+              }
+            },
+            "showAxisTitle": false,
+            "gridlineShow": false
+          }
+        ],
+        "valueAxis": [
+          {
+            "show": true,
+            "fontSize": 9,
+            "labelColor": {
+              "solid": {
+                "color": "#64748B"
+              }
+            },
+            "showAxisTitle": false,
+            "gridlineStyle": "dotted",
+            "gridlineColor": {
+              "solid": {
+                "color": "#DCE3EC"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "barChart": {
+      "*": {
+        "labels": [
+          {
+            "show": true,
+            "fontSize": 10
+          }
+        ],
+        "valueAxis": [
+          {
+            "show": false,
+            "gridlineShow": false,
+            "showAxisTitle": false
+          }
+        ],
+        "categoryAxis": [
+          {
+            "show": true,
+            "fontSize": 10,
+            "labelColor": {
+              "solid": {
+                "color": "#475569"
+              }
+            },
+            "showAxisTitle": false,
+            "innerPadding": 22,
+            "gridlineShow": false
+          }
+        ],
+        "legend": [
+          {
+            "show": false
+          }
+        ]
+      }
+    },
+    "slicer": {
+      "*": {
+        "header": [
+          {
+            "fontFamily": "Yu Gothic UI Semibold",
+            "textSize": 10,
+            "fontColor": {
+              "solid": {
+                "color": "#1F2937"
+              }
+            },
+            "outlineStyle": 0
+          }
+        ],
+        "items": [
+          {
+            "fontFamily": "Yu Gothic UI",
+            "textSize": 9,
+            "fontColor": {
+              "solid": {
+                "color": "#1F2937"
+              }
+            },
+            "outlineStyle": 0,
+            "padding": 2
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+rule SupplierAttribution
+	lineageTag: 290bb34e-8873-5cb2-ad84-fa92e2294802
+	statement: SupplierProvidesGift describes catalog eligibility, not a supplier assigned to a donation. A many-to-many supplier catalog join must not duplicate Donation amounts or imply an order-level supplier.
+	ruleReferencedEntity Supplier
+	ruleReferencedEntity Gift
+	ruleReferencedEntity Donation

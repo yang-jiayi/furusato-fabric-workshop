@@ -1,0 +1,28 @@
+{
+  "edition": "v3.0.0-preview",
+  "baselineEdition": "2.7.0",
+  "baselineTreeSha256": "0e18da23f0ab3f286eab51f632fa1419272c85dcb9c85927925d79518ec8ea6b",
+  "dataContract": {
+    "staticDonationRows": 80000,
+    "staticDonationYen": 1344099000,
+    "increments": {
+      "donation_events_001.csv": 5000,
+      "donation_events_002.csv": 5000,
+      "donation_events_003.csv": 5000
+    },
+    "rawIncrementRows": 15000,
+    "acceptedUniqueRows": 14900,
+    "duplicateRows": 100
+  },
+  "generation2": true,
+  "legacyFallback": false,
+  "ontologyContract": "../ontology/generation2-contract.json",
+  "environmentParameterRequired": [
+    "dev",
+    "test",
+    "prod"
+  ],
+  "privateEvidenceRequired": true,
+  "cloudStatus": "not-deployed-by-build",
+  "attachmentsOwner": "documents-workstream"
+}

@@ -1,0 +1,331 @@
+{
+  "caseAggregates": [
+    {
+      "case": "T01",
+      "fail": 0,
+      "nativeGate": false,
+      "pass": 7,
+      "sourceExecutions": 1
+    },
+    {
+      "case": "T02",
+      "fail": 0,
+      "nativeGate": false,
+      "pass": 6,
+      "sourceExecutions": 1
+    },
+    {
+      "case": "T03",
+      "fail": 0,
+      "nativeGate": false,
+      "pass": 6,
+      "sourceExecutions": 2
+    },
+    {
+      "case": "T04",
+      "fail": 5,
+      "nativeGate": false,
+      "pass": 6,
+      "sourceExecutions": 1
+    },
+    {
+      "case": "T05",
+      "fail": 5,
+      "nativeGate": false,
+      "pass": 9,
+      "sourceExecutions": 2
+    },
+    {
+      "case": "T06",
+      "fail": 8,
+      "nativeGate": false,
+      "pass": 2,
+      "sourceExecutions": 1
+    },
+    {
+      "case": "T07",
+      "fail": 3,
+      "nativeGate": false,
+      "pass": 5,
+      "sourceExecutions": 1
+    },
+    {
+      "case": "T08",
+      "fail": 2,
+      "nativeGate": false,
+      "pass": 5,
+      "sourceExecutions": 0
+    },
+    {
+      "case": "T09",
+      "fail": 6,
+      "nativeGate": false,
+      "pass": 2,
+      "sourceExecutions": 0
+    },
+    {
+      "case": "T10",
+      "fail": 7,
+      "nativeGate": true,
+      "pass": 0,
+      "sourceExecutions": 0
+    }
+  ],
+  "directCausalMcpAbClaimed": false,
+  "evidenceProjectionSha256": "4dc8b9f2ca12ab4d4c7a2485a62e770bfc6e149100429e1cc66df9b57615d106",
+  "externalSdk": {
+    "blocker": "Missing Fabric runtime service-discovery module",
+    "questionsSubmitted": 0,
+    "status": "blocked-in-observed-environment",
+    "universalSdkFailureClaimed": false
+  },
+  "finalEvaluation": {
+    "accepted": false,
+    "conditionCount": 84,
+    "counts": {
+      "blocked": 0,
+      "executionUnverified": 0,
+      "fail": 36,
+      "notApplicable": 0,
+      "pass": 48
+    },
+    "failureCounts": {
+      "content": 29,
+      "nativeAcceptance": 7
+    },
+    "freshBackendProof": true,
+    "id": "compat-native-ui-final",
+    "independentExecutionTraces": 7,
+    "label": {
+      "en": "Final Compat NativeUI (quality not accepted, not promoted)",
+      "ja": "最終Compat NativeUI（品質未合格・未promotion）"
+    },
+    "method": {
+      "causalAbClaimed": false,
+      "distinctBackendConversationsProven": 10,
+      "judgment": "manual-fixed-rubric-offline",
+      "recordedModel": "gpt-5.6-terra",
+      "runtime": "preview",
+      "sourceExecutions": {
+        "gql": 2,
+        "kql": 2,
+        "sql": 5
+      },
+      "stage": "sandbox",
+      "surface": "native-ui",
+      "transport": "responses"
+    },
+    "observedAt": "2026-09-30T07:31:33.077630+00:00",
+    "preblockedQuestions": 0,
+    "promoted": false,
+    "questionCount": 10,
+    "submittedQuestions": 10,
+    "summary": {
+      "en": "Manual fixed-rubric offline judgment. Ten backend conversations; nine source executions (SQL5/GQL2/KQL2) across seven question slots. Scoped gen1 consumer benefit is verified, not a gen2 fix or quality acceptance.29 content/required-evidence failures plus seven T10 native gates.",
+      "ja": "manual fixed-rubric offline判定。10 backend会話、source実行9回（SQL5/GQL2/KQL2）は7質問slotで確認。gen1 consumer benefitは実証したがgen2修正/品質合格ではない。FAIL29内容/要求証拠＋T10native gate7。"
+    }
+  },
+  "freezeStatus": "frozen-for-build",
+  "generalPopulationAccuracyClaimed": false,
+  "historicalRuns": [
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 51,
+        "executionUnverified": 1,
+        "fail": 23,
+        "notApplicable": 0,
+        "pass": 9
+      },
+      "failureCounts": {
+        "content": 23,
+        "nativeAcceptance": 0
+      },
+      "freshBackendProof": false,
+      "id": "main-baseline",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Main baseline",
+        "ja": "Main baseline（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "observedAt": "2026-09-29T23:44:56.522473+00:00",
+      "preblockedQuestions": 5,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 5,
+      "summary": {
+        "en": "Main baseline retains observed failures and missing execution proof.",
+        "ja": "Main baseline: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 51,
+        "executionUnverified": 1,
+        "fail": 10,
+        "notApplicable": 0,
+        "pass": 22
+      },
+      "failureCounts": {
+        "content": 3,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": false,
+      "id": "static-first",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Isolated StaticFirst",
+        "ja": "Isolated StaticFirst（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "observedAt": "2026-09-30T00:45:29.194804+00:00",
+      "preblockedQuestions": 5,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 5,
+      "summary": {
+        "en": "Separate isolated candidate, not promoted. T08 has three content deficiencies; T10 native content block produces seven acceptance failures, not correct contextual refusal.",
+        "ja": "Isolated StaticFirst: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 4,
+        "fail": 38,
+        "notApplicable": 3,
+        "pass": 39
+      },
+      "failureCounts": {
+        "content": 31,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": false,
+      "id": "context-published-mcp",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Context published-MCP",
+        "ja": "Context published-MCP（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "notApplicableReason": {
+        "en": "Three conditions are inapplicable to the recorded answer branches; retained in the original84 denominator.",
+        "ja": "記録された回答branchで3条件が非該当。元84条件の分母に保持。"
+      },
+      "observedAt": "2026-09-30T04:33:42.963361+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Published-MCP ledger only. Native UI/SDK diagnostics and direct operator queries do not change these grades. Main is unchanged and not promoted.",
+        "ja": "Context published-MCP: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    }
+  ],
+  "kind": "sanitized-preview-evaluation-and-progress",
+  "labStates": {
+    "copilot-act": "failed",
+    "copilot-additive-entity": "passed",
+    "copilot-attachments": "observed",
+    "copilot-baseline": "unverified",
+    "dashboard": "blocked",
+    "data-agent": "failed",
+    "entities": "observed",
+    "evaluation": "failed",
+    "gold": "unverified",
+    "graph": "observed",
+    "inheritance": "observed",
+    "mcp": "unverified",
+    "metrics": "observed",
+    "namespaces": "blocked",
+    "native-delivery": "observed",
+    "publish": "unverified",
+    "rdf": "observed",
+    "relationships": "observed",
+    "rules": "observed",
+    "shared-properties": "observed",
+    "timeseries": "observed",
+    "version-history": "observed"
+  },
+  "mainPromoted": false,
+  "nativeCapturePlacements": 23,
+  "pairBuildAuthorized": true,
+  "postcheck": {
+    "compatDraftCatalogMetadataExpanded": true,
+    "effectiveSelectedTablesAndColumnsUnchanged": true,
+    "effectiveSelectionCounts": {
+      "kql": 11,
+      "lakehouse": 99
+    },
+    "mainStaticFirstContextFullDefinitionsUnchanged": true,
+    "republished": false,
+    "sourceGlobalAndCiSettingsStable": true,
+    "unchangedPublications": 4,
+    "unselectedRawEventIdExposed": false
+  },
+  "presentation": {
+    "en": "Preview with implementation and verification results — AI answer quality not accepted; not GA",
+    "ja": "実装・検証結果を収録したPreview — AI回答品質は未合格／GAではありません"
+  },
+  "privacy": {
+    "answerKeysIncluded": false,
+    "internalReasoningIncluded": false,
+    "liveIdsEndpointsMachinePathsIncluded": false,
+    "privateCriterionTextIncluded": false,
+    "rawAnswersIncluded": false
+  },
+  "publication": {
+    "previewBranchUrl": null,
+    "previewReleaseUrl": null,
+    "stableArtifactsReplaced": false,
+    "stableVersion": "v2.7.0 / unified-20260923"
+  },
+  "qualityAccepted": false,
+  "reviewedAt": "2026-09-30T10:04:21.386824+00:00",
+  "scope": "historical-observed-run",
+  "scopedCompatibility": {
+    "generation1BridgeConsumerGqlObserved": true,
+    "generation2ConnectorFixed": false,
+    "implicitFallbackOrDefaultDowngrade": false,
+    "newGeneration2MetricsAndTsPreserved": true,
+    "t04AggregationAndPresentationStillFailed": true
+  },
+  "uniqueSanitizedImages": 21
+}

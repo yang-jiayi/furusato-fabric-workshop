@@ -1,0 +1,5 @@
+reportlab>=4.4
+Pillow>=10.0
+PyMuPDF>=1.26
+python-docx>=1.2
+openpyxl>=3.1

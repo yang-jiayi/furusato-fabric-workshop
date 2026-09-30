@@ -1,0 +1,930 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "{{item.lakehouse.id}}",
+  "dataSourceInstructions": "- Mandatory exact-Donation SQL projection: when DonationId is specified, the SQL result must include `d.DonationId`, `d.DonationAmountYen`, `donor.DonorId`, `donor.DonorName`, `donor.PrefectureId AS DonorResidencePrefectureId`, `donor_pref.PrefectureName AS DonorResidencePrefectureName`, `municipality.MunicipalityId`, `municipality.MunicipalityName`, `municipality.PrefectureId AS RecipientPrefectureId`, `recipient_pref.PrefectureName AS RecipientPrefectureName`, `gift.GiftId`, `gift.GiftName`, `category.CategoryId`, `category.CategoryName`, `supplier.SupplierId`, and `supplier.SupplierName`. Join the exact foreign keys through `ot_donor`, both aliases of `ot_prefecture`, `ot_municipality`, `ot_gift`, `ot_gift_category`, `ot_supplier_gift`, and `ot_supplier`, filter only `d.DonationId = <exact ID>`, and order by SupplierId. Do not issue an ID-only projection.\nQuery the `dbo` schema of this Lakehouse for static snapshot facts.\n\n- Always return the stable ID next to every named row: PrefectureId, MunicipalityId, DonorId, GiftId, CategoryId, SupplierId, DonationId. Resolve names to IDs before filtering, and never exact-match a partial or non-unique display name.\n- `ot_prefecture` carries both readings side by side. `PrefReceived*` is donation received by municipalities in that prefecture; `PrefResident*` is donation made by residents of that prefecture. Choose deliberately and say which reading you used. For a bare place phrase such as `Xの寄付`, issue one query that selects both column families and report both, or ask the user which meaning they intend; never choose one silently.\n- For an unqualified popularity or ranking question, return both the count and amount metrics, the stable ID, and the nationwide or filtered scope. Never choose only one metric and call it popularity.\n- `ot_donation` is the only transaction grain. `ot_donor`, `ot_gift`, `ot_municipality`, `ot_gift_category` and `ot_prefecture` carry pre-aggregated static counts and totals for their own grain, and `ot_mun_category_metric`, `ot_pref_category_metric` and `ot_pref_donation_flow` are already summarized pairs. Never re-aggregate a pre-aggregated column across a different grain, and never sum a rank.\n- `ot_supplier_gift` is a many-to-many registration bridge. Never use it in a donation count or amount aggregation.\n- `DonationSelectedGift` means the donation selected that return gift; `SupplierProvidesGift` means the supplier registered that gift in the catalog. Neither proves purchase, delivery or allocation of a donation to one supplier. `ot_pref_donation_flow` origin is residence and destination is recipient; they are not interchangeable.\n- Use `DonorResidenceAmountRank` only inside a residence prefecture and `DonorOverallAmountRank` only nationwide; the same rule applies to `MunicipalityPrefAmountRank` versus `MunicipalityAmountRank`. Print the rank scope with the rank.\n- `MunicipalityAmountRank` and `MunicipalityPrefAmountRank` are amount ranks, and `PrefReceivedAmountRank`, `PrefResidentAmountRank`, `DonorOverallAmountRank`, `DonorResidenceAmountRank`, `GiftAmountRank`, `CategoryAmountRank`, `MunCategoryAmountRank`, `PrefCategoryAmountRank`, `PrefFlowOriginRank` and `PrefFlowDestinationRank` are amount ranks too. No stored column ranks by record count. A count rank must be derived in the query by ordering the count column, and the answer must label it a derived count rank, never quote a stored amount rank as one.\n- Month filters use `DonationYearMonthJst` (`yyyy-MM`) or `DonationDateJst` (`yyyy-MM-dd`); both are Asia/Tokyo, while `DonatedAtUtc` is UTC.\n- Lakehouse relationship-key columns may support SQL joins, but Ontology owns modeled connectivity. In a multi-source question that explicitly asks for a Prefecture relationship, return the Municipality stable ID and static metrics only; do not use Lakehouse Prefecture fields as the relationship answer.\n- Membership or containment questions - which Municipalities belong to, sit under, hang from, 属する or ぶら下がる a Prefecture - belong to Ontology. Do not answer them by counting or grouping `ot_municipality.PrefectureId`; return static metrics only and let Ontology return the relationship-backed total.\n- When a MunicipalityID comes from Eventhouse, filter `ot_municipality.MunicipalityId` on that exact ID and return its display name, static metrics and requested ranking scope. The absence of a name in Eventhouse is not a reason to stop a cross-source comparison.\n- This source is independent of the Eventhouse observations. Never add its rows or amounts to Eventhouse observation totals and never call its rows approved, confirmed or finalized.\n- For an exact Donation trace, return DonationId, DonationAmountYen, DonorId, MunicipalityId and GiftId from `ot_donation`; resolve residence PrefectureId, recipient PrefectureId, CategoryId and catalog-registered SupplierIds in separate owning tables without inventing a direct Donor-to-Supplier relationship.\n- Do not invoke Ontology for a static place-metric question unless the user explicitly asks for a relationship or connectivity path. Return only query-backed static values and never invent overlap or reconciliation numbers between received and resident branches.\n- Static snapshot is a dataset label, not proof of deduplication, approval, confirmation or finality. Never add its metrics to Eventhouse observations, even as a reference value.\n- Canonical Gift category relationship name: `Gift -GiftInCategory-> GiftCategory`. Use that exact name in every Donation trace.\n- `_WorkshopGenerationId` is an opaque publication generation, never a calendar year. The `ot_*` tables already represent the static 2025 snapshot. Never filter `_WorkshopGenerationId` to 2025 or to any year; for a current static query, omit that filter.\n- `MunicipalityId` is a string key. Preserve leading zeros and compare an Eventhouse MunicipalityID as an exact quoted string. For a cross-source comparison, query the exact MunicipalityId row and return `MunicipalityStaticCount`, `MunicipalityStaticTotalYen`, `MunicipalityAmountRank`, and `MunicipalityPrefAmountRank`; do not substitute a generation filter for the MunicipalityId filter.\n- For Supplier lookup in a Donation trace, filter `ot_supplier_gift.GiftId` to the exact selected GiftId, then resolve only those SupplierIds in `ot_supplier`. Never list suppliers merely because they catalog another gift for the same Municipality.\n- Return every ID/name pair from the same SQL row. For an exact Donation trace, resolve attributes through exact-key joins and never infer MunicipalityName from PrefectureName or MunicipalityId. Use Lakehouse for attributes and Ontology only for modeled paths.\n",
+  "displayName": "{{name.lakehouse}}",
+  "elements": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality.",
+                      "display_name": "PrefectureId",
+                      "id": "de923c35-59a1-6a16-f216-978770058b52",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output.",
+                      "display_name": "PrefectureName",
+                      "id": "54871367-c916-7e01-9198-c679870bab8c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical English label of the prefecture. Use it for English lookup and display; PrefectureId remains the identity.",
+                      "display_name": "PrefectureNameEn",
+                      "id": "6bc21cbb-aad6-d459-1a2b-5536585746cd",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated count of static Donations received by municipalities in this Prefecture.",
+                      "display_name": "PrefReceivedStaticCount",
+                      "id": "a33f9c6d-4d57-40a8-afc7-5651cf052b6b",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated JPY amount received by municipalities in this Prefecture.",
+                      "display_name": "PrefReceivedTotalYen",
+                      "id": "1d59c0cf-3bb0-1298-d02f-2d2c864f8d8c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Received-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefReceivedTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending.",
+                      "display_name": "PrefReceivedAmountRank",
+                      "id": "09e8c1d0-f779-6371-1b7b-69f0fa6da90b",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated count of static Donations made by Donors who live in this Prefecture.",
+                      "display_name": "PrefResidentStaticCount",
+                      "id": "0086b790-7dac-f8e2-dba7-6b8bb9942267",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated JPY amount donated by Donors who live in this Prefecture.",
+                      "display_name": "PrefResidentTotalYen",
+                      "id": "67438c5f-7674-8650-f990-9d2379c6e0e5",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Resident-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefResidentTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending.",
+                      "display_name": "PrefResidentAmountRank",
+                      "id": "f6eb30a4-3b4b-12d6-2ac7-9baefbffa8f3",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Japanese prefecture (都道府県) used in two separate geography paths: recipient geography through Municipality and donor-residence geography through Donor. It is a reference dimension, not a Donation fact grain.",
+                  "display_name": "ot_prefecture",
+                  "id": "3584d8dc-b0fa-a2a3-8e42-9878f7f4bb8a",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Stable identifier for one Municipality entity. Preserve leading zeros if present and use it as the relationship key; do not aggregate it.",
+                      "display_name": "MunicipalityId",
+                      "id": "ea1f9f55-d674-290a-97df-5251584d6057",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japanese municipality name (自治体名／市区町村名) without a prefecture qualifier. Names are not globally unique, so include MunicipalityId or MunicipalityDisplayName when ambiguity is possible.",
+                      "display_name": "MunicipalityName",
+                      "id": "edbda28e-75cd-b514-f4cd-3ed319aa6f25",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Display-only composite label in the format MunicipalityName, PrefectureName, and MunicipalityId. Use MunicipalityId as the identity and this property only for unambiguous human-readable output.",
+                      "display_name": "MunicipalityDisplayName",
+                      "id": "1d0136d2-af7e-6f52-7b9e-59cd462e3dab",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated count of static Donations received by this Municipality.",
+                      "display_name": "MunicipalityStaticCount",
+                      "id": "f59d4dc9-991c-0fbc-b83f-e690a4629ad7",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation amount received by this Municipality in JPY.",
+                      "display_name": "MunicipalityStaticTotalYen",
+                      "id": "c9d857bb-4e5d-8413-47f0-bbcd9ed268f7",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Received-amount rank of this Municipality across all Municipalities. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc: equal amounts never share a rank because MunicipalityId breaks the tie ascending.",
+                      "display_name": "MunicipalityAmountRank",
+                      "id": "864ea72a-7c6c-c7b7-51d2-d3b928ed7741",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Received-amount rank of this Municipality inside its containing Prefecture. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc within each PrefectureId: equal amounts never share a rank because MunicipalityId breaks the tie ascending.",
+                      "display_name": "MunicipalityPrefAmountRank",
+                      "id": "2e40d0aa-09cb-db8f-c6a3-d6397a20ac7e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by MunicipalityInPrefecture.",
+                      "display_name": "PrefectureId",
+                      "id": "e0d0d3f0-bb4d-d27b-5d0b-d641f9d249b2",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Japanese municipality (自治体／市区町村) that may receive zero or more Donations. It also keys operational time-series observations; those observations are not Donation entities and have no Donor, Gift, or Supplier identity. SQL joins: PrefectureId supports MunicipalityInPrefecture.",
+                  "display_name": "ot_municipality",
+                  "id": "b8a9532f-6549-d807-ec4f-807e122fd93a",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people.",
+                      "display_name": "DonorId",
+                      "id": "2da53226-aff0-12c6-8f05-1d8385bb1d83",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person.",
+                      "display_name": "DonorName",
+                      "id": "c6443856-0d75-0f22-b7ae-cfd02ae6ee48",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Display-only composite of DonorName and DonorId. Use DonorId for identity and this property for human-readable output.",
+                      "display_name": "DonorDisplayName",
+                      "id": "9178b6bf-fa4a-49fa-5bcf-438bbaebfded",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Whole-year age of the synthetic donor (年齢) in the static donor record. It is not derived from the Donation timestamp and must not be summed.",
+                      "display_name": "DonorAge",
+                      "id": "40550d4d-40e6-6e52-96d6-7eeb777fcf6a",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japanese controlled occupation or job label (職業／職種／仕事) for the synthetic donor. It describes the donor's job category, not employer, recipient, or Supplier type.",
+                      "display_name": "DonorOccupation",
+                      "id": "e8151f83-120d-7cbf-32cd-f78273e373a3",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical English occupation label for DonorOccupation. Use it for English filtering and grouping; preserve DonorOccupation when returning the stored Japanese label.",
+                      "display_name": "DonorOccupationEn",
+                      "id": "a3f10cef-4df2-afe6-50ce-992590aaf0c8",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated number of static Donations made by this Donor.",
+                      "display_name": "DonorStaticCount",
+                      "id": "832ca59d-334b-92b1-e74c-375e47861bc8",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated cumulative static Donation amount made by this Donor in JPY.",
+                      "display_name": "DonorStaticTotalYen",
+                      "id": "909658fb-826c-6a7c-6f83-b1379aff896d",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Maximum single static Donation amount made by this Donor in JPY; it is not the cumulative amount.",
+                      "display_name": "DonorStaticMaxYen",
+                      "id": "b2095de7-4c01-a1e3-fb0d-0a3d96f4ab94",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Cumulative static donation-amount rank of this Donor nationwide. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc: equal amounts never share a rank because DonorId breaks the tie ascending.",
+                      "display_name": "DonorOverallAmountRank",
+                      "id": "bce7165f-4e47-7bc9-85d0-813e853bed72",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Cumulative static donation-amount rank of this Donor inside the residence Prefecture. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc within each PrefectureId: equal amounts never share a rank because DonorId breaks the tie ascending.",
+                      "display_name": "DonorResidenceAmountRank",
+                      "id": "a8df12bd-b78b-eed4-9754-1a6b5b8f3e6c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by DonorLivesInPrefecture.",
+                      "display_name": "PrefectureId",
+                      "id": "0cf0e8aa-0845-352f-86af-140b46923a2d",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Synthetic workshop donor (寄付者／寄附者) who may make zero or more Donations. Residence is defined only by DonorLivesInPrefecture and must never be interpreted as recipient geography. SQL joins: PrefectureId supports DonorLivesInPrefecture.",
+                  "display_name": "ot_donor",
+                  "id": "00371127-f67f-e123-36aa-9fdbda14dd73",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it.",
+                      "display_name": "CategoryId",
+                      "id": "b381fd14-07dc-71c5-0828-4ee7736f72de",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label.",
+                      "display_name": "CategoryName",
+                      "id": "5582435b-1f1b-a2d2-ee67-2da7a8fedf88",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical English return-gift category label paired one-to-one with CategoryName. Use it for English filtering, grouping, and display; CategoryId remains the identity.",
+                      "display_name": "CategoryNameEn",
+                      "id": "8996234d-d021-2092-f4de-09c1ff5a5e6d",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Lowercase pipe-delimited Japanese and English aliases with leading and trailing boundary pipes, used only to resolve colloquial return-gift category wording such as 海鮮系, 魚介, seafood, or equivalent bounded terms. If CategoryName does not match, query this alias index before claiming no category data. Never display, group, count, or treat this property as the category identity.",
+                      "display_name": "CategorySearchTerms",
+                      "id": "5d0bf8fc-9a35-1a65-dff3-37abec5552a6",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation count for this GiftCategory across the full snapshot.",
+                      "display_name": "CategoryStaticCount",
+                      "id": "cd10c5e1-4fc4-860e-b587-4a02380ea8d2",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation amount for this GiftCategory across the full snapshot.",
+                      "display_name": "CategoryStaticTotalYen",
+                      "id": "604f0b96-5066-b359-3c99-f592eb442188",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Static donation-amount rank of this GiftCategory across all GiftCategories. Deterministic row-number rank (row_number) over CategoryStaticTotalYen desc, CategoryId asc: equal amounts never share a rank because CategoryId breaks the tie ascending.",
+                      "display_name": "CategoryAmountRank",
+                      "id": "3c94941f-01ee-8745-f7fa-2dd488c4f22c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Controlled classification of return-gift options (返礼品カテゴリ). Category counts and amounts must be aggregated from Donation through DonationSelectedGift and GiftInCategory; the category itself is not a transaction fact.",
+                  "display_name": "ot_gift_category",
+                  "id": "64b82daa-b709-1807-9c31-60fb7b3248d1",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers.",
+                      "display_name": "GiftId",
+                      "id": "916ac700-e354-509a-b3d5-ed838ebe03eb",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal.",
+                      "display_name": "GiftName",
+                      "id": "3ae64b5d-d4c5-6597-a2ba-89fb64edbce8",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical human-readable municipality-qualified catalog label copied from the source Gift name before the core GiftName is derived. Use it for exact full-label resolution and GiftId as the stable identity.",
+                      "display_name": "GiftDisplayName",
+                      "id": "838f212b-c0ef-af2b-e6b8-f5d3481a8584",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Normalized search-only text for resolving shortened or colloquial Gift wording. It contains the Gift name, catalog Municipality, Prefecture, and GiftId with whitespace and punctuation removed. Filter it with every distinctive noun and numeric token supplied by the user; never display, group, count, or treat it as Gift identity.",
+                      "display_name": "GiftSearchTerms",
+                      "id": "6657efb7-04d3-ad6c-4f8f-4203502103a1",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japanese free-text note, notes, remarks, or description for the return-gift option (備考／注意事項／説明). Notes are descriptive only and do not define Supplier, recipient geography, category, or monetary amount.",
+                      "display_name": "GiftNotes",
+                      "id": "d51e65cc-61e6-551a-d811-9569b0eccd3d",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Authoritative pre-aggregated count of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift count; do not join Suppliers or recount Donation detail.",
+                      "display_name": "GiftStaticCount",
+                      "id": "8acebaeb-45c1-da56-224b-3e175674eff9",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Authoritative pre-aggregated JPY amount of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift total; do not join Suppliers or use SUM(DISTINCT DonationAmountYen).",
+                      "display_name": "GiftStaticTotalYen",
+                      "id": "4cb9af7b-3a8e-2096-1ba9-07a1131d125c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Static donation-amount rank of this Gift across all Gifts. Deterministic row-number rank (row_number) over GiftStaticTotalYen desc, GiftId asc: equal amounts never share a rank because GiftId breaks the tie ascending.",
+                      "display_name": "GiftAmountRank",
+                      "id": "ed0f75ed-ab13-7033-52bb-649a267711b7",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by GiftInCategory.",
+                      "display_name": "CategoryId",
+                      "id": "78b3ee41-a409-e13b-e189-d4378a54ebc7",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Foreign key used by MunicipalityCatalogsGift.",
+                      "display_name": "MunicipalityId",
+                      "id": "f3f6e5a4-5e80-2efc-c747-3e73a5c0a1af",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Synthetic return-gift option selected by a Donation (返礼品／お礼品／商品). It is a catalog dimension, not the donated money and not a transaction fact. If a Municipality is named, resolve that Municipality and traverse MunicipalityCatalogsGift before applying a GiftName CONTAINS candidate filter. Resolve exactly one stable GiftId before Supplier or Donation traversal. SQL joins: CategoryId supports GiftInCategory; MunicipalityId supports MunicipalityCatalogsGift.",
+                  "display_name": "ot_gift",
+                  "id": "8bd8e2e4-3c5d-2d13-b175-27d995e7ae8d",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Stable numeric identifier for one synthetic registered Supplier entity. It identifies a catalog provider, not an actual fulfillment event.",
+                      "display_name": "SupplierId",
+                      "id": "5947d2a9-dba6-857e-53a9-a59d4f4d10e9",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Synthetic Japanese organization-style name of the Supplier or vendor (事業者名／提供事業者名). It is not a Donation recipient.",
+                      "display_name": "SupplierName",
+                      "id": "b7044fcb-0bbd-aed9-7da8-c799f045d2e3",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Display-only composite of SupplierName and SupplierId. Use SupplierId for identity and this property for human-readable output.",
+                      "display_name": "SupplierDisplayName",
+                      "id": "9e64e339-7627-306f-eebf-1f1345531d9d",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japanese controlled supplier classification or business-type label (事業者種別／事業者区分) for the Supplier or vendor. It describes the provider, not the Gift category or Donation recipient.",
+                      "display_name": "SupplierType",
+                      "id": "56953414-1823-9780-5db2-70d0dbfa67b2",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical English business-type label for SupplierType. Use it for English filtering and grouping; it describes the provider and not the Gift category or Donation recipient.",
+                      "display_name": "SupplierTypeEn",
+                      "id": "08faa716-5e62-5621-0f0d-eb928ea42fa2",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Count of distinct Gifts linked to this Supplier in the registered catalog; it is not a Donation or fulfillment metric.",
+                      "display_name": "SupplierProvidedGiftCount",
+                      "id": "99013200-e563-c653-aca7-ff9cd92a1f34",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by SupplierInPrefecture.",
+                      "display_name": "PrefectureId",
+                      "id": "b39cc407-ae01-6443-d3c2-7a29a7db2b80",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Synthetic workshop business that may provide zero or more return-gift options (返礼品提供事業者). It is neither the Donation recipient nor a Donor; location is defined by SupplierInPrefecture. SQL joins: PrefectureId supports SupplierInPrefecture.",
+                  "display_name": "ot_supplier",
+                  "id": "da448cd0-669c-498d-0013-07c714477ea7",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Stable numeric identifier for one static Donation transaction. When a user says 寄付ID or Donation ID followed by a number, filter this property for exact identity; never reinterpret that number as DonationAmountYen. It is the transaction key and must not be used as a grouping dimension for an overall aggregate.",
+                      "display_name": "DonationId",
+                      "id": "c5850ef6-8216-7bfa-7b6e-455de6511860",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Display-only label in the format Donation followed by DonationId. Use DonationId for identity.",
+                      "display_name": "DonationDisplayName",
+                      "id": "d4e3abc7-0b49-d826-9003-33d00ead855e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Completed donation amount (寄付金額／寄附金額／納税額) in whole Japanese yen for exactly one static Donation. SUM this property for donation totals and never sum IDs or Municipality time-series observations into the same result.",
+                      "display_name": "DonationAmountYen",
+                      "id": "e03777f9-fae5-c18c-658b-02b5eedb4c4f",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "datetime2",
+                      "description": "Canonical UTC timestamp of the static baseline Donation. Use it for exact sorting, filtering, minimum, maximum, and deterministic latest-record selection.",
+                      "display_name": "DonatedAtUtc",
+                      "id": "297378d6-3ce5-2daf-0231-806ac9879767",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Display-only representation of DonatedAtUtc in Japan Standard Time (日本時間). Do not use this string for chronological sorting when DonatedAtUtc is available.",
+                      "display_name": "DonatedAtJstText",
+                      "id": "9a79b937-6532-3ad2-9b1f-c98f5278dfa0",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japan Standard Time calendar date of the Donation (寄付日／寄附日). Use it for local-day filtering and grouping, not for exact timestamp ordering.",
+                      "display_name": "DonationDateJst",
+                      "id": "0ff6b258-f403-e9a8-1d69-a69b5b4b9e03",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japan Standard Time calendar year and month of the Donation (寄付年月／寄附年月). Use it for local-month filtering and grouping. Normalize an unambiguous Japanese two-digit Gregorian year such as 25年 to 2025 before matching the stored yyyy-MM value.",
+                      "display_name": "DonationYearMonthJst",
+                      "id": "2418ef4d-5469-b695-8e4c-79b37be4cb76",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Japanese short Gregorian year-month label for the Donation, formatted yyyy年M月, such as 2025年1月. Use it only when the user supplies that short Japanese month wording; DonationYearMonthJst remains the canonical yyyy-MM calendar key.",
+                      "display_name": "DonationYearMonthJaShort",
+                      "id": "632b483c-cf1f-255b-fa52-b7e3fa9464ed",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Stored payment method, payment channel, checkout channel, or tender label (支払方法／決済方法／決済手段) for the completed Donation. It is a controlled Japanese-or-brand label and must not be interpreted as a Supplier.",
+                      "display_name": "DonationPaymentMethod",
+                      "id": "211abc4e-b554-c031-ab95-e54464d3ad04",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical English payment-method label for DonationPaymentMethod. Use it for English filtering and grouping; return both labels when the user asks for a translation.",
+                      "display_name": "DonationPaymentMethodEn",
+                      "id": "a66542dd-d5b2-fd23-24d3-1dbc96e3219e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Canonical layer label for this detail entity. Its only value is StaticSyntheticSnapshot, which is not a payment method or time-series event type.",
+                      "display_name": "DonationDataLayer",
+                      "id": "59b66d4b-c61f-bce5-19a0-f555be9e6a2e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by DonorMadeDonation.",
+                      "display_name": "DonorId",
+                      "id": "84167529-9050-29a8-5a6e-7fa779a149ac",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Foreign key used by DonationToMunicipality.",
+                      "display_name": "MunicipalityId",
+                      "id": "f9ec259d-9d56-0ec9-638c-ba3498e93184",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by DonationSelectedGift.",
+                      "display_name": "GiftId",
+                      "id": "c0a1050e-df91-ca98-72a7-e3871b4fcfd9",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Synthetic static baseline hometown-tax Donation row (ふるさと納税の寄付／寄附) and the only static fact grain for transaction counts and JPY amounts. It is an independent snapshot, not an approved, promoted, deduplicated, or finalized form of an Eventhouse observation. Each entity links to exactly one Donor, one recipient Municipality, and one selected Gift option in this dataset. SQL joins: DonorId supports DonorMadeDonation; MunicipalityId supports DonationToMunicipality; GiftId supports DonationSelectedGift.",
+                  "display_name": "ot_donation",
+                  "id": "9018c9c8-4b86-7f52-dc19-f0fa72918484",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row. The measure values are separate properties on this entity.",
+                      "display_name": "MunCategoryMetricId",
+                      "id": "345f5e52-ce48-191e-7f38-ead0f79cb54e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation count for one Municipality x GiftCategory pair.",
+                      "display_name": "MunCategoryStaticCount",
+                      "id": "61454467-f720-b5eb-0ce8-4861ab426112",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation amount for one Municipality x GiftCategory pair.",
+                      "display_name": "MunCategoryTotalYen",
+                      "id": "05e125af-28cb-e113-8590-0ab2d4733b73",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Amount rank of this GiftCategory inside one Municipality. Deterministic row-number rank (row_number) over MunCategoryTotalYen desc, CategoryId asc within each MunicipalityId: equal amounts never share a rank because CategoryId breaks the tie ascending.",
+                      "display_name": "MunCategoryAmountRank",
+                      "id": "9d752952-1794-e9f2-a481-5c3b250f334c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Foreign key used by MunHasCategoryMetric.",
+                      "display_name": "MunicipalityId",
+                      "id": "44982589-4ffa-a9f8-a70a-2b3311c9f45e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by MunMetricForCategory.",
+                      "display_name": "CategoryId",
+                      "id": "abab1529-2420-2f9b-afde-ce1468ad014e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Pre-aggregated current-static-snapshot metric for one Municipality and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain. SQL joins: MunicipalityId supports MunHasCategoryMetric; CategoryId supports MunMetricForCategory.",
+                  "display_name": "ot_mun_category_metric",
+                  "id": "b5c13a73-3f64-6011-92fb-8a03dedc511b",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Synthetic stable identifier for one recipient Prefecture x GiftCategory snapshot metric row. The measure values are separate properties on this entity.",
+                      "display_name": "PrefCategoryMetricId",
+                      "id": "6a2a6772-20b2-a232-c451-f078dc65ae78",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation count for one recipient Prefecture x GiftCategory pair.",
+                      "display_name": "PrefCategoryStaticCount",
+                      "id": "f29603c5-8fd1-6c54-3cf3-3346fcf799c1",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated static Donation amount for one recipient Prefecture x GiftCategory pair.",
+                      "display_name": "PrefCategoryTotalYen",
+                      "id": "963bfd07-7be8-7c86-5743-e6bf8dadbb86",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Amount rank of this GiftCategory inside one recipient Prefecture. Deterministic row-number rank (row_number) over PrefCategoryTotalYen desc, CategoryId asc within each PrefectureId: equal amounts never share a rank because CategoryId breaks the tie ascending.",
+                      "display_name": "PrefCategoryAmountRank",
+                      "id": "6391f681-2051-2270-671d-02ca8d739c38",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by PrefHasCategoryMetric.",
+                      "display_name": "PrefectureId",
+                      "id": "36229ebe-0339-31e8-9a4c-93199b093ec3",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by PrefMetricForCategory.",
+                      "display_name": "CategoryId",
+                      "id": "e0d623ef-0aac-0d3c-779a-96992fd51a8e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Pre-aggregated current-static-snapshot metric for one recipient Prefecture and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain. SQL joins: PrefectureId supports PrefHasCategoryMetric; CategoryId supports PrefMetricForCategory.",
+                  "display_name": "ot_pref_category_metric",
+                  "id": "47a5027c-f9f9-6762-08b6-42e24ca1466c",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "varchar",
+                      "description": "Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row. Directional measures are separate properties.",
+                      "display_name": "PrefDonationFlowId",
+                      "id": "bc47bea6-636c-5654-1c1e-06c7be68679b",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated count of static Donations from one residence Prefecture to one recipient Prefecture.",
+                      "display_name": "PrefFlowStaticCount",
+                      "id": "eecdd6c6-389b-1871-b1a8-23ccf616be65",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Pre-aggregated JPY amount from one residence Prefecture to one recipient Prefecture.",
+                      "display_name": "PrefFlowTotalYen",
+                      "id": "bdee782f-7299-888e-3bc0-b3ba6dbaf85e",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Amount rank of this recipient Prefecture among the destinations of one donor-residence Prefecture: the window is partitioned by the origin, so rank 1 is the destination that received the most from that origin. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, RecipientPrefectureId asc within each ResidencePrefectureId: equal amounts never share a rank because RecipientPrefectureId breaks the tie ascending.",
+                      "display_name": "PrefFlowOriginRank",
+                      "id": "bebf7ac6-22bd-7026-2077-b5f82e3e8fa2",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Amount rank of this donor-residence Prefecture among the origins of one recipient Prefecture: the window is partitioned by the destination, so rank 1 is the origin that sent the most to that destination. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, ResidencePrefectureId asc within each RecipientPrefectureId: equal amounts never share a rank because ResidencePrefectureId breaks the tie ascending.",
+                      "display_name": "PrefFlowDestinationRank",
+                      "id": "c1cd55ab-99a2-679d-14e1-ab8cc5722067",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by ResidencePrefHasFlow.",
+                      "display_name": "ResidencePrefectureId",
+                      "id": "52dfd831-e33e-41d7-4d82-68c3be04dd29",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Foreign key used by FlowToRecipientPref.",
+                      "display_name": "RecipientPrefectureId",
+                      "id": "a3ec178c-5e1d-8d18-66ea-d45fe637d63c",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Pre-aggregated current-static-snapshot flow from Donor residence Prefecture to Donation recipient Prefecture. Origin and destination are not interchangeable. It excludes time-series observations and Suppliers. SQL joins: ResidencePrefectureId supports ResidencePrefHasFlow; RecipientPrefectureId supports FlowToRecipientPref.",
+                  "display_name": "ot_pref_donation_flow",
+                  "id": "2a1112b8-de51-80f0-2839-1bfeb85d49ec",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                },
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Registered Supplier identifier; joins to ot_supplier.SupplierId.",
+                      "display_name": "SupplierId",
+                      "id": "2dacec75-bc02-a2fb-cbf8-0d629017485f",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    },
+                    {
+                      "children": [],
+                      "data_type": "bigint",
+                      "description": "Registered Gift identifier; joins to ot_gift.GiftId.",
+                      "display_name": "GiftId",
+                      "id": "2dacec75-bc02-a2fb-cbf8-0d629017485f",
+                      "is_selected": true,
+                      "type": "lakehouse_tables.column"
+                    }
+                  ],
+                  "description": "Many-to-many registered Supplier-to-Gift bridge. Never use it in Donation count or amount aggregation.",
+                  "display_name": "ot_supplier_gift",
+                  "id": "2dacec75-bc02-a2fb-cbf8-0d629017485f",
+                  "is_selected": true,
+                  "type": "lakehouse_tables.table"
+                }
+              ],
+              "description": null,
+              "display_name": "Tables",
+              "id": "2dacec75-bc02-a2fb-cbf8-0d629017485f",
+              "is_selected": true,
+              "type": "table_grouping"
+            }
+          ],
+          "description": "Curated Furusato static snapshot tables.",
+          "display_name": "dbo",
+          "id": "2dacec75-bc02-a2fb-cbf8-0d629017485f",
+          "is_selected": true,
+          "type": "lakehouse_tables.schema"
+        }
+      ],
+      "description": null,
+      "display_name": "Schemas",
+      "id": "2dacec75-bc02-a2fb-cbf8-0d629017485f",
+      "is_selected": true,
+      "type": "schema_grouping"
+    }
+  ],
+  "metadata": {},
+  "type": "lakehouse_tables",
+  "userDescription": "Static 2025 Furusato donation snapshot. It owns Donation, Donor, Gift, GiftCategory, Supplier, Municipality and Prefecture rows, the pre-aggregated static metric tables, and every static count, amount, ranking, payment-method, month, keyword and stable-ID fact. It contains no operational observation and proves no purchase, fulfillment, shipment, approval, wealth or income.",
+  "workspaceId": "{{workspace.id}}"
+}

@@ -1,0 +1,261 @@
+/// Connects each recipient Municipality to its containing Prefecture. Follow Municipality to Prefecture for recipient geography; do not use this relationship to infer donor residence or to count Donations.
+entityRelationship MunicipalityInPrefecture
+	lineageTag: d25c4669-6797-5e06-af3d-e0102e52d2ed
+	fromEntity: Municipality
+	toEntity: Prefecture
+	annotation Furusato_aggregationGuard = "count and sum Donation entities, not edges"
+	annotation Furusato_businessRole = "recipient administrative containment"
+	annotation Furusato_cardinality = "many-to-one, exactly one Prefecture per Municipality"
+	annotation Furusato_direction = "Municipality -> Prefecture"
+	annotation Furusato_grain = "one edge per Municipality"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "mandatory - every Municipality carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a Prefecture may have zero Municipality rows"
+
+	backingConfiguration
+		relationship: rel_MunicipalityInPrefecture
+
+/// Connects a synthetic Donor to the Prefecture of donor residence. This relationship defines donor-origin geography only and must never be treated as the Donation recipient.
+entityRelationship DonorLivesInPrefecture
+	lineageTag: b38d5ccc-f414-537f-9ced-0ece0beff151
+	fromEntity: Donor
+	toEntity: Prefecture
+	annotation Furusato_aggregationGuard = "use DonorMadeDonation before aggregating Donation facts"
+	annotation Furusato_businessRole = "donor residence geography"
+	annotation Furusato_cardinality = "many-to-one, exactly one Prefecture per Donor"
+	annotation Furusato_direction = "Donor -> Prefecture"
+	annotation Furusato_grain = "one edge per Donor"
+	annotation Furusato_sensitivity = "Synthetic-Personal"
+	annotation Furusato_sourceParticipation = "mandatory - every Donor carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a Prefecture may have zero Donor rows"
+
+	backingConfiguration
+		relationship: rel_DonorLivesInPrefecture
+
+/// Connects a synthetic Supplier to its registered Prefecture. Registered Supplier location is neither donor residence, Donation recipient geography, fulfillment location, service location, nor shipping origin.
+entityRelationship SupplierInPrefecture
+	lineageTag: 66240609-0626-597b-9ade-f3e07d98919c
+	fromEntity: Supplier
+	toEntity: Prefecture
+	annotation Furusato_aggregationGuard = "do not infer Donation recipient from Supplier location"
+	annotation Furusato_businessRole = "supplier base geography"
+	annotation Furusato_cardinality = "many-to-one, exactly one Prefecture per Supplier"
+	annotation Furusato_direction = "Supplier -> Prefecture"
+	annotation Furusato_grain = "one edge per Supplier"
+	annotation Furusato_sensitivity = "Synthetic-Organization"
+	annotation Furusato_sourceParticipation = "mandatory - every Supplier carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a Prefecture may have zero Supplier rows"
+
+	backingConfiguration
+		relationship: rel_SupplierInPrefecture
+
+/// Classifies a Gift in exactly one GiftCategory. Category-level donation metrics must traverse DonationSelectedGift first and aggregate DonationAmountYen from Donation.
+entityRelationship GiftInCategory
+	lineageTag: f1188ed9-d28b-5295-9cd1-b30597856623
+	fromEntity: Gift
+	toEntity: GiftCategory
+	annotation Furusato_aggregationGuard = "aggregate Donation facts, not Gift or edge counts"
+	annotation Furusato_businessRole = "catalog classification"
+	annotation Furusato_cardinality = "many-to-one, exactly one GiftCategory per Gift"
+	annotation Furusato_direction = "Gift -> GiftCategory"
+	annotation Furusato_grain = "one edge per Gift"
+	annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+	annotation Furusato_sourceParticipation = "mandatory - every Gift carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a GiftCategory may have zero Gift rows"
+
+	backingConfiguration
+		relationship: rel_GiftInCategory
+
+/// Connects a Supplier, provider, vendor, 事業者, 業者, or 会社 to a Gift for which it is a registered provider. It does not prove an actual fulfillment, service, shipment, or physical origin. For a Gift-centered provider question, resolve the GiftId first and traverse this relationship in reverse from Gift to every registered Supplier, then use SupplierInPrefecture for registered location. The registration contract is many-to-many and optional on both sides: a Gift may have zero, one or many Suppliers and a Supplier may register zero, one or many Gifts. In this dataset every one of the 2,500 Suppliers and all 6,000 Gifts participate, across 14,514 unique pairs, so no orphan appears at run time. No allocation of DonationAmountYen among Suppliers is defined.
+entityRelationship SupplierProvidesGift
+	lineageTag: c6a4fc3c-2239-5979-9043-7c97bc1856db
+	fromEntity: Supplier
+	toEntity: Gift
+	annotation Furusato_aggregationGuard = "do not sum DonationAmountYen across Suppliers without an explicit allocation rule because multi-supplier Gifts can duplicate attribution"
+	annotation Furusato_businessRole = "catalog supply relationship"
+	annotation Furusato_cardinality = "many-to-many, zero-to-many on both sides by contract"
+	annotation Furusato_direction = "Supplier -> Gift"
+	annotation Furusato_grain = "one unique Supplier-Gift pair"
+	annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+	annotation Furusato_sourceParticipation = "optional by contract; total in this dataset - 0 Suppliers without a Gift"
+	annotation Furusato_targetParticipation = "optional by contract; total in this dataset - 0 Gifts without a Supplier"
+
+	backingConfiguration
+		type: table
+		table: ot_supplier_gift
+		fromRelationship: rel_SupplierProvidesGift_from
+		toRelationship: rel_SupplierProvidesGift_to
+
+/// Connects the Donor associated with a static baseline Donation to that Donation. Every static Donation has exactly one Donor, and a Donor may have zero, one or many static Donations: 18 of the 12,000 Donors made none.
+entityRelationship DonorMadeDonation
+	lineageTag: 73c3a270-9e6e-5cd0-bfd9-0ab4302197b3
+	fromEntity: Donor
+	toEntity: Donation
+	annotation Furusato_aggregationGuard = "count target Donation entities and sum their DonationAmountYen"
+	annotation Furusato_businessRole = "transaction actor"
+	annotation Furusato_cardinality = "zero-to-many from Donor, exactly one Donor per Donation"
+	annotation Furusato_direction = "Donor -> Donation"
+	annotation Furusato_grain = "one edge per Donation"
+	annotation Furusato_sensitivity = "Synthetic-Transaction"
+	annotation Furusato_sourceParticipation = "optional - 18 Donors have no Donation"
+	annotation Furusato_targetParticipation = "mandatory - every Donation has exactly one Donor"
+
+	backingConfiguration
+		relationship: rel_DonorMadeDonation
+
+/// Connects each static baseline Donation to exactly one recipient Municipality. This is the authoritative path for received-by geography and must not be replaced by Gift or Supplier location.
+entityRelationship DonationToMunicipality
+	lineageTag: a45ac67f-6abb-544a-93fc-4635c5f9bf15
+	fromEntity: Donation
+	toEntity: Municipality
+	annotation Furusato_aggregationGuard = "authoritative recipient path for Donation counts and amounts"
+	annotation Furusato_businessRole = "recipient geography"
+	annotation Furusato_cardinality = "many-to-one, exactly one Municipality per Donation"
+	annotation Furusato_direction = "Donation -> Municipality"
+	annotation Furusato_grain = "one edge per Donation"
+	annotation Furusato_sensitivity = "Synthetic-Transaction"
+	annotation Furusato_sourceParticipation = "mandatory - every Donation carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a Municipality may have zero Donation rows"
+
+	backingConfiguration
+		relationship: rel_DonationToMunicipality
+
+/// Connects each static baseline Donation to the selected Gift option. A no-return-gift choice is represented by a Gift option in the no-return-gift category, not by a missing Donation.
+entityRelationship DonationSelectedGift
+	lineageTag: 9d9d88ab-fdeb-52eb-b57d-d1587e8a84ba
+	fromEntity: Donation
+	toEntity: Gift
+	annotation Furusato_aggregationGuard = "aggregate DonationAmountYen from Donation, not Gift"
+	annotation Furusato_businessRole = "transaction selection"
+	annotation Furusato_cardinality = "many-to-one, exactly one Gift option per Donation in this dataset"
+	annotation Furusato_direction = "Donation -> Gift"
+	annotation Furusato_grain = "one edge per Donation"
+	annotation Furusato_sensitivity = "Synthetic-Transaction"
+	annotation Furusato_sourceParticipation = "mandatory - every Donation carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a Gift may have zero Donation rows"
+
+	backingConfiguration
+		relationship: rel_DonationSelectedGift
+
+/// Connects a Municipality to each Gift registered in that Municipality's Workshop catalog. This is catalog geography, not Donation recipient geography, Supplier location, fulfillment location, or shipping origin. In this synthetic dataset every Donation happens to select a Gift catalogued by its own recipient Municipality, so a forbidden count taken through this edge can coincidentally return the same number as the correct DonationToMunicipality count. That coincidence is a property of the sample data, not of the model: the rule stays, because real catalogues diverge and the two paths answer different questions.
+entityRelationship MunicipalityCatalogsGift
+	lineageTag: e33d8fb3-2b17-5c59-8e5b-769f29e1ebd0
+	fromEntity: Municipality
+	toEntity: Gift
+	annotation Furusato_aggregationGuard = "never count or sum Donation facts through this relationship; use DonationToMunicipality for received-by geography"
+	annotation Furusato_businessRole = "gift catalog association"
+	annotation Furusato_cardinality = "one-to-many from Municipality, exactly one catalog Municipality per Gift"
+	annotation Furusato_dataCoincidenceWarning = "in this dataset the forbidden catalog path can return the same total as the correct recipient path; the guard protects future divergence, not this sample"
+	annotation Furusato_direction = "Municipality -> Gift"
+	annotation Furusato_grain = "one edge per Gift"
+	annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+	annotation Furusato_sourceParticipation = "mandatory - every one of the 1,741 Municipalities catalogs at least one Gift"
+	annotation Furusato_targetParticipation = "mandatory - every Gift has exactly one catalog Municipality"
+
+	backingConfiguration
+		relationship: rel_MunicipalityCatalogsGift
+
+/// Connects a Municipality to each MunicipalityCategoryMetric row for that recipient Municipality. A Municipality that received no Donation has no metric row at all: 10 of the 1,741 Municipalities have none.
+entityRelationship MunHasCategoryMetric
+	lineageTag: 01b1026a-6a4a-58c8-ba21-f256d4704de4
+	fromEntity: Municipality
+	toEntity: MunicipalityCategoryMetric
+	annotation Furusato_aggregationGuard = "read metric values once and do not traverse to Donation detail for the same total"
+	annotation Furusato_businessRole = "recipient Municipality to pre-aggregated category metric"
+	annotation Furusato_cardinality = "zero-to-many from Municipality, exactly one Municipality per MunicipalityCategoryMetric row"
+	annotation Furusato_direction = "Municipality -> MunicipalityCategoryMetric"
+	annotation Furusato_grain = "one edge per metric row"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "optional - 10 Municipalities have no metric row"
+	annotation Furusato_targetParticipation = "mandatory - every metric row has exactly one Municipality"
+
+	backingConfiguration
+		relationship: rel_MunHasCategoryMetric
+
+/// Connects a MunicipalityCategoryMetric row to its GiftCategory.
+entityRelationship MunMetricForCategory
+	lineageTag: b571114a-d58b-5cc5-a1e7-dd776bcd65cd
+	fromEntity: MunicipalityCategoryMetric
+	toEntity: GiftCategory
+	annotation Furusato_aggregationGuard = "metric is already aggregated at Municipality x GiftCategory grain"
+	annotation Furusato_businessRole = "pre-aggregated category metric to its GiftCategory"
+	annotation Furusato_cardinality = "many-to-one, exactly one GiftCategory per MunicipalityCategoryMetric row"
+	annotation Furusato_direction = "MunicipalityCategoryMetric -> GiftCategory"
+	annotation Furusato_grain = "one edge per metric row"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "mandatory - every MunicipalityCategoryMetric carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a GiftCategory may have zero MunicipalityCategoryMetric rows"
+
+	backingConfiguration
+		relationship: rel_MunMetricForCategory
+
+/// Connects a recipient Prefecture to each PrefectureCategoryMetric row for that Prefecture.
+entityRelationship PrefHasCategoryMetric
+	lineageTag: 56bfb641-ccce-5978-a7d5-64fab9a0db03
+	fromEntity: Prefecture
+	toEntity: PrefectureCategoryMetric
+	annotation Furusato_aggregationGuard = "read metric values once and do not traverse to Donation detail for the same total"
+	annotation Furusato_businessRole = "recipient Prefecture to pre-aggregated category metric"
+	annotation Furusato_cardinality = "one-to-many from Prefecture, exactly one recipient Prefecture per PrefectureCategoryMetric row"
+	annotation Furusato_direction = "Prefecture -> PrefectureCategoryMetric"
+	annotation Furusato_geographyRole = "recipient"
+	annotation Furusato_grain = "one edge per metric row"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "mandatory - every one of the 47 Prefectures has at least one metric row"
+	annotation Furusato_targetParticipation = "mandatory - every metric row has exactly one recipient Prefecture"
+
+	backingConfiguration
+		relationship: rel_PrefHasCategoryMetric
+
+/// Connects a PrefectureCategoryMetric row to its GiftCategory.
+entityRelationship PrefMetricForCategory
+	lineageTag: 881327ed-6a19-5332-8086-3f637e07fb0b
+	fromEntity: PrefectureCategoryMetric
+	toEntity: GiftCategory
+	annotation Furusato_aggregationGuard = "metric is already aggregated at recipient Prefecture x GiftCategory grain"
+	annotation Furusato_businessRole = "pre-aggregated category metric to its GiftCategory"
+	annotation Furusato_cardinality = "many-to-one, exactly one GiftCategory per PrefectureCategoryMetric row"
+	annotation Furusato_direction = "PrefectureCategoryMetric -> GiftCategory"
+	annotation Furusato_grain = "one edge per metric row"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "mandatory - every PrefectureCategoryMetric carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a GiftCategory may have zero PrefectureCategoryMetric rows"
+
+	backingConfiguration
+		relationship: rel_PrefMetricForCategory
+
+/// Connects the Donor-residence Prefecture to an origin-destination PrefectureDonationFlow row.
+entityRelationship ResidencePrefHasFlow
+	lineageTag: f34b0c6e-79c2-5675-8543-2d3b3da9c3ba
+	fromEntity: Prefecture
+	toEntity: PrefectureDonationFlow
+	annotation Furusato_aggregationGuard = "flow rows are already aggregated at residence x recipient Prefecture grain"
+	annotation Furusato_businessRole = "donor-residence origin of a pre-aggregated prefecture flow"
+	annotation Furusato_cardinality = "one-to-many from Prefecture, exactly one residence Prefecture per PrefectureDonationFlow row"
+	annotation Furusato_direction = "residence Prefecture -> PrefectureDonationFlow"
+	annotation Furusato_geographyRole = "origin donor residence"
+	annotation Furusato_grain = "one edge per flow row"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "mandatory - every one of the 47 Prefectures originates at least one flow row"
+	annotation Furusato_targetParticipation = "mandatory - every flow row has exactly one residence Prefecture"
+
+	backingConfiguration
+		relationship: rel_ResidencePrefHasFlow
+
+/// Connects a PrefectureDonationFlow row to the Donation-recipient Prefecture.
+entityRelationship FlowToRecipientPref
+	lineageTag: 1c12e823-15be-5541-8777-d59338de3c6d
+	fromEntity: PrefectureDonationFlow
+	toEntity: Prefecture
+	annotation Furusato_aggregationGuard = "flow rows are already aggregated at residence x recipient Prefecture grain"
+	annotation Furusato_businessRole = "Donation-recipient destination of a pre-aggregated prefecture flow"
+	annotation Furusato_cardinality = "many-to-one, exactly one recipient Prefecture per PrefectureDonationFlow row"
+	annotation Furusato_direction = "PrefectureDonationFlow -> recipient Prefecture"
+	annotation Furusato_geographyRole = "destination recipient"
+	annotation Furusato_grain = "one edge per flow row"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_sourceParticipation = "mandatory - every PrefectureDonationFlow carries exactly one edge"
+	annotation Furusato_targetParticipation = "optional - a Prefecture may have zero PrefectureDonationFlow rows"
+
+	backingConfiguration
+		relationship: rel_FlowToRecipientPref

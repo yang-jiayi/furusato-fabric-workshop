@@ -1,0 +1,5 @@
+rule StaticAndOperationalSeparation
+	lineageTag: 49ce99a6-4200-55b7-9310-792c269a3551
+	statement: Donation represents only the immutable static baseline. Municipality operational observations are raw time-series events. Never add those observations to static Donation counts or amounts.
+	ruleReferencedEntity Donation
+	ruleReferencedEntity Municipality

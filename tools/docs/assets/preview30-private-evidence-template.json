@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "furusato-preview30-evidence/v1",
+  "captures": [],
+  "labs": {
+    "entities": {"status": "not-run", "reason": {"ja": "審査済み証拠未提供。", "en": "Reviewed evidence not supplied."}, "evidenceIds": []},
+    "relationships": {"status": "not-run", "reason": {"ja": "審査済み証拠未提供。", "en": "Reviewed evidence not supplied."}, "evidenceIds": []},
+    "native-delivery": {"status": "not-run", "reason": {"ja": "自動/手動の区分を保って審査する。", "en": "Review automatic/manual provenance separately."}, "evidenceIds": []},
+    "timeseries": {"status": "not-run", "reason": {"ja": "native機能queryとTS Graphを分離して審査する。", "en": "Review native functional query separately from TS Graph."}, "evidenceIds": []},
+    "gold": {"status": "not-run", "reason": {"ja": "Gold/file品質分岐の証拠を審査する。", "en": "Review Gold/file-quality-branch evidence."}, "evidenceIds": []},
+    "metrics": {"status": "not-run", "reason": {"ja": "native Metric/source linkの証拠を審査する。", "en": "Review native Metric/source-link evidence."}, "evidenceIds": []},
+    "rules": {"status": "not-run", "reason": {"ja": "自然言語contextでありaction実行としない。", "en": "Natural-language context, not action execution."}, "evidenceIds": []},
+    "namespaces": {"status": "not-run", "reason": {"ja": "RDF URI保持とmulti-namespace UIを分ける。", "en": "Separate RDF URI preservation from multi-namespace UI."}, "evidenceIds": []},
+    "inheritance": {"status": "not-run", "reason": {"ja": "stored/effective/overrideを分けて審査する。", "en": "Review stored/effective/override behavior separately."}, "evidenceIds": []},
+    "shared-properties": {"status": "not-run", "reason": {"ja": "共有参照の実readbackを審査する。", "en": "Review actual shared-reference readback."}, "evidenceIds": []},
+    "copilot-baseline": {"status": "not-run", "reason": {"ja": "凍結baselineと会話の証拠を審査する。", "en": "Review frozen-baseline and conversation evidence."}, "evidenceIds": []},
+    "copilot-attachments": {"status": "not-run", "reason": {"ja": "現行Gold-aware 4ファイルのhashと利用証拠を審査する。", "en": "Review current Gold-aware four-file hashes and actual use."}, "evidenceIds": []},
+    "copilot-act": {"status": "not-run", "reason": {"ja": "旧metadata-only失敗を別intentの成功に置換しない。", "en": "Do not replace the old metadata-only failure with another intent's success."}, "evidenceIds": []},
+    "copilot-additive-entity": {"status": "not-run", "reason": {"ja": "typed intent・exact delta・既存parts保持を別判定する。", "en": "Separately verify typed intent, exact delta and preserved existing parts."}, "evidenceIds": []},
+    "graph": {"status": "not-run", "reason": {"ja": "static companionの実GQLとprimary TS Graph失敗を分ける。", "en": "Separate actual static-companion GQL from primary TS Graph failure."}, "evidenceIds": []},
+    "data-agent": {"status": "not-run", "reason": {"ja": "CI smokeと元84条件のAI評価を分ける。", "en": "Separate CI smoke from original84 AI evaluation."}, "evidenceIds": []},
+    "evaluation": {"status": "not-run", "reason": {"ja": "最終凍結AI runの承認済み集計待ち。", "en": "Await the approved final frozen AI-run aggregate."}, "evidenceIds": []},
+    "mcp": {"status": "not-run", "reason": {"ja": "discovery/rules読取/queryを分ける。", "en": "Separate discovery, rule reading and querying."}, "evidenceIds": []},
+    "dashboard": {"status": "not-run", "reason": {"ja": "direct連携は実availability確認後だけ。", "en": "Direct integration is conditional on actual availability."}, "evidenceIds": []},
+    "version-history": {"status": "not-run", "reason": {"ja": "定義/既存bindingの復元とdata/Metric-rich復元を分ける。", "en": "Separate definition/binding restore from data/Metric-rich restore."}, "evidenceIds": []},
+    "rdf": {"status": "not-run", "reason": {"ja": "構造往復の保持/損失とruntime動作を分ける。", "en": "Separate structural round-trip preservation/loss from runtime behavior."}, "evidenceIds": []},
+    "publish": {"status": "not-run", "reason": {"ja": "role読取と第2identityによるnegative checksを分ける。", "en": "Separate role readback from second-identity negative checks."}, "evidenceIds": []}
+  }
+}

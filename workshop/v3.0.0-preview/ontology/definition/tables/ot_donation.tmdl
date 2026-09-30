@@ -1,0 +1,81 @@
+table ot_donation
+	lineageTag: 2095b3ab-0ce7-55d5-83ec-de90d1dbf13f
+
+	column DonationId
+		dataType: int64
+		sourceColumn: DonationId
+
+	column DonationDisplayName
+		dataType: string
+		sourceColumn: DonationDisplayName
+
+	column DonationAmountYen
+		dataType: int64
+		sourceColumn: DonationAmountYen
+
+	column DonatedAtUtc
+		dataType: dateTime
+		sourceColumn: DonatedAtUtc
+
+	column DonatedAtJstText
+		dataType: string
+		sourceColumn: DonatedAtJstText
+
+	column DonationDateJst
+		dataType: string
+		sourceColumn: DonationDateJst
+
+	column DonationYearMonthJst
+		dataType: string
+		sourceColumn: DonationYearMonthJst
+
+	column DonationYearMonthJaShort
+		dataType: string
+		sourceColumn: DonationYearMonthJaShort
+
+	column DonationPaymentMethod
+		dataType: string
+		sourceColumn: DonationPaymentMethod
+
+	column DonationPaymentMethodEn
+		dataType: string
+		sourceColumn: DonationPaymentMethodEn
+
+	column DonationDataLayer
+		dataType: string
+		sourceColumn: DonationDataLayer
+
+	column DonorId
+		dataType: int64
+		sourceColumn: DonorId
+
+	column MunicipalityId
+		dataType: string
+		sourceColumn: MunicipalityId
+
+	column GiftId
+		dataType: int64
+		sourceColumn: GiftId
+
+	partition ot_donation = entity
+		mode: directLake
+		source
+			entityName: ot_donation
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

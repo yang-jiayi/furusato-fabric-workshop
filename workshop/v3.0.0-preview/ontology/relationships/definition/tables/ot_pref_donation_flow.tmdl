@@ -1,0 +1,53 @@
+table ot_pref_donation_flow
+	lineageTag: 34cef828-1e67-5043-a3c9-2aa0a22db623
+
+	column PrefDonationFlowId
+		dataType: string
+		sourceColumn: PrefDonationFlowId
+
+	column PrefFlowStaticCount
+		dataType: int64
+		sourceColumn: PrefFlowStaticCount
+
+	column PrefFlowTotalYen
+		dataType: int64
+		sourceColumn: PrefFlowTotalYen
+
+	column PrefFlowOriginRank
+		dataType: int64
+		sourceColumn: PrefFlowOriginRank
+
+	column PrefFlowDestinationRank
+		dataType: int64
+		sourceColumn: PrefFlowDestinationRank
+
+	column ResidencePrefectureId
+		dataType: int64
+		sourceColumn: ResidencePrefectureId
+
+	column RecipientPrefectureId
+		dataType: int64
+		sourceColumn: RecipientPrefectureId
+
+	partition ot_pref_donation_flow = entity
+		mode: directLake
+		source
+			entityName: ot_pref_donation_flow
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

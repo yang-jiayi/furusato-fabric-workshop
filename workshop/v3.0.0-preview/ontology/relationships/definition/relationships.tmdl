@@ -1,0 +1,111 @@
+relationship rel_MunicipalityInPrefecture
+	fromColumn: ot_municipality.PrefectureId
+	toColumn: ot_prefecture.PrefectureId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DonorLivesInPrefecture
+	fromColumn: ot_donor.PrefectureId
+	toColumn: ot_prefecture.PrefectureId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_SupplierInPrefecture
+	fromColumn: ot_supplier.PrefectureId
+	toColumn: ot_prefecture.PrefectureId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_GiftInCategory
+	fromColumn: ot_gift.CategoryId
+	toColumn: ot_gift_category.CategoryId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_SupplierProvidesGift_from
+	fromColumn: ot_supplier_gift.SupplierId
+	toColumn: ot_supplier.SupplierId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_SupplierProvidesGift_to
+	fromColumn: ot_supplier_gift.GiftId
+	toColumn: ot_gift.GiftId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DonorMadeDonation
+	fromColumn: ot_donor.DonorId
+	toColumn: ot_donation.DonorId
+	fromCardinality: one
+	toCardinality: many
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DonationToMunicipality
+	fromColumn: ot_donation.MunicipalityId
+	toColumn: ot_municipality.MunicipalityId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_DonationSelectedGift
+	fromColumn: ot_donation.GiftId
+	toColumn: ot_gift.GiftId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_MunicipalityCatalogsGift
+	fromColumn: ot_municipality.MunicipalityId
+	toColumn: ot_gift.MunicipalityId
+	fromCardinality: one
+	toCardinality: many
+	crossFilteringBehavior: oneDirection
+
+relationship rel_MunHasCategoryMetric
+	fromColumn: ot_municipality.MunicipalityId
+	toColumn: ot_mun_category_metric.MunicipalityId
+	fromCardinality: one
+	toCardinality: many
+	crossFilteringBehavior: oneDirection
+
+relationship rel_MunMetricForCategory
+	fromColumn: ot_mun_category_metric.CategoryId
+	toColumn: ot_gift_category.CategoryId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_PrefHasCategoryMetric
+	fromColumn: ot_prefecture.PrefectureId
+	toColumn: ot_pref_category_metric.PrefectureId
+	fromCardinality: one
+	toCardinality: many
+	crossFilteringBehavior: oneDirection
+
+relationship rel_PrefMetricForCategory
+	fromColumn: ot_pref_category_metric.CategoryId
+	toColumn: ot_gift_category.CategoryId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection
+
+relationship rel_ResidencePrefHasFlow
+	fromColumn: ot_prefecture.PrefectureId
+	toColumn: ot_pref_donation_flow.ResidencePrefectureId
+	fromCardinality: one
+	toCardinality: many
+	crossFilteringBehavior: oneDirection
+
+relationship rel_FlowToRecipientPref
+	fromColumn: ot_pref_donation_flow.RecipientPrefectureId
+	toColumn: ot_prefecture.PrefectureId
+	fromCardinality: many
+	toCardinality: one
+	crossFilteringBehavior: oneDirection

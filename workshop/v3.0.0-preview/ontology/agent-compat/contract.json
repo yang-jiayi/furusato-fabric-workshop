@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "furusato-explicit-generation1-consumer-bridge/v1",
+  "expectedGeneration": 1,
+  "wireFormat": "EntityTypes/RelationshipTypes JSON",
+  "defaultEnabled": false,
+  "implicitFallback": false,
+  "primaryGeneration2Unchanged": true,
+  "relationshipsGeneration2CompanionUnchanged": true,
+  "counts": {
+    "definitionParts": 53,
+    "entityTypes": 10,
+    "staticProperties": 72,
+    "timeseriesProperties": 0,
+    "dataBindings": 10,
+    "relationshipTypes": 15,
+    "contextualizations": 15,
+    "overviews": 1
+  },
+  "ontologyName": "ONT_Furusato_AgentCompat_<PID>",
+  "candidateAgentName": "DA_Furusato_AgentCompat_<PID>",
+  "sourceTables": [
+    "ot_donation",
+    "ot_donor",
+    "ot_gift",
+    "ot_gift_category",
+    "ot_mun_category_metric",
+    "ot_municipality",
+    "ot_pref_category_metric",
+    "ot_pref_donation_flow",
+    "ot_prefecture",
+    "ot_supplier",
+    "ot_supplier_gift"
+  ],
+  "sourceContract": {
+    "sameOwnedLakehouse": true,
+    "schema": "dbo",
+    "staticSourceObjects": 25,
+    "entityTables": 10,
+    "catalogBridgeTables": 1,
+    "copyBusinessData": false,
+    "businessIdsKeysTypesAndMappingsPreserved": true,
+    "legacyMetadataIdsPreserved": true,
+    "metadataIdsNeedNotEqualGen2LineageTags": true,
+    "omittedProperty": "Municipality.IncomingDonationAmountYen",
+    "omittedBindingParts": [
+      "EntityTypes/57727254480397/DataBindings/8f3fdd32-b7ea-494b-baca-61b8519e9741.json"
+    ],
+    "emptyOverviewRetained": true
+  },
+  "deployment": {
+    "mode": "offline-private-handoff-only",
+    "createOnly": true,
+    "approvedTempAncestryRequired": true,
+    "newItemOwnershipReadbackRequired": true,
+    "rerunNotebooks": false,
+    "sourceDdlAllowed": false,
+    "policiesOrRolesChanged": false
+  },
+  "graph": {
+    "automaticRefreshByHelper": false,
+    "actualManagedChildDiscoveryRequired": true,
+    "possibleServiceManagedChildren": [
+      "GraphModel",
+      "Lakehouse",
+      "SQLEndpoint"
+    ],
+    "derivedProjectionStorageAndCapacityCost": true,
+    "zeroCopyClaimed": false,
+    "nativeInitialization": "Open only the new managed Graph in the native editor when loading infrastructure requires initialization; Save can ingest data.",
+    "refreshMethod": "POST",
+    "refreshBody": null,
+    "refreshUrl": "https://api.fabric.microsoft.com/v1/workspaces/{workspaceId}/graphModels/{actualManagedGraphId}/jobs/refreshGraph/instances",
+    "reuseExistingActiveOrMatchingCompletedJob": true,
+    "maximumExplicitRefreshAttempts": 1,
+    "graphNotRefreshableBlindRetryAllowed": false,
+    "terminalJobAndGqlProofRequired": true,
+    "acceptance": {
+      "nodeTypes": 10,
+      "edgeTypes": 15,
+      "nodes": 109592,
+      "directedEdges": 297303,
+      "gqlChecks": 3,
+      "maximumWithOneSyntaxCorrection": 4,
+      "checks": [
+        "all node/edge labels and totals",
+        "Prefecture 45 reverse Municipality path",
+        "Donation 5000001 donor/geography/gift/category/catalog path"
+      ],
+      "catalogRelationshipIsFulfillment": false
+    }
+  },
+  "agent": {
+    "mode": "new-isolated-draft-handoff-only",
+    "onlyChangedOntologyFields": [
+      "artifactId",
+      "displayName",
+      "userDescription"
+    ],
+    "preserve": [
+      "Lakehouse",
+      "KQL",
+      "direct SemanticModel",
+      "Code Interpreter",
+      "GLOBAL exact bytes",
+      "all datasource instructions",
+      "entity/property selections"
+    ],
+    "publicCandidateFilesChanged": false,
+    "automaticPublication": false,
+    "automaticPromotion": false
+  },
+  "evidenceBoundary": {
+    "boundedPriorObservation": "An isolated source-only candidate executed native ontology-backed GQL without the generation API-version error.",
+    "strictOriginalQuestionAcceptedByThisObservation": false,
+    "full10Question84ConditionAcceptanceImplied": false,
+    "newEnvironmentAcceptanceProvenByBuild": false
+  },
+  "creator": {
+    "notebook": "notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb",
+    "definitionsOnly": true,
+    "template": "ontology/ontology-full-definition-template.json",
+    "originalTemplateSha256": "df89c307c28f3da104daf5815f186f2ad59dde5a571ccadb8358dab9ec612338",
+    "creatorFileSha256": "34d60ca450aecac5321af4804440618ea5cf200f6d71de090a0afd190a7226b3"
+  }
+}

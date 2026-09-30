@@ -1,0 +1,20 @@
+/// Furusato Fabric Workshop optional Direct Lake semantic model. Uses a single-direction star schema over gold tables and explicit Japanese measures.
+model SM_Furusato_Analytics
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	discourageCompositeModels
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation FurusatoWorkshopVersion = 2.7.0-analytics-extension
+
+annotation PBI_ProTooling = ["MCP-PBIModeling"]
+
+ref table 寄附
+ref table 寄附者
+ref table 自治体
+ref table 返礼品
+ref table 日付

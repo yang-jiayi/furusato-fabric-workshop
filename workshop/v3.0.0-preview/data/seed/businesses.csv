@@ -1,0 +1,2501 @@
+BusinessID,BusinessName,PrefectureID,BusinessType,PrefectureName,BusinessTypeEn
+4000001,農事組合法人熊取食品,27,食品加工,大阪府,Food processing
+4000002,株式会社五泉酒造,15,酒造,新潟県,Sake and spirits brewing
+4000003,有限会社愛荘本舗,25,伝統工芸,滋賀県,Traditional crafts
+4000004,農事組合法人石垣農園,47,果樹・青果,沖縄県,Orchard and produce
+4000005,農事組合法人宇治田原茶園,26,製茶・焙煎,京都府,Tea processing and roasting
+4000006,株式会社川崎牧場,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4000007,株式会社米原米穀,25,米穀・製粉,滋賀県,Rice and milling
+4000008,株式会社平生商店,35,食品加工,山口県,Food processing
+4000009,農事組合法人上三川醸造,9,調味料製造,栃木県,Seasoning manufacturing
+4000010,合同会社川内ライス,7,米穀・製粉,福島県,Rice and milling
+4000011,協同組合朝日米穀,16,米穀・製粉,富山県,Rice and milling
+4000012,農事組合法人南小国ツーリズム,43,観光・体験,熊本県,Tourism and experiences
+4000013,有限会社丸亀製材,37,木工・家具,香川県,Woodwork and furniture
+4000014,株式会社目黒酒造,13,酒造,東京都,Sake and spirits brewing
+4000015,株式会社嘉手納ワイナリー,47,醸造,沖縄県,Brewing
+4000016,株式会社名張ミート,24,畜産・食肉加工,三重県,Livestock and meat processing
+4000017,有限会社高松牧場,37,畜産・食肉加工,香川県,Livestock and meat processing
+4000018,合同会社大和酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4000019,有限会社志木食品,11,食品加工,埼玉県,Food processing
+4000020,株式会社茂原海産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4000021,合同会社大刀洗酒造,40,酒造,福岡県,Sake and spirits brewing
+4000022,有限会社高取フルーツ,29,果樹・青果,奈良県,Orchard and produce
+4000023,協同組合今別酒造,2,酒造,青森県,Sake and spirits brewing
+4000024,有限会社長与製麺,42,製麺,長崎県,Noodle manufacturing
+4000025,合同会社吹田フーズ,27,食品加工,大阪府,Food processing
+4000026,有限会社若狭酒造,18,酒造,福井県,Sake and spirits brewing
+4000027,株式会社北杜デイリー,19,酪農・乳製品,山梨県,Dairy farming
+4000028,有限会社多賀工房,25,伝統工芸,滋賀県,Traditional crafts
+4000029,有限会社富士見酒造場,11,酒造,埼玉県,Sake and spirits brewing
+4000030,株式会社加西海産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4000031,株式会社大菓子舗,20,製菓・製パン,長野県,Confectionery and bakery
+4000032,株式会社練馬製菓,13,製菓・製パン,東京都,Confectionery and bakery
+4000033,協同組合広川醸造,30,調味料製造,和歌山県,Seasoning manufacturing
+4000034,株式会社北大東漁業,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4000035,農事組合法人安芸本舗,39,調味料製造,高知県,Seasoning manufacturing
+4000036,株式会社南木曽ブルワリー,20,醸造,長野県,Brewing
+4000037,株式会社須恵水産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4000038,株式会社江府果樹園,31,果樹・青果,鳥取県,Orchard and produce
+4000039,協同組合瑞浪製陶,21,窯業・陶磁器,岐阜県,Ceramics
+4000040,農事組合法人村山精米,6,米穀・製粉,山形県,Rice and milling
+4000041,有限会社坂戸製菓,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000042,株式会社長井果樹園,6,果樹・青果,山形県,Orchard and produce
+4000043,有限会社安芸太田陶苑,34,窯業・陶磁器,広島県,Ceramics
+4000044,有限会社西原醸造,47,酒造,沖縄県,Sake and spirits brewing
+4000045,協同組合広島酒造,34,酒造,広島県,Sake and spirits brewing
+4000046,株式会社新篠津漁業,1,水産・水産加工,北海道,Fisheries and seafood processing
+4000047,株式会社田上醸造,15,酒造,新潟県,Sake and spirits brewing
+4000048,株式会社上越精米,15,米穀・製粉,新潟県,Rice and milling
+4000049,有限会社奈義生活用品,33,生活用品,岡山県,Household goods
+4000050,株式会社丸森飲料,4,飲料製造,宮城県,Beverage manufacturing
+4000051,株式会社松茂農園,36,果樹・青果,徳島県,Orchard and produce
+4000052,有限会社戸田フーズ,11,食品加工,埼玉県,Food processing
+4000053,株式会社伊賀本舗,24,伝統工芸,三重県,Traditional crafts
+4000054,農事組合法人大竹リゾート,34,観光・宿泊,広島県,Tourism and lodging
+4000055,株式会社和木醸造,35,醸造,山口県,Brewing
+4000056,有限会社日野工房,25,伝統工芸,滋賀県,Traditional crafts
+4000057,有限会社富谷牧場,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4000058,協同組合安芸太田海産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000059,合同会社延岡工芸,45,伝統工芸,宮崎県,Traditional crafts
+4000060,合同会社雲南窯,32,窯業・陶磁器,島根県,Ceramics
+4000061,株式会社甘楽製麺,10,製麺,群馬県,Noodle manufacturing
+4000062,有限会社大和高田工房,29,伝統工芸,奈良県,Traditional crafts
+4000063,合同会社東近江醸造,25,酒造,滋賀県,Sake and spirits brewing
+4000064,農事組合法人加茂製麺,15,製麺,新潟県,Noodle manufacturing
+4000065,株式会社小菅醸造,19,醸造,山梨県,Brewing
+4000066,合同会社波佐見海産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000067,協同組合本部水産,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4000068,農事組合法人美郷製麺,5,製麺,秋田県,Noodle manufacturing
+4000069,有限会社野迫川テキスタイル,29,繊維・アパレル,奈良県,Textiles and apparel
+4000070,株式会社狭山ベーカリー,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000071,株式会社精華製茶,26,製茶・焙煎,京都府,Tea processing and roasting
+4000072,農事組合法人中川牧場,1,畜産・食肉加工,北海道,Livestock and meat processing
+4000073,有限会社周南フーズ,35,食品加工,山口県,Food processing
+4000074,株式会社神栖牧場,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4000075,協同組合下妻青果,8,農産・青果,茨城県,Agriculture and produce
+4000076,株式会社南山城製作所,26,電機・機械,京都府,Electronics and machinery
+4000077,株式会社遊佐フルーツ,6,果樹・青果,山形県,Orchard and produce
+4000078,有限会社鹿島ミート,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4000079,株式会社智頭米穀,31,米穀・製粉,鳥取県,Rice and milling
+4000080,有限会社茨城製麺,8,製麺,茨城県,Noodle manufacturing
+4000081,有限会社加美水産,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4000082,有限会社玄海陶苑,41,窯業・陶磁器,佐賀県,Ceramics
+4000083,有限会社五條繊維,29,繊維・アパレル,奈良県,Textiles and apparel
+4000084,農事組合法人横瀬精米,11,米穀・製粉,埼玉県,Rice and milling
+4000085,有限会社安芸太田酒造場,34,酒造,広島県,Sake and spirits brewing
+4000086,農事組合法人豊橋旅館,23,観光・宿泊,愛知県,Tourism and lodging
+4000087,有限会社男鹿精米,5,米穀・製粉,秋田県,Rice and milling
+4000088,有限会社田子青果,2,農産・青果,青森県,Agriculture and produce
+4000089,合同会社志免牧場,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4000090,株式会社大月農園,19,果樹・青果,山梨県,Orchard and produce
+4000091,株式会社今治アウトドア,38,スポーツ用品,愛媛県,Sporting goods
+4000092,株式会社南アルプス工房,19,伝統工芸,山梨県,Traditional crafts
+4000093,株式会社勝浦畜産,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000094,有限会社鳴門繊維,36,繊維・アパレル,徳島県,Textiles and apparel
+4000095,有限会社石井製麺,36,製麺,徳島県,Noodle manufacturing
+4000096,株式会社北栄牧場,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000097,合同会社守口ツーリズム,27,観光・体験,大阪府,Tourism and experiences
+4000098,有限会社東白川工芸,21,伝統工芸,岐阜県,Traditional crafts
+4000099,農事組合法人小松酒造,17,酒造,石川県,Sake and spirits brewing
+4000100,株式会社嘉島果樹園,43,果樹・青果,熊本県,Orchard and produce
+4000101,株式会社大紀工房,24,伝統工芸,三重県,Traditional crafts
+4000102,農事組合法人平塚商会,14,生活用品,神奈川県,Household goods
+4000103,有限会社安芸太田製陶,34,窯業・陶磁器,広島県,Ceramics
+4000104,有限会社野田ミート,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4000105,農事組合法人にかほ麺業,5,製麺,秋田県,Noodle manufacturing
+4000106,有限会社尾花沢酒造場,6,酒造,山形県,Sake and spirits brewing
+4000107,有限会社四日水産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4000108,株式会社南城フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4000109,有限会社東員青果,24,農産・青果,三重県,Agriculture and produce
+4000110,株式会社湧水酒造,46,酒造,鹿児島県,Sake and spirits brewing
+4000111,有限会社小川麺業,20,製麺,長野県,Noodle manufacturing
+4000112,株式会社鬼北繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4000113,有限会社朝霞ベーカリー,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000114,有限会社田農園,7,農産・青果,福島県,Agriculture and produce
+4000115,合同会社時津水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000116,協同組合南砺漁業,16,水産・水産加工,富山県,Fisheries and seafood processing
+4000117,農事組合法人高山ワイナリー,20,醸造,長野県,Brewing
+4000118,有限会社石巻畜産,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4000119,合同会社豊後大野リゾート,44,観光・宿泊,大分県,Tourism and lodging
+4000120,合同会社鬼北水産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4000121,株式会社下関精米,35,米穀・製粉,山口県,Rice and milling
+4000122,有限会社池田商店,27,食品加工,大阪府,Food processing
+4000123,協同組合宮津木工,26,木工・家具,京都府,Woodwork and furniture
+4000124,合同会社皆野ブルワリー,11,醸造,埼玉県,Brewing
+4000125,協同組合檮原本舗,39,調味料製造,高知県,Seasoning manufacturing
+4000126,有限会社嵐山ライス,11,米穀・製粉,埼玉県,Rice and milling
+4000127,合同会社伊勢原生活用品,14,生活用品,神奈川県,Household goods
+4000128,合同会社牧之原商店,22,食品加工,静岡県,Food processing
+4000129,有限会社行田乳業,11,酪農・乳製品,埼玉県,Dairy farming
+4000130,合同会社日之影果樹園,45,果樹・青果,宮崎県,Orchard and produce
+4000131,株式会社南丹製茶,26,製茶・焙煎,京都府,Tea processing and roasting
+4000132,株式会社庄原旅館,34,観光・宿泊,広島県,Tourism and lodging
+4000133,株式会社甲賀ミート,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4000134,有限会社東フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4000135,農事組合法人小布施珈琲,20,製茶・焙煎,長野県,Tea processing and roasting
+4000136,株式会社岩出海産,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4000137,株式会社呉漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000138,株式会社鶴ヶ島茶園,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000139,株式会社河合フルーツ,29,果樹・青果,奈良県,Orchard and produce
+4000140,協同組合高石ワイナリー,27,醸造,大阪府,Brewing
+4000141,有限会社板柳農園,2,農産・青果,青森県,Agriculture and produce
+4000142,株式会社西興部乳業,1,酪農・乳製品,北海道,Dairy farming
+4000143,有限会社岡谷リゾート,20,観光・宿泊,長野県,Tourism and lodging
+4000144,有限会社加東畜産,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4000145,株式会社宇部精米,35,米穀・製粉,山口県,Rice and milling
+4000146,株式会社清瀬観光,13,観光・体験,東京都,Tourism and experiences
+4000147,株式会社斑鳩工房,29,伝統工芸,奈良県,Traditional crafts
+4000148,株式会社杵築畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4000149,有限会社南越前窯,18,窯業・陶磁器,福井県,Ceramics
+4000150,農事組合法人伊方繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4000151,合同会社湖南工芸,25,伝統工芸,滋賀県,Traditional crafts
+4000152,有限会社大月飲料,19,飲料製造,山梨県,Beverage manufacturing
+4000153,有限会社椎葉果樹園,45,果樹・青果,宮崎県,Orchard and produce
+4000154,株式会社南三陸フーズ,4,食品加工,宮城県,Food processing
+4000155,有限会社上峰ミート,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4000156,株式会社小田原商店,14,食品加工,神奈川県,Food processing
+4000157,株式会社那須牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000158,有限会社高砂漁業,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4000159,株式会社東松島食品,4,食品加工,宮城県,Food processing
+4000160,株式会社下呂窯,21,窯業・陶磁器,岐阜県,Ceramics
+4000161,株式会社さつま醸造,46,酒造,鹿児島県,Sake and spirits brewing
+4000162,有限会社由布リゾート,44,観光・宿泊,大分県,Tourism and lodging
+4000163,株式会社岩倉本舗,23,調味料製造,愛知県,Seasoning manufacturing
+4000164,有限会社勝山ブルワリー,18,醸造,福井県,Brewing
+4000165,有限会社美作精米,33,米穀・製粉,岡山県,Rice and milling
+4000166,合同会社徳島麺業,36,製麺,徳島県,Noodle manufacturing
+4000167,農事組合法人奈半利陶苑,39,窯業・陶磁器,高知県,Ceramics
+4000168,有限会社佐世保製麺,42,製麺,長崎県,Noodle manufacturing
+4000169,農事組合法人湯梨浜海産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4000170,有限会社赤平デイリー,1,酪農・乳製品,北海道,Dairy farming
+4000171,株式会社横瀬製茶,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000172,合同会社白河フルーツ,7,果樹・青果,福島県,Orchard and produce
+4000173,合同会社石垣果樹園,47,果樹・青果,沖縄県,Orchard and produce
+4000174,合同会社塩竈電機,4,電機・機械,宮城県,Electronics and machinery
+4000175,有限会社五泉ライス,15,米穀・製粉,新潟県,Rice and milling
+4000176,株式会社愛南繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4000177,株式会社甲府醸造,19,醸造,山梨県,Brewing
+4000178,農事組合法人四街道フーズ,12,食品加工,千葉県,Food processing
+4000179,株式会社山形農園,20,果樹・青果,長野県,Orchard and produce
+4000180,株式会社大治醸造,23,調味料製造,愛知県,Seasoning manufacturing
+4000181,協同組合遠賀電機,40,電機・機械,福岡県,Electronics and machinery
+4000182,合同会社河内米穀,8,米穀・製粉,茨城県,Rice and milling
+4000183,有限会社箱根旅館,14,観光・宿泊,神奈川県,Tourism and lodging
+4000184,株式会社あま織物,23,繊維・アパレル,愛知県,Textiles and apparel
+4000185,有限会社東みよし青果,36,農産・青果,徳島県,Agriculture and produce
+4000186,有限会社永平寺米穀,18,米穀・製粉,福井県,Rice and milling
+4000187,株式会社見附醸造,15,酒造,新潟県,Sake and spirits brewing
+4000188,株式会社三朝酒造場,31,酒造,鳥取県,Sake and spirits brewing
+4000189,合同会社東みよし麺業,36,製麺,徳島県,Noodle manufacturing
+4000190,株式会社駒ヶ根麺業,20,製麺,長野県,Noodle manufacturing
+4000191,有限会社大間水産,2,水産・水産加工,青森県,Fisheries and seafood processing
+4000192,株式会社袋井食品,22,食品加工,静岡県,Food processing
+4000193,農事組合法人東庄ミート,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000194,有限会社鳥栖窯,41,窯業・陶磁器,佐賀県,Ceramics
+4000195,合同会社上牧本舗,29,伝統工芸,奈良県,Traditional crafts
+4000196,株式会社みなべ食品,30,調味料製造,和歌山県,Seasoning manufacturing
+4000197,協同組合山陽小野田製作所,35,電機・機械,山口県,Electronics and machinery
+4000198,有限会社勝山製陶,18,窯業・陶磁器,福井県,Ceramics
+4000199,株式会社美郷麺業,32,製麺,島根県,Noodle manufacturing
+4000200,合同会社三芳商店,11,食品加工,埼玉県,Food processing
+4000201,合同会社大酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4000202,株式会社鹿児島酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4000203,株式会社上ミート,16,畜産・食肉加工,富山県,Livestock and meat processing
+4000204,株式会社小浜茶園,18,製茶・焙煎,福井県,Tea processing and roasting
+4000205,株式会社太子観光,27,観光・体験,大阪府,Tourism and experiences
+4000206,株式会社舟橋酒造場,16,酒造,富山県,Sake and spirits brewing
+4000207,農事組合法人御前崎商店,22,食品加工,静岡県,Food processing
+4000208,株式会社岸和田商店,27,食品加工,大阪府,Food processing
+4000209,株式会社岐南牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4000210,合同会社鶴田牧場,2,畜産・食肉加工,青森県,Livestock and meat processing
+4000211,農事組合法人尾花沢酒造場,6,酒造,山形県,Sake and spirits brewing
+4000212,株式会社真岡乳業,9,酪農・乳製品,栃木県,Dairy farming
+4000213,協同組合行田茶園,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000214,有限会社坂祝工房,21,伝統工芸,岐阜県,Traditional crafts
+4000215,有限会社柏原麺業,27,製麺,大阪府,Noodle manufacturing
+4000216,株式会社大津農園,43,農産・青果,熊本県,Agriculture and produce
+4000217,有限会社橋本醸造,30,調味料製造,和歌山県,Seasoning manufacturing
+4000218,株式会社揖斐川本舗,21,伝統工芸,岐阜県,Traditional crafts
+4000219,株式会社洋野米穀,3,米穀・製粉,岩手県,Rice and milling
+4000220,有限会社豊山商店,23,食品加工,愛知県,Food processing
+4000221,合同会社阿賀製麺,15,製麺,新潟県,Noodle manufacturing
+4000222,協同組合垂水牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000223,株式会社益子ミート,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000224,株式会社日出酒造,44,酒造,大分県,Sake and spirits brewing
+4000225,合同会社柳井フーズ,35,食品加工,山口県,Food processing
+4000226,株式会社昭和青果,7,農産・青果,福島県,Agriculture and produce
+4000227,有限会社輪之内牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4000228,合同会社徳島玩具,36,文具・玩具,徳島県,Stationery and toys
+4000229,有限会社神埼窯,41,窯業・陶磁器,佐賀県,Ceramics
+4000230,株式会社日置海産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4000231,合同会社久米島果樹園,47,果樹・青果,沖縄県,Orchard and produce
+4000232,株式会社湖西製茶,22,製茶・焙煎,静岡県,Tea processing and roasting
+4000233,株式会社小松島ファーム,36,農産・青果,徳島県,Agriculture and produce
+4000234,合同会社赤磐農園,33,果樹・青果,岡山県,Orchard and produce
+4000235,有限会社壬生牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000236,株式会社津久見食品,44,食品加工,大分県,Food processing
+4000237,農事組合法人身延ブルワリー,19,醸造,山梨県,Brewing
+4000238,株式会社春日製麺,40,製麺,福岡県,Noodle manufacturing
+4000239,株式会社湯沢米穀,15,米穀・製粉,新潟県,Rice and milling
+4000240,合同会社嵐山食品,11,食品加工,埼玉県,Food processing
+4000241,株式会社越前製陶,18,窯業・陶磁器,福井県,Ceramics
+4000242,協同組合加美水産,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4000243,株式会社宮津珈琲,26,製茶・焙煎,京都府,Tea processing and roasting
+4000244,株式会社福岡菓子舗,40,製菓・製パン,福岡県,Confectionery and bakery
+4000245,有限会社海陽製作所,36,電機・機械,徳島県,Electronics and machinery
+4000246,協同組合西条繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4000247,株式会社沼田ファーム,10,農産・青果,群馬県,Agriculture and produce
+4000248,合同会社海田麺業,34,製麺,広島県,Noodle manufacturing
+4000249,株式会社河内フーズ,8,食品加工,茨城県,Food processing
+4000250,株式会社草津本舗,25,伝統工芸,滋賀県,Traditional crafts
+4000251,株式会社にかほ畜産,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4000252,合同会社天城畜産,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000253,株式会社南箕輪果樹園,20,果樹・青果,長野県,Orchard and produce
+4000254,株式会社四万十漁業,39,水産・水産加工,高知県,Fisheries and seafood processing
+4000255,合同会社菊陽酒造,43,酒造,熊本県,Sake and spirits brewing
+4000256,農事組合法人八郎潟製麺,5,製麺,秋田県,Noodle manufacturing
+4000257,合同会社嬉野ミート,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4000258,株式会社うるま観光,47,観光・宿泊,沖縄県,Tourism and lodging
+4000259,株式会社小山菓子舗,9,製菓・製パン,栃木県,Confectionery and bakery
+4000260,有限会社上野製麺,10,製麺,群馬県,Noodle manufacturing
+4000261,有限会社小浜ライス,18,米穀・製粉,福井県,Rice and milling
+4000262,株式会社木城商店,45,食品加工,宮崎県,Food processing
+4000263,農事組合法人播磨水産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4000264,株式会社新十津川乳業,1,酪農・乳製品,北海道,Dairy farming
+4000265,株式会社印南麺業,30,製麺,和歌山県,Noodle manufacturing
+4000266,農事組合法人福崎ベーカリー,28,製菓・製パン,兵庫県,Confectionery and bakery
+4000267,株式会社かほく陶苑,17,窯業・陶磁器,石川県,Ceramics
+4000268,有限会社王寺織物,29,繊維・アパレル,奈良県,Textiles and apparel
+4000269,有限会社西ノ島海産,32,水産・水産加工,島根県,Fisheries and seafood processing
+4000270,有限会社大田酒造,32,酒造,島根県,Sake and spirits brewing
+4000271,農事組合法人八尾菓子舗,27,製菓・製パン,大阪府,Confectionery and bakery
+4000272,株式会社養父酒造場,28,酒造,兵庫県,Sake and spirits brewing
+4000273,株式会社名護醸造,47,酒造,沖縄県,Sake and spirits brewing
+4000274,協同組合廿日酒造,34,酒造,広島県,Sake and spirits brewing
+4000275,株式会社みどり食品,10,食品加工,群馬県,Food processing
+4000276,農事組合法人加美フーズ,4,食品加工,宮城県,Food processing
+4000277,合同会社美浜ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4000278,農事組合法人香芝工芸,29,伝統工芸,奈良県,Traditional crafts
+4000279,農事組合法人東洋酒造,39,酒造,高知県,Sake and spirits brewing
+4000280,有限会社姫島畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4000281,株式会社東串良化粧品,46,化粧品製造,鹿児島県,Cosmetics manufacturing
+4000282,株式会社陸別牧場,1,畜産・食肉加工,北海道,Livestock and meat processing
+4000283,有限会社四條畷商会,27,生活用品,大阪府,Household goods
+4000284,農事組合法人日野生活用品,13,生活用品,東京都,Household goods
+4000285,有限会社庄原漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000286,有限会社古賀ミート,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4000287,農事組合法人坂東ミート,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4000288,有限会社羽後米穀,5,米穀・製粉,秋田県,Rice and milling
+4000289,有限会社関川酒造,15,酒造,新潟県,Sake and spirits brewing
+4000290,株式会社小山ツーリズム,9,観光・体験,栃木県,Tourism and experiences
+4000291,有限会社萩漁業,35,水産・水産加工,山口県,Fisheries and seafood processing
+4000292,有限会社かほくスポーツ,17,スポーツ用品,石川県,Sporting goods
+4000293,農事組合法人串間酒造場,45,酒造,宮崎県,Sake and spirits brewing
+4000294,有限会社青梅菓子舗,13,製菓・製パン,東京都,Confectionery and bakery
+4000295,農事組合法人川崎旅館,14,観光・宿泊,神奈川県,Tourism and lodging
+4000296,合同会社金沢海産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4000297,株式会社北九州ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4000298,協同組合さつま農園,46,農産・青果,鹿児島県,Agriculture and produce
+4000299,株式会社奄美酒造,46,酒造,鹿児島県,Sake and spirits brewing
+4000300,株式会社下北山珈琲,29,製茶・焙煎,奈良県,Tea processing and roasting
+4000301,株式会社中川ブルワリー,20,醸造,長野県,Brewing
+4000302,有限会社紫波漁業,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4000303,協同組合津奈木青果,43,農産・青果,熊本県,Agriculture and produce
+4000304,株式会社稲城観光,13,観光・体験,東京都,Tourism and experiences
+4000305,有限会社江別デイリー,1,酪農・乳製品,北海道,Dairy farming
+4000306,有限会社さつま醸造,46,酒造,鹿児島県,Sake and spirits brewing
+4000307,合同会社苓北畜産,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4000308,株式会社太良酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4000309,株式会社さくら牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000310,株式会社勝浦テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4000311,有限会社南越前ライス,18,米穀・製粉,福井県,Rice and milling
+4000312,株式会社鏡野農園,33,果樹・青果,岡山県,Orchard and produce
+4000313,有限会社松野飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4000314,株式会社阿蘇テキスタイル,43,繊維・アパレル,熊本県,Textiles and apparel
+4000315,株式会社小田原商会,14,生活用品,神奈川県,Household goods
+4000316,株式会社日吉津畜産,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000317,有限会社宇治ベーカリー,26,製菓・製パン,京都府,Confectionery and bakery
+4000318,有限会社伊豆の国茶園,22,製茶・焙煎,静岡県,Tea processing and roasting
+4000319,株式会社九重園芸,44,園芸・造園,大分県,Horticulture and landscaping
+4000320,株式会社雲仙製菓,42,製菓・製パン,長崎県,Confectionery and bakery
+4000321,合同会社日南漁業,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4000322,株式会社北広島水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000323,有限会社鳩山商店,11,食品加工,埼玉県,Food processing
+4000324,株式会社高浜酒造場,18,酒造,福井県,Sake and spirits brewing
+4000325,有限会社千葉商会,12,生活用品,千葉県,Household goods
+4000326,株式会社立科ファーム,20,農産・青果,長野県,Agriculture and produce
+4000327,協同組合桑名菓子舗,24,製菓・製パン,三重県,Confectionery and bakery
+4000328,有限会社吹田商会,27,生活用品,大阪府,Household goods
+4000329,有限会社志摩海産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4000330,株式会社和光観光,11,観光・宿泊,埼玉県,Tourism and lodging
+4000331,株式会社片品食品,10,食品加工,群馬県,Food processing
+4000332,有限会社益田畜産,32,畜産・食肉加工,島根県,Livestock and meat processing
+4000333,株式会社清水海産,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4000334,有限会社雫石漁業,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4000335,株式会社北山醸造,30,調味料製造,和歌山県,Seasoning manufacturing
+4000336,合同会社高萩食品,8,食品加工,茨城県,Food processing
+4000337,有限会社今帰仁酒造場,47,酒造,沖縄県,Sake and spirits brewing
+4000338,株式会社藤崎フルーツ,2,果樹・青果,青森県,Orchard and produce
+4000339,有限会社愛川商会,14,生活用品,神奈川県,Household goods
+4000340,合同会社東広島醸造,34,酒造,広島県,Sake and spirits brewing
+4000341,有限会社熱海商店,22,食品加工,静岡県,Food processing
+4000342,株式会社長野原青果,10,農産・青果,群馬県,Agriculture and produce
+4000343,有限会社室戸農園,39,農産・青果,高知県,Agriculture and produce
+4000344,有限会社小牧本舗,23,調味料製造,愛知県,Seasoning manufacturing
+4000345,株式会社池田陶苑,18,窯業・陶磁器,福井県,Ceramics
+4000346,株式会社川南畜産,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4000347,株式会社鉾田ミート,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4000348,合同会社坂井漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4000349,有限会社安八家具,21,木工・家具,岐阜県,Woodwork and furniture
+4000350,株式会社与那国食品,47,食品加工,沖縄県,Food processing
+4000351,株式会社小城ミート,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4000352,株式会社まんのう本舗,37,伝統工芸,香川県,Traditional crafts
+4000353,有限会社小矢部酒造,16,酒造,富山県,Sake and spirits brewing
+4000354,株式会社下関米穀,35,米穀・製粉,山口県,Rice and milling
+4000355,株式会社瀬戸内精米,33,米穀・製粉,岡山県,Rice and milling
+4000356,農事組合法人松山海産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4000357,有限会社竹田窯,44,窯業・陶磁器,大分県,Ceramics
+4000358,株式会社久万高原テキスタイル,38,繊維・アパレル,愛媛県,Textiles and apparel
+4000359,株式会社中能登工芸,17,伝統工芸,石川県,Traditional crafts
+4000360,農事組合法人有田川フルーツ,30,果樹・青果,和歌山県,Orchard and produce
+4000361,有限会社藤井寺食品,27,食品加工,大阪府,Food processing
+4000362,株式会社千代田ミート,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4000363,合同会社亘理水産,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4000364,株式会社湯沢製陶,5,窯業・陶磁器,秋田県,Ceramics
+4000365,株式会社越谷菓子舗,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000366,株式会社度会ミート,24,畜産・食肉加工,三重県,Livestock and meat processing
+4000367,有限会社大潟ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4000368,有限会社大磯フーズ,14,食品加工,神奈川県,Food processing
+4000369,有限会社陸前高田水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4000370,協同組合天城畜産,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000371,有限会社高野本舗,30,調味料製造,和歌山県,Seasoning manufacturing
+4000372,有限会社長野原食品,10,食品加工,群馬県,Food processing
+4000373,株式会社中之条ミート,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4000374,株式会社南丹工芸,26,伝統工芸,京都府,Traditional crafts
+4000375,有限会社長岡京本舗,26,伝統工芸,京都府,Traditional crafts
+4000376,農事組合法人平川農園,2,農産・青果,青森県,Agriculture and produce
+4000377,有限会社竜王牧場,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4000378,有限会社筑後製菓,40,製菓・製パン,福岡県,Confectionery and bakery
+4000379,有限会社三郷珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000380,農事組合法人丹波山ワイナリー,19,醸造,山梨県,Brewing
+4000381,株式会社京都製菓,26,製菓・製パン,京都府,Confectionery and bakery
+4000382,株式会社善通寺ミート,37,畜産・食肉加工,香川県,Livestock and meat processing
+4000383,株式会社陸前高田漁業,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4000384,有限会社江府牧場,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000385,合同会社仙台漁業,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4000386,株式会社宇多津麺業,37,製麺,香川県,Noodle manufacturing
+4000387,有限会社井手製陶,26,窯業・陶磁器,京都府,Ceramics
+4000388,協同組合穴水工房,17,伝統工芸,石川県,Traditional crafts
+4000389,有限会社美里醸造,4,調味料製造,宮城県,Seasoning manufacturing
+4000390,株式会社葛城織物,29,繊維・アパレル,奈良県,Textiles and apparel
+4000391,株式会社白馬ブルワリー,20,醸造,長野県,Brewing
+4000392,農事組合法人出雲崎水産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4000393,株式会社田原繊維,23,繊維・アパレル,愛知県,Textiles and apparel
+4000394,株式会社新宮ミート,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4000395,株式会社上田ドリンク,20,飲料製造,長野県,Beverage manufacturing
+4000396,株式会社浦添米穀,47,米穀・製粉,沖縄県,Rice and milling
+4000397,株式会社まんのう木工,37,木工・家具,香川県,Woodwork and furniture
+4000398,有限会社箕輪ファーム,20,農産・青果,長野県,Agriculture and produce
+4000399,株式会社川北酒造,17,酒造,石川県,Sake and spirits brewing
+4000400,株式会社丸森ミート,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4000401,有限会社山辺果樹園,6,果樹・青果,山形県,Orchard and produce
+4000402,有限会社福山水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000403,有限会社九重畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4000404,有限会社流山ファーム,12,農産・青果,千葉県,Agriculture and produce
+4000405,株式会社三郷ベーカリー,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000406,有限会社美郷牧場,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4000407,株式会社鹿島窯,41,窯業・陶磁器,佐賀県,Ceramics
+4000408,株式会社与論畜産,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000409,株式会社北広島商店,34,食品加工,広島県,Food processing
+4000410,合同会社阿久根酒造,46,酒造,鹿児島県,Sake and spirits brewing
+4000411,合同会社天理テキスタイル,29,繊維・アパレル,奈良県,Textiles and apparel
+4000412,合同会社入間デイリー,11,酪農・乳製品,埼玉県,Dairy farming
+4000413,株式会社唐津コスメ,41,化粧品製造,佐賀県,Cosmetics manufacturing
+4000414,株式会社御宿青果,12,農産・青果,千葉県,Agriculture and produce
+4000415,有限会社柳井海産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4000416,株式会社広島フーズ,34,食品加工,広島県,Food processing
+4000417,株式会社つがる漁業,2,水産・水産加工,青森県,Fisheries and seafood processing
+4000418,協同組合かほく窯,17,窯業・陶磁器,石川県,Ceramics
+4000419,株式会社瀬戸内ミート,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000420,農事組合法人越谷珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000421,株式会社池田製陶,18,窯業・陶磁器,福井県,Ceramics
+4000422,株式会社江津酒造場,32,酒造,島根県,Sake and spirits brewing
+4000423,合同会社本山本舗,39,調味料製造,高知県,Seasoning manufacturing
+4000424,株式会社大磯フーズ,14,食品加工,神奈川県,Food processing
+4000425,農事組合法人三笠本舗,1,調味料製造,北海道,Seasoning manufacturing
+4000426,株式会社米原酒造場,25,酒造,滋賀県,Sake and spirits brewing
+4000427,農事組合法人安来水産,32,水産・水産加工,島根県,Fisheries and seafood processing
+4000428,株式会社八頭酒造場,31,酒造,鳥取県,Sake and spirits brewing
+4000429,有限会社周南米穀,35,米穀・製粉,山口県,Rice and milling
+4000430,有限会社糸田ミート,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4000431,株式会社上板農園,36,農産・青果,徳島県,Agriculture and produce
+4000432,株式会社伊方フルーツ,38,果樹・青果,愛媛県,Orchard and produce
+4000433,有限会社越前陶苑,18,窯業・陶磁器,福井県,Ceramics
+4000434,有限会社波佐見園芸,42,園芸・造園,長崎県,Horticulture and landscaping
+4000435,株式会社富山醸造,16,酒造,富山県,Sake and spirits brewing
+4000436,有限会社長岡製麺,15,製麺,新潟県,Noodle manufacturing
+4000437,農事組合法人御殿場製茶,22,製茶・焙煎,静岡県,Tea processing and roasting
+4000438,株式会社多摩ツーリズム,13,観光・体験,東京都,Tourism and experiences
+4000439,合同会社三島フルーツ,7,果樹・青果,福島県,Orchard and produce
+4000440,有限会社倉吉牧場,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000441,株式会社那珂川フルーツ,9,果樹・青果,栃木県,Orchard and produce
+4000442,株式会社鮭川畜産,6,畜産・食肉加工,山形県,Livestock and meat processing
+4000443,株式会社丸亀果樹園,37,果樹・青果,香川県,Orchard and produce
+4000444,株式会社座間ベーカリー,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000445,株式会社下條フルーツ,20,果樹・青果,長野県,Orchard and produce
+4000446,株式会社加西牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4000447,有限会社金武酒造場,47,酒造,沖縄県,Sake and spirits brewing
+4000448,有限会社倉吉精米,31,米穀・製粉,鳥取県,Rice and milling
+4000449,有限会社穴水酒造,17,酒造,石川県,Sake and spirits brewing
+4000450,株式会社美波アウトドア,36,スポーツ用品,徳島県,Sporting goods
+4000451,株式会社錦畜産,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4000452,株式会社川島製茶,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000453,株式会社小豆島ライス,37,米穀・製粉,香川県,Rice and milling
+4000454,有限会社日高川製陶,30,窯業・陶磁器,和歌山県,Ceramics
+4000455,農事組合法人久米南テキスタイル,33,繊維・アパレル,岡山県,Textiles and apparel
+4000456,株式会社大田海産,32,水産・水産加工,島根県,Fisheries and seafood processing
+4000457,合同会社芳賀農園,9,果樹・青果,栃木県,Orchard and produce
+4000458,株式会社野々酒造場,17,酒造,石川県,Sake and spirits brewing
+4000459,株式会社草加茶園,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000460,株式会社飯綱ブルワリー,20,醸造,長野県,Brewing
+4000461,株式会社宇美海産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4000462,合同会社玉ファーム,10,農産・青果,群馬県,Agriculture and produce
+4000463,株式会社神戸ベーカリー,28,製菓・製パン,兵庫県,Confectionery and bakery
+4000464,合同会社度会水産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4000465,合同会社新宮フルーツ,30,果樹・青果,和歌山県,Orchard and produce
+4000466,有限会社東洋水産,39,水産・水産加工,高知県,Fisheries and seafood processing
+4000467,有限会社天塩ミート,1,畜産・食肉加工,北海道,Livestock and meat processing
+4000468,有限会社太田本舗,10,調味料製造,群馬県,Seasoning manufacturing
+4000469,有限会社芸西酒造場,39,酒造,高知県,Sake and spirits brewing
+4000470,有限会社阿蘇農園,43,果樹・青果,熊本県,Orchard and produce
+4000471,株式会社藍住果樹園,36,果樹・青果,徳島県,Orchard and produce
+4000472,有限会社柏崎精米,15,米穀・製粉,新潟県,Rice and milling
+4000473,協同組合長岡製麺,15,製麺,新潟県,Noodle manufacturing
+4000474,協同組合板柳本舗,2,伝統工芸,青森県,Traditional crafts
+4000475,株式会社鳴門麺業,36,製麺,徳島県,Noodle manufacturing
+4000476,有限会社豊郷ライス,25,米穀・製粉,滋賀県,Rice and milling
+4000477,有限会社多良木農園,43,果樹・青果,熊本県,Orchard and produce
+4000478,株式会社内子グリーン,38,園芸・造園,愛媛県,Horticulture and landscaping
+4000479,株式会社備前商会,33,生活用品,岡山県,Household goods
+4000480,有限会社みなべドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4000481,有限会社吉賀酒造場,32,酒造,島根県,Sake and spirits brewing
+4000482,合同会社田上ライス,15,米穀・製粉,新潟県,Rice and milling
+4000483,株式会社鹿島水産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4000484,株式会社東成瀬麺業,5,製麺,秋田県,Noodle manufacturing
+4000485,合同会社箕面農園,27,果樹・青果,大阪府,Orchard and produce
+4000486,有限会社大東商会,27,生活用品,大阪府,Household goods
+4000487,農事組合法人粟島浦畜産,15,畜産・食肉加工,新潟県,Livestock and meat processing
+4000488,株式会社度会牧場,24,畜産・食肉加工,三重県,Livestock and meat processing
+4000489,農事組合法人防府酒造,35,酒造,山口県,Sake and spirits brewing
+4000490,有限会社幸手米穀,11,米穀・製粉,埼玉県,Rice and milling
+4000491,農事組合法人高萩フーズ,8,食品加工,茨城県,Food processing
+4000492,株式会社東郷製菓,23,製菓・製パン,愛知県,Confectionery and bakery
+4000493,農事組合法人井原製陶,33,窯業・陶磁器,岡山県,Ceramics
+4000494,株式会社坂陶苑,34,窯業・陶磁器,広島県,Ceramics
+4000495,株式会社延岡酒造,45,酒造,宮崎県,Sake and spirits brewing
+4000496,株式会社君津畜産,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000497,株式会社豊根園芸,23,園芸・造園,愛知県,Horticulture and landscaping
+4000498,株式会社川越ミート,24,畜産・食肉加工,三重県,Livestock and meat processing
+4000499,株式会社京田辺茶園,26,製茶・焙煎,京都府,Tea processing and roasting
+4000500,株式会社守口ベーカリー,27,製菓・製パン,大阪府,Confectionery and bakery
+4000501,有限会社上士幌畜産,1,畜産・食肉加工,北海道,Livestock and meat processing
+4000502,協同組合土庄農園,37,農産・青果,香川県,Agriculture and produce
+4000503,農事組合法人弘前農園,2,果樹・青果,青森県,Orchard and produce
+4000504,農事組合法人熊谷ミート,11,畜産・食肉加工,埼玉県,Livestock and meat processing
+4000505,有限会社大島ツーリズム,13,観光・体験,東京都,Tourism and experiences
+4000506,合同会社嬉野米穀,41,米穀・製粉,佐賀県,Rice and milling
+4000507,株式会社石井酒造,36,酒造,徳島県,Sake and spirits brewing
+4000508,農事組合法人木城生活用品,45,生活用品,宮崎県,Household goods
+4000509,株式会社安田農園,39,農産・青果,高知県,Agriculture and produce
+4000510,協同組合那賀製麺,36,製麺,徳島県,Noodle manufacturing
+4000511,有限会社大川海産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4000512,株式会社菊陽青果,43,農産・青果,熊本県,Agriculture and produce
+4000513,株式会社上山醸造,6,酒造,山形県,Sake and spirits brewing
+4000514,協同組合赤穂水産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4000515,有限会社葛巻スポーツ,3,スポーツ用品,岩手県,Sporting goods
+4000516,有限会社日野文具,13,文具・玩具,東京都,Stationery and toys
+4000517,株式会社横手ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4000518,有限会社土浦商店,8,食品加工,茨城県,Food processing
+4000519,協同組合胎内電機,15,電機・機械,新潟県,Electronics and machinery
+4000520,協同組合臼杵酒造,44,酒造,大分県,Sake and spirits brewing
+4000521,株式会社志木製材,11,木工・家具,埼玉県,Woodwork and furniture
+4000522,株式会社大槌牧場,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4000523,株式会社鶴岡農園,6,果樹・青果,山形県,Orchard and produce
+4000524,株式会社新座製菓,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000525,株式会社長与水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000526,株式会社豊後大野フーズ,44,食品加工,大分県,Food processing
+4000527,有限会社寒川菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000528,有限会社秋田醸造,5,酒造,秋田県,Sake and spirits brewing
+4000529,株式会社雲南米穀,32,米穀・製粉,島根県,Rice and milling
+4000530,株式会社江北畜産,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4000531,株式会社宇多津醸造,37,酒造,香川県,Sake and spirits brewing
+4000532,有限会社鳥栖製陶,41,窯業・陶磁器,佐賀県,Ceramics
+4000533,株式会社鳴沢飲料,19,飲料製造,山梨県,Beverage manufacturing
+4000534,株式会社松前農園,38,果樹・青果,愛媛県,Orchard and produce
+4000535,有限会社津水産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4000536,有限会社西海海産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000537,株式会社宇都宮果樹園,9,果樹・青果,栃木県,Orchard and produce
+4000538,株式会社恩納旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4000539,株式会社玉珈琲,10,製茶・焙煎,群馬県,Tea processing and roasting
+4000540,株式会社益子牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000541,株式会社宮若ミート,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4000542,株式会社四国中央飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4000543,有限会社黒滝本舗,29,伝統工芸,奈良県,Traditional crafts
+4000544,農事組合法人美郷製麺,5,製麺,秋田県,Noodle manufacturing
+4000545,株式会社都留工房,19,伝統工芸,山梨県,Traditional crafts
+4000546,株式会社秦野旅館,14,観光・宿泊,神奈川県,Tourism and lodging
+4000547,株式会社中津海産,44,水産・水産加工,大分県,Fisheries and seafood processing
+4000548,有限会社南箕輪フルーツ,20,果樹・青果,長野県,Orchard and produce
+4000549,株式会社黒潮醸造,39,酒造,高知県,Sake and spirits brewing
+4000550,株式会社富岡果樹園,7,果樹・青果,福島県,Orchard and produce
+4000551,株式会社日南酒造場,45,酒造,宮崎県,Sake and spirits brewing
+4000552,協同組合大豊漁業,39,水産・水産加工,高知県,Fisheries and seafood processing
+4000553,株式会社伊東ペット,22,ペット用品,静岡県,Pet supplies
+4000554,有限会社飯南畜産,32,畜産・食肉加工,島根県,Livestock and meat processing
+4000555,有限会社日立米穀,8,米穀・製粉,茨城県,Rice and milling
+4000556,農事組合法人大仙ライス,5,米穀・製粉,秋田県,Rice and milling
+4000557,株式会社かつらぎドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4000558,有限会社那賀織物,36,繊維・アパレル,徳島県,Textiles and apparel
+4000559,有限会社愛川菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000560,農事組合法人小豆島フルーツ,37,果樹・青果,香川県,Orchard and produce
+4000561,合同会社久米南工芸,33,伝統工芸,岡山県,Traditional crafts
+4000562,協同組合あきる野ツーリズム,13,観光・体験,東京都,Tourism and experiences
+4000563,有限会社西興部製菓,1,製菓・製パン,北海道,Confectionery and bakery
+4000564,合同会社京丹後陶苑,26,窯業・陶磁器,京都府,Ceramics
+4000565,有限会社奥出雲ミート,32,畜産・食肉加工,島根県,Livestock and meat processing
+4000566,株式会社南牧ファーム,10,農産・青果,群馬県,Agriculture and produce
+4000567,農事組合法人おおい酒造,18,酒造,福井県,Sake and spirits brewing
+4000568,有限会社遠野畜産,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4000569,農事組合法人邑南醸造,32,酒造,島根県,Sake and spirits brewing
+4000570,株式会社愛南水産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4000571,有限会社筑後水産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4000572,株式会社ふじみ野商店,11,食品加工,埼玉県,Food processing
+4000573,有限会社神山麺業,36,製麺,徳島県,Noodle manufacturing
+4000574,有限会社亀岡本舗,26,伝統工芸,京都府,Traditional crafts
+4000575,農事組合法人木古内漁業,1,水産・水産加工,北海道,Fisheries and seafood processing
+4000576,株式会社富士見食品,11,食品加工,埼玉県,Food processing
+4000577,農事組合法人若狭製陶,18,窯業・陶磁器,福井県,Ceramics
+4000578,株式会社大垣牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4000579,有限会社勝山醸造,18,酒造,福井県,Sake and spirits brewing
+4000580,有限会社山元商店,4,食品加工,宮城県,Food processing
+4000581,有限会社菰野漁業,24,水産・水産加工,三重県,Fisheries and seafood processing
+4000582,株式会社青ヶ島ツーリズム,13,観光・体験,東京都,Tourism and experiences
+4000583,株式会社市川三郷工房,19,伝統工芸,山梨県,Traditional crafts
+4000584,有限会社久御山製麺,26,製麺,京都府,Noodle manufacturing
+4000585,協同組合日向ミート,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4000586,合同会社南魚沼麺業,15,製麺,新潟県,Noodle manufacturing
+4000587,有限会社北谷菓子舗,47,製菓・製パン,沖縄県,Confectionery and bakery
+4000588,有限会社筑北ファーム,20,農産・青果,長野県,Agriculture and produce
+4000589,協同組合山辺牧場,6,畜産・食肉加工,山形県,Livestock and meat processing
+4000590,合同会社広陵製麺,29,製麺,奈良県,Noodle manufacturing
+4000591,有限会社神津島玩具,13,文具・玩具,東京都,Stationery and toys
+4000592,協同組合東秩父米穀,11,米穀・製粉,埼玉県,Rice and milling
+4000593,農事組合法人日出酒造,44,酒造,大分県,Sake and spirits brewing
+4000594,協同組合風間浦畜産,2,畜産・食肉加工,青森県,Livestock and meat processing
+4000595,株式会社山武ミート,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000596,有限会社向日製菓,26,製菓・製パン,京都府,Confectionery and bakery
+4000597,株式会社うきは海産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4000598,株式会社十和田酒造,2,酒造,青森県,Sake and spirits brewing
+4000599,有限会社高砂牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4000600,有限会社江南本舗,23,調味料製造,愛知県,Seasoning manufacturing
+4000601,合同会社柏原ベーカリー,27,製菓・製パン,大阪府,Confectionery and bakery
+4000602,株式会社白岡製菓,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000603,株式会社壱岐ライス,42,米穀・製粉,長崎県,Rice and milling
+4000604,株式会社金沢工房,17,伝統工芸,石川県,Traditional crafts
+4000605,合同会社佐々牧場,42,畜産・食肉加工,長崎県,Livestock and meat processing
+4000606,有限会社最上果樹園,6,果樹・青果,山形県,Orchard and produce
+4000607,農事組合法人北相木製麺,20,製麺,長野県,Noodle manufacturing
+4000608,農事組合法人南さつま醸造,46,酒造,鹿児島県,Sake and spirits brewing
+4000609,株式会社福崎ベーカリー,28,製菓・製パン,兵庫県,Confectionery and bakery
+4000610,有限会社深谷珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000611,株式会社延岡商店,45,食品加工,宮崎県,Food processing
+4000612,農事組合法人鯖江酒造,18,酒造,福井県,Sake and spirits brewing
+4000613,株式会社津久見牧場,44,畜産・食肉加工,大分県,Livestock and meat processing
+4000614,株式会社那賀ファーム,36,農産・青果,徳島県,Agriculture and produce
+4000615,有限会社珠洲水産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4000616,有限会社下松漁業,35,水産・水産加工,山口県,Fisheries and seafood processing
+4000617,株式会社大川青果,39,農産・青果,高知県,Agriculture and produce
+4000618,合同会社美郷フルーツ,45,果樹・青果,宮崎県,Orchard and produce
+4000619,農事組合法人八幡平麺業,3,製麺,岩手県,Noodle manufacturing
+4000620,株式会社吉備中央陶苑,33,窯業・陶磁器,岡山県,Ceramics
+4000621,有限会社唐津酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4000622,有限会社鮭川酒造場,6,酒造,山形県,Sake and spirits brewing
+4000623,農事組合法人尾花沢酒造場,6,酒造,山形県,Sake and spirits brewing
+4000624,有限会社あま製菓,23,製菓・製パン,愛知県,Confectionery and bakery
+4000625,株式会社滝沢畜産,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4000626,株式会社邑南醸造,32,酒造,島根県,Sake and spirits brewing
+4000627,株式会社宇治工房,26,伝統工芸,京都府,Traditional crafts
+4000628,株式会社智頭農園,31,果樹・青果,鳥取県,Orchard and produce
+4000629,合同会社長浜精米,25,米穀・製粉,滋賀県,Rice and milling
+4000630,有限会社輪之内製材,21,木工・家具,岐阜県,Woodwork and furniture
+4000631,株式会社あわら漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4000632,株式会社大野城麺業,40,製麺,福岡県,Noodle manufacturing
+4000633,株式会社西原酒造,43,酒造,熊本県,Sake and spirits brewing
+4000634,株式会社笠置製菓,26,製菓・製パン,京都府,Confectionery and bakery
+4000635,有限会社那賀果樹園,36,果樹・青果,徳島県,Orchard and produce
+4000636,株式会社六ヶ所ファーム,2,農産・青果,青森県,Agriculture and produce
+4000637,有限会社野田ライス,3,米穀・製粉,岩手県,Rice and milling
+4000638,株式会社美郷アニマル,45,ペット用品,宮崎県,Pet supplies
+4000639,合同会社江東グリーン,13,園芸・造園,東京都,Horticulture and landscaping
+4000640,合同会社鎌倉製菓,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000641,株式会社横須賀製菓,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000642,有限会社西郷青果,7,農産・青果,福島県,Agriculture and produce
+4000643,農事組合法人湯沢製麺,15,製麺,新潟県,Noodle manufacturing
+4000644,合同会社茂木茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4000645,協同組合川上ワイナリー,20,醸造,長野県,Brewing
+4000646,有限会社加古川物産,28,総合物産,兵庫県,General trading
+4000647,株式会社中能登工房,17,伝統工芸,石川県,Traditional crafts
+4000648,有限会社東洋青果,39,農産・青果,高知県,Agriculture and produce
+4000649,有限会社神戸ミート,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4000650,有限会社幸手珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000651,株式会社大阪ツーリズム,27,観光・体験,大阪府,Tourism and experiences
+4000652,有限会社坂観光,34,観光・体験,広島県,Tourism and experiences
+4000653,有限会社日進フーズ,23,食品加工,愛知県,Food processing
+4000654,合同会社串間酒造,45,酒造,宮崎県,Sake and spirits brewing
+4000655,株式会社西米良窯,45,窯業・陶磁器,宮崎県,Ceramics
+4000656,合同会社日吉津フルーツ,31,果樹・青果,鳥取県,Orchard and produce
+4000657,株式会社川西牧場,6,畜産・食肉加工,山形県,Livestock and meat processing
+4000658,農事組合法人神栖青果,8,農産・青果,茨城県,Agriculture and produce
+4000659,有限会社那智勝浦海産,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4000660,有限会社白石商会,4,生活用品,宮城県,Household goods
+4000661,株式会社尾張旭テキスタイル,23,繊維・アパレル,愛知県,Textiles and apparel
+4000662,農事組合法人都城麺業,45,製麺,宮崎県,Noodle manufacturing
+4000663,株式会社上毛海産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4000664,有限会社久慈ライス,3,米穀・製粉,岩手県,Rice and milling
+4000665,有限会社新見リゾート,33,観光・宿泊,岡山県,Tourism and lodging
+4000666,有限会社三朝米穀,31,米穀・製粉,鳥取県,Rice and milling
+4000667,有限会社平田果樹園,7,果樹・青果,福島県,Orchard and produce
+4000668,株式会社宮古島旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4000669,協同組合柏崎漁業,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4000670,有限会社山田水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4000671,有限会社新上五島製菓,42,製菓・製パン,長崎県,Confectionery and bakery
+4000672,株式会社上牧工房,29,伝統工芸,奈良県,Traditional crafts
+4000673,有限会社遊佐醸造,6,酒造,山形県,Sake and spirits brewing
+4000674,有限会社豊後大野醸造,44,酒造,大分県,Sake and spirits brewing
+4000675,農事組合法人小川スポーツ,20,スポーツ用品,長野県,Sporting goods
+4000676,株式会社逗子観光,14,観光・宿泊,神奈川県,Tourism and lodging
+4000677,有限会社高浜商店,23,食品加工,愛知県,Food processing
+4000678,農事組合法人広陵農園,29,果樹・青果,奈良県,Orchard and produce
+4000679,合同会社白井ファーム,12,農産・青果,千葉県,Agriculture and produce
+4000680,株式会社弘前海産,2,水産・水産加工,青森県,Fisheries and seafood processing
+4000681,農事組合法人岸和田製菓,27,製菓・製パン,大阪府,Confectionery and bakery
+4000682,株式会社香南ライス,39,米穀・製粉,高知県,Rice and milling
+4000683,農事組合法人八幡化粧品,26,化粧品製造,京都府,Cosmetics manufacturing
+4000684,株式会社入善ライス,16,米穀・製粉,富山県,Rice and milling
+4000685,有限会社山添フルーツ,29,果樹・青果,奈良県,Orchard and produce
+4000686,協同組合諫早菓子舗,42,製菓・製パン,長崎県,Confectionery and bakery
+4000687,協同組合恵那工芸,21,伝統工芸,岐阜県,Traditional crafts
+4000688,有限会社愛南フルーツ,38,果樹・青果,愛媛県,Orchard and produce
+4000689,有限会社湖西フーズ,22,食品加工,静岡県,Food processing
+4000690,株式会社美馬織物,36,繊維・アパレル,徳島県,Textiles and apparel
+4000691,協同組合江田島水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000692,株式会社久米島水産,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4000693,有限会社木更津漁業,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4000694,農事組合法人柏崎製麺,15,製麺,新潟県,Noodle manufacturing
+4000695,株式会社南山城工房,26,伝統工芸,京都府,Traditional crafts
+4000696,株式会社伊万里醸造,41,酒造,佐賀県,Sake and spirits brewing
+4000697,株式会社阿武商店,35,食品加工,山口県,Food processing
+4000698,株式会社廿日漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000699,株式会社新見フルーツ,33,果樹・青果,岡山県,Orchard and produce
+4000700,株式会社茂木茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4000701,株式会社東松島農園,4,農産・青果,宮城県,Agriculture and produce
+4000702,合同会社三木海産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4000703,株式会社瑞穂牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4000704,協同組合潮来ファーム,8,農産・青果,茨城県,Agriculture and produce
+4000705,株式会社坂祝木工,21,木工・家具,岐阜県,Woodwork and furniture
+4000706,株式会社赤磐フルーツ,33,果樹・青果,岡山県,Orchard and produce
+4000707,株式会社杵築観光,44,観光・宿泊,大分県,Tourism and lodging
+4000708,有限会社町田ベーカリー,13,製菓・製パン,東京都,Confectionery and bakery
+4000709,株式会社高森ファーム,43,農産・青果,熊本県,Agriculture and produce
+4000710,合同会社海老名菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000711,農事組合法人野洲米穀,25,米穀・製粉,滋賀県,Rice and milling
+4000712,有限会社新庄フルーツ,6,果樹・青果,山形県,Orchard and produce
+4000713,合同会社佐世保製麺,42,製麺,長崎県,Noodle manufacturing
+4000714,有限会社南魚沼水産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4000715,有限会社豊後高田商店,44,食品加工,大分県,Food processing
+4000716,協同組合延岡畜産,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4000717,株式会社大仙電機,5,電機・機械,秋田県,Electronics and machinery
+4000718,有限会社かつらぎ果樹園,30,果樹・青果,和歌山県,Orchard and produce
+4000719,株式会社厚木製菓,14,製菓・製パン,神奈川県,Confectionery and bakery
+4000720,合同会社若狭窯,18,窯業・陶磁器,福井県,Ceramics
+4000721,株式会社能登工房,17,伝統工芸,石川県,Traditional crafts
+4000722,有限会社竹原窯,34,窯業・陶磁器,広島県,Ceramics
+4000723,株式会社朝日米穀,16,米穀・製粉,富山県,Rice and milling
+4000724,農事組合法人阿賀麺業,15,製麺,新潟県,Noodle manufacturing
+4000725,株式会社刈谷テキスタイル,23,繊維・アパレル,愛知県,Textiles and apparel
+4000726,株式会社若桜園芸,31,園芸・造園,鳥取県,Horticulture and landscaping
+4000727,合同会社佐久穂ファーム,20,農産・青果,長野県,Agriculture and produce
+4000728,株式会社宇陀農園,29,果樹・青果,奈良県,Orchard and produce
+4000729,有限会社今帰仁旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4000730,有限会社芦屋ブルワリー,40,醸造,福岡県,Brewing
+4000731,株式会社門川酒造場,45,酒造,宮崎県,Sake and spirits brewing
+4000732,株式会社小松電機,17,電機・機械,石川県,Electronics and machinery
+4000733,有限会社西興部海産,1,水産・水産加工,北海道,Fisheries and seafood processing
+4000734,農事組合法人新富食品,45,食品加工,宮崎県,Food processing
+4000735,株式会社嵐山商店,11,食品加工,埼玉県,Food processing
+4000736,有限会社北斗牧場,1,酪農・乳製品,北海道,Dairy farming
+4000737,合同会社周南米穀,35,米穀・製粉,山口県,Rice and milling
+4000738,有限会社高取工房,29,伝統工芸,奈良県,Traditional crafts
+4000739,株式会社北広島商店,34,食品加工,広島県,Food processing
+4000740,株式会社吉野川麺業,36,製麺,徳島県,Noodle manufacturing
+4000741,株式会社港生活用品,13,生活用品,東京都,Household goods
+4000742,有限会社多古陶苑,12,窯業・陶磁器,千葉県,Ceramics
+4000743,有限会社吉備中央テキスタイル,33,繊維・アパレル,岡山県,Textiles and apparel
+4000744,株式会社宝達志水酒造場,17,酒造,石川県,Sake and spirits brewing
+4000745,農事組合法人神流青果,10,農産・青果,群馬県,Agriculture and produce
+4000746,株式会社丸亀製麺,37,製麺,香川県,Noodle manufacturing
+4000747,株式会社泉大津菓子舗,27,製菓・製パン,大阪府,Confectionery and bakery
+4000748,有限会社えびの本舗,45,調味料製造,宮崎県,Seasoning manufacturing
+4000749,株式会社南部漁業,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4000750,農事組合法人栗東米穀,25,米穀・製粉,滋賀県,Rice and milling
+4000751,株式会社清瀬商会,13,生活用品,東京都,Household goods
+4000752,株式会社亘理米穀,4,米穀・製粉,宮城県,Rice and milling
+4000753,有限会社海士醸造,32,酒造,島根県,Sake and spirits brewing
+4000754,農事組合法人鳥栖水産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4000755,有限会社伊勢牧場,24,畜産・食肉加工,三重県,Livestock and meat processing
+4000756,有限会社所沢酒造場,11,酒造,埼玉県,Sake and spirits brewing
+4000757,協同組合宇美農園,40,果樹・青果,福岡県,Orchard and produce
+4000758,株式会社葛城織物,29,繊維・アパレル,奈良県,Textiles and apparel
+4000759,農事組合法人玉城ミート,24,畜産・食肉加工,三重県,Livestock and meat processing
+4000760,株式会社赤磐ライス,33,米穀・製粉,岡山県,Rice and milling
+4000761,株式会社昭和ファーム,10,農産・青果,群馬県,Agriculture and produce
+4000762,有限会社舞鶴陶苑,26,窯業・陶磁器,京都府,Ceramics
+4000763,有限会社高梁製陶,33,窯業・陶磁器,岡山県,Ceramics
+4000764,合同会社柴田米穀,4,米穀・製粉,宮城県,Rice and milling
+4000765,有限会社天栄果樹園,7,果樹・青果,福島県,Orchard and produce
+4000766,株式会社那須烏山乳業,9,酪農・乳製品,栃木県,Dairy farming
+4000767,株式会社三木製材,37,木工・家具,香川県,Woodwork and furniture
+4000768,合同会社青ヶ島商会,13,生活用品,東京都,Household goods
+4000769,合同会社須賀川観光,7,観光・宿泊,福島県,Tourism and lodging
+4000770,株式会社鎌ケ谷牧場,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000771,有限会社屋久島牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000772,協同組合北栄ミート,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000773,有限会社魚津米穀,16,米穀・製粉,富山県,Rice and milling
+4000774,有限会社大川ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4000775,有限会社観音寺製麺,37,製麺,香川県,Noodle manufacturing
+4000776,有限会社津山製陶,33,窯業・陶磁器,岡山県,Ceramics
+4000777,有限会社白山陶苑,17,窯業・陶磁器,石川県,Ceramics
+4000778,有限会社新居浜果樹園,38,果樹・青果,愛媛県,Orchard and produce
+4000779,株式会社三島醸造,46,酒造,鹿児島県,Sake and spirits brewing
+4000780,農事組合法人河津果樹園,22,果樹・青果,静岡県,Orchard and produce
+4000781,株式会社富津牧場,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000782,有限会社松浦製陶,42,窯業・陶磁器,長崎県,Ceramics
+4000783,株式会社涌谷漁業,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4000784,株式会社岩国珈琲,35,製茶・焙煎,山口県,Tea processing and roasting
+4000785,株式会社佐伯リゾート,44,観光・宿泊,大分県,Tourism and lodging
+4000786,株式会社菊川漁業,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4000787,有限会社気仙沼精米,4,米穀・製粉,宮城県,Rice and milling
+4000788,有限会社日置酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4000789,有限会社安曇野コスメ,20,化粧品製造,長野県,Cosmetics manufacturing
+4000790,合同会社神恵内牧場,1,畜産・食肉加工,北海道,Livestock and meat processing
+4000791,合同会社伊予水産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4000792,株式会社妙高醸造,15,酒造,新潟県,Sake and spirits brewing
+4000793,有限会社川上製茶,29,製茶・焙煎,奈良県,Tea processing and roasting
+4000794,有限会社瑞浪家具,21,木工・家具,岐阜県,Woodwork and furniture
+4000795,有限会社大竹水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000796,株式会社熊野乳業,34,酪農・乳製品,広島県,Dairy farming
+4000797,合同会社曽於ファーム,46,農産・青果,鹿児島県,Agriculture and produce
+4000798,株式会社野沢温泉青果,20,農産・青果,長野県,Agriculture and produce
+4000799,協同組合朝日水産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4000800,株式会社芝山飲料,12,飲料製造,千葉県,Beverage manufacturing
+4000801,協同組合神栖ベーカリー,8,製菓・製パン,茨城県,Confectionery and bakery
+4000802,株式会社小坂製麺,5,製麺,秋田県,Noodle manufacturing
+4000803,有限会社狛江麺業,13,製麺,東京都,Noodle manufacturing
+4000804,合同会社筑紫野麺業,40,製麺,福岡県,Noodle manufacturing
+4000805,協同組合有田化粧品,30,化粧品製造,和歌山県,Cosmetics manufacturing
+4000806,株式会社安曇野果樹園,20,果樹・青果,長野県,Orchard and produce
+4000807,株式会社益田精米,32,米穀・製粉,島根県,Rice and milling
+4000808,有限会社伊方織物,38,繊維・アパレル,愛媛県,Textiles and apparel
+4000809,有限会社小菅ワイナリー,19,醸造,山梨県,Brewing
+4000810,株式会社伊東果樹園,22,果樹・青果,静岡県,Orchard and produce
+4000811,協同組合京都工芸,26,伝統工芸,京都府,Traditional crafts
+4000812,協同組合丹波山農園,19,果樹・青果,山梨県,Orchard and produce
+4000813,有限会社大田ライス,32,米穀・製粉,島根県,Rice and milling
+4000814,有限会社白山製陶,17,窯業・陶磁器,石川県,Ceramics
+4000815,株式会社湯沢ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4000816,有限会社香美菓子舗,28,製菓・製パン,兵庫県,Confectionery and bakery
+4000817,株式会社田原商会,23,生活用品,愛知県,Household goods
+4000818,株式会社遠別乳業,1,酪農・乳製品,北海道,Dairy farming
+4000819,農事組合法人田野畑ライス,3,米穀・製粉,岩手県,Rice and milling
+4000820,有限会社甲良工芸,25,伝統工芸,滋賀県,Traditional crafts
+4000821,株式会社えりもペット,1,ペット用品,北海道,Pet supplies
+4000822,株式会社室戸醸造,39,酒造,高知県,Sake and spirits brewing
+4000823,農事組合法人榛東畜産,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4000824,有限会社新庄製菓,33,製菓・製パン,岡山県,Confectionery and bakery
+4000825,株式会社筑後製菓,40,製菓・製パン,福岡県,Confectionery and bakery
+4000826,有限会社海士精米,32,米穀・製粉,島根県,Rice and milling
+4000827,有限会社江府ミート,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000828,株式会社大野製材,21,木工・家具,岐阜県,Woodwork and furniture
+4000829,農事組合法人玉城酒造場,24,酒造,三重県,Sake and spirits brewing
+4000830,株式会社那珂川デイリー,9,酪農・乳製品,栃木県,Dairy farming
+4000831,有限会社氷見ライス,16,米穀・製粉,富山県,Rice and milling
+4000832,株式会社佐野牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000833,有限会社上士幌デイリー,1,酪農・乳製品,北海道,Dairy farming
+4000834,有限会社高野水産,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4000835,株式会社十津川アニマル,29,ペット用品,奈良県,Pet supplies
+4000836,株式会社四国中央ドリンク,38,飲料製造,愛媛県,Beverage manufacturing
+4000837,有限会社能美醸造,17,酒造,石川県,Sake and spirits brewing
+4000838,有限会社中央飲料,19,飲料製造,山梨県,Beverage manufacturing
+4000839,有限会社さぬき青果,37,農産・青果,香川県,Agriculture and produce
+4000840,株式会社札幌ベーカリー,1,製菓・製パン,北海道,Confectionery and bakery
+4000841,株式会社小林果樹園,45,果樹・青果,宮崎県,Orchard and produce
+4000842,有限会社勝央織物,33,繊維・アパレル,岡山県,Textiles and apparel
+4000843,有限会社宮津本舗,26,伝統工芸,京都府,Traditional crafts
+4000844,株式会社大子化粧品,8,化粧品製造,茨城県,Cosmetics manufacturing
+4000845,株式会社津島製麺,23,製麺,愛知県,Noodle manufacturing
+4000846,株式会社柴田本舗,4,調味料製造,宮城県,Seasoning manufacturing
+4000847,株式会社大淀フルーツ,29,果樹・青果,奈良県,Orchard and produce
+4000848,株式会社球磨醸造,43,酒造,熊本県,Sake and spirits brewing
+4000849,農事組合法人片品青果,10,農産・青果,群馬県,Agriculture and produce
+4000850,合同会社会津坂下ファーム,7,農産・青果,福島県,Agriculture and produce
+4000851,株式会社湯河原商会,14,生活用品,神奈川県,Household goods
+4000852,株式会社奄美漁業,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4000853,有限会社上工芸,16,伝統工芸,富山県,Traditional crafts
+4000854,株式会社鯖江リゾート,18,観光・宿泊,福井県,Tourism and lodging
+4000855,協同組合越生食品,11,食品加工,埼玉県,Food processing
+4000856,有限会社文京製菓,13,製菓・製パン,東京都,Confectionery and bakery
+4000857,合同会社旭川ワイナリー,1,醸造,北海道,Brewing
+4000858,有限会社富加家具,21,木工・家具,岐阜県,Woodwork and furniture
+4000859,株式会社伊是名果樹園,47,果樹・青果,沖縄県,Orchard and produce
+4000860,株式会社朝日海産,16,水産・水産加工,富山県,Fisheries and seafood processing
+4000861,株式会社伊東食品,22,食品加工,静岡県,Food processing
+4000862,合同会社北川青果,39,農産・青果,高知県,Agriculture and produce
+4000863,株式会社横芝光牧場,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4000864,株式会社木更津醸造,12,調味料製造,千葉県,Seasoning manufacturing
+4000865,株式会社市川醸造,28,酒造,兵庫県,Sake and spirits brewing
+4000866,協同組合井手珈琲,26,製茶・焙煎,京都府,Tea processing and roasting
+4000867,農事組合法人太田農園,10,農産・青果,群馬県,Agriculture and produce
+4000868,株式会社日南フルーツ,31,果樹・青果,鳥取県,Orchard and produce
+4000869,株式会社能登本舗,17,伝統工芸,石川県,Traditional crafts
+4000870,有限会社みやこ製麺,40,製麺,福岡県,Noodle manufacturing
+4000871,農事組合法人大蔵牧場,6,酪農・乳製品,山形県,Dairy farming
+4000872,農事組合法人阪南観光,27,観光・体験,大阪府,Tourism and experiences
+4000873,農事組合法人かほく酒造,17,酒造,石川県,Sake and spirits brewing
+4000874,株式会社小値賀製菓,42,製菓・製パン,長崎県,Confectionery and bakery
+4000875,有限会社苓北ファーム,43,農産・青果,熊本県,Agriculture and produce
+4000876,有限会社直島フルーツ,37,果樹・青果,香川県,Orchard and produce
+4000877,株式会社熱海フーズ,22,食品加工,静岡県,Food processing
+4000878,協同組合光水産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4000879,農事組合法人木曽岬ベーカリー,24,製菓・製パン,三重県,Confectionery and bakery
+4000880,株式会社南関青果,43,農産・青果,熊本県,Agriculture and produce
+4000881,株式会社西海麺業,42,製麺,長崎県,Noodle manufacturing
+4000882,有限会社幸手珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4000883,株式会社小清水青果,1,農産・青果,北海道,Agriculture and produce
+4000884,株式会社朝霞ツーリズム,11,観光・体験,埼玉県,Tourism and experiences
+4000885,株式会社野洲畜産,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4000886,協同組合唐津製陶,41,窯業・陶磁器,佐賀県,Ceramics
+4000887,協同組合ふじみ野菓子舗,11,製菓・製パン,埼玉県,Confectionery and bakery
+4000888,株式会社小菅海産,19,水産・水産加工,山梨県,Fisheries and seafood processing
+4000889,株式会社長和ファーム,20,農産・青果,長野県,Agriculture and produce
+4000890,有限会社盛岡ミート,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4000891,株式会社大紀菓子舗,24,製菓・製パン,三重県,Confectionery and bakery
+4000892,株式会社鹿追畜産,1,畜産・食肉加工,北海道,Livestock and meat processing
+4000893,合同会社神石高原水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4000894,農事組合法人伊勢崎農園,10,農産・青果,群馬県,Agriculture and produce
+4000895,農事組合法人下妻青果,8,農産・青果,茨城県,Agriculture and produce
+4000896,株式会社高松農園,37,果樹・青果,香川県,Orchard and produce
+4000897,株式会社新上五島水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000898,株式会社築上本舗,40,伝統工芸,福岡県,Traditional crafts
+4000899,農事組合法人松江酒造,32,酒造,島根県,Sake and spirits brewing
+4000900,農事組合法人御坊本舗,30,調味料製造,和歌山県,Seasoning manufacturing
+4000901,有限会社新宮ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4000902,農事組合法人本部酒造場,47,酒造,沖縄県,Sake and spirits brewing
+4000903,株式会社高岡醸造,16,酒造,富山県,Sake and spirits brewing
+4000904,株式会社氷見水産,16,水産・水産加工,富山県,Fisheries and seafood processing
+4000905,農事組合法人加古川海産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4000906,有限会社多良間フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4000907,株式会社松茂果樹園,36,果樹・青果,徳島県,Orchard and produce
+4000908,有限会社直島文具,37,文具・玩具,香川県,Stationery and toys
+4000909,有限会社朝日フルーツ,6,果樹・青果,山形県,Orchard and produce
+4000910,株式会社泰阜製麺,20,製麺,長野県,Noodle manufacturing
+4000911,有限会社北秋田牧場,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4000912,株式会社北杜コスメ,19,化粧品製造,山梨県,Cosmetics manufacturing
+4000913,有限会社佐那河内ファーム,36,農産・青果,徳島県,Agriculture and produce
+4000914,株式会社福崎牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4000915,有限会社新宿文具,13,文具・玩具,東京都,Stationery and toys
+4000916,株式会社鹿角ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4000917,有限会社日吉津畜産,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4000918,株式会社御船農園,43,農産・青果,熊本県,Agriculture and produce
+4000919,農事組合法人十和田農園,2,農産・青果,青森県,Agriculture and produce
+4000920,株式会社大牟田商会,40,生活用品,福岡県,Household goods
+4000921,株式会社川崎リゾート,14,観光・宿泊,神奈川県,Tourism and lodging
+4000922,株式会社東彼杵漁業,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000923,有限会社竹原醸造,34,酒造,広島県,Sake and spirits brewing
+4000924,有限会社東吉野ドリンク,29,飲料製造,奈良県,Beverage manufacturing
+4000925,株式会社久留米麺業,40,製麺,福岡県,Noodle manufacturing
+4000926,株式会社高浜ベーカリー,23,製菓・製パン,愛知県,Confectionery and bakery
+4000927,株式会社羽咋醸造,17,酒造,石川県,Sake and spirits brewing
+4000928,合同会社富士吉田酒造場,19,酒造,山梨県,Sake and spirits brewing
+4000929,有限会社高岡水産,16,水産・水産加工,富山県,Fisheries and seafood processing
+4000930,農事組合法人琴浦海産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4000931,協同組合北名古屋フーズ,23,食品加工,愛知県,Food processing
+4000932,有限会社大津青果,43,農産・青果,熊本県,Agriculture and produce
+4000933,有限会社草津精米,25,米穀・製粉,滋賀県,Rice and milling
+4000934,合同会社人吉畜産,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4000935,株式会社大和観光,14,観光・宿泊,神奈川県,Tourism and lodging
+4000936,有限会社那智勝浦漁業,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4000937,有限会社小松製陶,17,窯業・陶磁器,石川県,Ceramics
+4000938,株式会社市貝乳業,9,酪農・乳製品,栃木県,Dairy farming
+4000939,株式会社西条農園,38,果樹・青果,愛媛県,Orchard and produce
+4000940,株式会社波佐見漁業,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4000941,協同組合柏原生活用品,27,生活用品,大阪府,Household goods
+4000942,株式会社能勢観光,27,観光・体験,大阪府,Tourism and experiences
+4000943,協同組合滑川酒造場,16,酒造,富山県,Sake and spirits brewing
+4000944,株式会社珠洲醸造,17,酒造,石川県,Sake and spirits brewing
+4000945,有限会社周防大島醸造,35,酒造,山口県,Sake and spirits brewing
+4000946,株式会社東大阪牧場,27,酪農・乳製品,大阪府,Dairy farming
+4000947,有限会社大磯リゾート,14,観光・宿泊,神奈川県,Tourism and lodging
+4000948,株式会社那智勝浦醸造,30,醸造,和歌山県,Brewing
+4000949,株式会社五條本舗,29,伝統工芸,奈良県,Traditional crafts
+4000950,合同会社桑折観光,7,観光・体験,福島県,Tourism and experiences
+4000951,協同組合船橋青果,12,農産・青果,千葉県,Agriculture and produce
+4000952,株式会社三木畜産,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4000953,株式会社木曽製麺,20,製麺,長野県,Noodle manufacturing
+4000954,有限会社つがるファーム,2,農産・青果,青森県,Agriculture and produce
+4000955,合同会社多気本舗,24,伝統工芸,三重県,Traditional crafts
+4000956,株式会社浦幌商会,1,生活用品,北海道,Household goods
+4000957,有限会社川西フルーツ,6,果樹・青果,山形県,Orchard and produce
+4000958,有限会社笠間製麺,8,製麺,茨城県,Noodle manufacturing
+4000959,株式会社合志農園,43,果樹・青果,熊本県,Orchard and produce
+4000960,株式会社三好農園,36,農産・青果,徳島県,Agriculture and produce
+4000961,合同会社田上醸造,15,酒造,新潟県,Sake and spirits brewing
+4000962,株式会社日出醸造,44,酒造,大分県,Sake and spirits brewing
+4000963,農事組合法人備前米穀,33,米穀・製粉,岡山県,Rice and milling
+4000964,合同会社龍郷牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4000965,有限会社橋本果樹園,30,果樹・青果,和歌山県,Orchard and produce
+4000966,農事組合法人市貝フルーツ,9,果樹・青果,栃木県,Orchard and produce
+4000967,有限会社宇多津牧場,37,畜産・食肉加工,香川県,Livestock and meat processing
+4000968,協同組合愛別農園,1,農産・青果,北海道,Agriculture and produce
+4000969,株式会社あきる野ツーリズム,13,観光・体験,東京都,Tourism and experiences
+4000970,有限会社岩美商事,31,総合物産,鳥取県,General trading
+4000971,有限会社笠間商店,8,食品加工,茨城県,Food processing
+4000972,株式会社江津畜産,32,畜産・食肉加工,島根県,Livestock and meat processing
+4000973,有限会社久米島アウトドア,47,スポーツ用品,沖縄県,Sporting goods
+4000974,有限会社川南食品,45,食品加工,宮崎県,Food processing
+4000975,協同組合野木ミート,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4000976,有限会社岩手漁業,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4000977,株式会社松浦牧場,42,畜産・食肉加工,長崎県,Livestock and meat processing
+4000978,株式会社壬生茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4000979,株式会社三条ライス,15,米穀・製粉,新潟県,Rice and milling
+4000980,株式会社別府酒造場,44,酒造,大分県,Sake and spirits brewing
+4000981,有限会社多治見製材,21,木工・家具,岐阜県,Woodwork and furniture
+4000982,株式会社北島繊維,36,繊維・アパレル,徳島県,Textiles and apparel
+4000983,有限会社小山商店,22,食品加工,静岡県,Food processing
+4000984,農事組合法人三朝乳業,31,酪農・乳製品,鳥取県,Dairy farming
+4000985,株式会社奥州農園,3,果樹・青果,岩手県,Orchard and produce
+4000986,有限会社直島製材,37,木工・家具,香川県,Woodwork and furniture
+4000987,有限会社三木畜産,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4000988,株式会社すさみ果樹園,30,果樹・青果,和歌山県,Orchard and produce
+4000989,株式会社滑川本舗,16,伝統工芸,富山県,Traditional crafts
+4000990,合同会社枚方製菓,27,製菓・製パン,大阪府,Confectionery and bakery
+4000991,株式会社清須菓子舗,23,製菓・製パン,愛知県,Confectionery and bakery
+4000992,有限会社山添テキスタイル,29,繊維・アパレル,奈良県,Textiles and apparel
+4000993,株式会社亘理ミート,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4000994,有限会社松伏フーズ,11,食品加工,埼玉県,Food processing
+4000995,株式会社忠岡製茶,27,製茶・焙煎,大阪府,Tea processing and roasting
+4000996,株式会社湯前観光,43,観光・宿泊,熊本県,Tourism and lodging
+4000997,農事組合法人射水精米,16,米穀・製粉,富山県,Rice and milling
+4000998,株式会社宮古米穀,3,米穀・製粉,岩手県,Rice and milling
+4000999,協同組合大月農園,19,果樹・青果,山梨県,Orchard and produce
+4001000,株式会社中津酒造場,44,酒造,大分県,Sake and spirits brewing
+4001001,合同会社栃木電機,9,電機・機械,栃木県,Electronics and machinery
+4001002,合同会社妙高酒造場,15,酒造,新潟県,Sake and spirits brewing
+4001003,株式会社野沢温泉ワイナリー,20,醸造,長野県,Brewing
+4001004,合同会社土浦醸造,8,醸造,茨城県,Brewing
+4001005,農事組合法人大津精米,25,米穀・製粉,滋賀県,Rice and milling
+4001006,株式会社勝浦テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4001007,合同会社西ノ島ミート,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001008,有限会社栗東米穀,25,米穀・製粉,滋賀県,Rice and milling
+4001009,合同会社新居浜繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4001010,株式会社赤磐製陶,33,窯業・陶磁器,岡山県,Ceramics
+4001011,株式会社東白川窯,21,窯業・陶磁器,岐阜県,Ceramics
+4001012,協同組合萩酒造,35,酒造,山口県,Sake and spirits brewing
+4001013,合同会社南部フルーツ,31,果樹・青果,鳥取県,Orchard and produce
+4001014,株式会社伊江観光,47,観光・宿泊,沖縄県,Tourism and lodging
+4001015,株式会社伯耆牧場,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4001016,有限会社河北米穀,6,米穀・製粉,山形県,Rice and milling
+4001017,有限会社三朝農園,31,果樹・青果,鳥取県,Orchard and produce
+4001018,農事組合法人見附製麺,15,製麺,新潟県,Noodle manufacturing
+4001019,合同会社島本菓子舗,27,製菓・製パン,大阪府,Confectionery and bakery
+4001020,株式会社魚津酒造,16,酒造,富山県,Sake and spirits brewing
+4001021,有限会社多良間農園,47,果樹・青果,沖縄県,Orchard and produce
+4001022,株式会社越谷フーズ,11,食品加工,埼玉県,Food processing
+4001023,有限会社上北山織物,29,繊維・アパレル,奈良県,Textiles and apparel
+4001024,株式会社彦根牧場,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4001025,有限会社邑南ライス,32,米穀・製粉,島根県,Rice and milling
+4001026,農事組合法人敦賀酒造場,18,酒造,福井県,Sake and spirits brewing
+4001027,株式会社山北商店,14,食品加工,神奈川県,Food processing
+4001028,株式会社仙北精米,5,米穀・製粉,秋田県,Rice and milling
+4001029,協同組合安中麺業,10,製麺,群馬県,Noodle manufacturing
+4001030,株式会社別府酒造,44,酒造,大分県,Sake and spirits brewing
+4001031,株式会社八代フルーツ,43,果樹・青果,熊本県,Orchard and produce
+4001032,有限会社平谷製麺,20,製麺,長野県,Noodle manufacturing
+4001033,有限会社芦北農園,43,農産・青果,熊本県,Agriculture and produce
+4001034,有限会社横須賀菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4001035,有限会社田原本珈琲,29,製茶・焙煎,奈良県,Tea processing and roasting
+4001036,株式会社甲府ブルワリー,19,醸造,山梨県,Brewing
+4001037,農事組合法人井川畜産,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4001038,合同会社南島原製麺,42,製麺,長崎県,Noodle manufacturing
+4001039,有限会社東かがわ商会,37,生活用品,香川県,Household goods
+4001040,株式会社石垣酒造場,47,酒造,沖縄県,Sake and spirits brewing
+4001041,株式会社二宮商会,14,生活用品,神奈川県,Household goods
+4001042,株式会社大木本舗,40,伝統工芸,福岡県,Traditional crafts
+4001043,農事組合法人天城酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4001044,有限会社新庄精米,33,米穀・製粉,岡山県,Rice and milling
+4001045,株式会社米原米穀,25,米穀・製粉,滋賀県,Rice and milling
+4001046,株式会社白井海産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4001047,株式会社南丹本舗,26,伝統工芸,京都府,Traditional crafts
+4001048,株式会社庄原酒造,34,酒造,広島県,Sake and spirits brewing
+4001049,合同会社坂祝木工,21,木工・家具,岐阜県,Woodwork and furniture
+4001050,有限会社出雲崎酒造,15,酒造,新潟県,Sake and spirits brewing
+4001051,有限会社宇佐商会,44,生活用品,大分県,Household goods
+4001052,協同組合川北醸造,17,酒造,石川県,Sake and spirits brewing
+4001053,有限会社瀬戸内乳業,33,酪農・乳製品,岡山県,Dairy farming
+4001054,農事組合法人能登製陶,17,窯業・陶磁器,石川県,Ceramics
+4001055,有限会社焼津フルーツ,22,果樹・青果,静岡県,Orchard and produce
+4001056,株式会社三浦食品,14,食品加工,神奈川県,Food processing
+4001057,協同組合栃木酒造場,9,酒造,栃木県,Sake and spirits brewing
+4001058,有限会社美浜デイリー,30,酪農・乳製品,和歌山県,Dairy farming
+4001059,有限会社富士川本舗,19,伝統工芸,山梨県,Traditional crafts
+4001060,農事組合法人熱海漁業,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4001061,協同組合滑川フーズ,11,食品加工,埼玉県,Food processing
+4001062,農事組合法人日田畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4001063,株式会社佐那河内果樹園,36,果樹・青果,徳島県,Orchard and produce
+4001064,有限会社那須烏山ツーリズム,9,観光・体験,栃木県,Tourism and experiences
+4001065,株式会社相馬デイリー,7,酪農・乳製品,福島県,Dairy farming
+4001066,株式会社新温泉牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001067,株式会社舞鶴製陶,26,窯業・陶磁器,京都府,Ceramics
+4001068,株式会社佐々製麺,42,製麺,長崎県,Noodle manufacturing
+4001069,株式会社川本畜産,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001070,農事組合法人美里フーズ,4,食品加工,宮城県,Food processing
+4001071,株式会社笠置珈琲,26,製茶・焙煎,京都府,Tea processing and roasting
+4001072,合同会社小川商店,11,食品加工,埼玉県,Food processing
+4001073,協同組合甲州家具,19,木工・家具,山梨県,Woodwork and furniture
+4001074,合同会社近江八幡精米,25,米穀・製粉,滋賀県,Rice and milling
+4001075,株式会社平塚リゾート,14,観光・宿泊,神奈川県,Tourism and lodging
+4001076,協同組合宇検醸造,46,調味料製造,鹿児島県,Seasoning manufacturing
+4001077,農事組合法人竹富フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4001078,株式会社観音寺果樹園,37,果樹・青果,香川県,Orchard and produce
+4001079,農事組合法人日進醸造,23,調味料製造,愛知県,Seasoning manufacturing
+4001080,株式会社東近江本舗,25,伝統工芸,滋賀県,Traditional crafts
+4001081,株式会社上峰陶苑,41,窯業・陶磁器,佐賀県,Ceramics
+4001082,株式会社防府精米,35,米穀・製粉,山口県,Rice and milling
+4001083,株式会社邑南醸造,32,酒造,島根県,Sake and spirits brewing
+4001084,株式会社狭山珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4001085,有限会社栃木製茶,9,製茶・焙煎,栃木県,Tea processing and roasting
+4001086,有限会社鹿児島スポーツ,46,スポーツ用品,鹿児島県,Sporting goods
+4001087,有限会社香美本舗,39,調味料製造,高知県,Seasoning manufacturing
+4001088,合同会社大洗畜産,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4001089,株式会社白浜果樹園,30,果樹・青果,和歌山県,Orchard and produce
+4001090,株式会社斑鳩珈琲,29,製茶・焙煎,奈良県,Tea processing and roasting
+4001091,有限会社小菅ファーム,19,農産・青果,山梨県,Agriculture and produce
+4001092,株式会社大月工芸,19,伝統工芸,山梨県,Traditional crafts
+4001093,有限会社府中醸造,34,酒造,広島県,Sake and spirits brewing
+4001094,合同会社松茂テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4001095,合同会社坂井漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001096,有限会社粟国旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4001097,株式会社南三陸ミート,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4001098,有限会社廿日フーズ,34,食品加工,広島県,Food processing
+4001099,合同会社肝付木工,46,木工・家具,鹿児島県,Woodwork and furniture
+4001100,協同組合垂井製陶,21,窯業・陶磁器,岐阜県,Ceramics
+4001101,農事組合法人清須本舗,23,調味料製造,愛知県,Seasoning manufacturing
+4001102,株式会社南山城製陶,26,窯業・陶磁器,京都府,Ceramics
+4001103,株式会社大網白里ミート,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4001104,有限会社みどり造園,10,園芸・造園,群馬県,Horticulture and landscaping
+4001105,有限会社下呂工芸,21,伝統工芸,岐阜県,Traditional crafts
+4001106,株式会社東近江リゾート,25,観光・宿泊,滋賀県,Tourism and lodging
+4001107,合同会社山陽小野田商店,35,食品加工,山口県,Food processing
+4001108,株式会社長浜精米,25,米穀・製粉,滋賀県,Rice and milling
+4001109,有限会社池田工芸,21,伝統工芸,岐阜県,Traditional crafts
+4001110,協同組合東近江製茶,25,製茶・焙煎,滋賀県,Tea processing and roasting
+4001111,株式会社東御ワイナリー,20,醸造,長野県,Brewing
+4001112,株式会社羽後精米,5,米穀・製粉,秋田県,Rice and milling
+4001113,株式会社那須果樹園,9,果樹・青果,栃木県,Orchard and produce
+4001114,有限会社八幡平精米,3,米穀・製粉,岩手県,Rice and milling
+4001115,株式会社池田商店,27,食品加工,大阪府,Food processing
+4001116,株式会社伊江リゾート,47,観光・宿泊,沖縄県,Tourism and lodging
+4001117,株式会社ふじみ野本舗,11,調味料製造,埼玉県,Seasoning manufacturing
+4001118,株式会社北観光,13,観光・体験,東京都,Tourism and experiences
+4001119,株式会社常総畜産,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4001120,合同会社長泉食品,22,食品加工,静岡県,Food processing
+4001121,有限会社鳥羽工芸,24,伝統工芸,三重県,Traditional crafts
+4001122,株式会社舟橋米穀,16,米穀・製粉,富山県,Rice and milling
+4001123,株式会社敦賀製陶,18,窯業・陶磁器,福井県,Ceramics
+4001124,農事組合法人大野海産,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001125,株式会社佐賀牧場,41,酪農・乳製品,佐賀県,Dairy farming
+4001126,農事組合法人豊郷工房,25,伝統工芸,滋賀県,Traditional crafts
+4001127,協同組合氷見水産,16,水産・水産加工,富山県,Fisheries and seafood processing
+4001128,株式会社滑川精米,16,米穀・製粉,富山県,Rice and milling
+4001129,株式会社座間味リゾート,47,観光・宿泊,沖縄県,Tourism and lodging
+4001130,協同組合福島酒造場,7,酒造,福島県,Sake and spirits brewing
+4001131,協同組合吉富製麺,40,製麺,福岡県,Noodle manufacturing
+4001132,株式会社大木製菓,40,製菓・製パン,福岡県,Confectionery and bakery
+4001133,農事組合法人川南フーズ,45,食品加工,宮崎県,Food processing
+4001134,有限会社神川珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4001135,有限会社伊勢原生活用品,14,生活用品,神奈川県,Household goods
+4001136,有限会社氷見工芸,16,伝統工芸,富山県,Traditional crafts
+4001137,合同会社呉食品,34,食品加工,広島県,Food processing
+4001138,株式会社輪之内陶苑,21,窯業・陶磁器,岐阜県,Ceramics
+4001139,株式会社男鹿ブルワリー,5,醸造,秋田県,Brewing
+4001140,株式会社宇治田原製茶,26,製茶・焙煎,京都府,Tea processing and roasting
+4001141,有限会社板野織物,36,繊維・アパレル,徳島県,Textiles and apparel
+4001142,有限会社浦臼物産,1,総合物産,北海道,General trading
+4001143,株式会社中泊水産,2,水産・水産加工,青森県,Fisheries and seafood processing
+4001144,合同会社北杜本舗,19,伝統工芸,山梨県,Traditional crafts
+4001145,協同組合田辺フルーツ,30,果樹・青果,和歌山県,Orchard and produce
+4001146,農事組合法人和水畜産,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001147,株式会社勝浦製麺,36,製麺,徳島県,Noodle manufacturing
+4001148,株式会社上関醸造,35,酒造,山口県,Sake and spirits brewing
+4001149,有限会社東フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4001150,合同会社御船ミート,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001151,合同会社能美工芸,17,伝統工芸,石川県,Traditional crafts
+4001152,株式会社東吉野珈琲,29,製茶・焙煎,奈良県,Tea processing and roasting
+4001153,株式会社藤岡商店,10,食品加工,群馬県,Food processing
+4001154,有限会社津南精米,15,米穀・製粉,新潟県,Rice and milling
+4001155,有限会社嘉手納観光,47,観光・宿泊,沖縄県,Tourism and lodging
+4001156,株式会社海津ミート,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001157,株式会社知立菓子舗,23,製菓・製パン,愛知県,Confectionery and bakery
+4001158,株式会社唐津牧場,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4001159,株式会社嘉麻製菓,40,製菓・製パン,福岡県,Confectionery and bakery
+4001160,株式会社曽爾本舗,29,伝統工芸,奈良県,Traditional crafts
+4001161,有限会社下関漁業,35,水産・水産加工,山口県,Fisheries and seafood processing
+4001162,協同組合鮭川陶苑,6,窯業・陶磁器,山形県,Ceramics
+4001163,株式会社芦屋畜産,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001164,株式会社大分食品,44,食品加工,大分県,Food processing
+4001165,有限会社善通寺畜産,37,畜産・食肉加工,香川県,Livestock and meat processing
+4001166,株式会社勝山窯,18,窯業・陶磁器,福井県,Ceramics
+4001167,有限会社阿波果樹園,36,果樹・青果,徳島県,Orchard and produce
+4001168,有限会社桜井工房,29,伝統工芸,奈良県,Traditional crafts
+4001169,有限会社薩摩川内牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001170,有限会社あさぎり畜産,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001171,有限会社安中麺業,10,製麺,群馬県,Noodle manufacturing
+4001172,株式会社尾道フーズ,34,食品加工,広島県,Food processing
+4001173,株式会社長崎製麺,42,製麺,長崎県,Noodle manufacturing
+4001174,有限会社奥多摩生活用品,13,生活用品,東京都,Household goods
+4001175,有限会社九重醸造,44,酒造,大分県,Sake and spirits brewing
+4001176,有限会社茂原海産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4001177,有限会社北山飲料,30,飲料製造,和歌山県,Beverage manufacturing
+4001178,株式会社館林製麺,10,製麺,群馬県,Noodle manufacturing
+4001179,有限会社椎葉醸造,45,酒造,宮崎県,Sake and spirits brewing
+4001180,株式会社吉見珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4001181,有限会社石岡園芸,8,園芸・造園,茨城県,Horticulture and landscaping
+4001182,合同会社可児窯,21,窯業・陶磁器,岐阜県,Ceramics
+4001183,有限会社羽後麺業,5,製麺,秋田県,Noodle manufacturing
+4001184,協同組合南関麺業,43,製麺,熊本県,Noodle manufacturing
+4001185,合同会社土庄フルーツ,37,果樹・青果,香川県,Orchard and produce
+4001186,農事組合法人八郎潟ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4001187,有限会社茅野麺業,20,製麺,長野県,Noodle manufacturing
+4001188,合同会社岐阜木工,21,木工・家具,岐阜県,Woodwork and furniture
+4001189,有限会社高山果樹園,20,果樹・青果,長野県,Orchard and produce
+4001190,有限会社伊勢菓子舗,24,製菓・製パン,三重県,Confectionery and bakery
+4001191,農事組合法人米子米穀,31,米穀・製粉,鳥取県,Rice and milling
+4001192,株式会社宜野座製麺,47,製麺,沖縄県,Noodle manufacturing
+4001193,農事組合法人四万十青果,39,農産・青果,高知県,Agriculture and produce
+4001194,有限会社西会津織物,7,繊維・アパレル,福島県,Textiles and apparel
+4001195,株式会社苓北農園,43,果樹・青果,熊本県,Orchard and produce
+4001196,農事組合法人花巻スポーツ,3,スポーツ用品,岩手県,Sporting goods
+4001197,協同組合山中湖飲料,19,飲料製造,山梨県,Beverage manufacturing
+4001198,合同会社大口醸造,23,調味料製造,愛知県,Seasoning manufacturing
+4001199,協同組合福津ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4001200,株式会社相生果樹園,28,果樹・青果,兵庫県,Orchard and produce
+4001201,株式会社茅ヶ崎商会,14,生活用品,神奈川県,Household goods
+4001202,株式会社越前青果,18,農産・青果,福井県,Agriculture and produce
+4001203,農事組合法人九戸牧場,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4001204,合同会社みやき牧場,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4001205,株式会社天草醸造,43,酒造,熊本県,Sake and spirits brewing
+4001206,株式会社木島平ワイナリー,20,醸造,長野県,Brewing
+4001207,協同組合森牧場,1,酪農・乳製品,北海道,Dairy farming
+4001208,合同会社上毛ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4001209,有限会社松本麺業,20,製麺,長野県,Noodle manufacturing
+4001210,協同組合大磯海産,14,水産・水産加工,神奈川県,Fisheries and seafood processing
+4001211,有限会社多賀城米穀,4,米穀・製粉,宮城県,Rice and milling
+4001212,有限会社新温泉海産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4001213,有限会社あわら漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001214,株式会社精華ブルワリー,26,醸造,京都府,Brewing
+4001215,株式会社東北ミート,2,畜産・食肉加工,青森県,Livestock and meat processing
+4001216,有限会社会津若松米穀,7,米穀・製粉,福島県,Rice and milling
+4001217,有限会社邑南畜産,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001218,株式会社総社ドリンク,33,飲料製造,岡山県,Beverage manufacturing
+4001219,合同会社稲美酒造,28,酒造,兵庫県,Sake and spirits brewing
+4001220,合同会社多度津畜産,37,畜産・食肉加工,香川県,Livestock and meat processing
+4001221,株式会社栗山漁業,1,水産・水産加工,北海道,Fisheries and seafood processing
+4001222,合同会社飯豊酒造場,6,酒造,山形県,Sake and spirits brewing
+4001223,有限会社大洲ワイナリー,38,醸造,愛媛県,Brewing
+4001224,農事組合法人北谷果樹園,47,果樹・青果,沖縄県,Orchard and produce
+4001225,有限会社和泉観光,27,観光・体験,大阪府,Tourism and experiences
+4001226,有限会社城里青果,8,農産・青果,茨城県,Agriculture and produce
+4001227,有限会社臼杵酒造場,44,酒造,大分県,Sake and spirits brewing
+4001228,有限会社五木農園,43,果樹・青果,熊本県,Orchard and produce
+4001229,有限会社世羅窯,34,窯業・陶磁器,広島県,Ceramics
+4001230,株式会社東成瀬麺業,5,製麺,秋田県,Noodle manufacturing
+4001231,有限会社宇和島繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4001232,株式会社長門精米,35,米穀・製粉,山口県,Rice and milling
+4001233,株式会社豊後高田食品,44,食品加工,大分県,Food processing
+4001234,農事組合法人笠松工芸,21,伝統工芸,岐阜県,Traditional crafts
+4001235,株式会社立川食品,13,食品加工,東京都,Food processing
+4001236,株式会社草加ベーカリー,11,製菓・製パン,埼玉県,Confectionery and bakery
+4001237,協同組合印南ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4001238,合同会社御杖果樹園,29,果樹・青果,奈良県,Orchard and produce
+4001239,有限会社太宰府麺業,40,製麺,福岡県,Noodle manufacturing
+4001240,有限会社京都製茶,26,製茶・焙煎,京都府,Tea processing and roasting
+4001241,有限会社高知酒造,39,酒造,高知県,Sake and spirits brewing
+4001242,株式会社恵那工房,21,伝統工芸,岐阜県,Traditional crafts
+4001243,協同組合伊賀牧場,24,畜産・食肉加工,三重県,Livestock and meat processing
+4001244,有限会社海田観光,34,観光・宿泊,広島県,Tourism and lodging
+4001245,有限会社宝達志水漁業,17,水産・水産加工,石川県,Fisheries and seafood processing
+4001246,合同会社菊池酒造場,43,酒造,熊本県,Sake and spirits brewing
+4001247,有限会社渋川ミート,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4001248,株式会社玄海醸造,41,酒造,佐賀県,Sake and spirits brewing
+4001249,農事組合法人新庄醸造,6,酒造,山形県,Sake and spirits brewing
+4001250,有限会社岩泉米穀,3,米穀・製粉,岩手県,Rice and milling
+4001251,農事組合法人岩美ライス,31,米穀・製粉,鳥取県,Rice and milling
+4001252,農事組合法人周南醸造,35,酒造,山口県,Sake and spirits brewing
+4001253,有限会社遊佐ライス,6,米穀・製粉,山形県,Rice and milling
+4001254,有限会社鹿屋牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001255,農事組合法人藤崎ミート,2,畜産・食肉加工,青森県,Livestock and meat processing
+4001256,有限会社大多喜ドリンク,12,飲料製造,千葉県,Beverage manufacturing
+4001257,協同組合枕崎海産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001258,合同会社みなべ漁業,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4001259,株式会社大蔵ワイナリー,6,醸造,山形県,Brewing
+4001260,有限会社松川麺業,20,製麺,長野県,Noodle manufacturing
+4001261,株式会社新居浜農園,38,果樹・青果,愛媛県,Orchard and produce
+4001262,株式会社大津牧場,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4001263,有限会社壬生茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4001264,有限会社須恵ミート,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4001265,農事組合法人今治海産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4001266,協同組合江北醸造,41,酒造,佐賀県,Sake and spirits brewing
+4001267,有限会社十和田ミート,2,畜産・食肉加工,青森県,Livestock and meat processing
+4001268,合同会社松前牧場,1,畜産・食肉加工,北海道,Livestock and meat processing
+4001269,株式会社志賀水産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4001270,有限会社長崎旅館,42,観光・宿泊,長崎県,Tourism and lodging
+4001271,有限会社広野果樹園,7,果樹・青果,福島県,Orchard and produce
+4001272,株式会社豊郷玩具,25,文具・玩具,滋賀県,Stationery and toys
+4001273,有限会社岐南家具,21,木工・家具,岐阜県,Woodwork and furniture
+4001274,有限会社吉岡青果,10,農産・青果,群馬県,Agriculture and produce
+4001275,有限会社小川ファーム,20,農産・青果,長野県,Agriculture and produce
+4001276,株式会社妙高醸造,15,酒造,新潟県,Sake and spirits brewing
+4001277,株式会社伊達畜産,1,畜産・食肉加工,北海道,Livestock and meat processing
+4001278,有限会社むかわ織物,1,繊維・アパレル,北海道,Textiles and apparel
+4001279,有限会社大館ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4001280,協同組合神栖牧場,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4001281,株式会社松前水産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4001282,合同会社島原漁業,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001283,合同会社板野農園,36,農産・青果,徳島県,Agriculture and produce
+4001284,株式会社大田原牧場,9,酪農・乳製品,栃木県,Dairy farming
+4001285,株式会社川西ベーカリー,28,製菓・製パン,兵庫県,Confectionery and bakery
+4001286,有限会社寿都牧場,1,酪農・乳製品,北海道,Dairy farming
+4001287,有限会社勝浦農園,36,農産・青果,徳島県,Agriculture and produce
+4001288,協同組合川南食品,45,食品加工,宮崎県,Food processing
+4001289,協同組合八峰牧場,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4001290,株式会社入善酒造,16,酒造,富山県,Sake and spirits brewing
+4001291,株式会社養父水産,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4001292,株式会社九重旅館,44,観光・宿泊,大分県,Tourism and lodging
+4001293,株式会社愛南テキスタイル,38,繊維・アパレル,愛媛県,Textiles and apparel
+4001294,株式会社龍ケ崎家具,8,木工・家具,茨城県,Woodwork and furniture
+4001295,株式会社市原畜産,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4001296,株式会社熊本アウトドア,43,スポーツ用品,熊本県,Sporting goods
+4001297,株式会社山辺牧場,6,畜産・食肉加工,山形県,Livestock and meat processing
+4001298,合同会社佐用酒造場,28,酒造,兵庫県,Sake and spirits brewing
+4001299,株式会社盛岡畜産,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4001300,株式会社小松島ファーム,36,農産・青果,徳島県,Agriculture and produce
+4001301,農事組合法人那須デイリー,9,酪農・乳製品,栃木県,Dairy farming
+4001302,株式会社葉山商会,14,生活用品,神奈川県,Household goods
+4001303,株式会社尾道食品,34,食品加工,広島県,Food processing
+4001304,合同会社蔵王ドリンク,4,飲料製造,宮城県,Beverage manufacturing
+4001305,株式会社浦安牧場,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4001306,株式会社新上五島ベーカリー,42,製菓・製パン,長崎県,Confectionery and bakery
+4001307,株式会社大垣観光,21,観光・体験,岐阜県,Tourism and experiences
+4001308,農事組合法人宿毛酒造,39,酒造,高知県,Sake and spirits brewing
+4001309,合同会社聖籠ライス,15,米穀・製粉,新潟県,Rice and milling
+4001310,協同組合大牟田畜産,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4001311,株式会社岩国水産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4001312,有限会社羽後畜産,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4001313,株式会社氷見醸造,16,酒造,富山県,Sake and spirits brewing
+4001314,合同会社大間醸造,2,醸造,青森県,Brewing
+4001315,株式会社七ヶ浜ライス,4,米穀・製粉,宮城県,Rice and milling
+4001316,有限会社葉山菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4001317,株式会社有田窯,41,窯業・陶磁器,佐賀県,Ceramics
+4001318,有限会社芳賀フルーツ,9,果樹・青果,栃木県,Orchard and produce
+4001319,合同会社酒田畜産,6,畜産・食肉加工,山形県,Livestock and meat processing
+4001320,合同会社藤岡麺業,10,製麺,群馬県,Noodle manufacturing
+4001321,合同会社高根沢畜産,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4001322,有限会社奥出雲米穀,32,米穀・製粉,島根県,Rice and milling
+4001323,有限会社国東観光,44,観光・宿泊,大分県,Tourism and lodging
+4001324,農事組合法人座間味旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4001325,株式会社みやこ麺業,40,製麺,福岡県,Noodle manufacturing
+4001326,株式会社早川醸造,19,醸造,山梨県,Brewing
+4001327,有限会社立山工芸,16,伝統工芸,富山県,Traditional crafts
+4001328,有限会社上勝精米,36,米穀・製粉,徳島県,Rice and milling
+4001329,協同組合小豆島デイリー,37,酪農・乳製品,香川県,Dairy farming
+4001330,有限会社富士吉田ワイナリー,19,醸造,山梨県,Brewing
+4001331,農事組合法人三笠畜産,1,畜産・食肉加工,北海道,Livestock and meat processing
+4001332,株式会社逗子商会,14,生活用品,神奈川県,Household goods
+4001333,株式会社海津牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001334,農事組合法人我孫子青果,12,農産・青果,千葉県,Agriculture and produce
+4001335,合同会社久御山製陶,26,窯業・陶磁器,京都府,Ceramics
+4001336,有限会社粟島浦精米,15,米穀・製粉,新潟県,Rice and milling
+4001337,株式会社富加陶苑,21,窯業・陶磁器,岐阜県,Ceramics
+4001338,協同組合戸沢牧場,6,畜産・食肉加工,山形県,Livestock and meat processing
+4001339,農事組合法人高崎玩具,10,文具・玩具,群馬県,Stationery and toys
+4001340,有限会社つるぎ農園,36,農産・青果,徳島県,Agriculture and produce
+4001341,株式会社越前ライス,18,米穀・製粉,福井県,Rice and milling
+4001342,有限会社中島米穀,7,米穀・製粉,福島県,Rice and milling
+4001343,株式会社海津窯,21,窯業・陶磁器,岐阜県,Ceramics
+4001344,株式会社朝日本舗,24,伝統工芸,三重県,Traditional crafts
+4001345,有限会社河北酒造,6,酒造,山形県,Sake and spirits brewing
+4001346,農事組合法人南木曽製麺,20,製麺,長野県,Noodle manufacturing
+4001347,協同組合穴水陶苑,17,窯業・陶磁器,石川県,Ceramics
+4001348,株式会社松原ミート,27,畜産・食肉加工,大阪府,Livestock and meat processing
+4001349,株式会社牧之原ファーム,22,農産・青果,静岡県,Agriculture and produce
+4001350,有限会社豊郷本舗,25,調味料製造,滋賀県,Seasoning manufacturing
+4001351,有限会社松山フルーツ,38,果樹・青果,愛媛県,Orchard and produce
+4001352,合同会社五島水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001353,合同会社徳島麺業,36,製麺,徳島県,Noodle manufacturing
+4001354,合同会社郡山精米,7,米穀・製粉,福島県,Rice and milling
+4001355,株式会社軽井沢製麺,20,製麺,長野県,Noodle manufacturing
+4001356,有限会社南小国ベーカリー,43,製菓・製パン,熊本県,Confectionery and bakery
+4001357,有限会社田辺ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4001358,有限会社東松山製菓,11,製菓・製パン,埼玉県,Confectionery and bakery
+4001359,有限会社宇多津ブルワリー,37,醸造,香川県,Brewing
+4001360,有限会社開成商店,14,食品加工,神奈川県,Food processing
+4001361,有限会社防府漁業,35,水産・水産加工,山口県,Fisheries and seafood processing
+4001362,株式会社青森農園,2,農産・青果,青森県,Agriculture and produce
+4001363,協同組合遠野商会,3,生活用品,岩手県,Household goods
+4001364,株式会社玉名農園,43,果樹・青果,熊本県,Orchard and produce
+4001365,有限会社若桜海産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4001366,有限会社大月漁業,39,水産・水産加工,高知県,Fisheries and seafood processing
+4001367,有限会社吉野珈琲,29,製茶・焙煎,奈良県,Tea processing and roasting
+4001368,株式会社加賀製陶,17,窯業・陶磁器,石川県,Ceramics
+4001369,株式会社三川畜産,6,畜産・食肉加工,山形県,Livestock and meat processing
+4001370,有限会社大刀洗麺業,40,製麺,福岡県,Noodle manufacturing
+4001371,農事組合法人潮来米穀,8,米穀・製粉,茨城県,Rice and milling
+4001372,株式会社野田農園,12,農産・青果,千葉県,Agriculture and produce
+4001373,農事組合法人箕輪農園,20,農産・青果,長野県,Agriculture and produce
+4001374,農事組合法人豊後高田旅館,44,観光・宿泊,大分県,Tourism and lodging
+4001375,有限会社さくら化粧品,9,化粧品製造,栃木県,Cosmetics manufacturing
+4001376,有限会社桜井農園,29,果樹・青果,奈良県,Orchard and produce
+4001377,有限会社喜界畜産,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001378,株式会社宿毛酒造,39,酒造,高知県,Sake and spirits brewing
+4001379,有限会社世羅海産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4001380,農事組合法人石垣観光,47,観光・宿泊,沖縄県,Tourism and lodging
+4001381,合同会社串本果樹園,30,果樹・青果,和歌山県,Orchard and produce
+4001382,株式会社深浦ミート,2,畜産・食肉加工,青森県,Livestock and meat processing
+4001383,株式会社綾瀬牧場,14,酪農・乳製品,神奈川県,Dairy farming
+4001384,株式会社佐渡酒造,15,酒造,新潟県,Sake and spirits brewing
+4001385,協同組合西粟倉果樹園,33,果樹・青果,岡山県,Orchard and produce
+4001386,有限会社京田辺工房,26,伝統工芸,京都府,Traditional crafts
+4001387,合同会社防府食品,35,食品加工,山口県,Food processing
+4001388,株式会社清川菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4001389,協同組合吉田フルーツ,22,果樹・青果,静岡県,Orchard and produce
+4001390,有限会社高梁テキスタイル,33,繊維・アパレル,岡山県,Textiles and apparel
+4001391,株式会社大石田農園,6,果樹・青果,山形県,Orchard and produce
+4001392,有限会社松山製麺,38,製麺,愛媛県,Noodle manufacturing
+4001393,有限会社多良木商事,43,総合物産,熊本県,General trading
+4001394,有限会社串本食品,30,食品加工,和歌山県,Food processing
+4001395,株式会社花巻麺業,3,製麺,岩手県,Noodle manufacturing
+4001396,株式会社上天草牧場,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001397,株式会社野木果樹園,9,果樹・青果,栃木県,Orchard and produce
+4001398,協同組合多可ベーカリー,28,製菓・製パン,兵庫県,Confectionery and bakery
+4001399,株式会社多久海産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4001400,株式会社小浜観光,18,観光・体験,福井県,Tourism and experiences
+4001401,協同組合別府畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4001402,株式会社上板玩具,36,文具・玩具,徳島県,Stationery and toys
+4001403,合同会社かほく製陶,17,窯業・陶磁器,石川県,Ceramics
+4001404,株式会社妙高牧場,15,酪農・乳製品,新潟県,Dairy farming
+4001405,有限会社上砂川デイリー,1,酪農・乳製品,北海道,Dairy farming
+4001406,有限会社紫波水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001407,株式会社川本水産,32,水産・水産加工,島根県,Fisheries and seafood processing
+4001408,農事組合法人伊方テキスタイル,38,繊維・アパレル,愛媛県,Textiles and apparel
+4001409,協同組合御杖繊維,29,繊維・アパレル,奈良県,Textiles and apparel
+4001410,農事組合法人東根フルーツ,6,果樹・青果,山形県,Orchard and produce
+4001411,株式会社弟子屈牧場,1,酪農・乳製品,北海道,Dairy farming
+4001412,協同組合江北陶苑,41,窯業・陶磁器,佐賀県,Ceramics
+4001413,協同組合穴水工房,17,伝統工芸,石川県,Traditional crafts
+4001414,農事組合法人三原窯,34,窯業・陶磁器,広島県,Ceramics
+4001415,株式会社早島テキスタイル,33,繊維・アパレル,岡山県,Textiles and apparel
+4001416,有限会社津畜産,24,畜産・食肉加工,三重県,Livestock and meat processing
+4001417,有限会社潟上酒造,5,酒造,秋田県,Sake and spirits brewing
+4001418,有限会社北栄ミート,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4001419,株式会社湯前青果,43,農産・青果,熊本県,Agriculture and produce
+4001420,有限会社加西ミート,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001421,株式会社東海商店,8,食品加工,茨城県,Food processing
+4001422,協同組合茨木食品,27,食品加工,大阪府,Food processing
+4001423,農事組合法人壬生デイリー,9,酪農・乳製品,栃木県,Dairy farming
+4001424,株式会社忍野ドリンク,19,飲料製造,山梨県,Beverage manufacturing
+4001425,有限会社都城畜産,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4001426,有限会社佐世保水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001427,株式会社豊田菓子舗,23,製菓・製パン,愛知県,Confectionery and bakery
+4001428,有限会社宝達志水製陶,17,窯業・陶磁器,石川県,Ceramics
+4001429,協同組合摂津ベーカリー,27,製菓・製パン,大阪府,Confectionery and bakery
+4001430,株式会社七ヶ宿米穀,4,米穀・製粉,宮城県,Rice and milling
+4001431,合同会社南丹工房,26,伝統工芸,京都府,Traditional crafts
+4001432,株式会社恩納醸造,47,酒造,沖縄県,Sake and spirits brewing
+4001433,有限会社小坂商店,5,食品加工,秋田県,Food processing
+4001434,株式会社魚沼水産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4001435,株式会社大和高田織物,29,繊維・アパレル,奈良県,Textiles and apparel
+4001436,有限会社呉漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4001437,株式会社宮古ドリンク,3,飲料製造,岩手県,Beverage manufacturing
+4001438,合同会社福岡コスメ,40,化粧品製造,福岡県,Cosmetics manufacturing
+4001439,有限会社豊郷工房,25,伝統工芸,滋賀県,Traditional crafts
+4001440,合同会社睦沢茶園,12,製茶・焙煎,千葉県,Tea processing and roasting
+4001441,株式会社越前水産,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001442,株式会社珠洲本舗,17,伝統工芸,石川県,Traditional crafts
+4001443,有限会社穴水文具,17,文具・玩具,石川県,Stationery and toys
+4001444,有限会社八頭水産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4001445,有限会社三原酒造,39,酒造,高知県,Sake and spirits brewing
+4001446,株式会社飯塚製菓,40,製菓・製パン,福岡県,Confectionery and bakery
+4001447,農事組合法人日高ファーム,30,農産・青果,和歌山県,Agriculture and produce
+4001448,有限会社渋川青果,10,農産・青果,群馬県,Agriculture and produce
+4001449,農事組合法人塩谷観光,9,観光・宿泊,栃木県,Tourism and lodging
+4001450,株式会社滑川製作所,16,電機・機械,富山県,Electronics and machinery
+4001451,株式会社新庄フルーツ,33,果樹・青果,岡山県,Orchard and produce
+4001452,有限会社阿久根海産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001453,有限会社観音寺ライス,37,米穀・製粉,香川県,Rice and milling
+4001454,協同組合壱岐スポーツ,42,スポーツ用品,長崎県,Sporting goods
+4001455,協同組合美祢醸造,35,酒造,山口県,Sake and spirits brewing
+4001456,有限会社那賀繊維,36,繊維・アパレル,徳島県,Textiles and apparel
+4001457,株式会社宇治田原食品,26,食品加工,京都府,Food processing
+4001458,株式会社阿南製陶,36,窯業・陶磁器,徳島県,Ceramics
+4001459,協同組合檜枝岐ファーム,7,農産・青果,福島県,Agriculture and produce
+4001460,有限会社菊池果樹園,43,果樹・青果,熊本県,Orchard and produce
+4001461,株式会社福崎醸造,28,酒造,兵庫県,Sake and spirits brewing
+4001462,株式会社普代水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001463,株式会社北川ブルワリー,39,醸造,高知県,Brewing
+4001464,株式会社多賀工芸,25,伝統工芸,滋賀県,Traditional crafts
+4001465,合同会社飯南畜産,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001466,有限会社松茂製麺,36,製麺,徳島県,Noodle manufacturing
+4001467,有限会社五島菓子舗,42,製菓・製パン,長崎県,Confectionery and bakery
+4001468,有限会社おいらせ青果,2,農産・青果,青森県,Agriculture and produce
+4001469,協同組合竜王ライス,25,米穀・製粉,滋賀県,Rice and milling
+4001470,有限会社富津ブルワリー,12,醸造,千葉県,Brewing
+4001471,株式会社東広島海産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4001472,株式会社鬼北繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4001473,株式会社新宿商会,13,生活用品,東京都,Household goods
+4001474,合同会社志賀海産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4001475,農事組合法人国見ファーム,7,農産・青果,福島県,Agriculture and produce
+4001476,株式会社みよし食品,23,食品加工,愛知県,Food processing
+4001477,株式会社那須烏山果樹園,9,果樹・青果,栃木県,Orchard and produce
+4001478,合同会社小谷ワイナリー,20,醸造,長野県,Brewing
+4001479,有限会社川崎製材,14,木工・家具,神奈川県,Woodwork and furniture
+4001480,合同会社伊奈フーズ,11,食品加工,埼玉県,Food processing
+4001481,株式会社津幡海産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4001482,株式会社嘉麻麺業,40,製麺,福岡県,Noodle manufacturing
+4001483,株式会社日進商会,23,生活用品,愛知県,Household goods
+4001484,有限会社大和牧場,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4001485,有限会社魚沼醸造,15,酒造,新潟県,Sake and spirits brewing
+4001486,協同組合城里ファーム,8,農産・青果,茨城県,Agriculture and produce
+4001487,株式会社関ケ原飲料,21,飲料製造,岐阜県,Beverage manufacturing
+4001488,有限会社燕ライス,15,米穀・製粉,新潟県,Rice and milling
+4001489,協同組合串間醸造,45,酒造,宮崎県,Sake and spirits brewing
+4001490,農事組合法人指宿商会,46,生活用品,鹿児島県,Household goods
+4001491,株式会社姫路牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001492,有限会社坂井漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001493,株式会社和歌山飲料,30,飲料製造,和歌山県,Beverage manufacturing
+4001494,株式会社宝達志水本舗,17,伝統工芸,石川県,Traditional crafts
+4001495,株式会社伊勢原旅館,14,観光・宿泊,神奈川県,Tourism and lodging
+4001496,株式会社川越菓子舗,11,製菓・製パン,埼玉県,Confectionery and bakery
+4001497,株式会社中津川畜産,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001498,株式会社大和フーズ,4,食品加工,宮城県,Food processing
+4001499,有限会社川島菓子舗,11,製菓・製パン,埼玉県,Confectionery and bakery
+4001500,合同会社砺波織物,16,繊維・アパレル,富山県,Textiles and apparel
+4001501,株式会社西予海産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4001502,株式会社奥州水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001503,株式会社西都ミート,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4001504,株式会社上越米穀,15,米穀・製粉,新潟県,Rice and milling
+4001505,株式会社双葉農園,7,果樹・青果,福島県,Orchard and produce
+4001506,株式会社有田フルーツ,30,果樹・青果,和歌山県,Orchard and produce
+4001507,有限会社多可牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001508,有限会社大潟菓子舗,5,製菓・製パン,秋田県,Confectionery and bakery
+4001509,合同会社小山牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4001510,株式会社えりも酒造,1,酒造,北海道,Sake and spirits brewing
+4001511,合同会社大崎上島醸造,34,酒造,広島県,Sake and spirits brewing
+4001512,有限会社川西織物,29,繊維・アパレル,奈良県,Textiles and apparel
+4001513,有限会社会津若松フルーツ,7,果樹・青果,福島県,Orchard and produce
+4001514,協同組合錦江牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001515,株式会社河津フルーツ,22,果樹・青果,静岡県,Orchard and produce
+4001516,有限会社真室川ミート,6,畜産・食肉加工,山形県,Livestock and meat processing
+4001517,株式会社江津ミート,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001518,有限会社森フルーツ,22,果樹・青果,静岡県,Orchard and produce
+4001519,有限会社豊後高田醸造,44,酒造,大分県,Sake and spirits brewing
+4001520,株式会社清川フーズ,14,食品加工,神奈川県,Food processing
+4001521,株式会社東吾妻ファーム,10,農産・青果,群馬県,Agriculture and produce
+4001522,株式会社神石高原水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4001523,株式会社平生醸造,35,酒造,山口県,Sake and spirits brewing
+4001524,農事組合法人砺波精米,16,米穀・製粉,富山県,Rice and milling
+4001525,株式会社秦野旅館,14,観光・宿泊,神奈川県,Tourism and lodging
+4001526,農事組合法人姫島旅館,44,観光・宿泊,大分県,Tourism and lodging
+4001527,株式会社新居浜飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4001528,株式会社海老名観光,14,観光・宿泊,神奈川県,Tourism and lodging
+4001529,合同会社尾花沢農園,6,果樹・青果,山形県,Orchard and produce
+4001530,有限会社有田窯,41,窯業・陶磁器,佐賀県,Ceramics
+4001531,合同会社富岡ファーム,7,農産・青果,福島県,Agriculture and produce
+4001532,有限会社曽爾本舗,29,伝統工芸,奈良県,Traditional crafts
+4001533,株式会社多治見グリーン,21,園芸・造園,岐阜県,Horticulture and landscaping
+4001534,合同会社浦安青果,12,農産・青果,千葉県,Agriculture and produce
+4001535,農事組合法人菊陽ミート,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001536,合同会社読谷酒造,47,酒造,沖縄県,Sake and spirits brewing
+4001537,株式会社川西牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001538,合同会社雲南ミート,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001539,株式会社平田フルーツ,7,果樹・青果,福島県,Orchard and produce
+4001540,株式会社鶴ヶ島ベーカリー,11,製菓・製パン,埼玉県,Confectionery and bakery
+4001541,協同組合二本松農園,7,果樹・青果,福島県,Orchard and produce
+4001542,有限会社山口食品,35,食品加工,山口県,Food processing
+4001543,株式会社つるぎ麺業,36,製麺,徳島県,Noodle manufacturing
+4001544,株式会社周南ライス,35,米穀・製粉,山口県,Rice and milling
+4001545,株式会社原ツーリズム,20,観光・体験,長野県,Tourism and experiences
+4001546,有限会社時津織物,42,繊維・アパレル,長崎県,Textiles and apparel
+4001547,株式会社美郷麺業,5,製麺,秋田県,Noodle manufacturing
+4001548,農事組合法人四万十食品,39,調味料製造,高知県,Seasoning manufacturing
+4001549,有限会社吉賀電機,32,電機・機械,島根県,Electronics and machinery
+4001550,有限会社河内フーズ,8,食品加工,茨城県,Food processing
+4001551,株式会社太子酒造,28,酒造,兵庫県,Sake and spirits brewing
+4001552,有限会社高石商会,27,生活用品,大阪府,Household goods
+4001553,株式会社一戸漁業,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001554,株式会社中津川果樹園,21,果樹・青果,岐阜県,Orchard and produce
+4001555,有限会社国東商店,44,食品加工,大分県,Food processing
+4001556,農事組合法人朝日海産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4001557,農事組合法人太子製菓,27,製菓・製パン,大阪府,Confectionery and bakery
+4001558,株式会社日向物産,45,総合物産,宮崎県,General trading
+4001559,合同会社桑名菓子舗,24,製菓・製パン,三重県,Confectionery and bakery
+4001560,有限会社にかほ米穀,5,米穀・製粉,秋田県,Rice and milling
+4001561,有限会社鳥栖醸造,41,酒造,佐賀県,Sake and spirits brewing
+4001562,有限会社生坂化粧品,20,化粧品製造,長野県,Cosmetics manufacturing
+4001563,協同組合日光ミート,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4001564,株式会社大玉青果,7,農産・青果,福島県,Agriculture and produce
+4001565,有限会社諫早漁業,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001566,株式会社最上フルーツ,6,果樹・青果,山形県,Orchard and produce
+4001567,合同会社伊根本舗,26,伝統工芸,京都府,Traditional crafts
+4001568,株式会社石川米穀,7,米穀・製粉,福島県,Rice and milling
+4001569,株式会社道志産業,19,総合物産,山梨県,General trading
+4001570,株式会社高原フルーツ,45,果樹・青果,宮崎県,Orchard and produce
+4001571,有限会社鳴沢農園,19,果樹・青果,山梨県,Orchard and produce
+4001572,有限会社有田牧場,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4001573,株式会社貝塚ツーリズム,27,観光・体験,大阪府,Tourism and experiences
+4001574,株式会社茅ヶ崎製麺,14,製麺,神奈川県,Noodle manufacturing
+4001575,有限会社茨木生活用品,27,生活用品,大阪府,Household goods
+4001576,有限会社長崎本舗,42,伝統工芸,長崎県,Traditional crafts
+4001577,株式会社関陶苑,21,窯業・陶磁器,岐阜県,Ceramics
+4001578,有限会社岩倉織物,23,繊維・アパレル,愛知県,Textiles and apparel
+4001579,農事組合法人多気菓子舗,24,製菓・製パン,三重県,Confectionery and bakery
+4001580,有限会社上天草醸造,43,酒造,熊本県,Sake and spirits brewing
+4001581,有限会社岬生活用品,27,生活用品,大阪府,Household goods
+4001582,協同組合新潟窯,15,窯業・陶磁器,新潟県,Ceramics
+4001583,株式会社越前ライス,18,米穀・製粉,福井県,Rice and milling
+4001584,有限会社下田珈琲,22,製茶・焙煎,静岡県,Tea processing and roasting
+4001585,有限会社徳島テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4001586,農事組合法人座間味漁業,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4001587,合同会社豊見城リゾート,47,観光・宿泊,沖縄県,Tourism and lodging
+4001588,有限会社伊佐水産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001589,農事組合法人栃木茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4001590,株式会社白河農園,7,果樹・青果,福島県,Orchard and produce
+4001591,有限会社山陽小野田食品,35,食品加工,山口県,Food processing
+4001592,農事組合法人福岡牧場,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4001593,合同会社黒潮農園,39,農産・青果,高知県,Agriculture and produce
+4001594,株式会社加東菓子舗,28,製菓・製パン,兵庫県,Confectionery and bakery
+4001595,株式会社長与ファーム,42,農産・青果,長崎県,Agriculture and produce
+4001596,有限会社津久見醸造,44,酒造,大分県,Sake and spirits brewing
+4001597,株式会社太田ミート,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4001598,株式会社嘉手納ツーリズム,47,観光・体験,沖縄県,Tourism and experiences
+4001599,株式会社目黒生活用品,13,生活用品,東京都,Household goods
+4001600,合同会社人吉醸造,43,酒造,熊本県,Sake and spirits brewing
+4001601,有限会社下諏訪麺業,20,製麺,長野県,Noodle manufacturing
+4001602,株式会社鶴ヶ島精米,11,米穀・製粉,埼玉県,Rice and milling
+4001603,有限会社池田醸造,18,酒造,福井県,Sake and spirits brewing
+4001604,有限会社西川米穀,6,米穀・製粉,山形県,Rice and milling
+4001605,株式会社都農果樹園,45,果樹・青果,宮崎県,Orchard and produce
+4001606,農事組合法人本山商会,39,生活用品,高知県,Household goods
+4001607,有限会社市原麺業,12,製麺,千葉県,Noodle manufacturing
+4001608,株式会社直島製麺,37,製麺,香川県,Noodle manufacturing
+4001609,合同会社玉川酒造,7,酒造,福島県,Sake and spirits brewing
+4001610,株式会社球磨農園,43,農産・青果,熊本県,Agriculture and produce
+4001611,有限会社豊中商会,27,生活用品,大阪府,Household goods
+4001612,株式会社府中漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4001613,合同会社上野原本舗,19,伝統工芸,山梨県,Traditional crafts
+4001614,株式会社川場玩具,10,文具・玩具,群馬県,Stationery and toys
+4001615,合同会社長泉水産,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4001616,有限会社大任菓子舗,40,製菓・製パン,福岡県,Confectionery and bakery
+4001617,農事組合法人五木酒造,43,酒造,熊本県,Sake and spirits brewing
+4001618,有限会社日吉津農園,31,果樹・青果,鳥取県,Orchard and produce
+4001619,株式会社河内産業,8,総合物産,茨城県,General trading
+4001620,協同組合多久窯,41,窯業・陶磁器,佐賀県,Ceramics
+4001621,株式会社横手麺業,5,製麺,秋田県,Noodle manufacturing
+4001622,株式会社掛川食品,22,食品加工,静岡県,Food processing
+4001623,株式会社鉾田米穀,8,米穀・製粉,茨城県,Rice and milling
+4001624,協同組合城里牧場,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4001625,株式会社可児畜産,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001626,有限会社島原水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001627,合同会社東大和観光,13,観光・体験,東京都,Tourism and experiences
+4001628,株式会社天川テキスタイル,29,繊維・アパレル,奈良県,Textiles and apparel
+4001629,協同組合阪南ベーカリー,27,製菓・製パン,大阪府,Confectionery and bakery
+4001630,有限会社北名古屋食品,23,食品加工,愛知県,Food processing
+4001631,有限会社甲府ブルワリー,19,醸造,山梨県,Brewing
+4001632,有限会社奄美水産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001633,有限会社一関ドリンク,3,飲料製造,岩手県,Beverage manufacturing
+4001634,株式会社北島製麺,36,製麺,徳島県,Noodle manufacturing
+4001635,株式会社東松島醸造,4,醸造,宮城県,Brewing
+4001636,株式会社台東玩具,13,文具・玩具,東京都,Stationery and toys
+4001637,株式会社長岡京菓子舗,26,製菓・製パン,京都府,Confectionery and bakery
+4001638,農事組合法人豊明食品,23,調味料製造,愛知県,Seasoning manufacturing
+4001639,有限会社御坊フルーツ,30,果樹・青果,和歌山県,Orchard and produce
+4001640,協同組合八頭牧場,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4001641,株式会社内子繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4001642,協同組合箕面家具,27,木工・家具,大阪府,Woodwork and furniture
+4001643,株式会社志賀製陶,17,窯業・陶磁器,石川県,Ceramics
+4001644,有限会社紋別漁業,1,水産・水産加工,北海道,Fisheries and seafood processing
+4001645,有限会社雲南スポーツ,32,スポーツ用品,島根県,Sporting goods
+4001646,株式会社南大東フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4001647,株式会社越生食品,11,食品加工,埼玉県,Food processing
+4001648,有限会社南九州牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001649,株式会社南あわじ青果,28,農産・青果,兵庫県,Agriculture and produce
+4001650,有限会社つがる農園,2,果樹・青果,青森県,Orchard and produce
+4001651,株式会社滝沢海産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001652,株式会社福山牧場,34,畜産・食肉加工,広島県,Livestock and meat processing
+4001653,株式会社さくら酒造場,9,酒造,栃木県,Sake and spirits brewing
+4001654,農事組合法人鶴岡フルーツ,6,果樹・青果,山形県,Orchard and produce
+4001655,農事組合法人南九州水産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001656,株式会社大阪商店,27,食品加工,大阪府,Food processing
+4001657,合同会社射水酒造,16,酒造,富山県,Sake and spirits brewing
+4001658,株式会社嬉野海産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4001659,有限会社美濃家具,21,木工・家具,岐阜県,Woodwork and furniture
+4001660,株式会社高松製材,37,木工・家具,香川県,Woodwork and furniture
+4001661,有限会社松野ドリンク,38,飲料製造,愛媛県,Beverage manufacturing
+4001662,合同会社坂テキスタイル,34,繊維・アパレル,広島県,Textiles and apparel
+4001663,株式会社神河畜産,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001664,株式会社有田水産,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4001665,株式会社吉備中央製陶,33,窯業・陶磁器,岡山県,Ceramics
+4001666,株式会社大分旅館,44,観光・宿泊,大分県,Tourism and lodging
+4001667,有限会社鋸南ファーム,12,農産・青果,千葉県,Agriculture and produce
+4001668,株式会社美浜水産,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001669,合同会社高山工房,21,伝統工芸,岐阜県,Traditional crafts
+4001670,有限会社石巻水産,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4001671,株式会社まんのう牧場,37,畜産・食肉加工,香川県,Livestock and meat processing
+4001672,株式会社小浜陶苑,18,窯業・陶磁器,福井県,Ceramics
+4001673,株式会社中城製作所,47,電機・機械,沖縄県,Electronics and machinery
+4001674,株式会社熊野食品,34,食品加工,広島県,Food processing
+4001675,有限会社御船果樹園,43,果樹・青果,熊本県,Orchard and produce
+4001676,有限会社北秋田酒造場,5,酒造,秋田県,Sake and spirits brewing
+4001677,有限会社御坊ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4001678,有限会社掛川観光,22,観光・宿泊,静岡県,Tourism and lodging
+4001679,株式会社東白川畜産,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001680,有限会社湯梨浜食品,31,食品加工,鳥取県,Food processing
+4001681,合同会社高浜水産,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001682,株式会社中川ファーム,20,農産・青果,長野県,Agriculture and produce
+4001683,株式会社鈴鹿酒造,24,酒造,三重県,Sake and spirits brewing
+4001684,有限会社置戸ベーカリー,1,製菓・製パン,北海道,Confectionery and bakery
+4001685,農事組合法人砥部海産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4001686,有限会社三木フルーツ,37,果樹・青果,香川県,Orchard and produce
+4001687,協同組合玉名ミート,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001688,協同組合西ノ島漁業,32,水産・水産加工,島根県,Fisheries and seafood processing
+4001689,協同組合甲佐ファーム,43,農産・青果,熊本県,Agriculture and produce
+4001690,株式会社美祢海産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4001691,有限会社御宿ファーム,12,農産・青果,千葉県,Agriculture and produce
+4001692,協同組合湯沢米穀,5,米穀・製粉,秋田県,Rice and milling
+4001693,協同組合中土佐醸造,39,酒造,高知県,Sake and spirits brewing
+4001694,農事組合法人佐久製麺,20,製麺,長野県,Noodle manufacturing
+4001695,有限会社若狭水産,18,水産・水産加工,福井県,Fisheries and seafood processing
+4001696,有限会社安中フーズ,10,食品加工,群馬県,Food processing
+4001697,農事組合法人紫波海産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001698,有限会社大潟酒造,5,酒造,秋田県,Sake and spirits brewing
+4001699,農事組合法人真鶴商会,14,生活用品,神奈川県,Household goods
+4001700,協同組合川上製麺,20,製麺,長野県,Noodle manufacturing
+4001701,有限会社上小阿仁牧場,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4001702,株式会社入善醸造,16,酒造,富山県,Sake and spirits brewing
+4001703,有限会社藤里ライス,5,米穀・製粉,秋田県,Rice and milling
+4001704,協同組合高浜製陶,18,窯業・陶磁器,福井県,Ceramics
+4001705,株式会社仙台グリーン,4,園芸・造園,宮城県,Horticulture and landscaping
+4001706,株式会社伊江グリーン,47,園芸・造園,沖縄県,Horticulture and landscaping
+4001707,有限会社大石田酒造場,6,酒造,山形県,Sake and spirits brewing
+4001708,株式会社浦添酒造,47,酒造,沖縄県,Sake and spirits brewing
+4001709,株式会社白浜漁業,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4001710,株式会社久御山製陶,26,窯業・陶磁器,京都府,Ceramics
+4001711,株式会社久山漁業,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4001712,株式会社尼崎漁業,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4001713,有限会社南国ファーム,39,農産・青果,高知県,Agriculture and produce
+4001714,有限会社足利醸造,9,酒造,栃木県,Sake and spirits brewing
+4001715,有限会社玉城ミート,24,畜産・食肉加工,三重県,Livestock and meat processing
+4001716,株式会社飯綱農園,20,農産・青果,長野県,Agriculture and produce
+4001717,株式会社大竹水産,34,水産・水産加工,広島県,Fisheries and seafood processing
+4001718,合同会社阿南農園,36,果樹・青果,徳島県,Orchard and produce
+4001719,合同会社丸亀牧場,37,畜産・食肉加工,香川県,Livestock and meat processing
+4001720,有限会社下仁田製麺,10,製麺,群馬県,Noodle manufacturing
+4001721,農事組合法人羽島家具,21,木工・家具,岐阜県,Woodwork and furniture
+4001722,株式会社津山繊維,33,繊維・アパレル,岡山県,Textiles and apparel
+4001723,株式会社熊取商会,27,生活用品,大阪府,Household goods
+4001724,合同会社上小阿仁製麺,5,製麺,秋田県,Noodle manufacturing
+4001725,株式会社太良水産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4001726,有限会社砥部本舗,38,伝統工芸,愛媛県,Traditional crafts
+4001727,有限会社富士宮フーズ,22,食品加工,静岡県,Food processing
+4001728,株式会社川南珈琲,45,製茶・焙煎,宮崎県,Tea processing and roasting
+4001729,株式会社島田珈琲,22,製茶・焙煎,静岡県,Tea processing and roasting
+4001730,有限会社下野畜産,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4001731,有限会社中津織物,44,繊維・アパレル,大分県,Textiles and apparel
+4001732,農事組合法人五ヶ瀬畜産,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4001733,有限会社真庭果樹園,33,果樹・青果,岡山県,Orchard and produce
+4001734,農事組合法人庄原牧場,34,畜産・食肉加工,広島県,Livestock and meat processing
+4001735,合同会社王滝工房,20,伝統工芸,長野県,Traditional crafts
+4001736,有限会社多賀城ライス,4,米穀・製粉,宮城県,Rice and milling
+4001737,株式会社五城目製茶,5,製茶・焙煎,秋田県,Tea processing and roasting
+4001738,株式会社長浜牧場,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4001739,株式会社三次フーズ,34,食品加工,広島県,Food processing
+4001740,株式会社印南ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4001741,有限会社北杜果樹園,19,果樹・青果,山梨県,Orchard and produce
+4001742,株式会社飯塚ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4001743,有限会社妙高米穀,15,米穀・製粉,新潟県,Rice and milling
+4001744,株式会社木更津飲料,12,飲料製造,千葉県,Beverage manufacturing
+4001745,株式会社足利デイリー,9,酪農・乳製品,栃木県,Dairy farming
+4001746,株式会社長洲ミート,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4001747,有限会社朝日酒造場,24,酒造,三重県,Sake and spirits brewing
+4001748,農事組合法人福山商店,34,食品加工,広島県,Food processing
+4001749,農事組合法人熱海ツーリズム,22,観光・体験,静岡県,Tourism and experiences
+4001750,合同会社江府海産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4001751,有限会社長与海産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001752,農事組合法人諸塚食品,45,食品加工,宮崎県,Food processing
+4001753,株式会社亀山海産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4001754,株式会社苫前菓子舗,1,製菓・製パン,北海道,Confectionery and bakery
+4001755,株式会社西ノ島醸造,32,酒造,島根県,Sake and spirits brewing
+4001756,合同会社山田ベーカリー,3,製菓・製パン,岩手県,Confectionery and bakery
+4001757,株式会社下呂畜産,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001758,協同組合吉田コスメ,22,化粧品製造,静岡県,Cosmetics manufacturing
+4001759,農事組合法人牧之原スポーツ,22,スポーツ用品,静岡県,Sporting goods
+4001760,協同組合おいらせ果樹園,2,果樹・青果,青森県,Orchard and produce
+4001761,株式会社勝央ライス,33,米穀・製粉,岡山県,Rice and milling
+4001762,株式会社松江製菓,32,製菓・製パン,島根県,Confectionery and bakery
+4001763,株式会社越前窯,18,窯業・陶磁器,福井県,Ceramics
+4001764,株式会社杉戸製茶,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4001765,農事組合法人下松化粧品,35,化粧品製造,山口県,Cosmetics manufacturing
+4001766,有限会社綾川珈琲,37,製茶・焙煎,香川県,Tea processing and roasting
+4001767,農事組合法人周南米穀,35,米穀・製粉,山口県,Rice and milling
+4001768,有限会社調布菓子舗,13,製菓・製パン,東京都,Confectionery and bakery
+4001769,株式会社調布商会,13,生活用品,東京都,Household goods
+4001770,合同会社桑折コスメ,7,化粧品製造,福島県,Cosmetics manufacturing
+4001771,合同会社和光工房,11,伝統工芸,埼玉県,Traditional crafts
+4001772,協同組合鹿角造園,5,園芸・造園,秋田県,Horticulture and landscaping
+4001773,株式会社日吉津牧場,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4001774,株式会社上野製麺,10,製麺,群馬県,Noodle manufacturing
+4001775,株式会社阿賀野漁業,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4001776,有限会社川西工芸,29,伝統工芸,奈良県,Traditional crafts
+4001777,株式会社多久酒造,41,酒造,佐賀県,Sake and spirits brewing
+4001778,株式会社伊賀工房,24,伝統工芸,三重県,Traditional crafts
+4001779,有限会社津和野醸造,32,醸造,島根県,Brewing
+4001780,協同組合三郷果樹園,29,果樹・青果,奈良県,Orchard and produce
+4001781,有限会社松山飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4001782,有限会社大野牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001783,有限会社基山水産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4001784,株式会社岐南本舗,21,伝統工芸,岐阜県,Traditional crafts
+4001785,合同会社小豆島農園,37,果樹・青果,香川県,Orchard and produce
+4001786,協同組合南島原水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001787,協同組合与那原観光,47,観光・宿泊,沖縄県,Tourism and lodging
+4001788,合同会社大阪狭山商会,27,生活用品,大阪府,Household goods
+4001789,株式会社妙高酒造,15,酒造,新潟県,Sake and spirits brewing
+4001790,株式会社邑南醸造,32,酒造,島根県,Sake and spirits brewing
+4001791,協同組合善通寺農園,37,果樹・青果,香川県,Orchard and produce
+4001792,有限会社都城食品,45,食品加工,宮崎県,Food processing
+4001793,有限会社名護麺業,47,製麺,沖縄県,Noodle manufacturing
+4001794,協同組合八幡菓子舗,26,製菓・製パン,京都府,Confectionery and bakery
+4001795,農事組合法人鹿島酒造,41,酒造,佐賀県,Sake and spirits brewing
+4001796,有限会社日野醸造,25,酒造,滋賀県,Sake and spirits brewing
+4001797,有限会社高森青果,43,農産・青果,熊本県,Agriculture and produce
+4001798,有限会社西目屋産業,2,総合物産,青森県,General trading
+4001799,合同会社琴浦農園,31,果樹・青果,鳥取県,Orchard and produce
+4001800,合同会社滝沢製麺,3,製麺,岩手県,Noodle manufacturing
+4001801,有限会社養老陶苑,21,窯業・陶磁器,岐阜県,Ceramics
+4001802,農事組合法人上関商店,35,食品加工,山口県,Food processing
+4001803,合同会社大多喜ファーム,12,農産・青果,千葉県,Agriculture and produce
+4001804,株式会社下北山工芸,29,伝統工芸,奈良県,Traditional crafts
+4001805,農事組合法人阿南織物,36,繊維・アパレル,徳島県,Textiles and apparel
+4001806,有限会社名護農園,47,果樹・青果,沖縄県,Orchard and produce
+4001807,株式会社中島精米,7,米穀・製粉,福島県,Rice and milling
+4001808,株式会社安芸高田醸造,34,酒造,広島県,Sake and spirits brewing
+4001809,株式会社枕崎ミート,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001810,農事組合法人逗子生活用品,14,生活用品,神奈川県,Household goods
+4001811,有限会社つるぎテキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4001812,農事組合法人山田水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001813,株式会社芦屋牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4001814,株式会社昭和醸造,19,醸造,山梨県,Brewing
+4001815,株式会社対馬製菓,42,製菓・製パン,長崎県,Confectionery and bakery
+4001816,株式会社八幡浜漁業,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4001817,株式会社七宗ミート,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001818,株式会社岩美ミート,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4001819,農事組合法人大洗製作所,8,電機・機械,茨城県,Electronics and machinery
+4001820,株式会社関川海産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4001821,農事組合法人真庭製作所,33,電機・機械,岡山県,Electronics and machinery
+4001822,有限会社足寄海産,1,水産・水産加工,北海道,Fisheries and seafood processing
+4001823,株式会社南山城窯,26,窯業・陶磁器,京都府,Ceramics
+4001824,有限会社大台工芸,24,伝統工芸,三重県,Traditional crafts
+4001825,農事組合法人上富田青果,30,農産・青果,和歌山県,Agriculture and produce
+4001826,有限会社真庭陶苑,33,窯業・陶磁器,岡山県,Ceramics
+4001827,株式会社さくら果樹園,9,果樹・青果,栃木県,Orchard and produce
+4001828,株式会社和水青果,43,農産・青果,熊本県,Agriculture and produce
+4001829,合同会社大竹窯,34,窯業・陶磁器,広島県,Ceramics
+4001830,株式会社瑞浪食品,21,食品加工,岐阜県,Food processing
+4001831,株式会社長岡京工芸,26,伝統工芸,京都府,Traditional crafts
+4001832,合同会社匝瑳水産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4001833,協同組合能代ワイナリー,5,醸造,秋田県,Brewing
+4001834,有限会社諫早漁業,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001835,有限会社薩摩川内醸造,46,醸造,鹿児島県,Brewing
+4001836,株式会社日野麺業,25,製麺,滋賀県,Noodle manufacturing
+4001837,株式会社川越米穀,11,米穀・製粉,埼玉県,Rice and milling
+4001838,株式会社備前農園,33,果樹・青果,岡山県,Orchard and produce
+4001839,合同会社魚津酒造場,16,酒造,富山県,Sake and spirits brewing
+4001840,合同会社嬉野酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4001841,有限会社佐那河内テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4001842,株式会社長生水産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4001843,株式会社松島食品,4,食品加工,宮城県,Food processing
+4001844,株式会社高岡畜産,16,畜産・食肉加工,富山県,Livestock and meat processing
+4001845,農事組合法人岡山繊維,33,繊維・アパレル,岡山県,Textiles and apparel
+4001846,株式会社鶴ヶ島食品,11,食品加工,埼玉県,Food processing
+4001847,農事組合法人矢巾水産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4001848,株式会社神崎飲料,12,飲料製造,千葉県,Beverage manufacturing
+4001849,有限会社山北商事,14,総合物産,神奈川県,General trading
+4001850,合同会社京丹後酒造場,26,酒造,京都府,Sake and spirits brewing
+4001851,農事組合法人上野原ドリンク,19,飲料製造,山梨県,Beverage manufacturing
+4001852,有限会社壱岐ドリンク,42,飲料製造,長崎県,Beverage manufacturing
+4001853,農事組合法人玖珠リゾート,44,観光・宿泊,大分県,Tourism and lodging
+4001854,農事組合法人都城果樹園,45,果樹・青果,宮崎県,Orchard and produce
+4001855,合同会社長島水産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001856,有限会社神流農園,10,農産・青果,群馬県,Agriculture and produce
+4001857,協同組合日高海産,39,水産・水産加工,高知県,Fisheries and seafood processing
+4001858,有限会社鯖江酒造場,18,酒造,福井県,Sake and spirits brewing
+4001859,有限会社江北製茶,41,製茶・焙煎,佐賀県,Tea processing and roasting
+4001860,株式会社栃木デイリー,9,酪農・乳製品,栃木県,Dairy farming
+4001861,有限会社伯耆ライス,31,米穀・製粉,鳥取県,Rice and milling
+4001862,有限会社五所川原牧場,2,畜産・食肉加工,青森県,Livestock and meat processing
+4001863,有限会社曽爾繊維,29,繊維・アパレル,奈良県,Textiles and apparel
+4001864,有限会社八重瀬漁業,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4001865,有限会社下呂木工,21,木工・家具,岐阜県,Woodwork and furniture
+4001866,合同会社舟形畜産,6,畜産・食肉加工,山形県,Livestock and meat processing
+4001867,有限会社出雲崎ペット,15,ペット用品,新潟県,Pet supplies
+4001868,協同組合豊後大野酒造,44,酒造,大分県,Sake and spirits brewing
+4001869,株式会社西和賀ライス,3,米穀・製粉,岩手県,Rice and milling
+4001870,合同会社北方本舗,21,伝統工芸,岐阜県,Traditional crafts
+4001871,株式会社井手菓子舗,26,製菓・製パン,京都府,Confectionery and bakery
+4001872,農事組合法人五霞青果,8,農産・青果,茨城県,Agriculture and produce
+4001873,有限会社大潟製麺,5,製麺,秋田県,Noodle manufacturing
+4001874,合同会社嘉麻ブルワリー,40,醸造,福岡県,Brewing
+4001875,合同会社大崎上島陶苑,34,窯業・陶磁器,広島県,Ceramics
+4001876,有限会社田舎館フルーツ,2,果樹・青果,青森県,Orchard and produce
+4001877,株式会社郡上牧場,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4001878,株式会社丸亀陶苑,37,窯業・陶磁器,香川県,Ceramics
+4001879,株式会社川西商店,29,食品加工,奈良県,Food processing
+4001880,有限会社阿波青果,36,農産・青果,徳島県,Agriculture and produce
+4001881,有限会社神戸木工,21,木工・家具,岐阜県,Woodwork and furniture
+4001882,農事組合法人笠置生活用品,26,生活用品,京都府,Household goods
+4001883,株式会社庄原陶苑,34,窯業・陶磁器,広島県,Ceramics
+4001884,株式会社平生水産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4001885,協同組合日野牧場,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4001886,有限会社豊郷ライス,25,米穀・製粉,滋賀県,Rice and milling
+4001887,農事組合法人門真製菓,27,製菓・製パン,大阪府,Confectionery and bakery
+4001888,株式会社神栖ファーム,8,農産・青果,茨城県,Agriculture and produce
+4001889,株式会社能登工房,17,伝統工芸,石川県,Traditional crafts
+4001890,農事組合法人八百津アニマル,21,ペット用品,岐阜県,Pet supplies
+4001891,株式会社柳川製麺,40,製麺,福岡県,Noodle manufacturing
+4001892,農事組合法人北相木醸造,20,醸造,長野県,Brewing
+4001893,有限会社東員畜産,24,畜産・食肉加工,三重県,Livestock and meat processing
+4001894,株式会社南関農園,43,農産・青果,熊本県,Agriculture and produce
+4001895,有限会社小松本舗,17,伝統工芸,石川県,Traditional crafts
+4001896,合同会社上富田ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4001897,有限会社南丹玩具,26,文具・玩具,京都府,Stationery and toys
+4001898,株式会社身延ドリンク,19,飲料製造,山梨県,Beverage manufacturing
+4001899,株式会社伊方飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4001900,農事組合法人中城観光,47,観光・宿泊,沖縄県,Tourism and lodging
+4001901,有限会社大分酒造,44,酒造,大分県,Sake and spirits brewing
+4001902,合同会社朝倉牧場,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4001903,農事組合法人鹿角ライス,5,米穀・製粉,秋田県,Rice and milling
+4001904,協同組合市貝ドリンク,9,飲料製造,栃木県,Beverage manufacturing
+4001905,株式会社草津精米,25,米穀・製粉,滋賀県,Rice and milling
+4001906,株式会社城陽珈琲,26,製茶・焙煎,京都府,Tea processing and roasting
+4001907,株式会社能美酒造場,17,酒造,石川県,Sake and spirits brewing
+4001908,株式会社東温果樹園,38,果樹・青果,愛媛県,Orchard and produce
+4001909,株式会社馬路農園,39,農産・青果,高知県,Agriculture and produce
+4001910,合同会社新発田海産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4001911,有限会社多良間農園,47,果樹・青果,沖縄県,Orchard and produce
+4001912,株式会社知名漁業,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4001913,有限会社佐野農園,9,果樹・青果,栃木県,Orchard and produce
+4001914,合同会社大和郡山牧場,29,畜産・食肉加工,奈良県,Livestock and meat processing
+4001915,有限会社高山本舗,21,伝統工芸,岐阜県,Traditional crafts
+4001916,協同組合水俣製茶,43,製茶・焙煎,熊本県,Tea processing and roasting
+4001917,農事組合法人魚津ファーム,16,農産・青果,富山県,Agriculture and produce
+4001918,農事組合法人みやき畜産,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4001919,農事組合法人瀬戸ベーカリー,23,製菓・製パン,愛知県,Confectionery and bakery
+4001920,有限会社鉾田青果,8,農産・青果,茨城県,Agriculture and produce
+4001921,農事組合法人吹田観光,27,観光・体験,大阪府,Tourism and experiences
+4001922,株式会社竹田フーズ,44,食品加工,大分県,Food processing
+4001923,農事組合法人田上醸造,15,酒造,新潟県,Sake and spirits brewing
+4001924,農事組合法人横浜農園,14,農産・青果,神奈川県,Agriculture and produce
+4001925,有限会社南木曽フルーツ,20,果樹・青果,長野県,Orchard and produce
+4001926,合同会社田尻菓子舗,27,製菓・製パン,大阪府,Confectionery and bakery
+4001927,有限会社神石高原酒造,34,酒造,広島県,Sake and spirits brewing
+4001928,株式会社富岡青果,10,農産・青果,群馬県,Agriculture and produce
+4001929,株式会社草津工芸,25,伝統工芸,滋賀県,Traditional crafts
+4001930,有限会社みなかみ製麺,10,製麺,群馬県,Noodle manufacturing
+4001931,有限会社高山製麺,20,製麺,長野県,Noodle manufacturing
+4001932,合同会社宝達志水陶苑,17,窯業・陶磁器,石川県,Ceramics
+4001933,株式会社上山醸造,6,酒造,山形県,Sake and spirits brewing
+4001934,有限会社隠岐の島米穀,32,米穀・製粉,島根県,Rice and milling
+4001935,有限会社西海海産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4001936,農事組合法人川上製茶,29,製茶・焙煎,奈良県,Tea processing and roasting
+4001937,協同組合下アニマル,29,ペット用品,奈良県,Pet supplies
+4001938,農事組合法人太良醸造,41,酒造,佐賀県,Sake and spirits brewing
+4001939,株式会社鹿島醸造,41,醸造,佐賀県,Brewing
+4001940,協同組合馬路食品,39,調味料製造,高知県,Seasoning manufacturing
+4001941,株式会社高松製麺,37,製麺,香川県,Noodle manufacturing
+4001942,協同組合南阿蘇醸造,43,酒造,熊本県,Sake and spirits brewing
+4001943,有限会社市川三郷醸造,19,醸造,山梨県,Brewing
+4001944,株式会社山田米穀,3,米穀・製粉,岩手県,Rice and milling
+4001945,株式会社愛南乳業,38,酪農・乳製品,愛媛県,Dairy farming
+4001946,株式会社南九州産業,46,総合物産,鹿児島県,General trading
+4001947,合同会社藤里酒造,5,酒造,秋田県,Sake and spirits brewing
+4001948,株式会社北中城水産,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4001949,株式会社御蔵島玩具,13,文具・玩具,東京都,Stationery and toys
+4001950,株式会社築上牧場,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4001951,株式会社日高造園,39,園芸・造園,高知県,Horticulture and landscaping
+4001952,株式会社金山牧場,6,酪農・乳製品,山形県,Dairy farming
+4001953,農事組合法人丸亀畜産,37,畜産・食肉加工,香川県,Livestock and meat processing
+4001954,農事組合法人都城商会,45,生活用品,宮崎県,Household goods
+4001955,合同会社大口醸造,23,醸造,愛知県,Brewing
+4001956,株式会社奄美牧場,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4001957,有限会社天龍製麺,20,製麺,長野県,Noodle manufacturing
+4001958,株式会社寄居菓子舗,11,製菓・製パン,埼玉県,Confectionery and bakery
+4001959,株式会社境港水産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4001960,有限会社倉吉果樹園,31,果樹・青果,鳥取県,Orchard and produce
+4001961,株式会社三原本舗,39,調味料製造,高知県,Seasoning manufacturing
+4001962,株式会社九度山水産,30,水産・水産加工,和歌山県,Fisheries and seafood processing
+4001963,株式会社加茂水産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4001964,有限会社糸満水産,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4001965,有限会社小野製菓,28,製菓・製パン,兵庫県,Confectionery and bakery
+4001966,協同組合御嵩デイリー,21,酪農・乳製品,岐阜県,Dairy farming
+4001967,有限会社金沢水産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4001968,有限会社松川商事,20,総合物産,長野県,General trading
+4001969,有限会社高野ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4001970,株式会社新座ライス,11,米穀・製粉,埼玉県,Rice and milling
+4001971,株式会社筑西ライス,8,米穀・製粉,茨城県,Rice and milling
+4001972,株式会社三好酒造場,36,酒造,徳島県,Sake and spirits brewing
+4001973,株式会社志摩水産,24,水産・水産加工,三重県,Fisheries and seafood processing
+4001974,株式会社大田ミート,32,畜産・食肉加工,島根県,Livestock and meat processing
+4001975,合同会社都農アウトドア,45,スポーツ用品,宮崎県,Sporting goods
+4001976,株式会社掛川水産,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4001977,農事組合法人曽爾テキスタイル,29,繊維・アパレル,奈良県,Textiles and apparel
+4001978,協同組合笠岡精米,33,米穀・製粉,岡山県,Rice and milling
+4001979,株式会社伊勢原ベーカリー,14,製菓・製パン,神奈川県,Confectionery and bakery
+4001980,株式会社彦根米穀,25,米穀・製粉,滋賀県,Rice and milling
+4001981,株式会社高浜農園,18,農産・青果,福井県,Agriculture and produce
+4001982,株式会社沖縄陶苑,47,窯業・陶磁器,沖縄県,Ceramics
+4001983,協同組合呉窯,34,窯業・陶磁器,広島県,Ceramics
+4001984,協同組合東かがわ木工,37,木工・家具,香川県,Woodwork and furniture
+4001985,有限会社神崎畜産,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4001986,有限会社竹田牧場,44,畜産・食肉加工,大分県,Livestock and meat processing
+4001987,有限会社大崎ライス,4,米穀・製粉,宮城県,Rice and milling
+4001988,農事組合法人太田製麺,10,製麺,群馬県,Noodle manufacturing
+4001989,合同会社智頭農園,31,農産・青果,鳥取県,Agriculture and produce
+4001990,株式会社総社醸造,33,醸造,岡山県,Brewing
+4001991,合同会社真鶴フーズ,14,食品加工,神奈川県,Food processing
+4001992,有限会社三条水産,15,水産・水産加工,新潟県,Fisheries and seafood processing
+4001993,株式会社みなべ飲料,30,飲料製造,和歌山県,Beverage manufacturing
+4001994,株式会社竹富窯,47,窯業・陶磁器,沖縄県,Ceramics
+4001995,株式会社湖南醸造,25,酒造,滋賀県,Sake and spirits brewing
+4001996,農事組合法人石垣漁業,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4001997,有限会社栗東精米,25,米穀・製粉,滋賀県,Rice and milling
+4001998,株式会社八百津家具,21,木工・家具,岐阜県,Woodwork and furniture
+4001999,株式会社矢吹ファーム,7,農産・青果,福島県,Agriculture and produce
+4002000,株式会社旭水産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4002001,有限会社魚沼ライス,15,米穀・製粉,新潟県,Rice and milling
+4002002,有限会社芸西物産,39,総合物産,高知県,General trading
+4002003,株式会社倉吉ミート,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4002004,有限会社弥彦製麺,15,製麺,新潟県,Noodle manufacturing
+4002005,有限会社吉岡食品,10,食品加工,群馬県,Food processing
+4002006,株式会社度会牧場,24,畜産・食肉加工,三重県,Livestock and meat processing
+4002007,有限会社壱岐畜産,42,畜産・食肉加工,長崎県,Livestock and meat processing
+4002008,株式会社飯能本舗,11,伝統工芸,埼玉県,Traditional crafts
+4002009,株式会社御所フルーツ,29,果樹・青果,奈良県,Orchard and produce
+4002010,合同会社田布施ライス,35,米穀・製粉,山口県,Rice and milling
+4002011,株式会社宮古島フルーツ,47,果樹・青果,沖縄県,Orchard and produce
+4002012,株式会社熊本電機,43,電機・機械,熊本県,Electronics and machinery
+4002013,株式会社日置青果,46,農産・青果,鹿児島県,Agriculture and produce
+4002014,株式会社精華本舗,26,伝統工芸,京都府,Traditional crafts
+4002015,有限会社東彼杵製材,42,木工・家具,長崎県,Woodwork and furniture
+4002016,合同会社砺波米穀,16,米穀・製粉,富山県,Rice and milling
+4002017,農事組合法人千代田麺業,10,製麺,群馬県,Noodle manufacturing
+4002018,有限会社片品ミート,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4002019,有限会社垂井本舗,21,伝統工芸,岐阜県,Traditional crafts
+4002020,農事組合法人盛岡海産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4002021,株式会社岩美漁業,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4002022,株式会社岐阜ミート,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4002023,農事組合法人美浜陶苑,18,窯業・陶磁器,福井県,Ceramics
+4002024,有限会社下野乳業,9,酪農・乳製品,栃木県,Dairy farming
+4002025,有限会社大月フルーツ,19,果樹・青果,山梨県,Orchard and produce
+4002026,株式会社潟上醸造,5,調味料製造,秋田県,Seasoning manufacturing
+4002027,農事組合法人坂井海産,18,水産・水産加工,福井県,Fisheries and seafood processing
+4002028,合同会社新座商店,11,食品加工,埼玉県,Food processing
+4002029,合同会社小浜ワイナリー,18,醸造,福井県,Brewing
+4002030,株式会社四條畷茶園,27,製茶・焙煎,大阪府,Tea processing and roasting
+4002031,有限会社宇和島フルーツ,38,果樹・青果,愛媛県,Orchard and produce
+4002032,株式会社刈羽米穀,15,米穀・製粉,新潟県,Rice and milling
+4002033,農事組合法人川本醸造,32,酒造,島根県,Sake and spirits brewing
+4002034,株式会社上富田本舗,30,調味料製造,和歌山県,Seasoning manufacturing
+4002035,株式会社常陸太田牧場,8,畜産・食肉加工,茨城県,Livestock and meat processing
+4002036,株式会社出雲崎本舗,15,調味料製造,新潟県,Seasoning manufacturing
+4002037,有限会社長島陶苑,46,窯業・陶磁器,鹿児島県,Ceramics
+4002038,株式会社多治見木工,21,木工・家具,岐阜県,Woodwork and furniture
+4002039,有限会社片品食品,10,食品加工,群馬県,Food processing
+4002040,有限会社堺商店,27,食品加工,大阪府,Food processing
+4002041,株式会社合志果樹園,43,果樹・青果,熊本県,Orchard and produce
+4002042,株式会社松山ドリンク,38,飲料製造,愛媛県,Beverage manufacturing
+4002043,有限会社越前漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4002044,有限会社早川工房,19,伝統工芸,山梨県,Traditional crafts
+4002045,株式会社大崎上島アニマル,34,ペット用品,広島県,Pet supplies
+4002046,株式会社門川フルーツ,45,果樹・青果,宮崎県,Orchard and produce
+4002047,株式会社天理工芸,29,伝統工芸,奈良県,Traditional crafts
+4002048,株式会社須崎醸造,39,調味料製造,高知県,Seasoning manufacturing
+4002049,有限会社上北山茶園,29,製茶・焙煎,奈良県,Tea processing and roasting
+4002050,有限会社蟹江食品,23,調味料製造,愛知県,Seasoning manufacturing
+4002051,株式会社宝達志水窯,17,窯業・陶磁器,石川県,Ceramics
+4002052,有限会社十日製麺,15,製麺,新潟県,Noodle manufacturing
+4002053,協同組合射水精米,16,米穀・製粉,富山県,Rice and milling
+4002054,株式会社みなかみ麺業,10,製麺,群馬県,Noodle manufacturing
+4002055,株式会社羽後酒造場,5,酒造,秋田県,Sake and spirits brewing
+4002056,合同会社本部漁業,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4002057,農事組合法人天童酒造,6,酒造,山形県,Sake and spirits brewing
+4002058,協同組合南九州水産,46,水産・水産加工,鹿児島県,Fisheries and seafood processing
+4002059,合同会社海田醸造,34,酒造,広島県,Sake and spirits brewing
+4002060,有限会社川棚ベーカリー,42,製菓・製パン,長崎県,Confectionery and bakery
+4002061,有限会社野田農園,12,農産・青果,千葉県,Agriculture and produce
+4002062,協同組合宝塚畜産,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4002063,有限会社宮若漁業,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4002064,株式会社大洲フルーツ,38,果樹・青果,愛媛県,Orchard and produce
+4002065,株式会社府中ベーカリー,13,製菓・製パン,東京都,Confectionery and bakery
+4002066,株式会社菰野農園,24,果樹・青果,三重県,Orchard and produce
+4002067,合同会社大垣本舗,21,伝統工芸,岐阜県,Traditional crafts
+4002068,農事組合法人白山窯,17,窯業・陶磁器,石川県,Ceramics
+4002069,農事組合法人箕輪果樹園,20,果樹・青果,長野県,Orchard and produce
+4002070,株式会社燕製麺,15,製麺,新潟県,Noodle manufacturing
+4002071,株式会社米沢文具,6,文具・玩具,山形県,Stationery and toys
+4002072,有限会社井川電機,5,電機・機械,秋田県,Electronics and machinery
+4002073,株式会社岩泉漁業,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4002074,株式会社太良窯,41,窯業・陶磁器,佐賀県,Ceramics
+4002075,有限会社深谷アニマル,11,ペット用品,埼玉県,Pet supplies
+4002076,有限会社滑川水産,16,水産・水産加工,富山県,Fisheries and seafood processing
+4002077,農事組合法人琴浦フルーツ,31,果樹・青果,鳥取県,Orchard and produce
+4002078,株式会社千早赤阪ブルワリー,27,醸造,大阪府,Brewing
+4002079,株式会社白石酒造場,4,酒造,宮城県,Sake and spirits brewing
+4002080,株式会社市川牧場,28,畜産・食肉加工,兵庫県,Livestock and meat processing
+4002081,株式会社横手米穀,5,米穀・製粉,秋田県,Rice and milling
+4002082,株式会社黒石青果,2,農産・青果,青森県,Agriculture and produce
+4002083,有限会社大阪生活用品,27,生活用品,大阪府,Household goods
+4002084,合同会社串本珈琲,30,製茶・焙煎,和歌山県,Tea processing and roasting
+4002085,有限会社隠岐の島ミート,32,畜産・食肉加工,島根県,Livestock and meat processing
+4002086,有限会社亘理水産,4,水産・水産加工,宮城県,Fisheries and seafood processing
+4002087,株式会社上関牧場,35,酪農・乳製品,山口県,Dairy farming
+4002088,株式会社松野観光,38,観光・体験,愛媛県,Tourism and experiences
+4002089,有限会社阿蘇農園,43,農産・青果,熊本県,Agriculture and produce
+4002090,株式会社明日香農園,29,果樹・青果,奈良県,Orchard and produce
+4002091,協同組合奥州本舗,3,調味料製造,岩手県,Seasoning manufacturing
+4002092,株式会社東大阪商店,27,食品加工,大阪府,Food processing
+4002093,有限会社守口製菓,27,製菓・製パン,大阪府,Confectionery and bakery
+4002094,株式会社玉名水産,43,水産・水産加工,熊本県,Fisheries and seafood processing
+4002095,有限会社小矢部造園,16,園芸・造園,富山県,Horticulture and landscaping
+4002096,有限会社津山米穀,33,米穀・製粉,岡山県,Rice and milling
+4002097,株式会社大川水産,39,水産・水産加工,高知県,Fisheries and seafood processing
+4002098,有限会社清須製菓,23,製菓・製パン,愛知県,Confectionery and bakery
+4002099,株式会社東大和生活用品,13,生活用品,東京都,Household goods
+4002100,農事組合法人三沢ファーム,2,農産・青果,青森県,Agriculture and produce
+4002101,有限会社宝達志水工芸,17,伝統工芸,石川県,Traditional crafts
+4002102,株式会社舟橋酒造,16,酒造,富山県,Sake and spirits brewing
+4002103,株式会社栗原製陶,4,窯業・陶磁器,宮城県,Ceramics
+4002104,株式会社雲南ライス,32,米穀・製粉,島根県,Rice and milling
+4002105,株式会社宇治田原工房,26,伝統工芸,京都府,Traditional crafts
+4002106,株式会社国東リゾート,44,観光・宿泊,大分県,Tourism and lodging
+4002107,合同会社高知製茶,39,製茶・焙煎,高知県,Tea processing and roasting
+4002108,協同組合遊佐畜産,6,畜産・食肉加工,山形県,Livestock and meat processing
+4002109,合同会社産山果樹園,43,果樹・青果,熊本県,Orchard and produce
+4002110,農事組合法人山鹿ミート,43,畜産・食肉加工,熊本県,Livestock and meat processing
+4002111,株式会社飯塚漁業,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4002112,有限会社野木牧場,9,酪農・乳製品,栃木県,Dairy farming
+4002113,株式会社阿智フルーツ,20,果樹・青果,長野県,Orchard and produce
+4002114,合同会社今別農園,2,農産・青果,青森県,Agriculture and produce
+4002115,株式会社横手醸造,5,酒造,秋田県,Sake and spirits brewing
+4002116,株式会社平戸麺業,42,製麺,長崎県,Noodle manufacturing
+4002117,農事組合法人栃木繊維,9,繊維・アパレル,栃木県,Textiles and apparel
+4002118,株式会社泉大津商会,27,生活用品,大阪府,Household goods
+4002119,株式会社天童本舗,6,伝統工芸,山形県,Traditional crafts
+4002120,合同会社東串良酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4002121,株式会社射水醸造,16,酒造,富山県,Sake and spirits brewing
+4002122,協同組合宗像ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4002123,農事組合法人八郎潟麺業,5,製麺,秋田県,Noodle manufacturing
+4002124,有限会社府中菓子舗,34,製菓・製パン,広島県,Confectionery and bakery
+4002125,有限会社三好製麺,36,製麺,徳島県,Noodle manufacturing
+4002126,株式会社和歌山醸造,30,調味料製造,和歌山県,Seasoning manufacturing
+4002127,合同会社智頭米穀,31,米穀・製粉,鳥取県,Rice and milling
+4002128,株式会社永平寺電機,18,電機・機械,福井県,Electronics and machinery
+4002129,有限会社朝来醸造,28,酒造,兵庫県,Sake and spirits brewing
+4002130,株式会社片品農園,10,農産・青果,群馬県,Agriculture and produce
+4002131,株式会社神戸製陶,21,窯業・陶磁器,岐阜県,Ceramics
+4002132,有限会社多治見窯,21,窯業・陶磁器,岐阜県,Ceramics
+4002133,合同会社小豆島造園,37,園芸・造園,香川県,Horticulture and landscaping
+4002134,株式会社杉並玩具,13,文具・玩具,東京都,Stationery and toys
+4002135,農事組合法人石井テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4002136,有限会社芝山飲料,12,飲料製造,千葉県,Beverage manufacturing
+4002137,株式会社和木製茶,35,製茶・焙煎,山口県,Tea processing and roasting
+4002138,株式会社四万十海産,39,水産・水産加工,高知県,Fisheries and seafood processing
+4002139,株式会社阿南麺業,20,製麺,長野県,Noodle manufacturing
+4002140,株式会社檜枝岐農園,7,農産・青果,福島県,Agriculture and produce
+4002141,農事組合法人有田川飲料,30,飲料製造,和歌山県,Beverage manufacturing
+4002142,農事組合法人廿日漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4002143,合同会社田原製菓,23,製菓・製パン,愛知県,Confectionery and bakery
+4002144,農事組合法人坂井酒造,18,酒造,福井県,Sake and spirits brewing
+4002145,有限会社住田麺業,3,製麺,岩手県,Noodle manufacturing
+4002146,有限会社基山海産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4002147,株式会社三条酒造,15,酒造,新潟県,Sake and spirits brewing
+4002148,有限会社南丹窯,26,窯業・陶磁器,京都府,Ceramics
+4002149,株式会社熊本フルーツ,43,果樹・青果,熊本県,Orchard and produce
+4002150,株式会社新座珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4002151,有限会社日南ライス,31,米穀・製粉,鳥取県,Rice and milling
+4002152,有限会社真狩牧場,1,畜産・食肉加工,北海道,Livestock and meat processing
+4002153,株式会社みよしフーズ,23,食品加工,愛知県,Food processing
+4002154,有限会社羽咋海産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4002155,有限会社宇和島飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4002156,株式会社清川菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4002157,有限会社仙北醸造,5,酒造,秋田県,Sake and spirits brewing
+4002158,株式会社猪名川旅館,28,観光・宿泊,兵庫県,Tourism and lodging
+4002159,有限会社室戸酒造,39,酒造,高知県,Sake and spirits brewing
+4002160,有限会社小田原食品,14,食品加工,神奈川県,Food processing
+4002161,有限会社新庄漁業,33,水産・水産加工,岡山県,Fisheries and seafood processing
+4002162,有限会社佐用園芸,28,園芸・造園,兵庫県,Horticulture and landscaping
+4002163,有限会社西予飲料,38,飲料製造,愛媛県,Beverage manufacturing
+4002164,有限会社阿久根酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4002165,株式会社美郷果樹園,5,果樹・青果,秋田県,Orchard and produce
+4002166,協同組合加茂麺業,15,製麺,新潟県,Noodle manufacturing
+4002167,株式会社二戸製麺,3,製麺,岩手県,Noodle manufacturing
+4002168,株式会社柏原物産,27,総合物産,大阪府,General trading
+4002169,株式会社潟上製麺,5,製麺,秋田県,Noodle manufacturing
+4002170,有限会社鬼北繊維,38,繊維・アパレル,愛媛県,Textiles and apparel
+4002171,有限会社柳井酒造場,35,酒造,山口県,Sake and spirits brewing
+4002172,有限会社中能登陶苑,17,窯業・陶磁器,石川県,Ceramics
+4002173,有限会社安中畜産,10,畜産・食肉加工,群馬県,Livestock and meat processing
+4002174,有限会社小豆島麺業,37,製麺,香川県,Noodle manufacturing
+4002175,農事組合法人根羽コスメ,20,化粧品製造,長野県,Cosmetics manufacturing
+4002176,合同会社東峰水産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4002177,株式会社阿賀野菓子舗,15,製菓・製パン,新潟県,Confectionery and bakery
+4002178,株式会社寒川製菓,14,製菓・製パン,神奈川県,Confectionery and bakery
+4002179,株式会社宝達志水酒造場,17,酒造,石川県,Sake and spirits brewing
+4002180,有限会社野木製茶,9,製茶・焙煎,栃木県,Tea processing and roasting
+4002181,協同組合世羅酒造場,34,酒造,広島県,Sake and spirits brewing
+4002182,協同組合内子漁業,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4002183,株式会社早川工房,19,伝統工芸,山梨県,Traditional crafts
+4002184,株式会社銚子ミート,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4002185,株式会社永平寺漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4002186,有限会社仁淀川醸造,39,酒造,高知県,Sake and spirits brewing
+4002187,農事組合法人松浦玩具,42,文具・玩具,長崎県,Stationery and toys
+4002188,株式会社多気漁業,24,水産・水産加工,三重県,Fisheries and seafood processing
+4002189,株式会社西之表青果,46,農産・青果,鹿児島県,Agriculture and produce
+4002190,株式会社益子珈琲,9,製茶・焙煎,栃木県,Tea processing and roasting
+4002191,有限会社穴水工芸,17,伝統工芸,石川県,Traditional crafts
+4002192,合同会社大月玩具,19,文具・玩具,山梨県,Stationery and toys
+4002193,協同組合神戸畜産,21,畜産・食肉加工,岐阜県,Livestock and meat processing
+4002194,株式会社由利本荘ミート,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4002195,有限会社大豊醸造,39,酒造,高知県,Sake and spirits brewing
+4002196,合同会社時津水産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4002197,株式会社越谷ベーカリー,11,製菓・製パン,埼玉県,Confectionery and bakery
+4002198,有限会社南足柄菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4002199,有限会社吉野ヶ里酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4002200,株式会社南伊勢畜産,24,畜産・食肉加工,三重県,Livestock and meat processing
+4002201,有限会社奥出雲海産,32,水産・水産加工,島根県,Fisheries and seafood processing
+4002202,有限会社江田島酒造,34,酒造,広島県,Sake and spirits brewing
+4002203,株式会社糸魚川米穀,15,米穀・製粉,新潟県,Rice and milling
+4002204,有限会社大山崎工房,26,伝統工芸,京都府,Traditional crafts
+4002205,株式会社おおい漁業,18,水産・水産加工,福井県,Fisheries and seafood processing
+4002206,株式会社大分リゾート,44,観光・宿泊,大分県,Tourism and lodging
+4002207,株式会社雲仙畜産,42,畜産・食肉加工,長崎県,Livestock and meat processing
+4002208,株式会社小値賀漁業,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4002209,株式会社多古水産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4002210,株式会社上島フーズ,38,食品加工,愛媛県,Food processing
+4002211,株式会社伊豆漁業,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4002212,株式会社長浜酒造,25,酒造,滋賀県,Sake and spirits brewing
+4002213,株式会社鯖江デイリー,18,酪農・乳製品,福井県,Dairy farming
+4002214,株式会社鏡野フルーツ,33,果樹・青果,岡山県,Orchard and produce
+4002215,有限会社高島ミート,25,畜産・食肉加工,滋賀県,Livestock and meat processing
+4002216,株式会社金ケ崎海産,3,水産・水産加工,岩手県,Fisheries and seafood processing
+4002217,株式会社新見農園,33,果樹・青果,岡山県,Orchard and produce
+4002218,有限会社由利本荘製麺,5,製麺,秋田県,Noodle manufacturing
+4002219,農事組合法人徳島本舗,36,調味料製造,徳島県,Seasoning manufacturing
+4002220,株式会社小竹海産,40,水産・水産加工,福岡県,Fisheries and seafood processing
+4002221,株式会社村山酒造場,6,酒造,山形県,Sake and spirits brewing
+4002222,株式会社長与海産,42,水産・水産加工,長崎県,Fisheries and seafood processing
+4002223,有限会社高松麺業,37,製麺,香川県,Noodle manufacturing
+4002224,有限会社小浜米穀,18,米穀・製粉,福井県,Rice and milling
+4002225,株式会社北谷酒造,47,酒造,沖縄県,Sake and spirits brewing
+4002226,株式会社東庄牧場,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4002227,協同組合二宮製菓,14,製菓・製パン,神奈川県,Confectionery and bakery
+4002228,株式会社鮫川農園,7,農産・青果,福島県,Agriculture and produce
+4002229,有限会社日高ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4002230,合同会社春日部米穀,11,米穀・製粉,埼玉県,Rice and milling
+4002231,株式会社新宿テキスタイル,13,繊維・アパレル,東京都,Textiles and apparel
+4002232,有限会社三条酒造場,15,酒造,新潟県,Sake and spirits brewing
+4002233,有限会社小浜窯,18,窯業・陶磁器,福井県,Ceramics
+4002234,有限会社田布施フーズ,35,食品加工,山口県,Food processing
+4002235,有限会社阿賀野米穀,15,米穀・製粉,新潟県,Rice and milling
+4002236,株式会社和木商店,35,食品加工,山口県,Food processing
+4002237,農事組合法人今帰仁海産,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4002238,合同会社井手本舗,26,伝統工芸,京都府,Traditional crafts
+4002239,株式会社入間製菓,11,製菓・製パン,埼玉県,Confectionery and bakery
+4002240,協同組合川越産業,24,総合物産,三重県,General trading
+4002241,株式会社香取海産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4002242,株式会社安芸高田酒造,34,酒造,広島県,Sake and spirits brewing
+4002243,株式会社大海産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4002244,株式会社佐々本舗,42,伝統工芸,長崎県,Traditional crafts
+4002245,株式会社総社果樹園,33,果樹・青果,岡山県,Orchard and produce
+4002246,有限会社伊東水産,22,水産・水産加工,静岡県,Fisheries and seafood processing
+4002247,有限会社阿波麺業,36,製麺,徳島県,Noodle manufacturing
+4002248,株式会社美浜商店,23,食品加工,愛知県,Food processing
+4002249,有限会社身延醸造,19,醸造,山梨県,Brewing
+4002250,株式会社いなべ漁業,24,水産・水産加工,三重県,Fisheries and seafood processing
+4002251,協同組合笠岡フルーツ,33,果樹・青果,岡山県,Orchard and produce
+4002252,有限会社志布志ミート,46,畜産・食肉加工,鹿児島県,Livestock and meat processing
+4002253,農事組合法人日光畜産,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4002254,有限会社高山窯,21,窯業・陶磁器,岐阜県,Ceramics
+4002255,有限会社棚倉家具,7,木工・家具,福島県,Woodwork and furniture
+4002256,有限会社柳井グリーン,35,園芸・造園,山口県,Horticulture and landscaping
+4002257,合同会社長浜ライス,25,米穀・製粉,滋賀県,Rice and milling
+4002258,有限会社九戸ミート,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4002259,有限会社那須塩原牧場,9,酪農・乳製品,栃木県,Dairy farming
+4002260,有限会社神川菓子舗,11,製菓・製パン,埼玉県,Confectionery and bakery
+4002261,合同会社長生農園,12,農産・青果,千葉県,Agriculture and produce
+4002262,株式会社みなべベーカリー,30,製菓・製パン,和歌山県,Confectionery and bakery
+4002263,有限会社八丈生活用品,13,生活用品,東京都,Household goods
+4002264,合同会社糸魚川ペット,15,ペット用品,新潟県,Pet supplies
+4002265,農事組合法人笠岡ワイナリー,33,醸造,岡山県,Brewing
+4002266,有限会社大旅館,42,観光・宿泊,長崎県,Tourism and lodging
+4002267,有限会社那珂フーズ,8,食品加工,茨城県,Food processing
+4002268,株式会社喜多方酒造場,7,酒造,福島県,Sake and spirits brewing
+4002269,有限会社石狩牧場,1,畜産・食肉加工,北海道,Livestock and meat processing
+4002270,株式会社南大東農園,47,果樹・青果,沖縄県,Orchard and produce
+4002271,有限会社湯河原菓子舗,14,製菓・製パン,神奈川県,Confectionery and bakery
+4002272,株式会社湯前醸造,43,酒造,熊本県,Sake and spirits brewing
+4002273,株式会社大和高田製茶,29,製茶・焙煎,奈良県,Tea processing and roasting
+4002274,農事組合法人和束青果,26,農産・青果,京都府,Agriculture and produce
+4002275,株式会社新上五島陶苑,42,窯業・陶磁器,長崎県,Ceramics
+4002276,株式会社池田ツーリズム,27,観光・体験,大阪府,Tourism and experiences
+4002277,農事組合法人鳥栖海産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4002278,協同組合綾電機,45,電機・機械,宮崎県,Electronics and machinery
+4002279,協同組合松江米穀,32,米穀・製粉,島根県,Rice and milling
+4002280,協同組合鎌倉商会,14,生活用品,神奈川県,Household goods
+4002281,株式会社古平畜産,1,畜産・食肉加工,北海道,Livestock and meat processing
+4002282,合同会社戸田飲料,11,飲料製造,埼玉県,Beverage manufacturing
+4002283,株式会社播磨漁業,28,水産・水産加工,兵庫県,Fisheries and seafood processing
+4002284,有限会社由利本荘畜産,5,畜産・食肉加工,秋田県,Livestock and meat processing
+4002285,農事組合法人南丹ツーリズム,26,観光・体験,京都府,Tourism and experiences
+4002286,株式会社松茂果樹園,36,果樹・青果,徳島県,Orchard and produce
+4002287,株式会社茨木ベーカリー,27,製菓・製パン,大阪府,Confectionery and bakery
+4002288,有限会社日田酒造場,44,酒造,大分県,Sake and spirits brewing
+4002289,株式会社吉野川麺業,36,製麺,徳島県,Noodle manufacturing
+4002290,株式会社宮崎醸造,45,酒造,宮崎県,Sake and spirits brewing
+4002291,合同会社津幡旅館,17,観光・宿泊,石川県,Tourism and lodging
+4002292,株式会社笠間フーズ,8,食品加工,茨城県,Food processing
+4002293,有限会社北秋田製麺,5,製麺,秋田県,Noodle manufacturing
+4002294,協同組合美浜食品,23,調味料製造,愛知県,Seasoning manufacturing
+4002295,有限会社紫波精米,3,米穀・製粉,岩手県,Rice and milling
+4002296,農事組合法人板倉商店,10,食品加工,群馬県,Food processing
+4002297,有限会社赤磐ドリンク,33,飲料製造,岡山県,Beverage manufacturing
+4002298,有限会社柳井水産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4002299,合同会社二宮生活用品,14,生活用品,神奈川県,Household goods
+4002300,有限会社波佐見畜産,42,畜産・食肉加工,長崎県,Livestock and meat processing
+4002301,株式会社矢吹ライス,7,米穀・製粉,福島県,Rice and milling
+4002302,有限会社恵那アウトドア,21,スポーツ用品,岐阜県,Sporting goods
+4002303,協同組合宮古島漁業,47,水産・水産加工,沖縄県,Fisheries and seafood processing
+4002304,合同会社高根沢茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4002305,合同会社美里果樹園,43,果樹・青果,熊本県,Orchard and produce
+4002306,有限会社久万高原漁業,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4002307,有限会社久米島旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4002308,株式会社魚津米穀,16,米穀・製粉,富山県,Rice and milling
+4002309,株式会社田原本農園,29,果樹・青果,奈良県,Orchard and produce
+4002310,協同組合二戸果樹園,3,果樹・青果,岩手県,Orchard and produce
+4002311,株式会社甲賀リゾート,25,観光・宿泊,滋賀県,Tourism and lodging
+4002312,合同会社田野漁業,39,水産・水産加工,高知県,Fisheries and seafood processing
+4002313,株式会社丹波山醸造,19,醸造,山梨県,Brewing
+4002314,有限会社佐井果樹園,2,果樹・青果,青森県,Orchard and produce
+4002315,有限会社小国酒造場,43,酒造,熊本県,Sake and spirits brewing
+4002316,株式会社栗原フーズ,4,食品加工,宮城県,Food processing
+4002317,株式会社揖斐川工房,21,伝統工芸,岐阜県,Traditional crafts
+4002318,農事組合法人奥出雲ライス,32,米穀・製粉,島根県,Rice and milling
+4002319,協同組合九十九里ミート,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4002320,有限会社磐田製茶,22,製茶・焙煎,静岡県,Tea processing and roasting
+4002321,有限会社高根沢食品,9,食品加工,栃木県,Food processing
+4002322,協同組合まんのうアニマル,37,ペット用品,香川県,Pet supplies
+4002323,農事組合法人名古屋商店,23,食品加工,愛知県,Food processing
+4002324,株式会社東伊豆製茶,22,製茶・焙煎,静岡県,Tea processing and roasting
+4002325,株式会社西伊豆農園,22,果樹・青果,静岡県,Orchard and produce
+4002326,有限会社西伊豆茶園,22,製茶・焙煎,静岡県,Tea processing and roasting
+4002327,株式会社南部畜産,31,畜産・食肉加工,鳥取県,Livestock and meat processing
+4002328,株式会社上峰海産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4002329,有限会社甲府フルーツ,19,果樹・青果,山梨県,Orchard and produce
+4002330,有限会社馬路ファーム,39,農産・青果,高知県,Agriculture and produce
+4002331,農事組合法人上天草酒造,43,酒造,熊本県,Sake and spirits brewing
+4002332,合同会社太良物産,41,総合物産,佐賀県,General trading
+4002333,有限会社九度山テキスタイル,30,繊維・アパレル,和歌山県,Textiles and apparel
+4002334,合同会社三朝海産,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4002335,有限会社宍粟製菓,28,製菓・製パン,兵庫県,Confectionery and bakery
+4002336,株式会社韮崎フルーツ,19,果樹・青果,山梨県,Orchard and produce
+4002337,株式会社中土佐製陶,39,窯業・陶磁器,高知県,Ceramics
+4002338,有限会社勝央農園,33,果樹・青果,岡山県,Orchard and produce
+4002339,株式会社佐々麺業,42,製麺,長崎県,Noodle manufacturing
+4002340,株式会社九十九里牧場,12,畜産・食肉加工,千葉県,Livestock and meat processing
+4002341,株式会社都城畜産,45,畜産・食肉加工,宮崎県,Livestock and meat processing
+4002342,株式会社大山精米,31,米穀・製粉,鳥取県,Rice and milling
+4002343,有限会社与謝野製陶,26,窯業・陶磁器,京都府,Ceramics
+4002344,株式会社中城農園,47,果樹・青果,沖縄県,Orchard and produce
+4002345,有限会社南大東農園,47,果樹・青果,沖縄県,Orchard and produce
+4002346,株式会社陸前高田畜産,3,畜産・食肉加工,岩手県,Livestock and meat processing
+4002347,協同組合多賀工芸,25,伝統工芸,滋賀県,Traditional crafts
+4002348,有限会社坂漁業,34,水産・水産加工,広島県,Fisheries and seafood processing
+4002349,協同組合和泉ベーカリー,27,製菓・製パン,大阪府,Confectionery and bakery
+4002350,有限会社春日ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4002351,農事組合法人羽生文具,11,文具・玩具,埼玉県,Stationery and toys
+4002352,株式会社那賀テキスタイル,36,繊維・アパレル,徳島県,Textiles and apparel
+4002353,協同組合内灘製作所,17,電機・機械,石川県,Electronics and machinery
+4002354,株式会社穴水本舗,17,伝統工芸,石川県,Traditional crafts
+4002355,有限会社涌谷ミート,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4002356,株式会社萩水産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4002357,株式会社本庄珈琲,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4002358,有限会社武豊水産,23,水産・水産加工,愛知県,Fisheries and seafood processing
+4002359,株式会社井原農園,33,果樹・青果,岡山県,Orchard and produce
+4002360,農事組合法人鳴沢工房,19,伝統工芸,山梨県,Traditional crafts
+4002361,株式会社鎌倉牧場,14,酪農・乳製品,神奈川県,Dairy farming
+4002362,協同組合豊能ツーリズム,27,観光・体験,大阪府,Tourism and experiences
+4002363,株式会社南島原製菓,42,製菓・製パン,長崎県,Confectionery and bakery
+4002364,株式会社直島家具,37,木工・家具,香川県,Woodwork and furniture
+4002365,株式会社紀北フーズ,24,食品加工,三重県,Food processing
+4002366,合同会社越知水産,39,水産・水産加工,高知県,Fisheries and seafood processing
+4002367,株式会社朝日工芸,16,伝統工芸,富山県,Traditional crafts
+4002368,有限会社土庄家具,37,木工・家具,香川県,Woodwork and furniture
+4002369,農事組合法人五島菓子舗,42,製菓・製パン,長崎県,Confectionery and bakery
+4002370,有限会社富士川フルーツ,19,果樹・青果,山梨県,Orchard and produce
+4002371,農事組合法人羽生食品,11,食品加工,埼玉県,Food processing
+4002372,有限会社五木酒造場,43,酒造,熊本県,Sake and spirits brewing
+4002373,株式会社玖珠畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4002374,有限会社日田醸造,44,酒造,大分県,Sake and spirits brewing
+4002375,株式会社生坂工房,20,伝統工芸,長野県,Traditional crafts
+4002376,有限会社大船渡米穀,3,米穀・製粉,岩手県,Rice and milling
+4002377,合同会社上富田ドリンク,30,飲料製造,和歌山県,Beverage manufacturing
+4002378,株式会社熊取観光,27,観光・体験,大阪府,Tourism and experiences
+4002379,合同会社調布テキスタイル,13,繊維・アパレル,東京都,Textiles and apparel
+4002380,農事組合法人日野観光,13,観光・体験,東京都,Tourism and experiences
+4002381,有限会社高知醸造,39,調味料製造,高知県,Seasoning manufacturing
+4002382,有限会社利府商店,4,食品加工,宮城県,Food processing
+4002383,株式会社神崎コスメ,12,化粧品製造,千葉県,Cosmetics manufacturing
+4002384,有限会社大東生活用品,27,生活用品,大阪府,Household goods
+4002385,株式会社熊取観光,27,観光・体験,大阪府,Tourism and experiences
+4002386,株式会社大刀洗ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4002387,株式会社玉城畜産,24,畜産・食肉加工,三重県,Livestock and meat processing
+4002388,有限会社宝達志水海産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4002389,株式会社東北フルーツ,2,果樹・青果,青森県,Orchard and produce
+4002390,株式会社若狭窯,18,窯業・陶磁器,福井県,Ceramics
+4002391,有限会社中間畜産,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4002392,合同会社日置酒造場,46,酒造,鹿児島県,Sake and spirits brewing
+4002393,株式会社沼津果樹園,22,果樹・青果,静岡県,Orchard and produce
+4002394,農事組合法人気仙沼ライス,4,米穀・製粉,宮城県,Rice and milling
+4002395,有限会社千曲ファーム,20,農産・青果,長野県,Agriculture and produce
+4002396,株式会社春日井菓子舗,23,製菓・製パン,愛知県,Confectionery and bakery
+4002397,有限会社酒々井製作所,12,電機・機械,千葉県,Electronics and machinery
+4002398,有限会社五所川原ファーム,2,農産・青果,青森県,Agriculture and produce
+4002399,株式会社みやき酒造,41,酒造,佐賀県,Sake and spirits brewing
+4002400,株式会社山添農園,29,果樹・青果,奈良県,Orchard and produce
+4002401,合同会社京極漁業,1,水産・水産加工,北海道,Fisheries and seafood processing
+4002402,有限会社南伊豆茶園,22,製茶・焙煎,静岡県,Tea processing and roasting
+4002403,株式会社郡山珈琲,7,製茶・焙煎,福島県,Tea processing and roasting
+4002404,有限会社小海青果,20,農産・青果,長野県,Agriculture and produce
+4002405,農事組合法人富津ファーム,12,農産・青果,千葉県,Agriculture and produce
+4002406,株式会社嘉手納旅館,47,観光・宿泊,沖縄県,Tourism and lodging
+4002407,有限会社秋田ライス,5,米穀・製粉,秋田県,Rice and milling
+4002408,協同組合さいたま米穀,11,米穀・製粉,埼玉県,Rice and milling
+4002409,協同組合綾酒造,45,酒造,宮崎県,Sake and spirits brewing
+4002410,株式会社小林農園,45,果樹・青果,宮崎県,Orchard and produce
+4002411,株式会社士幌食品,1,食品加工,北海道,Food processing
+4002412,農事組合法人南アルプス飲料,19,飲料製造,山梨県,Beverage manufacturing
+4002413,有限会社日光牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4002414,株式会社武雄酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4002415,株式会社湧水醸造,46,酒造,鹿児島県,Sake and spirits brewing
+4002416,協同組合広島商店,34,食品加工,広島県,Food processing
+4002417,有限会社那智勝浦フルーツ,30,果樹・青果,和歌山県,Orchard and produce
+4002418,株式会社上ライス,16,米穀・製粉,富山県,Rice and milling
+4002419,協同組合広島フーズ,34,食品加工,広島県,Food processing
+4002420,有限会社柳井醸造,35,酒造,山口県,Sake and spirits brewing
+4002421,株式会社沼田麺業,10,製麺,群馬県,Noodle manufacturing
+4002422,株式会社気仙沼ライス,4,米穀・製粉,宮城県,Rice and milling
+4002423,有限会社能勢商店,27,食品加工,大阪府,Food processing
+4002424,株式会社日田フーズ,44,食品加工,大分県,Food processing
+4002425,株式会社日高川醸造,30,調味料製造,和歌山県,Seasoning manufacturing
+4002426,農事組合法人志免製陶,40,窯業・陶磁器,福岡県,Ceramics
+4002427,株式会社小美玉米穀,8,米穀・製粉,茨城県,Rice and milling
+4002428,株式会社笠置本舗,26,伝統工芸,京都府,Traditional crafts
+4002429,協同組合小城ミート,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4002430,有限会社可児スポーツ,21,スポーツ用品,岐阜県,Sporting goods
+4002431,株式会社枝幸畜産,1,畜産・食肉加工,北海道,Livestock and meat processing
+4002432,株式会社足利茶園,9,製茶・焙煎,栃木県,Tea processing and roasting
+4002433,農事組合法人墨田電機,13,電機・機械,東京都,Electronics and machinery
+4002434,有限会社浅口テキスタイル,33,繊維・アパレル,岡山県,Textiles and apparel
+4002435,株式会社大野城牧場,40,畜産・食肉加工,福岡県,Livestock and meat processing
+4002436,農事組合法人鹿児島醸造,46,酒造,鹿児島県,Sake and spirits brewing
+4002437,株式会社十津川アニマル,29,ペット用品,奈良県,Pet supplies
+4002438,有限会社四万十青果,39,農産・青果,高知県,Agriculture and produce
+4002439,株式会社吉賀繊維,32,繊維・アパレル,島根県,Textiles and apparel
+4002440,有限会社町田観光,13,観光・体験,東京都,Tourism and experiences
+4002441,株式会社甲府テキスタイル,19,繊維・アパレル,山梨県,Textiles and apparel
+4002442,株式会社湯梨浜果樹園,31,果樹・青果,鳥取県,Orchard and produce
+4002443,株式会社彦根精米,25,米穀・製粉,滋賀県,Rice and milling
+4002444,農事組合法人甲佐果樹園,43,果樹・青果,熊本県,Orchard and produce
+4002445,株式会社西目屋果樹園,2,果樹・青果,青森県,Orchard and produce
+4002446,株式会社早川ブルワリー,19,醸造,山梨県,Brewing
+4002447,有限会社別府畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4002448,株式会社愛川食品,14,食品加工,神奈川県,Food processing
+4002449,株式会社輪島漁業,17,水産・水産加工,石川県,Fisheries and seafood processing
+4002450,有限会社弥彦精米,15,米穀・製粉,新潟県,Rice and milling
+4002451,有限会社四日商会,24,生活用品,三重県,Household goods
+4002452,合同会社嘉麻ベーカリー,40,製菓・製パン,福岡県,Confectionery and bakery
+4002453,株式会社入善醸造,16,酒造,富山県,Sake and spirits brewing
+4002454,株式会社早川ワイナリー,19,醸造,山梨県,Brewing
+4002455,株式会社つくばみらい農園,8,農産・青果,茨城県,Agriculture and produce
+4002456,株式会社銚子農園,12,農産・青果,千葉県,Agriculture and produce
+4002457,有限会社飯豊ライス,6,米穀・製粉,山形県,Rice and milling
+4002458,有限会社香美農園,39,農産・青果,高知県,Agriculture and produce
+4002459,株式会社館林製麺,10,製麺,群馬県,Noodle manufacturing
+4002460,株式会社椎葉フーズ,45,食品加工,宮崎県,Food processing
+4002461,有限会社坂東茶園,8,製茶・焙煎,茨城県,Tea processing and roasting
+4002462,農事組合法人今治海産,38,水産・水産加工,愛媛県,Fisheries and seafood processing
+4002463,有限会社洋野製麺,3,製麺,岩手県,Noodle manufacturing
+4002464,株式会社座間商店,14,食品加工,神奈川県,Food processing
+4002465,有限会社山元畜産,4,畜産・食肉加工,宮城県,Livestock and meat processing
+4002466,有限会社那須烏山珈琲,9,製茶・焙煎,栃木県,Tea processing and roasting
+4002467,株式会社大月工芸,19,伝統工芸,山梨県,Traditional crafts
+4002468,株式会社雲南酒造,32,酒造,島根県,Sake and spirits brewing
+4002469,有限会社高根沢牧場,9,畜産・食肉加工,栃木県,Livestock and meat processing
+4002470,株式会社田野畑麺業,3,製麺,岩手県,Noodle manufacturing
+4002471,株式会社金沢海産,17,水産・水産加工,石川県,Fisheries and seafood processing
+4002472,協同組合嬉野水産,41,水産・水産加工,佐賀県,Fisheries and seafood processing
+4002473,合同会社玉城畜産,24,畜産・食肉加工,三重県,Livestock and meat processing
+4002474,合同会社吉野工芸,29,伝統工芸,奈良県,Traditional crafts
+4002475,有限会社唐津酒造場,41,酒造,佐賀県,Sake and spirits brewing
+4002476,株式会社鎌倉観光,14,観光・宿泊,神奈川県,Tourism and lodging
+4002477,有限会社みどり食品,10,食品加工,群馬県,Food processing
+4002478,有限会社舟橋工芸,16,伝統工芸,富山県,Traditional crafts
+4002479,農事組合法人大山崎窯,26,窯業・陶磁器,京都府,Ceramics
+4002480,株式会社平生水産,35,水産・水産加工,山口県,Fisheries and seafood processing
+4002481,株式会社十日ライス,15,米穀・製粉,新潟県,Rice and milling
+4002482,有限会社日吉津漁業,31,水産・水産加工,鳥取県,Fisheries and seafood processing
+4002483,株式会社琴浦ベーカリー,31,製菓・製パン,鳥取県,Confectionery and bakery
+4002484,有限会社佐呂間園芸,1,園芸・造園,北海道,Horticulture and landscaping
+4002485,株式会社垂水農園,46,農産・青果,鹿児島県,Agriculture and produce
+4002486,株式会社米子米穀,31,米穀・製粉,鳥取県,Rice and milling
+4002487,協同組合富里水産,12,水産・水産加工,千葉県,Fisheries and seafood processing
+4002488,株式会社大牧場,41,畜産・食肉加工,佐賀県,Livestock and meat processing
+4002489,農事組合法人東海醸造,23,調味料製造,愛知県,Seasoning manufacturing
+4002490,株式会社西伊豆製茶,22,製茶・焙煎,静岡県,Tea processing and roasting
+4002491,株式会社糸満工芸,47,伝統工芸,沖縄県,Traditional crafts
+4002492,株式会社ふじみ野食品,11,食品加工,埼玉県,Food processing
+4002493,有限会社横瀬茶園,11,製茶・焙煎,埼玉県,Tea processing and roasting
+4002494,有限会社千曲フルーツ,20,果樹・青果,長野県,Orchard and produce
+4002495,有限会社三原酒造,39,酒造,高知県,Sake and spirits brewing
+4002496,株式会社佐伯畜産,44,畜産・食肉加工,大分県,Livestock and meat processing
+4002497,株式会社上毛製麺,40,製麺,福岡県,Noodle manufacturing
+4002498,有限会社岡崎製作所,23,電機・機械,愛知県,Electronics and machinery
+4002499,協同組合塙酒造場,7,酒造,福島県,Sake and spirits brewing
+4002500,農事組合法人新潟精米,15,米穀・製粉,新潟県,Rice and milling

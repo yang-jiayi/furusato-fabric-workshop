@@ -1,5 +1,27 @@
 # tools/html — 日英 2 言語の単一ファイル HTML 配布物 / bilingual single-file HTML deliverable
 
+## 3.0 Preview
+
+[v3の全文ビルドと検証](../../docs/v3-preview/README.md)は `tools/docs/build_preview30.py` から
+実WordとHTMLを同じ共有日英原稿で生成します。`furusato_html/preview30.py` と
+`assets/preview30.{css,js}` はオフライン検索・日英切替・学習記録・コードコピー・拡大・印刷を実装します。
+`tools/docs/validate_preview30.py --interactions --print-html` はローカルファイルだけを実操作し、
+JA/EN両方の印刷・リンク・responsive表示を検証します。外部HTTP(S)は遮断し、Fabricには接続しません。
+原本・図の来歴・評価が未審査ならDRAFTと表示し、旧UI写真を新演習に流用しません。
+以下のv2.7 builder / 対訳 / 配布ペアは比較用に保持します。
+
+The v3 Preview renderer uses the same complete shared model as Word, embeds only
+reviewed actual new-UI captures and records the exact paired Word hash. Local
+automated interaction/print tests do not claim live Fabric verification.
+
+The v3 source-only path consumes an approved sanitized public projection through
+`tools/docs/Build-Preview30.ps1 -PublicEvidenceManifest ...`, or its default
+`docs/assets/v3-preview-evidence/manifest.json`. See the
+[evidence/freeze contract](../../docs/v3-preview/evidence-contract.md). Private originals,
+identities, query URIs, answers and reasoning never become HTML inputs through that path.
+Repeated native images retain separate captions/provenance but share a verified pixel
+resource. Print headings are kept together. Source preparation does not execute this build.
+
 [日本語](#日本語) | [English](#english)
 
 ---

@@ -1,0 +1,49 @@
+table ot_pref_category_metric
+	lineageTag: 8d536ec8-c4f3-53a9-bb1a-66123efc1db8
+
+	column PrefCategoryMetricId
+		dataType: string
+		sourceColumn: PrefCategoryMetricId
+
+	column PrefCategoryStaticCount
+		dataType: int64
+		sourceColumn: PrefCategoryStaticCount
+
+	column PrefCategoryTotalYen
+		dataType: int64
+		sourceColumn: PrefCategoryTotalYen
+
+	column PrefCategoryAmountRank
+		dataType: int64
+		sourceColumn: PrefCategoryAmountRank
+
+	column PrefectureId
+		dataType: int64
+		sourceColumn: PrefectureId
+
+	column CategoryId
+		dataType: int64
+		sourceColumn: CategoryId
+
+	partition ot_pref_category_metric = entity
+		mode: directLake
+		source
+			entityName: ot_pref_category_metric
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

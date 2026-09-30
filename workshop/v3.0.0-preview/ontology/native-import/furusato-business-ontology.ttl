@@ -1,0 +1,481 @@
+# Generated standards-only native-import candidate; import success is unverified.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix furusato: <https://github.com/yang-jiayi/furusato-fabric-workshop/ontology/furusato#> .
+
+furusato:Donation rdf:type owl:Class .
+furusato:Donation rdfs:comment "Synthetic static baseline hometown-tax Donation row (ふるさと納税の寄付／寄附) and the only static fact grain for transaction counts and JPY amounts. It is an independent snapshot, not an approved, promoted, deduplicated, or finalized form of an Eventhouse observation. Each entity links to exactly one Donor, one recipient Municipality, and one selected Gift option in this dataset." .
+furusato:Donation rdfs:label "Donation" .
+furusato:DonationSelectedGift rdf:type owl:ObjectProperty .
+furusato:DonationSelectedGift rdfs:comment "Connects each static baseline Donation to the selected Gift option. A no-return-gift choice is represented by a Gift option in the no-return-gift category, not by a missing Donation." .
+furusato:DonationSelectedGift rdfs:domain furusato:Donation .
+furusato:DonationSelectedGift rdfs:label "DonationSelectedGift" .
+furusato:DonationSelectedGift rdfs:range furusato:Gift .
+furusato:DonationToMunicipality rdf:type owl:ObjectProperty .
+furusato:DonationToMunicipality rdfs:comment "Connects each static baseline Donation to exactly one recipient Municipality. This is the authoritative path for received-by geography and must not be replaced by Gift or Supplier location." .
+furusato:DonationToMunicipality rdfs:domain furusato:Donation .
+furusato:DonationToMunicipality rdfs:label "DonationToMunicipality" .
+furusato:DonationToMunicipality rdfs:range furusato:Municipality .
+furusato:Donation__DonatedAtJstText rdf:type owl:DatatypeProperty .
+furusato:Donation__DonatedAtJstText rdfs:comment "Display-only representation of DonatedAtUtc in Japan Standard Time (日本時間), formatted as yyyy-MM-dd HH:mm:ss followed by the literal suffix JST. Do not use this string for chronological sorting when DonatedAtUtc is available." .
+furusato:Donation__DonatedAtJstText rdfs:domain furusato:Donation .
+furusato:Donation__DonatedAtJstText rdfs:label "DonatedAtJstText" .
+furusato:Donation__DonatedAtJstText rdfs:range xsd:string .
+furusato:Donation__DonatedAtUtc rdf:type owl:DatatypeProperty .
+furusato:Donation__DonatedAtUtc rdfs:comment "Canonical UTC timestamp of the static baseline Donation. Use it for exact sorting, filtering, minimum, maximum, and deterministic latest-record selection." .
+furusato:Donation__DonatedAtUtc rdfs:domain furusato:Donation .
+furusato:Donation__DonatedAtUtc rdfs:label "DonatedAtUtc" .
+furusato:Donation__DonatedAtUtc rdfs:range xsd:dateTime .
+furusato:Donation__DonationAmountYen rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationAmountYen rdfs:comment "Completed donation amount (寄付金額／寄附金額／納税額) in whole Japanese yen for exactly one static Donation. SUM this property for donation totals and never sum IDs or Municipality time-series observations into the same result." .
+furusato:Donation__DonationAmountYen rdfs:domain furusato:Donation .
+furusato:Donation__DonationAmountYen rdfs:label "DonationAmountYen" .
+furusato:Donation__DonationAmountYen rdfs:range xsd:long .
+furusato:Donation__DonationDataLayer rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationDataLayer rdfs:comment "Canonical layer label for this detail entity. Its only value is StaticSyntheticSnapshot, which is not a payment method or a time-series event type. The constant is a deliberate exception to the rule that a single-valued column carries no information: it is the declared boundary marker that keeps the static snapshot separable from the operational observation layer, so a query can never silently blend the two. Never filter it away, never group by it, and never present it as a lifecycle or approval state." .
+furusato:Donation__DonationDataLayer rdfs:domain furusato:Donation .
+furusato:Donation__DonationDataLayer rdfs:label "DonationDataLayer" .
+furusato:Donation__DonationDataLayer rdfs:range xsd:string .
+furusato:Donation__DonationDateJst rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationDateJst rdfs:comment "Japan Standard Time calendar date of the Donation (寄付日／寄附日). Use it for local-day filtering and grouping, not for exact timestamp ordering." .
+furusato:Donation__DonationDateJst rdfs:domain furusato:Donation .
+furusato:Donation__DonationDateJst rdfs:label "DonationDateJst" .
+furusato:Donation__DonationDateJst rdfs:range xsd:string .
+furusato:Donation__DonationDisplayName rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationDisplayName rdfs:comment "Display-only label in the format Donation followed by DonationId. Use DonationId for identity." .
+furusato:Donation__DonationDisplayName rdfs:domain furusato:Donation .
+furusato:Donation__DonationDisplayName rdfs:label "DonationDisplayName" .
+furusato:Donation__DonationDisplayName rdfs:range xsd:string .
+furusato:Donation__DonationId rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationId rdfs:comment "Stable numeric identifier for one static Donation transaction. When a user says 寄付ID or Donation ID followed by a number, filter this property for exact identity; never reinterpret that number as DonationAmountYen. It is the transaction key and must not be used as a grouping dimension for an overall aggregate." .
+furusato:Donation__DonationId rdfs:domain furusato:Donation .
+furusato:Donation__DonationId rdfs:label "DonationId" .
+furusato:Donation__DonationId rdfs:range xsd:long .
+furusato:Donation__DonationPaymentMethod rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationPaymentMethod rdfs:comment "Stored payment method, payment channel, checkout channel, or tender label (支払方法／決済方法／決済手段) for the completed Donation. It is a controlled Japanese-or-brand label and must not be interpreted as a Supplier." .
+furusato:Donation__DonationPaymentMethod rdfs:domain furusato:Donation .
+furusato:Donation__DonationPaymentMethod rdfs:label "DonationPaymentMethod" .
+furusato:Donation__DonationPaymentMethod rdfs:range xsd:string .
+furusato:Donation__DonationPaymentMethodEn rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationPaymentMethodEn rdfs:comment "Canonical English payment-method label for DonationPaymentMethod. Use it for English filtering and grouping; return both labels when the user asks for a translation." .
+furusato:Donation__DonationPaymentMethodEn rdfs:domain furusato:Donation .
+furusato:Donation__DonationPaymentMethodEn rdfs:label "DonationPaymentMethodEn" .
+furusato:Donation__DonationPaymentMethodEn rdfs:range xsd:string .
+furusato:Donation__DonationYearMonthJaShort rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationYearMonthJaShort rdfs:comment "Japanese short Gregorian year-month label for the Donation, formatted yyyy年M月, such as 2025年1月. Use it only when the user supplies that short Japanese month wording; DonationYearMonthJst remains the canonical yyyy-MM calendar key." .
+furusato:Donation__DonationYearMonthJaShort rdfs:domain furusato:Donation .
+furusato:Donation__DonationYearMonthJaShort rdfs:label "DonationYearMonthJaShort" .
+furusato:Donation__DonationYearMonthJaShort rdfs:range xsd:string .
+furusato:Donation__DonationYearMonthJst rdf:type owl:DatatypeProperty .
+furusato:Donation__DonationYearMonthJst rdfs:comment "Japan Standard Time calendar year and month of the Donation (寄付年月／寄附年月). Use it for local-month filtering and grouping. Normalize an unambiguous Japanese two-digit Gregorian year such as 25年 to 2025 before matching the stored yyyy-MM value." .
+furusato:Donation__DonationYearMonthJst rdfs:domain furusato:Donation .
+furusato:Donation__DonationYearMonthJst rdfs:label "DonationYearMonthJst" .
+furusato:Donation__DonationYearMonthJst rdfs:range xsd:string .
+furusato:Donor rdf:type owl:Class .
+furusato:Donor rdfs:comment "Synthetic workshop donor (寄付者／寄附者) who may make zero or more Donations. Residence is defined only by DonorLivesInPrefecture and must never be interpreted as recipient geography." .
+furusato:Donor rdfs:label "Donor" .
+furusato:DonorLivesInPrefecture rdf:type owl:ObjectProperty .
+furusato:DonorLivesInPrefecture rdfs:comment "Connects a synthetic Donor to the Prefecture of donor residence. This relationship defines donor-origin geography only and must never be treated as the Donation recipient." .
+furusato:DonorLivesInPrefecture rdfs:domain furusato:Donor .
+furusato:DonorLivesInPrefecture rdfs:label "DonorLivesInPrefecture" .
+furusato:DonorLivesInPrefecture rdfs:range furusato:Prefecture .
+furusato:DonorMadeDonation rdf:type owl:ObjectProperty .
+furusato:DonorMadeDonation rdfs:comment "Connects the Donor associated with a static baseline Donation to that Donation. Every static Donation has exactly one Donor, and a Donor may have zero, one or many static Donations: 18 of the 12,000 Donors made none." .
+furusato:DonorMadeDonation rdfs:domain furusato:Donor .
+furusato:DonorMadeDonation rdfs:label "DonorMadeDonation" .
+furusato:DonorMadeDonation rdfs:range furusato:Donation .
+furusato:Donor__DonorAge rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorAge rdfs:comment "Whole-year age of the synthetic donor (年齢) in the static donor record. It is not derived from the Donation timestamp and must not be summed." .
+furusato:Donor__DonorAge rdfs:domain furusato:Donor .
+furusato:Donor__DonorAge rdfs:label "DonorAge" .
+furusato:Donor__DonorAge rdfs:range xsd:long .
+furusato:Donor__DonorDisplayName rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorDisplayName rdfs:comment "Display-only composite in the format {DonorName} / Donor {DonorId}. Use DonorId for identity and this property for human-readable output." .
+furusato:Donor__DonorDisplayName rdfs:domain furusato:Donor .
+furusato:Donor__DonorDisplayName rdfs:label "DonorDisplayName" .
+furusato:Donor__DonorDisplayName rdfs:range xsd:string .
+furusato:Donor__DonorId rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorId rdfs:comment "Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people." .
+furusato:Donor__DonorId rdfs:domain furusato:Donor .
+furusato:Donor__DonorId rdfs:label "DonorId" .
+furusato:Donor__DonorId rdfs:range xsd:long .
+furusato:Donor__DonorName rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorName rdfs:comment "Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person." .
+furusato:Donor__DonorName rdfs:domain furusato:Donor .
+furusato:Donor__DonorName rdfs:label "DonorName" .
+furusato:Donor__DonorName rdfs:range xsd:string .
+furusato:Donor__DonorOccupation rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorOccupation rdfs:comment "Japanese controlled occupation or job label (職業／職種／仕事) for the synthetic donor. It describes the donor's job category, not employer, recipient, or Supplier type." .
+furusato:Donor__DonorOccupation rdfs:domain furusato:Donor .
+furusato:Donor__DonorOccupation rdfs:label "DonorOccupation" .
+furusato:Donor__DonorOccupation rdfs:range xsd:string .
+furusato:Donor__DonorOccupationEn rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorOccupationEn rdfs:comment "Canonical English occupation label for DonorOccupation. Use it for English filtering and grouping; preserve DonorOccupation when returning the stored Japanese label." .
+furusato:Donor__DonorOccupationEn rdfs:domain furusato:Donor .
+furusato:Donor__DonorOccupationEn rdfs:label "DonorOccupationEn" .
+furusato:Donor__DonorOccupationEn rdfs:range xsd:string .
+furusato:Donor__DonorOverallAmountRank rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorOverallAmountRank rdfs:comment "Cumulative static donation-amount rank of this Donor nationwide. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc: equal amounts never share a rank because DonorId breaks the tie ascending." .
+furusato:Donor__DonorOverallAmountRank rdfs:domain furusato:Donor .
+furusato:Donor__DonorOverallAmountRank rdfs:label "DonorOverallAmountRank" .
+furusato:Donor__DonorOverallAmountRank rdfs:range xsd:long .
+furusato:Donor__DonorResidenceAmountRank rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorResidenceAmountRank rdfs:comment "Cumulative static donation-amount rank of this Donor inside the residence Prefecture. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc within each PrefectureId: equal amounts never share a rank because DonorId breaks the tie ascending." .
+furusato:Donor__DonorResidenceAmountRank rdfs:domain furusato:Donor .
+furusato:Donor__DonorResidenceAmountRank rdfs:label "DonorResidenceAmountRank" .
+furusato:Donor__DonorResidenceAmountRank rdfs:range xsd:long .
+furusato:Donor__DonorStaticCount rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorStaticCount rdfs:comment "Pre-aggregated number of static Donations made by this Donor." .
+furusato:Donor__DonorStaticCount rdfs:domain furusato:Donor .
+furusato:Donor__DonorStaticCount rdfs:label "DonorStaticCount" .
+furusato:Donor__DonorStaticCount rdfs:range xsd:long .
+furusato:Donor__DonorStaticMaxYen rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorStaticMaxYen rdfs:comment "Maximum single static Donation amount made by this Donor in JPY; it is not the cumulative amount." .
+furusato:Donor__DonorStaticMaxYen rdfs:domain furusato:Donor .
+furusato:Donor__DonorStaticMaxYen rdfs:label "DonorStaticMaxYen" .
+furusato:Donor__DonorStaticMaxYen rdfs:range xsd:long .
+furusato:Donor__DonorStaticTotalYen rdf:type owl:DatatypeProperty .
+furusato:Donor__DonorStaticTotalYen rdfs:comment "Pre-aggregated cumulative static Donation amount made by this Donor in JPY." .
+furusato:Donor__DonorStaticTotalYen rdfs:domain furusato:Donor .
+furusato:Donor__DonorStaticTotalYen rdfs:label "DonorStaticTotalYen" .
+furusato:Donor__DonorStaticTotalYen rdfs:range xsd:long .
+furusato:FlowToRecipientPref rdf:type owl:ObjectProperty .
+furusato:FlowToRecipientPref rdfs:comment "Connects a PrefectureDonationFlow row to the Donation-recipient Prefecture." .
+furusato:FlowToRecipientPref rdfs:domain furusato:PrefectureDonationFlow .
+furusato:FlowToRecipientPref rdfs:label "FlowToRecipientPref" .
+furusato:FlowToRecipientPref rdfs:range furusato:Prefecture .
+furusato:Gift rdf:type owl:Class .
+furusato:Gift rdfs:comment "Synthetic return-gift option selected by a Donation (返礼品／お礼品／商品). It is a catalog dimension, not the donated money and not a transaction fact. If a Municipality is named, resolve that Municipality and traverse MunicipalityCatalogsGift before applying a GiftName CONTAINS candidate filter. Resolve exactly one stable GiftId before Supplier or Donation traversal." .
+furusato:Gift rdfs:label "Gift" .
+furusato:GiftCategory rdf:type owl:Class .
+furusato:GiftCategory rdfs:comment "Controlled classification of return-gift options (返礼品カテゴリ). Category counts and amounts must be aggregated from Donation through DonationSelectedGift and GiftInCategory; the category itself is not a transaction fact." .
+furusato:GiftCategory rdfs:label "GiftCategory" .
+furusato:GiftCategory__CategoryAmountRank rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategoryAmountRank rdfs:comment "Static donation-amount rank of this GiftCategory across all GiftCategories. Deterministic row-number rank (row_number) over CategoryStaticTotalYen desc, CategoryId asc: equal amounts never share a rank because CategoryId breaks the tie ascending." .
+furusato:GiftCategory__CategoryAmountRank rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategoryAmountRank rdfs:label "CategoryAmountRank" .
+furusato:GiftCategory__CategoryAmountRank rdfs:range xsd:long .
+furusato:GiftCategory__CategoryId rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategoryId rdfs:comment "Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it." .
+furusato:GiftCategory__CategoryId rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategoryId rdfs:label "CategoryId" .
+furusato:GiftCategory__CategoryId rdfs:range xsd:long .
+furusato:GiftCategory__CategoryName rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategoryName rdfs:comment "Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label." .
+furusato:GiftCategory__CategoryName rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategoryName rdfs:label "CategoryName" .
+furusato:GiftCategory__CategoryName rdfs:range xsd:string .
+furusato:GiftCategory__CategoryNameEn rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategoryNameEn rdfs:comment "Canonical English return-gift category label paired one-to-one with CategoryName. Use it for English filtering, grouping, and display; CategoryId remains the identity." .
+furusato:GiftCategory__CategoryNameEn rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategoryNameEn rdfs:label "CategoryNameEn" .
+furusato:GiftCategory__CategoryNameEn rdfs:range xsd:string .
+furusato:GiftCategory__CategorySearchTerms rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategorySearchTerms rdfs:comment "Pipe-delimited alias text holding the Japanese CategoryName, the English CategoryNameEn, and the literal marker gift category. Use it only to resolve colloquial return-gift category wording such as 海鮮系, 魚介, or seafood with a case-insensitive substring match. If CategoryName does not match, query this alias index before claiming no category data. Never display, group, count, or treat this property as the category identity." .
+furusato:GiftCategory__CategorySearchTerms rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategorySearchTerms rdfs:label "CategorySearchTerms" .
+furusato:GiftCategory__CategorySearchTerms rdfs:range xsd:string .
+furusato:GiftCategory__CategoryStaticCount rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategoryStaticCount rdfs:comment "Pre-aggregated static Donation count for this GiftCategory across the full snapshot." .
+furusato:GiftCategory__CategoryStaticCount rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategoryStaticCount rdfs:label "CategoryStaticCount" .
+furusato:GiftCategory__CategoryStaticCount rdfs:range xsd:long .
+furusato:GiftCategory__CategoryStaticTotalYen rdf:type owl:DatatypeProperty .
+furusato:GiftCategory__CategoryStaticTotalYen rdfs:comment "Pre-aggregated static Donation amount for this GiftCategory across the full snapshot." .
+furusato:GiftCategory__CategoryStaticTotalYen rdfs:domain furusato:GiftCategory .
+furusato:GiftCategory__CategoryStaticTotalYen rdfs:label "CategoryStaticTotalYen" .
+furusato:GiftCategory__CategoryStaticTotalYen rdfs:range xsd:long .
+furusato:GiftInCategory rdf:type owl:ObjectProperty .
+furusato:GiftInCategory rdfs:comment "Classifies a Gift in exactly one GiftCategory. Category-level donation metrics must traverse DonationSelectedGift first and aggregate DonationAmountYen from Donation." .
+furusato:GiftInCategory rdfs:domain furusato:Gift .
+furusato:GiftInCategory rdfs:label "GiftInCategory" .
+furusato:GiftInCategory rdfs:range furusato:GiftCategory .
+furusato:Gift__GiftAmountRank rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftAmountRank rdfs:comment "Static donation-amount rank of this Gift across all Gifts. Deterministic row-number rank (row_number) over GiftStaticTotalYen desc, GiftId asc: equal amounts never share a rank because GiftId breaks the tie ascending." .
+furusato:Gift__GiftAmountRank rdfs:domain furusato:Gift .
+furusato:Gift__GiftAmountRank rdfs:label "GiftAmountRank" .
+furusato:Gift__GiftAmountRank rdfs:range xsd:long .
+furusato:Gift__GiftDisplayName rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftDisplayName rdfs:comment "Display-only composite in the format {GiftName} / Gift {GiftId}. Use it for unambiguous human-readable output and GiftId as the stable identity." .
+furusato:Gift__GiftDisplayName rdfs:domain furusato:Gift .
+furusato:Gift__GiftDisplayName rdfs:label "GiftDisplayName" .
+furusato:Gift__GiftDisplayName rdfs:range xsd:string .
+furusato:Gift__GiftId rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftId rdfs:comment "Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers." .
+furusato:Gift__GiftId rdfs:domain furusato:Gift .
+furusato:Gift__GiftId rdfs:label "GiftId" .
+furusato:Gift__GiftId rdfs:range xsd:long .
+furusato:Gift__GiftName rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftName rdfs:comment "Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal." .
+furusato:Gift__GiftName rdfs:domain furusato:Gift .
+furusato:Gift__GiftName rdfs:label "GiftName" .
+furusato:Gift__GiftName rdfs:range xsd:string .
+furusato:Gift__GiftNotes rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftNotes rdfs:comment "Japanese free-text note, notes, remarks, or description for the return-gift option (備考／注意事項／説明). Notes are descriptive only and do not define Supplier, recipient geography, category, or monetary amount." .
+furusato:Gift__GiftNotes rdfs:domain furusato:Gift .
+furusato:Gift__GiftNotes rdfs:label "GiftNotes" .
+furusato:Gift__GiftNotes rdfs:range xsd:string .
+furusato:Gift__GiftSearchTerms rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftSearchTerms rdfs:comment "Pipe-delimited search-only text for resolving shortened or colloquial Gift wording. It contains the core GiftName, the English GiftNameEn, the Japanese CategoryName, and the English CategoryNameEn. Place-of-origin words often appear inside those name strings, but they are display text and not authoritative geography, so resolve catalog and recipient geography through MunicipalityCatalogsGift and DonationToMunicipality. Filter it with a case-insensitive substring match for every distinctive noun supplied by the user; never display, group, count, or treat it as Gift identity." .
+furusato:Gift__GiftSearchTerms rdfs:domain furusato:Gift .
+furusato:Gift__GiftSearchTerms rdfs:label "GiftSearchTerms" .
+furusato:Gift__GiftSearchTerms rdfs:range xsd:string .
+furusato:Gift__GiftStaticCount rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftStaticCount rdfs:comment "Authoritative pre-aggregated count of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift count; do not join Suppliers or recount Donation detail." .
+furusato:Gift__GiftStaticCount rdfs:domain furusato:Gift .
+furusato:Gift__GiftStaticCount rdfs:label "GiftStaticCount" .
+furusato:Gift__GiftStaticCount rdfs:range xsd:long .
+furusato:Gift__GiftStaticTotalYen rdf:type owl:DatatypeProperty .
+furusato:Gift__GiftStaticTotalYen rdfs:comment "Authoritative pre-aggregated JPY amount of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift total; do not join Suppliers or use SUM(DISTINCT DonationAmountYen)." .
+furusato:Gift__GiftStaticTotalYen rdfs:domain furusato:Gift .
+furusato:Gift__GiftStaticTotalYen rdfs:label "GiftStaticTotalYen" .
+furusato:Gift__GiftStaticTotalYen rdfs:range xsd:long .
+furusato:MunHasCategoryMetric rdf:type owl:ObjectProperty .
+furusato:MunHasCategoryMetric rdfs:comment "Connects a Municipality to each MunicipalityCategoryMetric row for that recipient Municipality. A Municipality that received no Donation has no metric row at all: 10 of the 1,741 Municipalities have none." .
+furusato:MunHasCategoryMetric rdfs:domain furusato:Municipality .
+furusato:MunHasCategoryMetric rdfs:label "MunHasCategoryMetric" .
+furusato:MunHasCategoryMetric rdfs:range furusato:MunicipalityCategoryMetric .
+furusato:MunMetricForCategory rdf:type owl:ObjectProperty .
+furusato:MunMetricForCategory rdfs:comment "Connects a MunicipalityCategoryMetric row to its GiftCategory." .
+furusato:MunMetricForCategory rdfs:domain furusato:MunicipalityCategoryMetric .
+furusato:MunMetricForCategory rdfs:label "MunMetricForCategory" .
+furusato:MunMetricForCategory rdfs:range furusato:GiftCategory .
+furusato:Municipality rdf:type owl:Class .
+furusato:Municipality rdfs:comment "Japanese municipality (自治体／市区町村) that may receive zero or more Donations. It also keys operational time-series observations; those observations are not Donation entities and have no Donor, Gift, or Supplier identity." .
+furusato:Municipality rdfs:label "Municipality" .
+furusato:MunicipalityCatalogsGift rdf:type owl:ObjectProperty .
+furusato:MunicipalityCatalogsGift rdfs:comment "Connects a Municipality to each Gift registered in that Municipality's Workshop catalog. This is catalog geography, not Donation recipient geography, Supplier location, fulfillment location, or shipping origin. In this synthetic dataset every Donation happens to select a Gift catalogued by its own recipient Municipality, so a forbidden count taken through this edge can coincidentally return the same number as the correct DonationToMunicipality count. That coincidence is a property of the sample data, not of the model: the rule stays, because real catalogues diverge and the two paths answer different questions." .
+furusato:MunicipalityCatalogsGift rdfs:domain furusato:Municipality .
+furusato:MunicipalityCatalogsGift rdfs:label "MunicipalityCatalogsGift" .
+furusato:MunicipalityCatalogsGift rdfs:range furusato:Gift .
+furusato:MunicipalityCategoryMetric rdf:type owl:Class .
+furusato:MunicipalityCategoryMetric rdfs:comment "Pre-aggregated current-static-snapshot metric for one Municipality and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain." .
+furusato:MunicipalityCategoryMetric rdfs:label "MunicipalityCategoryMetric" .
+furusato:MunicipalityCategoryMetric__MunCategoryAmountRank rdf:type owl:DatatypeProperty .
+furusato:MunicipalityCategoryMetric__MunCategoryAmountRank rdfs:comment "Amount rank of this GiftCategory inside one Municipality. Deterministic row-number rank (row_number) over MunCategoryTotalYen desc, CategoryId asc within each MunicipalityId: equal amounts never share a rank because CategoryId breaks the tie ascending." .
+furusato:MunicipalityCategoryMetric__MunCategoryAmountRank rdfs:domain furusato:MunicipalityCategoryMetric .
+furusato:MunicipalityCategoryMetric__MunCategoryAmountRank rdfs:label "MunCategoryAmountRank" .
+furusato:MunicipalityCategoryMetric__MunCategoryAmountRank rdfs:range xsd:long .
+furusato:MunicipalityCategoryMetric__MunCategoryMetricId rdf:type owl:DatatypeProperty .
+furusato:MunicipalityCategoryMetric__MunCategoryMetricId rdfs:comment "Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row, encoded as {MunicipalityId}-{CategoryId:02}, for example 452025-01. The measure values are separate properties on this entity. The same NN-NN text can also occur as a PrefCategoryMetricId or a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a MunicipalityCategoryMetric identifier." .
+furusato:MunicipalityCategoryMetric__MunCategoryMetricId rdfs:domain furusato:MunicipalityCategoryMetric .
+furusato:MunicipalityCategoryMetric__MunCategoryMetricId rdfs:label "MunCategoryMetricId" .
+furusato:MunicipalityCategoryMetric__MunCategoryMetricId rdfs:range xsd:string .
+furusato:MunicipalityCategoryMetric__MunCategoryStaticCount rdf:type owl:DatatypeProperty .
+furusato:MunicipalityCategoryMetric__MunCategoryStaticCount rdfs:comment "Pre-aggregated static Donation count for one Municipality x GiftCategory pair." .
+furusato:MunicipalityCategoryMetric__MunCategoryStaticCount rdfs:domain furusato:MunicipalityCategoryMetric .
+furusato:MunicipalityCategoryMetric__MunCategoryStaticCount rdfs:label "MunCategoryStaticCount" .
+furusato:MunicipalityCategoryMetric__MunCategoryStaticCount rdfs:range xsd:long .
+furusato:MunicipalityCategoryMetric__MunCategoryTotalYen rdf:type owl:DatatypeProperty .
+furusato:MunicipalityCategoryMetric__MunCategoryTotalYen rdfs:comment "Pre-aggregated static Donation amount for one Municipality x GiftCategory pair." .
+furusato:MunicipalityCategoryMetric__MunCategoryTotalYen rdfs:domain furusato:MunicipalityCategoryMetric .
+furusato:MunicipalityCategoryMetric__MunCategoryTotalYen rdfs:label "MunCategoryTotalYen" .
+furusato:MunicipalityCategoryMetric__MunCategoryTotalYen rdfs:range xsd:long .
+furusato:MunicipalityInPrefecture rdf:type owl:ObjectProperty .
+furusato:MunicipalityInPrefecture rdfs:comment "Connects each recipient Municipality to its containing Prefecture. Follow Municipality to Prefecture for recipient geography; do not use this relationship to infer donor residence or to count Donations." .
+furusato:MunicipalityInPrefecture rdfs:domain furusato:Municipality .
+furusato:MunicipalityInPrefecture rdfs:label "MunicipalityInPrefecture" .
+furusato:MunicipalityInPrefecture rdfs:range furusato:Prefecture .
+furusato:Municipality__IncomingDonationAmountYen rdf:type owl:DatatypeProperty .
+furusato:Municipality__IncomingDonationAmountYen rdfs:comment "Donation amount observed in an operational Municipality time-series event. It binds to the raw ingested DonationEvents rows through DonatedAt and DonationAmountYen, so its values are raw observations: deduplication = none, and duplicate EventIDs are retained. It is measured in JPY but is not a static Donation entity property; never use it to increase Donation entity counts or to identify a Donor, Gift, Supplier, or DonationId. The Eventhouse remains the numeric authority for operational observation metrics; this property is a modeled mirror of them." .
+furusato:Municipality__IncomingDonationAmountYen rdfs:domain furusato:Municipality .
+furusato:Municipality__IncomingDonationAmountYen rdfs:label "IncomingDonationAmountYen" .
+furusato:Municipality__IncomingDonationAmountYen rdfs:range xsd:long .
+furusato:Municipality__MunicipalityAmountRank rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityAmountRank rdfs:comment "Received-amount rank of this Municipality across all Municipalities. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc: equal amounts never share a rank because MunicipalityId breaks the tie ascending." .
+furusato:Municipality__MunicipalityAmountRank rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityAmountRank rdfs:label "MunicipalityAmountRank" .
+furusato:Municipality__MunicipalityAmountRank rdfs:range xsd:long .
+furusato:Municipality__MunicipalityDisplayName rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityDisplayName rdfs:comment "Display-only composite label in the format {MunicipalityName} / {PrefectureName}. It does not contain MunicipalityId, so use MunicipalityId as the identity and this property only for human-readable output." .
+furusato:Municipality__MunicipalityDisplayName rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityDisplayName rdfs:label "MunicipalityDisplayName" .
+furusato:Municipality__MunicipalityDisplayName rdfs:range xsd:string .
+furusato:Municipality__MunicipalityId rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityId rdfs:comment "Stable identifier for one Municipality entity. Preserve leading zeros if present and use it as the relationship key; do not aggregate it." .
+furusato:Municipality__MunicipalityId rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityId rdfs:label "MunicipalityId" .
+furusato:Municipality__MunicipalityId rdfs:range xsd:string .
+furusato:Municipality__MunicipalityName rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityName rdfs:comment "Japanese municipality name (自治体名／市区町村名) without a prefecture qualifier. Names are not globally unique, so include MunicipalityId or MunicipalityDisplayName when ambiguity is possible." .
+furusato:Municipality__MunicipalityName rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityName rdfs:label "MunicipalityName" .
+furusato:Municipality__MunicipalityName rdfs:range xsd:string .
+furusato:Municipality__MunicipalityPrefAmountRank rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityPrefAmountRank rdfs:comment "Received-amount rank of this Municipality inside its containing Prefecture. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc within each PrefectureId: equal amounts never share a rank because MunicipalityId breaks the tie ascending." .
+furusato:Municipality__MunicipalityPrefAmountRank rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityPrefAmountRank rdfs:label "MunicipalityPrefAmountRank" .
+furusato:Municipality__MunicipalityPrefAmountRank rdfs:range xsd:long .
+furusato:Municipality__MunicipalityStaticCount rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityStaticCount rdfs:comment "Pre-aggregated count of static Donations received by this Municipality." .
+furusato:Municipality__MunicipalityStaticCount rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityStaticCount rdfs:label "MunicipalityStaticCount" .
+furusato:Municipality__MunicipalityStaticCount rdfs:range xsd:long .
+furusato:Municipality__MunicipalityStaticTotalYen rdf:type owl:DatatypeProperty .
+furusato:Municipality__MunicipalityStaticTotalYen rdfs:comment "Pre-aggregated static Donation amount received by this Municipality in JPY." .
+furusato:Municipality__MunicipalityStaticTotalYen rdfs:domain furusato:Municipality .
+furusato:Municipality__MunicipalityStaticTotalYen rdfs:label "MunicipalityStaticTotalYen" .
+furusato:Municipality__MunicipalityStaticTotalYen rdfs:range xsd:long .
+furusato:PrefHasCategoryMetric rdf:type owl:ObjectProperty .
+furusato:PrefHasCategoryMetric rdfs:comment "Connects a recipient Prefecture to each PrefectureCategoryMetric row for that Prefecture." .
+furusato:PrefHasCategoryMetric rdfs:domain furusato:Prefecture .
+furusato:PrefHasCategoryMetric rdfs:label "PrefHasCategoryMetric" .
+furusato:PrefHasCategoryMetric rdfs:range furusato:PrefectureCategoryMetric .
+furusato:PrefMetricForCategory rdf:type owl:ObjectProperty .
+furusato:PrefMetricForCategory rdfs:comment "Connects a PrefectureCategoryMetric row to its GiftCategory." .
+furusato:PrefMetricForCategory rdfs:domain furusato:PrefectureCategoryMetric .
+furusato:PrefMetricForCategory rdfs:label "PrefMetricForCategory" .
+furusato:PrefMetricForCategory rdfs:range furusato:GiftCategory .
+furusato:Prefecture rdf:type owl:Class .
+furusato:Prefecture rdfs:comment "Japanese prefecture (都道府県) used in two separate geography paths: recipient geography through Municipality and donor-residence geography through Donor. It is a reference dimension, not a Donation fact grain." .
+furusato:Prefecture rdfs:label "Prefecture" .
+furusato:PrefectureCategoryMetric rdf:type owl:Class .
+furusato:PrefectureCategoryMetric rdfs:comment "Pre-aggregated current-static-snapshot metric for one recipient Prefecture and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain." .
+furusato:PrefectureCategoryMetric rdfs:label "PrefectureCategoryMetric" .
+furusato:PrefectureCategoryMetric__PrefCategoryAmountRank rdf:type owl:DatatypeProperty .
+furusato:PrefectureCategoryMetric__PrefCategoryAmountRank rdfs:comment "Amount rank of this GiftCategory inside one recipient Prefecture. Deterministic row-number rank (row_number) over PrefCategoryTotalYen desc, CategoryId asc within each PrefectureId: equal amounts never share a rank because CategoryId breaks the tie ascending." .
+furusato:PrefectureCategoryMetric__PrefCategoryAmountRank rdfs:domain furusato:PrefectureCategoryMetric .
+furusato:PrefectureCategoryMetric__PrefCategoryAmountRank rdfs:label "PrefCategoryAmountRank" .
+furusato:PrefectureCategoryMetric__PrefCategoryAmountRank rdfs:range xsd:long .
+furusato:PrefectureCategoryMetric__PrefCategoryMetricId rdf:type owl:DatatypeProperty .
+furusato:PrefectureCategoryMetric__PrefCategoryMetricId rdfs:comment "Synthetic stable identifier for one recipient Prefecture x GiftCategory snapshot metric row, encoded as {PrefectureId:02}-{CategoryId:02}, for example 13-01. The measure values are separate properties on this entity. The identical NN-NN text can also be a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureCategoryMetric identifier." .
+furusato:PrefectureCategoryMetric__PrefCategoryMetricId rdfs:domain furusato:PrefectureCategoryMetric .
+furusato:PrefectureCategoryMetric__PrefCategoryMetricId rdfs:label "PrefCategoryMetricId" .
+furusato:PrefectureCategoryMetric__PrefCategoryMetricId rdfs:range xsd:string .
+furusato:PrefectureCategoryMetric__PrefCategoryStaticCount rdf:type owl:DatatypeProperty .
+furusato:PrefectureCategoryMetric__PrefCategoryStaticCount rdfs:comment "Pre-aggregated static Donation count for one recipient Prefecture x GiftCategory pair." .
+furusato:PrefectureCategoryMetric__PrefCategoryStaticCount rdfs:domain furusato:PrefectureCategoryMetric .
+furusato:PrefectureCategoryMetric__PrefCategoryStaticCount rdfs:label "PrefCategoryStaticCount" .
+furusato:PrefectureCategoryMetric__PrefCategoryStaticCount rdfs:range xsd:long .
+furusato:PrefectureCategoryMetric__PrefCategoryTotalYen rdf:type owl:DatatypeProperty .
+furusato:PrefectureCategoryMetric__PrefCategoryTotalYen rdfs:comment "Pre-aggregated static Donation amount for one recipient Prefecture x GiftCategory pair." .
+furusato:PrefectureCategoryMetric__PrefCategoryTotalYen rdfs:domain furusato:PrefectureCategoryMetric .
+furusato:PrefectureCategoryMetric__PrefCategoryTotalYen rdfs:label "PrefCategoryTotalYen" .
+furusato:PrefectureCategoryMetric__PrefCategoryTotalYen rdfs:range xsd:long .
+furusato:PrefectureDonationFlow rdf:type owl:Class .
+furusato:PrefectureDonationFlow rdfs:comment "Pre-aggregated current-static-snapshot flow from Donor residence Prefecture to Donation recipient Prefecture. Origin and destination are not interchangeable. It excludes time-series observations and Suppliers." .
+furusato:PrefectureDonationFlow rdfs:label "PrefectureDonationFlow" .
+furusato:PrefectureDonationFlow__PrefDonationFlowId rdf:type owl:DatatypeProperty .
+furusato:PrefectureDonationFlow__PrefDonationFlowId rdfs:comment "Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row, encoded as {ResidencePrefectureId:02}-{RecipientPrefectureId:02}, for example 13-01, which reads as residence 13 to recipient 01. Directional measures are separate properties. The identical NN-NN text can also be a PrefCategoryMetricId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureDonationFlow identifier." .
+furusato:PrefectureDonationFlow__PrefDonationFlowId rdfs:domain furusato:PrefectureDonationFlow .
+furusato:PrefectureDonationFlow__PrefDonationFlowId rdfs:label "PrefDonationFlowId" .
+furusato:PrefectureDonationFlow__PrefDonationFlowId rdfs:range xsd:string .
+furusato:PrefectureDonationFlow__PrefFlowDestinationRank rdf:type owl:DatatypeProperty .
+furusato:PrefectureDonationFlow__PrefFlowDestinationRank rdfs:comment "Amount rank of this donor-residence Prefecture among the origins of one recipient Prefecture: the window is partitioned by the destination, so rank 1 is the origin that sent the most to that destination. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, ResidencePrefectureId asc within each RecipientPrefectureId: equal amounts never share a rank because ResidencePrefectureId breaks the tie ascending." .
+furusato:PrefectureDonationFlow__PrefFlowDestinationRank rdfs:domain furusato:PrefectureDonationFlow .
+furusato:PrefectureDonationFlow__PrefFlowDestinationRank rdfs:label "PrefFlowDestinationRank" .
+furusato:PrefectureDonationFlow__PrefFlowDestinationRank rdfs:range xsd:long .
+furusato:PrefectureDonationFlow__PrefFlowOriginRank rdf:type owl:DatatypeProperty .
+furusato:PrefectureDonationFlow__PrefFlowOriginRank rdfs:comment "Amount rank of this recipient Prefecture among the destinations of one donor-residence Prefecture: the window is partitioned by the origin, so rank 1 is the destination that received the most from that origin. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, RecipientPrefectureId asc within each ResidencePrefectureId: equal amounts never share a rank because RecipientPrefectureId breaks the tie ascending." .
+furusato:PrefectureDonationFlow__PrefFlowOriginRank rdfs:domain furusato:PrefectureDonationFlow .
+furusato:PrefectureDonationFlow__PrefFlowOriginRank rdfs:label "PrefFlowOriginRank" .
+furusato:PrefectureDonationFlow__PrefFlowOriginRank rdfs:range xsd:long .
+furusato:PrefectureDonationFlow__PrefFlowStaticCount rdf:type owl:DatatypeProperty .
+furusato:PrefectureDonationFlow__PrefFlowStaticCount rdfs:comment "Pre-aggregated count of static Donations from one residence Prefecture to one recipient Prefecture." .
+furusato:PrefectureDonationFlow__PrefFlowStaticCount rdfs:domain furusato:PrefectureDonationFlow .
+furusato:PrefectureDonationFlow__PrefFlowStaticCount rdfs:label "PrefFlowStaticCount" .
+furusato:PrefectureDonationFlow__PrefFlowStaticCount rdfs:range xsd:long .
+furusato:PrefectureDonationFlow__PrefFlowTotalYen rdf:type owl:DatatypeProperty .
+furusato:PrefectureDonationFlow__PrefFlowTotalYen rdfs:comment "Pre-aggregated JPY amount from one residence Prefecture to one recipient Prefecture." .
+furusato:PrefectureDonationFlow__PrefFlowTotalYen rdfs:domain furusato:PrefectureDonationFlow .
+furusato:PrefectureDonationFlow__PrefFlowTotalYen rdfs:label "PrefFlowTotalYen" .
+furusato:PrefectureDonationFlow__PrefFlowTotalYen rdfs:range xsd:long .
+furusato:Prefecture__PrefReceivedAmountRank rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefReceivedAmountRank rdfs:comment "Received-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefReceivedTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending." .
+furusato:Prefecture__PrefReceivedAmountRank rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefReceivedAmountRank rdfs:label "PrefReceivedAmountRank" .
+furusato:Prefecture__PrefReceivedAmountRank rdfs:range xsd:long .
+furusato:Prefecture__PrefReceivedStaticCount rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefReceivedStaticCount rdfs:comment "Pre-aggregated count of static Donations received by municipalities in this Prefecture." .
+furusato:Prefecture__PrefReceivedStaticCount rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefReceivedStaticCount rdfs:label "PrefReceivedStaticCount" .
+furusato:Prefecture__PrefReceivedStaticCount rdfs:range xsd:long .
+furusato:Prefecture__PrefReceivedTotalYen rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefReceivedTotalYen rdfs:comment "Pre-aggregated JPY amount received by municipalities in this Prefecture." .
+furusato:Prefecture__PrefReceivedTotalYen rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefReceivedTotalYen rdfs:label "PrefReceivedTotalYen" .
+furusato:Prefecture__PrefReceivedTotalYen rdfs:range xsd:long .
+furusato:Prefecture__PrefResidentAmountRank rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefResidentAmountRank rdfs:comment "Resident-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefResidentTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending." .
+furusato:Prefecture__PrefResidentAmountRank rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefResidentAmountRank rdfs:label "PrefResidentAmountRank" .
+furusato:Prefecture__PrefResidentAmountRank rdfs:range xsd:long .
+furusato:Prefecture__PrefResidentStaticCount rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefResidentStaticCount rdfs:comment "Pre-aggregated count of static Donations made by Donors who live in this Prefecture." .
+furusato:Prefecture__PrefResidentStaticCount rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefResidentStaticCount rdfs:label "PrefResidentStaticCount" .
+furusato:Prefecture__PrefResidentStaticCount rdfs:range xsd:long .
+furusato:Prefecture__PrefResidentTotalYen rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefResidentTotalYen rdfs:comment "Pre-aggregated JPY amount donated by Donors who live in this Prefecture." .
+furusato:Prefecture__PrefResidentTotalYen rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefResidentTotalYen rdfs:label "PrefResidentTotalYen" .
+furusato:Prefecture__PrefResidentTotalYen rdfs:range xsd:long .
+furusato:Prefecture__PrefectureId rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefectureId rdfs:comment "Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality." .
+furusato:Prefecture__PrefectureId rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefectureId rdfs:label "PrefectureId" .
+furusato:Prefecture__PrefectureId rdfs:range xsd:long .
+furusato:Prefecture__PrefectureName rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefectureName rdfs:comment "Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output." .
+furusato:Prefecture__PrefectureName rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefectureName rdfs:label "PrefectureName" .
+furusato:Prefecture__PrefectureName rdfs:range xsd:string .
+furusato:Prefecture__PrefectureNameEn rdf:type owl:DatatypeProperty .
+furusato:Prefecture__PrefectureNameEn rdfs:comment "Canonical English label of the prefecture. Use it for English lookup and display; PrefectureId remains the identity." .
+furusato:Prefecture__PrefectureNameEn rdfs:domain furusato:Prefecture .
+furusato:Prefecture__PrefectureNameEn rdfs:label "PrefectureNameEn" .
+furusato:Prefecture__PrefectureNameEn rdfs:range xsd:string .
+furusato:ResidencePrefHasFlow rdf:type owl:ObjectProperty .
+furusato:ResidencePrefHasFlow rdfs:comment "Connects the Donor-residence Prefecture to an origin-destination PrefectureDonationFlow row." .
+furusato:ResidencePrefHasFlow rdfs:domain furusato:Prefecture .
+furusato:ResidencePrefHasFlow rdfs:label "ResidencePrefHasFlow" .
+furusato:ResidencePrefHasFlow rdfs:range furusato:PrefectureDonationFlow .
+furusato:Supplier rdf:type owl:Class .
+furusato:Supplier rdfs:comment "Synthetic workshop business that may provide zero or more return-gift options (返礼品提供事業者). It is neither the Donation recipient nor a Donor; location is defined by SupplierInPrefecture." .
+furusato:Supplier rdfs:label "Supplier" .
+furusato:SupplierInPrefecture rdf:type owl:ObjectProperty .
+furusato:SupplierInPrefecture rdfs:comment "Connects a synthetic Supplier to its registered Prefecture. Registered Supplier location is neither donor residence, Donation recipient geography, fulfillment location, service location, nor shipping origin." .
+furusato:SupplierInPrefecture rdfs:domain furusato:Supplier .
+furusato:SupplierInPrefecture rdfs:label "SupplierInPrefecture" .
+furusato:SupplierInPrefecture rdfs:range furusato:Prefecture .
+furusato:SupplierProvidesGift rdf:type owl:ObjectProperty .
+furusato:SupplierProvidesGift rdfs:comment "Connects a Supplier, provider, vendor, 事業者, 業者, or 会社 to a Gift for which it is a registered provider. It does not prove an actual fulfillment, service, shipment, or physical origin. For a Gift-centered provider question, resolve the GiftId first and traverse this relationship in reverse from Gift to every registered Supplier, then use SupplierInPrefecture for registered location. The registration contract is many-to-many and optional on both sides: a Gift may have zero, one or many Suppliers and a Supplier may register zero, one or many Gifts. In this dataset every one of the 2,500 Suppliers and all 6,000 Gifts participate, across 14,514 unique pairs, so no orphan appears at run time. No allocation of DonationAmountYen among Suppliers is defined." .
+furusato:SupplierProvidesGift rdfs:domain furusato:Supplier .
+furusato:SupplierProvidesGift rdfs:label "SupplierProvidesGift" .
+furusato:SupplierProvidesGift rdfs:range furusato:Gift .
+furusato:Supplier__SupplierDisplayName rdf:type owl:DatatypeProperty .
+furusato:Supplier__SupplierDisplayName rdfs:comment "Display-only composite in the format {SupplierName} / Supplier {SupplierId}. Use SupplierId for identity and this property for human-readable output." .
+furusato:Supplier__SupplierDisplayName rdfs:domain furusato:Supplier .
+furusato:Supplier__SupplierDisplayName rdfs:label "SupplierDisplayName" .
+furusato:Supplier__SupplierDisplayName rdfs:range xsd:string .
+furusato:Supplier__SupplierId rdf:type owl:DatatypeProperty .
+furusato:Supplier__SupplierId rdfs:comment "Stable numeric identifier for one synthetic registered Supplier entity. It identifies a catalog provider, not an actual fulfillment event." .
+furusato:Supplier__SupplierId rdfs:domain furusato:Supplier .
+furusato:Supplier__SupplierId rdfs:label "SupplierId" .
+furusato:Supplier__SupplierId rdfs:range xsd:long .
+furusato:Supplier__SupplierName rdf:type owl:DatatypeProperty .
+furusato:Supplier__SupplierName rdfs:comment "Synthetic Japanese organization-style name of the Supplier or vendor (事業者名／提供事業者名). It is not a Donation recipient." .
+furusato:Supplier__SupplierName rdfs:domain furusato:Supplier .
+furusato:Supplier__SupplierName rdfs:label "SupplierName" .
+furusato:Supplier__SupplierName rdfs:range xsd:string .
+furusato:Supplier__SupplierProvidedGiftCount rdf:type owl:DatatypeProperty .
+furusato:Supplier__SupplierProvidedGiftCount rdfs:comment "Count of distinct Gifts linked to this Supplier in the registered catalog; it is not a Donation or fulfillment metric." .
+furusato:Supplier__SupplierProvidedGiftCount rdfs:domain furusato:Supplier .
+furusato:Supplier__SupplierProvidedGiftCount rdfs:label "SupplierProvidedGiftCount" .
+furusato:Supplier__SupplierProvidedGiftCount rdfs:range xsd:long .
+furusato:Supplier__SupplierType rdf:type owl:DatatypeProperty .
+furusato:Supplier__SupplierType rdfs:comment "Japanese controlled supplier classification or business-type label (事業者種別／事業者区分) for the Supplier or vendor. It describes the provider, not the Gift category or Donation recipient." .
+furusato:Supplier__SupplierType rdfs:domain furusato:Supplier .
+furusato:Supplier__SupplierType rdfs:label "SupplierType" .
+furusato:Supplier__SupplierType rdfs:range xsd:string .
+furusato:Supplier__SupplierTypeEn rdf:type owl:DatatypeProperty .
+furusato:Supplier__SupplierTypeEn rdfs:comment "Canonical English business-type label for SupplierType. Use it for English filtering and grouping; it describes the provider and not the Gift category or Donation recipient." .
+furusato:Supplier__SupplierTypeEn rdfs:domain furusato:Supplier .
+furusato:Supplier__SupplierTypeEn rdfs:label "SupplierTypeEn" .
+furusato:Supplier__SupplierTypeEn rdfs:range xsd:string .
+<https://github.com/yang-jiayi/furusato-fabric-workshop/ontology/furusato> rdf:type owl:Ontology .
+<https://github.com/yang-jiayi/furusato-fabric-workshop/ontology/furusato> rdfs:comment "Standards-only business schema derived from the workshop ontology. No data instances, executable bindings, metrics, keys, temporal behavior or Fabric ALM metadata are included. Native import compatibility is unverified." .
+<https://github.com/yang-jiayi/furusato-fabric-workshop/ontology/furusato> rdfs:label "Furusato business ontology" .
+<https://github.com/yang-jiayi/furusato-fabric-workshop/ontology/furusato> owl:versionInfo "2.7.0" .

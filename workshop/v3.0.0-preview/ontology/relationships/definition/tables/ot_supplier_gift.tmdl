@@ -1,0 +1,33 @@
+table ot_supplier_gift
+	lineageTag: 606daff0-537d-569a-a1ad-c2723e90021c
+
+	column SupplierId
+		dataType: int64
+		sourceColumn: SupplierId
+
+	column GiftId
+		dataType: int64
+		sourceColumn: GiftId
+
+	partition ot_supplier_gift = entity
+		mode: directLake
+		source
+			entityName: ot_supplier_gift
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

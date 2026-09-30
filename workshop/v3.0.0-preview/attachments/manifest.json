@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "furusato-attachments/v1",
+  "edition": "3.0.0-preview",
+  "synthetic": true,
+  "conversationScoped": true,
+  "dataIngestion": false,
+  "rdfImport": false,
+  "containsPrivateEvaluationAnswers": false,
+  "uploadObserved": false,
+  "modelUseObserved": false,
+  "definitionContext": {
+    "newFormat": "TMDL/TMSL++",
+    "compatibilityLevel": 1000000,
+    "generation2Payload": false,
+    "nativeBindingVerified": false
+  },
+  "maxFilesPerConversation": 10,
+  "maxBytesPerFile": 5242880,
+  "sourceDatasetVersion": "2.7.0-realistic.1",
+  "font": {
+    "name": "meiryo.ttc",
+    "sha256": "457b306f719a002f1d037b2a3942f2abfa8a55d7bb109bf8950341a3129adb46"
+  },
+  "files": {
+    "business-requirements.pdf": {
+      "bytes": 106640,
+      "sha256": "114eb260fc49d3e8d617545e230f6b119f8aefac9a22870316d5803bb6fd57b7"
+    },
+    "data-dictionary.txt": {
+      "bytes": 36755,
+      "sha256": "49541af275186043d59a1cca82134766b9128a0c76e00c0ff899760f20ede7b6"
+    },
+    "domain-model.png": {
+      "bytes": 298703,
+      "sha256": "42b2a269a033de441b8d5f4ed13510d32b45c222354bbd47f29b5db5393f565b"
+    },
+    "revision-requirements.txt": {
+      "bytes": 1325,
+      "sha256": "34cf65314841175db4c4ad37255bba2b19d0b896328660e92e992543ea2259fa"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "approvedForPartialSourceProjection": true,
+  "captures": [
+    {
+      "accountsEndpointsUuidsPathsVisible": false,
+      "capturedAt": "2026-09-30T04:14:26.694427+00:00",
+      "coordinateConvention": "original pixels; [left,top,right,bottom), no resizing",
+      "cropBox": [
+        1750,
+        130,
+        2132,
+        1032
+      ],
+      "id": "p30-15-attachments",
+      "imageMetadataRemoved": true,
+      "internalReasoningContentVisible": false,
+      "onlyDeclaredCropApplied": true,
+      "opaqueMasks": [],
+      "originalFile": "preview30-complete-08-four-attachments.png",
+      "originalSha256": "2f722ed137bfde8410ec4625de06d5be1d2f547fcb92c8d0b7cfb2301b678ad3",
+      "originalSize": [
+        2132,
+        1202
+      ],
+      "originalUnchanged": true,
+      "reviewedAt": "2026-09-30T05:36:35.185360+00:00",
+      "reviewer": "doc-preparation-review",
+      "sanitizedFile": "captures/e87b5c46d183552ef3a89305d34bd288f4ae375de1607995cbd468853ce47af1.png",
+      "sanitizedSha256": "e87b5c46d183552ef3a89305d34bd288f4ae375de1607995cbd468853ce47af1",
+      "sanitizedSize": [
+        382,
+        902
+      ],
+      "uiValuesOrStatesChanged": false,
+      "visualReview": "approved-local-document-preparation"
+    },
+    {
+      "accountsEndpointsUuidsPathsVisible": false,
+      "capturedAt": "2026-09-30T04:21:10.536252+00:00",
+      "coordinateConvention": "original pixels; [left,top,right,bottom), no resizing",
+      "cropBox": [
+        1750,
+        120,
+        2132,
+        892
+      ],
+      "id": "p30-15-attachment-response",
+      "imageMetadataRemoved": true,
+      "internalReasoningContentVisible": false,
+      "onlyDeclaredCropApplied": true,
+      "opaqueMasks": [],
+      "originalFile": "preview30-complete-09-gold-context.png",
+      "originalSha256": "75df7aa10135c1c7d1997af8745a28d06e8d4f545b57c793bc15eb0e84c60971",
+      "originalSize": [
+        2132,
+        1202
+      ],
+      "originalUnchanged": true,
+      "reviewedAt": "2026-09-30T05:36:35.185360+00:00",
+      "reviewer": "doc-preparation-review",
+      "sanitizedFile": "captures/2f5cedb8bbb5cbb421e0f8d9d8f8dbff3d0775890c810673f905e191321111fc.png",
+      "sanitizedSha256": "2f5cedb8bbb5cbb421e0f8d9d8f8dbff3d0775890c810673f905e191321111fc",
+      "sanitizedSize": [
+        382,
+        772
+      ],
+      "uiValuesOrStatesChanged": false,
+      "visualReview": "approved-local-document-preparation"
+    }
+  ],
+  "defaultFullCourseProjection": false,
+  "notReleaseFreeze": true,
+  "reviewedAt": "2026-09-30T05:36:35.185360+00:00",
+  "reviewer": "doc-preparation-review",
+  "scope": "historical-observed-run"
+}

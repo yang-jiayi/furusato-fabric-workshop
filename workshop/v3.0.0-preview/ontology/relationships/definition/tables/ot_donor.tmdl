@@ -1,0 +1,73 @@
+table ot_donor
+	lineageTag: c27ca8d7-0633-5bfc-946b-635fda34d10f
+
+	column DonorId
+		dataType: int64
+		sourceColumn: DonorId
+
+	column DonorName
+		dataType: string
+		sourceColumn: DonorName
+
+	column DonorDisplayName
+		dataType: string
+		sourceColumn: DonorDisplayName
+
+	column DonorAge
+		dataType: int64
+		sourceColumn: DonorAge
+
+	column DonorOccupation
+		dataType: string
+		sourceColumn: DonorOccupation
+
+	column DonorOccupationEn
+		dataType: string
+		sourceColumn: DonorOccupationEn
+
+	column DonorStaticCount
+		dataType: int64
+		sourceColumn: DonorStaticCount
+
+	column DonorStaticTotalYen
+		dataType: int64
+		sourceColumn: DonorStaticTotalYen
+
+	column DonorStaticMaxYen
+		dataType: int64
+		sourceColumn: DonorStaticMaxYen
+
+	column DonorOverallAmountRank
+		dataType: int64
+		sourceColumn: DonorOverallAmountRank
+
+	column DonorResidenceAmountRank
+		dataType: int64
+		sourceColumn: DonorResidenceAmountRank
+
+	column PrefectureId
+		dataType: int64
+		sourceColumn: PrefectureId
+
+	partition ot_donor = entity
+		mode: directLake
+		source
+			entityName: ot_donor
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

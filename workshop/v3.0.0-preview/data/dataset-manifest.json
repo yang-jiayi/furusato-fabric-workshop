@@ -1,0 +1,206 @@
+{
+ "datasetVersion": "2.7.0-realistic.1",
+ "checksumContract": "generated-realistic-v1",
+ "description": "Synthetic Furusato hometown-tax dataset. Municipality names and codes use the real 全国地方公共団体コード; every person, supplier and donation is generated.",
+ "files": [
+  {
+   "file": "business_gifts.csv",
+   "rows": 14514,
+   "bytes": 232242,
+   "sha256": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",
+   "header": "BusinessID,GiftID"
+  },
+  {
+   "file": "businesses.csv",
+   "rows": 2500,
+   "bytes": 218536,
+   "sha256": "41534c77287abe881ab33403ac10078097118c64ce694351fe24605f399f7c97",
+   "header": "BusinessID,BusinessName,PrefectureID,BusinessType,PrefectureName,BusinessTypeEn"
+  },
+  {
+   "file": "categories.csv",
+   "rows": 30,
+   "bytes": 1190,
+   "sha256": "78bc570c40430d6b1970e8997adeec81e6442fda31601603efc69bbe687ebc26",
+   "header": "CategoryID,CategoryName,CategoryNameEn"
+  },
+  {
+   "file": "donation_orders.csv",
+   "rows": 80000,
+   "bytes": 6319115,
+   "sha256": "2995bf66896993614090e895ef1814b0383122bd837dba4b948b30e8a57cfadf",
+   "header": "DonationID,DonorID,MunicipalityID,GiftID,DonationAmountYen,DonatedAt,PaymentMethod"
+  },
+  {
+   "file": "donors.csv",
+   "rows": 12000,
+   "bytes": 794926,
+   "sha256": "e5772173373ffb19c5203d6ecb26329327c002adc83292ada432341ff0cf4fb3",
+   "header": "DonorID,DonorName,PrefectureID,Age,Occupation,PrefectureName,PrefectureNameEn,OccupationEn"
+  },
+  {
+   "file": "gifts.csv",
+   "rows": 6000,
+   "bytes": 746005,
+   "sha256": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869",
+   "header": "GiftID,GiftName,CategoryID,MunicipalityID,Notes,GiftNameEn"
+  },
+  {
+   "file": "municipalities.csv",
+   "rows": 1741,
+   "bytes": 53534,
+   "sha256": "8c344cbd7663b8c496e68a3cbe92136b3e5789da65d3795858f42f63b4d9ac63",
+   "header": "MunicipalityID,MunicipalityName,PrefectureID,PrefectureName"
+  },
+  {
+   "file": "prefectures.csv",
+   "rows": 47,
+   "bytes": 1006,
+   "sha256": "0b534b8c5e9aacf659ef52599487096c9df9d6e9324ad659b9dcb0e36f1846cc",
+   "header": "PrefectureID,PrefectureName,PrefectureNameEn"
+  }
+ ],
+ "expected": {
+  "totalDonationAmountYen": 1344099000,
+  "donationRows": 80000,
+  "outputTableCounts": {
+   "ot_prefecture": 47,
+   "ot_municipality": 1741,
+   "ot_donor": 12000,
+   "ot_gift_category": 30,
+   "ot_gift": 6000,
+   "ot_supplier": 2500,
+   "ot_supplier_gift": 14514,
+   "ot_donation": 80000,
+   "ot_mun_category_metric": 4403,
+   "ot_pref_category_metric": 662,
+   "ot_pref_donation_flow": 2209
+  },
+  "nodeCounts": {
+   "ot_prefecture": 47,
+   "ot_municipality": 1741,
+   "ot_donor": 12000,
+   "ot_gift_category": 30,
+   "ot_gift": 6000,
+   "ot_supplier": 2500,
+   "ot_donation": 80000,
+   "ot_mun_category_metric": 4403,
+   "ot_pref_category_metric": 662,
+   "ot_pref_donation_flow": 2209
+  },
+  "nodeTotal": 109592,
+  "edgeCounts": {
+   "MunicipalityInPrefecture": 1741,
+   "DonorLivesInPrefecture": 12000,
+   "SupplierInPrefecture": 2500,
+   "GiftInCategory": 6000,
+   "MunicipalityCatalogsGift": 6000,
+   "SupplierProvidesGift": 14514,
+   "DonorMadeDonation": 80000,
+   "DonationToMunicipality": 80000,
+   "DonationSelectedGift": 80000,
+   "MunHasCategoryMetric": 4403,
+   "MunMetricForCategory": 4403,
+   "PrefHasCategoryMetric": 662,
+   "PrefMetricForCategory": 662,
+   "ResidencePrefHasFlow": 2209,
+   "FlowToRecipientPref": 2209
+  },
+  "edgeTotal": 297303,
+  "topMunicipality": {
+   "MunicipalityId": "452025",
+   "MunicipalityName": "都城市",
+   "PrefectureName": "宮崎県",
+   "Count": 1813,
+   "TotalYen": 41151000
+  },
+  "topMunicipalityCategory": {
+   "CategoryId": 1,
+   "CategoryName": "肉・肉加工品",
+   "Count": 1147,
+   "TotalYen": 28901000
+  },
+  "tokyoRank1Donor": {
+   "DonorId": 2005075,
+   "DonorName": "野口啓介",
+   "PrefectureId": 13,
+   "DonorStaticCount": 8,
+   "DonorStaticTotalYen": 383000,
+   "DonorStaticMaxYen": 300000
+  },
+  "tokyoAmbiguity": {
+   "PrefReceivedStaticCount": 2661,
+   "PrefReceivedTotalYen": 45930000,
+   "PrefResidentStaticCount": 8784,
+   "PrefResidentTotalYen": 146543000
+  },
+  "donorsWithoutDonations": 18,
+  "municipalitiesWithoutDonations": 10,
+  "suppliersWithoutGifts": 0
+ },
+ "incrementFiles": [
+  {
+   "file": "donation_events_001.csv",
+   "rows": 5000,
+   "bytes": 889618,
+   "sha256": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",
+   "header": "EventID,DonationID,DonorID,MunicipalityID,GiftID,DonationAmountYen,DonatedAt,PaymentMethod,WorkshopRunId,ParticipantAlias,SourceFile,PublishedAtUtc"
+  },
+  {
+   "file": "donation_events_002.csv",
+   "rows": 5000,
+   "bytes": 889921,
+   "sha256": "e42e836638afc370f7a0fdc1d12e8d5126fcad05c266f87d4400834d52fc1fb3",
+   "header": "EventID,DonationID,DonorID,MunicipalityID,GiftID,DonationAmountYen,DonatedAt,PaymentMethod,WorkshopRunId,ParticipantAlias,SourceFile,PublishedAtUtc"
+  },
+  {
+   "file": "donation_events_003.csv",
+   "rows": 5000,
+   "bytes": 889586,
+   "sha256": "bad72fc616c682839e120781579c21d3d313068f948d6fcccbec9c4d13222608",
+   "header": "EventID,DonationID,DonorID,MunicipalityID,GiftID,DonationAmountYen,DonatedAt,PaymentMethod,WorkshopRunId,ParticipantAlias,SourceFile,PublishedAtUtc"
+  }
+ ],
+ "expectedIncrement": {
+  "rawRows": 15000,
+  "uniqueEventIds": 14900,
+  "duplicateEventIds": 100,
+  "duplicateMultiplicity": 2,
+  "duplicateLayout": "the last 100 rows of donation_events_001.csv reappear as the first 100 rows of donation_events_002.csv",
+  "rawAmountYen": 253886000,
+  "deduplicatedAmountYen": 252058000,
+  "firstFileRows": 5000,
+  "firstFileAmountYen": 85098000,
+  "observationWindowUtc": {
+   "from": "2026-08-01T00:02:47Z",
+   "to": "2026-08-31T23:58:20Z"
+  },
+  "publishedAtUtc": [
+   "2026-08-11T11:59:30Z",
+   "2026-08-21T14:20:02Z",
+   "2026-09-01T00:03:20Z"
+  ],
+  "ingestionPath": "Data Pipeline copy from Lakehouse Files/increment into the DonationEvents table with DonationEvents_IncrementCsvMap",
+  "dailyDistributionUtc": {
+   "groupedBy": "UTC calendar date of DonatedAt across all three increment files",
+   "calendarDays": 31,
+   "firstDate": "2026-08-01",
+   "lastDate": "2026-08-31",
+   "contiguous": true,
+   "minRowsPerDay": 450,
+   "maxRowsPerDay": 582,
+   "everyDayWithinBounds": true
+  },
+  "curatedViewLeader": {
+   "groupedBy": "MunicipalityID over every raw increment row, matching DonationObservationSummaryForAgent before any deduplication",
+   "municipalityId": "452025",
+   "observationCount": 331,
+   "observedAmountYen": 5737000,
+   "sameLeaderByCountAndAmount": true,
+   "strictlyAheadOfRunnerUp": true,
+   "runnerUpMunicipalityId": "272132",
+   "runnerUpObservationCount": 155,
+   "runnerUpObservedAmountYen": 2453000
+  }
+ }
+}

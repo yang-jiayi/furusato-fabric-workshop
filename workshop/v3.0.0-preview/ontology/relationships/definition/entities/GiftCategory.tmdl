@@ -1,0 +1,116 @@
+/// Controlled classification of return-gift options (返礼品カテゴリ). Category counts and amounts must be aggregated from Donation through DonationSelectedGift and GiftInCategory; the category itself is not a transaction fact.
+entity GiftCategory
+	lineageTag: 58fa226f-e97f-5afd-bac0-7a02fafa5d90
+	backingTable: ot_gift_category
+	keyProperty: CategoryId
+	synonym 'gift category'
+	synonym 'return-gift category'
+	synonym 'reward category'
+	synonym 'benefit category'
+	synonym 'product category'
+	synonym genre
+	synonym '返礼品カテゴリ'
+	synonym '返礼品分類'
+	synonym 'お礼品カテゴリ'
+	synonym '特典カテゴリ'
+	synonym 'ジャンル'
+	annotation Furusato_businessRole = "catalog classification dimension"
+	annotation Furusato_grain = "one controlled return-gift category"
+	annotation Furusato_metricPolicy = "aggregate at Donation grain"
+	annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+	/// Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it.
+	property CategoryId
+		dataType: int64
+		lineageTag: 689997cd-04fb-57ea-92c2-cd7a190b2deb
+		annotation Furusato_businessRole = "stable entity identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer ID"
+		annotation Furusato_grain = "one GiftCategory"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategoryId
+
+	/// Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label.
+	property CategoryName
+		dataType: string
+		lineageTag: ab4bdf55-e5b3-5751-8977-d5297ac8ab5e
+		annotation Furusato_businessRole = "Japanese controlled label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 30 values"
+		annotation Furusato_grain = "one value per GiftCategory"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategoryName
+
+	/// Canonical English return-gift category label paired one-to-one with CategoryName. Use it for English filtering, grouping, and display; CategoryId remains the identity.
+	property CategoryNameEn
+		dataType: string
+		lineageTag: 827c7b42-8773-5092-8719-3e816f1c2d92
+		annotation Furusato_businessRole = "canonical English label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 30 values"
+		annotation Furusato_grain = "one value per GiftCategory"
+		annotation Furusato_language = "en"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategoryNameEn
+
+	/// Pipe-delimited alias text holding the Japanese CategoryName, the English CategoryNameEn, and the literal marker gift category. Use it only to resolve colloquial return-gift category wording such as 海鮮系, 魚介, or seafood with a case-insensitive substring match. If CategoryName does not match, query this alias index before claiming no category data. Never display, group, count, or treat this property as the category identity.
+	property CategorySearchTerms
+		dataType: string
+		lineageTag: be1b8ba7-4b57-5e17-8fa9-f14e31f55920
+		annotation Furusato_businessRole = "search-only alias index"
+		annotation Furusato_displayPolicy = "never display, group, or aggregate"
+		annotation Furusato_format = "{CategoryName} | {CategoryNameEn} | gift category"
+		annotation Furusato_grain = "one value per GiftCategory"
+		annotation Furusato_language = "ja-JP,en"
+		annotation Furusato_queryPattern = "FILTER lower(c.CategorySearchTerms) CONTAINS lower('<alias>')"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategorySearchTerms
+
+	/// Pre-aggregated static Donation count for this GiftCategory across the full snapshot.
+	property CategoryStaticCount
+		dataType: int64
+		lineageTag: 48705437-93ff-5709-add5-23f556144123
+		annotation Furusato_businessRole = "category snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one GiftCategory"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategoryStaticCount
+
+	/// Pre-aggregated static Donation amount for this GiftCategory across the full snapshot.
+	property CategoryStaticTotalYen
+		dataType: int64
+		lineageTag: 6f40c75f-227c-5fbc-91f6-68e273603bc8
+		annotation Furusato_businessRole = "category snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one GiftCategory"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategoryStaticTotalYen
+
+	/// Static donation-amount rank of this GiftCategory across all GiftCategories. Deterministic row-number rank (row_number) over CategoryStaticTotalYen desc, CategoryId asc: equal amounts never share a rank because CategoryId breaks the tie ascending.
+	property CategoryAmountRank
+		dataType: int64
+		lineageTag: 1451f7bd-d75a-5932-8504-c3357c17c77d
+		annotation Furusato_businessRole = "category amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one GiftCategory"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "none (single global window)"
+		annotation Furusato_rankScope = "all GiftCategories"
+		annotation Furusato_rankSort = "CategoryStaticTotalYen desc, CategoryId asc"
+		annotation Furusato_rankTieBreak = "CategoryId ascending"
+
+		backingConfiguration
+			valueColumn: ot_gift_category.CategoryAmountRank
+

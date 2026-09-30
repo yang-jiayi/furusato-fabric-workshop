@@ -1,0 +1,143 @@
+/// Japanese prefecture (都道府県) used in two separate geography paths: recipient geography through Municipality and donor-residence geography through Donor. It is a reference dimension, not a Donation fact grain.
+entity Prefecture
+	lineageTag: fe67e9ad-95b1-5fe5-88e0-75f1a24b6d5f
+	backingTable: ot_prefecture
+	keyProperty: PrefectureId
+	synonym prefecture
+	synonym prefectures
+	synonym 'Japanese prefecture'
+	synonym 'recipient prefecture'
+	synonym 'donor residence prefecture'
+	synonym '都道府県'
+	synonym '都府県'
+	annotation Furusato_businessRole = "reference geography dimension"
+	annotation Furusato_geographyRoles = "recipient prefecture and donor-residence prefecture"
+	annotation Furusato_grain = "one entity per Japanese prefecture"
+	annotation Furusato_language = "ja-JP,en"
+	annotation Furusato_sensitivity = "Public"
+
+	/// Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality.
+	property PrefectureId
+		dataType: int64
+		lineageTag: 31072d74-302a-558b-a29a-a288d6b7ab62
+		annotation Furusato_businessRole = "stable entity identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer ID"
+		annotation Furusato_grain = "one Prefecture"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefectureId
+
+	/// Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output.
+	property PrefectureName
+		dataType: string
+		lineageTag: 79d95df8-de4f-5422-868c-3fdc681d939f
+		annotation Furusato_businessRole = "Japanese label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "Japanese text"
+		annotation Furusato_grain = "one value per Prefecture"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefectureName
+
+	/// Canonical English label of the prefecture. Use it for English lookup and display; PrefectureId remains the identity.
+	property PrefectureNameEn
+		dataType: string
+		lineageTag: 81f54efc-fc66-57cb-b9c8-6bf43dae67e9
+		annotation Furusato_businessRole = "English label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "English text"
+		annotation Furusato_grain = "one value per Prefecture"
+		annotation Furusato_language = "en"
+		annotation Furusato_sensitivity = "Public"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefectureNameEn
+
+	/// Pre-aggregated count of static Donations received by municipalities in this Prefecture.
+	property PrefReceivedStaticCount
+		dataType: int64
+		lineageTag: 0d7c2533-e3e5-5ba0-9fb5-da192adb4f35
+		annotation Furusato_businessRole = "received snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Prefecture"
+		annotation Furusato_measure = "count of Donation"
+		annotation Furusato_snapshotScope = "current static Donation only"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefReceivedStaticCount
+
+	/// Pre-aggregated JPY amount received by municipalities in this Prefecture.
+	property PrefReceivedTotalYen
+		dataType: int64
+		lineageTag: 57ff05d9-8abf-5a15-b2d2-b8c7f44940b8
+		annotation Furusato_businessRole = "received snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Prefecture"
+		annotation Furusato_snapshotScope = "current static Donation only"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefReceivedTotalYen
+
+	/// Received-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefReceivedTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending.
+	property PrefReceivedAmountRank
+		dataType: int64
+		lineageTag: b0e8c775-0d23-5f1d-89ff-3928e5ee2839
+		annotation Furusato_businessRole = "received amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Prefecture"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "none (single global window)"
+		annotation Furusato_rankScope = "all Prefectures"
+		annotation Furusato_rankSort = "PrefReceivedTotalYen desc, PrefectureId asc"
+		annotation Furusato_rankTieBreak = "PrefectureId ascending"
+		annotation Furusato_sort = "amount descending"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefReceivedAmountRank
+
+	/// Pre-aggregated count of static Donations made by Donors who live in this Prefecture.
+	property PrefResidentStaticCount
+		dataType: int64
+		lineageTag: 0916f786-5e8e-5b43-b730-4d825a8798c2
+		annotation Furusato_businessRole = "resident-origin snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_geographyRole = "donor residence"
+		annotation Furusato_grain = "one Prefecture"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefResidentStaticCount
+
+	/// Pre-aggregated JPY amount donated by Donors who live in this Prefecture.
+	property PrefResidentTotalYen
+		dataType: int64
+		lineageTag: ba2de9fe-1e1f-59b2-9782-86a0c16b2d7e
+		annotation Furusato_businessRole = "resident-origin snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_geographyRole = "donor residence"
+		annotation Furusato_grain = "one Prefecture"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefResidentTotalYen
+
+	/// Resident-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefResidentTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending.
+	property PrefResidentAmountRank
+		dataType: int64
+		lineageTag: 2d8d175e-2d0f-5d36-88c4-437e49786bb8
+		annotation Furusato_businessRole = "resident-origin amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Prefecture"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "none (single global window)"
+		annotation Furusato_rankScope = "all Prefectures"
+		annotation Furusato_rankSort = "PrefResidentTotalYen desc, PrefectureId asc"
+		annotation Furusato_rankTieBreak = "PrefectureId ascending"
+
+		backingConfiguration
+			valueColumn: ot_prefecture.PrefResidentAmountRank
+

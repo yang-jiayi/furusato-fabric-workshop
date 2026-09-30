@@ -1,0 +1,49 @@
+table ot_mun_category_metric
+	lineageTag: 58491be6-87d7-53e6-af48-faeb5c4b5175
+
+	column MunCategoryMetricId
+		dataType: string
+		sourceColumn: MunCategoryMetricId
+
+	column MunCategoryStaticCount
+		dataType: int64
+		sourceColumn: MunCategoryStaticCount
+
+	column MunCategoryTotalYen
+		dataType: int64
+		sourceColumn: MunCategoryTotalYen
+
+	column MunCategoryAmountRank
+		dataType: int64
+		sourceColumn: MunCategoryAmountRank
+
+	column MunicipalityId
+		dataType: string
+		sourceColumn: MunicipalityId
+
+	column CategoryId
+		dataType: int64
+		sourceColumn: CategoryId
+
+	partition ot_mun_category_metric = entity
+		mode: directLake
+		source
+			entityName: ot_mun_category_metric
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

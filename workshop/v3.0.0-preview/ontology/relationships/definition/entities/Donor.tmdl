@@ -1,0 +1,177 @@
+/// Synthetic workshop donor (寄付者／寄附者) who may make zero or more Donations. Residence is defined only by DonorLivesInPrefecture and must never be interpreted as recipient geography.
+entity Donor
+	lineageTag: 55d6fb72-fc1c-5610-8587-9a9875faa142
+	backingTable: ot_donor
+	keyProperty: DonorId
+	synonym donor
+	synonym donors
+	synonym contributor
+	synonym contributors
+	synonym supporter
+	synonym supporters
+	synonym 'hometown tax donor'
+	synonym taxpayer
+	synonym '寄付者'
+	synonym '寄附者'
+	synonym '支援者'
+	synonym '納税者'
+	annotation Furusato_businessRole = "actor dimension"
+	annotation Furusato_dataNature = "synthetic, no real PII"
+	annotation Furusato_geographyRole = "donor residence only"
+	annotation Furusato_grain = "one synthetic donor"
+	annotation Furusato_sensitivity = "Synthetic-Personal"
+
+	/// Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people.
+	property DonorId
+		dataType: int64
+		lineageTag: 6a6d9da7-9147-5698-bb77-6d36f7f8d2b0
+		annotation Furusato_businessRole = "stable entity identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer ID"
+		annotation Furusato_grain = "one Donor"
+		annotation Furusato_sensitivity = "Synthetic workshop data"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorId
+
+	/// Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person.
+	property DonorName
+		dataType: string
+		lineageTag: 06b2ec44-6249-5ba1-9ffe-e815bf308b36
+		annotation Furusato_businessRole = "Japanese label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "synthetic Japanese name"
+		annotation Furusato_grain = "one value per Donor"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Synthetic-Personal"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorName
+
+	/// Display-only composite in the format {DonorName} / Donor {DonorId}. Use DonorId for identity and this property for human-readable output.
+	property DonorDisplayName
+		dataType: string
+		lineageTag: 36647929-992f-5980-bbcd-d76dcb2c6b4a
+		annotation Furusato_businessRole = "display label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "{DonorName} / Donor {DonorId}"
+		annotation Furusato_grain = "one value per Donor"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Synthetic-Personal"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorDisplayName
+
+	/// Whole-year age of the synthetic donor (年齢) in the static donor record. It is not derived from the Donation timestamp and must not be summed.
+	property DonorAge
+		dataType: int64
+		lineageTag: 3d18e477-0662-5708-b1df-a780fba8050a
+		annotation Furusato_businessRole = "demographic attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer"
+		annotation Furusato_grain = "one value per Donor"
+		annotation Furusato_sensitivity = "Synthetic-Personal"
+		annotation Furusato_unit = "years"
+		annotation Furusato_validRange = "20-79"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorAge
+
+	/// Japanese controlled occupation or job label (職業／職種／仕事) for the synthetic donor. It describes the donor's job category, not employer, recipient, or Supplier type.
+	property DonorOccupation
+		dataType: string
+		lineageTag: 9d3ccf42-85a7-57e6-a106-0450710b4551
+		annotation Furusato_businessRole = "Japanese categorical attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 28 values"
+		annotation Furusato_grain = "one value per Donor"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Synthetic-Personal"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorOccupation
+
+	/// Canonical English occupation label for DonorOccupation. Use it for English filtering and grouping; preserve DonorOccupation when returning the stored Japanese label.
+	property DonorOccupationEn
+		dataType: string
+		lineageTag: 2d75c887-28f8-551e-8105-e83dea6afbdd
+		annotation Furusato_businessRole = "canonical English categorical attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 28 values"
+		annotation Furusato_grain = "one value per Donor"
+		annotation Furusato_language = "en"
+		annotation Furusato_sensitivity = "Synthetic-Personal"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorOccupationEn
+
+	/// Pre-aggregated number of static Donations made by this Donor.
+	property DonorStaticCount
+		dataType: int64
+		lineageTag: eb66cc02-c699-5866-a344-d8ba5459489f
+		annotation Furusato_businessRole = "donor snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Donor"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorStaticCount
+
+	/// Pre-aggregated cumulative static Donation amount made by this Donor in JPY.
+	property DonorStaticTotalYen
+		dataType: int64
+		lineageTag: 9b8a6e48-fd21-536c-90ac-2c74ecd18a72
+		annotation Furusato_businessRole = "donor snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Donor"
+		annotation Furusato_metric = "cumulative amount"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorStaticTotalYen
+
+	/// Maximum single static Donation amount made by this Donor in JPY; it is not the cumulative amount.
+	property DonorStaticMaxYen
+		dataType: int64
+		lineageTag: b14c3bf7-93dd-5323-b5cc-e91fd30d537e
+		annotation Furusato_businessRole = "donor snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Donor"
+		annotation Furusato_metric = "single-donation maximum"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorStaticMaxYen
+
+	/// Cumulative static donation-amount rank of this Donor nationwide. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc: equal amounts never share a rank because DonorId breaks the tie ascending.
+	property DonorOverallAmountRank
+		dataType: int64
+		lineageTag: 1dd16bca-410a-5757-ac97-404b44f6a8b5
+		annotation Furusato_businessRole = "cumulative amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Donor"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "none (single global window)"
+		annotation Furusato_rankScope = "all Donors nationwide"
+		annotation Furusato_rankSort = "DonorStaticTotalYen desc, DonorId asc"
+		annotation Furusato_rankTieBreak = "DonorId ascending"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorOverallAmountRank
+
+	/// Cumulative static donation-amount rank of this Donor inside the residence Prefecture. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc within each PrefectureId: equal amounts never share a rank because DonorId breaks the tie ascending.
+	property DonorResidenceAmountRank
+		dataType: int64
+		lineageTag: c0586eff-2dcb-59be-9b98-4df9d48741b4
+		annotation Furusato_businessRole = "cumulative amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Donor"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "PrefectureId"
+		annotation Furusato_rankScope = "within residence Prefecture"
+		annotation Furusato_rankSort = "DonorStaticTotalYen desc, DonorId asc"
+		annotation Furusato_rankTieBreak = "DonorId ascending"
+
+		backingConfiguration
+			valueColumn: ot_donor.DonorResidenceAmountRank
+

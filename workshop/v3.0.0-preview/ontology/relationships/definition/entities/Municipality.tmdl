@@ -1,0 +1,122 @@
+/// Japanese municipality (自治体／市区町村) that may receive zero or more Donations. It also keys operational time-series observations; those observations are not Donation entities and have no Donor, Gift, or Supplier identity.
+entity Municipality
+	lineageTag: 03438d4b-0296-55e5-8856-05a5511057ab
+	backingTable: ot_municipality
+	keyProperty: MunicipalityId
+	synonym municipality
+	synonym municipalities
+	synonym 'recipient municipality'
+	synonym 'donation destination'
+	synonym 'local government'
+	synonym 'local authority'
+	synonym city
+	synonym town
+	synonym village
+	synonym ward
+	synonym '自治体'
+	synonym '市区町村'
+	synonym '受入自治体'
+	synonym '寄付先自治体'
+	synonym '寄附先自治体'
+	annotation Furusato_businessRole = "recipient geography dimension"
+	annotation Furusato_factPolicy = "Donation is the transaction fact"
+	annotation Furusato_grain = "one entity per Japanese municipality"
+	annotation Furusato_sensitivity = "Public"
+	annotation Furusato_timeSeriesRole = "context key only"
+
+	/// Stable identifier for one Municipality entity. Preserve leading zeros if present and use it as the relationship key; do not aggregate it.
+	property MunicipalityId
+		dataType: string
+		lineageTag: c842b8f5-5754-5383-a32e-8d963b6ec999
+		annotation Furusato_businessRole = "stable entity identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "string ID"
+		annotation Furusato_grain = "one Municipality"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityId
+
+	/// Japanese municipality name (自治体名／市区町村名) without a prefecture qualifier. Names are not globally unique, so include MunicipalityId or MunicipalityDisplayName when ambiguity is possible.
+	property MunicipalityName
+		dataType: string
+		lineageTag: 0bc3f9f1-0646-5545-a0e8-6432789a8a83
+		annotation Furusato_businessRole = "Japanese label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "Japanese text"
+		annotation Furusato_grain = "one value per Municipality"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityName
+
+	/// Display-only composite label in the format {MunicipalityName} / {PrefectureName}. It does not contain MunicipalityId, so use MunicipalityId as the identity and this property only for human-readable output.
+	property MunicipalityDisplayName
+		dataType: string
+		lineageTag: dee430b9-c307-5014-b653-726c0ae647fb
+		annotation Furusato_businessRole = "display label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "{MunicipalityName} / {PrefectureName}"
+		annotation Furusato_grain = "one value per Municipality"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityDisplayName
+
+	/// Pre-aggregated count of static Donations received by this Municipality.
+	property MunicipalityStaticCount
+		dataType: int64
+		lineageTag: 106b0d67-0a55-57c6-ab5c-ca90dbe2e8a8
+		annotation Furusato_businessRole = "received snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityStaticCount
+
+	/// Pre-aggregated static Donation amount received by this Municipality in JPY.
+	property MunicipalityStaticTotalYen
+		dataType: int64
+		lineageTag: f570ea44-1e9c-594f-8ebc-d2c5439758c0
+		annotation Furusato_businessRole = "received snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityStaticTotalYen
+
+	/// Received-amount rank of this Municipality across all Municipalities. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc: equal amounts never share a rank because MunicipalityId breaks the tie ascending.
+	property MunicipalityAmountRank
+		dataType: int64
+		lineageTag: c6f1c53c-6868-5e3c-9718-70c2ed3fdcf1
+		annotation Furusato_businessRole = "received amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "none (single global window)"
+		annotation Furusato_rankScope = "all Municipalities"
+		annotation Furusato_rankSort = "MunicipalityStaticTotalYen desc, MunicipalityId asc"
+		annotation Furusato_rankTieBreak = "MunicipalityId ascending"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityAmountRank
+
+	/// Received-amount rank of this Municipality inside its containing Prefecture. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc within each PrefectureId: equal amounts never share a rank because MunicipalityId breaks the tie ascending.
+	property MunicipalityPrefAmountRank
+		dataType: int64
+		lineageTag: b5867923-66d7-5222-b7b7-6308dde10691
+		annotation Furusato_businessRole = "received amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "PrefectureId"
+		annotation Furusato_rankScope = "within containing Prefecture"
+		annotation Furusato_rankSort = "MunicipalityStaticTotalYen desc, MunicipalityId asc"
+		annotation Furusato_rankTieBreak = "MunicipalityId ascending"
+
+		backingConfiguration
+			valueColumn: ot_municipality.MunicipalityPrefAmountRank
+

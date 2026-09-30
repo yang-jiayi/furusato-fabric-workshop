@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "customTheme": {
+      "name": "FurusatoCivicLab-63fefe32a4.json",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.1.0"
+      },
+      "type": "RegisteredResources"
+    }
+  },
+  "resourcePackages": [
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "FurusatoCivicLab-63fefe32a4.json",
+          "path": "FurusatoCivicLab-63fefe32a4.json",
+          "type": "CustomTheme"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "hideVisualContainerHeader": true,
+    "useEnhancedTooltips": true,
+    "exportDataMode": "AllowSummarized",
+    "filterPaneHiddenInEditMode": true,
+    "defaultFilterActionIsDataFilter": true
+  },
+  "annotations": [
+    {
+      "name": "FurusatoWorkshopVersion",
+      "value": "2.7.0-analytics-extension"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "profile": "context-aware",
+  "status": "candidate",
+  "intervention": "combined architecture and semantic instructions",
+  "sourceIdentityChanges": ["ontology: primary -> accepted static relationships companion"],
+  "preserve": ["lakehouse_tables", "kusto", "semantic_model", "Code Interpreter settings"],
+  "sourceMetadataAlignment": "Remove the absent time-series property description from the copied Ontology source selection; keep its static entities selected.",
+  "graphUse": "Actual GQL for relationship/traversal/containment/multihop intents; not schema or SQL impersonation.",
+  "timeSeriesGraphSuccessClaimed": false,
+  "benchmarkAnswersIncluded": false,
+  "requiresFrozenOriginalSuite": true,
+  "maximumCandidates": 1,
+  "maximumOriginalQuestionSubmissions": 10,
+  "originalConditionDenominator": 84,
+  "automaticPromotion": false
+}

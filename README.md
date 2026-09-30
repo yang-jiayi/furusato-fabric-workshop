@@ -1,5 +1,29 @@
 <a id="top"></a>
 
+> **3.0 Preview — 実装・検証結果を収録（AI回答品質は未合格／GAではありません）**
+> **[Word・205ページ](docs/v3-preview/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx) ·
+> [対応する日英HTML](docs/v3-preview/guide/furusato-workshop-v3-0-0-preview-complete.html) ·
+> [評価結果](docs/v3-preview/reports/evaluation-report.md) · [進捗・制約](docs/v3-preview/reports/progress-report.md)**
+>
+> 全24章・5付録、実画面、Copilot添付演習、可搬デプロイ資産を収録しています。
+> 元10問・84条件の最終実機評価は **48 PASS／36 FAIL**。主Agentへは昇格せず、
+> 未確認のUI・部分的な証拠・既知の制約を明記した **DRAFT** として配布します。
+> [添付PDF・TXT・PNG](tools/preview30-attachments/README.md) ·
+> [配置・再生成手順](docs/v3-preview/README.md) ·
+> [匿名化済み証拠と再現方法](docs/v3-preview/evidence-contract.md)。
+> 下の安定版v2.7と旧デモは保持し、新UIの成功証拠には流用しません。
+>
+> **3.0 Preview — implementation and verification results; AI answer quality not accepted, not GA.**
+> **[205-page Word](docs/v3-preview/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx) ·
+> [Matching bilingual HTML](docs/v3-preview/guide/furusato-workshop-v3-0-0-preview-complete.html) ·
+> [Evaluation](docs/v3-preview/reports/evaluation-report.md) · [Progress and limits](docs/v3-preview/reports/progress-report.md)**
+>
+> Includes all 24 chapters, five appendices, actual UI captures, Copilot attachments and portable deployment assets.
+> The unchanged ten-question/84-condition native-UI run scored **48 PASS / 36 FAIL**; the main Agent was not promoted.
+> The package remains **DRAFT**, with incomplete UI evidence and known limitations stated explicitly.
+> [Deployment and reproduction](docs/v3-preview/README.md#english) use sanitized source-owned evidence, not private logs.
+> Stable v2.7 and its earlier demonstrations remain unchanged.
+
 <div align="center">
 
 <p><img src="docs/assets/architecture/icons/microsoft-fabric.svg" width="64" height="64" alt="Microsoft Fabric"></p>
@@ -125,7 +149,8 @@ Ontology のキー・型・説明・バインディング・関係の向きを�
 
 ### 最新版を使う
 
-配布版は `v2.7.0 / unified-20260923` です。
+現時点の検証済み配布版は `v2.7.0 / unified-20260923` です。3.0 Previewの全文ソース・添付・生成手順は
+[別ページ](docs/v3-preview/README.md)を参照してください。新UI実施の未確認を既存版の実績で置き換えません。
 この版では、Activatorの正式な初回開始・停止、完成ファイルのPutBlob1回送信、
 実イベント／activation／Pipeline／Copy／KQLを区別する確認を、コード・Word・HTMLへ同期しました。
 Word と HTML を同じフォルダーへ保存すると、HTML 内の Word ダウンロードリンクも利用できます。
@@ -811,7 +836,9 @@ committed to Git history. Videos inherit the repository's access permissions.
 
 ### Current documents
 
-The edition is `v2.7.0 / unified-20260923`. Keep the two files in the same
+The verified distribution remains `v2.7.0 / unified-20260923`. See the
+[complete 3.0 Preview source, attachments and build path](docs/v3-preview/README.md#english);
+past runs do not substitute for new-UI execution evidence. Keep the two files in the same
 folder so the Word link in the HTML works.
 This edition synchronizes formal Activator first-start/stop, one complete-file PutBlob
 and separate event/activation/Pipeline/Copy/KQL gates across the code, Word and HTML.

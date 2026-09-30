@@ -1,0 +1,46 @@
+{
+  "edition": "v3.0.0-preview",
+  "status": "candidate",
+  "validationStatus": "offline-only",
+  "accuracyAccepted": false,
+  "publishedByBuild": false,
+  "sourceTypes": [
+    "lakehouse_tables",
+    "kusto",
+    "ontology",
+    "semantic_model"
+  ],
+  "codeInterpreterConfigured": true,
+  "codeInterpreterObserved": false,
+  "directSemanticModelSourceRequired": true,
+  "ontologyGenerationRequired": 2,
+  "nativeMetricProjectionInherited": false,
+  "graphRequiredByDefault": false,
+  "globalInstructionsCharacters": 4236,
+  "sourceOwnedMeasures": [
+    {
+      "table": "寄附",
+      "name": "静的寄附総額",
+      "dax": "CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))",
+      "formatString": "¥#,##0"
+    },
+    {
+      "table": "寄附",
+      "name": "静的寄附件数",
+      "dax": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))",
+      "formatString": "#,##0"
+    },
+    {
+      "table": "寄附",
+      "name": "受入増分寄附総額",
+      "dax": "CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))",
+      "formatString": "¥#,##0"
+    },
+    {
+      "table": "寄附",
+      "name": "受入増分寄附件数",
+      "dax": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))",
+      "formatString": "#,##0"
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "schema_version": "furusato-preview30-cases/v1",
+  "suite_kind": "new_features",
+  "states": ["planned", "implemented", "deployed", "pass", "fail", "blocked", "unsupported", "unverified"],
+  "original_inventory": {"questions": 10, "conditions": 84, "independent_hidden": false, "modified": false},
+  "policy": {
+    "ai_repeats": 3,
+    "max_candidates": 2,
+    "stop_identical_failure_after": 2,
+    "no_questions_accuracy": null,
+    "missing_evidence_is_failure_score": false,
+    "critical_truth_before_aggregate": true,
+    "evaluator_cloud_writes": false,
+    "heldout_location": "private evidence root only; never attachments"
+  },
+  "cases": [
+    {
+      "id": "SCOPE01", "category": "data", "critical": true,
+      "title": "Verified folder, identity and source readiness",
+      "roles": {"scope": "scope_receipt", "readiness": "source_query"},
+      "checks": ["numeric_folder_mapping", "all_items_allowlisted", "principal_and_folder_readback", "no_stale_participant_or_forbidden_source"],
+      "required_items": ["lakehouse"],
+      "notes": "A similar date/name or an old participant run does not identify the authorized scope."
+    },
+    {
+      "id": "DATA01", "category": "data", "critical": true,
+      "title": "Static source totals, dates, types and donation grain",
+      "roles": {"totals": "source_query", "schema": "source_query"},
+      "checks": ["immutable_fixture", "source_total_and_count", "unique_donation_keys", "utc_period_and_native_types", "no_supplier_fanout_sum"],
+      "required_items": ["lakehouse"],
+      "oracle_assertions": ["static.rows", "static.amount_yen", "static.unique_donation_ids", "static.from_utc", "static.to_utc"]
+    },
+    {
+      "id": "DATA02", "category": "data", "critical": true,
+      "title": "Operational raw observations versus accepted events",
+      "roles": {"raw": "source_query", "accepted": "source_query", "schema": "source_query"},
+      "checks": ["all_three_files_and_run_scope", "raw_count_not_bucket_count", "raw_and_accepted_amounts_separate", "duplicate_event_ids", "utc_period_and_types", "no_static_plus_operational_sum"],
+      "required_items": ["kql_database", "lakehouse"],
+      "oracle_assertions": ["increment.raw_rows", "increment.unique_event_ids", "increment.duplicate_event_ids", "increment.raw_amount_yen", "increment.accepted_amount_yen", "increment.from_utc", "increment.to_utc"]
+    },
+    {
+      "id": "UI01", "category": "structural", "critical": true,
+      "title": "Genuine new experience with saved definition",
+      "roles": {"screen": "ui_capture", "item": "capability_probe", "readback": "definition"},
+      "checks": ["new_ui_not_legacy", "native_generation_two", "gen2_tmdl_not_legacy_json", "actual_item_identity", "saved_definition_matches_screen", "readable_authentic_capture"],
+      "required_items": ["ontology"],
+      "notes": "Require the actual Get Ontology properties.generation value 2 and gen2 TMDL readback. Logical teaching metadata from legacy EntityTypes JSON is not proof of the new experience."
+    },
+    {
+      "id": "UI02", "category": "structural", "critical": true,
+      "title": "Correct bindings, data types and identity grain",
+      "roles": {"binding": "definition", "schema": "source_query", "grain": "source_query", "screen": "ui_capture", "functional": "operation_receipt"},
+      "checks": ["workspace_item_table_column_identity", "source_types_and_periods_preserved", "all_key_parts", "entity_grain_not_display_name", "keyless_limits_explicit", "native_instances_functional_readback"],
+      "required_items": ["ontology", "lakehouse"],
+      "notes": "Schema, source-column labels and direct SQL success do not prove that the ontology binding can resolve and read the source. Require actual native Instances/ontology-bound results; retain source-kind errors as functional failures."
+    },
+    {
+      "id": "UI03", "category": "structural", "critical": true,
+      "title": "Relationship direction, keys and many-to-many fanout",
+      "roles": {"relationship": "definition", "join": "source_query"},
+      "checks": ["direction_preserved", "composite_join_all_parts", "relationship_grain", "orphan_and_fanout_checks", "catalog_not_fulfillment"],
+      "required_items": ["ontology", "lakehouse"]
+    },
+    {
+      "id": "METRIC01", "category": "data", "critical": true,
+      "title": "Model-owned DAX surfaced as Metrics",
+      "roles": {"model": "definition", "metric": "definition", "dax": "source_query", "source": "source_query", "screen": "ui_capture"},
+      "checks": ["named_model_connection_identity", "measure_owned_by_model", "native_projection_or_enrichment_link", "no_explicit_dax_metric", "tmdl_backing_measure_gap_not_hidden", "actual_dax_not_prose", "filters_period_grain_equal", "source_reconciliation"],
+      "required_items": ["semantic_model", "ontology", "lakehouse"],
+      "required_languages": ["DAX", "SQL"],
+      "notes": "Projected/enrichment backingMeasure cannot round-trip TMDL. Require a real native-UI or documented public-contract metric link; merely adding a table DAX measure does not create a Metric."
+    },
+    {
+      "id": "RULE01", "category": "structural", "critical": true,
+      "title": "Natural-language Rules definition before and after",
+      "roles": {"before": "definition", "after": "definition", "screen": "ui_capture"},
+      "checks": ["scoped_definition_delta", "business_rule_language_preserved", "no_executable_constraint_claim", "no_activator_action_claim", "source_unchanged"],
+      "required_items": ["ontology"]
+    },
+    {
+      "id": "RULE02", "category": "ai", "critical": true,
+      "title": "Rule-grounded interpretation before and after",
+      "roles": {"answer": "native_response", "trace": "execution_trace", "source": "source_query", "comparison": "comparison"},
+      "checks": ["same_frozen_prompt_data_identity", "fresh_conversation", "factual_source_truth", "no_unperformed_action_claim", "all_repeats_retained"],
+      "required_items": ["ontology"]
+    },
+    {
+      "id": "NAMESPACE01", "category": "structural", "critical": true,
+      "title": "Namespaces, inheritance, shared properties and graph eligibility",
+      "roles": {"definition": "definition", "screen": "ui_capture", "eligibility": "capability_probe"},
+      "checks": ["qualified_name_resolution", "single_parent_is_a_not_composition", "shared_property_identity_and_type", "inherited_keys", "graph_eligibility_per_entity"],
+      "required_items": ["ontology"]
+    },
+    {
+      "id": "COPILOT01", "category": "structural", "critical": true,
+      "title": "Plan, validation, preview, Act and structural readback",
+      "roles": {"plan": "native_response", "preview": "ui_capture", "before": "definition", "after": "definition", "act": "operation_receipt"},
+      "checks": ["isolated_lab_item", "plan_is_not_act", "validation_and_preview_observed", "actual_act_receipt", "readback_matches_delta", "source_unchanged"],
+      "required_items": ["copilot_lab"]
+    },
+    {
+      "id": "COPILOT02", "category": "ai", "critical": true,
+      "title": "Factual Copilot answers, separate from structural success",
+      "roles": {"answer": "native_response", "trace": "execution_trace", "source": "source_query"},
+      "checks": ["frozen_prompt_and_fresh_conversation", "executed_source_query", "numeric_grain_identity_truth", "no_plan_as_factual_proof", "all_repeats_retained"],
+      "required_items": ["ontology"]
+    },
+    {
+      "id": "ATTACH01", "category": "structural", "critical": true,
+      "title": "Actual upload and conversation-scoped attachment limits",
+      "roles": {"upload": "upload_receipt", "screen": "ui_capture", "read": "native_response"},
+      "checks": ["actual_uploaded_bytes_hashes", "at_most_ten_files", "each_at_most_five_mib", "same_conversation_read", "not_data_ingestion", "no_private_evaluation_or_secrets"],
+      "required_items": ["copilot_lab"],
+      "limits": {"files": 10, "bytes_per_file": 5242880}
+    },
+    {
+      "id": "ATTACH02", "category": "ai", "critical": true,
+      "title": "Attachment use versus no-attachment fresh conversations",
+      "roles": {"upload": "upload_receipt", "answer": "native_response", "trace": "execution_trace", "source": "source_query", "comparison": "comparison"},
+      "checks": ["actual_read_and_use_citations", "not_just_generated_files", "frozen_prompts_without_answer_leak", "fresh_separate_conversations", "same_data_scope_identity", "all_repeats_retained"],
+      "required_items": ["copilot_lab"]
+    },
+    {
+      "id": "GRAPH01", "category": "structural", "critical": true,
+      "title": "Declared graph scope and source eligibility",
+      "roles": {"scope": "graph_scope", "definition": "definition", "eligibility": "capability_probe"},
+      "checks": ["selected_entities_and_relationships", "single_backing_table_and_keys", "semantic_model_keyless_unbound_limits", "partial_counts_derived_from_scope", "full_counts_only_full_original_projection"],
+      "required_items": ["ontology"]
+    },
+    {
+      "id": "GRAPH02", "category": "data", "critical": true,
+      "title": "Materialized graph and actual scoped GQL results",
+      "roles": {"scope": "graph_scope", "materialization": "operation_receipt", "gql": "source_query", "source": "source_query", "screen": "ui_capture"},
+      "checks": ["materialization_completed", "actual_gql_not_sql_substitution", "scope_specific_nodes_edges", "stable_keys_paths_and_grain", "returned_rows_not_generated_query"],
+      "required_items": ["ontology"],
+      "required_languages": ["GQL"]
+    },
+    {
+      "id": "GRAPH03", "category": "data", "critical": true,
+      "title": "Readiness, source watermark and graph freshness",
+      "roles": {"ready": "capability_probe", "source": "source_query", "gql": "source_query", "materialization": "operation_receipt"},
+      "checks": ["ready_from_actual_surface", "source_and_graph_watermark_match", "no_stale_snapshot", "fresh_query_after_materialization"],
+      "required_items": ["ontology"],
+      "required_languages": ["GQL"]
+    },
+    {
+      "id": "VERSION01", "category": "structural", "critical": true,
+      "title": "Definition save, modify and restore",
+      "roles": {"saved": "definition", "modified": "definition", "restored": "definition", "history": "operation_receipt", "source": "source_query"},
+      "checks": ["actual_saved_version", "observed_modification", "restore_content_equals_saved", "history_identity", "source_data_not_rolled_back", "projected_metric_serialization_limits_recorded"],
+      "required_items": ["version_lab"]
+    },
+    {
+      "id": "RDF01", "category": "structural", "critical": true,
+      "title": "Empty-item import with loss and transformation summary",
+      "roles": {"empty": "definition", "input": "rdf_file", "summary": "rdf_import_log", "after": "definition", "screen": "ui_capture"},
+      "checks": ["target_was_empty", "actual_ttl_rdf_owl_import", "preserved_autofixed_unsupported_inventory", "loss_and_transform_not_hidden", "no_operational_data_import_claim"],
+      "required_items": ["rdf_lab"]
+    },
+    {
+      "id": "RDF02", "category": "structural", "critical": true,
+      "title": "TTL/RDF export and scoped empty-item roundtrip",
+      "roles": {"before": "definition", "export": "rdf_file", "empty": "definition", "summary": "rdf_import_log", "after": "definition"},
+      "checks": ["actual_export_bytes", "ttl_or_rdf_not_owl_export", "separate_empty_target", "canonical_definition_comparison", "documented_loss_accounted"],
+      "required_items": ["rdf_lab", "rdf_roundtrip_lab"]
+    },
+    {
+      "id": "MCP01", "category": "capability", "critical": false,
+      "title": "Native tool discovery and permission-respecting connection",
+      "roles": {"tools": "mcp_tools", "connection": "capability_probe"},
+      "checks": ["actual_native_tools_list", "observed_endpoint_identity", "permission_scope", "no_wrapper_as_native_claim"],
+      "required_items": ["ontology"]
+    },
+    {
+      "id": "MCP02", "category": "ai", "critical": true,
+      "title": "Native query trace and returned source-grounded answer",
+      "roles": {"tools": "mcp_tools", "answer": "native_response", "trace": "execution_trace", "source": "source_query"},
+      "checks": ["actual_tool_name", "paired_executed_query_and_result", "not_answer_only_mcp", "all_calls_scope_reviewed", "factual_oracle", "all_repeats_retained"],
+      "required_items": ["data_agent"]
+    },
+    {
+      "id": "AGENT01", "category": "ai", "critical": true,
+      "title": "Data Agent comparison and direct semantic-model grounding",
+      "roles": {"agent": "definition", "answer": "native_response", "trace": "execution_trace", "source": "source_query", "comparison": "comparison"},
+      "checks": ["model_directly_configured_not_inherited", "architecture_routing_applicability_explicit", "same_frozen_data_identity_prompts", "actual_dax_when_tested", "original_no_regression", "all_repeats_retained"],
+      "required_items": ["data_agent", "semantic_model"]
+    },
+    {
+      "id": "DASHBOARD01", "category": "capability", "critical": false,
+      "title": "Direct dashboard integration, only if available",
+      "roles": {"capability": "capability_probe", "screen": "ui_capture", "integration": "definition"},
+      "checks": ["actual_direct_integration_capability", "real_binding_not_manual_lookalike", "explicit_blocked_or_unsupported_when_absent"],
+      "required_items": ["dashboard", "ontology"],
+      "notes": "A lack of capability is reported, not silently removed from the requested inventory."
+    },
+    {
+      "id": "SCREENSHOT01", "category": "document", "critical": true,
+      "title": "Screenshot provenance, redaction integrity and legibility",
+      "roles": {"screen": "ui_capture"},
+      "checks": ["raw_capture_hash_and_timestamp", "approved_scope_and_new_ui", "no_mock_or_legacy_capture", "unchanged_pixels_outside_masks", "legible_at_delivery_size", "review_bound_to_exact_published_hash"],
+      "required_items": []
+    },
+    {
+      "id": "DOCUMENT01", "category": "document", "critical": true,
+      "title": "Word/HTML images, links and evidence labels",
+      "roles": {"html": "artifact_check", "word": "artifact_check", "review": "document_review"},
+      "checks": ["html_images_links_anchors", "docx_media_and_relationships", "external_links_explicitly_checked_or_unverified", "illustrations_not_live_evidence", "no_private_identifiers_or_heldout_answers"],
+      "required_items": []
+    }
+  ]
+}

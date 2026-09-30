@@ -1,0 +1,6 @@
+/// Observed native OneLake binding contract; partition ONT_* annotations identify the Fabric item.
+expression 'DirectLake - {{source.lakehouse.displayName}}' =
+		let
+		    Source = AzureStorage.DataLake("{{source.lakehouse.oneLakeRootUrl}}", [HierarchicalNavigation=true])
+		in
+		    Source

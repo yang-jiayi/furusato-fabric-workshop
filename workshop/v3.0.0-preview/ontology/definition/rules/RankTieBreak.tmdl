@@ -1,0 +1,6 @@
+rule RankTieBreak
+	lineageTag: fd9fce52-f3ee-5a00-84a5-12a146687440
+	statement: Published rank columns are deterministic ordinal ranks. Preserve their source-defined amount-descending and identifier-ascending tie-break rules rather than substituting a dense rank.
+	ruleReferencedEntity Donor
+	ruleReferencedEntity Municipality
+	ruleReferencedEntity GiftCategory

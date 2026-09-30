@@ -1,0 +1,62 @@
+/// 寄附者1人1行。属性、居住都道府県、寄附ファクトの分析軸を提供します。
+table 寄附者
+	lineageTag: dc8a0065-93f6-40b8-9ead-b722bbd21583
+
+	/// 寄附者を一意に識別するキー。
+	column 寄附者ID
+		dataType: int64
+		isHidden
+		isUnique
+		isKey
+		isNullable: false
+		lineageTag: 88858796-6b89-4462-a0e0-637dcd425ef9
+		summarizeBy: none
+		sourceColumn: DonorId
+
+	/// 合成データ上の寄附者名。
+	column 寄附者名
+		dataType: string
+		isNullable: false
+		lineageTag: 4834ad47-5ad8-42d9-852f-a780c43a554d
+		summarizeBy: none
+		sourceColumn: DonorName
+
+	/// 同名を識別できる表示用の寄附者名。
+	column 寄附者表示名
+		dataType: string
+		isNullable: false
+		lineageTag: 765d319a-b2c4-491b-aa18-c4ae05ae1b6b
+		summarizeBy: none
+		sourceColumn: DonorDisplayName
+
+	/// 寄附者の年齢。平均値ではなく年齢帯や分布の分析に使用します。
+	column 年齢
+		dataType: int64
+		isNullable: false
+		lineageTag: dd9d09de-b60a-4bbb-9ea9-39fea2dd6243
+		summarizeBy: none
+		sourceColumn: DonorAge
+
+	/// 寄附者の合成職業カテゴリ。
+	column 職業
+		dataType: string
+		isNullable: false
+		lineageTag: d9dbf073-e303-45b4-a33e-9679a12da4be
+		summarizeBy: none
+		sourceColumn: DonorOccupation
+
+	/// 寄附者が居住する都道府県。寄附先都道府県とは異なります。
+	column 居住都道府県
+		dataType: string
+		isNullable: false
+		lineageTag: a237bc26-a587-4891-bafc-53fcd88d10fc
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: ResidencePrefectureName
+
+	partition 寄附者 = entity
+		mode: directLake
+		source
+			entityName: donor
+			schemaName: gold
+			expressionSource: 'DirectLake - Furusato Analytics'

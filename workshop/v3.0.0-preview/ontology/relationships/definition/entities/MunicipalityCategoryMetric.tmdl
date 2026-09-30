@@ -1,0 +1,72 @@
+/// Pre-aggregated current-static-snapshot metric for one Municipality and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain.
+entity MunicipalityCategoryMetric
+	lineageTag: 7a0d2a81-ed31-57e8-af58-d6386e2a0993
+	backingTable: ot_mun_category_metric
+	keyProperty: MunCategoryMetricId
+	synonym 'municipality category metric'
+	synonym 'municipality category summary'
+	synonym '自治体別カテゴリ指標'
+	synonym '自治体別返礼品カテゴリ実績'
+	annotation Furusato_businessRole = "semantic metric entity"
+	annotation Furusato_defaultAggregation = "none"
+	annotation Furusato_grain = "one Municipality x GiftCategory pair"
+	annotation Furusato_identityProperty = "MunCategoryMetricId"
+	annotation Furusato_keyType = "String"
+	annotation Furusato_snapshotScope = "current static Donation only"
+	annotation Furusato_supplierPolicy = "excluded"
+
+	/// Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row, encoded as {MunicipalityId}-{CategoryId:02}, for example 452025-01. The measure values are separate properties on this entity. The same NN-NN text can also occur as a PrefCategoryMetricId or a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a MunicipalityCategoryMetric identifier.
+	property MunCategoryMetricId
+		dataType: string
+		lineageTag: b41f57bb-783a-5852-92f1-ed65b0f8ee69
+		annotation Furusato_businessRole = "composite metric-row identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "string ID"
+		annotation Furusato_grain = "one Municipality x GiftCategory pair"
+		annotation Furusato_keyAmbiguity = "the same NN-NN text may exist in another metric entity type; qualify by entity type"
+		annotation Furusato_keyEncoding = "{MunicipalityId}-{CategoryId:02}"
+		annotation Furusato_keyExample = "452025-01"
+
+		backingConfiguration
+			valueColumn: ot_mun_category_metric.MunCategoryMetricId
+
+	/// Pre-aggregated static Donation count for one Municipality x GiftCategory pair.
+	property MunCategoryStaticCount
+		dataType: int64
+		lineageTag: dfe55bd5-4288-55f5-8d9e-3eae51ef1560
+		annotation Furusato_businessRole = "cross-dimensional snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality x GiftCategory pair"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_mun_category_metric.MunCategoryStaticCount
+
+	/// Pre-aggregated static Donation amount for one Municipality x GiftCategory pair.
+	property MunCategoryTotalYen
+		dataType: int64
+		lineageTag: 2edfed2b-5766-55d6-a8fa-6a165c5cf800
+		annotation Furusato_businessRole = "cross-dimensional snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality x GiftCategory pair"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_mun_category_metric.MunCategoryTotalYen
+
+	/// Amount rank of this GiftCategory inside one Municipality. Deterministic row-number rank (row_number) over MunCategoryTotalYen desc, CategoryId asc within each MunicipalityId: equal amounts never share a rank because CategoryId breaks the tie ascending.
+	property MunCategoryAmountRank
+		dataType: int64
+		lineageTag: 8d19dbde-7452-50a0-a5a4-1a2e81fe7a99
+		annotation Furusato_businessRole = "cross-dimensional amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Municipality x GiftCategory pair"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "MunicipalityId"
+		annotation Furusato_rankScope = "within Municipality"
+		annotation Furusato_rankSort = "MunCategoryTotalYen desc, CategoryId asc"
+		annotation Furusato_rankTieBreak = "CategoryId ascending"
+
+		backingConfiguration
+			valueColumn: ot_mun_category_metric.MunCategoryAmountRank
+

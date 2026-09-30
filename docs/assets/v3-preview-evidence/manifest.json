@@ -1,0 +1,868 @@
+{
+  "approved": true,
+  "captures": [
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Configure shows the saved String key and static columns. This earlier view has an Unbound time series; distinguish it from the later saved-definition change in 10.5.",
+        "ja": "保存済みStringキーと静的列のConfigure表示。時系列がUnboundの修正前の画面であり、最新状態は10.5節の保存後差分と区別します。"
+      },
+      "capturedAt": "2026-09-29T15:45:43.265967+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/7a84cbc6bdccb87ced6d5ae92a7412d78440f605b1a7960bc8e85d088af2328d.png",
+      "id": "p30-06-entities",
+      "originalSha256": "0d8334bc1333589265801a46f285fe8fdc64aa58e824606382d82d3974ab14b3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "7a84cbc6bdccb87ced6d5ae92a7412d78440f605b1a7960bc8e85d088af2328d"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Municipality Instances after repair. A separate read-only comparison matched 17 rows by eight columns to source. The image shows the visible subset, not verification of all ten entities.",
+        "ja": "修復後のMunicipality Instances。別の読取照合で17行×8列がsourceと一致しました。この画面は表示中の行のみで、全10Entityの検証ではありません。"
+      },
+      "capturedAt": "2026-09-29T21:02:55.048040+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de.png",
+      "id": "p30-06-instances",
+      "originalSha256": "2b3adf03144e909eddfefd729af0373c820313d7fc5663b816fb117f74079d9a",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual Home with ten entities and fifteen relationships. The diagram and counts do not replace reconciliation of every direction, bridge and source key pair.",
+        "ja": "実Homeの10Entity・15Relationship。接続図と件数の観測であり、全関係の方向・bridge・実キー対照合を代替しません。"
+      },
+      "capturedAt": "2026-09-29T15:43:44.982569+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png",
+      "id": "p30-07-relationships",
+      "originalSha256": "b7cc414d0b6ab63e35305033db5fce01810010e994d85ebf4d592a75cc811700",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native Run UI parameters for001 recovery: IncrementFileName is supplied; Type/Subject/Source are blank (Value is a placeholder). Cropped parameter region only; job/Copy/query success is a separate receipt. Manual recovery is not automatic delivery.",
+        "ja": "native Run UIの001回復parameter。IncrementFileNameを指定し、Type/Subject/Sourceは空（Valueはplaceholder）です。設定領域だけの切抜きで、job/Copy/query成功は別receipt。手動回復を自動配送と呼びません。"
+      },
+      "capturedAt": "2026-09-30T03:22:18.803379+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/bde681cdcfb15ddfd734386ee82eb7c94212488941203e64e1b7e91e71948cce.png",
+      "id": "p30-09-manual-recovery",
+      "originalSha256": "c1ce6af4530441375123cf8f148a6dda1952bdde2b8b26223be5d86272288a80",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "bde681cdcfb15ddfd734386ee82eb7c94212488941203e64e1b7e91e71948cce"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native mapping at capture: IncomingDonationAmountYen, Timeseries<Integer> and DonatedAt. Later review retained added PrefectureId and confirmed 73 static plus one TS. Custom-status correction is a separate receipt, not functional-query acceptance.",
+        "ja": "撮影時のnative mapping: IncomingDonationAmountYen、Timeseries<Integer>、DonatedAt。後続reviewは追加PrefectureIdを保持し、73 static + 1 TSを確認。custom status補正は別receiptで、機能queryの合格ではありません。"
+      },
+      "capturedAt": "2026-09-29T22:34:22.102645+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f.png",
+      "id": "p30-10-timeseries",
+      "originalSha256": "ca436a4040a05c04b68c2425c1f4a9fae7730578d01c9d7b50a486d7b135cd65",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native Metric source DAX and disabled Synonyms field. Only the environment-specific Source name is covered by an opaque black rectangle; unused margin is cropped. Expressions, values and UI states are unchanged.",
+        "ja": "native Metricの元DAXと無効なSynonyms欄。Sourceの環境固有名だけを黒い不透明矩形で伏せ、余白を切除しています。式・数値・UI状態は変更していません。"
+      },
+      "capturedAt": "2026-09-29T21:37:57.504127+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/d57a1ca7d0cebf7466f6b4a2077860aede53ad81b5efd9d48150da9821fb4824.png",
+      "id": "p30-12-metrics",
+      "originalSha256": "e1d8b7e6b2bd3fca7090a9374f56ad0adf39070ffb84002e66eed90af187aece",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "d57a1ca7d0cebf7466f6b4a2077860aede53ad81b5efd9d48150da9821fb4824"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual Rules > Edit rule showing SupplierAttribution and linked Supplier/Gift/Donation concepts. Rule metadata is empty and Save disabled at capture. Observed natural-language context, not proof of rule-action execution, constraint enforcement or answer improvement.",
+        "ja": "実Rules > Edit ruleのSupplierAttributionと、linked conceptsのSupplier/Gift/Donation。Rule metadataは空、Saveはdisabledという撮影時点の表示です。自然言語contextの観測で、Rule action実行・制約enforcement・回答改善の証明ではありません。"
+      },
+      "capturedAt": "2026-09-29T23:28:34.257325+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/dd7cf1f846fa651ea4d8d8622e439a02e6fa90a4f24768fa6c8355460da2409a.png",
+      "id": "p30-13-rules",
+      "originalSha256": "83fbc06b474ed757a65c69c9a5098965f343af2f847cafcd6e90876a73badd91",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "dd7cf1f846fa651ea4d8d8622e439a02e6fa90a4f24768fa6c8355460da2409a"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Municipality after the real rename, with String key, local bindings and AdministrativeArea inheritance. Entity/property IDs were preserved. No entity label was digitally replaced.",
+        "ja": "実rename後のMunicipality、Stringキー、ローカルbinding、AdministrativeAreaの継承。entity/property IDは保持。画面上の名前を画像編集で変更していません。"
+      },
+      "capturedAt": "2026-09-29T16:39:46.594101+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164.png",
+      "id": "p30-14-inheritance",
+      "originalSha256": "de286d9319ee4d15bd52dbe80168799cf7a1f667017c3db29fd00f65b036e886",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual ribbon region cropped from the2132px-wide new-UI original. +Namespace/Manage namespaces are not visible in the observed ribbon. Do not infer closed-menu/global-tenant behavior; this is separate from verified RDF URI preservation.",
+        "ja": "2132px wide new UI原画から実ribbon領域を切抜き。表示中のribbonに+Namespace/Manage namespacesは確認されません。閉じたmenuや全tenantの非対応を推測せず、RDF URI保持の成功とは分けます。"
+      },
+      "capturedAt": "2026-09-30T04:14:26.694427+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/3eca56b3a8f41ef3d29ccfcf813cd70ec4d1a14a6e3e4f503654d705d69fd0f5.png",
+      "id": "p30-14-namespace",
+      "originalSha256": "2f722ed137bfde8410ec4625de06d5be1d2f547fcb92c8d0b7cfb2301b678ad3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "3eca56b3a8f41ef3d29ccfcf813cd70ec4d1a14a6e3e4f503654d705d69fd0f5"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Before Act, AdministrativeArea.AreaName is Global / String / Unbound with no key. Cropped actual UI, not completed override/revert or binding evidence.",
+        "ja": "Act前のAdministrativeArea.AreaNameはGlobal / String / Unbound、キーなし。実画面の切抜きで、override/revertやbindingの完成証拠ではありません。"
+      },
+      "capturedAt": "2026-09-29T14:19:46.762553+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35.png",
+      "id": "p30-14-shared",
+      "originalSha256": "491e0e38fc23e3b23cde2ee704c0374647e0d958dff97fb1b3fcc04602bf084d",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual read-only preview of the metadata-only candidate. The conversation pane is cropped out; the proposed-ontology banner remains. Baseline was unchanged before saving, but the later Act failed the shared-reference invariant.",
+        "ja": "metadata-only候補の実read-only preview。会話領域を切除し、proposed ontologyの帯を保持。保存前はbaseline不変ですが、後続Actは共有参照の回帰により失敗しました。"
+      },
+      "capturedAt": "2026-09-29T15:07:45.562819+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/928a876a90f354401964069a456f6b1c29b4d2c43d0b36323295337f88ac1af5.png",
+      "id": "p30-15-act-preview",
+      "originalSha256": "b091f4207f900fe1ee14d7f6a175743c251996c54af8ec84558dc181e5973c66",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "928a876a90f354401964069a456f6b1c29b4d2c43d0b36323295337f88ac1af5"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual readback of the FAILED metadata-only Act: AreaName changed from Global to Local. Negative execution/diff and native rollback are verified by separate receipts. Completion of the failure record, not a positive Act pass.",
+        "ja": "FAILED metadata-only Actの実readback: AreaNameがGlobalからLocalへ変化。negative caseの実行/差分とnative rollbackは別receiptで確認。失敗の記録完了であり、positive Actの合格ではありません。"
+      },
+      "capturedAt": "2026-09-29T15:21:03.449903+00:00",
+      "completionEvidence": true,
+      "experience": "new",
+      "file": "captures/fa763e210b3f93dc1a92233d77c223b0ce4cc99df9226d127e433397aa0da3fb.png",
+      "id": "p30-15-act-readback",
+      "originalSha256": "16c5058903ddc40edb5c5862e7dd55ed4e3286db15dd5f3532c35f4bcbbeb5ca",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "fa763e210b3f93dc1a92233d77c223b0ce4cc99df9226d127e433397aa0da3fb"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual read-only Plan preview proposing PaymentMethod. Cropped to the single-entity proposal without changing displayed values. Separate before/after receipts verify the saved definition stayed unchanged during Plan; not a fix for the old metadata-only failure.",
+        "ja": "実read-only Plan previewのPaymentMethod提案。単一Entity追加の部分に切り抜き、表示値は変更していません。別のbefore/after receiptでPlan中の保存定義不変を確認。旧metadata-only失敗の修正合格ではありません。"
+      },
+      "capturedAt": "2026-09-30T02:53:12.665894+00:00",
+      "completionEvidence": true,
+      "experience": "new",
+      "file": "captures/5317f2c826279ba9778eed8789a22f3af3d613ddd79f2be9b615648943209762.png",
+      "id": "p30-15-additive-plan",
+      "originalSha256": "91dd9b811a6c9f9bb2a8b0a6f22019078e6dfd5a247d3034e851920968d33cd8",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "5317f2c826279ba9778eed8789a22f3af3d613ddd79f2be9b615648943209762"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual post-Apply PaymentMethodName:String / Local / Unbound with no key defined. This cropped view is paired with separate readback receipts proving preserved existing parts and only the approved entity/model-reference delta.",
+        "ja": "実Apply後のPaymentMethodName:String / Local / Unboundと未設定key。表示の切抜きと、既存parts保持・entity/model refだけの承認deltaを示す別readback receiptを組み合わせたadditive labの証拠です。"
+      },
+      "capturedAt": "2026-09-30T03:24:22.035573+00:00",
+      "completionEvidence": true,
+      "experience": "new",
+      "file": "captures/92c47e35e7cd30316907b753e1bbae30be46d6f9fff7f4cf40b6202979876e8e.png",
+      "id": "p30-15-additive-readback",
+      "originalSha256": "222645a5d54c3b3d88e269c8687dbabbea9d8b6f863936e99a8d2fd35b6f4126",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "92c47e35e7cd30316907b753e1bbae30be46d6f9fff7f4cf40b6202979876e8e"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual response from the same Gold-aware material run, explaining Notebook05, EventID deduplication, StaticSeed/RealtimeIncrement and quality acceptance—not payment, shipment, manual approval or ingestion success. Original retained; only the readable right-pane region is cropped.",
+        "ja": "同じGold-aware資料runの実応答。Notebook05、EventID重複除去、StaticSeed/RealtimeIncrement、quality acceptanceと支払・発送・手動承認・取込成功の非同一性を説明しています。原本を保ち、右paneの可読部分だけを切り抜いています。"
+      },
+      "capturedAt": "2026-09-30T04:21:10.536252+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/2f5cedb8bbb5cbb421e0f8d9d8f8dbff3d0775890c810673f905e191321111fc.png",
+      "id": "p30-15-attachment-response",
+      "originalSha256": "75df7aa10135c1c7d1997af8745a28d06e8d4f545b57c793bc15eb0e84c60971",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "2f5cedb8bbb5cbb421e0f8d9d8f8dbff3d0775890c810673f905e191321111fc"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual excerpt acknowledging all four current files in a fresh conversation. Cropped to the right pane only; pixels, UI wording and states are unchanged. Document design context, not proof of business-data querying, Act or statistical accuracy.",
+        "ja": "fresh会話で現行4ファイルを認識した実抜粋。右paneだけを切り抜き、画素・UI文言・状態は変更していません。資料の設計文脈であり、実データquery・Act・統計精度の証明ではありません。"
+      },
+      "capturedAt": "2026-09-30T04:14:26.694427+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/e87b5c46d183552ef3a89305d34bd288f4ae375de1607995cbd468853ce47af1.png",
+      "id": "p30-15-attachments",
+      "originalSha256": "2f722ed137bfde8410ec4625de06d5be1d2f547fcb92c8d0b7cfb2301b678ad3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "e87b5c46d183552ef3a89305d34bd288f4ae375de1607995cbd468853ce47af1"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Historical three-file revision, not the current four-file Gold-aware run. PDF/TXT/PNG attachments and selected Plan in frozen conversation B; upper blank space cropped. Subsequent use is evidenced by the response and receipt, not certification of the current pack.",
+        "ja": "旧3ファイル版の履歴（現行4ファイルGold-aware runではない）。凍結B会話のPDF/TXT/PNG添付とPlan選択。上部余白を切除。送信後の利用は次の応答とreceiptで確認し、現行packの認証とはしません。"
+      },
+      "capturedAt": "2026-09-29T14:35:12.503192+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/bf86fedceb4218f911921da5f0f0c4928c09455a0c7bd830609bb586c47026dc.png",
+      "id": "p30-15-historical-attachments",
+      "originalSha256": "3ee34dc9666815ad8b2935b4a6dc062ef93f94b3dfa7932e9fe13fef8a6527ff",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "bf86fedceb4218f911921da5f0f0c4928c09455a0c7bd830609bb586c47026dc"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Historical three-file revision, not the current four-file Gold-aware run. Excerpt of the same frozen B response identifying all three files and their requirements, dictionary and relationship-diagram content. Document-only use, not live-source accuracy or an independent execution trace.",
+        "ja": "旧3ファイル版の履歴（現行4ファイルGold-aware runではない）。同じ凍結B応答の抜粋。3ファイル名と業務要件・辞書・関係図の内容を説明しています。document-onlyの利用証拠で、live source正確性や独立実行traceではありません。"
+      },
+      "capturedAt": "2026-09-29T14:49:04.478873+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/bd2029102603840535dc1aa4e377cc89ae534b72b3d89a2c5f887c380a7963be.png",
+      "id": "p30-15-historical-response",
+      "originalSha256": "99d75d7870d3ea80a187578a1211aaec3400260f98af5ba545e50caa5c3af1b2",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "bd2029102603840535dc1aa4e377cc89ae534b72b3d89a2c5f887c380a7963be"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual Explore graph capture excluding the private Source header. It shows MunicipalityInPrefecture direction and rendering, but numeric node captions are ranks, not business IDs. Visible-path Table-view reconciliation and full-graph counts are separate receipts.",
+        "ja": "private Source headerを含まない実Explore graph。MunicipalityInPrefectureの方向と描画を確認できますが、node数字はrankでbusiness IDではありません。Table viewでの可視path照合とfull graph件数は別receiptです。"
+      },
+      "capturedAt": "2026-09-30T04:07:15.943000+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c.png",
+      "id": "p30-16-gql",
+      "originalSha256": "ae3698af3997d0d4d2496137e074a6d2424b05bdc42ba4d5e19d9b98e9272ad6",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "The same actual ribbon observation: a direct Ontology→Real-Time Dashboard entry is unconfirmed. Native TS KQL or a generic chart is not substitute direct-integration success; retain an environment-conditional lane.",
+        "ja": "同じ実ribbonの観測。direct Ontology→Real-Time Dashboard entryは確認されていません。native TS KQLや一般chartをdirect連携の成功に置き換えず、環境条件付きlaneとして残します。"
+      },
+      "capturedAt": "2026-09-30T04:14:26.694427+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/3eca56b3a8f41ef3d29ccfcf813cd70ec4d1a14a6e3e4f503654d705d69fd0f5.png",
+      "id": "p30-20-dashboard",
+      "originalSha256": "2f722ed137bfde8410ec4625de06d5be1d2f547fcb92c8d0b7cfb2301b678ad3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "3eca56b3a8f41ef3d29ccfcf813cd70ec4d1a14a6e3e4f503654d705d69fd0f5"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native Restore confirmation preserves the failed candidate as a version first. A separate receipt confirms exact baseline restoration. Limited to an unbound structural lab with no Metrics, not source-data or Metric-link recovery.",
+        "ja": "native Restoreで失敗候補を先にversion保存する確認。別receiptでbaselineとの完全一致を確認。外部binding 0・Metricsなしの構造labだけで、sourceデータやMetric linkの復元試験ではありません。"
+      },
+      "capturedAt": "2026-09-29T15:30:13.550533+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/46a39e4ecf1ed8712d610b0d5082f872f70b9f292c4c79bb097f1be1e579bba3.png",
+      "id": "p30-21-versions",
+      "originalSha256": "2198088e22be0e6868094fd1115c500ee6cc499bc859e8c1b3537e45eabe3ac7",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "46a39e4ecf1ed8712d610b0d5082f872f70b9f292c4c79bb097f1be1e579bba3"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual summary after reimporting the native export into an independent empty item: 98 Preserved / 0 Fixed / 0 Unsupported; ten entities, 73 properties, fifteen relationships. Separate definition comparison matches 14/14 parts after excluding 98 regenerated GUIDs, not lossless RDF metadata or Fabric runtime.",
+        "ja": "独立した空itemへnative exportを再importした実summary。98 Preserved / 0 Fixed / 0 Unsupported、10Entity・73Property・15Relationship。別の定義比較は再生成98GUIDを除いて14/14一致。RDF metadataやFabric runtimeの無損失を意味しません。"
+      },
+      "capturedAt": "2026-09-29T22:56:59.035059+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/f1a25996a580e278480d08007ab8d7b3485da3277ed279c4cafad6da068e0077.png",
+      "id": "p30-22-export",
+      "originalSha256": "df451c7f183afe013ff5d9ada565ba5d86e2a20be8b94192824340e0291e51c5",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "f1a25996a580e278480d08007ab8d7b3485da3277ed279c4cafad6da068e0077"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native import of the standards-only candidate: Preserved 98, Fixed automatically 0, Not supported 0; ten entities, 73 properties, fifteen relationships. The 100% applies only to this reduced candidate, not a lossless legacy round trip.",
+        "ja": "standards-only候補のnative import: Preserved 98、Fixed automatically 0、Not supported 0。10Entity・73Property・15Relationship。100%はこの縮小候補だけで、旧payloadのlossless往復ではありません。"
+      },
+      "capturedAt": "2026-09-29T22:42:45.879000+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/f1a25996a580e278480d08007ab8d7b3485da3277ed279c4cafad6da068e0077.png",
+      "id": "p30-22-import",
+      "originalSha256": "df451c7f183afe013ff5d9ada565ba5d86e2a20be8b94192824340e0291e51c5",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T08:10:41.090576+00:00",
+      "sha256": "f1a25996a580e278480d08007ab8d7b3485da3277ed279c4cafad6da068e0077"
+    }
+  ],
+  "freezeStatus": "frozen-for-build",
+  "labs": {
+    "copilot-act": {
+      "evidenceIds": [
+        "p30-15-act-preview",
+        "p30-15-act-readback"
+      ],
+      "executionAndReadbackObserved": true,
+      "intent": {
+        "kind": "metadata-only"
+      },
+      "invariants": {
+        "bindingsPreserved": true,
+        "entityPropertySetPreserved": true,
+        "inheritancePreserved": true,
+        "keysPreserved": true,
+        "lineageIdsPreserved": true,
+        "onlyApprovedMetadataDelta": false,
+        "propertyTypesPreserved": true,
+        "sharedPropertyReferencesPreserved": false
+      },
+      "knownIssue": {
+        "failedInvariants": [
+          "sharedPropertyReferencesPreserved",
+          "onlyApprovedMetadataDelta"
+        ],
+        "reviewed": true,
+        "rollbackVerified": true
+      },
+      "reason": {
+        "en": "The old metadata-only patch lost reusableProperty and remains FAILED. Native rollback is verified, not a passed bug fix; retained as a known issue.",
+        "ja": "旧metadata-only patchはreusablePropertyを失いFAILED。native rollbackは確認済みだがbug修正合格ではない。known issueとして保持。"
+      },
+      "status": "failed"
+    },
+    "copilot-additive-entity": {
+      "approvedDelta": {
+        "addedParts": [
+          "entities/PaymentMethod.tmdl"
+        ],
+        "changedExistingParts": [
+          "model.tmdl"
+        ],
+        "modelReferencesAdded": [
+          "PaymentMethod"
+        ],
+        "newProperties": [
+          {
+            "dataType": "string",
+            "name": "PaymentMethodName"
+          }
+        ],
+        "removedParts": []
+      },
+      "evidenceIds": [
+        "p30-15-additive-plan",
+        "p30-15-additive-readback"
+      ],
+      "executionAndReadbackObserved": true,
+      "intent": {
+        "dataType": "string",
+        "entityName": "PaymentMethod",
+        "keyless": true,
+        "kind": "add-unbound-keyless-entity",
+        "propertyName": "PaymentMethodName",
+        "unbound": true
+      },
+      "invariants": {
+        "existingIdsTypesKeysBindingsSharedRefsInheritancePreserved": true,
+        "existingPartsExceptModelByteIdentical": true,
+        "modelOnlyAddsApprovedReference": true,
+        "newEntityMatchesApprovedIntent": true,
+        "planLeftDefinitionUnchanged": true,
+        "sourceDataUnchanged": true
+      },
+      "observedDelta": {
+        "addedParts": [
+          "entities/PaymentMethod.tmdl"
+        ],
+        "changedExistingParts": [
+          "model.tmdl"
+        ],
+        "modelReferencesAdded": [
+          "PaymentMethod"
+        ],
+        "newProperties": [
+          {
+            "dataType": "string",
+            "name": "PaymentMethodName"
+          }
+        ],
+        "removedParts": []
+      },
+      "reason": {
+        "en": "Separate typed PaymentMethod/String-property Plan/Act/readback verified: existing semantic parts/IDs/keys/bindings/shared refs preserved, with only the approved model reference changed.",
+        "ja": "別typed intentのPaymentMethod/String property追加だけをPlan/Act/readbackで確認。既存semantic parts・IDs/keys/bindings/shared refsを保持し、model ref以外の既存変更なし。"
+      },
+      "status": "passed"
+    },
+    "copilot-attachments": {
+      "evidenceIds": [
+        "p30-15-historical-attachments",
+        "p30-15-historical-response",
+        "p30-15-attachments",
+        "p30-15-attachment-response"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Current Gold-aware four-file/same-prompt/fresh-conversation context use, hashes and unchanged definition verified. The382px panes remain partial, not source-query/Act/original84 credit.",
+        "ja": "現行Gold-aware4ファイル/same prompt/fresh会話で正しい資料context利用、hash一致、定義不変を確認。382px paneはpartialで、source query/Act/元84条件へ加点しない。"
+      },
+      "status": "observed"
+    },
+    "copilot-baseline": {
+      "evidenceIds": [],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Historical no-attachment control did not invent document contents; complete source-discovery/typed-draft/preview captures remain incomplete.",
+        "ja": "旧添付なし対照は資料内容を捏造せず回答。全source discovery/typed draft/previewのcompletion captureは不足。"
+      },
+      "status": "unverified"
+    },
+    "dashboard": {
+      "evidenceIds": [
+        "p30-20-dashboard"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Direct Ontology→RTdashboard entry is unobserved and environment-conditional. Native Ontology agent KQL verifies TS exploration, not direct-dashboard integration.",
+        "ja": "direct Ontology→RTdashboard entryを観測できず、環境条件付き。TS探索はnative Ontology agent KQLで検証済みだがdirect dashboardではない。"
+      },
+      "status": "blocked"
+    },
+    "data-agent": {
+      "evidenceIds": [],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Final Compat NativeUI is48 PASS/36 FAIL, quality-unaccepted and main unpromoted. The gen1 bridge enabled consumer GQL, not a gen2 connector fix. Separate ten conversations/nine source executions from remaining content/native-gate failures.",
+        "ja": "最終Compat NativeUIは48 PASS/36 FAILで品質未合格、main未promotion。gen1 bridgeでconsumer GQLは実行成功したがgen2 connector修正ではない。10会話/9source実行と残る内容・native gate失敗を分ける。"
+      },
+      "status": "failed"
+    },
+    "entities": {
+      "evidenceIds": [
+        "p30-06-entities",
+        "p30-06-instances"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Primary core ten entities,73 static+one TS and functional Municipality sample are verified; complete UI coverage of every entity remains incomplete.",
+        "ja": "primary core10Entity、73 static+1TSとMunicipality sampleの機能照合は確認。全EntityのUI完成captureは未網羅。"
+      },
+      "status": "observed"
+    },
+    "evaluation": {
+      "evidenceIds": [],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Manual fixed-rubric offline judgment of original ten once/84 conditions:48 PASS/36 FAIL, zero N/A/unverified/preblocked.29 content/required-evidence failures plus seven native T10 gates. Do not merge or claim causal A/B with historical MCP.",
+        "ja": "元10問各1回/84条件のmanual fixed-rubric offline判定は48 PASS/36 FAIL、N/A/実行未検証/前提blocked0。FAIL29内容/要求証拠＋7nativeT10gate。過去MCPと合算/因果A/Bにしない。"
+      },
+      "status": "failed"
+    },
+    "gold": {
+      "evidenceIds": [],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Independent-file Notebook05,29 outputs,15000/14900/100 and Gold/DAX are verified, but required UI completion capture is incomplete; separate from automatic Eventhouse delivery.",
+        "ja": "Notebook05の独立file入力・29outputs・15000/14900/100とGold/DAXは確認。要求されたUI completion captureは不足し、Eventhouse自動配送とは別。"
+      },
+      "status": "unverified"
+    },
+    "graph": {
+      "evidenceIds": [
+        "p30-16-gql"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Gen2 static-companion GQL109592/297303 and10/15 labels verified; native UI21 paths/ten visible independently checked. Primary TS Graph has InvalidPropertyType. The separate gen1 bridge subsequently enabled actual Data Agent GQL; the gen2 connector remains unfixed and full answer quality is not accepted.",
+        "ja": "gen2 static companionのGQL109592/297303・10/15labelsを確認。native UI21paths/可視10も別照合。primary TS GraphはInvalidPropertyType。後続の別gen1 bridgeでData Agentの実GQL実行を確認しましたが、gen2 connectorの修復や全回答品質の合格ではありません。"
+      },
+      "status": "observed"
+    },
+    "inheritance": {
+      "evidenceIds": [
+        "p30-14-inheritance"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Municipality business name/key/binding and AdministrativeArea inheritance verified; complete stored/effective/override/revert testing remains incomplete.",
+        "ja": "Municipalityの実名・key/binding・AdministrativeArea継承を確認。stored/effective metadataとoverride/revertの全試験は未網羅。"
+      },
+      "status": "observed"
+    },
+    "mcp": {
+      "evidenceIds": [],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Official ontologyEndpoint three tools/four matching Rule names/statements verified. Independent ask_ontology query-completion capture remains incomplete; no Rule-use/enforcement claim.",
+        "ja": "official ontologyEndpoint3tools・4rules名称/statement一致を確認。独立したask_ontology query completion captureは不足し、Rules考慮/enforcementを主張しない。"
+      },
+      "status": "unverified"
+    },
+    "metrics": {
+      "evidenceIds": [
+        "p30-12-metrics"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Native Metrics/source links/original DAX and scoped numerical agreement verified; Metric-rich restoration and complete execution-trace acceptance remain incomplete.",
+        "ja": "native Metrics/source link/元DAXと限定数値一致を確認。Metric-rich復元と全実行traceの受入れは未完了。"
+      },
+      "status": "observed"
+    },
+    "namespaces": {
+      "evidenceIds": [
+        "p30-14-namespace"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Management entry is unconfirmed in the wide new-UI ribbon. RDF URI/default-namespace preservation is verified, not UI management or universal product unsupported status.",
+        "ja": "wide new UI ribbonで管理entry未確認。RDF namespace URI/default namespace保持は実証済みだがUI管理ではない。全製品非対応とはしない。"
+      },
+      "status": "blocked"
+    },
+    "native-delivery": {
+      "evidenceIds": [
+        "p30-09-manual-recovery"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Automatic002/003 plus exactly one native-UI manual001 recovery reconciles actual15000/14900/100. Retain generic-parameters403; rule stopped and file/Pipeline unchanged. Not three automatic successes.",
+        "ja": "002/003自動＋001 native UI手動1回で実query全15000/14900/100。generic parameters403は保持。rule停止・file/Pipeline不変、全3件自動ではない。"
+      },
+      "status": "observed"
+    },
+    "publish": {
+      "evidenceIds": [],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Publication configuration/role counts read only, without changes. No authorized second low-privilege principal for proven RLS/OLS/CLS negative tests; candidate main promotion is not established.",
+        "ja": "公開設定/role件数はread-onlyで確認、変更なし。第2の承認済み低権限principalがなくRLS/OLS/CLS negative testsは未証明。候補main promotionも未成立。"
+      },
+      "status": "unverified"
+    },
+    "rdf": {
+      "evidenceIds": [
+        "p30-22-import",
+        "p30-22-export"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Standards-only native cycle/namespace preservation and14/14 normalized parts verified with label/type/header losses retained. The480px export dialog is not embedded as completion evidence; no runtime losslessness claim.",
+        "ja": "standards-only native import/export/reimportとnamespace保持、14/14 normalized partsを確認。label/type/header損失は保持。480px export dialogはcompletion解像度不足で非掲載、runtime無損失ではない。"
+      },
+      "status": "observed"
+    },
+    "relationships": {
+      "evidenceIds": [
+        "p30-07-relationships"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Static companion10/72/15 labels/counts and requested paths reconcile through native GQL/source checks; not exhaustive mapping-UI/every-edge-pair validation.",
+        "ja": "static companion10/72/15・全labels/件数・要求pathをnative GQLとsourceへ照合。全mapping UI/全edge pairの網羅検査ではない。"
+      },
+      "status": "observed"
+    },
+    "rules": {
+      "evidenceIds": [
+        "p30-13-rules"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Actual SupplierAttribution wording/three concepts and official MCP four-rule reading verified. Metadata completion, actions/enforcement or ask_ontology Rule use are not claimed.",
+        "ja": "SupplierAttributionの実文言/3conceptsとofficial MCPの4rules読取を確認。metadata未完了、action/enforcement/ask_ontologyのRules利用は主張しない。"
+      },
+      "status": "observed"
+    },
+    "shared-properties": {
+      "evidenceIds": [
+        "p30-14-shared"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Global display, unsafe Act localization and native rollback retained; separate from complete shared override/revert/detach acceptance.",
+        "ja": "Global表示、unsafe ActでのLocal化、native rollbackを保持。共有機能の全override/revert/detach受入れとは別。"
+      },
+      "status": "observed"
+    },
+    "timeseries": {
+      "evidenceIds": [
+        "p30-10-timeseries"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Native Plan bounded KQL execution and independent reconciliation are verified with unchanged definition and73 static+one TS. Functional TS querying, not TS Graph; the additional query-screen capture is not included.",
+        "ja": "native Planのbounded KQL実行と独立照合を確認、定義不変。73 static+1TSを保持。機能TS query成功でありTS Graph成功ではなく、追加query画面captureは未収録。"
+      },
+      "status": "observed"
+    },
+    "version-history": {
+      "evidenceIds": [
+        "p30-21-versions"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Later bound native Restore reconciles exact hash and17 rows/136 values. The retained older dialog is unbound rollback history; bound-specific completion imagery is incomplete. Not source-data/Metric-rich restoration.",
+        "ja": "後続bound native Restoreはexact hashと17rows/136valuesを照合。掲載旧dialogはunbound rollback履歴で、bound専用completion画面は不足。source-data/Metric-rich restoreではない。"
+      },
+      "status": "observed"
+    }
+  },
+  "originalSuiteRuns": [
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 51,
+        "executionUnverified": 1,
+        "fail": 23,
+        "notApplicable": 0,
+        "pass": 9
+      },
+      "failureCounts": {
+        "content": 23,
+        "nativeAcceptance": 0
+      },
+      "freshBackendProof": false,
+      "id": "main-baseline",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Main baseline",
+        "ja": "Main baseline（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "observedAt": "2026-09-29T23:44:56.522473+00:00",
+      "preblockedQuestions": 5,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 5,
+      "summary": {
+        "en": "Main baseline retains observed failures and missing execution proof.",
+        "ja": "Main baseline: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 51,
+        "executionUnverified": 1,
+        "fail": 10,
+        "notApplicable": 0,
+        "pass": 22
+      },
+      "failureCounts": {
+        "content": 3,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": false,
+      "id": "static-first",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Isolated StaticFirst",
+        "ja": "Isolated StaticFirst（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "observedAt": "2026-09-30T00:45:29.194804+00:00",
+      "preblockedQuestions": 5,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 5,
+      "summary": {
+        "en": "Separate isolated candidate, not promoted. T08 has three content deficiencies; T10 native content block produces seven acceptance failures, not correct contextual refusal.",
+        "ja": "Isolated StaticFirst: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 4,
+        "fail": 38,
+        "notApplicable": 3,
+        "pass": 39
+      },
+      "failureCounts": {
+        "content": 31,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": false,
+      "id": "context-published-mcp",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Context published-MCP",
+        "ja": "Context published-MCP（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "notApplicableReason": {
+        "en": "Three conditions are inapplicable to the recorded answer branches; retained in the original84 denominator.",
+        "ja": "記録された回答branchで3条件が非該当。元84条件の分母に保持。"
+      },
+      "observedAt": "2026-09-30T04:33:42.963361+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Published-MCP ledger only. Native UI/SDK diagnostics and direct operator queries do not change these grades. Main is unchanged and not promoted.",
+        "ja": "Context published-MCP: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 36,
+        "notApplicable": 0,
+        "pass": 48
+      },
+      "failureCounts": {
+        "content": 29,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": true,
+      "id": "compat-native-ui-final",
+      "independentExecutionTraces": 7,
+      "label": {
+        "en": "Final Compat NativeUI (quality not accepted, not promoted)",
+        "ja": "最終Compat NativeUI（品質未合格・未promotion）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 10,
+        "judgment": "manual-fixed-rubric-offline",
+        "recordedModel": "gpt-5.6-terra",
+        "runtime": "preview",
+        "sourceExecutions": {
+          "gql": 2,
+          "kql": 2,
+          "sql": 5
+        },
+        "stage": "sandbox",
+        "surface": "native-ui",
+        "transport": "responses"
+      },
+      "observedAt": "2026-09-30T07:31:33.077630+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Manual fixed-rubric offline judgment. Ten backend conversations; nine source executions (SQL5/GQL2/KQL2) across seven question slots. Scoped gen1 consumer benefit is verified, not a gen2 fix or quality acceptance.29 content/required-evidence failures plus seven T10 native gates.",
+        "ja": "manual fixed-rubric offline判定。10 backend会話、source実行9回（SQL5/GQL2/KQL2）は7質問slotで確認。gen1 consumer benefitは実証したがgen2修正/品質合格ではない。FAIL29内容/要求証拠＋T10native gate7。"
+      }
+    }
+  ],
+  "reviewedAt": "2026-09-30T10:04:21.386824+00:00",
+  "reviewer": "publication-consistency-review",
+  "schemaVersion": "furusato-preview30-public-evidence/v1",
+  "scope": "historical-observed-run"
+}

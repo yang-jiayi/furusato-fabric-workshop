@@ -1,0 +1,53 @@
+table ot_supplier
+	lineageTag: edb0ed92-17df-596c-8e36-1f58fd248415
+
+	column SupplierId
+		dataType: int64
+		sourceColumn: SupplierId
+
+	column SupplierName
+		dataType: string
+		sourceColumn: SupplierName
+
+	column SupplierDisplayName
+		dataType: string
+		sourceColumn: SupplierDisplayName
+
+	column SupplierType
+		dataType: string
+		sourceColumn: SupplierType
+
+	column SupplierTypeEn
+		dataType: string
+		sourceColumn: SupplierTypeEn
+
+	column SupplierProvidedGiftCount
+		dataType: int64
+		sourceColumn: SupplierProvidedGiftCount
+
+	column PrefectureId
+		dataType: int64
+		sourceColumn: PrefectureId
+
+	partition ot_supplier = entity
+		mode: directLake
+		source
+			entityName: ot_supplier
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

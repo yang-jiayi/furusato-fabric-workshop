@@ -1,0 +1,41 @@
+{
+  "source": "Furusato_Analytics.SemanticModel",
+  "storageMode": "DirectLake",
+  "factSource": "gold.donations",
+  "dimensionSources": [
+    "gold.donor",
+    "gold.municipality",
+    "gold.gift",
+    "gold.date"
+  ],
+  "measures": [
+    {
+      "table": "寄附",
+      "name": "静的寄附総額",
+      "dax": "CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))",
+      "formatString": "¥#,##0"
+    },
+    {
+      "table": "寄附",
+      "name": "静的寄附件数",
+      "dax": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))",
+      "formatString": "#,##0"
+    },
+    {
+      "table": "寄附",
+      "name": "受入増分寄附総額",
+      "dax": "CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))",
+      "formatString": "¥#,##0"
+    },
+    {
+      "table": "寄附",
+      "name": "受入増分寄附件数",
+      "dax": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))",
+      "formatString": "#,##0"
+    }
+  ],
+  "sourceOwnsDax": true,
+  "ontologyProjection": "native-ui-required",
+  "dataAgentRequiresDirectSemanticModelSource": true,
+  "validationState": "offline-only-not-executed"
+}

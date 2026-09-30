@@ -1,0 +1,109 @@
+/// Synthetic workshop business that may provide zero or more return-gift options (返礼品提供事業者). It is neither the Donation recipient nor a Donor; location is defined by SupplierInPrefecture.
+entity Supplier
+	lineageTag: d060dfd9-9f33-5c04-bffc-fa9f95372dde
+	backingTable: ot_supplier
+	keyProperty: SupplierId
+	synonym supplier
+	synonym suppliers
+	synonym vendor
+	synonym vendors
+	synonym provider
+	synonym providers
+	synonym merchant
+	synonym 'local business'
+	synonym 'return-gift provider'
+	synonym 'gift supplier'
+	synonym '事業者'
+	synonym '提供事業者'
+	synonym '返礼品事業者'
+	synonym 'ベンダー'
+	synonym '加盟店'
+	annotation Furusato_businessRole = "provider dimension"
+	annotation Furusato_grain = "one synthetic supplier"
+	annotation Furusato_locationRole = "supplier base prefecture"
+	annotation Furusato_metricPolicy = "supplier allocation is not defined"
+	annotation Furusato_sensitivity = "Synthetic-Organization"
+
+	/// Stable numeric identifier for one synthetic registered Supplier entity. It identifies a catalog provider, not an actual fulfillment event.
+	property SupplierId
+		dataType: int64
+		lineageTag: 016daa4a-ce0f-5c07-b5bc-580c2329366a
+		annotation Furusato_businessRole = "stable entity identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer ID"
+		annotation Furusato_fulfillmentRole = "none"
+		annotation Furusato_grain = "one Supplier"
+
+		backingConfiguration
+			valueColumn: ot_supplier.SupplierId
+
+	/// Synthetic Japanese organization-style name of the Supplier or vendor (事業者名／提供事業者名). It is not a Donation recipient.
+	property SupplierName
+		dataType: string
+		lineageTag: 66ef6127-8ab0-5c56-82b0-31e63856398b
+		annotation Furusato_businessRole = "Japanese label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "synthetic Japanese organization name"
+		annotation Furusato_grain = "one value per Supplier"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Synthetic-Organization"
+
+		backingConfiguration
+			valueColumn: ot_supplier.SupplierName
+
+	/// Display-only composite in the format {SupplierName} / Supplier {SupplierId}. Use SupplierId for identity and this property for human-readable output.
+	property SupplierDisplayName
+		dataType: string
+		lineageTag: c6dc3f05-d9d2-5501-b7d8-3d1c6aa464db
+		annotation Furusato_businessRole = "display label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "{SupplierName} / Supplier {SupplierId}"
+		annotation Furusato_grain = "one value per Supplier"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Synthetic-Organization"
+
+		backingConfiguration
+			valueColumn: ot_supplier.SupplierDisplayName
+
+	/// Japanese controlled supplier classification or business-type label (事業者種別／事業者区分) for the Supplier or vendor. It describes the provider, not the Gift category or Donation recipient.
+	property SupplierType
+		dataType: string
+		lineageTag: b8486c30-0b0a-5cf2-bef8-52faf337a62c
+		annotation Furusato_businessRole = "Japanese categorical attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 28 values"
+		annotation Furusato_grain = "one value per Supplier"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Synthetic-Organization"
+
+		backingConfiguration
+			valueColumn: ot_supplier.SupplierType
+
+	/// Canonical English business-type label for SupplierType. Use it for English filtering and grouping; it describes the provider and not the Gift category or Donation recipient.
+	property SupplierTypeEn
+		dataType: string
+		lineageTag: 92e1a286-1e98-56d3-a5a2-cf9dc89c62e7
+		annotation Furusato_businessRole = "canonical English categorical attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 28 values"
+		annotation Furusato_grain = "one value per Supplier"
+		annotation Furusato_language = "en"
+		annotation Furusato_sensitivity = "Synthetic-Organization"
+
+		backingConfiguration
+			valueColumn: ot_supplier.SupplierTypeEn
+
+	/// Count of distinct Gifts linked to this Supplier in the registered catalog; it is not a Donation or fulfillment metric.
+	property SupplierProvidedGiftCount
+		dataType: int64
+		lineageTag: 85d7ded0-241b-50e0-86e0-6d3a9db6597f
+		annotation Furusato_businessRole = "catalog relationship count"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_fulfillmentRole = "none"
+		annotation Furusato_grain = "one Supplier"
+		annotation Furusato_measure = "count of registered Gift links"
+		annotation Furusato_monetaryRole = "none"
+
+		backingConfiguration
+			valueColumn: ot_supplier.SupplierProvidedGiftCount
+

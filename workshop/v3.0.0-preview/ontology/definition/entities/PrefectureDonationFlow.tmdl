@@ -1,0 +1,89 @@
+/// Pre-aggregated current-static-snapshot flow from Donor residence Prefecture to Donation recipient Prefecture. Origin and destination are not interchangeable. It excludes time-series observations and Suppliers.
+entity PrefectureDonationFlow
+	lineageTag: 47f59acc-8f91-5d97-b5ba-8be12c00f990
+	backingTable: ot_pref_donation_flow
+	keyProperty: PrefDonationFlowId
+	synonym 'prefecture donation flow'
+	synonym 'origin destination donation flow'
+	synonym '居住地から寄付先への寄付フロー'
+	synonym '都道府県間寄付フロー'
+	annotation Furusato_businessRole = "semantic flow metric entity"
+	annotation Furusato_defaultAggregation = "none"
+	annotation Furusato_direction = "origin residence to destination recipient"
+	annotation Furusato_grain = "one residence Prefecture x recipient Prefecture pair"
+	annotation Furusato_identityProperty = "PrefDonationFlowId"
+	annotation Furusato_keyType = "String"
+	annotation Furusato_snapshotScope = "current static Donation only"
+	annotation Furusato_supplierPolicy = "excluded"
+
+	/// Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row, encoded as {ResidencePrefectureId:02}-{RecipientPrefectureId:02}, for example 13-01, which reads as residence 13 to recipient 01. Directional measures are separate properties. The identical NN-NN text can also be a PrefCategoryMetricId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureDonationFlow identifier.
+	property PrefDonationFlowId
+		dataType: string
+		lineageTag: ba384792-5478-5f98-9333-4d3a4cbe59cd
+		annotation Furusato_businessRole = "origin-destination metric-row identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "string ID"
+		annotation Furusato_grain = "one residence Prefecture x recipient Prefecture pair"
+		annotation Furusato_keyAmbiguity = "the same NN-NN text may exist in another metric entity type; qualify by entity type"
+		annotation Furusato_keyEncoding = "{ResidencePrefectureId:02}-{RecipientPrefectureId:02}"
+		annotation Furusato_keyExample = "13-01 = residence Prefecture 13 to recipient Prefecture 01"
+
+		backingConfiguration
+			valueColumn: ot_pref_donation_flow.PrefDonationFlowId
+
+	/// Pre-aggregated count of static Donations from one residence Prefecture to one recipient Prefecture.
+	property PrefFlowStaticCount
+		dataType: int64
+		lineageTag: 4a6147a9-1439-520c-9a0c-0cdf839732a6
+		annotation Furusato_businessRole = "origin-destination snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one residence Prefecture x recipient Prefecture pair"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_pref_donation_flow.PrefFlowStaticCount
+
+	/// Pre-aggregated JPY amount from one residence Prefecture to one recipient Prefecture.
+	property PrefFlowTotalYen
+		dataType: int64
+		lineageTag: 3c16ab70-6d7c-5625-a8bb-1a7416d1bfdf
+		annotation Furusato_businessRole = "origin-destination snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one residence Prefecture x recipient Prefecture pair"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_pref_donation_flow.PrefFlowTotalYen
+
+	/// Amount rank of this recipient Prefecture among the destinations of one donor-residence Prefecture: the window is partitioned by the origin, so rank 1 is the destination that received the most from that origin. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, RecipientPrefectureId asc within each ResidencePrefectureId: equal amounts never share a rank because RecipientPrefectureId breaks the tie ascending.
+	property PrefFlowOriginRank
+		dataType: int64
+		lineageTag: ea126d96-1750-5e2d-85a1-26f93aee4215
+		annotation Furusato_businessRole = "flow amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one residence-to-recipient pair"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "ResidencePrefectureId"
+		annotation Furusato_rankScope = "destinations within one residence Prefecture"
+		annotation Furusato_rankSort = "PrefFlowTotalYen desc, RecipientPrefectureId asc"
+		annotation Furusato_rankTieBreak = "RecipientPrefectureId ascending"
+
+		backingConfiguration
+			valueColumn: ot_pref_donation_flow.PrefFlowOriginRank
+
+	/// Amount rank of this donor-residence Prefecture among the origins of one recipient Prefecture: the window is partitioned by the destination, so rank 1 is the origin that sent the most to that destination. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, ResidencePrefectureId asc within each RecipientPrefectureId: equal amounts never share a rank because ResidencePrefectureId breaks the tie ascending.
+	property PrefFlowDestinationRank
+		dataType: int64
+		lineageTag: 27063d68-27e4-5d1e-813a-96dfef1ce64e
+		annotation Furusato_businessRole = "flow amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one residence-to-recipient pair"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "RecipientPrefectureId"
+		annotation Furusato_rankScope = "origins within one recipient Prefecture"
+		annotation Furusato_rankSort = "PrefFlowTotalYen desc, ResidencePrefectureId asc"
+		annotation Furusato_rankTieBreak = "ResidencePrefectureId ascending"
+
+		backingConfiguration
+			valueColumn: ot_pref_donation_flow.PrefFlowDestinationRank
+

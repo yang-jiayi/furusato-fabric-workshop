@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "furusato-donation-events-synthetic/v1",
+  "table": "DonationEvents",
+  "incrementCsvMapping": "DonationEvents_IncrementCsvMap",
+  "mappingNote": "The twelve-column columns[] contract below is the only supported input and is ingested with incrementCsvMapping (DonationEvents_IncrementCsvMap) by the Data Pipeline that copies Lakehouse Files/increment/donation_events_*.csv.",
+  "ingestionPath": {
+    "trigger": "Reflex OneLake Microsoft.Fabric.OneLake.FileCreated on /Files/increment/*.csv",
+    "pipelineParameters": [
+      "IncrementFileName",
+      "Type",
+      "Subject",
+      "Source"
+    ],
+    "sourceFolder": "Files/increment",
+    "sink": "DonationEvents"
+  },
+  "observationWindowUtc": {
+    "from": "2026-08-01T00:02:47Z",
+    "to": "2026-08-31T23:58:20Z"
+  },
+  "encoding": "UTF-8",
+  "delimiter": ",",
+  "firstRowIsHeader": true,
+  "columns": [
+    {
+      "name": "EventID",
+      "kqlType": "string",
+      "nullable": false,
+      "purpose": "Stable deduplication key"
+    },
+    {
+      "name": "DonationID",
+      "kqlType": "long",
+      "nullable": false,
+      "purpose": "Synthetic observation identifier"
+    },
+    {
+      "name": "DonorID",
+      "kqlType": "long",
+      "nullable": false,
+      "purpose": "Seed donor foreign key"
+    },
+    {
+      "name": "MunicipalityID",
+      "kqlType": "string",
+      "nullable": false,
+      "purpose": "Six-character seed municipality foreign key"
+    },
+    {
+      "name": "GiftID",
+      "kqlType": "long",
+      "nullable": false,
+      "purpose": "Seed gift foreign key"
+    },
+    {
+      "name": "DonationAmountYen",
+      "kqlType": "long",
+      "nullable": false,
+      "purpose": "Observed amount in yen"
+    },
+    {
+      "name": "DonatedAt",
+      "kqlType": "datetime",
+      "nullable": false,
+      "purpose": "Ontology time-series timestamp"
+    },
+    {
+      "name": "PaymentMethod",
+      "kqlType": "string",
+      "nullable": false,
+      "purpose": "Synthetic payment method"
+    },
+    {
+      "name": "WorkshopRunId",
+      "kqlType": "string",
+      "nullable": false,
+      "purpose": "Packaged increment batch identifier"
+    },
+    {
+      "name": "ParticipantAlias",
+      "kqlType": "string",
+      "nullable": false,
+      "purpose": "Non-personal participant alias"
+    },
+    {
+      "name": "SourceFile",
+      "kqlType": "string",
+      "nullable": false,
+      "purpose": "Pipeline source reconciliation"
+    },
+    {
+      "name": "PublishedAtUtc",
+      "kqlType": "datetime",
+      "nullable": false,
+      "purpose": "Publication audit timestamp"
+    }
+  ],
+  "materializedViewInputs": {
+    "MunicipalityID": "string",
+    "DonatedAt": "datetime",
+    "WorkshopRunId": "string",
+    "ParticipantAlias": "string",
+    "SourceFile": "string",
+    "DonationAmountYen": "long",
+    "PublishedAtUtc": "datetime"
+  },
+  "deduplication": {
+    "key": "EventID",
+    "rawObservationRows": 15000,
+    "uniqueEventIds": 14900,
+    "duplicateEventIds": 100,
+    "duplicateMultiplicity": 2,
+    "note": "The historical KQL dedup policy was unavailable; this contract supplies controlled duplicate keys for policy testing."
+  }
+}

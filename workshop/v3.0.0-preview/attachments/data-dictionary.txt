@@ -1,0 +1,297 @@
+Furusato Workshop 3.0 Preview | portable data dictionary / データ辞書
+Synthetic context only / 合成データの設計文脈。No private benchmark answers.
+Dataset contract: 2.7.0-realistic.1
+Do not treat this file as source data ingestion, RDF import, or authorization.
+Raw 15000 / unique EventID 14900 / duplicate rows 100. Never mix raw and deduplicated denominators.
+Donor residence != recipient municipality geography != supplier registration.
+SupplierProvidesGift means registration, NOT delivery; DonationSelectedGift means selection, NOT receipt.
+Do not infer income, assets or wealth from donation amounts.
+Definition boundary: this is a business/source dictionary, NOT a generation-2 definition payload.
+New definitions use TMDL/TMSL++ with compatibilityLevel 1000000, not old EntityTypes JSON.
+Source-contract BigInt maps to TMDL int64, DateTime to dateTime, String to string.
+Native target types below describe intended meaning; they do not prove native binding or service acceptance.
+
+1. ACTUAL CSV SCHEMAS / 公開CSV実スキーマ
+business_gifts.csv | rows=14514
+Columns: BusinessID, GiftID
+businesses.csv | rows=2500
+Columns: BusinessID, BusinessName, PrefectureID, BusinessType, PrefectureName, BusinessTypeEn
+categories.csv | rows=30
+Columns: CategoryID, CategoryName, CategoryNameEn
+donation_orders.csv | rows=80000
+Columns: DonationID, DonorID, MunicipalityID, GiftID, DonationAmountYen, DonatedAt, PaymentMethod
+donors.csv | rows=12000
+Columns: DonorID, DonorName, PrefectureID, Age, Occupation, PrefectureName, PrefectureNameEn, OccupationEn
+gifts.csv | rows=6000
+Columns: GiftID, GiftName, CategoryID, MunicipalityID, Notes, GiftNameEn
+municipalities.csv | rows=1741
+Columns: MunicipalityID, MunicipalityName, PrefectureID, PrefectureName
+prefectures.csv | rows=47
+Columns: PrefectureID, PrefectureName, PrefectureNameEn
+donation_events_001.csv | rows=5000
+Columns: EventID, DonationID, DonorID, MunicipalityID, GiftID, DonationAmountYen, DonatedAt, PaymentMethod, WorkshopRunId, ParticipantAlias, SourceFile, PublishedAtUtc
+donation_events_002.csv | rows=5000
+Columns: EventID, DonationID, DonorID, MunicipalityID, GiftID, DonationAmountYen, DonatedAt, PaymentMethod, WorkshopRunId, ParticipantAlias, SourceFile, PublishedAtUtc
+donation_events_003.csv | rows=5000
+Columns: EventID, DonationID, DonorID, MunicipalityID, GiftID, DonationAmountYen, DonatedAt, PaymentMethod, WorkshopRunId, ParticipantAlias, SourceFile, PublishedAtUtc
+
+2. NOTEBOOK 01 ENTITY BINDINGS / 型・キー・実列対応
+
+Prefecture | key=PrefectureId | display=PrefectureName
+Japanese prefecture (都道府県) used in two separate geography paths: recipient geography through Municipality and donor-residence geography through Donor. It is a reference dimension, not a Donation fact grain.
+  PrefectureId : BigInt [KEY] | new TMDL target type=int64 | Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality.
+  PrefectureName : String | new TMDL target type=string | Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output.
+  PrefectureNameEn : String | new TMDL target type=string | Canonical English label of the prefecture. Use it for English lookup and display; PrefectureId remains the identity.
+  PrefReceivedStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated count of static Donations received by municipalities in this Prefecture.
+  PrefReceivedTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated JPY amount received by municipalities in this Prefecture.
+  PrefReceivedAmountRank : BigInt | new TMDL target type=int64 | Received-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefReceivedTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending.
+  PrefResidentStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated count of static Donations made by Donors who live in this Prefecture.
+  PrefResidentTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated JPY amount donated by Donors who live in this Prefecture.
+  PrefResidentAmountRank : BigInt | new TMDL target type=int64 | Resident-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefResidentTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_prefecture
+    PrefectureId -> PrefectureId
+    PrefectureName -> PrefectureName
+    PrefectureNameEn -> PrefectureNameEn
+    PrefReceivedStaticCount -> PrefReceivedStaticCount
+    PrefReceivedTotalYen -> PrefReceivedTotalYen
+    PrefReceivedAmountRank -> PrefReceivedAmountRank
+    PrefResidentStaticCount -> PrefResidentStaticCount
+    PrefResidentTotalYen -> PrefResidentTotalYen
+    PrefResidentAmountRank -> PrefResidentAmountRank
+
+Municipality | key=MunicipalityId | display=MunicipalityDisplayName
+Japanese municipality (自治体／市区町村) that may receive zero or more Donations. It also keys operational time-series observations; those observations are not Donation entities and have no Donor, Gift, or Supplier identity.
+  MunicipalityId : String [KEY] | new TMDL target type=string | Stable identifier for one Municipality entity. Preserve leading zeros if present and use it as the relationship key; do not aggregate it.
+  MunicipalityName : String | new TMDL target type=string | Japanese municipality name (自治体名／市区町村名) without a prefecture qualifier. Names are not globally unique, so include MunicipalityId or MunicipalityDisplayName when ambiguity is possible.
+  MunicipalityDisplayName : String | new TMDL target type=string | Display-only composite label in the format {MunicipalityName} / {PrefectureName}. It does not contain MunicipalityId, so use MunicipalityId as the identity and this property only for human-readable output.
+  MunicipalityStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated count of static Donations received by this Municipality.
+  MunicipalityStaticTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation amount received by this Municipality in JPY.
+  MunicipalityAmountRank : BigInt | new TMDL target type=int64 | Received-amount rank of this Municipality across all Municipalities. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc: equal amounts never share a rank because MunicipalityId breaks the tie ascending.
+  MunicipalityPrefAmountRank : BigInt | new TMDL target type=int64 | Received-amount rank of this Municipality inside its containing Prefecture. Deterministic row-number rank (row_number) over MunicipalityStaticTotalYen desc, MunicipalityId asc within each PrefectureId: equal amounts never share a rank because MunicipalityId breaks the tie ascending.
+  IncomingDonationAmountYen : BigInt | new TMDL target type=TimeSeries<int64> | Donation amount observed in an operational Municipality time-series event. It binds to the raw ingested DonationEvents rows through DonatedAt and DonationAmountYen, so its values are raw observations: deduplication = none, and duplicate EventIDs are retained. It is measured in JPY but is not a static Donation entity property; never use it to increase Donation entity counts or to identify a Donor, Gift, Supplier, or DonationId. The Eventhouse remains the numeric authority for operational observation metrics; this property is a modeled mirror of them.
+  NonTimeSeries LakehouseTable table=ot_municipality
+    MunicipalityId -> MunicipalityId
+    MunicipalityName -> MunicipalityName
+    MunicipalityDisplayName -> MunicipalityDisplayName
+    MunicipalityStaticCount -> MunicipalityStaticCount
+    MunicipalityStaticTotalYen -> MunicipalityStaticTotalYen
+    MunicipalityAmountRank -> MunicipalityAmountRank
+    MunicipalityPrefAmountRank -> MunicipalityPrefAmountRank
+  TimeSeries KustoTable table=DonationEvents
+  timestamp=DonatedAt
+    DonationAmountYen -> IncomingDonationAmountYen
+    MunicipalityID -> MunicipalityId
+
+Donor | key=DonorId | display=DonorDisplayName
+Synthetic workshop donor (寄付者／寄附者) who may make zero or more Donations. Residence is defined only by DonorLivesInPrefecture and must never be interpreted as recipient geography.
+  DonorId : BigInt [KEY] | new TMDL target type=int64 | Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people.
+  DonorName : String | new TMDL target type=string | Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person.
+  DonorDisplayName : String | new TMDL target type=string | Display-only composite in the format {DonorName} / Donor {DonorId}. Use DonorId for identity and this property for human-readable output.
+  DonorAge : BigInt | new TMDL target type=int64 | Whole-year age of the synthetic donor (年齢) in the static donor record. It is not derived from the Donation timestamp and must not be summed.
+  DonorOccupation : String | new TMDL target type=string | Japanese controlled occupation or job label (職業／職種／仕事) for the synthetic donor. It describes the donor's job category, not employer, recipient, or Supplier type.
+  DonorOccupationEn : String | new TMDL target type=string | Canonical English occupation label for DonorOccupation. Use it for English filtering and grouping; preserve DonorOccupation when returning the stored Japanese label.
+  DonorStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated number of static Donations made by this Donor.
+  DonorStaticTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated cumulative static Donation amount made by this Donor in JPY.
+  DonorStaticMaxYen : BigInt | new TMDL target type=int64 | Maximum single static Donation amount made by this Donor in JPY; it is not the cumulative amount.
+  DonorOverallAmountRank : BigInt | new TMDL target type=int64 | Cumulative static donation-amount rank of this Donor nationwide. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc: equal amounts never share a rank because DonorId breaks the tie ascending.
+  DonorResidenceAmountRank : BigInt | new TMDL target type=int64 | Cumulative static donation-amount rank of this Donor inside the residence Prefecture. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc within each PrefectureId: equal amounts never share a rank because DonorId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_donor
+    DonorId -> DonorId
+    DonorName -> DonorName
+    DonorDisplayName -> DonorDisplayName
+    DonorAge -> DonorAge
+    DonorOccupation -> DonorOccupation
+    DonorOccupationEn -> DonorOccupationEn
+    DonorStaticCount -> DonorStaticCount
+    DonorStaticTotalYen -> DonorStaticTotalYen
+    DonorStaticMaxYen -> DonorStaticMaxYen
+    DonorOverallAmountRank -> DonorOverallAmountRank
+    DonorResidenceAmountRank -> DonorResidenceAmountRank
+
+GiftCategory | key=CategoryId | display=CategoryName
+Controlled classification of return-gift options (返礼品カテゴリ). Category counts and amounts must be aggregated from Donation through DonationSelectedGift and GiftInCategory; the category itself is not a transaction fact.
+  CategoryId : BigInt [KEY] | new TMDL target type=int64 | Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it.
+  CategoryName : String | new TMDL target type=string | Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label.
+  CategoryNameEn : String | new TMDL target type=string | Canonical English return-gift category label paired one-to-one with CategoryName. Use it for English filtering, grouping, and display; CategoryId remains the identity.
+  CategorySearchTerms : String | new TMDL target type=string | Pipe-delimited alias text holding the Japanese CategoryName, the English CategoryNameEn, and the literal marker gift category. Use it only to resolve colloquial return-gift category wording such as 海鮮系, 魚介, or seafood with a case-insensitive substring match. If CategoryName does not match, query this alias index before claiming no category data. Never display, group, count, or treat this property as the category identity.
+  CategoryStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation count for this GiftCategory across the full snapshot.
+  CategoryStaticTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation amount for this GiftCategory across the full snapshot.
+  CategoryAmountRank : BigInt | new TMDL target type=int64 | Static donation-amount rank of this GiftCategory across all GiftCategories. Deterministic row-number rank (row_number) over CategoryStaticTotalYen desc, CategoryId asc: equal amounts never share a rank because CategoryId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_gift_category
+    CategoryId -> CategoryId
+    CategoryName -> CategoryName
+    CategoryNameEn -> CategoryNameEn
+    CategorySearchTerms -> CategorySearchTerms
+    CategoryStaticCount -> CategoryStaticCount
+    CategoryStaticTotalYen -> CategoryStaticTotalYen
+    CategoryAmountRank -> CategoryAmountRank
+
+Gift | key=GiftId | display=GiftDisplayName
+Synthetic return-gift option selected by a Donation (返礼品／お礼品／商品). It is a catalog dimension, not the donated money and not a transaction fact. If a Municipality is named, resolve that Municipality and traverse MunicipalityCatalogsGift before applying a GiftName CONTAINS candidate filter. Resolve exactly one stable GiftId before Supplier or Donation traversal.
+  GiftId : BigInt [KEY] | new TMDL target type=int64 | Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers.
+  GiftName : String | new TMDL target type=string | Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal.
+  GiftDisplayName : String | new TMDL target type=string | Display-only composite in the format {GiftName} / Gift {GiftId}. Use it for unambiguous human-readable output and GiftId as the stable identity.
+  GiftSearchTerms : String | new TMDL target type=string | Pipe-delimited search-only text for resolving shortened or colloquial Gift wording. It contains the core GiftName, the English GiftNameEn, the Japanese CategoryName, and the English CategoryNameEn. Place-of-origin words often appear inside those name strings, but they are display text and not authoritative geography, so resolve catalog and recipient geography through MunicipalityCatalogsGift and DonationToMunicipality. Filter it with a case-insensitive substring match for every distinctive noun supplied by the user; never display, group, count, or treat it as Gift identity.
+  GiftNotes : String | new TMDL target type=string | Japanese free-text note, notes, remarks, or description for the return-gift option (備考／注意事項／説明). Notes are descriptive only and do not define Supplier, recipient geography, category, or monetary amount.
+  GiftStaticCount : BigInt | new TMDL target type=int64 | Authoritative pre-aggregated count of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift count; do not join Suppliers or recount Donation detail.
+  GiftStaticTotalYen : BigInt | new TMDL target type=int64 | Authoritative pre-aggregated JPY amount of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift total; do not join Suppliers or use SUM(DISTINCT DonationAmountYen).
+  GiftAmountRank : BigInt | new TMDL target type=int64 | Static donation-amount rank of this Gift across all Gifts. Deterministic row-number rank (row_number) over GiftStaticTotalYen desc, GiftId asc: equal amounts never share a rank because GiftId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_gift
+    GiftId -> GiftId
+    GiftName -> GiftName
+    GiftDisplayName -> GiftDisplayName
+    GiftSearchTerms -> GiftSearchTerms
+    GiftNotes -> GiftNotes
+    GiftStaticCount -> GiftStaticCount
+    GiftStaticTotalYen -> GiftStaticTotalYen
+    GiftAmountRank -> GiftAmountRank
+
+Supplier | key=SupplierId | display=SupplierDisplayName
+Synthetic workshop business that may provide zero or more return-gift options (返礼品提供事業者). It is neither the Donation recipient nor a Donor; location is defined by SupplierInPrefecture.
+  SupplierId : BigInt [KEY] | new TMDL target type=int64 | Stable numeric identifier for one synthetic registered Supplier entity. It identifies a catalog provider, not an actual fulfillment event.
+  SupplierName : String | new TMDL target type=string | Synthetic Japanese organization-style name of the Supplier or vendor (事業者名／提供事業者名). It is not a Donation recipient.
+  SupplierDisplayName : String | new TMDL target type=string | Display-only composite in the format {SupplierName} / Supplier {SupplierId}. Use SupplierId for identity and this property for human-readable output.
+  SupplierType : String | new TMDL target type=string | Japanese controlled supplier classification or business-type label (事業者種別／事業者区分) for the Supplier or vendor. It describes the provider, not the Gift category or Donation recipient.
+  SupplierTypeEn : String | new TMDL target type=string | Canonical English business-type label for SupplierType. Use it for English filtering and grouping; it describes the provider and not the Gift category or Donation recipient.
+  SupplierProvidedGiftCount : BigInt | new TMDL target type=int64 | Count of distinct Gifts linked to this Supplier in the registered catalog; it is not a Donation or fulfillment metric.
+  NonTimeSeries LakehouseTable table=ot_supplier
+    SupplierId -> SupplierId
+    SupplierName -> SupplierName
+    SupplierDisplayName -> SupplierDisplayName
+    SupplierType -> SupplierType
+    SupplierTypeEn -> SupplierTypeEn
+    SupplierProvidedGiftCount -> SupplierProvidedGiftCount
+
+Donation | key=DonationId | display=DonationDisplayName
+Synthetic static baseline hometown-tax Donation row (ふるさと納税の寄付／寄附) and the only static fact grain for transaction counts and JPY amounts. It is an independent snapshot, not an approved, promoted, deduplicated, or finalized form of an Eventhouse observation. Each entity links to exactly one Donor, one recipient Municipality, and one selected Gift option in this dataset.
+  DonationId : BigInt [KEY] | new TMDL target type=int64 | Stable numeric identifier for one static Donation transaction. When a user says 寄付ID or Donation ID followed by a number, filter this property for exact identity; never reinterpret that number as DonationAmountYen. It is the transaction key and must not be used as a grouping dimension for an overall aggregate.
+  DonationDisplayName : String | new TMDL target type=string | Display-only label in the format Donation followed by DonationId. Use DonationId for identity.
+  DonationAmountYen : BigInt | new TMDL target type=int64 | Completed donation amount (寄付金額／寄附金額／納税額) in whole Japanese yen for exactly one static Donation. SUM this property for donation totals and never sum IDs or Municipality time-series observations into the same result.
+  DonatedAtUtc : DateTime | new TMDL target type=dateTime | Canonical UTC timestamp of the static baseline Donation. Use it for exact sorting, filtering, minimum, maximum, and deterministic latest-record selection.
+  DonatedAtJstText : String | new TMDL target type=string | Display-only representation of DonatedAtUtc in Japan Standard Time (日本時間), formatted as yyyy-MM-dd HH:mm:ss followed by the literal suffix JST. Do not use this string for chronological sorting when DonatedAtUtc is available.
+  DonationDateJst : String | new TMDL target type=string | Japan Standard Time calendar date of the Donation (寄付日／寄附日). Use it for local-day filtering and grouping, not for exact timestamp ordering.
+  DonationYearMonthJst : String | new TMDL target type=string | Japan Standard Time calendar year and month of the Donation (寄付年月／寄附年月). Use it for local-month filtering and grouping. Normalize an unambiguous Japanese two-digit Gregorian year such as 25年 to 2025 before matching the stored yyyy-MM value.
+  DonationYearMonthJaShort : String | new TMDL target type=string | Japanese short Gregorian year-month label for the Donation, formatted yyyy年M月, such as 2025年1月. Use it only when the user supplies that short Japanese month wording; DonationYearMonthJst remains the canonical yyyy-MM calendar key.
+  DonationPaymentMethod : String | new TMDL target type=string | Stored payment method, payment channel, checkout channel, or tender label (支払方法／決済方法／決済手段) for the completed Donation. It is a controlled Japanese-or-brand label and must not be interpreted as a Supplier.
+  DonationPaymentMethodEn : String | new TMDL target type=string | Canonical English payment-method label for DonationPaymentMethod. Use it for English filtering and grouping; return both labels when the user asks for a translation.
+  DonationDataLayer : String | new TMDL target type=string | Canonical layer label for this detail entity. Its only value is StaticSyntheticSnapshot, which is not a payment method or a time-series event type. The constant is a deliberate exception to the rule that a single-valued column carries no information: it is the declared boundary marker that keeps the static snapshot separable from the operational observation layer, so a query can never silently blend the two. Never filter it away, never group by it, and never present it as a lifecycle or approval state.
+  NonTimeSeries LakehouseTable table=ot_donation
+    DonationId -> DonationId
+    DonationDisplayName -> DonationDisplayName
+    DonationAmountYen -> DonationAmountYen
+    DonatedAtUtc -> DonatedAtUtc
+    DonatedAtJstText -> DonatedAtJstText
+    DonationDateJst -> DonationDateJst
+    DonationYearMonthJst -> DonationYearMonthJst
+    DonationYearMonthJaShort -> DonationYearMonthJaShort
+    DonationPaymentMethod -> DonationPaymentMethod
+    DonationPaymentMethodEn -> DonationPaymentMethodEn
+    DonationDataLayer -> DonationDataLayer
+
+MunicipalityCategoryMetric | key=MunCategoryMetricId | display=MunCategoryMetricId
+Pre-aggregated current-static-snapshot metric for one Municipality and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain.
+  MunCategoryMetricId : String [KEY] | new TMDL target type=string | Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row, encoded as {MunicipalityId}-{CategoryId:02}, for example 452025-01. The measure values are separate properties on this entity. The same NN-NN text can also occur as a PrefCategoryMetricId or a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a MunicipalityCategoryMetric identifier.
+  MunCategoryStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation count for one Municipality x GiftCategory pair.
+  MunCategoryTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation amount for one Municipality x GiftCategory pair.
+  MunCategoryAmountRank : BigInt | new TMDL target type=int64 | Amount rank of this GiftCategory inside one Municipality. Deterministic row-number rank (row_number) over MunCategoryTotalYen desc, CategoryId asc within each MunicipalityId: equal amounts never share a rank because CategoryId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_mun_category_metric
+    MunCategoryMetricId -> MunCategoryMetricId
+    MunCategoryStaticCount -> MunCategoryStaticCount
+    MunCategoryTotalYen -> MunCategoryTotalYen
+    MunCategoryAmountRank -> MunCategoryAmountRank
+
+PrefectureCategoryMetric | key=PrefCategoryMetricId | display=PrefCategoryMetricId
+Pre-aggregated current-static-snapshot metric for one recipient Prefecture and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain.
+  PrefCategoryMetricId : String [KEY] | new TMDL target type=string | Synthetic stable identifier for one recipient Prefecture x GiftCategory snapshot metric row, encoded as {PrefectureId:02}-{CategoryId:02}, for example 13-01. The measure values are separate properties on this entity. The identical NN-NN text can also be a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureCategoryMetric identifier.
+  PrefCategoryStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation count for one recipient Prefecture x GiftCategory pair.
+  PrefCategoryTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated static Donation amount for one recipient Prefecture x GiftCategory pair.
+  PrefCategoryAmountRank : BigInt | new TMDL target type=int64 | Amount rank of this GiftCategory inside one recipient Prefecture. Deterministic row-number rank (row_number) over PrefCategoryTotalYen desc, CategoryId asc within each PrefectureId: equal amounts never share a rank because CategoryId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_pref_category_metric
+    PrefCategoryMetricId -> PrefCategoryMetricId
+    PrefCategoryStaticCount -> PrefCategoryStaticCount
+    PrefCategoryTotalYen -> PrefCategoryTotalYen
+    PrefCategoryAmountRank -> PrefCategoryAmountRank
+
+PrefectureDonationFlow | key=PrefDonationFlowId | display=PrefDonationFlowId
+Pre-aggregated current-static-snapshot flow from Donor residence Prefecture to Donation recipient Prefecture. Origin and destination are not interchangeable. It excludes time-series observations and Suppliers.
+  PrefDonationFlowId : String [KEY] | new TMDL target type=string | Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row, encoded as {ResidencePrefectureId:02}-{RecipientPrefectureId:02}, for example 13-01, which reads as residence 13 to recipient 01. Directional measures are separate properties. The identical NN-NN text can also be a PrefCategoryMetricId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureDonationFlow identifier.
+  PrefFlowStaticCount : BigInt | new TMDL target type=int64 | Pre-aggregated count of static Donations from one residence Prefecture to one recipient Prefecture.
+  PrefFlowTotalYen : BigInt | new TMDL target type=int64 | Pre-aggregated JPY amount from one residence Prefecture to one recipient Prefecture.
+  PrefFlowOriginRank : BigInt | new TMDL target type=int64 | Amount rank of this recipient Prefecture among the destinations of one donor-residence Prefecture: the window is partitioned by the origin, so rank 1 is the destination that received the most from that origin. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, RecipientPrefectureId asc within each ResidencePrefectureId: equal amounts never share a rank because RecipientPrefectureId breaks the tie ascending.
+  PrefFlowDestinationRank : BigInt | new TMDL target type=int64 | Amount rank of this donor-residence Prefecture among the origins of one recipient Prefecture: the window is partitioned by the destination, so rank 1 is the origin that sent the most to that destination. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, ResidencePrefectureId asc within each RecipientPrefectureId: equal amounts never share a rank because ResidencePrefectureId breaks the tie ascending.
+  NonTimeSeries LakehouseTable table=ot_pref_donation_flow
+    PrefDonationFlowId -> PrefDonationFlowId
+    PrefFlowStaticCount -> PrefFlowStaticCount
+    PrefFlowTotalYen -> PrefFlowTotalYen
+    PrefFlowOriginRank -> PrefFlowOriginRank
+    PrefFlowDestinationRank -> PrefFlowDestinationRank
+
+3. DIRECTED RELATIONSHIPS / 向きとマッピング列
+MunicipalityInPrefecture: Municipality -> Prefecture
+  mapping=ot_municipality; origin=MunicipalityId; target=PrefectureId
+  Connects each recipient Municipality to its containing Prefecture. Follow Municipality to Prefecture for recipient geography; do not use this relationship to infer donor residence or to count Donations.
+DonorLivesInPrefecture: Donor -> Prefecture
+  mapping=ot_donor; origin=DonorId; target=PrefectureId
+  Connects a synthetic Donor to the Prefecture of donor residence. This relationship defines donor-origin geography only and must never be treated as the Donation recipient.
+SupplierInPrefecture: Supplier -> Prefecture
+  mapping=ot_supplier; origin=SupplierId; target=PrefectureId
+  Connects a synthetic Supplier to its registered Prefecture. Registered Supplier location is neither donor residence, Donation recipient geography, fulfillment location, service location, nor shipping origin.
+GiftInCategory: Gift -> GiftCategory
+  mapping=ot_gift; origin=GiftId; target=CategoryId
+  Classifies a Gift in exactly one GiftCategory. Category-level donation metrics must traverse DonationSelectedGift first and aggregate DonationAmountYen from Donation.
+MunicipalityCatalogsGift: Municipality -> Gift
+  mapping=ot_gift; origin=MunicipalityId; target=GiftId
+  Connects a Municipality to each Gift registered in that Municipality's Workshop catalog. This is catalog geography, not Donation recipient geography, Supplier location, fulfillment location, or shipping origin. In this synthetic dataset every Donation happens to select a Gift catalogued by its own recipient Municipality, so a forbidden count taken through this edge can coincidentally return the same number as the correct DonationToMunicipality count. That coincidence is a property of the sample data, not of the model: the rule stays, because real catalogues diverge and the two paths answer different questions.
+SupplierProvidesGift: Supplier -> Gift
+  mapping=ot_supplier_gift; origin=SupplierId; target=GiftId
+  Connects a Supplier, provider, vendor, 事業者, 業者, or 会社 to a Gift for which it is a registered provider. It does not prove an actual fulfillment, service, shipment, or physical origin. For a Gift-centered provider question, resolve the GiftId first and traverse this relationship in reverse from Gift to every registered Supplier, then use SupplierInPrefecture for registered location. The registration contract is many-to-many and optional on both sides: a Gift may have zero, one or many Suppliers and a Supplier may register zero, one or many Gifts. In this dataset every one of the 2,500 Suppliers and all 6,000 Gifts participate, across 14,514 unique pairs, so no orphan appears at run time. No allocation of DonationAmountYen among Suppliers is defined.
+DonorMadeDonation: Donor -> Donation
+  mapping=ot_donation; origin=DonorId; target=DonationId
+  Connects the Donor associated with a static baseline Donation to that Donation. Every static Donation has exactly one Donor, and a Donor may have zero, one or many static Donations: 18 of the 12,000 Donors made none.
+DonationToMunicipality: Donation -> Municipality
+  mapping=ot_donation; origin=DonationId; target=MunicipalityId
+  Connects each static baseline Donation to exactly one recipient Municipality. This is the authoritative path for received-by geography and must not be replaced by Gift or Supplier location.
+DonationSelectedGift: Donation -> Gift
+  mapping=ot_donation; origin=DonationId; target=GiftId
+  Connects each static baseline Donation to the selected Gift option. A no-return-gift choice is represented by a Gift option in the no-return-gift category, not by a missing Donation.
+MunHasCategoryMetric: Municipality -> MunicipalityCategoryMetric
+  mapping=ot_mun_category_metric; origin=MunicipalityId; target=MunCategoryMetricId
+  Connects a Municipality to each MunicipalityCategoryMetric row for that recipient Municipality. A Municipality that received no Donation has no metric row at all: 10 of the 1,741 Municipalities have none.
+MunMetricForCategory: MunicipalityCategoryMetric -> GiftCategory
+  mapping=ot_mun_category_metric; origin=MunCategoryMetricId; target=CategoryId
+  Connects a MunicipalityCategoryMetric row to its GiftCategory.
+PrefHasCategoryMetric: Prefecture -> PrefectureCategoryMetric
+  mapping=ot_pref_category_metric; origin=PrefectureId; target=PrefCategoryMetricId
+  Connects a recipient Prefecture to each PrefectureCategoryMetric row for that Prefecture.
+PrefMetricForCategory: PrefectureCategoryMetric -> GiftCategory
+  mapping=ot_pref_category_metric; origin=PrefCategoryMetricId; target=CategoryId
+  Connects a PrefectureCategoryMetric row to its GiftCategory.
+ResidencePrefHasFlow: Prefecture -> PrefectureDonationFlow
+  mapping=ot_pref_donation_flow; origin=ResidencePrefectureId; target=PrefDonationFlowId
+  Connects the Donor-residence Prefecture to an origin-destination PrefectureDonationFlow row.
+FlowToRecipientPref: PrefectureDonationFlow -> Prefecture
+  mapping=ot_pref_donation_flow; origin=PrefDonationFlowId; target=RecipientPrefectureId
+  Connects a PrefectureDonationFlow row to the Donation-recipient Prefecture.
+
+4. INTERPRETATION / 解釈
+Original donation_orders.csv uses DonatedAt. Ontology uses DonatedAtUtc and explicit JST-derived display fields.
+MunicipalityId is String; keep leading zeroes. SupplierId derives from raw BusinessID.
+MunicipalityCategoryMetric and PrefectureCategoryMetric are stored aggregate entities, not ontology DAX Metrics.
+DAX Metrics remain owned and executed by their source semantic model. Ontology descriptions do not edit the source DAX.
+Graph is optional. Keys, supported Delta source and eligible single backing table are required.
+A time-series binding does not establish Graph compatibility. Preserve the operational binding; use a separately reviewed static-only companion for relationship Graph queries.
+Time-series semantics do not imply live graph refresh. Record the actual source and freshness.
+The Eventhouse mapping above is an intended source mapping, pending native binding verification; do not embed old KustoTable JSON as new TMDL.
+DAX projected/enrichment metric backingMeasure does not survive the current TMDL round trip; avoid wholesale replay after native Metrics are added.
+Use only instructor-supplied source IDs; this portable pack deliberately contains no environment identifiers.
+
+5. V3 GOLD SERVING SCOPE / 品質受入済み分析層
+Gold is built by Notebook05 from the immutable static seed and staged increment files, with validation and EventID deduplication.
+DataSource=StaticSeed is the static population; DataSource=RealtimeIncrement is the quality-accepted, deduplicated increment population.
+Raw DonationEvents still contains every ingested observation, including duplicates; the one-minute summary has an aggregate, not transaction, grain.
+Gold acceptance means passing data-quality checks, NOT payment/shipment confirmation, manual business approval, or a newly inferred real donation.
+Static Donation is an immutable synthetic snapshot, NOT evidence of confirmed payment or shipment.
+The direct Semantic Model owns and executes DAX measures. Use static-scoped measures for StaticSeed and accepted-increment measures for RealtimeIncrement.
+A combined Gold view is valid only when explicitly requested and labelled; it is not a raw-observation-plus-static sum.
+Gold build completion is independent of FileCreated/Activator/Pipeline delivery. Verify automatic delivery separately using event, activation, job, Copy and KQL evidence.
+These are design definitions only. This attachment proves neither live deployment nor data-query execution.

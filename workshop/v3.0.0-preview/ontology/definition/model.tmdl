@@ -1,0 +1,31 @@
+model Model
+
+ref table ot_prefecture
+ref table ot_municipality
+ref table ot_donor
+ref table ot_gift_category
+ref table ot_gift
+ref table ot_supplier
+ref table ot_donation
+ref table ot_mun_category_metric
+ref table ot_pref_category_metric
+ref table ot_pref_donation_flow
+ref table ot_supplier_gift
+
+ref entity Prefecture
+ref entity Municipality
+ref entity Donor
+ref entity GiftCategory
+ref entity Gift
+ref entity Supplier
+ref entity Donation
+ref entity MunicipalityCategoryMetric
+ref entity PrefectureCategoryMetric
+ref entity PrefectureDonationFlow
+
+ref namespace default
+
+ref rule StaticAndOperationalSeparation
+ref rule SupplierAttribution
+ref rule RankTieBreak
+ref rule RawObservationSemantics

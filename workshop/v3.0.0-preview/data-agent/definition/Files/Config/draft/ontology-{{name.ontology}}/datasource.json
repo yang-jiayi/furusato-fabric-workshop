@@ -1,0 +1,92 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "{{item.ontology.id}}",
+  "dataSourceInstructions": null,
+  "displayName": "{{name.ontology}}",
+  "elements": [
+    {
+      "children": [],
+      "description": "PrefectureId,PrefectureName,PrefectureNameEn,PrefReceivedStaticCount,PrefReceivedTotalYen,PrefReceivedAmountRank,PrefResidentStaticCount,PrefResidentTotalYen,PrefResidentAmountRank",
+      "display_name": "Prefecture",
+      "id": "Prefecture",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "MunicipalityId,MunicipalityName,MunicipalityDisplayName,MunicipalityStaticCount,MunicipalityStaticTotalYen,MunicipalityAmountRank,MunicipalityPrefAmountRank,IncomingDonationAmountYen",
+      "display_name": "Municipality",
+      "id": "Municipality",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "DonorId,DonorName,DonorDisplayName,DonorAge,DonorOccupation,DonorOccupationEn,DonorStaticCount,DonorStaticTotalYen,DonorStaticMaxYen,DonorOverallAmountRank,DonorResidenceAmountRank",
+      "display_name": "Donor",
+      "id": "Donor",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "CategoryId,CategoryName,CategoryNameEn,CategorySearchTerms,CategoryStaticCount,CategoryStaticTotalYen,CategoryAmountRank",
+      "display_name": "GiftCategory",
+      "id": "GiftCategory",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "GiftId,GiftName,GiftDisplayName,GiftSearchTerms,GiftNotes,GiftStaticCount,GiftStaticTotalYen,GiftAmountRank",
+      "display_name": "Gift",
+      "id": "Gift",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "SupplierId,SupplierName,SupplierDisplayName,SupplierType,SupplierTypeEn,SupplierProvidedGiftCount",
+      "display_name": "Supplier",
+      "id": "Supplier",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "DonationId,DonationDisplayName,DonationAmountYen,DonatedAtUtc,DonatedAtJstText,DonationDateJst,DonationYearMonthJst,DonationYearMonthJaShort,DonationPaymentMethod,DonationPaymentMethodEn,DonationDataLayer",
+      "display_name": "Donation",
+      "id": "Donation",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "MunCategoryMetricId,MunCategoryStaticCount,MunCategoryTotalYen,MunCategoryAmountRank",
+      "display_name": "MunicipalityCategoryMetric",
+      "id": "MunicipalityCategoryMetric",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "PrefCategoryMetricId,PrefCategoryStaticCount,PrefCategoryTotalYen,PrefCategoryAmountRank",
+      "display_name": "PrefectureCategoryMetric",
+      "id": "PrefectureCategoryMetric",
+      "is_selected": true,
+      "type": "ontology.entity"
+    },
+    {
+      "children": [],
+      "description": "PrefDonationFlowId,PrefFlowStaticCount,PrefFlowTotalYen,PrefFlowOriginRank,PrefFlowDestinationRank",
+      "display_name": "PrefectureDonationFlow",
+      "id": "PrefectureDonationFlow",
+      "is_selected": true,
+      "type": "ontology.entity"
+    }
+  ],
+  "metadata": {},
+  "type": "ontology",
+  "userDescription": "Relationship traversal over the modeled Furusato ontology. Use it for connectivity, path, neighbourhood, membership and containment questions across Prefecture, Municipality, Donor, Gift, GiftCategory, Supplier, Donation and the pre-aggregated metric entities. Entity properties carry the same stable IDs as the Lakehouse snapshot, so resolve an ID before traversing a name. Reverse traversal is written with `<-Relationship-`, and there is no direct Supplier-to-Donor edge. The model also mirrors the August observation measure as the modeled time-series property `IncomingDonationAmountYen` on Municipality; the Eventhouse remains the numeric authority for operational observation metrics, and this source is used by the Agent for relationship paths only.",
+  "workspaceId": "{{workspace.id}}"
+}

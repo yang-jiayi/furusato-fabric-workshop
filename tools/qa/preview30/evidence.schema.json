@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:furusato:preview30:evaluation:v1",
+  "title": "Private Preview evidence manifest; semantic validation uses preview_contract.py",
+  "type": "object",
+  "required": ["schema_version", "catalog_sha256", "context", "original_inventory", "records", "evidence", "prompt_hashes", "capacity_measurements"],
+  "properties": {
+    "schema_version": {"const": "furusato-preview30-evaluation/v1"},
+    "catalog_sha256": {"$ref": "#/$defs/sha"},
+    "validator_sha256": {"$ref": "#/$defs/sha"},
+    "context": {
+      "type": "object",
+      "required": ["frozen_at_utc", "campaign_id", "scope_sha256", "identity_sha256", "data_sha256", "prompts_sha256", "configuration_sha256", "ai_repeats"],
+      "properties": {
+        "frozen_at_utc": {"type": "string", "format": "date-time"},
+        "campaign_id": {"type": "string", "minLength": 1},
+        "scope_sha256": {"$ref": "#/$defs/plannedSha"},
+        "identity_sha256": {"$ref": "#/$defs/plannedSha"},
+        "data_sha256": {"$ref": "#/$defs/sha"},
+        "prompts_sha256": {"$ref": "#/$defs/plannedSha"},
+        "configuration_sha256": {"$ref": "#/$defs/plannedSha"},
+        "ai_repeats": {"type": "integer", "minimum": 3}
+      }
+    },
+    "original_inventory": {
+      "type": "object",
+      "required": ["question_count", "condition_count", "independent_hidden", "routing_applicability"],
+      "properties": {
+        "question_count": {"const": 10},
+        "condition_count": {"const": 84},
+        "independent_hidden": {"const": false},
+        "state": {"$ref": "#/$defs/state"},
+        "routing_applicability": {
+          "type": "object", "minProperties": 10, "maxProperties": 10,
+          "patternProperties": {
+            "^T(0[1-9]|10)$": {
+              "type": "object", "required": ["support", "reason"],
+              "properties": {"support": {"$ref": "#/$defs/support"}, "reason": {"type": "string", "minLength": 1}}
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "prompt_hashes": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha"}},
+    "records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/record"}},
+    "evidence": {"type": "object", "additionalProperties": {"$ref": "#/$defs/proof"}},
+    "capacity_measurements": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["kind", "value", "unit", "operation_id", "artifact"],
+        "properties": {
+          "kind": {"const": "observed"}, "value": {"type": "number", "minimum": 0},
+          "unit": {"type": "string", "minLength": 1}, "operation_id": {"type": "string", "minLength": 1},
+          "artifact": {"$ref": "#/$defs/artifact"}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "plannedSha": {"oneOf": [{"$ref": "#/$defs/sha"}, {"type": "null"}]},
+    "state": {"enum": ["planned", "implemented", "deployed", "pass", "fail", "blocked", "unsupported", "unverified"]},
+    "support": {"enum": ["supported", "blocked", "unsupported", "pending"]},
+    "artifact": {
+      "type": "object", "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"}}
+    },
+    "proof": {
+      "type": "object",
+      "required": ["kind", "origin", "captured_at_utc", "context_sha256", "artifact", "item_ids", "review"],
+      "properties": {
+        "kind": {"enum": ["scope_receipt", "source_query", "definition", "ui_capture", "native_response", "execution_trace", "upload_receipt", "graph_scope", "capability_probe", "operation_receipt", "rdf_file", "rdf_import_log", "mcp_tools", "comparison", "artifact_check", "document_review"]},
+        "origin": {"enum": ["authenticated_api", "native_tool", "coordinator_browser", "local_verifier", "generated_artifact", "mock", "test_fixture", "legacy_ui"]},
+        "captured_at_utc": {"type": "string", "format": "date-time"},
+        "context_sha256": {"$ref": "#/$defs/sha"},
+        "artifact": {"$ref": "#/$defs/artifact"},
+        "raw_artifact": {"$ref": "#/$defs/artifact"},
+        "capture_receipt": {"$ref": "#/$defs/artifact"},
+        "item_ids": {"type": "array", "items": {"type": "string", "format": "uuid"}, "uniqueItems": true},
+        "review": {
+          "type": "object", "required": ["reviewer", "note", "artifact_sha256"],
+          "properties": {"reviewer": {"type": "string", "minLength": 1}, "note": {"type": "string", "minLength": 1}, "artifact_sha256": {"$ref": "#/$defs/sha"}}
+        },
+        "trace": {
+          "type": "object",
+          "required": ["call_id", "call_id_pointer", "language", "query_pointer", "result_pointer", "execution_pointer", "executed", "scope_reviewed", "complete", "reviewer"],
+          "properties": {
+            "call_id": {"type": "string", "minLength": 1}, "language": {"enum": ["SQL", "KQL", "DAX", "GQL"]},
+            "query_pointer": {"type": "string", "pattern": "^/.+"}, "result_pointer": {"type": "string", "pattern": "^/.+"},
+            "call_id_pointer": {"type": "string", "pattern": "^/.+"}, "execution_pointer": {"type": "string", "pattern": "^/.+"},
+            "executed": {"type": "boolean"}, "scope_reviewed": {"type": "boolean"}, "complete": {"type": "boolean"},
+            "reviewer": {"type": "string", "minLength": 1}
+          }
+        },
+        "measurement": {
+          "type": "object", "required": ["kind", "latency_ms"],
+          "properties": {"kind": {"const": "observed"}, "latency_ms": {"type": "number", "minimum": 0}}
+        }
+      }
+    },
+    "record": {
+      "type": "object", "required": ["case_id", "repeat", "state", "support", "reason", "evidence", "checks"],
+      "properties": {
+        "case_id": {"type": "string", "pattern": "^[A-Z]+[0-9]+$"},
+        "repeat": {"type": "integer", "minimum": 1},
+        "state": {"$ref": "#/$defs/state"}, "support": {"$ref": "#/$defs/support"},
+        "reason": {"type": "string", "minLength": 1}, "blocker": {"type": "string"},
+        "evidence": {"type": "object", "additionalProperties": {"type": "string"}},
+        "checks": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object", "required": ["state", "reason", "citations"],
+            "properties": {
+              "state": {"enum": ["pass", "fail", "unverified"]},
+              "reason": {"type": "string", "minLength": 1},
+              "citations": {
+                "type": "array",
+                "items": {
+                  "type": "object", "required": ["role"],
+                  "properties": {"role": {"type": "string"}, "pointer": {"type": "string"}, "sha256": {"$ref": "#/$defs/sha"}}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

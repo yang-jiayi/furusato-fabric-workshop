@@ -1,0 +1,224 @@
+{
+  "approved": true,
+  "captures": [
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual excerpt acknowledging all four current files in a fresh conversation. Cropped to the right pane only; pixels, UI wording and states are unchanged. Document design context, not proof of business-data querying, Act or statistical accuracy.",
+        "ja": "fresh会話で現行4ファイルを認識した実抜粋。右paneだけを切り抜き、画素・UI文言・状態は変更していません。資料の設計文脈であり、実データquery・Act・統計精度の証明ではありません。"
+      },
+      "capturedAt": "2026-09-30T04:14:26.694427+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/e87b5c46d183552ef3a89305d34bd288f4ae375de1607995cbd468853ce47af1.png",
+      "id": "p30-15-attachments",
+      "originalSha256": "2f722ed137bfde8410ec4625de06d5be1d2f547fcb92c8d0b7cfb2301b678ad3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T05:36:35.185360+00:00",
+      "sha256": "e87b5c46d183552ef3a89305d34bd288f4ae375de1607995cbd468853ce47af1"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual response from the same Gold-aware material run, explaining Notebook05, EventID deduplication, StaticSeed/RealtimeIncrement and quality acceptance—not payment, shipment, manual approval or ingestion success. Original retained; only the readable right-pane region is cropped.",
+        "ja": "同じGold-aware資料runの実応答。Notebook05、EventID重複除去、StaticSeed/RealtimeIncrement、quality acceptanceと支払・発送・手動承認・取込成功の非同一性を説明しています。原本を保ち、右paneの可読部分だけを切り抜いています。"
+      },
+      "capturedAt": "2026-09-30T04:21:10.536252+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/2f5cedb8bbb5cbb421e0f8d9d8f8dbff3d0775890c810673f905e191321111fc.png",
+      "id": "p30-15-attachment-response",
+      "originalSha256": "75df7aa10135c1c7d1997af8745a28d06e8d4f545b57c793bc15eb0e84c60971",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-09-30T05:36:35.185360+00:00",
+      "sha256": "2f5cedb8bbb5cbb421e0f8d9d8f8dbff3d0775890c810673f905e191321111fc"
+    }
+  ],
+  "labs": {
+    "copilot-act": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "copilot-additive-entity": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "copilot-attachments": {
+      "evidenceIds": [
+        "p30-15-attachments",
+        "p30-15-attachment-response"
+      ],
+      "executionAndReadbackObserved": false,
+      "reason": {
+        "en": "Current four files, same prompt and fresh conversation verified document-grounded Gold definition/scope with unchanged ontology definition. No Act, source-query or original84 acceptance is claimed.",
+        "ja": "現行4ファイル・same prompt・fresh会話でGold定義/範囲の資料利用を確認。定義不変。Act、source query、元84条件の合格は主張しない。"
+      },
+      "status": "observed"
+    },
+    "copilot-baseline": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "dashboard": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "data-agent": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "entities": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "evaluation": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "gold": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "graph": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "inheritance": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "mcp": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "metrics": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "namespaces": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "native-delivery": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "publish": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "rdf": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "relationships": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "rules": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "shared-properties": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "timeseries": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    },
+    "version-history": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "No new-UI execution evidence supplied. Prepared material is not a passed lab.",
+        "ja": "新UIの実施証拠未提供。教材の準備と実行合格は別です。"
+      },
+      "status": "not-run"
+    }
+  },
+  "originalSuiteRuns": [],
+  "reviewedAt": "2026-09-30T05:36:35.185360+00:00",
+  "reviewer": "doc-preparation-review",
+  "schemaVersion": "furusato-preview30-public-evidence/v1",
+  "scope": "historical-observed-run"
+}

@@ -1,0 +1,65 @@
+table ot_gift
+	lineageTag: 87cb0417-3438-5ce2-9f03-b3675bc3c1bf
+
+	column GiftId
+		dataType: int64
+		sourceColumn: GiftId
+
+	column GiftName
+		dataType: string
+		sourceColumn: GiftName
+
+	column GiftDisplayName
+		dataType: string
+		sourceColumn: GiftDisplayName
+
+	column GiftSearchTerms
+		dataType: string
+		sourceColumn: GiftSearchTerms
+
+	column GiftNotes
+		dataType: string
+		sourceColumn: GiftNotes
+
+	column GiftStaticCount
+		dataType: int64
+		sourceColumn: GiftStaticCount
+
+	column GiftStaticTotalYen
+		dataType: int64
+		sourceColumn: GiftStaticTotalYen
+
+	column GiftAmountRank
+		dataType: int64
+		sourceColumn: GiftAmountRank
+
+	column CategoryId
+		dataType: int64
+		sourceColumn: CategoryId
+
+	column MunicipalityId
+		dataType: string
+		sourceColumn: MunicipalityId
+
+	partition ot_gift = entity
+		mode: directLake
+		source
+			entityName: ot_gift
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

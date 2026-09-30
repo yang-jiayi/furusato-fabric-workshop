@@ -1,0 +1,72 @@
+/// Pre-aggregated current-static-snapshot metric for one recipient Prefecture and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain.
+entity PrefectureCategoryMetric
+	lineageTag: 40d687aa-071d-5383-a13f-5e4c14b4468c
+	backingTable: ot_pref_category_metric
+	keyProperty: PrefCategoryMetricId
+	synonym 'prefecture category metric'
+	synonym 'prefecture category summary'
+	synonym '都道府県別カテゴリ指標'
+	synonym '都道府県別返礼品カテゴリ実績'
+	annotation Furusato_businessRole = "semantic metric entity"
+	annotation Furusato_defaultAggregation = "none"
+	annotation Furusato_grain = "one recipient Prefecture x GiftCategory pair"
+	annotation Furusato_identityProperty = "PrefCategoryMetricId"
+	annotation Furusato_keyType = "String"
+	annotation Furusato_snapshotScope = "current static Donation only"
+	annotation Furusato_supplierPolicy = "excluded"
+
+	/// Synthetic stable identifier for one recipient Prefecture x GiftCategory snapshot metric row, encoded as {PrefectureId:02}-{CategoryId:02}, for example 13-01. The measure values are separate properties on this entity. The identical NN-NN text can also be a PrefDonationFlowId, so the entity type - not the string shape - disambiguates the key; always qualify it as a PrefectureCategoryMetric identifier.
+	property PrefCategoryMetricId
+		dataType: string
+		lineageTag: 8f519b26-4f2b-5127-bbdd-fd14cfda65f4
+		annotation Furusato_businessRole = "composite metric-row identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "string ID"
+		annotation Furusato_grain = "one recipient Prefecture x GiftCategory pair"
+		annotation Furusato_keyAmbiguity = "the same NN-NN text may exist in another metric entity type; qualify by entity type"
+		annotation Furusato_keyEncoding = "{PrefectureId:02}-{CategoryId:02}"
+		annotation Furusato_keyExample = "13-01"
+
+		backingConfiguration
+			valueColumn: ot_pref_category_metric.PrefCategoryMetricId
+
+	/// Pre-aggregated static Donation count for one recipient Prefecture x GiftCategory pair.
+	property PrefCategoryStaticCount
+		dataType: int64
+		lineageTag: 5e86fdda-b3f4-5379-becc-e210d861601b
+		annotation Furusato_businessRole = "cross-dimensional snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one recipient Prefecture x GiftCategory pair"
+		annotation Furusato_measure = "count of Donation"
+
+		backingConfiguration
+			valueColumn: ot_pref_category_metric.PrefCategoryStaticCount
+
+	/// Pre-aggregated static Donation amount for one recipient Prefecture x GiftCategory pair.
+	property PrefCategoryTotalYen
+		dataType: int64
+		lineageTag: f283fedb-025c-5373-82f3-dd97807076f4
+		annotation Furusato_businessRole = "cross-dimensional snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one recipient Prefecture x GiftCategory pair"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_pref_category_metric.PrefCategoryTotalYen
+
+	/// Amount rank of this GiftCategory inside one recipient Prefecture. Deterministic row-number rank (row_number) over PrefCategoryTotalYen desc, CategoryId asc within each PrefectureId: equal amounts never share a rank because CategoryId breaks the tie ascending.
+	property PrefCategoryAmountRank
+		dataType: int64
+		lineageTag: a1ae3c0e-af6b-5c8d-8ea9-8387a1c64423
+		annotation Furusato_businessRole = "cross-dimensional amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one recipient Prefecture x GiftCategory pair"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "PrefectureId"
+		annotation Furusato_rankScope = "within recipient Prefecture"
+		annotation Furusato_rankSort = "PrefCategoryTotalYen desc, CategoryId asc"
+		annotation Furusato_rankTieBreak = "CategoryId ascending"
+
+		backingConfiguration
+			valueColumn: ot_pref_category_metric.PrefCategoryAmountRank
+

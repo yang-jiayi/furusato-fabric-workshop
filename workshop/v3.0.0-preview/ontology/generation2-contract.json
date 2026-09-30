@@ -1,0 +1,626 @@
+{
+  "schemaVersion": "furusato-generation2-candidate/v1",
+  "generation": 2,
+  "compatibilityLevel": 1000000,
+  "entityTypes": 10,
+  "staticProperties": 72,
+  "timeseriesProperties": 1,
+  "staticBindings": 10,
+  "relationshipTypes": 15,
+  "backingTables": 11,
+  "nativeLakehouseSourceContract": {
+    "connector": "AzureStorage.DataLake",
+    "hierarchicalNavigation": true,
+    "partitionType": "entity",
+    "mode": "directLake",
+    "itemKind": "Lakehouse",
+    "sqlDatabaseLocator": "Lakehouse display name, not SQL endpoint GUID",
+    "annotations": [
+      "ONT_WorkspaceId",
+      "ONT_ItemId",
+      "ONT_ItemKind",
+      "ONT_ItemName",
+      "ONT_WorkspaceName",
+      "ONT_SqlEndpoint",
+      "ONT_SqlDatabase",
+      "ONT_PinnedAtUtc"
+    ],
+    "nativeInstancesVerificationRequired": true
+  },
+  "nativeRules": [
+    "StaticAndOperationalSeparation",
+    "SupplierAttribution",
+    "RankTieBreak",
+    "RawObservationSemantics"
+  ],
+  "entities": [
+    {
+      "name": "Prefecture",
+      "namespace": "default",
+      "lineageTag": "fe67e9ad-95b1-5fe5-88e0-75f1a24b6d5f",
+      "sourceTable": "ot_prefecture",
+      "sourceSchema": "dbo",
+      "keyProperty": "PrefectureId",
+      "properties": [
+        {
+          "name": "PrefectureId",
+          "dataType": "int64",
+          "sourceColumn": "PrefectureId"
+        },
+        {
+          "name": "PrefectureName",
+          "dataType": "string",
+          "sourceColumn": "PrefectureName"
+        },
+        {
+          "name": "PrefectureNameEn",
+          "dataType": "string",
+          "sourceColumn": "PrefectureNameEn"
+        },
+        {
+          "name": "PrefReceivedStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "PrefReceivedStaticCount"
+        },
+        {
+          "name": "PrefReceivedTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "PrefReceivedTotalYen"
+        },
+        {
+          "name": "PrefReceivedAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "PrefReceivedAmountRank"
+        },
+        {
+          "name": "PrefResidentStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "PrefResidentStaticCount"
+        },
+        {
+          "name": "PrefResidentTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "PrefResidentTotalYen"
+        },
+        {
+          "name": "PrefResidentAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "PrefResidentAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "Municipality",
+      "namespace": "default",
+      "lineageTag": "03438d4b-0296-55e5-8856-05a5511057ab",
+      "sourceTable": "ot_municipality",
+      "sourceSchema": "dbo",
+      "keyProperty": "MunicipalityId",
+      "properties": [
+        {
+          "name": "MunicipalityId",
+          "dataType": "string",
+          "sourceColumn": "MunicipalityId"
+        },
+        {
+          "name": "MunicipalityName",
+          "dataType": "string",
+          "sourceColumn": "MunicipalityName"
+        },
+        {
+          "name": "MunicipalityDisplayName",
+          "dataType": "string",
+          "sourceColumn": "MunicipalityDisplayName"
+        },
+        {
+          "name": "MunicipalityStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "MunicipalityStaticCount"
+        },
+        {
+          "name": "MunicipalityStaticTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "MunicipalityStaticTotalYen"
+        },
+        {
+          "name": "MunicipalityAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "MunicipalityAmountRank"
+        },
+        {
+          "name": "MunicipalityPrefAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "MunicipalityPrefAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "pending-native-binding"
+    },
+    {
+      "name": "Donor",
+      "namespace": "default",
+      "lineageTag": "55d6fb72-fc1c-5610-8587-9a9875faa142",
+      "sourceTable": "ot_donor",
+      "sourceSchema": "dbo",
+      "keyProperty": "DonorId",
+      "properties": [
+        {
+          "name": "DonorId",
+          "dataType": "int64",
+          "sourceColumn": "DonorId"
+        },
+        {
+          "name": "DonorName",
+          "dataType": "string",
+          "sourceColumn": "DonorName"
+        },
+        {
+          "name": "DonorDisplayName",
+          "dataType": "string",
+          "sourceColumn": "DonorDisplayName"
+        },
+        {
+          "name": "DonorAge",
+          "dataType": "int64",
+          "sourceColumn": "DonorAge"
+        },
+        {
+          "name": "DonorOccupation",
+          "dataType": "string",
+          "sourceColumn": "DonorOccupation"
+        },
+        {
+          "name": "DonorOccupationEn",
+          "dataType": "string",
+          "sourceColumn": "DonorOccupationEn"
+        },
+        {
+          "name": "DonorStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "DonorStaticCount"
+        },
+        {
+          "name": "DonorStaticTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "DonorStaticTotalYen"
+        },
+        {
+          "name": "DonorStaticMaxYen",
+          "dataType": "int64",
+          "sourceColumn": "DonorStaticMaxYen"
+        },
+        {
+          "name": "DonorOverallAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "DonorOverallAmountRank"
+        },
+        {
+          "name": "DonorResidenceAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "DonorResidenceAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "GiftCategory",
+      "namespace": "default",
+      "lineageTag": "58fa226f-e97f-5afd-bac0-7a02fafa5d90",
+      "sourceTable": "ot_gift_category",
+      "sourceSchema": "dbo",
+      "keyProperty": "CategoryId",
+      "properties": [
+        {
+          "name": "CategoryId",
+          "dataType": "int64",
+          "sourceColumn": "CategoryId"
+        },
+        {
+          "name": "CategoryName",
+          "dataType": "string",
+          "sourceColumn": "CategoryName"
+        },
+        {
+          "name": "CategoryNameEn",
+          "dataType": "string",
+          "sourceColumn": "CategoryNameEn"
+        },
+        {
+          "name": "CategorySearchTerms",
+          "dataType": "string",
+          "sourceColumn": "CategorySearchTerms"
+        },
+        {
+          "name": "CategoryStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "CategoryStaticCount"
+        },
+        {
+          "name": "CategoryStaticTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "CategoryStaticTotalYen"
+        },
+        {
+          "name": "CategoryAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "CategoryAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "Gift",
+      "namespace": "default",
+      "lineageTag": "18050265-eb1d-5d4d-a165-251ae373d50a",
+      "sourceTable": "ot_gift",
+      "sourceSchema": "dbo",
+      "keyProperty": "GiftId",
+      "properties": [
+        {
+          "name": "GiftId",
+          "dataType": "int64",
+          "sourceColumn": "GiftId"
+        },
+        {
+          "name": "GiftName",
+          "dataType": "string",
+          "sourceColumn": "GiftName"
+        },
+        {
+          "name": "GiftDisplayName",
+          "dataType": "string",
+          "sourceColumn": "GiftDisplayName"
+        },
+        {
+          "name": "GiftSearchTerms",
+          "dataType": "string",
+          "sourceColumn": "GiftSearchTerms"
+        },
+        {
+          "name": "GiftNotes",
+          "dataType": "string",
+          "sourceColumn": "GiftNotes"
+        },
+        {
+          "name": "GiftStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "GiftStaticCount"
+        },
+        {
+          "name": "GiftStaticTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "GiftStaticTotalYen"
+        },
+        {
+          "name": "GiftAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "GiftAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "Supplier",
+      "namespace": "default",
+      "lineageTag": "d060dfd9-9f33-5c04-bffc-fa9f95372dde",
+      "sourceTable": "ot_supplier",
+      "sourceSchema": "dbo",
+      "keyProperty": "SupplierId",
+      "properties": [
+        {
+          "name": "SupplierId",
+          "dataType": "int64",
+          "sourceColumn": "SupplierId"
+        },
+        {
+          "name": "SupplierName",
+          "dataType": "string",
+          "sourceColumn": "SupplierName"
+        },
+        {
+          "name": "SupplierDisplayName",
+          "dataType": "string",
+          "sourceColumn": "SupplierDisplayName"
+        },
+        {
+          "name": "SupplierType",
+          "dataType": "string",
+          "sourceColumn": "SupplierType"
+        },
+        {
+          "name": "SupplierTypeEn",
+          "dataType": "string",
+          "sourceColumn": "SupplierTypeEn"
+        },
+        {
+          "name": "SupplierProvidedGiftCount",
+          "dataType": "int64",
+          "sourceColumn": "SupplierProvidedGiftCount"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "Donation",
+      "namespace": "default",
+      "lineageTag": "60b60851-200a-5115-a6a2-e3724298f2a0",
+      "sourceTable": "ot_donation",
+      "sourceSchema": "dbo",
+      "keyProperty": "DonationId",
+      "properties": [
+        {
+          "name": "DonationId",
+          "dataType": "int64",
+          "sourceColumn": "DonationId"
+        },
+        {
+          "name": "DonationDisplayName",
+          "dataType": "string",
+          "sourceColumn": "DonationDisplayName"
+        },
+        {
+          "name": "DonationAmountYen",
+          "dataType": "int64",
+          "sourceColumn": "DonationAmountYen"
+        },
+        {
+          "name": "DonatedAtUtc",
+          "dataType": "dateTime",
+          "sourceColumn": "DonatedAtUtc"
+        },
+        {
+          "name": "DonatedAtJstText",
+          "dataType": "string",
+          "sourceColumn": "DonatedAtJstText"
+        },
+        {
+          "name": "DonationDateJst",
+          "dataType": "string",
+          "sourceColumn": "DonationDateJst"
+        },
+        {
+          "name": "DonationYearMonthJst",
+          "dataType": "string",
+          "sourceColumn": "DonationYearMonthJst"
+        },
+        {
+          "name": "DonationYearMonthJaShort",
+          "dataType": "string",
+          "sourceColumn": "DonationYearMonthJaShort"
+        },
+        {
+          "name": "DonationPaymentMethod",
+          "dataType": "string",
+          "sourceColumn": "DonationPaymentMethod"
+        },
+        {
+          "name": "DonationPaymentMethodEn",
+          "dataType": "string",
+          "sourceColumn": "DonationPaymentMethodEn"
+        },
+        {
+          "name": "DonationDataLayer",
+          "dataType": "string",
+          "sourceColumn": "DonationDataLayer"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "MunicipalityCategoryMetric",
+      "namespace": "default",
+      "lineageTag": "7a0d2a81-ed31-57e8-af58-d6386e2a0993",
+      "sourceTable": "ot_mun_category_metric",
+      "sourceSchema": "dbo",
+      "keyProperty": "MunCategoryMetricId",
+      "properties": [
+        {
+          "name": "MunCategoryMetricId",
+          "dataType": "string",
+          "sourceColumn": "MunCategoryMetricId"
+        },
+        {
+          "name": "MunCategoryStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "MunCategoryStaticCount"
+        },
+        {
+          "name": "MunCategoryTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "MunCategoryTotalYen"
+        },
+        {
+          "name": "MunCategoryAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "MunCategoryAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "PrefectureCategoryMetric",
+      "namespace": "default",
+      "lineageTag": "40d687aa-071d-5383-a13f-5e4c14b4468c",
+      "sourceTable": "ot_pref_category_metric",
+      "sourceSchema": "dbo",
+      "keyProperty": "PrefCategoryMetricId",
+      "properties": [
+        {
+          "name": "PrefCategoryMetricId",
+          "dataType": "string",
+          "sourceColumn": "PrefCategoryMetricId"
+        },
+        {
+          "name": "PrefCategoryStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "PrefCategoryStaticCount"
+        },
+        {
+          "name": "PrefCategoryTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "PrefCategoryTotalYen"
+        },
+        {
+          "name": "PrefCategoryAmountRank",
+          "dataType": "int64",
+          "sourceColumn": "PrefCategoryAmountRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    },
+    {
+      "name": "PrefectureDonationFlow",
+      "namespace": "default",
+      "lineageTag": "47f59acc-8f91-5d97-b5ba-8be12c00f990",
+      "sourceTable": "ot_pref_donation_flow",
+      "sourceSchema": "dbo",
+      "keyProperty": "PrefDonationFlowId",
+      "properties": [
+        {
+          "name": "PrefDonationFlowId",
+          "dataType": "string",
+          "sourceColumn": "PrefDonationFlowId"
+        },
+        {
+          "name": "PrefFlowStaticCount",
+          "dataType": "int64",
+          "sourceColumn": "PrefFlowStaticCount"
+        },
+        {
+          "name": "PrefFlowTotalYen",
+          "dataType": "int64",
+          "sourceColumn": "PrefFlowTotalYen"
+        },
+        {
+          "name": "PrefFlowOriginRank",
+          "dataType": "int64",
+          "sourceColumn": "PrefFlowOriginRank"
+        },
+        {
+          "name": "PrefFlowDestinationRank",
+          "dataType": "int64",
+          "sourceColumn": "PrefFlowDestinationRank"
+        }
+      ],
+      "timeSeriesBindingStatus": "not-applicable"
+    }
+  ],
+  "relationships": [
+    {
+      "name": "MunicipalityInPrefecture",
+      "fromEntity": "Municipality",
+      "toEntity": "Prefecture",
+      "sourceTable": "ot_municipality"
+    },
+    {
+      "name": "DonorLivesInPrefecture",
+      "fromEntity": "Donor",
+      "toEntity": "Prefecture",
+      "sourceTable": "ot_donor"
+    },
+    {
+      "name": "SupplierInPrefecture",
+      "fromEntity": "Supplier",
+      "toEntity": "Prefecture",
+      "sourceTable": "ot_supplier"
+    },
+    {
+      "name": "GiftInCategory",
+      "fromEntity": "Gift",
+      "toEntity": "GiftCategory",
+      "sourceTable": "ot_gift"
+    },
+    {
+      "name": "SupplierProvidesGift",
+      "fromEntity": "Supplier",
+      "toEntity": "Gift",
+      "sourceTable": "ot_supplier_gift"
+    },
+    {
+      "name": "DonorMadeDonation",
+      "fromEntity": "Donor",
+      "toEntity": "Donation",
+      "sourceTable": "ot_donation"
+    },
+    {
+      "name": "DonationToMunicipality",
+      "fromEntity": "Donation",
+      "toEntity": "Municipality",
+      "sourceTable": "ot_donation"
+    },
+    {
+      "name": "DonationSelectedGift",
+      "fromEntity": "Donation",
+      "toEntity": "Gift",
+      "sourceTable": "ot_donation"
+    },
+    {
+      "name": "MunicipalityCatalogsGift",
+      "fromEntity": "Municipality",
+      "toEntity": "Gift",
+      "sourceTable": "ot_gift"
+    },
+    {
+      "name": "MunHasCategoryMetric",
+      "fromEntity": "Municipality",
+      "toEntity": "MunicipalityCategoryMetric",
+      "sourceTable": "ot_mun_category_metric"
+    },
+    {
+      "name": "MunMetricForCategory",
+      "fromEntity": "MunicipalityCategoryMetric",
+      "toEntity": "GiftCategory",
+      "sourceTable": "ot_mun_category_metric"
+    },
+    {
+      "name": "PrefHasCategoryMetric",
+      "fromEntity": "Prefecture",
+      "toEntity": "PrefectureCategoryMetric",
+      "sourceTable": "ot_pref_category_metric"
+    },
+    {
+      "name": "PrefMetricForCategory",
+      "fromEntity": "PrefectureCategoryMetric",
+      "toEntity": "GiftCategory",
+      "sourceTable": "ot_pref_category_metric"
+    },
+    {
+      "name": "ResidencePrefHasFlow",
+      "fromEntity": "Prefecture",
+      "toEntity": "PrefectureDonationFlow",
+      "sourceTable": "ot_pref_donation_flow"
+    },
+    {
+      "name": "FlowToRecipientPref",
+      "fromEntity": "PrefectureDonationFlow",
+      "toEntity": "Prefecture",
+      "sourceTable": "ot_pref_donation_flow"
+    }
+  ],
+  "timeSeriesBinding": {
+    "status": "requires-native-contract",
+    "entity": "Municipality",
+    "property": "IncomingDonationAmountYen",
+    "sourceTable": "DonationEvents",
+    "keyColumn": "MunicipalityID",
+    "valueColumn": "DonationAmountYen",
+    "orderingColumn": "DonatedAt"
+  },
+  "nativeMetrics": {
+    "status": "requires-native-semantic-model-binding",
+    "sourceOwnsDax": true,
+    "tmdlProjectionSupported": false
+  },
+  "graph": {
+    "materialization": "opt-in",
+    "default": false
+  },
+  "migration": {
+    "doNotUpdateGeneration1InPlace": true,
+    "preserveOriginal": true,
+    "newItemRequiresConsumerReconnection": true,
+    "stableIdentity": "UUIDv5 lineageTag derived from semantic kind/name; not a deployed item ID",
+    "baseEntityTypeChange": "immutable; native change is delete/recreate, isolated lab only",
+    "afterNativeMetrics": "do not round-trip complete ontology TMDL; backingMeasure may be lost"
+  }
+}

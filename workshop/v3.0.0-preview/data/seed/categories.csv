@@ -1,0 +1,31 @@
+CategoryID,CategoryName,CategoryNameEn
+1,肉・肉加工品,Meat and meat products
+2,魚介類・海産物,Seafood
+3,米・パン,Rice and bread
+4,果物,Fruit
+5,野菜・きのこ,Vegetables and mushrooms
+6,卵・乳製品,Eggs and dairy
+7,麺類,Noodles
+8,惣菜・加工品,Prepared and processed foods
+9,菓子・スイーツ,Confectionery and sweets
+10,日本酒,Sake
+11,焼酎・泡盛,Shochu and awamori
+12,ビール・発泡酒,Beer
+13,ワイン,Wine
+14,茶・コーヒー,Tea and coffee
+15,飲料・ジュース,Beverages and juice
+16,調味料・油,Seasonings and oils
+17,定期便,Subscription deliveries
+18,工芸品・民芸品,Crafts and folk art
+19,陶磁器・ガラス,Ceramics and glassware
+20,木工品・家具,Woodwork and furniture
+21,繊維・衣類,Textiles and apparel
+22,化粧品・美容,Cosmetics and beauty
+23,日用品・雑貨,Household goods
+24,家電・電化製品,Home appliances
+25,文具・玩具,Stationery and toys
+26,スポーツ・アウトドア,Sports and outdoor
+27,旅行券・宿泊券,Travel and accommodation vouchers
+28,体験・チケット,Experiences and tickets
+29,花・観葉植物,Flowers and plants
+30,ペット用品,Pet supplies

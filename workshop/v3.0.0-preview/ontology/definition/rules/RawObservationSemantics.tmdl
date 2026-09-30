@@ -1,0 +1,4 @@
+rule RawObservationSemantics
+	lineageTag: 661d8622-32b4-5786-ab29-7bcd2bb25c88
+	statement: IncomingDonationAmountYen represents raw ingested operational observations, including duplicate events. Deduplicated accepted increments belong to the separate quality-processed Lakehouse serving layer, not to the raw Eventhouse count.
+	ruleReferencedEntity Municipality

@@ -1,0 +1,10 @@
+{
+  "tenantId": "<tenant-guid>",
+  "workspaceId": "<workspace-guid>",
+  "workspaceName": "<exact-workspace-name>",
+  "folderId": "<verified-folder-guid>",
+  "portalSubfolderId": "<portal-numeric-folder-reference>",
+  "participantId": "001",
+  "folderMappingVerified": false,
+  "forbiddenItemIds": []
+}

@@ -1,0 +1,20 @@
+relationship 寄附_寄附者
+	relyOnReferentialIntegrity
+	fromColumn: 寄附.寄附者ID
+	toColumn: 寄附者.寄附者ID
+
+relationship 寄附_自治体
+	relyOnReferentialIntegrity
+	fromColumn: 寄附.自治体ID
+	toColumn: 自治体.自治体ID
+
+relationship 寄附_返礼品
+	relyOnReferentialIntegrity
+	fromColumn: 寄附.返礼品ID
+	toColumn: 返礼品.返礼品ID
+
+relationship 寄附_日付
+	joinOnDateBehavior: datePartOnly
+	relyOnReferentialIntegrity
+	fromColumn: 寄附.寄附日
+	toColumn: 日付.日付

@@ -1,0 +1,61 @@
+table ot_prefecture
+	lineageTag: 14d8960f-2b03-5426-99e1-07caacd0ddf7
+
+	column PrefectureId
+		dataType: int64
+		sourceColumn: PrefectureId
+
+	column PrefectureName
+		dataType: string
+		sourceColumn: PrefectureName
+
+	column PrefectureNameEn
+		dataType: string
+		sourceColumn: PrefectureNameEn
+
+	column PrefReceivedStaticCount
+		dataType: int64
+		sourceColumn: PrefReceivedStaticCount
+
+	column PrefReceivedTotalYen
+		dataType: int64
+		sourceColumn: PrefReceivedTotalYen
+
+	column PrefReceivedAmountRank
+		dataType: int64
+		sourceColumn: PrefReceivedAmountRank
+
+	column PrefResidentStaticCount
+		dataType: int64
+		sourceColumn: PrefResidentStaticCount
+
+	column PrefResidentTotalYen
+		dataType: int64
+		sourceColumn: PrefResidentTotalYen
+
+	column PrefResidentAmountRank
+		dataType: int64
+		sourceColumn: PrefResidentAmountRank
+
+	partition ot_prefecture = entity
+		mode: directLake
+		source
+			entityName: ot_prefecture
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

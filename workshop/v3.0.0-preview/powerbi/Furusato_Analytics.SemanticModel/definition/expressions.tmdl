@@ -1,0 +1,7 @@
+/// Portable Direct Lake connection. Notebook 04 or deployment tooling replaces the workspace and Lakehouse placeholders at deployment time.
+expression 'DirectLake - Furusato Analytics' =
+		let
+		    Source = AzureStorage.DataLake("https://onelake.dfs.fabric.microsoft.com/{{workspace.id}}/{{item.lakehouse.id}}", [HierarchicalNavigation=true])
+		in
+		    Source
+	lineageTag: 2d70f9dd-e996-42d4-9e54-1a36fbd21479

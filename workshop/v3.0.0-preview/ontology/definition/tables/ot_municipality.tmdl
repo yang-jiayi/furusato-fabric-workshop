@@ -1,0 +1,57 @@
+table ot_municipality
+	lineageTag: 080ce79c-af2e-5fda-89e0-1302b48b3d7b
+
+	column MunicipalityId
+		dataType: string
+		sourceColumn: MunicipalityId
+
+	column MunicipalityName
+		dataType: string
+		sourceColumn: MunicipalityName
+
+	column MunicipalityDisplayName
+		dataType: string
+		sourceColumn: MunicipalityDisplayName
+
+	column MunicipalityStaticCount
+		dataType: int64
+		sourceColumn: MunicipalityStaticCount
+
+	column MunicipalityStaticTotalYen
+		dataType: int64
+		sourceColumn: MunicipalityStaticTotalYen
+
+	column MunicipalityAmountRank
+		dataType: int64
+		sourceColumn: MunicipalityAmountRank
+
+	column MunicipalityPrefAmountRank
+		dataType: int64
+		sourceColumn: MunicipalityPrefAmountRank
+
+	column PrefectureId
+		dataType: int64
+		sourceColumn: PrefectureId
+
+	partition ot_municipality = entity
+		mode: directLake
+		source
+			entityName: ot_municipality
+			schemaName: dbo
+			expressionSource: 'DirectLake - {{source.lakehouse.displayName}}'
+
+		annotation ONT_WorkspaceId = {{workspace.id}}
+
+		annotation ONT_ItemId = {{source.lakehouse.id}}
+
+		annotation ONT_ItemKind = Lakehouse
+
+		annotation ONT_ItemName = {{source.lakehouse.displayName}}
+
+		annotation ONT_WorkspaceName = {{workspace.name}}
+
+		annotation ONT_SqlEndpoint = {{source.lakehouse.sqlEndpoint}}
+
+		annotation ONT_SqlDatabase = {{source.lakehouse.displayName}}
+
+		annotation ONT_PinnedAtUtc = {{source.binding.pinnedAtUtc}}

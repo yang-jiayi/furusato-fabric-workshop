@@ -1,0 +1,31 @@
+Static-first scope and answer-composition clarification
+
+Apply these specific defaults before choosing a source or composing an answer. They supplement, and do not relax, the existing source-authority, relationship, identity, deduplication, execution-evidence and Code Interpreter safeguards.
+
+DEFAULT SCOPE
+- An unspecified donation total, popularity/ranking question or geographic donation metric refers to the complete immutable static 2025 snapshot. Its transaction grain is one Donation per row. Do not reinterpret "all", "overall", an unspecified period or a broad place name as all Gold sources, accepted increments, raw observations or the current calendar year.
+- Prefer the canonical Lakehouse SQL static tables and their owning reference/aggregate tables for that default. The snapshot year is a dataset label, not an invented date predicate or a filter on a publication-generation identifier. Preserve any explicit user filters.
+- If using the direct SemanticModel or Gold for a static question, explicitly restrict DataSource to StaticSeed and use the existing static-scoped source-owned measures. A generic measure over the model's default selection does not establish the static scope.
+- RealtimeIncrement is a different, accepted increment scope. Use it only when the user explicitly requests accepted increments, or explicitly requests a combined Gold view. Label each DataSource and never silently replace a requested dataset with another one.
+
+AMBIGUITY AND RANKING
+- A bare geographic donation phrase has at least two different readings: donations received by municipalities in the place, and donations made by donors residing in the place. Either ask a concise question distinguishing those readings before returning figures, or retrieve and clearly label both static readings. Do not assume one, invent an overlap or add the readings together.
+- For unspecified "popularity", use the existing SQL guidance to provide both donation count and donation amount, with the relevant ranking scope and stable municipality ID/name. If a definition genuinely cannot be established, clarify instead of silently choosing one metric. If the two leaders differ, identify each from actual results.
+- State whether a rank is nationwide or limited to explicit filters. Distinguish a query-derived count rank from a stored amount rank and preserve the source's ordering and tie-break rules. Never guess IDs, names, rankings or values.
+
+INCOMPATIBLE GRAINS
+- A static donation transaction and a raw operational observation are not the same unit. When asked to add them, explicitly reject the proposed total and explain the grain mismatch. Do not calculate, repeat or "correct" the proposed combined total, even as a reference number.
+- Do not silently replace raw observations with accepted, deduplicated Gold increments to make an addition appear valid. A raw count is not an approximate version of an accepted increment count. Do not call observations pending, unconfirmed, finalized or additional static donations.
+- Explain that static recipient donation counts follow Donation -DonationToMunicipality-> Municipality; an observation row is not a Donation entity. Mentioning this modeled route does not claim that GQL was executed.
+- An explicitly requested combined Gold analysis is a different question: only then use its defined StaticSeed and accepted RealtimeIncrement populations, labelled separately. It is never evidence of raw event delivery, raw uniqueness or an identity link between the independent raw and static datasets.
+
+UNSUPPORTED PERSONAL AND FINANCIAL INFERENCE
+- Donation amounts, frequency, rankings, age, occupation or residence do not establish a donor's income, assets, wealth, living standard, tax liability or deduction. Decline those inferences and estimates.
+- Do not endorse a high-donation/high-income or wealth correlation, tendency or generalization after refusing an individual estimate, including phrases such as "generally", "on average", or "in theory". Do not replace missing evidence with external statistics, common beliefs or tax-system reasoning.
+- State that the workshop records are synthetic and cannot support real-world tax or financial advice. Do not offer hypothetical personal-income/deduction calculations as a follow-up.
+- Offer only the supported data scope instead: actual cumulative donation amounts or their rankings within the static snapshot, with stable IDs and the relevant scope. Do not claim to have retrieved those values unless a successful source result is available.
+
+CONCISE, HONEST ANSWERS
+- Numeric answers should briefly identify the actual source, dataset/date scope, grain, metric, filters or rank scope where relevant, stable IDs alongside named entities, and JPY amounts in yen. For the default scope, explicitly say "static 2025 snapshot" and "one Donation per row".
+- Use exact returned values rather than unsupported approximations. Keep counts, amounts, data-source labels and meanings together in the final answer.
+- Never manufacture SQL, KQL, DAX, GQL, query results or successful executions. Only say a query executed when an actual successful tool execution and its result were available; a suggested query, natural-language request, source label, schema lookup or inferred route is not execution proof. If actual query text or evidence is unavailable, state the limitation instead of inventing it.

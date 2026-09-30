@@ -1,0 +1,385 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "{{item.semanticModel.id}}",
+  "workspaceId": "{{workspace.id}}",
+  "displayName": "{{name.semanticModel}}",
+  "type": "semantic_model",
+  "userDescription": "Governed source-owned DAX over Notebook05 Gold. StaticSeed and accepted RealtimeIncrement remain explicitly separated.",
+  "dataSourceInstructions": "Use source-owned DAX measures. Preserve current dimension filters and label StaticSeed versus RealtimeIncrement. Do not infer raw Eventhouse counts from Gold.",
+  "metadata": {},
+  "elements": [
+    {
+      "id": "04a83bf2-4ab1-559f-8241-2681bd83b2f4",
+      "display_name": "寄附",
+      "type": "semantic_model.table",
+      "description": null,
+      "is_selected": true,
+      "children": [
+        {
+          "id": "b2b4410d-c173-50ac-a0cf-e9d31e9ac27c",
+          "display_name": "静的寄附総額",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "d9ff442c-b572-58b5-b3cb-b59d6df5c665",
+          "display_name": "静的寄附件数",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "4a647cea-0b7d-58e1-80f7-87d8417ec536",
+          "display_name": "受入増分寄附総額",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "dd2f5a5a-6fb2-5390-a117-d0cb27168e97",
+          "display_name": "受入増分寄附件数",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "47d499e7-457e-5dd6-9105-db3388f5b784",
+          "display_name": "寄附総額",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "b82c3b3b-d1b0-526b-9faa-89297686c1ad",
+          "display_name": "寄附件数",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "be6dbcda-fafd-52d6-8466-36db41c2a73c",
+          "display_name": "平均寄附額",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "888a4aff-789d-5195-a934-7b58c0934e36",
+          "display_name": "寄附総額 前年同期間",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "2b221398-333f-5040-b817-2c8e11774ac3",
+          "display_name": "自治体別シェア (%)",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "d900673d-af3f-584f-916b-7ec481bdac39",
+          "display_name": "高額寄附件数",
+          "is_selected": true,
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "5fa3291f-6ff7-5dc3-a8a4-d9ad9cad457c",
+          "display_name": "寄附ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "3b723ec5-1703-52d2-b2ac-b7234b3d3ad4",
+          "display_name": "寄附金額",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "1b00ddc7-ad75-563b-b56b-d7bfff65cbfd",
+          "display_name": "寄附日時 UTC",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "778b65be-5542-5953-b53b-d4a5aae3db40",
+          "display_name": "寄附日",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "c0527dec-6741-5f25-a517-caa316685bbe",
+          "display_name": "決済方法",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "8058cc0a-ca8a-5dc7-a062-3480b506f0b3",
+          "display_name": "データソース",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "1c49c24d-c5a3-5130-8122-7e58d707f790",
+          "display_name": "高額寄附フラグ",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "3417e827-d493-5f8d-bb95-8d9477971308",
+          "display_name": "寄附者ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "a2d71486-d956-555d-8ee0-b72a163fd43e",
+          "display_name": "自治体ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "6c02af09-cdd6-5d85-9b64-efbaa2ba9b54",
+          "display_name": "返礼品ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "d441c74e-8a4c-5d21-a068-97120e6e9d01",
+      "display_name": "寄附者",
+      "type": "semantic_model.table",
+      "description": null,
+      "is_selected": true,
+      "children": [
+        {
+          "id": "2390bda0-4319-5e3f-8542-6c939bce3708",
+          "display_name": "寄附者ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "212d477e-ce3d-5351-99df-e0896c6c51c2",
+          "display_name": "寄附者名",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "357c3155-8c55-5ab6-b9ed-61c55b7d34e5",
+          "display_name": "寄附者表示名",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "4d94b573-7eb9-5c86-b1ce-73679e7a3c1d",
+          "display_name": "年齢",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "e76212bf-b2c2-5098-81e1-603913d9e954",
+          "display_name": "職業",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "8005da1f-30b5-54d8-b104-7da66ae16454",
+          "display_name": "居住都道府県",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "b871acc2-a3c0-5138-a9cf-79cffe3cb5e1",
+      "display_name": "日付",
+      "type": "semantic_model.table",
+      "description": null,
+      "is_selected": true,
+      "children": [
+        {
+          "id": "3469b020-4771-5fcf-a019-4133a9ee5cf1",
+          "display_name": "日付キー",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "57380a98-a522-5880-bd96-cf03cbf9c65f",
+          "display_name": "日付",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "b612fef1-bd8f-54c1-bd22-469bea24c542",
+          "display_name": "年",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "fda3a268-22e2-5e15-8b61-f999ed0b1088",
+          "display_name": "四半期",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "43c4fd5c-cffc-5208-99be-2dacb5ab1f68",
+          "display_name": "月番号",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "8df9829e-b78a-5a62-a945-73fdc65e7a9e",
+          "display_name": "月",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "6e043fba-6ef7-5373-8ec5-51ad7d1034b5",
+          "display_name": "年月",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "add314d8-86c5-551b-b8ef-97b8a3fcc029",
+      "display_name": "自治体",
+      "type": "semantic_model.table",
+      "description": null,
+      "is_selected": true,
+      "children": [
+        {
+          "id": "c4cd2251-a9da-5ec1-b165-b0c75cd3d62e",
+          "display_name": "自治体ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "35223bef-61dd-5dae-87b5-eb431c4f9134",
+          "display_name": "自治体名",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "1b858ec3-843e-58c6-bff3-a4b827f67577",
+          "display_name": "自治体表示名",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "35f998bf-719b-5e1c-bb46-fb8b150558e3",
+          "display_name": "寄附先都道府県",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "e2f9950d-835b-5f48-b8fc-cb77bf9caf63",
+      "display_name": "返礼品",
+      "type": "semantic_model.table",
+      "description": null,
+      "is_selected": true,
+      "children": [
+        {
+          "id": "993a0174-eef8-5c44-bb08-7131c4c65b1b",
+          "display_name": "返礼品ID",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "8fac6c14-67fc-53ce-9912-0549bc7a8ec8",
+          "display_name": "返礼品名",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "87d418ea-3843-5d6f-b6fe-f84ef57ff0a7",
+          "display_name": "返礼品表示名",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "01dc8bc4-5ece-5bc7-87f1-0ef3985d5c94",
+          "display_name": "カテゴリ",
+          "is_selected": true,
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+/// Synthetic return-gift option selected by a Donation (返礼品／お礼品／商品). It is a catalog dimension, not the donated money and not a transaction fact. If a Municipality is named, resolve that Municipality and traverse MunicipalityCatalogsGift before applying a GiftName CONTAINS candidate filter. Resolve exactly one stable GiftId before Supplier or Donation traversal.
+entity Gift
+	lineageTag: 18050265-eb1d-5d4d-a165-251ae373d50a
+	backingTable: ot_gift
+	keyProperty: GiftId
+	synonym gift
+	synonym 'return gift'
+	synonym 'return gifts'
+	synonym 'thank-you gift'
+	synonym reward
+	synonym benefit
+	synonym perk
+	synonym 'gift option'
+	synonym 'hometown tax gift'
+	synonym '返礼品'
+	synonym 'お礼品'
+	synonym '商品'
+	synonym '特典'
+	synonym '返礼品オプション'
+	annotation Furusato_businessRole = "catalog item dimension"
+	annotation Furusato_grain = "one return-gift option"
+	annotation Furusato_monetaryRole = "none"
+	annotation Furusato_recipientPath = "DonationToMunicipality only"
+	annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+	/// Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers.
+	property GiftId
+		dataType: int64
+		lineageTag: 4580778f-f7de-591c-a487-f8d096229480
+		annotation Furusato_businessRole = "stable entity identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer ID"
+		annotation Furusato_grain = "one Gift"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftId
+
+	/// Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal.
+	property GiftName
+		dataType: string
+		lineageTag: 51936d7d-7e7f-5edd-ba4c-211c41ba8c90
+		annotation Furusato_businessRole = "Japanese label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "Japanese text"
+		annotation Furusato_grain = "one value per Gift"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftName
+
+	/// Display-only composite in the format {GiftName} / Gift {GiftId}. Use it for unambiguous human-readable output and GiftId as the stable identity.
+	property GiftDisplayName
+		dataType: string
+		lineageTag: 991c3302-d0ed-5ea8-b9ce-400c41ddd4fa
+		annotation Furusato_businessRole = "display label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "{GiftName} / Gift {GiftId}"
+		annotation Furusato_grain = "one value per Gift"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftDisplayName
+
+	/// Pipe-delimited search-only text for resolving shortened or colloquial Gift wording. It contains the core GiftName, the English GiftNameEn, the Japanese CategoryName, and the English CategoryNameEn. Place-of-origin words often appear inside those name strings, but they are display text and not authoritative geography, so resolve catalog and recipient geography through MunicipalityCatalogsGift and DonationToMunicipality. Filter it with a case-insensitive substring match for every distinctive noun supplied by the user; never display, group, count, or treat it as Gift identity.
+	property GiftSearchTerms
+		dataType: string
+		lineageTag: d954fcba-776b-505d-a49a-979e0f2f52fd
+		annotation Furusato_businessRole = "search-only Gift resolver"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_displayPolicy = "never display, group, or aggregate"
+		annotation Furusato_format = "{GiftName} | {GiftNameEn} | {CategoryName} | {CategoryNameEn}"
+		annotation Furusato_grain = "one value per Gift"
+		annotation Furusato_language = "ja-JP,en"
+		annotation Furusato_queryPattern = "FILTER lower(g.GiftSearchTerms) CONTAINS lower('<distinctive token>') for every supplied token"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftSearchTerms
+
+	/// Japanese free-text note, notes, remarks, or description for the return-gift option (備考／注意事項／説明). Notes are descriptive only and do not define Supplier, recipient geography, category, or monetary amount.
+	property GiftNotes
+		dataType: string
+		lineageTag: 9eb5a2d2-b0a7-5f57-91b1-a97db04b2315
+		annotation Furusato_businessRole = "descriptive text"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "free text"
+		annotation Furusato_grain = "one value per Gift"
+		annotation Furusato_language = "ja-JP"
+		annotation Furusato_sensitivity = "Public-Synthetic-Catalog"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftNotes
+
+	/// Authoritative pre-aggregated count of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift count; do not join Suppliers or recount Donation detail.
+	property GiftStaticCount
+		dataType: int64
+		lineageTag: 586bbade-f0ca-5365-b7ac-10325e6b3316
+		annotation Furusato_businessRole = "gift snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Gift"
+		annotation Furusato_measure = "count of Donation"
+		annotation Furusato_queryPolicy = "select directly from the resolved Gift without traversing any relationship"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftStaticCount
+
+	/// Authoritative pre-aggregated JPY amount of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift total; do not join Suppliers or use SUM(DISTINCT DonationAmountYen).
+	property GiftStaticTotalYen
+		dataType: int64
+		lineageTag: 9f18849d-ea16-57f9-9f94-d8709c40c504
+		annotation Furusato_businessRole = "gift snapshot metric"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Gift"
+		annotation Furusato_queryPolicy = "select directly from the resolved Gift without traversing any relationship"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftStaticTotalYen
+
+	/// Static donation-amount rank of this Gift across all Gifts. Deterministic row-number rank (row_number) over GiftStaticTotalYen desc, GiftId asc: equal amounts never share a rank because GiftId breaks the tie ascending.
+	property GiftAmountRank
+		dataType: int64
+		lineageTag: 55a0ba28-5b73-5981-ab06-ad224a1614b2
+		annotation Furusato_businessRole = "gift amount rank"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Gift"
+		annotation Furusato_rankMethod = "row_number"
+		annotation Furusato_rankPartition = "none (single global window)"
+		annotation Furusato_rankScope = "all Gifts"
+		annotation Furusato_rankSort = "GiftStaticTotalYen desc, GiftId asc"
+		annotation Furusato_rankTieBreak = "GiftId ascending"
+
+		backingConfiguration
+			valueColumn: ot_gift.GiftAmountRank
+

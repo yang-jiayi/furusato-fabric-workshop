@@ -823,11 +823,14 @@ def with_document_edition(
 
 
 def load_context(
-    root: Path | None = None, *, document_edition: str = "", unified_assets: dict[str, Any] | None = None
+    root: Path | None = None, *, document_edition: str = "", unified_assets: dict[str, Any] | None = None,
+    source_version: str | None = None,
 ) -> RuntimeContext:
     root = root or repo_root()
+    if source_version not in (None, "2.7.0"):
+        raise ValueError("This loader supports only the retained 2.7.0 source contract")
     workshop = root / "workshop" / "v2.7.0"
-    version = (root / "VERSION").read_text(encoding="utf-8").strip()
+    version = source_version or (root / "VERSION").read_text(encoding="utf-8").strip()
 
     dataset_manifest = json.loads((workshop / "data" / "dataset-manifest.json").read_text("utf-8"))
     workspace_contract = json.loads((workshop / "participant-workspace-contract.json").read_text("utf-8"))

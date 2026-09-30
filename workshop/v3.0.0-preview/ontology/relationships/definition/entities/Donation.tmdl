@@ -1,0 +1,186 @@
+/// Synthetic static baseline hometown-tax Donation row (ふるさと納税の寄付／寄附) and the only static fact grain for transaction counts and JPY amounts. It is an independent snapshot, not an approved, promoted, deduplicated, or finalized form of an Eventhouse observation. Each entity links to exactly one Donor, one recipient Municipality, and one selected Gift option in this dataset.
+entity Donation
+	lineageTag: 60b60851-200a-5115-a6a2-e3724298f2a0
+	backingTable: ot_donation
+	keyProperty: DonationId
+	synonym donation
+	synonym donations
+	synonym contribution
+	synonym contributions
+	synonym 'donation record'
+	synonym 'contribution record'
+	synonym 'donation transaction'
+	synonym 'donation order'
+	synonym 'completed donation'
+	synonym 'hometown tax donation'
+	synonym 'Furusato Nozei donation'
+	synonym 'Furusato tax contribution'
+	synonym '寄付'
+	synonym '寄附'
+	synonym '寄付申込'
+	synonym '寄附申込'
+	synonym 'ふるさと納税'
+	annotation Furusato_businessRole = "transaction fact"
+	annotation Furusato_currency = "JPY"
+	annotation Furusato_factPolicy = "only source for transaction counts and donation amounts"
+	annotation Furusato_grain = "one static baseline donation"
+	annotation Furusato_sensitivity = "Synthetic-Transaction"
+	annotation Furusato_timeSeriesPolicy = "Municipality time-series observations are excluded"
+
+	/// Stable numeric identifier for one static Donation transaction. When a user says 寄付ID or Donation ID followed by a number, filter this property for exact identity; never reinterpret that number as DonationAmountYen. It is the transaction key and must not be used as a grouping dimension for an overall aggregate.
+	property DonationId
+		dataType: int64
+		lineageTag: 087f485f-5256-5643-a6ff-1e3dba761d93
+		annotation Furusato_businessRole = "stable transaction identifier"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "integer ID"
+		annotation Furusato_grain = "one static Donation"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationId
+
+	/// Display-only label in the format Donation followed by DonationId. Use DonationId for identity.
+	property DonationDisplayName
+		dataType: string
+		lineageTag: 6c547580-1feb-5b3d-b049-307769d47613
+		annotation Furusato_businessRole = "display label"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "Donation {DonationId}"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_language = "en"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationDisplayName
+
+	/// Completed donation amount (寄付金額／寄附金額／納税額) in whole Japanese yen for exactly one static Donation. SUM this property for donation totals and never sum IDs or Municipality time-series observations into the same result.
+	property DonationAmountYen
+		dataType: int64
+		lineageTag: c3440073-ca19-5043-97fc-5c0151c24760
+		annotation Furusato_businessRole = "additive fact measure"
+		annotation Furusato_defaultAggregation = "SUM"
+		annotation Furusato_format = "whole-yen integer"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+		annotation Furusato_unit = "JPY"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationAmountYen
+
+	/// Canonical UTC timestamp of the static baseline Donation. Use it for exact sorting, filtering, minimum, maximum, and deterministic latest-record selection.
+	property DonatedAtUtc
+		dataType: dateTime
+		lineageTag: a788dd16-5aaf-5665-9dc8-ac5b3c641c97
+		annotation Furusato_businessRole = "canonical transaction timestamp"
+		annotation Furusato_defaultAggregation = "MIN or MAX only"
+		annotation Furusato_format = "DateTime"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+		annotation Furusato_timezone = "UTC"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonatedAtUtc
+
+	/// Display-only representation of DonatedAtUtc in Japan Standard Time (日本時間), formatted as yyyy-MM-dd HH:mm:ss followed by the literal suffix JST. Do not use this string for chronological sorting when DonatedAtUtc is available.
+	property DonatedAtJstText
+		dataType: string
+		lineageTag: 064d9584-5e9b-547b-bb0e-5ec636ef7e65
+		annotation Furusato_businessRole = "localized display timestamp"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "yyyy-MM-dd HH:mm:ss JST"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+		annotation Furusato_timezone = "Asia/Tokyo (+09:00)"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonatedAtJstText
+
+	/// Japan Standard Time calendar date of the Donation (寄付日／寄附日). Use it for local-day filtering and grouping, not for exact timestamp ordering.
+	property DonationDateJst
+		dataType: string
+		lineageTag: 4767304a-ed1e-58ab-8d8f-a76f44f155aa
+		annotation Furusato_businessRole = "local calendar date"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "yyyy-MM-dd"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+		annotation Furusato_timezone = "Asia/Tokyo"
+		annotation Furusato_unit = "day"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationDateJst
+
+	/// Japan Standard Time calendar year and month of the Donation (寄付年月／寄附年月). Use it for local-month filtering and grouping. Normalize an unambiguous Japanese two-digit Gregorian year such as 25年 to 2025 before matching the stored yyyy-MM value.
+	property DonationYearMonthJst
+		dataType: string
+		lineageTag: 4238e9a9-38c8-5524-b3f0-bcd6b54b28ba
+		annotation Furusato_businessRole = "local calendar month"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "yyyy-MM"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+		annotation Furusato_timezone = "Asia/Tokyo"
+		annotation Furusato_unit = "month"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationYearMonthJst
+
+	/// Japanese short Gregorian year-month label for the Donation, formatted yyyy年M月, such as 2025年1月. Use it only when the user supplies that short Japanese month wording; DonationYearMonthJst remains the canonical yyyy-MM calendar key.
+	property DonationYearMonthJaShort
+		dataType: string
+		lineageTag: 9546b173-d729-504f-a719-6a94debb1225
+		annotation Furusato_businessRole = "Japanese short local calendar month"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "yyyy年M月"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+		annotation Furusato_timezone = "Asia/Tokyo"
+		annotation Furusato_unit = "month"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationYearMonthJaShort
+
+	/// Stored payment method, payment channel, checkout channel, or tender label (支払方法／決済方法／決済手段) for the completed Donation. It is a controlled Japanese-or-brand label and must not be interpreted as a Supplier.
+	property DonationPaymentMethod
+		dataType: string
+		lineageTag: f1d32c75-0693-5991-803a-400683e7d4f0
+		annotation Furusato_businessRole = "Japanese or brand categorical attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 4 values"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_language = "ja-JP and brand names"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationPaymentMethod
+
+	/// Canonical English payment-method label for DonationPaymentMethod. Use it for English filtering and grouping; return both labels when the user asks for a translation.
+	property DonationPaymentMethodEn
+		dataType: string
+		lineageTag: 2ba3fbd5-fcb1-5155-bf3f-4657e18a3f4c
+		annotation Furusato_businessRole = "canonical English categorical attribute"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_format = "controlled text, 4 values"
+		annotation Furusato_grain = "one value per Donation"
+		annotation Furusato_language = "en"
+		annotation Furusato_sensitivity = "Synthetic-Transaction"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationPaymentMethodEn
+
+	/// Canonical layer label for this detail entity. Its only value is StaticSyntheticSnapshot, which is not a payment method or a time-series event type. The constant is a deliberate exception to the rule that a single-valued column carries no information: it is the declared boundary marker that keeps the static snapshot separable from the operational observation layer, so a query can never silently blend the two. Never filter it away, never group by it, and never present it as a lifecycle or approval state.
+	property DonationDataLayer
+		dataType: string
+		lineageTag: 5e4fae1d-d340-5941-9ace-8a38e9ddc041
+		annotation Furusato_boundaryRole = "static-versus-observation layer marker"
+		annotation Furusato_businessRole = "data layer discriminator"
+		annotation Furusato_canonicalValue = "StaticSyntheticSnapshot"
+		annotation Furusato_constantByDesign = "true"
+		annotation Furusato_defaultAggregation = "none"
+		annotation Furusato_grain = "one Donation"
+		annotation Furusato_modelingException = "a single-valued technical property is retained on purpose so the static layer is explicit in every projection"
+		annotation Furusato_paymentMethodRole = "none"
+
+		backingConfiguration
+			valueColumn: ot_donation.DonationDataLayer
+

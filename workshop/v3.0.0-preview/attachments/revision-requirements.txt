@@ -1,0 +1,10 @@
+Revision exercise / 改訂演習 (Plan only until explicit approval)
+Ambiguous request: 東京の寄付が多い地域と、実際に発送した業者を教えて。
+Clarify whether Tokyo means donor residence or recipient geography. Ask count versus amount and the data layer/time window.
+Actual shipment/delivery is not represented. Offer registered suppliers for a selected gift instead, await consent, and preserve source labels.
+Propose metadata-only clarifications for DonorLivesInPrefecture, DonationToMunicipality and SupplierProvidesGift.
+Keep existing entity/property/relationship IDs, names, data types, keys, bindings, inheritance, shared-property references and redefines. No deletions, no source data writes, no new data agents.
+Check the proposed object kind: a Business Rule is not a relationship. If the requested operation is unsupported, stop and state that limitation.
+Show changed versus stable items, validate, and provide a read-only draft preview. Apply only to the approved lab copy in Act.
+Before Act, save a native version. After Act, compare the saved definition, including reusableProperty links, with the baseline; a success message is not proof. Restore the baseline if any protected structure changed.
+This file contains scenario requirements, not benchmark answers or evidence of execution.

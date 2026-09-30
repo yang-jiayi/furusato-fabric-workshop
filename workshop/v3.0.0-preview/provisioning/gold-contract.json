@@ -1,0 +1,41 @@
+{
+  "outputTables": [
+    "bronze.prefectures_raw",
+    "bronze.municipalities_raw",
+    "bronze.donors_raw",
+    "bronze.gift_categories_raw",
+    "bronze.gifts_raw",
+    "bronze.suppliers_raw",
+    "bronze.supplier_gifts_raw",
+    "bronze.donations_raw",
+    "bronze.donation_events_raw",
+    "silver.prefecture",
+    "silver.municipality",
+    "silver.donor",
+    "silver.gift_category",
+    "silver.gift",
+    "silver.supplier",
+    "silver.supplier_gift",
+    "silver.donation",
+    "silver.donation_event",
+    "gold.prefecture",
+    "gold.municipality",
+    "gold.donor",
+    "gold.gift_category",
+    "gold.gift",
+    "gold.date",
+    "gold.donations",
+    "gold.donation_agent",
+    "ops.dq_rule_results",
+    "ops.run_telemetry",
+    "quarantine.donation_events_rejected"
+  ],
+  "generationColumn": "_AnalyticsGenerationId",
+  "controlTable": "ops.analytics_publish_control",
+  "readyState": "Ready",
+  "inputs": [
+    "Lakehouse static/staging tables",
+    "Files/increment/*.csv"
+  ],
+  "eventhouseToGold": false
+}

@@ -115,7 +115,7 @@ def synthetic_projection():
 
 class SelectedReportingTests(unittest.TestCase):
     def setUp(self):
-        self.directory = tempfile.TemporaryDirectory(prefix=".preview30-selected-", dir=ROOT)
+        self.directory = tempfile.TemporaryDirectory(prefix="preview30-selected-")
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
         self.projection = self.root / "manifest.json"
@@ -135,8 +135,13 @@ class SelectedReportingTests(unittest.TestCase):
     def summary(self):
         return json.loads(self.payloads()["evaluation-summary.json"])
 
+    def build_model(self):
+        evidence = public.load(self.projection, root=self.root)
+        with patch.object(public, "resolve", return_value=evidence):
+            return content.build(ROOT, public_evidence_path=self.projection)
+
     def metadata(self):
-        return content.build(ROOT, public_evidence_path=self.projection)[-1]
+        return self.build_model()[-1]
 
     def generate(self):
         return generate(self.projection, self.reports, root=self.root)
@@ -258,7 +263,7 @@ class SelectedReportingTests(unittest.TestCase):
             self.assertIn("incomplete/truncated results", text)
             self.assertIn("does not retroactively complete an earlier result", text)
             self.assertIn("Terminal native-response completion is separate proof", text)
-        document, _, _, _, _, metadata = content.build(ROOT, public_evidence_path=self.projection)
+        document, _, _, _, _, metadata = self.build_model()
         for ident in ("ch-17-7", "ch-19-10"):
             section = next(section for section in document.walk() if section.ident == ident)
             text = json.dumps(asdict(section), ensure_ascii=False)
@@ -325,7 +330,7 @@ class SelectedReportingTests(unittest.TestCase):
             self.payloads()
 
     def test_shared_model_metadata_cases_context_and_package_selection_match(self):
-        document, _, _, _, _, metadata = content.build(ROOT, public_evidence_path=self.projection)
+        document, _, _, _, _, metadata = self.build_model()
         summary = self.summary()
         self.assertEqual(summary["finalEvaluation"], metadata["finalEvaluation"])
         self.assertEqual(summary["executionEvidence"], metadata["selectedSuiteExecutionEvidence"])

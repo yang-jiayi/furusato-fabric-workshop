@@ -99,6 +99,461 @@ feature or promotion flags to true. It writes versioned3.0.0 filenames and
 `RELEASE_STATUS.json`; the private approval is not packaged. Default Preview
 behavior and the strict gate below remain unchanged.
 
+### Opt-in frozen100 / 2026-10-02 post-release validation snapshot
+
+`--evaluation100 <counts-only JSON>` is optional in the shared builder, validator
+and packager; the PowerShell equivalent is `-Evaluation100`. **No input means
+unchanged Preview/released behavior.** `--release-profile v3.0.0` rejects this
+later study rather than modifying the original release. For actual final data
+use `--release-profile validation-20261002` and a **new**, study-bound private
+`--release-approval`. Course edition and Word/HTML basenames stay `3.0.0`; the
+cover, HTML title/badge and shared body identify the dated validation snapshot.
+The shared source adds only subsections **19.11 and 24.11**, retaining24 chapters,
+five appendices, the original ten/84 and all previous evidence sections.
+
+Place final approved output only beneath
+`docs/v3.0.0/validation-20261002/`: the matching pair in `guide/` and the exact
+public projection as `evaluation100.json`. The dated ZIP is
+`Furusato_Workshop_v3.0.0_validation-20261002.zip`, with
+`VALIDATION_SNAPSHOT_STATUS.json`, the exact study at `reports/evaluation100.json`,
+and the unchanged original84 reports. **Do not overwrite `docs/v3.0.0/guide`,
+the v3.0.0 tag or its original release assets.** The old projection remains
+48 capture placements /46 PNGs /9 histories, selected76 PASS/8 FAIL; frozen100
+does not join that84-condition denominator or the old14/0 and13/0 diagnostics.
+This profile is known-limitations disclosure, not strict acceptance, zero-FAIL,
+GA, all-feature acceptance or Agent promotion. `--require-acceptance` is unchanged
+and still independently rejects unmet original-suite/feature/approval gates.
+
+この追加studyは元84条件や既存の診断とは別の分母です。実データとfreshな承認が
+揃うまでは公開版を生成せず、架空fixtureを実結果・改善・人間の承認に変換しません。
+AI-assisted reviewは固定rubricとは別の審査方法として明示し、独立した人間の
+sign-offはありません。回答文によるnative GQL/DAX実行や別backend会話の証明は
+`UNOBSERVABLE`のままです。旧版成果物は置換しません。
+
+**Review timing limitation: corroborated, not independently proven.** The
+preserved operator prep result at recorded time08:24:25 contains candidate SHA,
+definition SHA and zero questions at preparation, but **no original method-intent
+hash or eventId**. Intent mtime and declared `frozenAt` predate plan08:24:55 and
+run08:25:23. These are operator-receipt/filesystem corroboration, not independent
+preregistration proof. Times are quoted as recorded, not assigned a new timezone.
+Preserve the original result and intent verbatim. Their method-evidence hashes
+are computed **now, at admission** (`computedAtAdmission`), not backdated;
+keep them distinct from the originally recorded candidate/definition hashes.
+Preparation's zero questions is not the later campaign's submission count.
+
+`methodPreregistered=false`, `methodTimingIndependentlyCertified=false`,
+`fullReviewPolicyPreregistered=false`, and `reviewToolingPreregistered=false`
+are required. The existing `reviewPolicyTiming` string is retained only as a
+compatibility label, **not certification**. Tooling/policy-code was finalized
+during capture. A separate narrowly scoped admission receipt must precede
+answer-content grading. Keep the original capture plan, candidate and spent
+claims unchanged: no edits, reset, replanning, reauthorization of attempts or
+best-of pooling. The method remains case-by-case oracle + exact-native-span
+review of all frozen criteria, without human sign-off or heuristic substitution.
+
+Word/HTML cover notices, subsection 19.11, snapshot metadata and package status
+disclose the corroboration basis, false certification/preregistration flags and
+admission-time hash provenance alongside the retained `reviewPolicyTiming` label.
+Subsection 24.11 also keeps the separately supplied 2026-10-02 deployment
+observations apart from AI grades: three manual Copies, each Completed once
+with 5,000 rows (automatic 0); raw KQL 15,000 /253,886,000 JPY; exact 14,900 accepted
+EventIDs /252,058,000 JPY and 100 duplicates; restored original safe Pipeline
+defaults; isolated AgentCompat published/native Published UI loading all 10
+entities without warning. Primary gen2/main Agent preservation pending evaluation
+is a dated deployment observation, not a final deployment decision or a gen2
+consumer repair. None of these observations supply missing frozen100 outcomes.
+
+**Execution protocol is separately amended after a stop.** The current dated
+profile requires an explicit `executionProtocol` disclosure. The original blanket
+no-resume rule was **not fully followed**: a single, separately authorized
+continuation consumes only17 originally reserved but never-submitted first
+attempts. The prior two captures and one HTTP500 unknown are retained, never
+replayed. This is not execution preregistration, a retry of uncertain delivery,
+a new candidate/campaign, heldout-feedback tuning or best-of pooling.
+
+#### Exact public-study contract: `furusato100-public-study/v1`
+
+[`preview30_evaluation100.py`](furusato_docs/preview30_evaluation100.py) is the
+executable, strict contract. It accepts **only** the following fields; unknown or
+duplicate keys anywhere, non-finite numbers, omitted verdicts, booleans used as
+counts, and oversized input (over256 KiB) fail closed. No private `cases`,
+questions, prompts, answers, oracles, reasons, reviewer notes, identities or paths
+are accepted or silently discarded. A private `furusato100-report/v1` is **not**
+this public projection. The parent owns projection from the actual private
+records; documentation tools never open the suite, oracle or persistent ledger.
+
+`H` below means64 lowercase hexadecimal SHA-256 characters. `label` means a
+public lowercase slug matching `[a-z][a-z0-9]*(?:-[a-z0-9]+)*`, at most64
+characters, with no32/36-character GUID embedded. Only candidate profiles,
+source-file aliases and optional bucket labels accept such labels, not arbitrary
+prose. URLs/endpoints, UPNs, local/UNC paths and tenant/workspace/item GUIDs are
+rejected. Aliases are **not** source filenames or private locations.
+
+| Root field | Exact value / shape |
+|---|---|
+| `schemaVersion` | `furusato100-public-study/v1` |
+| `evidenceKind` | `observed-live`, or `synthetic-private-test` for private Preview smoke only |
+| `snapshotDate` | ISO date; dated publication profile requires `2026-10-02` |
+| `projectedAtUtc` | Timezone-aware final projection timestamp, not before the snapshot date |
+| `denominators` | Exactly `{"unique":100,"development":80,"heldout":20}` |
+| `bindings` | Exactly `suiteManifestSha256`, `inputManifestSha256`, `splitLockSha256`, `rubricSha256`, `sourceFileHashes`, `sourceFilesSha256` |
+| `bindingSha256` | `H`: canonical digest of the entire `bindings` object |
+| `review` | Exact review object below |
+| `observability` | Exactly `{"internalQueries":"UNOBSERVABLE","backendConversations":"UNOBSERVABLE"}` |
+| `final` | Exact final-freeze object below; development-only/partial stages are rejected |
+| `baseline` | Development run,80 selected/terminal slots |
+| `intervention` | `null`, or one authorization wrapper below; never a list or additional rounds |
+| `heldout` | Heldout run,20 selected/terminal slots, same final candidate |
+| `combined` | Final-development80 + heldout20 run,100 slots, with the two report references below |
+| `executionProtocol` | Optional in the base contract, **required by `validation-20261002`**; exact amendment below. Absent preserves legacy Preview behavior; `null` is not an amendment |
+
+All binding values except `sourceFileHashes` are `H`.
+`sourceFileHashes` is a nonempty object of1–128 public aliases to actual file
+hashes supplied by the parent. `sourceFilesSha256` must equal its canonical
+digest. Canonical digest is SHA-256 of UTF-8
+`json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"), allow_nan=False)`,
+without a trailing newline; `study100.digest(value)` implements it.
+The study's **file** SHA is instead over its exact original bytes, including
+whitespace. Every run binds the same suite/source/rubric digest and the admitted
+review policy. These final public-projection bindings do **not** claim that the
+whole policy/code inventory was preregistered, or rewrite the original plan.
+This checks declared bindings and arithmetic, **not independent verification
+of private file contents, case uniqueness, population accuracy or live
+execution**; keep the original private hash/uniqueness/attempt evidence privately.
+
+`review` has exactly:
+
+```json
+{
+  "mode": "ai-assisted",
+  "policySha256": "<actual finalized review-policy SHA256>",
+  "reviewPolicyTiming": "method-preregistered-tooling-finalized-during-capture",
+  "methodTimingEvidence": "operator-receipt-and-filesystem-corroboration",
+  "methodTimingIndependentlyCertified": false,
+  "methodPreregistered": false,
+  "methodPreregistrationClaim": "corroborated-not-independently-proven",
+  "originalMethodTimingCorroborated": true,
+  "fullReviewPolicyPreregistered": false,
+  "reviewToolingPreregistered": false,
+  "methodEvidenceHashProvenance": "computedAtAdmission",
+  "methodIntentSha256": "<preserved verbatim METHOD intent hash computed at admission>",
+  "timingAdmissionReceiptSha256": "<exact narrowly scoped timing-admission receipt SHA256>",
+  "timingAdmissionBeforeContentGrading": true,
+  "rubricUnchanged": true,
+  "noIndependentHumanSignoff": true,
+  "automaticSemanticPass": false
+}
+```
+
+The shape above describes required **actual** protocol facts, not permission to
+assert them without evidence. The rubric hash remains in `bindings`; changing
+review method does not rewrite the rubric. Do not claim independent human review.
+The three receipt hashes (preserved method intent, finalized policy, timing
+admission) must be valid and distinct. `methodTimingEvidence`,
+`methodPreregistrationClaim` and `methodEvidenceHashProvenance` accept exactly
+the strings above. The current contract requires the corroboration form, not a
+stronger preregistration assertion. The four certification/preregistration flags
+must be boolean **false**, never true,0, omitted/defaulted or strings.
+`originalMethodTimingCorroborated` must be true; this is not independent proof.
+The former `policyFrozenBeforeBaseline` and
+`methodPreregisteredBeforePlanAuthQuestions` fields are rejected, not silently
+reinterpreted as weaker evidence. No affirmative/independent certification route
+is inferred from filesystem times or hashes obtained later.
+`timingAdmissionBeforeContentGrading` means before reading/judging answers for
+content grading, not before raw capture or transport-status bookkeeping.
+The docbuilder checks these declarations and binds their hashes; it does not
+read the private receipts or independently certify their chronology. Exact quote
+matches remain citation checks, not automatic semantic passes.
+
+While baseline80 is still being captured or heldout20 remains sealed, no actual
+final100 projection exists for this rendering gate. Do not invent the missing
+counts, hashes or approval to render an actual snapshot; synthetic private smoke
+remains separate and cannot be packaged.
+
+`final` has exactly `stage: "final-frozen"`,
+`developmentRound: "baseline" | "intervention"`, `candidateSha256: H`,
+`freezeReceiptSha256: H`, `heldoutClaimSha256: H`, timezone-aware `frozenAtUtc`
+and `heldoutReservedAtUtc`, `frozenBeforeHeldout: true`,
+`heldoutIrreversiblySpent: true`, `heldoutUsedForTuning: false`,
+`bestOfPooling: false`, `baselineAnswersBorrowed: false`, and
+`selectionPolicy: "all_once_declared_cases_no_best_of"`.
+The freeze must precede or coincide with heldout reservation, which must not
+postdate the projection. These hash-bound declarations never authorize another
+attempt. Irreversible heldout exposure/spent slots remain spent after errors;
+do not regenerate a ledger or use heldout feedback to tune/retry.
+
+Each run has exactly `candidate`, `bindingSha256: H`,
+`reviewPolicySha256: H`, `sourceReportSha256: H`, `metrics`, and optional
+`buckets`. `candidate` has exactly `profileLabel: label`, `candidateSha256: H`
+(exact private candidate-file hash), and `definitionSha256: H` (the frozen native
+definition digest). `sourceReportSha256` binds the exact actual private report
+bytes; reports for each round and combined100 must have distinct hashes.
+`combined` additionally requires `finalDevelopmentReportSha256: H` and
+`heldoutReportSha256: H`, referring to the **selected final** development and
+heldout reports. Candidate objects must match across those three records, and
+every combined metric must be their arithmetic sum. Baseline wins are never
+borrowed when an intervention is selected, nor is improvement assumed.
+
+The optional `intervention` wrapper has exactly `authorizationSha256: H`,
+`baselineReportSha256: H`, `meaningfulChange: true`, `noSafetyBypass: true`,
+and `run`. Both candidate-file and native-definition hashes must differ from
+baseline; a rename or unchanged retry is rejected. It references the actual
+baseline report. Every baseline native block must appear in the intervention
+as `protectedNotResubmitted`, including in each provided bucket.
+
+Each `metrics` object has exactly these nonnegative integer counters and objects:
+
+| Field | Required arithmetic / meaning |
+|---|---|
+| `uniqueCases`, `terminalCases` | Both equal the run denominator (80,20 or100); terminal includes failed/unknown outcomes, **not** success |
+| `terminalCounts` | Exact keys below; disjoint partition summing to `uniqueCases` |
+| `submissionIntents` | `answerCaptured + nativeServiceBlocked + nativeErrorReply + submissionUncertain + captureFailed`; an intent is **not** confirmed delivery, query execution or success |
+| `capturedResponses` | `answerCaptured + nativeServiceBlocked + nativeErrorReply`; native errors/blocks are not correct business answers |
+| `nativeBlocks` | Exactly `nativeServiceBlocked`; retained prior blocks are separate |
+| `unknownOutcomes` | Exactly `submissionUncertain + captureFailed`; never silently discarded |
+| `axes` | Four separately retained result axes below, each summing to the full denominator |
+
+`terminalCounts` keys are `answerCaptured`, `nativeServiceBlocked`,
+`nativeErrorReply`, `protectedNotResubmitted`, `notSubmitted`,
+`submissionUncertain`, `captureFailed`. Baseline and heldout cannot use
+`protectedNotResubmitted`. `notSubmitted` has no submission intent;
+`submissionUncertain` has an intent but unknown delivery/response; `captureFailed`
+has an intent and terminal capture/integrity failure. Normalize actual outcomes
+without inventing attempts, captures or responses. Protection records have zero
+new attempts; unknown/error outcomes stay in the denominator.
+
+| `axes` key | Exact verdict-count keys |
+|---|---|
+| `factualCorrectness` | `pass`, `fail`, `unknown`, `notApplicable` |
+| `contextualHelpfulness` | `pass`, `fail`, `unknown` |
+| `protectiveBoundary` | `pass`, `fail`, `unknown`, `notApplicable`, `nativeServiceBlock`, `retainedServiceBlock` |
+| `answerContent` | `pass`, `fail`, `unknown` |
+
+Native/retained blocks keep factual `unknown` and helpfulness/content `fail`;
+protection records them as the two explicit service-block observations, **not
+PASS**. Uncaptured/error answers cannot establish factual PASS/FAIL/N/A.
+Content PASS cannot exceed the captured-answer or supporting-axis counts;
+content FAIL cannot be below any contributing-axis FAIL. Absent/unreviewed
+values cannot become PASS, factual N/A or a fabricated zero-percent accuracy.
+No rates are accepted or manufactured. Map reviewer `PASS/FAIL/UNKNOWN/NOT_APPLICABLE`
+to the corresponding lowercase fields; map `PROTECTIVE_SERVICE_BLOCK` and
+`PROTECTIVE_SERVICE_BLOCK_RETAINED` to the separate protection counters.
+
+If supplied, `buckets` is a nonempty list (at most100) of exactly
+`{"label": label, "metrics": <same metric shape>}`. Provide the same unique labels
+on all runs, including combined100; use an all-zero bucket when a split has no
+case in that bucket. Every numeric metric/verdict must sum to the whole run.
+Development bucket denominators cannot change during the intervention, and
+combined buckets must add only the selected final-development + heldout metrics.
+
+#### Exact execution amendment: `post-stop-unsent-slots-only`
+
+This is a counts/hash-only projection of the **disclosed** continuation report,
+not a reader of the private ledger. No case IDs, request IDs, GUIDs, endpoints,
+private paths, questions, answer text or oracle fields are accepted. The one
+existing HTTP500 uncertainty stays `submissionUncertain`, not a native block,
+successful answer, inferred failure grade or waived denominator.
+
+The following is an **incomplete schema illustration**, not a result. Unknown
+hashes, outcomes and counts deliberately cannot pass validation:
+
+```json
+{
+  "label": "post-stop-unsent-slots-only",
+  "originalPlanSha256": "3201eead130d96a2be84e2d503a4e1f016f31407ef3f28f86d07aae2df2e4ef2",
+  "continuationPlanSha256": "7083551695d1fbc3689748517f64b1c50365fc864c64e04f7d43ba202fecbf20",
+  "originalStoppedBatchSha256": "<actual unchanged stopped-batch file SHA256>",
+  "reconciliationSha256": "<actual immutable reconciliation file SHA256>",
+  "reportSha256": "<actual disclosed combined100 amendment-report file SHA256>",
+  "executionAmendmentPreregistered": false,
+  "originalNoResumePolicyAmended": true,
+  "originalProtocolWasFullyFollowed": false,
+  "originalClaimsRemainSpent": true,
+  "retrySubmittedOrUncertainCases": false,
+  "sourceTransportCandidateOrQuestionChanges": false,
+  "heldoutFeedbackTuning": false,
+  "noBestOf": true,
+  "priorCaptured": 2,
+  "priorUnknown": 1,
+  "eligibleUnsent": 17,
+  "priorUnknownHttpStatus": 500,
+  "continuationInvocations": 1,
+  "stopOnNextFailure": true,
+  "outcome": "<completed or stopped-fail-closed, after durable reconciliation>",
+  "continuationTerminalCounts": {
+    "answerCaptured": "<actual count>",
+    "nativeServiceBlocked": "<actual count>",
+    "nativeErrorReply": "<actual count>",
+    "protectedNotResubmitted": 0,
+    "notSubmitted": "<actual count>",
+    "submissionUncertain": "<actual count>",
+    "captureFailed": "<actual count>"
+  }
+}
+```
+
+All fields above are required when `executionProtocol` is present; no extra
+fields are accepted. All five hashes must be valid, distinct `H` values. Both
+plan hashes are exact fixed bindings, not configurable examples.
+`reportSha256` must equal `combined.sourceReportSha256`, identifying the
+amendment-disclosing **combined** report, not an unwrapped earlier report.
+The heldout report hash remains separately required by the existing run contract.
+
+For this one actual amendment, final development must select `intervention`.
+The already-required final-candidate and heldout-definition bindings must be:
+
+- Candidate SHA256: `3c225b426acdfb782495a19000bc0ce41a69b1853f829a6ba227f30675a4f25f`
+- Definition SHA256: `ebdf70c2bff27fb3542e969bfd73db44a5a31f7cc5de19c4bf222b22dd58a007`
+
+This does not permit a different final candidate, source/transport/question
+bindings or another continuation. It neither alters nor weakens the original
+AI-assisted review, timing-corroboration, rubric, unknown-result, same-candidate,
+no-best-of or strict original84 acceptance guards.
+
+**Accounting:** exact prior counts2 +1 +17 = heldout20. All numeric fields
+are integers, never booleans. `continuationInvocations` is exactly1;
+auth/preflight failure consumes that one invocation too. `outcome` accepts only
+`completed` or `stopped-fail-closed`, not running/pending/unreconciled states.
+The seven `continuationTerminalCounts` sum to17, with
+`protectedNotResubmitted=0`. Reconciled heldout terminal counts must equal
+those17 counters **plus2 `answerCaptured` and1 `submissionUncertain`** from
+the unchanged prior records. All derived counters, axes, optional buckets and
+combined100 arithmetic still undergo the existing checks.
+
+For `completed`, all17 continuation slots must have `answerCaptured`.
+Therefore the ceiling is **19 captured answers +1 unknown**, not20 successful
+answers; capture does not award a content/factual PASS. For `stopped-fail-closed`,
+later unsent slots remain `notSubmitted` in the20/100 denominators. At most
+one new terminal outcome may be `nativeServiceBlocked`, `nativeErrorReply`,
+`submissionUncertain` or `captureFailed`: stop at the next failure, never
+automatically try later slots. Zero new submissions after auth/preflight failure
+is valid; captured slots plus a separate definition/integrity/cleanup failure
+are also possible, including failure after the last capture. Do not recast a
+failed control outcome as completed merely because every slot has a capture.
+
+The original batch stays byte-identical and `stopped_fail_closed`. Original
+plan, claims, attempt intents, records, reviews and policy evidence are not
+rewritten; the additive reconciliation/report describes the new first submissions.
+All original20 claims remain spent, including any slots still unsent after
+another failure. Local journal absence is **not independent proof** of no
+out-of-band submissions: the parent's stopped-run/no-other-submission attestation
+and actual adapter eligibility checks remain necessary. The docbuilder checks
+declared counts/hash bindings, not private execution order or ledger integrity.
+If no durable terminal execution result/reconciliation exists, this dated
+profile blocks; do not invent a hash, recovery receipt or second invocation.
+
+The declaration is visible in the Word/HTML notices, chapter19.11 execution
+accounting, chapter24.11 hash table, HTML provenance, validation identity,
+package `START_HERE.txt` and status. Baseline80 and candidate80 remain separate
+from the final candidate's reconciled heldout20. Do not hardcode a successful
+continuation,20 captures or completed final scores while the real report is
+still unavailable.
+
+#### Fresh dated-snapshot approval (private; never packaged)
+
+The new approval uses `furusato-document-validation-snapshot-approval/v1`, not
+the original `furusato-document-release-approval/v1`. Exact shape below; this is
+an **intentionally invalid, unapproved template**, not publication permission:
+
+```json
+{
+  "schemaVersion": "furusato-document-validation-snapshot-approval/v1",
+  "approved": false,
+  "userAuthorized": false,
+  "version": "3.0.0",
+  "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
+  "evidenceProjectionSha256": "<exact unchanged original public manifest SHA256>",
+  "knownLimitationsAcknowledged": false,
+  "originalCounts": {"pass":76,"fail":8,"executionUnverified":0,"blocked":0,"notApplicable":0},
+  "snapshotDate": "2026-10-02",
+  "evaluation100Sha256": "<exact actual public-study file SHA256>",
+  "executionProtocolSha256": "<canonical digest of the exact executionProtocol object>",
+  "executionProtocolHashes": {
+    "originalPlanSha256": "3201eead130d96a2be84e2d503a4e1f016f31407ef3f28f86d07aae2df2e4ef2",
+    "continuationPlanSha256": "7083551695d1fbc3689748517f64b1c50365fc864c64e04f7d43ba202fecbf20",
+    "originalStoppedBatchSha256": "<actual unchanged stopped-batch SHA256>",
+    "reconciliationSha256": "<actual immutable reconciliation SHA256>",
+    "reportSha256": "<actual disclosed combined100 amendment-report SHA256>"
+  },
+  "approvedAtUtc": "<actual fresh timezone-aware approval timestamp>",
+  "knownLimitations": [
+    "ai-assisted-review-no-independent-human-signoff",
+    "method-timing-corroborated-not-independently-proven",
+    "post-stop-unsent-slots-only-execution-amendment-not-preregistered",
+    "internal-query-and-backend-conversation-proof-unobservable",
+    "frozen100-separate-from-original84-and-targeted-diagnostics",
+    "not-ga-all-feature-acceptance-or-agent-promotion",
+    "original-v3.0.0-tag-and-release-assets-unchanged"
+  ]
+}
+```
+
+An actual authorized record must set the three approval/acknowledgment booleans
+to true and bind the exact current projection and study bytes.
+`executionProtocolSha256` uses `study100.digest(study["executionProtocol"])`;
+`executionProtocolHashes` must exactly match all five hashes in the study.
+`study100.execution_binding(study, required=True)` returns those two bindings.
+This explicitly acknowledges the post-stop amendment and its exact evidence;
+an older study-only approval cannot silently imply original-protocol compliance.
+`approvedAtUtc`
+must be at or after `projectedAtUtc`; wrong/stale hashes, dates, limitations,
+old approval schema, synthetic study and private overrides are rejected before
+building the model or creating output. The corroborated/not-independently-proven
+limitation and the execution-amendment limitation are mandatory; earlier
+method-preregistration or pre-amendment approvals/fixtures cannot be reused as
+evidence of certification/compliance. Do not flip flags merely to pass a gate.
+
+#### Offline checks and parent-only final rendering
+
+Run from the public **source checkout**, never the private archive/main checkout.
+Set all scratch, temp, output and receipts beneath the authorized private `$R30`.
+No command below runs questions, touches the persistent ledger, changes cloud
+roles/Agent sources, commits, pushes or publishes.
+
+```powershell
+Set-Location $Source
+$env:PYTHONDONTWRITEBYTECODE = '1'
+$PrivateTemp = Join-Path $R30 'temp'
+New-Item -ItemType Directory -Path $PrivateTemp -Force | Out-Null
+# Windows extended path keeps deeply nested Python test fixtures under R30.
+$env:TEMP = '\\?\' + (Resolve-Path -LiteralPath $PrivateTemp).Path
+$env:TMP = $env:TEMP
+$env:PYTHONPATH = Join-Path $Source 'tools\docs'
+
+# Schema/arithmetic/binding check only, with actual projected counts when ready.
+python -B -m furusato_docs.preview30_evaluation100 --input $ActualPublicStudy
+
+# Synthetic unit fixtures only; no actual private evaluation inputs.
+python -B -m unittest discover -s .\tools\docs\tests -p 'test_preview30*.py'
+
+# PARENT ONLY, after final100 projection and fresh approval actually exist.
+.\tools\docs\Build-Preview30.ps1 `
+  -Stage (Join-Path $R30 'final-actual-001') `
+  -PublicEvidenceManifest .\docs\assets\v3.0.0-evidence\manifest.json `
+  -Evaluation100 $ActualPublicStudy `
+  -ReleaseProfile validation-20261002 -ReleaseApproval $FreshSnapshotApproval
+```
+
+The extended prefix above is only for Python temporary files on Windows; keep
+the final Word/COM stage at a normal, short-enough absolute path under `$R30`.
+No system long-path policy, drive mapping or shared temp directory is changed.
+
+For split execution pass the **same** `--evaluation100`, `--release-profile`
+and `--release-approval` to `build_preview30.py`, `validate_preview30.py` (with
+`--render --interactions --print-html`), and `package_preview30.py`. The
+validation identity and ZIP status bind the exact study, source/suite binding,
+final candidate, execution-amendment digest/hashes and shared-content hash.
+Changed studies, amendments or stale receipts fail
+before package output. Full Word TOC refresh, rendering, bilingual printing and
+interaction checks remain mandatory for a distributable snapshot.
+
+Before actual results, only private `preview` rendering with
+`evidenceKind: "synthetic-private-test"` is allowed for fixtures (optionally
+`--skip-word`). Its shared body and badges say **SYNTHETIC PRIVATE TEST**;
+the snapshot profile and packager reject it. Do not copy fixture files, mock
+validation receipts, unrefreshed smoke pairs or placeholder success into source
+assets, README result summaries, GitHub or a release.
+
 `check_preview30_acceptance.py` evaluates an explicitly selected original ten/84
 run, its native case proof, all required lab states and completion captures,
 the reviewed public freeze, and an explicit approval bound to the exact evidence

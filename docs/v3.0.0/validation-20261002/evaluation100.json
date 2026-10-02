@@ -1,0 +1,1657 @@
+{
+  "baseline": {
+    "bindingSha256": "bab9aef2d60973473a871cdbca3838a779eab4bcc22da4bb7b8415755f74ac63",
+    "buckets": [
+      {
+        "label": "ambiguity-unavailable-responsible-refusal",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 9,
+              "pass": 3,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 7,
+              "pass": 5,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 4,
+              "notApplicable": 0,
+              "pass": 8,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 1,
+              "nativeServiceBlock": 0,
+              "notApplicable": 4,
+              "pass": 5,
+              "retainedServiceBlock": 0,
+              "unknown": 2
+            }
+          },
+          "capturedResponses": 12,
+          "nativeBlocks": 0,
+          "submissionIntents": 12,
+          "terminalCases": 12,
+          "terminalCounts": {
+            "answerCaptured": 12,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 12,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "donation-catalog-trace",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 7,
+              "pass": 5,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 3,
+              "pass": 9,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 1,
+              "notApplicable": 0,
+              "pass": 10,
+              "unknown": 1
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 10,
+              "pass": 1,
+              "retainedServiceBlock": 0,
+              "unknown": 1
+            }
+          },
+          "capturedResponses": 12,
+          "nativeBlocks": 0,
+          "submissionIntents": 12,
+          "terminalCases": 12,
+          "terminalCounts": {
+            "answerCaptured": 12,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 12,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "gold-source-owned-dax",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 2,
+              "pass": 6,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 2,
+              "pass": 6,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 0,
+              "notApplicable": 0,
+              "pass": 7,
+              "unknown": 1
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 7,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 1
+            }
+          },
+          "capturedResponses": 8,
+          "nativeBlocks": 0,
+          "submissionIntents": 8,
+          "terminalCases": 8,
+          "terminalCounts": {
+            "answerCaptured": 8,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 8,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "operational-kql",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 8,
+              "pass": 3,
+              "unknown": 1
+            },
+            "contextualHelpfulness": {
+              "fail": 3,
+              "pass": 9,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 2,
+              "notApplicable": 0,
+              "pass": 9,
+              "unknown": 1
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 11,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 1
+            }
+          },
+          "capturedResponses": 12,
+          "nativeBlocks": 0,
+          "submissionIntents": 12,
+          "terminalCases": 12,
+          "terminalCounts": {
+            "answerCaptured": 12,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 12,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "recipient-vs-donor-geography",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 12,
+              "pass": 0,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 10,
+              "pass": 2,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 7,
+              "notApplicable": 0,
+              "pass": 3,
+              "unknown": 2
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 10,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 2
+            }
+          },
+          "capturedResponses": 12,
+          "nativeBlocks": 0,
+          "submissionIntents": 12,
+          "terminalCases": 12,
+          "terminalCounts": {
+            "answerCaptured": 12,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 12,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "semantic-relationship-navigation",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 6,
+              "pass": 2,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 3,
+              "pass": 5,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 3,
+              "notApplicable": 0,
+              "pass": 5,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 8,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 8,
+          "nativeBlocks": 0,
+          "submissionIntents": 8,
+          "terminalCases": 8,
+          "terminalCounts": {
+            "answerCaptured": 8,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 8,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "static-count-rank",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 14,
+              "pass": 2,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 12,
+              "pass": 4,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 12,
+              "notApplicable": 0,
+              "pass": 4,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 16,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 16,
+          "nativeBlocks": 0,
+          "submissionIntents": 16,
+          "terminalCases": 16,
+          "terminalCounts": {
+            "answerCaptured": 16,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 16,
+          "unknownOutcomes": 0
+        }
+      }
+    ],
+    "candidate": {
+      "candidateSha256": "72d4468588967eb21cb38dd67597f8ff95d7b6b702fa39a3680a949da1861552",
+      "definitionSha256": "fddf05b19e44c2288caac27e57dfcff0ea1ce00072bce028c74d1ad6d8955665",
+      "profileLabel": "release30-static-compat-baseline"
+    },
+    "metrics": {
+      "axes": {
+        "answerContent": {
+          "fail": 58,
+          "pass": 21,
+          "unknown": 1
+        },
+        "contextualHelpfulness": {
+          "fail": 40,
+          "pass": 40,
+          "unknown": 0
+        },
+        "factualCorrectness": {
+          "fail": 29,
+          "notApplicable": 0,
+          "pass": 46,
+          "unknown": 5
+        },
+        "protectiveBoundary": {
+          "fail": 1,
+          "nativeServiceBlock": 0,
+          "notApplicable": 66,
+          "pass": 6,
+          "retainedServiceBlock": 0,
+          "unknown": 7
+        }
+      },
+      "capturedResponses": 80,
+      "nativeBlocks": 0,
+      "submissionIntents": 80,
+      "terminalCases": 80,
+      "terminalCounts": {
+        "answerCaptured": 80,
+        "captureFailed": 0,
+        "nativeErrorReply": 0,
+        "nativeServiceBlocked": 0,
+        "notSubmitted": 0,
+        "protectedNotResubmitted": 0,
+        "submissionUncertain": 0
+      },
+      "uniqueCases": 80,
+      "unknownOutcomes": 0
+    },
+    "reviewPolicySha256": "9a083d68f62337dbdae0a41351df308f51430cc372d775c584547f281111ae7e",
+    "sourceReportSha256": "c0fb262dd0d6604429de03e97eea199dfda04a5c2e08b98d7c18b114e0f5302a"
+  },
+  "bindingSha256": "bab9aef2d60973473a871cdbca3838a779eab4bcc22da4bb7b8415755f74ac63",
+  "bindings": {
+    "inputManifestSha256": "92cc70bd17ee29fa4517c26a85f7e9692a14d99820dedd571dfb687766580cba",
+    "rubricSha256": "cd584ad9aa0ea8e736d1f8c2fecf83e2bde3bd3885705921271bf58374f73f44",
+    "sourceFileHashes": {
+      "source-001": "1d42a02eefa99b333d719d480c9bffe5eff48f82e40bc67f3e74093865944cfe",
+      "source-002": "163199b8e3cb90591b76eec4b2c0c54978016f8f837bc24775c132977ca583ca",
+      "source-003": "5bcef799c8af65f9daa9930dd51460e04d4ae94b8c5bd3089717da5d5507aa1e",
+      "source-004": "40cf9811c674533713467530978971f667eba7c50aed99e35577dd92b48b2dc8",
+      "source-005": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+      "source-006": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",
+      "source-007": "e42e836638afc370f7a0fdc1d12e8d5126fcad05c266f87d4400834d52fc1fb3",
+      "source-008": "bad72fc616c682839e120781579c21d3d313068f948d6fcccbec9c4d13222608",
+      "source-009": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",
+      "source-010": "41534c77287abe881ab33403ac10078097118c64ce694351fe24605f399f7c97",
+      "source-011": "78bc570c40430d6b1970e8997adeec81e6442fda31601603efc69bbe687ebc26",
+      "source-012": "2995bf66896993614090e895ef1814b0383122bd837dba4b948b30e8a57cfadf",
+      "source-013": "e5772173373ffb19c5203d6ecb26329327c002adc83292ada432341ff0cf4fb3",
+      "source-014": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869",
+      "source-015": "8c344cbd7663b8c496e68a3cbe92136b3e5789da65d3795858f42f63b4d9ac63",
+      "source-016": "0b534b8c5e9aacf659ef52599487096c9df9d6e9324ad659b9dcb0e36f1846cc",
+      "source-017": "5fef5ac672fc6fc47bb16db0fab588c84764afba4dcac98e2b333abf58c3da1d",
+      "source-018": "96f7be02deda561a98966b9468de16c85202154e2f48331e5ac897a6655e0d99",
+      "source-019": "3ccc8f6b13e30c2244982dee893bf09f3119d0b155854d975b39524ede058c73",
+      "source-020": "f9354395965462ce3b95e561ffa6ef924b157cfa8cc384826bb630dbf717e977",
+      "source-021": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+      "source-022": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",
+      "source-023": "e42e836638afc370f7a0fdc1d12e8d5126fcad05c266f87d4400834d52fc1fb3",
+      "source-024": "bad72fc616c682839e120781579c21d3d313068f948d6fcccbec9c4d13222608",
+      "source-025": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",
+      "source-026": "41534c77287abe881ab33403ac10078097118c64ce694351fe24605f399f7c97",
+      "source-027": "78bc570c40430d6b1970e8997adeec81e6442fda31601603efc69bbe687ebc26",
+      "source-028": "2995bf66896993614090e895ef1814b0383122bd837dba4b948b30e8a57cfadf",
+      "source-029": "e5772173373ffb19c5203d6ecb26329327c002adc83292ada432341ff0cf4fb3",
+      "source-030": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869",
+      "source-031": "8c344cbd7663b8c496e68a3cbe92136b3e5789da65d3795858f42f63b4d9ac63",
+      "source-032": "0b534b8c5e9aacf659ef52599487096c9df9d6e9324ad659b9dcb0e36f1846cc",
+      "source-033": "598ac20f014218a811ac59a5ec3bb5455cc4ae4e6755b73371e82a9304535560",
+      "source-034": "6cf4a6ae4083654a52ebce6cc63e1ce05714ba72889a49074bf8e03b8e4d7dce",
+      "source-035": "78408861c5aed9da0dcdcd8eb1e9532d0482cb6b7c53a0ce9d8ad5c8404e7d98",
+      "source-036": "536132f918275fa543977e1715f1afd5ec844f81fc54a761fe64bd60894224c8",
+      "source-037": "53971aefb36e759e060cee7712a2efd8ee6cd41c467479b84f8d2216c57f9ca1",
+      "source-038": "74fffc968a12be59e91074336cd1e905078ac7991a1a5bda2e0f5fe560bf0b09",
+      "source-039": "045387a47ccfd621f49cab229d76d46bfa649fa6358480c9d7c1d0829935b1b4",
+      "source-040": "ac9ad927b8faf5f3af7d327120804b255581ae1bad418285333d95059238c8b6",
+      "source-041": "ff80b8f42c47d0ab3a1d904f4ab72decd0c4df99c5614a8accd2b27dd7e8018a",
+      "source-042": "36bda446c563aa4296c89fecf0c131e39b2bdb2c6561feeafc2debfa33410c53",
+      "source-043": "554eb36fd823fbdf8d8fcc377933f74e40031989f6ca467902d5acacfec307c4",
+      "source-044": "244b808a1e25f605f6b068e7611ed17a38a752e2ee10dfb9ab648e7d171bfd92",
+      "source-045": "48ef5403dbb8ae32963a523977f5b95d9e12a37858a764f6470cffca19057861",
+      "source-046": "97def6dfacd237b678aadba26806adcf367d71b7c7f3c8fbfb450eb31bf8eda6",
+      "source-047": "9f9d251104908064eea80aa3b2fc06a3e938a0cbe975586521c2ba023fd2bbfe",
+      "source-048": "a4219c0c5be880648560fa4e343282c13341f4e18afbec0b5944195e88beff59",
+      "source-049": "90960185990d0ee35b8a1028ccdd74a3690fafefcc78c60fd5e915a9a4bba506",
+      "source-050": "75c3109d34dd798538023da46cbf9ab9596e53020810c90e0a79c3579ae26844"
+    },
+    "sourceFilesSha256": "466a548bbb2fb6b7026b00e1074f9a16e8cf90751a27fd85004aff9fae27d41b",
+    "splitLockSha256": "eae4874e761f14fecdf4b56d40d64b2d0e3c11483cc7ae576f00af13016ec3fb",
+    "suiteManifestSha256": "485fe426dc18c8f6bb97702423d388adae32aa789afe03d4b1234881aa176b63"
+  },
+  "combined": {
+    "bindingSha256": "bab9aef2d60973473a871cdbca3838a779eab4bcc22da4bb7b8415755f74ac63",
+    "buckets": [
+      {
+        "label": "ambiguity-unavailable-responsible-refusal",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 9,
+              "pass": 5,
+              "unknown": 1
+            },
+            "contextualHelpfulness": {
+              "fail": 7,
+              "pass": 7,
+              "unknown": 1
+            },
+            "factualCorrectness": {
+              "fail": 3,
+              "notApplicable": 2,
+              "pass": 8,
+              "unknown": 2
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 4,
+              "pass": 7,
+              "retainedServiceBlock": 0,
+              "unknown": 4
+            }
+          },
+          "capturedResponses": 14,
+          "nativeBlocks": 0,
+          "submissionIntents": 15,
+          "terminalCases": 15,
+          "terminalCounts": {
+            "answerCaptured": 14,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 1
+          },
+          "uniqueCases": 15,
+          "unknownOutcomes": 1
+        }
+      },
+      {
+        "label": "donation-catalog-trace",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 6,
+              "pass": 6,
+              "unknown": 3
+            },
+            "contextualHelpfulness": {
+              "fail": 3,
+              "pass": 9,
+              "unknown": 3
+            },
+            "factualCorrectness": {
+              "fail": 1,
+              "notApplicable": 0,
+              "pass": 11,
+              "unknown": 3
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 11,
+              "pass": 1,
+              "retainedServiceBlock": 0,
+              "unknown": 3
+            }
+          },
+          "capturedResponses": 12,
+          "nativeBlocks": 0,
+          "submissionIntents": 12,
+          "terminalCases": 15,
+          "terminalCounts": {
+            "answerCaptured": 12,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 3,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 15,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "gold-source-owned-dax",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 4,
+              "pass": 5,
+              "unknown": 1
+            },
+            "contextualHelpfulness": {
+              "fail": 4,
+              "pass": 6,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 4,
+              "notApplicable": 0,
+              "pass": 6,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 10,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 10,
+          "nativeBlocks": 0,
+          "submissionIntents": 10,
+          "terminalCases": 10,
+          "terminalCounts": {
+            "answerCaptured": 10,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 10,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "operational-kql",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 9,
+              "pass": 5,
+              "unknown": 1
+            },
+            "contextualHelpfulness": {
+              "fail": 6,
+              "pass": 9,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 5,
+              "notApplicable": 0,
+              "pass": 9,
+              "unknown": 1
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 13,
+              "pass": 1,
+              "retainedServiceBlock": 0,
+              "unknown": 1
+            }
+          },
+          "capturedResponses": 15,
+          "nativeBlocks": 0,
+          "submissionIntents": 15,
+          "terminalCases": 15,
+          "terminalCounts": {
+            "answerCaptured": 15,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 15,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "recipient-vs-donor-geography",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 10,
+              "pass": 5,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 2,
+              "pass": 13,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 2,
+              "notApplicable": 0,
+              "pass": 13,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 15,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 15,
+          "nativeBlocks": 0,
+          "submissionIntents": 15,
+          "terminalCases": 15,
+          "terminalCounts": {
+            "answerCaptured": 15,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 15,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "semantic-relationship-navigation",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 8,
+              "pass": 1,
+              "unknown": 1
+            },
+            "contextualHelpfulness": {
+              "fail": 5,
+              "pass": 5,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 4,
+              "notApplicable": 0,
+              "pass": 4,
+              "unknown": 2
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 9,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 1
+            }
+          },
+          "capturedResponses": 10,
+          "nativeBlocks": 0,
+          "submissionIntents": 10,
+          "terminalCases": 10,
+          "terminalCounts": {
+            "answerCaptured": 10,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 10,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "static-count-rank",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 11,
+              "pass": 6,
+              "unknown": 3
+            },
+            "contextualHelpfulness": {
+              "fail": 3,
+              "pass": 14,
+              "unknown": 3
+            },
+            "factualCorrectness": {
+              "fail": 0,
+              "notApplicable": 0,
+              "pass": 16,
+              "unknown": 4
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 16,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 4
+            }
+          },
+          "capturedResponses": 18,
+          "nativeBlocks": 0,
+          "submissionIntents": 18,
+          "terminalCases": 20,
+          "terminalCounts": {
+            "answerCaptured": 17,
+            "captureFailed": 0,
+            "nativeErrorReply": 1,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 2,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 20,
+          "unknownOutcomes": 0
+        }
+      }
+    ],
+    "candidate": {
+      "candidateSha256": "3c225b426acdfb782495a19000bc0ce41a69b1853f829a6ba227f30675a4f25f",
+      "definitionSha256": "ebdf70c2bff27fb3542e969bfd73db44a5a31f7cc5de19c4bf222b22dd58a007",
+      "profileLabel": "release30-scope-grounding-dev1"
+    },
+    "finalDevelopmentReportSha256": "413d8ebb4e2f8ae07491ed04e2074d5bf0f02a43004d2e05a75b8bf43287e915",
+    "heldoutReportSha256": "07058dd467655337a117c5489ae832655f29b4395eca2881a5ea83a70ecbe301",
+    "metrics": {
+      "axes": {
+        "answerContent": {
+          "fail": 57,
+          "pass": 33,
+          "unknown": 10
+        },
+        "contextualHelpfulness": {
+          "fail": 30,
+          "pass": 63,
+          "unknown": 7
+        },
+        "factualCorrectness": {
+          "fail": 19,
+          "notApplicable": 2,
+          "pass": 67,
+          "unknown": 12
+        },
+        "protectiveBoundary": {
+          "fail": 0,
+          "nativeServiceBlock": 0,
+          "notApplicable": 78,
+          "pass": 9,
+          "retainedServiceBlock": 0,
+          "unknown": 13
+        }
+      },
+      "capturedResponses": 94,
+      "nativeBlocks": 0,
+      "submissionIntents": 95,
+      "terminalCases": 100,
+      "terminalCounts": {
+        "answerCaptured": 93,
+        "captureFailed": 0,
+        "nativeErrorReply": 1,
+        "nativeServiceBlocked": 0,
+        "notSubmitted": 5,
+        "protectedNotResubmitted": 0,
+        "submissionUncertain": 1
+      },
+      "uniqueCases": 100,
+      "unknownOutcomes": 1
+    },
+    "reviewPolicySha256": "9a083d68f62337dbdae0a41351df308f51430cc372d775c584547f281111ae7e",
+    "sourceReportSha256": "3156fa80568bec4353400c67a690dcfcfb6d7fd85bfbd8e775a9bc832ead683b"
+  },
+  "denominators": {
+    "development": 80,
+    "heldout": 20,
+    "unique": 100
+  },
+  "evidenceKind": "observed-live",
+  "executionProtocol": {
+    "continuationInvocations": 1,
+    "continuationPlanSha256": "7083551695d1fbc3689748517f64b1c50365fc864c64e04f7d43ba202fecbf20",
+    "continuationTerminalCounts": {
+      "answerCaptured": 11,
+      "captureFailed": 0,
+      "nativeErrorReply": 1,
+      "nativeServiceBlocked": 0,
+      "notSubmitted": 5,
+      "protectedNotResubmitted": 0,
+      "submissionUncertain": 0
+    },
+    "eligibleUnsent": 17,
+    "executionAmendmentPreregistered": false,
+    "heldoutFeedbackTuning": false,
+    "label": "post-stop-unsent-slots-only",
+    "noBestOf": true,
+    "originalClaimsRemainSpent": true,
+    "originalNoResumePolicyAmended": true,
+    "originalPlanSha256": "3201eead130d96a2be84e2d503a4e1f016f31407ef3f28f86d07aae2df2e4ef2",
+    "originalProtocolWasFullyFollowed": false,
+    "originalStoppedBatchSha256": "3c4ac452e5145ecf6223f43c8f063bbc053e8d9a4f660cefec91bb4149c0376a",
+    "outcome": "stopped-fail-closed",
+    "priorCaptured": 2,
+    "priorUnknown": 1,
+    "priorUnknownHttpStatus": 500,
+    "reconciliationSha256": "013814780d9decba10e41e4a8e2e1a9bb26cf39b04aca07138383e5a7fd27a3e",
+    "reportSha256": "3156fa80568bec4353400c67a690dcfcfb6d7fd85bfbd8e775a9bc832ead683b",
+    "retrySubmittedOrUncertainCases": false,
+    "sourceTransportCandidateOrQuestionChanges": false,
+    "stopOnNextFailure": true
+  },
+  "final": {
+    "baselineAnswersBorrowed": false,
+    "bestOfPooling": false,
+    "candidateSha256": "3c225b426acdfb782495a19000bc0ce41a69b1853f829a6ba227f30675a4f25f",
+    "developmentRound": "intervention",
+    "freezeReceiptSha256": "ed3299ed602a3103f378e264faf195a7e5dc2bbb90e3d89905149ee5b2aa3730",
+    "frozenAtUtc": "2026-10-02T14:01:11.814701+00:00",
+    "frozenBeforeHeldout": true,
+    "heldoutClaimSha256": "02b5dd6c60b2b714e4545a0c5d30b641219cff97ddec0af5f310bb7ab591f038",
+    "heldoutIrreversiblySpent": true,
+    "heldoutReservedAtUtc": "2026-10-02T14:01:15.415447+00:00",
+    "heldoutUsedForTuning": false,
+    "selectionPolicy": "all_once_declared_cases_no_best_of",
+    "stage": "final-frozen"
+  },
+  "heldout": {
+    "bindingSha256": "bab9aef2d60973473a871cdbca3838a779eab4bcc22da4bb7b8415755f74ac63",
+    "buckets": [
+      {
+        "label": "ambiguity-unavailable-responsible-refusal",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 0,
+              "pass": 2,
+              "unknown": 1
+            },
+            "contextualHelpfulness": {
+              "fail": 0,
+              "pass": 2,
+              "unknown": 1
+            },
+            "factualCorrectness": {
+              "fail": 0,
+              "notApplicable": 1,
+              "pass": 1,
+              "unknown": 1
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 0,
+              "pass": 2,
+              "retainedServiceBlock": 0,
+              "unknown": 1
+            }
+          },
+          "capturedResponses": 2,
+          "nativeBlocks": 0,
+          "submissionIntents": 3,
+          "terminalCases": 3,
+          "terminalCounts": {
+            "answerCaptured": 2,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 1
+          },
+          "uniqueCases": 3,
+          "unknownOutcomes": 1
+        }
+      },
+      {
+        "label": "donation-catalog-trace",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 0,
+              "pass": 0,
+              "unknown": 3
+            },
+            "contextualHelpfulness": {
+              "fail": 0,
+              "pass": 0,
+              "unknown": 3
+            },
+            "factualCorrectness": {
+              "fail": 0,
+              "notApplicable": 0,
+              "pass": 0,
+              "unknown": 3
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 0,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 3
+            }
+          },
+          "capturedResponses": 0,
+          "nativeBlocks": 0,
+          "submissionIntents": 0,
+          "terminalCases": 3,
+          "terminalCounts": {
+            "answerCaptured": 0,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 3,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 3,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "gold-source-owned-dax",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 2,
+              "pass": 0,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 2,
+              "pass": 0,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 2,
+              "notApplicable": 0,
+              "pass": 0,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 2,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 2,
+          "nativeBlocks": 0,
+          "submissionIntents": 2,
+          "terminalCases": 2,
+          "terminalCounts": {
+            "answerCaptured": 2,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 2,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "operational-kql",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 2,
+              "pass": 1,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 1,
+              "pass": 2,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 1,
+              "notApplicable": 0,
+              "pass": 2,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 2,
+              "pass": 1,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 3,
+          "nativeBlocks": 0,
+          "submissionIntents": 3,
+          "terminalCases": 3,
+          "terminalCounts": {
+            "answerCaptured": 3,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 3,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "recipient-vs-donor-geography",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 1,
+              "pass": 2,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 0,
+              "pass": 3,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 0,
+              "notApplicable": 0,
+              "pass": 3,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 3,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 3,
+          "nativeBlocks": 0,
+          "submissionIntents": 3,
+          "terminalCases": 3,
+          "terminalCounts": {
+            "answerCaptured": 3,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 3,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "semantic-relationship-navigation",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 2,
+              "pass": 0,
+              "unknown": 0
+            },
+            "contextualHelpfulness": {
+              "fail": 1,
+              "pass": 1,
+              "unknown": 0
+            },
+            "factualCorrectness": {
+              "fail": 1,
+              "notApplicable": 0,
+              "pass": 1,
+              "unknown": 0
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 2,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 0
+            }
+          },
+          "capturedResponses": 2,
+          "nativeBlocks": 0,
+          "submissionIntents": 2,
+          "terminalCases": 2,
+          "terminalCounts": {
+            "answerCaptured": 2,
+            "captureFailed": 0,
+            "nativeErrorReply": 0,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 0,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 2,
+          "unknownOutcomes": 0
+        }
+      },
+      {
+        "label": "static-count-rank",
+        "metrics": {
+          "axes": {
+            "answerContent": {
+              "fail": 1,
+              "pass": 0,
+              "unknown": 3
+            },
+            "contextualHelpfulness": {
+              "fail": 0,
+              "pass": 1,
+              "unknown": 3
+            },
+            "factualCorrectness": {
+              "fail": 0,
+              "notApplicable": 0,
+              "pass": 1,
+              "unknown": 3
+            },
+            "protectiveBoundary": {
+              "fail": 0,
+              "nativeServiceBlock": 0,
+              "notApplicable": 1,
+              "pass": 0,
+              "retainedServiceBlock": 0,
+              "unknown": 3
+            }
+          },
+          "capturedResponses": 2,
+          "nativeBlocks": 0,
+          "submissionIntents": 2,
+          "terminalCases": 4,
+          "terminalCounts": {
+            "answerCaptured": 1,
+            "captureFailed": 0,
+            "nativeErrorReply": 1,
+            "nativeServiceBlocked": 0,
+            "notSubmitted": 2,
+            "protectedNotResubmitted": 0,
+            "submissionUncertain": 0
+          },
+          "uniqueCases": 4,
+          "unknownOutcomes": 0
+        }
+      }
+    ],
+    "candidate": {
+      "candidateSha256": "3c225b426acdfb782495a19000bc0ce41a69b1853f829a6ba227f30675a4f25f",
+      "definitionSha256": "ebdf70c2bff27fb3542e969bfd73db44a5a31f7cc5de19c4bf222b22dd58a007",
+      "profileLabel": "release30-scope-grounding-dev1"
+    },
+    "metrics": {
+      "axes": {
+        "answerContent": {
+          "fail": 8,
+          "pass": 5,
+          "unknown": 7
+        },
+        "contextualHelpfulness": {
+          "fail": 4,
+          "pass": 9,
+          "unknown": 7
+        },
+        "factualCorrectness": {
+          "fail": 4,
+          "notApplicable": 1,
+          "pass": 8,
+          "unknown": 7
+        },
+        "protectiveBoundary": {
+          "fail": 0,
+          "nativeServiceBlock": 0,
+          "notApplicable": 10,
+          "pass": 3,
+          "retainedServiceBlock": 0,
+          "unknown": 7
+        }
+      },
+      "capturedResponses": 14,
+      "nativeBlocks": 0,
+      "submissionIntents": 15,
+      "terminalCases": 20,
+      "terminalCounts": {
+        "answerCaptured": 13,
+        "captureFailed": 0,
+        "nativeErrorReply": 1,
+        "nativeServiceBlocked": 0,
+        "notSubmitted": 5,
+        "protectedNotResubmitted": 0,
+        "submissionUncertain": 1
+      },
+      "uniqueCases": 20,
+      "unknownOutcomes": 1
+    },
+    "reviewPolicySha256": "9a083d68f62337dbdae0a41351df308f51430cc372d775c584547f281111ae7e",
+    "sourceReportSha256": "07058dd467655337a117c5489ae832655f29b4395eca2881a5ea83a70ecbe301"
+  },
+  "intervention": {
+    "authorizationSha256": "56084d626770d1f76bea200ec7b0407a60e65dd3e7fd841d021e9c2a1eafc2b9",
+    "baselineReportSha256": "c0fb262dd0d6604429de03e97eea199dfda04a5c2e08b98d7c18b114e0f5302a",
+    "meaningfulChange": true,
+    "noSafetyBypass": true,
+    "run": {
+      "bindingSha256": "bab9aef2d60973473a871cdbca3838a779eab4bcc22da4bb7b8415755f74ac63",
+      "buckets": [
+        {
+          "label": "ambiguity-unavailable-responsible-refusal",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 9,
+                "pass": 3,
+                "unknown": 0
+              },
+              "contextualHelpfulness": {
+                "fail": 7,
+                "pass": 5,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 3,
+                "notApplicable": 1,
+                "pass": 7,
+                "unknown": 1
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 4,
+                "pass": 5,
+                "retainedServiceBlock": 0,
+                "unknown": 3
+              }
+            },
+            "capturedResponses": 12,
+            "nativeBlocks": 0,
+            "submissionIntents": 12,
+            "terminalCases": 12,
+            "terminalCounts": {
+              "answerCaptured": 12,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 12,
+            "unknownOutcomes": 0
+          }
+        },
+        {
+          "label": "donation-catalog-trace",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 6,
+                "pass": 6,
+                "unknown": 0
+              },
+              "contextualHelpfulness": {
+                "fail": 3,
+                "pass": 9,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 1,
+                "notApplicable": 0,
+                "pass": 11,
+                "unknown": 0
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 11,
+                "pass": 1,
+                "retainedServiceBlock": 0,
+                "unknown": 0
+              }
+            },
+            "capturedResponses": 12,
+            "nativeBlocks": 0,
+            "submissionIntents": 12,
+            "terminalCases": 12,
+            "terminalCounts": {
+              "answerCaptured": 12,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 12,
+            "unknownOutcomes": 0
+          }
+        },
+        {
+          "label": "gold-source-owned-dax",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 2,
+                "pass": 5,
+                "unknown": 1
+              },
+              "contextualHelpfulness": {
+                "fail": 2,
+                "pass": 6,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 2,
+                "notApplicable": 0,
+                "pass": 6,
+                "unknown": 0
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 8,
+                "pass": 0,
+                "retainedServiceBlock": 0,
+                "unknown": 0
+              }
+            },
+            "capturedResponses": 8,
+            "nativeBlocks": 0,
+            "submissionIntents": 8,
+            "terminalCases": 8,
+            "terminalCounts": {
+              "answerCaptured": 8,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 8,
+            "unknownOutcomes": 0
+          }
+        },
+        {
+          "label": "operational-kql",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 7,
+                "pass": 4,
+                "unknown": 1
+              },
+              "contextualHelpfulness": {
+                "fail": 5,
+                "pass": 7,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 4,
+                "notApplicable": 0,
+                "pass": 7,
+                "unknown": 1
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 11,
+                "pass": 0,
+                "retainedServiceBlock": 0,
+                "unknown": 1
+              }
+            },
+            "capturedResponses": 12,
+            "nativeBlocks": 0,
+            "submissionIntents": 12,
+            "terminalCases": 12,
+            "terminalCounts": {
+              "answerCaptured": 12,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 12,
+            "unknownOutcomes": 0
+          }
+        },
+        {
+          "label": "recipient-vs-donor-geography",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 9,
+                "pass": 3,
+                "unknown": 0
+              },
+              "contextualHelpfulness": {
+                "fail": 2,
+                "pass": 10,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 2,
+                "notApplicable": 0,
+                "pass": 10,
+                "unknown": 0
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 12,
+                "pass": 0,
+                "retainedServiceBlock": 0,
+                "unknown": 0
+              }
+            },
+            "capturedResponses": 12,
+            "nativeBlocks": 0,
+            "submissionIntents": 12,
+            "terminalCases": 12,
+            "terminalCounts": {
+              "answerCaptured": 12,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 12,
+            "unknownOutcomes": 0
+          }
+        },
+        {
+          "label": "semantic-relationship-navigation",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 6,
+                "pass": 1,
+                "unknown": 1
+              },
+              "contextualHelpfulness": {
+                "fail": 4,
+                "pass": 4,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 3,
+                "notApplicable": 0,
+                "pass": 3,
+                "unknown": 2
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 7,
+                "pass": 0,
+                "retainedServiceBlock": 0,
+                "unknown": 1
+              }
+            },
+            "capturedResponses": 8,
+            "nativeBlocks": 0,
+            "submissionIntents": 8,
+            "terminalCases": 8,
+            "terminalCounts": {
+              "answerCaptured": 8,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 8,
+            "unknownOutcomes": 0
+          }
+        },
+        {
+          "label": "static-count-rank",
+          "metrics": {
+            "axes": {
+              "answerContent": {
+                "fail": 10,
+                "pass": 6,
+                "unknown": 0
+              },
+              "contextualHelpfulness": {
+                "fail": 3,
+                "pass": 13,
+                "unknown": 0
+              },
+              "factualCorrectness": {
+                "fail": 0,
+                "notApplicable": 0,
+                "pass": 15,
+                "unknown": 1
+              },
+              "protectiveBoundary": {
+                "fail": 0,
+                "nativeServiceBlock": 0,
+                "notApplicable": 15,
+                "pass": 0,
+                "retainedServiceBlock": 0,
+                "unknown": 1
+              }
+            },
+            "capturedResponses": 16,
+            "nativeBlocks": 0,
+            "submissionIntents": 16,
+            "terminalCases": 16,
+            "terminalCounts": {
+              "answerCaptured": 16,
+              "captureFailed": 0,
+              "nativeErrorReply": 0,
+              "nativeServiceBlocked": 0,
+              "notSubmitted": 0,
+              "protectedNotResubmitted": 0,
+              "submissionUncertain": 0
+            },
+            "uniqueCases": 16,
+            "unknownOutcomes": 0
+          }
+        }
+      ],
+      "candidate": {
+        "candidateSha256": "3c225b426acdfb782495a19000bc0ce41a69b1853f829a6ba227f30675a4f25f",
+        "definitionSha256": "ebdf70c2bff27fb3542e969bfd73db44a5a31f7cc5de19c4bf222b22dd58a007",
+        "profileLabel": "release30-scope-grounding-dev1"
+      },
+      "metrics": {
+        "axes": {
+          "answerContent": {
+            "fail": 49,
+            "pass": 28,
+            "unknown": 3
+          },
+          "contextualHelpfulness": {
+            "fail": 26,
+            "pass": 54,
+            "unknown": 0
+          },
+          "factualCorrectness": {
+            "fail": 15,
+            "notApplicable": 1,
+            "pass": 59,
+            "unknown": 5
+          },
+          "protectiveBoundary": {
+            "fail": 0,
+            "nativeServiceBlock": 0,
+            "notApplicable": 68,
+            "pass": 6,
+            "retainedServiceBlock": 0,
+            "unknown": 6
+          }
+        },
+        "capturedResponses": 80,
+        "nativeBlocks": 0,
+        "submissionIntents": 80,
+        "terminalCases": 80,
+        "terminalCounts": {
+          "answerCaptured": 80,
+          "captureFailed": 0,
+          "nativeErrorReply": 0,
+          "nativeServiceBlocked": 0,
+          "notSubmitted": 0,
+          "protectedNotResubmitted": 0,
+          "submissionUncertain": 0
+        },
+        "uniqueCases": 80,
+        "unknownOutcomes": 0
+      },
+      "reviewPolicySha256": "9a083d68f62337dbdae0a41351df308f51430cc372d775c584547f281111ae7e",
+      "sourceReportSha256": "413d8ebb4e2f8ae07491ed04e2074d5bf0f02a43004d2e05a75b8bf43287e915"
+    }
+  },
+  "observability": {
+    "backendConversations": "UNOBSERVABLE",
+    "internalQueries": "UNOBSERVABLE"
+  },
+  "projectedAtUtc": "2026-10-02T15:55:39.101726+00:00",
+  "review": {
+    "automaticSemanticPass": false,
+    "fullReviewPolicyPreregistered": false,
+    "methodEvidenceHashProvenance": "computedAtAdmission",
+    "methodIntentSha256": "5c705e1a257f9056cbb75dd0f3d24d6c42fc909e3a4abfb753f1bca695e0d898",
+    "methodPreregistered": false,
+    "methodPreregistrationClaim": "corroborated-not-independently-proven",
+    "methodTimingEvidence": "operator-receipt-and-filesystem-corroboration",
+    "methodTimingIndependentlyCertified": false,
+    "mode": "ai-assisted",
+    "noIndependentHumanSignoff": true,
+    "originalMethodTimingCorroborated": true,
+    "policySha256": "9a083d68f62337dbdae0a41351df308f51430cc372d775c584547f281111ae7e",
+    "reviewPolicyTiming": "method-preregistered-tooling-finalized-during-capture",
+    "reviewToolingPreregistered": false,
+    "rubricUnchanged": true,
+    "timingAdmissionBeforeContentGrading": true,
+    "timingAdmissionReceiptSha256": "7c023f672b94c21e8a8f5bec734fcca0723947ba5feb63d7a02d35769bae118f"
+  },
+  "schemaVersion": "furusato100-public-study/v1",
+  "snapshotDate": "2026-10-02"
+}

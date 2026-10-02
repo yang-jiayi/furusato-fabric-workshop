@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "furusato-experimental-instruction-profile/v1",
+  "profileLabel": "release30-scope-grounding-dev1",
+  "status": "measured-experiment-not-promoted",
+  "courseVersion": "3.0.0",
+  "snapshotDate": "2026-10-02",
+  "instructionFile": "agent-instructions.experimental.txt",
+  "instructionUtf8Sha256": "23ef0ad7bb3265847087b11195e610ca1637214597abd7e0dfd26f44b7dfeefb",
+  "instructionBytes": 8910,
+  "instructionEncoding": "UTF-8, exact field value, no trailing newline",
+  "baselineDefinitionSha256": "fddf05b19e44c2288caac27e57dfcff0ea1ce00072bce028c74d1ad6d8955665",
+  "candidateDefinitionSha256": "ebdf70c2bff27fb3542e969bfd73db44a5a31f7cc5de19c4bf222b22dd58a007",
+  "changedFields": [
+    {"part": "Files/Config/draft/stage_config.json", "pointer": "/aiInstructions"},
+    {"part": "Files/Config/published/stage_config.json", "pointer": "/aiInstructions"}
+  ],
+  "sourceBindingsChanged": false,
+  "selectedFieldsChanged": false,
+  "fixturesChanged": false,
+  "safetySettingsChanged": false,
+  "transportChanged": false,
+  "heldoutUsedForTuning": false,
+  "mainAgentPromoted": false,
+  "automaticApplicationAuthorizedByThisFile": false,
+  "publicStudy": "evaluation100.json",
+  "publicStudySha256": "57e30a4e92000be800a546d1dbcb2bc624ff9aaebbd17f5de739696041e73057",
+  "authoredBusinessRuleSource": "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb",
+  "authoredBusinessRuleSourceSha256": "78408861c5aed9da0dcdcd8eb1e9532d0482cb6b7c53a0ce9d8ad5c8404e7d98"
+}

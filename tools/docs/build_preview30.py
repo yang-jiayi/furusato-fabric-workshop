@@ -32,13 +32,15 @@ def write_word(
 ):
     profile = release.require_metadata_profile(metadata, release_profile)
     builder = DocumentBuilder(carrier, review / "participant-shell.docx")
-    # Reserve room for the real TOC field-end and section boundary. Normal-style
-    # inherited spacing can otherwise strand those two hairlines on a blank page.
+    # The dated title and extra snapshot TOC entries must not strand a footer or
+    # final entry on its own page. Keep the original editions' spacing unchanged.
     for style in builder.document.styles:
+        if profile.is_snapshot and style.style_id == "Title":
+            style.font.size = Pt(25)
         if style.style_id in {"TOC1", "TOC2"}:
             style.font.size = Pt(11)
             style.paragraph_format.space_before = Pt(0)
-            style.paragraph_format.space_after = Pt(1)
+            style.paragraph_format.space_after = Pt(0 if profile.is_snapshot else 1)
             style.paragraph_format.line_spacing = 1.0
     status = release.presentation(metadata, profile).get(lang, PREVIEW_NOTICE_JA)
     cover_page(
@@ -122,6 +124,7 @@ def main(argv=None):
     profile = release.get_profile(args.release_profile)
     release.check_options(
         profile, args.release_approval, evidence_path=args.evidence, evaluation_path=args.evaluation_report,
+        evaluation100_path=args.evaluation100,
     )
     if profile.is_release and args.skip_word:
         parser.error("--skip-word is Preview/DRAFT-only; a release requires refreshed Word fields")
@@ -142,6 +145,7 @@ def main(argv=None):
     document, context, facts, carrier, evidence, metadata = build(
         ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
         release_profile=profile, release_approval=args.release_approval,
+        evaluation100_path=args.evaluation100,
     )
     if args.require_evidence and (
         not evidence["complete"]
@@ -173,6 +177,8 @@ def main(argv=None):
     report["status"] = "awaiting-layout-and-interaction-validation" if evidence["complete"] else "usable-draft-awaiting-ui-evidence"
     if profile.is_release:
         report["status"] = "user-authorized-release-awaiting-layout-and-interaction-validation"
+    if profile.is_snapshot:
+        report["status"] = "dated-validation-snapshot-awaiting-layout-and-interaction-validation"
     (review / "build.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (review / "shared-content.json").write_text(json.dumps(asdict(document), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (review / "SHA256SUMS.txt").write_text("".join(f"{value}  {name}\n" for name, value in report["files"].items()), encoding="utf-8")

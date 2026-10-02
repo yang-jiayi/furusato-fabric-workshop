@@ -16,6 +16,7 @@ from furusato_docs.preview30_content import HTML_NAME, WORD_NAME, build  # noqa:
 from furusato_docs import preview30_public_evidence as public  # noqa: E402
 from furusato_docs import preview30_reporting as reporting  # noqa: E402
 from furusato_docs import preview30_release as release  # noqa: E402
+from furusato_docs import preview30_evaluation100 as study100  # noqa: E402
 from furusato_docs.preview30_acceptance import require_public_acceptance  # noqa: E402
 from furusato_docs.validators import Report  # noqa: E402
 from validate_preview30 import inspect_word, inspect_html, check_capture_fidelity  # noqa: E402
@@ -152,20 +153,27 @@ def selected_package_status(metadata, *, release_profile=release.PREVIEW):
     profile = release.get_profile(release_profile)
     if profile.is_release:
         release.require_metadata_profile(metadata, profile)
-    if "selectedOriginalSuiteRunId" not in metadata:
-        return {}
-    selected = reporting.selection_metadata(metadata)
-    result = {
-        "selectedOriginalSuiteRunId": selected["selectedOriginalSuiteRunId"],
-        "originalSuiteAccepted": selected["originalSuiteAccepted"],
-        "aiAnswerQualityAccepted": selected["aiAnswerQualityAccepted"],
-        "mainPromoted": selected["mainPromoted"],
-        "finalUserAcceptanceCertified": False,
-        "publicEvidenceProjectionSha256": metadata["publicEvidenceProjectionSha256"],
-    }
+    result = {}
+    if "selectedOriginalSuiteRunId" in metadata:
+        selected = reporting.selection_metadata(metadata)
+        result.update({
+            "selectedOriginalSuiteRunId": selected["selectedOriginalSuiteRunId"],
+            "originalSuiteAccepted": selected["originalSuiteAccepted"],
+            "aiAnswerQualityAccepted": selected["aiAnswerQualityAccepted"],
+            "mainPromoted": selected["mainPromoted"],
+            "finalUserAcceptanceCertified": False,
+            "publicEvidenceProjectionSha256": metadata["publicEvidenceProjectionSha256"],
+        })
     if profile.is_release:
         result["documentIdentity"] = release.document_identity(metadata, profile)
         result["documentRelease"] = result["documentIdentity"]["documentRelease"]
+    if "evaluation100" in metadata:
+        result["evaluation100"] = study100.require_metadata(metadata)
+        result["evaluation100Sha256"] = metadata["evaluation100Sha256"]
+        result["documentIdentity"] = release.document_identity(metadata, profile)
+        if "executionProtocol" in result["evaluation100"]:
+            result["executionProtocol"] = result["evaluation100"]["executionProtocol"]
+            result.update(study100.execution_binding(result["evaluation100"]))
     return result
 
 
@@ -173,7 +181,42 @@ def start_here(metadata, *, release_profile=release.PREVIEW):
     profile = release.get_profile(release_profile)
     if profile.is_release:
         notice = release.presentation(metadata, profile)
-        return f"""{profile.title} — User-authorized document release with known limitations
+        snapshot_notice = ""
+        if profile.is_snapshot:
+            snapshot_notice = f"""
+This is a dated post-release validation snapshot, not a replacement release.
+Original v3.0.0 tag/assets and docs/v3.0.0/guide remain byte-for-byte unchanged.
+Public placement: {profile.guide_relative.parent.as_posix()} only.
+reports/evaluation100.json is the exact counts-only frozen100 projection;
+its SHA256 is {metadata["evaluation100Sha256"]}.
+Baseline/intervention80 and final-candidate development80+heldout20 are separate.
+AI-assisted review has no independent human sign-off; internal-query/backend
+conversation proof remains UNOBSERVABLE. UNKNOWN is not zero-percent accuracy.
+METHOD timing is corroborated by an operator receipt and filesystem metadata,
+not independently proven; methodTimingIndependentlyCertified=false and
+methodPreregistered=false. Preserve the original prep result/intent verbatim:
+method-evidence hashes are computedAtAdmission, not backdated.
+Review tooling and policy-code binding were finalized DURING capture:
+reviewPolicyTiming={metadata["evaluation100"]["review"]["reviewPolicyTiming"]};
+this retained string is a compatibility label, not preregistration certification.
+fullReviewPolicyPreregistered=false; reviewToolingPreregistered=false.
+The separate timing admission precedes
+content grading and does not rewrite the original capture plan/candidate/claims.
+EXECUTION AMENDMENT: post-stop-unsent-slots-only, not preregistered.
+The original blanket no-resume policy WAS amended; originalProtocolWasFullyFollowed=false.
+Keep the old stopped batch, original plan/claims/records and the prior2 captures
+unchanged. The prior HTTP500 outcome remains UNKNOWN and is never replayed.
+Only the17 never-submitted original first attempts may continue, once; stop on
+the next failure. Original claims remain spent; no source/transport/candidate/
+question changes, heldout-feedback tuning or best-of pooling are authorized.
+Even completed continuation means at most19 captured answers +1 unknown, not20
+successful answers. A failed invocation may leave additional unsent/unknown slots.
+Inspect executionProtocol in {profile.status_name} and reports/evaluation100.json;
+executionProtocolSha256={metadata["documentRelease"]["executionProtocolSha256"]}.
+The original84 reports below are historical and are not pooled with frozen100.
+"""
+        heading = "Dated validation snapshot with known limitations" if profile.is_snapshot else "User-authorized document release with known limitations"
+        return f"""{profile.title} — {heading}
 
 {notice["ja"]}
 {notice["en"]}
@@ -181,7 +224,7 @@ Selected original suite: {metadata["selectedOriginalSuiteRunId"]}.
 Original ten questions/84 conditions and complete historical ledgers are retained.
 Partial captures and blocked/failed labs remain partial, blocked or failed.
 This release does not pass the independent --require-acceptance gate.
-
+{snapshot_notice}
 Open guide/{profile.html_name} locally.
 Word and HTML are together in guide/; the Word-download link stays local.
 Use the Japanese/English switch, search, progress checklist, zoom and print.
@@ -205,15 +248,20 @@ exact projection hash and unaccepted release status. Verify SHA256SUMS.txt:
 Get-FileHash .\\guide\\{profile.word_name} -Algorithm SHA256
 Get-FileHash .\\guide\\{profile.html_name} -Algorithm SHA256
 """
-    if "selectedOriginalSuiteRunId" not in metadata:
-        return START_HERE
-    selected = public.selected_original_suite_run(metadata, required=True)
-    ja, en = reporting.selection_notice(selected)
-    return START_HERE.replace(
-        "AI回答品質は未合格。GA・全機能合格・main promotionの主張ではありません。\n"
-        "AI answer quality is not accepted. Not GA, all-feature acceptance or main promotion.",
-        ja + "\n" + en,
-    )
+    result = START_HERE
+    if "selectedOriginalSuiteRunId" in metadata:
+        selected = public.selected_original_suite_run(metadata, required=True)
+        ja, en = reporting.selection_notice(selected)
+        result = result.replace(
+            "AI回答品質は未合格。GA・全機能合格・main promotionの主張ではありません。\n"
+            "AI answer quality is not accepted. Not GA, all-feature acceptance or main promotion.",
+            ja + "\n" + en,
+        )
+    if "evaluation100" in metadata:
+        notice = study100.notice(study100.require_metadata(metadata))
+        result += "\n" + notice["ja"] + "\n" + notice["en"] + "\n"
+        result += "Separate counts-only study: reports/evaluation100.json\nSHA256: " + metadata["evaluation100Sha256"] + "\n"
+    return result
 
 
 def package(
@@ -222,10 +270,12 @@ def package(
     public_reports_path: Path | None = None, require_acceptance: bool = False,
     acceptance_approval: Path | None = None, release_profile=release.PREVIEW,
     release_approval: Path | None = None,
+    evaluation100_path: Path | None = None,
 ):
     profile = release.get_profile(release_profile)
     release.check_options(
         profile, release_approval, evidence_path=evidence_path, evaluation_path=evaluation_path,
+        evaluation100_path=evaluation100_path,
     )
     if acceptance_approval and not require_acceptance:
         raise ValueError("Publication approval cannot be supplied without the acceptance gate.")
@@ -242,7 +292,10 @@ def package(
     document, _, _, _, evidence, metadata = build(
         ROOT, evidence_path, evaluation_path, public_evidence_path=public_evidence_path,
         release_profile=profile, release_approval=release_approval,
+        evaluation100_path=evaluation100_path,
     )
+    if metadata.get("evaluation100", {}).get("evidenceKind") == "synthetic-private-test":
+        raise ValueError("Synthetic private study fixtures cannot be packaged or published")
     validation, files = load_validated_inputs(pair, validation_path, release_profile=profile)
     release.require_validation_identity(validation, metadata, profile)
     report = Report(target=profile.kind + " package input recheck")
@@ -263,6 +316,11 @@ def package(
         files["attachments/" + name] = payload
     public_reports = collect_public_reports(metadata, root=ROOT, reports_path=public_reports_path, release_profile=profile)
     files.update(public_reports)
+    if evaluation100_path is not None:
+        study_blob = evaluation100_path.read_bytes()
+        if sha(study_blob) != metadata.get("evaluation100Sha256"):
+            raise ValueError("Public frozen100 study changed during packaging")
+        files["reports/evaluation100.json"] = study_blob
     files["START_HERE.txt"] = start_here(metadata, release_profile=profile).encode("utf-8")
     state = {
         "schemaVersion": "furusato-document-release-package/v1" if profile.is_release else "furusato-local-draft-package/v1",
@@ -290,6 +348,8 @@ def package(
         state["independentEvaluationApprovedProjection"] = metadata["evaluationProjection"]
     if metadata.get("originalSuiteRuns") is not None:
         state["approvedOriginalSuiteAggregates"] = metadata["originalSuiteRuns"]
+    if profile.is_snapshot:
+        state["schemaVersion"] = "furusato-document-validation-snapshot-package/v1"
     files[profile.status_name] = (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     files["SHA256SUMS.txt"] = "".join(f"{sha(blob)}  {name}\n" for name, blob in sorted(files.items())).encode("utf-8")
     for name in (profile.word_name, profile.html_name):
@@ -342,4 +402,5 @@ if __name__ == "__main__":
         public_evidence_path=args.public_evidence, public_reports_path=args.public_reports,
         require_acceptance=args.require_acceptance, acceptance_approval=args.acceptance_approval,
         release_profile=args.release_profile, release_approval=args.release_approval,
+        evaluation100_path=args.evaluation100,
     ), ensure_ascii=False, indent=2))

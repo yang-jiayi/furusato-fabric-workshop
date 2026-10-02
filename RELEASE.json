@@ -23,5 +23,24 @@
   "mainAgentPromoted": false,
   "historicalVerdictsChanged": false,
   "new100CaseEvaluationIncluded": false,
-  "privateOriginalsOrDiagnosticsIncluded": false
+  "privateOriginalsOrDiagnosticsIncluded": false,
+  "latestValidationSnapshot": {
+    "snapshotDate": "2026-10-02",
+    "directory": "docs/v3.0.0/validation-20261002",
+    "publicStudy": "docs/v3.0.0/validation-20261002/evaluation100.json",
+    "publicStudySha256": "57e30a4e92000be800a546d1dbcb2bc624ff9aaebbd17f5de739696041e73057",
+    "replacesOriginalRelease": false,
+    "new100CaseEvaluationIncluded": true,
+    "uniqueEvaluationSlots": 100,
+    "finalCandidateBusinessAnswers": 93,
+    "finalCandidateSubmissionIntents": 95,
+    "nativeErrorReplies": 1,
+    "uncertainSubmissions": 1,
+    "unsentSlots": 5,
+    "answerContentCounts": {"pass": 33, "fail": 57, "unknown": 10},
+    "reviewMode": "ai-assisted-no-independent-human-signoff",
+    "executionProtocolAmendedAfterStop": true,
+    "mainAgentPromoted": false,
+    "aiQualityAccepted": false
+  }
 }

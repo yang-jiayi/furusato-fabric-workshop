@@ -4,10 +4,9 @@ import copy
 import hashlib
 import io
 import json
-import shutil
 import sys
+import tempfile
 import unittest
-import uuid
 import zipfile
 from contextlib import ExitStack, redirect_stderr, redirect_stdout
 from dataclasses import FrozenInstanceError, asdict, dataclass, replace
@@ -58,9 +57,9 @@ def snapshot():
 
 class ReleaseProfileTests(unittest.TestCase):
     def setUp(self):
-        self.work = ROOT / (".preview30-release-test-" + uuid.uuid4().hex)
-        self.work.mkdir()
-        self.addCleanup(shutil.rmtree, self.work)
+        temporary = tempfile.TemporaryDirectory(prefix="preview30-release-test-")
+        self.addCleanup(temporary.cleanup)
+        self.work = Path(temporary.name)
         self.source, self.private = self.work / "source", self.work / "private"
         self.source.mkdir()
         self.private.mkdir()
@@ -572,7 +571,8 @@ class ReleaseProfileTests(unittest.TestCase):
         reports = self.create_reports(release.V300)
         self.assertEqual(4, len(packager.collect_public_reports(metadata, root=self.source, release_profile=release.V300)))
         for path in (self.source / "docs" / "v3-preview" / "reports",
-                     reports.parent / "guide", reports / ".." / "other", self.private):
+                     reports.parent / "guide", reports.parent / "reports-unapproved",
+                     reports / ".." / "other", self.private):
             with self.subTest(path=path), self.assertRaisesRegex(ValueError, "docs/v3.0.0/reports"):
                 packager.collect_public_reports(metadata, root=self.source, reports_path=path, release_profile=release.V300)
         self.create_reports(release.PREVIEW)
@@ -582,11 +582,18 @@ class ReleaseProfileTests(unittest.TestCase):
         outside = self.private / "external-report.md"
         outside.write_text("private fixture", encoding="utf-8")
         original_resolve = Path.resolve
+        target = original_resolve(reports / "evaluation-report.md")
+        outside = original_resolve(outside)
+
         def redirected(path, *args, **kwargs):
-            return outside if path == reports / "evaluation-report.md" else original_resolve(path, *args, **kwargs)
+            # TEMP may use an 8.3 alias while the report loader uses canonical paths.
+            resolved = original_resolve(path, *args, **kwargs)
+            return outside if resolved == target else resolved
+
         with patch.object(Path, "resolve", redirected):
-            with self.assertRaisesRegex(ValueError, "inside the approved reports"):
-                packager.collect_public_reports(metadata, root=self.source, release_profile=release.V300)
+            for path in (None, reports, reports / ".." / reports.name):
+                with self.subTest(report_path=path), self.assertRaisesRegex(ValueError, "inside the approved reports"):
+                    packager.collect_public_reports(metadata, root=self.source, reports_path=path, release_profile=release.V300)
 
     def test_package_and_status_bind_actual_inputs_without_changing_default_draft_semantics(self):
         self.create_attachments()

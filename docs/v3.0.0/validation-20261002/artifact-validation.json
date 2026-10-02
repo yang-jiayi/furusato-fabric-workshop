@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "furusato-validation-artifacts/v1",
+  "snapshotDate": "2026-10-02",
+  "courseVersion": "3.0.0",
+  "documentChecks": {
+    "pass": 203,
+    "fail": 0
+  },
+  "packageInputRechecks": 170,
+  "wordPages": 246,
+  "wordBlankPages": [],
+  "bilingualHtmlPrintedAndInteractionsChecked": true,
+  "chapters": 24,
+  "appendices": 5,
+  "headings": 345,
+  "tables": 178,
+  "figures": 54,
+  "contentSha256": "5596df6d84737de41fc3ae01402496852ac83eb091c7e4efff0e30adefef2528",
+  "publicStudySha256": "57e30a4e92000be800a546d1dbcb2bc624ff9aaebbd17f5de739696041e73057",
+  "assets": {
+    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": {
+      "sha256": "ed36cb60bdfdcc2b903ab407c804eeda6444f1482ecc948c34d3c8a0800f7169",
+      "bytes": 5693062
+    },
+    "furusato-workshop-v3-0-0-complete.html": {
+      "sha256": "b970ebc533ad359b4fd9e922d269fac29f3ef89d1a3cdd4a0157eba0a7fd3661",
+      "bytes": 3755951
+    },
+    "Furusato_Workshop_v3.0.0_validation-20261002.zip": {
+      "sha256": "9d9778a115e5271938f2571944d6cc3ab0f40e5ea4af786e5e332b2b06510837",
+      "bytes": 7675672
+    }
+  },
+  "originalReleaseAssetsReplaced": false,
+  "aiQualityAccepted": false,
+  "mainAgentPromoted": false
+}

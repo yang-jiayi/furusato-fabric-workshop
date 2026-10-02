@@ -21,6 +21,7 @@ from furusato_html.model import Block, Document, Section, Text, build_document
 
 from . import preview30_evidence
 from . import preview30_evaluation
+from . import preview30_evaluation100 as study100
 from . import preview30_public_evidence
 from . import preview30_reporting
 from . import preview30_release as release
@@ -1669,6 +1670,184 @@ def evaluation_sections(roots, projection):
     ])
 
 
+def evaluation100_sections(roots, study, study_sha):
+    rounds = [(("Baseline development80", "Baseline development80"), study["baseline"])]
+    if study["intervention"] is not None:
+        rounds.append((("単一intervention development80", "Single intervention development80"), study["intervention"]["run"]))
+    rounds += [(("Heldout20 (最終候補)", "Heldout20 (final candidate)"), study["heldout"]),
+               (("Combined100 (最終候補)", "Combined100 (final candidate)"), study["combined"])]
+    axis_labels = {
+        "factualCorrectness": ("事実の正しさ", "Factual correctness"),
+        "contextualHelpfulness": ("文脈に沿った有用性", "Contextual helpfulness"),
+        "protectiveBoundary": ("保護境界", "Protective boundary"),
+        "answerContent": ("回答内容", "Answer content"),
+    }
+
+    def verdict_text(counts):
+        return " / ".join(str(counts[key]) if key in counts else "-" for key in ("pass", "fail", "unknown", "notApplicable"))
+
+    notice = study100.notice(study)
+    blocks = [
+        note(notice["ja"], notice["en"], "gate"),
+        note(
+            "審査の時系列上の制約: METHOD timingはoperator receiptとfilesystemによるcorroborationであり、独立した事前登録の証明ではありません。記録時刻08:24:25の原prep resultにはcandidate SHA・definition SHA・準備時点の0 questionsがあり、原method-intent hashやeventIdはありません。intentのmtimeと宣言されたfrozenAtはplan08:24:55/run08:25:23より前ですが、これは独立証明ではありません。原result/intentをverbatimで保持し、証拠hashはadmission時に計算 (computedAtAdmission) します。methodTimingIndependentlyCertified=false、methodPreregistered=false、fullReviewPolicyPreregistered=false、reviewToolingPreregistered=falseです。準備時点の0は後続captureの送信数ではありません。",
+            "REVIEW TIMING LIMITATION: METHOD timing is corroborated by the operator receipt and filesystem, NOT independently proven preregistration. At recorded time08:24:25 the original prep result contains candidate SHA, definition SHA and zero questions at preparation, but no original method-intent hash or eventId. Intent mtime and declared frozenAt precede plan08:24:55/run08:25:23; this is corroboration, not independent proof. Preserve the original result/intent verbatim; evidence hashes are computed at admission (computedAtAdmission), not backdated. methodTimingIndependentlyCertified=false, methodPreregistered=false, fullReviewPolicyPreregistered=false and reviewToolingPreregistered=false. Preparation's zero is not the later capture submission count.",
+            "stop"),
+        p(
+            "methodは全固定criteriaをcaseごとのoracleと実応答の正確なspansに照らして審査し、人間のsign-off・heuristic置換・best-of poolingを使いません。tooling/policy-codeはcapture中に完成しました。既存reviewPolicyTiming文字列は互換labelであり事前登録の認定ではありません。timing admissionは内容審査より前に必要です。corroborationの開示は原capture plan・candidate・spent claimsの編集、reset、replan、再質問を許可せず、criteria・records・countsを変更しません。",
+            "The method requires case-by-case review against the oracle and exact native spans for every frozen criterion, with no human sign-off, heuristic substitution or best-of pooling. Tooling/policy-code was finalized during capture. The retained reviewPolicyTiming string is a compatibility label, not a preregistration certification. Timing admission must precede content grading. Corroboration disclosure does not authorize editing, resetting or replanning the original capture plan, candidate or spent claims, resubmitting questions, or changing criteria, records or counts."),
+        p(
+            "この追加研究は100 unique cases = development80 + heldout20です。元10問/84条件、旧14/0・13/0の診断、既存の公開履歴とは合算・置換しません。baseline80と任意の単一intervention80は別々に表示し、改善を仮定しません。",
+            "This additional study retains 100 unique cases = development80 + heldout20. It neither pools with nor replaces the original ten/84, old14/0 or13/0 diagnostics, or existing published histories. Baseline80 and the optional single intervention80 are separate; improvement is not assumed."),
+        p(
+            "各slotは宣言したroundで最大1試行です。baselineのnative blockはinterventionで再送せず、protectedとして80/100の分母に残します。最終候補をfreezeしてからheldout20を不可逆に予約し、heldoutによる調整・再試行・best-of pooling・baseline成功回答の借用を禁止します。",
+            "Each slot allows at most one attempt in its declared round. Baseline native blocks are not resubmitted in the intervention and remain protected in the80/100 denominators. Freeze the final candidate before irreversibly reserving heldout20; no heldout tuning, retries, best-of pooling or borrowed baseline successes."),
+        p(
+            "最終development round: " + study["final"]["developmentRound"] + "。combined100はこのround80と同一candidateのheldout20だけを加算します。異なる候補の良い結果を選んで合算しません。",
+            "Final development round: " + study["final"]["developmentRound"] + ". Combined100 adds only this round80 and heldout20 of the identical candidate, never the better answers from different candidates."),
+        table(
+            [("Round", "Round"), ("unique / terminal", "Unique / terminal"),
+             ("送信intent", "Submission intents"), ("捕捉応答", "Captured responses"),
+             ("新native block", "New native blocks"), ("不明な送信結果", "Unknown submission outcomes")],
+            [[name, f"{run['metrics']['uniqueCases']} / {run['metrics']['terminalCases']}",
+              run["metrics"]["submissionIntents"], run["metrics"]["capturedResponses"],
+              run["metrics"]["nativeBlocks"], run["metrics"]["unknownOutcomes"]] for name, run in rounds],
+            ("Intentはdelivery/query成功の証明ではない。terminalには失敗・不明も含む", "Intent is not delivery/query success; terminal includes failed and unknown outcomes")),
+        table(
+            [("Round", "Round"), ("応答 / block / error / 保護 / 未送信 / 不確実 / 捕捉失敗",
+                                   "Answer / block / error / protected / unsent / uncertain / capture failure")],
+            [[name, " / ".join(str(run["metrics"]["terminalCounts"][key]) for key in study100.TERMINALS)] for name, run in rounds],
+            ("相互排他的なterminal分類。native errorも内容正解ではない", "Disjoint terminal accounting; a native error is not a correct answer")),
+        table(
+            [("Round", "Round"), ("判定軸", "Result axis"), "PASS / FAIL / UNKNOWN / N/A",
+             ("新規 / 保持service block", "New / retained service block")],
+            [[name, axis_labels[axis], verdict_text(run["metrics"]["axes"][axis]),
+              f"{run['metrics']['axes'][axis]['nativeServiceBlock']} / {run['metrics']['axes'][axis]['retainedServiceBlock']}"
+              if axis == "protectiveBoundary" else "-"] for name, run in rounds for axis in study100.AXES],
+            ("各軸は全分母を保持。service blockは保護の観測でありPASSではない", "Every axis retains the whole denominator; service blocks are protective observations, not PASS")),
+        note(
+            "PASS0とUNKNOWNがある状態は0%正確性ではありません。未捕捉・未審査・native blockを事実PASSやN/Aへ変換せず、割合を補完しません。AI-assisted reviewは元の固定rubricとは別の実際の審査方法であり、独立した人間のsign-offはありません。引用一致や自動文書検査も意味的正解の自動判定ではありません。",
+            "Zero PASS with UNKNOWN is not zero-percent accuracy. Do not turn uncaptured/unreviewed/native-blocked outcomes into factual PASS or N/A, or fill in a rate. AI-assisted review is the actual judgment method, separate from the unchanged frozen rubric; there is no independent human sign-off. Quote matching and document checks do not automatically establish semantic correctness.",
+            "gate"),
+        note(
+            "Published MCPはANSWER_ONLYです。回答文はnative GQL/DAX/SQL/KQL実行、返却row、呼出数、別backend会話の証明ではなく、内部query・backend conversationのproofはUNOBSERVABLEです。一般母集団の正確性、因果的A/B、GA、全機能受入、main/Agent promotionは主張しません。",
+            "Published MCP is ANSWER_ONLY. Answer text proves neither native GQL/DAX/SQL/KQL execution, returned rows, call counts nor distinct backend conversations: internal-query and backend-conversation proof remains UNOBSERVABLE. No general-population accuracy, causal A/B, GA, all-feature acceptance or main/Agent promotion is claimed.",
+            "stop"),
+    ]
+    if "executionProtocol" in study:
+        execution = study["executionProtocol"]
+        continued = execution["continuationTerminalCounts"]
+        heldout_metrics = study["heldout"]["metrics"]
+        blocks[1:1] = [
+            note(
+                "停止後の実行protocol変更: post-stop-unsent-slots-only。事前登録されたresume機構ではありません (executionAmendmentPreregistered=false)。元の一律no-resume ruleを変更したためoriginalNoResumePolicyAmended=true / originalProtocolWasFullyFollowed=falseです。先の2 capturesとHTTP500による1 unknownを保持し、その不確実slotは再送しません。元planの未送信17 slotsだけの初回送信を、最大1回のcontinuation invocationで実施し、次の失敗・native block・不確実な送信で停止します。",
+                "POST-STOP EXECUTION-PROTOCOL AMENDMENT: post-stop-unsent-slots-only, NOT a preregistered resume mechanism (executionAmendmentPreregistered=false). The original blanket no-resume rule WAS amended: originalNoResumePolicyAmended=true / originalProtocolWasFullyFollowed=false. Retain the prior2 captures and one HTTP500 UNKNOWN; never replay that uncertain slot. Only the17 never-submitted slots from the original plan may receive their first submission, in at most one continuation invocation, stopping on the next failure, native block or uncertain submission.",
+                "stop"),
+            table(
+                [("Amendment accounting", "Amendment accounting"), ("公開記録", "Public record")],
+                [
+                    [("元heldout分母 / 先のcapture / 先のunknown / 継続対象", "Original heldout denominator / prior captures / prior unknown / eligible"),
+                     f"20 / {execution['priorCaptured']} / {execution['priorUnknown']} / {execution['eligibleUnsent']}"],
+                    [("Continuation invocation / outcome", "Continuation invocation / outcome"),
+                     f"{execution['continuationInvocations']} / {execution['outcome']}"],
+                    [("継続17の応答 / block / error / 保護 / 未送信 / 不確実 / 捕捉失敗",
+                      "Continuation17: answer / block / error / protected / unsent / uncertain / capture failure"),
+                     " / ".join(str(continued[key]) for key in study100.TERMINALS)],
+                    [("照合後heldoutの応答 / block / error / 保護 / 未送信 / 不確実 / 捕捉失敗",
+                      "Reconciled heldout: answer / block / error / protected / unsent / uncertain / capture failure"),
+                     " / ".join(str(heldout_metrics["terminalCounts"][key]) for key in study100.TERMINALS)],
+                    [("Heldout submission intents / captured responses / unknown outcomes",
+                      "Heldout submission intents / captured responses / unknown outcomes"),
+                     f"{heldout_metrics['submissionIntents']} / {heldout_metrics['capturedResponses']} / {heldout_metrics['unknownOutcomes']}"],
+                ],
+                ("captureと正答は別。19 captures +1 unknownが上限であり20 successful answersではない",
+                 "Capture is not correctness; the ceiling is19 captures +1 unknown, never20 successful answers")),
+            note(
+                "元batchはstopped_fail_closedのままbyteを保持し、新reconciliation/reportだけで追加の初回送信を照合します。全20 original claimsはspentのままです。retrySubmittedOrUncertainCases=false、sourceTransportCandidateOrQuestionChanges=false、heldoutFeedbackTuning=false、noBestOf=trueを保持します。journal内に送信記録が無いことだけはout-of-band送信不在の独立証明ではなく、元run停止・別送信無しのparent attestationが必要です。失敗時の後続未送信slotも20/100の分母から消しません。durableなterminal result/reconciliationが無い場合は文書も停止し、回復receiptや成功を作りません。",
+                "Preserve the original batch bytes as stopped_fail_closed; only a separate reconciliation/report accounts for additional first submissions. All20 original claims remain spent. Retain retrySubmittedOrUncertainCases=false, sourceTransportCandidateOrQuestionChanges=false, heldoutFeedbackTuning=false and noBestOf=true. Journal absence alone is not independent proof of no out-of-band submission: parent attestation that the original run stopped and no other submission occurred is required. Later unsent slots after failure remain in the20/100 denominators. Without a durable terminal result/reconciliation, the document gate also stops; invent no recovery receipt or success.",
+                "gate"),
+        ]
+    if "buckets" in study["baseline"]:
+        blocks.append(table(
+            [("Round / bucket", "Round / bucket"), ("分母", "Denominator"), ("判定軸", "Result axis"),
+             "PASS / FAIL / UNKNOWN / N/A", ("新規 / 保持block", "New / retained block")],
+            [[(name[0] + " / " + bucket["label"], name[1] + " / " + bucket["label"]),
+              bucket["metrics"]["uniqueCases"], axis_labels[axis], verdict_text(bucket["metrics"]["axes"][axis]),
+              f"{bucket['metrics']['axes'][axis]['nativeServiceBlock']} / {bucket['metrics']['axes'][axis]['retainedServiceBlock']}"
+              if axis == "protectiveBoundary" else "-"]
+             for name, run in rounds for bucket in run["buckets"] for axis in study100.AXES],
+            ("任意bucketも同じ最終候補・分母・集計規則。private case本文は含めない", "Optional buckets use the same final candidate, denominators and aggregation; no private case text")))
+    sub(next(s for s in roots if s.chapter == 19), "11",
+        (study["snapshotDate"] + " frozen100追加検証", study["snapshotDate"] + " additional frozen100 validation"), blocks)
+    binding_rows = [
+        ["Public study SHA256", study_sha], ["Suite/source/rubric binding SHA256", study["bindingSha256"]],
+        *[[key, value] for key, value in study["bindings"].items() if key != "sourceFileHashes"],
+        ["Bound source-file count", len(study["bindings"]["sourceFileHashes"])],
+        ["Method timing evidence", study["review"]["methodTimingEvidence"]],
+        ["Method preregistration claim", study["review"]["methodPreregistrationClaim"]],
+        ["Method timing independently certified / method preregistered", "false / false"],
+        ["Original method timing corroborated", "true"],
+        ["Method-evidence hash provenance", study["review"]["methodEvidenceHashProvenance"]],
+        ["Preserved METHOD intent SHA256 (computed at admission)", study["review"]["methodIntentSha256"]],
+        ["Retained timing label (not preregistration proof)", study["review"]["reviewPolicyTiming"]],
+        ["Full review policy / review tooling preregistered", "false / false"],
+        ["Timing admission receipt SHA256", study["review"]["timingAdmissionReceiptSha256"]],
+        ["Review policy SHA256 (finalized during capture)", study["review"]["policySha256"]],
+        ["Final freeze receipt SHA256", study["final"]["freezeReceiptSha256"]],
+        ["Irreversible heldout claim SHA256", study["final"]["heldoutClaimSha256"]],
+    ]
+    if "executionProtocol" in study:
+        amendment_binding = study100.execution_binding(study)
+        binding_rows += [
+            ["Execution amendment SHA256", amendment_binding["executionProtocolSha256"]],
+            *[[key, value] for key, value in amendment_binding["executionProtocolHashes"].items()],
+        ]
+    for name, run in rounds:
+        binding_rows += [
+            [(name[0] + " profile", name[1] + " profile"), run["candidate"]["profileLabel"]],
+            [(name[0] + " candidate SHA256", name[1] + " candidate SHA256"), run["candidate"]["candidateSha256"]],
+            [(name[0] + " definition SHA256", name[1] + " definition SHA256"), run["candidate"]["definitionSha256"]],
+            [(name[0] + " report SHA256", name[1] + " report SHA256"), run["sourceReportSha256"]],
+        ]
+    sub(next(s for s in roots if s.chapter == 24), "11",
+        ("公開後snapshotの再現境界", "Post-release snapshot reproduction boundaries"), [
+            p(
+                "追加studyはcounts/hash/public profileだけの投影です。docbuilderが検証するのはschema・算術・宣言hashの整合性で、private ledgerや実環境の再実行・再採点ではありません。sourceFileHashesの公開labelはパスではなく、各digestとsuite/rubric/splitのbindingを投影内に保持します。",
+                "The additional study projects only counts, hashes and public profiles. The docbuilder checks schema, arithmetic and declared hash consistency, not the private ledger or a new live run/regrade. Public sourceFileHashes labels are not paths; the projection retains each digest and its suite/rubric/split binding."),
+            note(
+                "method証拠のhash bindingはadmission時にhashした保存済みresult/intentを識別し、原prep resultに無かったmethod hash/eventIdを補ったり、capture planを書き換えたりしません。candidate/definitionの原SHAとadmission時に計算したmethod証拠hashを区別します。method timingのcorroborationは独立認定ではありません。timing admission前の内容審査は認めず、captureと内容採点を別段階として保持します。",
+                "Method-evidence hash bindings identify the preserved result/intent as hashed at admission; they do not add a missing method hash/eventId to the original prep result or rewrite the capture plan. Distinguish the originally recorded candidate/definition SHAs from method-evidence hashes computed at admission. Method-timing corroboration is not independent certification. No content grading before timing admission; capture and content grading remain separate stages.",
+                "gate"),
+            table([("Binding", "Binding"), ("公開値", "Public value")], binding_rows,
+                  ("私有原本の場所や識別子を公開せずexact-byte投影にbindする", "Bind the exact-byte projection without disclosing private source locations or identities")),
+            table(
+                [("配置・運用の別観測", "Separate deployment observation"), ("2026-10-02に記録された範囲", "Scope recorded on 2026-10-02")],
+                [
+                    [("Pipeline Copy", "Pipeline Copy"),
+                     ("3 Copyは各1回Completed、各5,000行。manual3 / automatic0。元の安全なPipeline defaultsは復元済みです。",
+                      "Three Copies each Completed exactly once with 5,000 rows each: manual 3 / automatic 0. Original safe Pipeline defaults were restored.")],
+                    [("Raw KQL", "Raw KQL"), ("15,000行 /253,886,000 JPYを確認。", "15,000 rows /253,886,000 JPY verified.")],
+                    [("EventID照合", "EventID reconciliation"),
+                     ("exact14900の受入EventIDs /252,058,000 JPYと100 duplicatesを確認。",
+                      "Exact 14,900 accepted EventIDs /252,058,000 JPY and 100 duplicates verified.")],
+                    [("Isolated AgentCompat", "Isolated AgentCompat"),
+                     ("published版のnative Published UIで10 entitiesがwarningなしで表示されました。",
+                      "The published isolated AgentCompat loaded all 10 entities in native Published UI without a warning.")],
+                    [("Primary gen2 / main Agent", "Primary gen2 / main Agent"),
+                     ("この配置観測時点では、評価・最終配置判断を待って両者を変更せず保持しました。",
+                      "Both were preserved unchanged pending evaluation/final-deployment decisions at this deployment observation.")],
+                ],
+                ("別途提供された配置観測であり、docbuilder再実行や100問のAI採点ではない", "Separately supplied deployment observations, not a docbuilder rerun or 100-case AI grades")),
+            p(
+                "2026-10-02文書snapshotはdocs/v3.0.0/validation-20261002配下だけへ配置します。course editionは3.0.0を保ち、v3.0.0 tag・元のrelease assets・docs/v3.0.0/guide・元48 capture placements/46 PNGs/9 historiesを変更しません。freshなsnapshot approvalはstudyのexact SHAと既知制約をbindし、元release approvalを流用しません。",
+                "Place the dated2026-10-02 document snapshot only under docs/v3.0.0/validation-20261002. Course edition remains3.0.0; preserve the v3.0.0 tag, original release assets, docs/v3.0.0/guide, and original48 capture placements/46 PNGs/9 histories. A fresh snapshot approval binds the exact study SHA and known limitations, never reusing the original release approval."),
+            note(
+                "この追加studyは自動event配送、Graph/TS/consumer互換性、配置の現在性を再認定せず、既存の失敗・手動実行・known limitationsを消しません。特にcompatibility構成の回答結果をgeneration2 consumer修復やTS numeric query成功とは扱いません。厳格な--require-acceptanceは変更せず独立して残ります。文書の成功は権限変更・再質問・公開・Agent promotionの承認ではありません。",
+                "This study does not recertify automatic event delivery, Graph/TS/consumer compatibility or deployment readiness, and does not erase failures, manual execution or known limitations. Compatibility-profile answers do not repair the generation2 consumer or prove a TS numeric query. The strict --require-acceptance gate remains unchanged and independent. Successful document work authorizes no permission change, resubmission, publication or Agent promotion.",
+                "gate"),
+        ])
+
+
 def appendices(roots, context, tests):
     a = {s.appendix: s for s in roots}
     sub(a["A"], "1", ("期待値の適用範囲", "Scope of expected values"), [
@@ -1737,12 +1916,13 @@ def _legacy_copy(source: Section, parent: Section, index: int) -> Section:
 def build(
     root: Path, evidence_path: Path | None = None, evaluation_path: Path | None = None, *,
     public_evidence_path: Path | None = None, release_profile=release.PREVIEW,
-    release_approval: Path | None = None,
+    release_approval: Path | None = None, evaluation100_path: Path | None = None,
 ):
     profile = release.get_profile(release_profile)
     evidence, document_release = release.resolve_evidence(
         root, evidence_path, evaluation_path, public_evidence_path=public_evidence_path,
         release_profile=profile, release_approval=release_approval,
+        evaluation100_path=evaluation100_path,
     )
     context = load_context(root, document_edition="unified-20260923", source_version="2.7.0")
     facts = compute_facts(context)
@@ -1794,6 +1974,8 @@ def build(
     evaluation_sections(roots, evaluation)
     current_receipt_sections(roots, selected_nonlegacy)
     original_suite_run_sections(roots, evidence.get("originalSuiteRuns", []), evidence=evidence)
+    if "evaluation100" in evidence:
+        evaluation100_sections(roots, evidence["evaluation100"], evidence["evaluation100Sha256"])
     if selected_nonlegacy is not None:
         roots[0].blocks.insert(0, note(*preview30_reporting.selection_notice(selected_nonlegacy), "stop"))
     else:
@@ -1802,12 +1984,21 @@ def build(
             PREVIEW_NOTICE_EN + ". The final Compat native-UI original84 result is48 PASS/36 FAIL. Main is not promoted; known failures, partial and blocked lanes remain explicit.",
             "stop",
         ))
-    if document_release is not None:
+    if profile.is_snapshot:
+        roots[0].blocks.insert(0, note(
+            "2026-10-02公開後検証snapshot (文書版3.0.0)。元releaseを置換せず、frozen100を別分母で追加します。freshなstudy-bound approvalは既知制約の開示だけを承認し、AI回答品質・GA・全機能受入・Agent promotionは承認しません。",
+            "Post-release validation snapshot2026-10-02 (course edition3.0.0). It adds frozen100 under a separate denominator without replacing the original release. Fresh study-bound approval authorizes known-limitations disclosure only, not AI-quality, GA, all-feature acceptance or Agent promotion.",
+            "stop",
+        ))
+    elif document_release is not None:
         roots[0].blocks.insert(0, note(
             "文書版3.0.0はユーザー承認の既知制約付きリリースです。選択した実結果76 PASS/8 FAIL、全履歴、partial/blocked/failedの状態を保持します。製品機能・APIは引き続きPreviewです。--release-profile v3.0.0と別のhash-bound --release-approvalは文書配布だけを承認し、AI回答品質・GA・全機能合格・Fabric Agent promotionを承認しません。厳格な--require-acceptanceは独立して残り、このsnapshotは未合格です。",
             "Document edition 3.0.0 is a user-authorized release with known limitations. The selected 76 PASS/8 FAIL result, complete historical ledgers and partial/blocked/failed states are retained. Product features and APIs remain Preview. --release-profile v3.0.0 with a separate hash-bound --release-approval authorizes document distribution only, not AI acceptance, GA, all-feature success or Fabric Agent promotion. The strict --require-acceptance gate remains independent; this snapshot is unaccepted.",
             "stop",
         ))
+    if "evaluation100" in evidence:
+        study_notice = study100.notice(evidence["evaluation100"])
+        roots[0].blocks.insert(0, note(study_notice["ja"], study_notice["en"], "gate"))
     request_list = preview30_evidence.requests()
     for section in roots:
         key = section.chapter if section.chapter else section.appendix
@@ -1889,6 +2080,8 @@ def build(
         metadata["finalUserAcceptanceCertified"] = False
     if evaluation is not None:
         metadata["evaluationProjection"] = evaluation
+    if "evaluation100" in evidence:
+        metadata.update({key: copy.deepcopy(evidence[key]) for key in ("evaluation100", "evaluation100Sha256")})
     if document_release is not None:
         metadata["documentRelease"] = document_release
         release.require_metadata_profile(metadata, profile)

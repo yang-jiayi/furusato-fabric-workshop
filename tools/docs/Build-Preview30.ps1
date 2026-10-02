@@ -4,9 +4,10 @@ param(
     [string]$EvidenceManifest,
     [string]$PublicEvidenceManifest,
     [string]$EvaluationReport,
+    [string]$Evaluation100,
     [switch]$RequireAcceptance,
     [string]$AcceptanceApproval,
-    [ValidateSet('preview', 'v3.0.0')][string]$ReleaseProfile = 'preview',
+    [ValidateSet('preview', 'v3.0.0', 'validation-20261002')][string]$ReleaseProfile = 'preview',
     [string]$ReleaseApproval
 )
 
@@ -20,11 +21,17 @@ if ($AcceptanceApproval -and -not $RequireAcceptance) {
 if ($RequireAcceptance -and ($EvidenceManifest -or -not $PublicEvidenceManifest)) {
     throw 'Final admission requires an explicitly selected reviewed PublicEvidenceManifest.'
 }
-if ($ReleaseApproval -and $ReleaseProfile -ne 'v3.0.0') {
-    throw 'ReleaseApproval requires ReleaseProfile v3.0.0.'
+if ($ReleaseApproval -and $ReleaseProfile -eq 'preview') {
+    throw 'ReleaseApproval requires ReleaseProfile v3.0.0 or validation-20261002.'
 }
-if ($ReleaseProfile -eq 'v3.0.0' -and (-not $ReleaseApproval -or $EvidenceManifest -or $EvaluationReport)) {
+if ($ReleaseProfile -ne 'preview' -and (-not $ReleaseApproval -or $EvidenceManifest -or $EvaluationReport)) {
     throw 'v3.0.0 requires a private known-limitations ReleaseApproval and a source-owned public projection without private overrides.'
+}
+if ($ReleaseProfile -eq 'v3.0.0' -and $Evaluation100) {
+    throw 'Evaluation100 must not alter the original v3.0.0 release. Use validation-20261002.'
+}
+if ($ReleaseProfile -eq 'validation-20261002' -and -not $Evaluation100) {
+    throw 'A dated snapshot requires Evaluation100 and fresh study-bound ReleaseApproval.'
 }
 $root = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $stagePath = [System.IO.Path]::GetFullPath($Stage, (Get-Location).ProviderPath)
@@ -45,6 +52,9 @@ if ($PublicEvidenceManifest) {
 if ($EvaluationReport) {
     $EvaluationReport = (Resolve-Path -LiteralPath $EvaluationReport).Path
 }
+if ($Evaluation100) {
+    $Evaluation100 = (Resolve-Path -LiteralPath $Evaluation100).Path
+}
 if ($ReleaseApproval) {
     $ReleaseApproval = (Resolve-Path -LiteralPath $ReleaseApproval).Path
 }
@@ -57,7 +67,7 @@ $env:PYTHONIOENCODING = 'utf-8'
 
 function Invoke-PythonChecked {
     param([string[]]$Arguments)
-    & python @Arguments
+    & python -B @Arguments
     if ($LASTEXITCODE -ne 0) {
         throw "Local command failed (exit $LASTEXITCODE). Preserve the draft/logs and correct the failure; do not claim verification."
     }
@@ -102,11 +112,20 @@ try {
         $checkArgs += @('--evaluation-report', $EvaluationReport)
         $packArgs += @('--evaluation-report', $EvaluationReport)
     }
+    if ($Evaluation100) {
+        $buildArgs += @('--evaluation100', $Evaluation100)
+        $checkArgs += @('--evaluation100', $Evaluation100)
+        $packArgs += @('--evaluation100', $Evaluation100)
+    }
     Invoke-PythonChecked -Arguments @((Join-Path $root 'tools\preview30-attachments\test_attachments.py'))
     Invoke-PythonChecked -Arguments $buildArgs
     Invoke-PythonChecked -Arguments $checkArgs
     Invoke-PythonChecked -Arguments $packArgs
-    if ($ReleaseProfile -eq 'v3.0.0') {
+    if ($ReleaseProfile -eq 'validation-20261002') {
+        Write-Output "Dated post-release validation snapshot 2026-10-02 (course edition 3.0.0): $pair"
+        Write-Output "Known-limitations snapshot package; original tag/assets are not replaced: $package"
+    }
+    elseif ($ReleaseProfile -eq 'v3.0.0') {
         Write-Output "User-authorized 3.0.0 known-limitations document pair: $pair"
         Write-Output "Portable 3.0.0 document package (AI unaccepted, not GA or Agent promotion): $package"
     }

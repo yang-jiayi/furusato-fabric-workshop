@@ -169,6 +169,8 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
     title = ET.fromstring(core).find("{http://purl.org/dc/elements/1.1/}title")
     report_check(report, "word.documentTitle", title is not None and title.text == profile.title + " — participant guide")
     report_check(report, "word.coverEdition", normalized(profile.title) in all_text and normalized(profile.version) in all_text)
+    if "evaluation100" in metadata:
+        report_check(report, "word.evaluation100Hash", metadata["evaluation100Sha256"] in all_text)
     return parts
 
 
@@ -195,6 +197,7 @@ def inspect_html(pair, document, metadata, report, *, release_profile=release.PR
         "selectedOriginalSuiteRunId", "publicEvidenceProjectionSha256", "originalSuiteRuns", "finalEvaluation",
         "originalSuiteAccepted", "aiAnswerQualityAccepted", "mainPromoted", "allFeaturesPassedClaimed",
         "finalUserAcceptanceCertified",
+        "evaluation100", "evaluation100Sha256",
     )))
     report_check(report, "html.sharedFingerprint", provenance["contentSha256"] == metadata["contentSha256"])
     report_check(report, "html.shape", provenance["counts"] == metadata["counts"])
@@ -406,6 +409,7 @@ def main(argv=None):
     document, _, _, _, evidence, metadata = build(
         ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
         release_profile=profile, release_approval=args.release_approval,
+        evaluation100_path=args.evaluation100,
     )
     pair, review = args.pair.resolve(), args.review.resolve()
     if review.is_relative_to(ROOT) or review.is_relative_to(pair):
@@ -445,6 +449,8 @@ def main(argv=None):
             "locally-validated-known-limitations-release"
             if args.render and args.interactions and args.print_html else "more-local-validation-required"
         )
+    if report.passed and profile.is_snapshot and args.render and args.interactions and args.print_html:
+        result["status"] = "locally-validated-known-limitations-snapshot"
     (review / "validation.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
         "passed": sum(f.level == "PASS" for f in report.findings),

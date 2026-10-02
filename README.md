@@ -1,5 +1,26 @@
 <a id="top"></a>
 
+> **3.0.0 検証スナップショット — 2026-10-02**
+> **[更新Word](docs/v3.0.0/validation-20261002/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+> [更新日英HTML](docs/v3.0.0/validation-20261002/guide/furusato-workshop-v3-0-0-complete.html) ·
+> [再配置・評価の詳細](docs/v3.0.0/validation-20261002/README.md) ·
+> [件数とhashの公開記録](docs/v3.0.0/validation-20261002/evaluation100.json)**
+> **[日付付き配布物・ZIP](https://github.com/yang-jiayi/furusato-fabric-workshop/releases/tag/v3.0.0-validation-20261002)**
+>
+> 新環境でPipelineを手動3回、各5,000行取り込み、Eventhouseの生観測15,000件と
+> Gold94,900件を別々に確認しました。開発用80問では、事実が正確な回答は **46→59問**、
+> 固定条件を満たす回答は **21→28問**。ただし退行・欠落も残り、0 FAILではありません。
+> 最終100枠は **回答取得93／APIエラー1／送信結果不明1／未送信5**。
+> 内容判定は **33 PASS／57 FAIL／10 UNKNOWN** で、100問すべての回答取得を意味しません。
+> 審査はAI補助・独立した人のsign-offなし。通信停止後の未送信枠限定の手順変更も明記しています。
+> 元の3.0.0タグ・配布物は保持し、元84条件や過去の診断とは合算しません。
+>
+> **Dated validation snapshot, not a replacement release or production acceptance.**
+> Development factual passes increased **46→59/80**; complete-content passes increased **21→28/80**.
+> Final100-slot accounting is **93 answers,1 API-error reply,1 uncertain submission and5 unsent slots**;
+> content is **33 PASS /57 FAIL /10 UNKNOWN**. See the linked report for AI-assisted review,
+> the disclosed unsent-only continuation amendment, regressions and unchanged original release boundaries.
+
 > **Furusato Workshop 3.0.0 — 既知の制約を明記した教材リリース**
 > **[Word](docs/v3.0.0/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 > [対応する日英HTML](docs/v3.0.0/guide/furusato-workshop-v3-0-0-complete.html) ·

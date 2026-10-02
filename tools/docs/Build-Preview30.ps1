@@ -3,12 +3,28 @@ param(
     [Parameter(Mandatory = $true)][string]$Stage,
     [string]$EvidenceManifest,
     [string]$PublicEvidenceManifest,
-    [string]$EvaluationReport
+    [string]$EvaluationReport,
+    [switch]$RequireAcceptance,
+    [string]$AcceptanceApproval,
+    [ValidateSet('preview', 'v3.0.0')][string]$ReleaseProfile = 'preview',
+    [string]$ReleaseApproval
 )
 
 $ErrorActionPreference = 'Stop'
 if ($EvidenceManifest -and $PublicEvidenceManifest) {
     throw 'Choose private evidence OR an approved public projection, never both.'
+}
+if ($AcceptanceApproval -and -not $RequireAcceptance) {
+    throw 'AcceptanceApproval requires RequireAcceptance.'
+}
+if ($RequireAcceptance -and ($EvidenceManifest -or -not $PublicEvidenceManifest)) {
+    throw 'Final admission requires an explicitly selected reviewed PublicEvidenceManifest.'
+}
+if ($ReleaseApproval -and $ReleaseProfile -ne 'v3.0.0') {
+    throw 'ReleaseApproval requires ReleaseProfile v3.0.0.'
+}
+if ($ReleaseProfile -eq 'v3.0.0' -and (-not $ReleaseApproval -or $EvidenceManifest -or $EvaluationReport)) {
+    throw 'v3.0.0 requires a private known-limitations ReleaseApproval and a source-owned public projection without private overrides.'
 }
 $root = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..\..'))
 $stagePath = [System.IO.Path]::GetFullPath($Stage, (Get-Location).ProviderPath)
@@ -28,6 +44,9 @@ if ($PublicEvidenceManifest) {
 }
 if ($EvaluationReport) {
     $EvaluationReport = (Resolve-Path -LiteralPath $EvaluationReport).Path
+}
+if ($ReleaseApproval) {
+    $ReleaseApproval = (Resolve-Path -LiteralPath $ReleaseApproval).Path
 }
 $pair = Join-Path $stagePath 'pair'
 $review = Join-Path $stagePath 'review'
@@ -51,6 +70,23 @@ try {
         '--render', '--interactions', '--print-html')
     $packArgs = @((Join-Path $PSScriptRoot 'package_preview30.py'), '--pair', $pair,
         '--validation', (Join-Path $checks 'validation.json'), '--out', $package)
+    $buildArgs += @('--release-profile', $ReleaseProfile)
+    $checkArgs += @('--release-profile', $ReleaseProfile)
+    $packArgs += @('--release-profile', $ReleaseProfile)
+    if ($ReleaseApproval) {
+        $buildArgs += @('--release-approval', $ReleaseApproval)
+        $checkArgs += @('--release-approval', $ReleaseApproval)
+        $packArgs += @('--release-approval', $ReleaseApproval)
+    }
+    if ($RequireAcceptance) {
+        $buildArgs += '--require-acceptance'
+        $packArgs += '--require-acceptance'
+        if ($AcceptanceApproval) {
+            $approvalPath = (Resolve-Path -LiteralPath $AcceptanceApproval).Path
+            $buildArgs += @('--acceptance-approval', $approvalPath)
+            $packArgs += @('--acceptance-approval', $approvalPath)
+        }
+    }
     if ($EvidenceManifest) {
         $buildArgs += @('--evidence', $EvidenceManifest)
         $checkArgs += @('--evidence', $EvidenceManifest)
@@ -70,8 +106,14 @@ try {
     Invoke-PythonChecked -Arguments $buildArgs
     Invoke-PythonChecked -Arguments $checkArgs
     Invoke-PythonChecked -Arguments $packArgs
-    Write-Output "LOCAL DRAFT ready: $pair"
-    Write-Output "Portable DRAFT package: $package"
+    if ($ReleaseProfile -eq 'v3.0.0') {
+        Write-Output "User-authorized 3.0.0 known-limitations document pair: $pair"
+        Write-Output "Portable 3.0.0 document package (AI unaccepted, not GA or Agent promotion): $package"
+    }
+    else {
+        Write-Output "LOCAL DRAFT ready: $pair"
+        Write-Output "Portable DRAFT package: $package"
+    }
     Write-Output 'No Fabric authentication, deployment, permission change, commit, push or publication was performed.'
 }
 finally {

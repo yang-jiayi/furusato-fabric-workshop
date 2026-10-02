@@ -41,6 +41,14 @@ RUNTIME_INPUT_FILES = (
     "tools/provisioning/reference_kql.py", "tools/data-agent/native_evaluation.py",
     "tools/data-agent/native_mcp.py",
 )
+BASELINE_PROTECTED_PATHS = (
+    "workshop/v2.7.0",
+    "tools/docs/furusato_docs/tests10.py",
+    "tools/data-agent/reference-models",
+    "tools/data-agent/operational-functions",
+    "tools/data-agent/source-contract",
+    "tools/data-agent/path_ontology.py",
+)
 
 
 class SafetyError(RuntimeError):
@@ -191,7 +199,7 @@ def immutable_baseline() -> dict[str, Any]:
         raise SafetyError("Immutable increment contract differs from 3x5000 / 14900.")
     dirty = subprocess.run(
         ["git", "-C", str(REPO), "--no-pager", "diff", "--name-only",
-         BASELINE_COMMIT, "--", "workshop/v2.7.0", "tools/data-agent"],
+         BASELINE_COMMIT, "--", *BASELINE_PROTECTED_PATHS],
         capture_output=True, text=True, check=True,
     ).stdout.strip().splitlines()
     if dirty:

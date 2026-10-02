@@ -353,6 +353,113 @@ class OriginalSuiteAggregateTests(unittest.TestCase):
             public.suite_runs([accepted])
 
 
+class NativeCaseAggregateTests(unittest.TestCase):
+    def fixture(self):
+        run = OriginalSuiteAggregateTests().fixture()
+        run.update(
+            id="synthetic-native-fixture", submittedQuestions=10, preblockedQuestions=0,
+            independentExecutionTraces=8, freshBackendProof=True, accepted=True,
+        )
+        run["counts"] = {key: 84 if key == "pass" else 0 for key in public.VERDICTS}
+        run["failureCounts"] = {"content": 0, "nativeAcceptance": 0}
+        required = (
+            ["sql"], ["sql"], ["sql"], ["gql"], ["sql", "gql"],
+            ["kql"], ["kql"], [], ["sql", "kql", "gql"], [],
+        )
+        denominators = (7, 6, 6, 11, 14, 10, 8, 7, 8, 7)
+        run["caseAggregates"] = [
+            {
+                "case": f"T{index + 1:02d}",
+                "counts": {key: count if key == "pass" else 0 for key in public.VERDICTS},
+                "sourceAttempts": len(languages), "successfulSourceExecutions": len(languages),
+                "rejectedSourceAttempts": 0, "nativeGate": False,
+                "completedNativeResponse": True, "successfulQueryLanguages": languages,
+            }
+            for index, (count, languages) in enumerate(zip(denominators, required))
+        ]
+        run["method"] = {
+            "surface": "native-ui", "transport": "responses", "stage": "sandbox",
+            "runtime": "preview", "recordedModel": "synthetic-model",
+            "judgment": "manual-fixed-rubric-offline", "distinctBackendConversationsProven": 10,
+            "sourceExecutions": {"sql": 5, "gql": 3, "kql": 3},
+            "successfulSourceExecutions": {"sql": 5, "gql": 3, "kql": 3},
+            "rejectedSourceAttempts": {"sql": 0, "gql": 0, "kql": 0},
+            "causalAbClaimed": False,
+        }
+        return run
+
+    def test_complete_native_refusals_do_not_require_invented_queries(self):
+        checked = public.suite_runs([self.fixture()])[0]
+        self.assertTrue(checked["accepted"])
+        self.assertEqual(8, checked["independentExecutionTraces"])
+        self.assertEqual(0, checked["caseAggregates"][9]["sourceAttempts"])
+        self.assertEqual(84, checked["counts"]["pass"])
+
+    def test_dax_execution_family_is_retained_without_rewriting_sql_routes(self):
+        run = self.fixture()
+        run["accepted"] = False
+        case = run["caseAggregates"][2]
+        case["successfulQueryLanguages"] = ["dax"]
+        for field in ("sourceExecutions", "successfulSourceExecutions"):
+            run["method"][field]["sql"] -= 1
+            run["method"][field]["dax"] = 1
+        run["method"]["rejectedSourceAttempts"]["dax"] = 0
+        self.assertEqual(1, public.suite_runs([run])[0]["method"]["sourceExecutions"]["dax"])
+        run["accepted"] = True
+        with self.assertRaisesRegex(ValueError, "complete execution proof"):
+            public.suite_runs([run])
+
+    def test_original_denominators_case_order_and_totals_are_closed(self):
+        for mutation in (
+            lambda run: run["caseAggregates"].pop(),
+            lambda run: run["caseAggregates"][0].update(case="T02"),
+            lambda run: run["caseAggregates"][0]["counts"].update(pass_=7),
+            lambda run: run["caseAggregates"][0]["counts"].update({"pass": 6}),
+            lambda run: run["caseAggregates"][0].update(sourceAttempts=2),
+            lambda run: run["method"]["sourceExecutions"].update(sql=6),
+            lambda run: run.update(independentExecutionTraces=7),
+        ):
+            run = self.fixture()
+            mutation(run)
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                public.suite_runs([run])
+
+    def test_unproved_completion_routes_or_private_fields_cannot_pass(self):
+        for mutation in (
+            lambda run: run["caseAggregates"][9].pop("completedNativeResponse"),
+            lambda run: run["caseAggregates"][9].update(completedNativeResponse=False),
+            lambda run: run["caseAggregates"][9].update(completedNativeResponse=1),
+            lambda run: run["caseAggregates"][3].update(successfulQueryLanguages=[]),
+            lambda run: run["caseAggregates"][4].update(successfulQueryLanguages=["sql", "sql"]),
+            lambda run: run["caseAggregates"][0].update(successfulQueryLanguages=[{}]),
+            lambda run: run["caseAggregates"][0].update(successfulQueryLanguages=["sql", "dax"]),
+            lambda run: run["caseAggregates"][9].update(rawAnswer="private"),
+            lambda run: run["caseAggregates"][9].update(nativeGate=True),
+            lambda run: run["method"].update(transport="mcp"),
+        ):
+            run = self.fixture()
+            mutation(run)
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                public.suite_runs([run])
+
+    def test_attempts_do_not_become_successes_or_traced_slots(self):
+        for mutation in (
+            lambda run: run["method"].pop("rejectedSourceAttempts"),
+            lambda run: run["method"]["successfulSourceExecutions"].update(sql=4),
+            lambda run: run["method"]["rejectedSourceAttempts"].update(dax=1),
+        ):
+            run = self.fixture()
+            mutation(run)
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                public.suite_runs([run])
+        run = self.fixture()
+        run["accepted"] = False
+        run["method"]["successfulSourceExecutions"] = {"sql": 1, "gql": 1, "kql": 1}
+        run["method"]["rejectedSourceAttempts"] = {"sql": 4, "gql": 2, "kql": 2}
+        with self.assertRaisesRegex(ValueError, "successfully traced"):
+            public.suite_runs([run])
+
+
 class ReviewedGoldCaptureTests(unittest.TestCase):
     def test_checked_in_subset_is_private_free_and_not_final_course_projection(self):
         directory = ROOT / "docs" / "assets" / "v3-preview-gold-attachments"

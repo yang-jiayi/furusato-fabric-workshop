@@ -5,6 +5,44 @@ Preview is not GA. Review coverage can include supported passed labs, explicit
 unavailable lanes and the preserved metadata-only Act known issue; it is not an
 all-features-passed or original-84 acceptance claim.
 
+## Final-publication admission is a separate gate
+
+`tools/docs/check_preview30_acceptance.py` writes a private, exclusive decision
+and exits 2 when any final-acceptance prerequisite is unmet. It does not change
+the rubric, promote an Agent, publish files or choose an older/better run.
+`Build-Preview30.ps1 -RequireAcceptance` forwards the same gate to both
+`build_preview30.py` and `package_preview30.py` before they create artifacts.
+The ordinary DRAFT path remains a review path, not a way to authorize final use.
+
+Admission requires an **explicitly selected**, reviewed original ten/84 run
+with no FAIL, blocked or execution-unverified conditions, genuine native
+acceptance and complete case proof; every required lab must pass and every
+required completion image must be verified. Documented unsupported/blocked
+features and known-issue coverage stay useful teaching evidence, but do not
+become all-feature acceptance. The optional context placements added later
+do not replace or reduce the existing **26 required** captures.
+
+The final approval is a separate private JSON record bound to the exact selected
+public projection. Start with `finalPublicationApproved: false`; a tool must not
+set it merely because tests or connection discovery succeeded:
+
+```json
+{
+  "schemaVersion": "furusato-preview30-publication-approval/v1",
+  "selectedOriginalSuiteRunId": "<explicit reviewed original-suite run id>",
+  "evidenceSha256": "<exact public manifest SHA-256>",
+  "finalPublicationApproved": false,
+  "reviewer": "<reviewer role>",
+  "reviewedAt": "<actual timezone-aware review time>"
+}
+```
+
+No approval file or a mismatched digest leaves admission closed. Private
+original/sanitized manifests and aggregate runs can be checked with
+`--private-evidence`, `--original-suite-runs` and
+`--selected-original-suite-run-id`, but cannot satisfy the public-freeze gate.
+Raw answers, native private IDs and original screenshots still stay outside Git.
+
 The final evidence/acceptance decision is frozen as an explicit Preview with known
 limitations:48 PASS/36 FAIL, not AI-quality accepted or GA. Runtime optional-bridge
 code and Notebook reseal plus the parent's GO now authorize one fresh
@@ -195,8 +233,11 @@ Counts must sum to 84, submitted plus preblocked questions to 10, and failure ty
 to FAIL. Native content-block acceptance failures are not successful contextual
 refusals or adjudicated false claims. N/A must not be dropped to claim an81-condition
 pass rate. `accepted: true` requires all84 conditions accounted for, every applicable
-condition passed, nonempty applicable coverage, ten submitted questions, ten
-independently traced executions and fresh-backend proof. Reviewed N/A is not a
+condition passed, nonempty applicable coverage, ten submitted questions, independently
+proven required executions and fresh-backend proof. The existing native validator
+can recognize completed contextual refusals in T08/T10 without invented queries,
+using explicit native-completion and successful-language proof for the other cases.
+A native fixed block remains FAIL, never contextual acceptance. Reviewed N/A is not a
 passed condition and this flag never means every platform feature passed. No absent
 result is invented; UI/SDK diagnostic fields are rejected from these aggregate records.
 
@@ -231,6 +272,59 @@ Historical method records may use `surface: "published-mcp"`, `transport: "mcp"`
 counts where not observed. A null execution count means unknown, not zero.
 Native UI and published MCP are not a direct causal A/B. A standalone SDK diagnostic
 with zero questions is not an original-suite run and must not be added to this ledger.
+
+### Explicit selection of a later reviewed aggregate / 後続runの明示選択
+
+Optional root `selectedOriginalSuiteRunId` must identify exactly one
+`originalSuiteRuns[].id`. Unknown IDs, duplicate IDs/selection fields and malformed
+selections are rejected. Without the field, the frozen `compat-native-ui-final`
+selection and existing report/model output are preserved; neither the highest score
+nor the newest timestamp is selected automatically. Retain older entries unchanged.
+Explicitly selecting the legacy ID still requires its frozen counts, method and
+case rows; different records need a new reviewed run ID, not a rewrite of that ledger.
+The exporter can carry this reviewed choice into a **fresh** projection using
+`--selected-original-suite-run-id`; it performs no evaluation or promotion.
+
+rootの任意field `selectedOriginalSuiteRunId` は審査済みrun IDを1件だけ指します。
+省略時は旧48 PASS/36 FAILの再現契約を保持し、最高点・最新時刻で選びません。
+選択は新規評価・受入・promotion・公開ではなく、既存manifestと履歴は変更しません。
+
+A nonlegacy selected run must supply validated `caseAggregates`: T01–T10 in order,
+the unchanged per-case denominators `(7,6,6,11,14,10,8,7,8,7)`, all five verdict
+counts, `sourceAttempts`, `successfulSourceExecutions`, `rejectedSourceAttempts`
+and the explicit `nativeGate` flag. Attempts reconcile to successes plus rejections,
+and cases reconcile to the run/method. Optional `completedNativeResponse` and
+`successfulQueryLanguages` remain unverified when absent. Method-level attempts,
+successes and rejections retain SQL/GQL/KQL and optional **separate DAX** counts.
+Completed responses, traced QUESTION slots and distinct backend conversations are
+different evidence denominators, not accuracy or causal evidence. No legacy case
+rows or old T04 defect diagnosis are borrowed for a later selection.
+
+Successful source execution can return incomplete/truncated results. Success counts
+do not certify complete returned rows/query results, and a later complete aggregate
+in the same case does not retroactively complete an earlier result. Terminal
+native-response completion is a separate fact. Omitted public truncation counts
+must not be read as zero; private per-call observations do not change the original84 rubric.
+
+source実行成功でも返却が不完全・打切りの場合があります。後続aggregateの完全性は
+先の返却を完全化せず、native応答の終端完了も別proofです。打切り数の未掲載を0と
+推定せず、private観測によって元84条件の採点基準を変更しません。
+
+後続runは元10 case/84条件の検証済み集計を必須とし、FAIL・未検証・blocked・N/Aと
+native固定blockを保持します。DAX・query成功・拒否・native完了・別会話を混同しません。
+84 PASSから `accepted` を自動設定せず、既存validatorと明示した審査flagだけを使います。
+元suiteの審査記録上の受入は全機能・最終user受入ではありません。
+
+The selected report and bilingual Word/HTML model use the same source aggregate
+and projection digest. UI lab states retain their reviewed source scopes; run-bound
+compatibility, SDK and postcheck facts not supplied by this contract are
+**unverified / not newly rechecked**, not a repeated old blocker or an invented
+repair. Final user acceptance still requires the original ten/84 with zero FAIL
+and actual remaining-feature evidence plus an explicit decision. Publication remains deferred.
+
+UI/lab状態はsourceのscopeのままです。新たなrun紐づけがない互換性・SDK・postcheckは
+未検証・新規再確認なしと表示し、旧結果や推測した修復を新runへ流用しません。
+公開は延期のままで、最終受入には元10問/84条件の0 FAILと残る機能の実証が必要です。
 
 ## 4. Explicit public projection export
 
@@ -340,6 +434,21 @@ build Word/HTML/ZIP or read private answers, criterion text or reasoning.
 `--check` compares the existing files with those deterministic outputs.
 The final package allowlist includes these public reports only when their evidence
 hash and final aggregate match the guide.
+
+For a later explicitly selected projection, generate/check reports in a separately
+reviewed source directory under `docs/v3-preview`, leaving the historical reports
+unchanged. Explicit selection refuses to overwrite differing existing report bytes;
+use a fresh `--out` directory. Future authorized packaging may pass `--public-reports`
+for that directory.
+It checks the projection digest, selected ID, full run, historical ledgers, case
+decisions, attempt/success/rejection counters, context and model metadata; old
+48/36 or a fixed ID cannot stand in for the selected aggregate. The package's
+selection/acceptance notice remains a scoped record, never final user acceptance.
+These options do not authorize a Word/HTML/ZIP build or publication.
+
+後続の選択用reportは別の審査済みsource directoryに生成し、旧reportを置換しません。
+将来の承認済みpackageは `--public-reports` を使い、projection hash・選択ID・case・
+実行counter・モデルとの一致を検査します。この契約自体はbuild・公開を許可しません。
 
 Future branch/release URLs remain null until actual parent-verified URLs are supplied.
 There are no fabricated Preview links, and stable v2.7 artifacts remain unchanged.

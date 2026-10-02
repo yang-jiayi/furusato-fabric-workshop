@@ -1,0 +1,1915 @@
+{
+  "allFeaturesPassedClaimed": false,
+  "caseAggregates": [
+    {
+      "case": "T01",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 7
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 1,
+      "successfulQueryLanguages": [
+        "sql"
+      ],
+      "successfulSourceExecutions": 1
+    },
+    {
+      "case": "T02",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 6
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 1,
+      "successfulQueryLanguages": [
+        "sql"
+      ],
+      "successfulSourceExecutions": 1
+    },
+    {
+      "case": "T03",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 6
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 1,
+      "successfulQueryLanguages": [
+        "sql"
+      ],
+      "successfulSourceExecutions": 1
+    },
+    {
+      "case": "T04",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 11
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 1,
+      "successfulQueryLanguages": [
+        "gql"
+      ],
+      "successfulSourceExecutions": 1
+    },
+    {
+      "case": "T05",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 1,
+        "notApplicable": 0,
+        "pass": 13
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 2,
+      "successfulQueryLanguages": [
+        "gql",
+        "sql"
+      ],
+      "successfulSourceExecutions": 2
+    },
+    {
+      "case": "T06",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 10
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 2,
+      "successfulQueryLanguages": [
+        "kql"
+      ],
+      "successfulSourceExecutions": 2
+    },
+    {
+      "case": "T07",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 8
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 2,
+      "successfulQueryLanguages": [
+        "kql"
+      ],
+      "successfulSourceExecutions": 2
+    },
+    {
+      "case": "T08",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 7
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 0,
+      "successfulQueryLanguages": [],
+      "successfulSourceExecutions": 0
+    },
+    {
+      "case": "T09",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 0,
+        "notApplicable": 0,
+        "pass": 8
+      },
+      "nativeGate": false,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 6,
+      "successfulQueryLanguages": [
+        "gql",
+        "kql",
+        "sql"
+      ],
+      "successfulSourceExecutions": 6
+    },
+    {
+      "case": "T10",
+      "completedNativeResponse": true,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 7,
+        "notApplicable": 0,
+        "pass": 0
+      },
+      "nativeGate": true,
+      "rejectedSourceAttempts": 0,
+      "sourceAttempts": 0,
+      "successfulQueryLanguages": [],
+      "successfulSourceExecutions": 0
+    }
+  ],
+  "directCausalMcpAbClaimed": false,
+  "evidenceProjectionSha256": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
+  "executionEvidence": {
+    "distinctBackendConversationsProven": 10,
+    "freshBackendProof": true,
+    "independentlyTracedQuestionSlots": 8,
+    "nativeResponseCompletion": {
+      "completed": 10,
+      "notCompleted": 0,
+      "unverified": 0
+    },
+    "rejectedSourceAttemptCount": 0,
+    "rejectedSourceAttempts": {
+      "dax": 0,
+      "gql": 0,
+      "kql": 0,
+      "sql": 0
+    },
+    "sourceAttemptCount": 16,
+    "sourceAttempts": {
+      "dax": 0,
+      "gql": 3,
+      "kql": 8,
+      "sql": 5
+    },
+    "successfulSourceExecutionCount": 16,
+    "successfulSourceExecutions": {
+      "dax": 0,
+      "gql": 3,
+      "kql": 8,
+      "sql": 5
+    }
+  },
+  "externalSdk": {
+    "reason": {
+      "en": "No separately reviewed external SDK qualification is bound to this selected run. Submission count, blocker and repair are unverified / not newly rechecked.",
+      "ja": "選択runに紐づく外部SDKの追加審査記録なし。送信数・blocker・修復は未検証・新規再確認なし。"
+    },
+    "status": "unverified-not-newly-rechecked"
+  },
+  "finalEvaluation": {
+    "accepted": false,
+    "caseAggregates": [
+      {
+        "case": "T01",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 7
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 1,
+        "successfulQueryLanguages": [
+          "sql"
+        ],
+        "successfulSourceExecutions": 1
+      },
+      {
+        "case": "T02",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 6
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 1,
+        "successfulQueryLanguages": [
+          "sql"
+        ],
+        "successfulSourceExecutions": 1
+      },
+      {
+        "case": "T03",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 6
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 1,
+        "successfulQueryLanguages": [
+          "sql"
+        ],
+        "successfulSourceExecutions": 1
+      },
+      {
+        "case": "T04",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 11
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 1,
+        "successfulQueryLanguages": [
+          "gql"
+        ],
+        "successfulSourceExecutions": 1
+      },
+      {
+        "case": "T05",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 1,
+          "notApplicable": 0,
+          "pass": 13
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 2,
+        "successfulQueryLanguages": [
+          "gql",
+          "sql"
+        ],
+        "successfulSourceExecutions": 2
+      },
+      {
+        "case": "T06",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 10
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 2,
+        "successfulQueryLanguages": [
+          "kql"
+        ],
+        "successfulSourceExecutions": 2
+      },
+      {
+        "case": "T07",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 8
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 2,
+        "successfulQueryLanguages": [
+          "kql"
+        ],
+        "successfulSourceExecutions": 2
+      },
+      {
+        "case": "T08",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 7
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 0,
+        "successfulQueryLanguages": [],
+        "successfulSourceExecutions": 0
+      },
+      {
+        "case": "T09",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 0,
+          "notApplicable": 0,
+          "pass": 8
+        },
+        "nativeGate": false,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 6,
+        "successfulQueryLanguages": [
+          "gql",
+          "kql",
+          "sql"
+        ],
+        "successfulSourceExecutions": 6
+      },
+      {
+        "case": "T10",
+        "completedNativeResponse": true,
+        "counts": {
+          "blocked": 0,
+          "executionUnverified": 0,
+          "fail": 7,
+          "notApplicable": 0,
+          "pass": 0
+        },
+        "nativeGate": true,
+        "rejectedSourceAttempts": 0,
+        "sourceAttempts": 0,
+        "successfulQueryLanguages": [],
+        "successfulSourceExecutions": 0
+      }
+    ],
+    "conditionCount": 84,
+    "counts": {
+      "blocked": 0,
+      "executionUnverified": 0,
+      "fail": 8,
+      "notApplicable": 0,
+      "pass": 76
+    },
+    "failureCounts": {
+      "content": 1,
+      "nativeAcceptance": 7
+    },
+    "freshBackendProof": true,
+    "id": "provenance-native-ui-20261001",
+    "independentExecutionTraces": 8,
+    "label": {
+      "en": "Provenance",
+      "ja": "Provenance"
+    },
+    "method": {
+      "causalAbClaimed": false,
+      "distinctBackendConversationsProven": 10,
+      "judgment": "manual-fixed-rubric-offline",
+      "recordedModel": "gpt-5.6-terra",
+      "rejectedSourceAttempts": {
+        "dax": 0,
+        "gql": 0,
+        "kql": 0,
+        "sql": 0
+      },
+      "runtime": "preview",
+      "sourceExecutions": {
+        "dax": 0,
+        "gql": 3,
+        "kql": 8,
+        "sql": 5
+      },
+      "stage": "sandbox",
+      "successfulSourceExecutions": {
+        "dax": 0,
+        "gql": 3,
+        "kql": 8,
+        "sql": 5
+      },
+      "surface": "native-ui",
+      "transport": "responses"
+    },
+    "observedAt": "2026-09-30T23:39:57.195000+00:00",
+    "preblockedQuestions": 0,
+    "promoted": false,
+    "questionCount": 10,
+    "submittedQuestions": 10,
+    "summary": {
+      "en": "Separate complete original ten/84 run. Original verdicts are unchanged. Execution counters use retained additive accounting corrections, not targeted or heldout scores.",
+      "ja": "固定原10問・84条件を保持した独立した全run。判定原本は不変。実行回数は別保存の会計訂正を反映し、限定診断・heldoutとは合算しません。"
+    }
+  },
+  "finalUserAcceptanceCertified": false,
+  "freezeStatus": "frozen-for-build",
+  "generalPopulationAccuracyClaimed": false,
+  "historicalRuns": [
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 51,
+        "executionUnverified": 1,
+        "fail": 23,
+        "notApplicable": 0,
+        "pass": 9
+      },
+      "failureCounts": {
+        "content": 23,
+        "nativeAcceptance": 0
+      },
+      "freshBackendProof": false,
+      "id": "main-baseline",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Main baseline",
+        "ja": "Main baseline（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "observedAt": "2026-09-29T23:44:56.522473+00:00",
+      "preblockedQuestions": 5,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 5,
+      "summary": {
+        "en": "Main baseline retains observed failures and missing execution proof.",
+        "ja": "Main baseline: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 51,
+        "executionUnverified": 1,
+        "fail": 10,
+        "notApplicable": 0,
+        "pass": 22
+      },
+      "failureCounts": {
+        "content": 3,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": false,
+      "id": "static-first",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Isolated StaticFirst",
+        "ja": "Isolated StaticFirst（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "observedAt": "2026-09-30T00:45:29.194804+00:00",
+      "preblockedQuestions": 5,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 5,
+      "summary": {
+        "en": "Separate isolated candidate, not promoted. T08 has three content deficiencies; T10 native content block produces seven acceptance failures, not correct contextual refusal.",
+        "ja": "Isolated StaticFirst: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 4,
+        "fail": 38,
+        "notApplicable": 3,
+        "pass": 39
+      },
+      "failureCounts": {
+        "content": 31,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": false,
+      "id": "context-published-mcp",
+      "independentExecutionTraces": 0,
+      "label": {
+        "en": "Context published-MCP",
+        "ja": "Context published-MCP（別個の観測記録）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 0,
+        "judgment": "recorded-rubric-assessment",
+        "recordedModel": null,
+        "runtime": null,
+        "sourceExecutions": null,
+        "stage": null,
+        "surface": "published-mcp",
+        "transport": "mcp"
+      },
+      "notApplicableReason": {
+        "en": "Three conditions are inapplicable to the recorded answer branches; retained in the original84 denominator.",
+        "ja": "記録された回答branchで3条件が非該当。元84条件の分母に保持。"
+      },
+      "observedAt": "2026-09-30T04:33:42.963361+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Published-MCP ledger only. Native UI/SDK diagnostics and direct operator queries do not change these grades. Main is unchanged and not promoted.",
+        "ja": "Context published-MCP: 分母84を保持。診断/別smokeを採点へ混ぜず、main promotionや全体合格は主張しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 36,
+        "notApplicable": 0,
+        "pass": 48
+      },
+      "failureCounts": {
+        "content": 29,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": true,
+      "id": "compat-native-ui-final",
+      "independentExecutionTraces": 7,
+      "label": {
+        "en": "Final Compat NativeUI (quality not accepted, not promoted)",
+        "ja": "最終Compat NativeUI（品質未合格・未promotion）"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 10,
+        "judgment": "manual-fixed-rubric-offline",
+        "recordedModel": "gpt-5.6-terra",
+        "runtime": "preview",
+        "sourceExecutions": {
+          "gql": 2,
+          "kql": 2,
+          "sql": 5
+        },
+        "stage": "sandbox",
+        "surface": "native-ui",
+        "transport": "responses"
+      },
+      "observedAt": "2026-09-30T07:31:33.077630+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Manual fixed-rubric offline judgment. Ten backend conversations; nine source executions (SQL5/GQL2/KQL2) across seven question slots. Scoped gen1 consumer benefit is verified, not a gen2 fix or quality acceptance.29 content/required-evidence failures plus seven T10 native gates.",
+        "ja": "manual fixed-rubric offline判定。10 backend会話、source実行9回（SQL5/GQL2/KQL2）は7質問slotで確認。gen1 consumer benefitは実証したがgen2修正/品質合格ではない。FAIL29内容/要求証拠＋T10native gate7。"
+      }
+    },
+    {
+      "accepted": false,
+      "caseAggregates": [
+        {
+          "case": "T01",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 1,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T02",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T03",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 3,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 3
+        },
+        {
+          "case": "T04",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 4,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "gql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T05",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 14
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "gql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T06",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 10
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 5,
+          "sourceAttempts": 7,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T07",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 1,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 4,
+          "sourceAttempts": 7,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 3
+        },
+        {
+          "case": "T08",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        },
+        {
+          "case": "T09",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 3,
+            "notApplicable": 0,
+            "pass": 5
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 7,
+          "sourceAttempts": 10,
+          "successfulQueryLanguages": [
+            "gql",
+            "kql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 3
+        },
+        {
+          "case": "T10",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 7,
+            "notApplicable": 0,
+            "pass": 0
+          },
+          "nativeGate": true,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        }
+      ],
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 16,
+        "notApplicable": 0,
+        "pass": 68
+      },
+      "failureCounts": {
+        "content": 9,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": true,
+      "id": "evidence-native-ui-20260930",
+      "independentExecutionTraces": 8,
+      "label": {
+        "en": "Evidence",
+        "ja": "Evidence"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 10,
+        "judgment": "manual-fixed-rubric-offline",
+        "recordedModel": "gpt-5.6-terra",
+        "rejectedSourceAttempts": {
+          "dax": 0,
+          "gql": 0,
+          "kql": 16,
+          "sql": 0
+        },
+        "runtime": "preview",
+        "sourceExecutions": {
+          "dax": 0,
+          "gql": 3,
+          "kql": 22,
+          "sql": 7
+        },
+        "stage": "sandbox",
+        "successfulSourceExecutions": {
+          "dax": 0,
+          "gql": 3,
+          "kql": 6,
+          "sql": 7
+        },
+        "surface": "native-ui",
+        "transport": "responses"
+      },
+      "observedAt": "2026-09-30T13:17:04.627000+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Separate complete original ten/84 run. Original verdicts are unchanged. Execution counters use retained additive accounting corrections, not targeted or heldout scores.",
+        "ja": "固定原10問・84条件を保持した独立した全run。判定原本は不変。実行回数は別保存の会計訂正を反映し、限定診断・heldoutとは合算しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "caseAggregates": [
+        {
+          "case": "T01",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T02",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T03",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 3,
+          "successfulQueryLanguages": [
+            "gql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 3
+        },
+        {
+          "case": "T04",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 5,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 2,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        },
+        {
+          "case": "T05",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 14
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "gql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T06",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 10
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T07",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 8
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T08",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 1,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        },
+        {
+          "case": "T09",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 8
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 1,
+          "sourceAttempts": 5,
+          "successfulQueryLanguages": [
+            "gql",
+            "kql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 4
+        },
+        {
+          "case": "T10",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 7,
+            "notApplicable": 0,
+            "pass": 0
+          },
+          "nativeGate": true,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        }
+      ],
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 13,
+        "notApplicable": 0,
+        "pass": 71
+      },
+      "failureCounts": {
+        "content": 6,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": true,
+      "id": "refined-native-ui-20260930",
+      "independentExecutionTraces": 7,
+      "label": {
+        "en": "EvidenceRefined",
+        "ja": "EvidenceRefined"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 10,
+        "judgment": "manual-fixed-rubric-offline",
+        "recordedModel": "gpt-5.6-terra",
+        "rejectedSourceAttempts": {
+          "dax": 0,
+          "gql": 2,
+          "kql": 1,
+          "sql": 0
+        },
+        "runtime": "preview",
+        "sourceExecutions": {
+          "dax": 0,
+          "gql": 5,
+          "kql": 7,
+          "sql": 6
+        },
+        "stage": "sandbox",
+        "successfulSourceExecutions": {
+          "dax": 0,
+          "gql": 3,
+          "kql": 6,
+          "sql": 6
+        },
+        "surface": "native-ui",
+        "transport": "responses"
+      },
+      "observedAt": "2026-09-30T14:08:50.359000+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Separate complete original ten/84 run. Original verdicts are unchanged. Execution counters use retained additive accounting corrections, not targeted or heldout scores.",
+        "ja": "固定原10問・84条件を保持した独立した全run。判定原本は不変。実行回数は別保存の会計訂正を反映し、限定診断・heldoutとは合算しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "caseAggregates": [
+        {
+          "case": "T01",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T02",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T03",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 3,
+            "notApplicable": 0,
+            "pass": 3
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "dax"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T04",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 11
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "gql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T05",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 14
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "gql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T06",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 10
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T07",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 8
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 3,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 3
+        },
+        {
+          "case": "T08",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 1,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        },
+        {
+          "case": "T09",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 8
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 6,
+          "successfulQueryLanguages": [
+            "gql",
+            "kql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 6
+        },
+        {
+          "case": "T10",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        }
+      ],
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 4,
+        "notApplicable": 0,
+        "pass": 80
+      },
+      "failureCounts": {
+        "content": 4,
+        "nativeAcceptance": 0
+      },
+      "freshBackendProof": true,
+      "id": "answerable-native-ui-20260930",
+      "independentExecutionTraces": 8,
+      "label": {
+        "en": "Answerable",
+        "ja": "Answerable"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 10,
+        "judgment": "manual-fixed-rubric-offline",
+        "recordedModel": "gpt-5.6-terra",
+        "rejectedSourceAttempts": {
+          "dax": 0,
+          "gql": 0,
+          "kql": 0,
+          "sql": 0
+        },
+        "runtime": "preview",
+        "sourceExecutions": {
+          "dax": 1,
+          "gql": 3,
+          "kql": 9,
+          "sql": 4
+        },
+        "stage": "sandbox",
+        "successfulSourceExecutions": {
+          "dax": 1,
+          "gql": 3,
+          "kql": 9,
+          "sql": 4
+        },
+        "surface": "native-ui",
+        "transport": "responses"
+      },
+      "observedAt": "2026-09-30T14:51:26.922000+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Separate complete original ten/84 run. Original verdicts are unchanged. Execution counters use retained additive accounting corrections, not targeted or heldout scores.",
+        "ja": "固定原10問・84条件を保持した独立した全run。判定原本は不変。実行回数は別保存の会計訂正を反映し、限定診断・heldoutとは合算しません。"
+      }
+    },
+    {
+      "accepted": false,
+      "caseAggregates": [
+        {
+          "case": "T01",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T02",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T03",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 6
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "sql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T04",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 11
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 1,
+          "successfulQueryLanguages": [
+            "gql"
+          ],
+          "successfulSourceExecutions": 1
+        },
+        {
+          "case": "T05",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 1,
+            "notApplicable": 0,
+            "pass": 13
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "gql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T06",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 10
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T07",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 8
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 2,
+          "successfulQueryLanguages": [
+            "kql"
+          ],
+          "successfulSourceExecutions": 2
+        },
+        {
+          "case": "T08",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 7
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        },
+        {
+          "case": "T09",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 0,
+            "notApplicable": 0,
+            "pass": 8
+          },
+          "nativeGate": false,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 4,
+          "successfulQueryLanguages": [
+            "gql",
+            "kql",
+            "sql"
+          ],
+          "successfulSourceExecutions": 4
+        },
+        {
+          "case": "T10",
+          "completedNativeResponse": true,
+          "counts": {
+            "blocked": 0,
+            "executionUnverified": 0,
+            "fail": 7,
+            "notApplicable": 0,
+            "pass": 0
+          },
+          "nativeGate": true,
+          "rejectedSourceAttempts": 0,
+          "sourceAttempts": 0,
+          "successfulQueryLanguages": [],
+          "successfulSourceExecutions": 0
+        }
+      ],
+      "conditionCount": 84,
+      "counts": {
+        "blocked": 0,
+        "executionUnverified": 0,
+        "fail": 8,
+        "notApplicable": 0,
+        "pass": 76
+      },
+      "failureCounts": {
+        "content": 1,
+        "nativeAcceptance": 7
+      },
+      "freshBackendProof": true,
+      "id": "scoped-recovery-native-ui-20261001",
+      "independentExecutionTraces": 8,
+      "label": {
+        "en": "Scoped recovery campaign",
+        "ja": "Scoped recovery campaign"
+      },
+      "method": {
+        "causalAbClaimed": false,
+        "distinctBackendConversationsProven": 10,
+        "judgment": "manual-fixed-rubric-offline",
+        "recordedModel": "gpt-5.6-terra",
+        "rejectedSourceAttempts": {
+          "dax": 0,
+          "gql": 0,
+          "kql": 0,
+          "sql": 0
+        },
+        "runtime": "preview",
+        "sourceExecutions": {
+          "dax": 0,
+          "gql": 3,
+          "kql": 6,
+          "sql": 5
+        },
+        "stage": "sandbox",
+        "successfulSourceExecutions": {
+          "dax": 0,
+          "gql": 3,
+          "kql": 6,
+          "sql": 5
+        },
+        "surface": "native-ui",
+        "transport": "responses"
+      },
+      "observedAt": "2026-09-30T21:43:23.672000+00:00",
+      "preblockedQuestions": 0,
+      "promoted": false,
+      "questionCount": 10,
+      "submittedQuestions": 10,
+      "summary": {
+        "en": "Separate complete original ten/84 run. Original verdicts are unchanged. Execution counters use retained additive accounting corrections, not targeted or heldout scores.",
+        "ja": "固定原10問・84条件を保持した独立した全run。判定原本は不変。実行回数は別保存の会計訂正を反映し、限定診断・heldoutとは合算しません。"
+      }
+    }
+  ],
+  "kind": "sanitized-preview-evaluation-and-progress",
+  "labEvidence": {
+    "copilot-act": {
+      "evidenceIds": [
+        "p30-15-act-preview",
+        "p30-15-act-readback"
+      ],
+      "reason": {
+        "en": "The old metadata-only patch lost reusableProperty and remains FAILED. Native rollback is verified, not a passed bug fix; retained as a known issue.",
+        "ja": "旧metadata-only patchはreusablePropertyを失いFAILED。native rollbackは確認済みだがbug修正合格ではない。known issueとして保持。"
+      },
+      "status": "failed"
+    },
+    "copilot-additive-entity": {
+      "evidenceIds": [
+        "p30-15-additive-plan",
+        "p30-15-additive-readback"
+      ],
+      "reason": {
+        "en": "Separate typed PaymentMethod/String-property Plan/Act/readback verified: existing semantic parts/IDs/keys/bindings/shared refs preserved, with only the approved model reference changed.",
+        "ja": "別typed intentのPaymentMethod/String property追加だけをPlan/Act/readbackで確認。既存semantic parts・IDs/keys/bindings/shared refsを保持し、model ref以外の既存変更なし。"
+      },
+      "status": "passed"
+    },
+    "copilot-attachments": {
+      "evidenceIds": [
+        "p30-15-attachment-grounding",
+        "p30-15-attachment-response",
+        "p30-15-attachment-response-bottom",
+        "p30-15-attachments",
+        "p30-15-historical-attachments",
+        "p30-15-historical-response",
+        "p30-15-preview"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "copilot-baseline": {
+      "evidenceIds": [
+        "p30-15-noattachment",
+        "p30-15-noattachment-preview"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "dashboard": {
+      "evidenceIds": [
+        "p30-20-dashboard"
+      ],
+      "reason": {
+        "en": "Direct Ontology→RTdashboard entry is unobserved and environment-conditional. Native Ontology agent KQL verifies TS exploration, not direct-dashboard integration.",
+        "ja": "direct Ontology→RTdashboard entryを観測できず、環境条件付き。TS探索はnative Ontology agent KQLで検証済みだがdirect dashboardではない。"
+      },
+      "status": "blocked"
+    },
+    "data-agent": {
+      "evidenceIds": [
+        "p30-17-agent-ci",
+        "p30-17-ci-chart",
+        "p30-17-ci-sql-output"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "failed"
+    },
+    "entities": {
+      "evidenceIds": [
+        "p30-06-entities",
+        "p30-06-instances"
+      ],
+      "reason": {
+        "en": "Primary core ten entities,73 static+one TS and functional Municipality sample are verified; complete UI coverage of every entity remains incomplete.",
+        "ja": "primary core10Entity、73 static+1TSとMunicipality sampleの機能照合は確認。全EntityのUI完成captureは未網羅。"
+      },
+      "status": "observed"
+    },
+    "evaluation": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "Manual fixed-rubric offline judgment of original ten once/84 conditions:48 PASS/36 FAIL, zero N/A/unverified/preblocked.29 content/required-evidence failures plus seven native T10 gates. Do not merge or claim causal A/B with historical MCP.",
+        "ja": "元10問各1回/84条件のmanual fixed-rubric offline判定は48 PASS/36 FAIL、N/A/実行未検証/前提blocked0。FAIL29内容/要求証拠＋7nativeT10gate。過去MCPと合算/因果A/Bにしない。"
+      },
+      "status": "failed"
+    },
+    "gold": {
+      "evidenceIds": [
+        "p30-11-executed-output",
+        "p30-11-executed-parameters",
+        "p30-11-gold",
+        "p30-11-run-context",
+        "p30-11-schema-preview"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "graph": {
+      "evidenceIds": [
+        "p30-16-eligibility",
+        "p30-16-empty-projection",
+        "p30-16-gql"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "inheritance": {
+      "evidenceIds": [
+        "p30-14-inheritance"
+      ],
+      "reason": {
+        "en": "Municipality business name/key/binding and AdministrativeArea inheritance verified; complete stored/effective/override/revert testing remains incomplete.",
+        "ja": "Municipalityの実名・key/binding・AdministrativeArea継承を確認。stored/effective metadataとoverride/revertの全試験は未網羅。"
+      },
+      "status": "observed"
+    },
+    "mcp": {
+      "evidenceIds": [
+        "p30-20-data-agent-mcp-settings"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "metrics": {
+      "evidenceIds": [
+        "p30-12-metric-list",
+        "p30-12-metrics"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "namespaces": {
+      "evidenceIds": [
+        "p30-14-namespace"
+      ],
+      "reason": {
+        "en": "Management entry is unconfirmed in the wide new-UI ribbon. RDF URI/default-namespace preservation is verified, not UI management or universal product unsupported status.",
+        "ja": "wide new UI ribbonで管理entry未確認。RDF namespace URI/default namespace保持は実証済みだがUI管理ではない。全製品非対応とはしない。"
+      },
+      "status": "blocked"
+    },
+    "native-delivery": {
+      "evidenceIds": [
+        "p30-09-copy-001-manual",
+        "p30-09-copy-002",
+        "p30-09-copy-003",
+        "p30-09-manual-recovery",
+        "p30-09-native-delivery",
+        "p30-09-run-history",
+        "p30-09-source-events"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "publish": {
+      "evidenceIds": [],
+      "reason": {
+        "en": "Publication configuration/role counts read only, without changes. No authorized second low-privilege principal for proven RLS/OLS/CLS negative tests; candidate main promotion is not established.",
+        "ja": "公開設定/role件数はread-onlyで確認、変更なし。第2の承認済み低権限principalがなくRLS/OLS/CLS negative testsは未証明。候補main promotionも未成立。"
+      },
+      "status": "unverified"
+    },
+    "rdf": {
+      "evidenceIds": [
+        "p30-22-export",
+        "p30-22-import"
+      ],
+      "reason": {
+        "en": "Standards-only native cycle/namespace preservation and14/14 normalized parts verified with label/type/header losses retained. The480px export dialog is not embedded as completion evidence; no runtime losslessness claim.",
+        "ja": "standards-only native import/export/reimportとnamespace保持、14/14 normalized partsを確認。label/type/header損失は保持。480px export dialogはcompletion解像度不足で非掲載、runtime無損失ではない。"
+      },
+      "status": "observed"
+    },
+    "relationships": {
+      "evidenceIds": [
+        "p30-07-relationships"
+      ],
+      "reason": {
+        "en": "Static companion10/72/15 labels/counts and requested paths reconcile through native GQL/source checks; not exhaustive mapping-UI/every-edge-pair validation.",
+        "ja": "static companion10/72/15・全labels/件数・要求pathをnative GQLとsourceへ照合。全mapping UI/全edge pairの網羅検査ではない。"
+      },
+      "status": "observed"
+    },
+    "rules": {
+      "evidenceIds": [
+        "p30-13-rule-list",
+        "p30-13-rules"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    },
+    "shared-properties": {
+      "evidenceIds": [
+        "p30-14-shared"
+      ],
+      "reason": {
+        "en": "Global display, unsafe Act localization and native rollback retained; separate from complete shared override/revert/detach acceptance.",
+        "ja": "Global表示、unsafe ActでのLocal化、native rollbackを保持。共有機能の全override/revert/detach受入れとは別。"
+      },
+      "status": "observed"
+    },
+    "timeseries": {
+      "evidenceIds": [
+        "p30-10-timeseries"
+      ],
+      "reason": {
+        "en": "Native Plan bounded KQL execution and independent reconciliation are verified with unchanged definition and73 static+one TS. Functional TS querying, not TS Graph; the additional query-screen capture is not included.",
+        "ja": "native Planのbounded KQL実行と独立照合を確認、定義不変。73 static+1TSを保持。機能TS query成功でありTS Graph成功ではなく、追加query画面captureは未収録。"
+      },
+      "status": "observed"
+    },
+    "version-history": {
+      "evidenceIds": [
+        "p30-21-metric-rich-version",
+        "p30-21-versions"
+      ],
+      "reason": {
+        "en": "Reviewed native captures placed with their exact captioned scope. Partial views and separate connectivity checks do not confer whole-lab acceptance.",
+        "ja": "審査済みの実画面を配置。各captionの範囲だけを示し、部分表示や別の接続検査を演習全体の合格へ変更しません。"
+      },
+      "status": "observed"
+    }
+  },
+  "labStates": {
+    "copilot-act": "failed",
+    "copilot-additive-entity": "passed",
+    "copilot-attachments": "observed",
+    "copilot-baseline": "observed",
+    "dashboard": "blocked",
+    "data-agent": "failed",
+    "entities": "observed",
+    "evaluation": "failed",
+    "gold": "observed",
+    "graph": "observed",
+    "inheritance": "observed",
+    "mcp": "observed",
+    "metrics": "observed",
+    "namespaces": "blocked",
+    "native-delivery": "observed",
+    "publish": "unverified",
+    "rdf": "observed",
+    "relationships": "observed",
+    "rules": "observed",
+    "shared-properties": "observed",
+    "timeseries": "observed",
+    "version-history": "observed"
+  },
+  "mainPromoted": false,
+  "nativeCapturePlacements": 48,
+  "originalSuiteAccepted": false,
+  "pairBuildAuthorized": true,
+  "postcheck": {
+    "reason": {
+      "en": "No separately reviewed postcheck is bound to this selected run. Definitions, publications and selected scope are unverified / not newly rechecked.",
+      "ja": "選択runに紐づくpostcheckの追加審査記録なし。定義・公開・選択scopeの状態は未検証・新規再確認なし。"
+    },
+    "status": "unverified-not-newly-rechecked"
+  },
+  "presentation": {
+    "en": "Preview with implementation and verification results — AI answer quality not accepted; not GA",
+    "ja": "実装・検証結果を収録したPreview — AI回答品質は未合格／GAではありません"
+  },
+  "privacy": {
+    "answerKeysIncluded": false,
+    "internalReasoningIncluded": false,
+    "liveIdsEndpointsMachinePathsIncluded": false,
+    "privateCriterionTextIncluded": false,
+    "rawAnswersIncluded": false
+  },
+  "publication": {
+    "previewBranchUrl": null,
+    "previewReleaseUrl": null,
+    "stableArtifactsReplaced": false,
+    "stableVersion": "v2.7.0 / unified-20260923"
+  },
+  "qualityAccepted": false,
+  "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+  "scope": "historical-observed-run",
+  "scopedCompatibility": {
+    "reason": {
+      "en": "No separately reviewed UI/connector compatibility facts are bound to this selected run. Unverified / not newly rechecked; do not reuse the old T04 outcome.",
+      "ja": "選択runに紐づくUI/connector互換性の追加審査記録なし。未検証・新規再確認なし。旧T04結果を流用しません。"
+    },
+    "status": "unverified-not-newly-rechecked"
+  },
+  "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
+  "uniqueSanitizedImages": 46
+}

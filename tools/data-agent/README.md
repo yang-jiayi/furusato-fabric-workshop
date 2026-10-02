@@ -80,6 +80,37 @@ and needs **no browser session, system ODBC driver, full Fabric SDK, regional
 workload host or capacity ID**. It does not authenticate or submit anything
 during `doctor`, `freeze`, `plan`, `report`, or local tests.
 
+### Question-free connection check
+
+`preflight_mcp.py` reserves a fresh private intent before authentication and calls
+only initialize, notifications/initialized and tools/list. It cannot submit a
+question. A native session handle is closed when supplied; HTTP405 is retained as
+unsupported server cleanup, not a successful DELETE. Every request carries the
+skill attribution header. An exact HTTP202 `text/plain` `Accepted` notification
+is an acknowledgement, not a JSON-RPC answer; other unexpected bodies fail.
+Raw protocol records and failures remain private and are not retried.
+
+```powershell
+python -B .\tools\data-agent\preflight_mcp.py `
+  --workspace-id '<workspace GUID>' --data-agent-id '<published Agent GUID>' `
+  --out '<fresh absolute private directory outside Git>' --allow-connect
+```
+
+For code running in an already authorized, dedicated Fabric notebook without a
+default Lakehouse, `NotebookMcpCredential` accepts the runtime's `Mapping`
+interface, including a native JavaMap, rather than requiring a builtin `dict`.
+It verifies the expected notebook/workspace identities, actual Fabric marker,
+non-pipeline/non-reference flags and explicit no-default-Lakehouse state before
+`notebookutils.credentials.getToken("pbi")`. Missing fields never imply permission.
+Pass `skill_name="spark-cli"` to `NativeMcpClient` in that notebook.
+`client.preflight(emit)` returns tool discovery with zero question submissions;
+the caller must retain emitted records privately. It neither constructs an SDK
+metadata client nor qualifies a durable question journal.
+
+接続検査は質問・実ソース照会・元84条件の合格とは別です。`--allow-connect`なしでは認証も
+接続も行わず、使用済みの出力先・intentを上書きしません。NotebookのCompleted表示だけで
+成功とせず、実プロトコルの結果とcleanupを確認してください。
+
 **MCP is an answer-only evidence surface.** The observed native reply exposes
 answer text, not the internal executed SQL/KQL/GQL or their result rows.
 Neither a JSON-RPC ID nor an MCP session ID is a backend conversation ID.
@@ -108,6 +139,22 @@ Consequently:
   A reviewer can also mark `basis: "native_execution"`; MCP cannot prove it.
 - The original T03 clarification branch retains only its three numeric-only
   N/A conditions. Observability remains a separate failed gate.
+
+Official native-UI Diagnostics are a separate evidence surface.
+`native_evaluation.diagnostic_source_calls` selects execution **attempts** from
+`analyze.database.execute` (SQL/GQL/KQL) and the separate
+`askPBI.tool.execute` (DAX). Initialization, generated code and parent trace
+wrappers are not extra executions. Reconcile successful and rejected attempts
+from their real outputs; selection alone never awards a PASS. Preserve frozen
+historical counts and attach newly identified DAX evidence as a separate
+correction, not an overwritten run.
+
+The sanitized Preview projection can retain per-case aggregate decisions,
+successful query languages and completed-native-response proof without raw
+answers or identifiers. Query-required cases still need their original routes.
+A contextual refusal can have zero queries only with its genuine completed
+native response and fresh-backend proof. This changes the artifact-proof gate,
+not the original ten questions, 84 human criteria or native-block verdicts.
 
 All deployment JSON, exact prompts, CSV-derived keys, requests, replies,
 snapshots and reviews must be under an **absolute private root outside Git**.

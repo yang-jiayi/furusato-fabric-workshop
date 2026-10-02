@@ -91,6 +91,26 @@ class PreviewRuntimeTests(unittest.TestCase):
         self.assertEqual(result["acceptedUniqueRows"], 14900)
         self.assertEqual(result["duplicateRows"], 100)
 
+    def test_baseline_gate_pins_corpus_rubric_and_reference_assets_not_evolving_transport(self):
+        from types import SimpleNamespace
+        with patch.object(runtime.subprocess, "run", return_value=SimpleNamespace(stdout="")) as git:
+            runtime.immutable_baseline()
+        command = git.call_args.args[0]
+        self.assertEqual(tuple(command[command.index("--") + 1:]), runtime.BASELINE_PROTECTED_PATHS)
+        self.assertIn("workshop/v2.7.0", command)
+        self.assertIn("tools/docs/furusato_docs/tests10.py", command)
+        self.assertIn("tools/data-agent/source-contract", command)
+        self.assertNotIn("tools/data-agent", command)
+        self.assertIn("tools/data-agent/native_mcp.py", runtime.RUNTIME_INPUT_FILES)
+        self.assertIn("tools/data-agent/native_evaluation.py", runtime.RUNTIME_INPUT_FILES)
+
+    def test_original_rubric_or_reference_delta_still_blocks_build(self):
+        from types import SimpleNamespace
+        for path in ("tools/docs/furusato_docs/tests10.py", "tools/data-agent/source-contract/contract.json"):
+            with patch.object(runtime.subprocess, "run", return_value=SimpleNamespace(stdout=path + "\n")):
+                with self.subTest(path=path), self.assertRaises(runtime.SafetyError):
+                    runtime.immutable_baseline()
+
     def test_latest_receipts_override_old_zero_deployment_flags(self):
         state = {"items": {"ontology": {"id": "owned"}, "semanticModel": {"id": "model"},
                            "dataAgent": {"id": "agent"}},

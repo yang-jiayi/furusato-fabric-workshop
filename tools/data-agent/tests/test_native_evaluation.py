@@ -303,6 +303,62 @@ class GradingTests(unittest.TestCase):
         self.assertBlocked()
 
 
+class DiagnosticSourceCallTests(unittest.TestCase):
+    def call(self, title="analyze.database.execute", source="LakehouseTables"):
+        return {
+            "kind": "tool-call", "title": title, "callId": "call-fixture",
+            "status": "completed", "input": {"datasource_type": source},
+            "output": {"rows": [["synthetic"]]},
+        }
+
+    def test_all_observed_source_execution_families_are_counted(self):
+        for title, source, language in (
+            ("analyze.database.execute", "LakehouseTables", "SQL"),
+            ("analyze.database.execute", "Kusto", "KQL"),
+            ("analyze.database.execute", "Ontology", "GQL"),
+            ("askPBI.tool.execute", "SemanticModel", "DAX"),
+        ):
+            call = self.call(title, source)
+            with self.subTest(language=language):
+                self.assertEqual([(language, call)], ne.diagnostic_source_calls([call]))
+
+    def test_wrappers_generators_and_discovery_do_not_double_count(self):
+        actual = self.call("askPBI.tool.execute", "SemanticModel")
+        wrappers = [
+            self.call(title, "SemanticModel") for title in (
+                "askPBI.initialize", "trace.analyze_semantic_model",
+                "analyze.database.nl2code", "analyze.database.fewshots.loading",
+                "analyze.database.nl2sql.generatesql.agent.iteration1.execute_sql",
+            )
+        ]
+        self.assertEqual([("DAX", actual)], ne.diagnostic_source_calls(wrappers + [actual]))
+
+    def test_failure_is_an_attempt_not_success_credit(self):
+        call = self.call()
+        call.update(status="failed", output="Failed to execute tool: synthetic failure")
+        self.assertEqual([("SQL", call)], ne.diagnostic_source_calls([call]))
+        self.assertEqual("failed", call["status"])
+
+    def test_malformed_or_incomplete_execution_evidence_fails_closed(self):
+        for mutation in (
+            lambda call: call.update(input=None),
+            lambda call: call["input"].update(datasource_type="Unknown"),
+            lambda call: call["input"].update(datasource_type={}),
+            lambda call: call.update(title="askPBI.tool.execute"),
+            lambda call: call.update(callId=""),
+            lambda call: call.update(status="in_progress"),
+            lambda call: call.pop("output"),
+        ):
+            call = self.call()
+            mutation(call)
+            with self.subTest(mutation=mutation), self.assertRaises(ne.EvaluationError):
+                ne.diagnostic_source_calls([call])
+        with self.assertRaises(ne.EvaluationError):
+            ne.diagnostic_source_calls([self.call(), self.call()])
+        with self.assertRaises(ne.EvaluationError):
+            ne.diagnostic_source_calls([None])
+
+
 class ParsingTests(unittest.TestCase):
     def test_raw_json_roundtrip_keeps_exact_answer(self):
         response = example_response()

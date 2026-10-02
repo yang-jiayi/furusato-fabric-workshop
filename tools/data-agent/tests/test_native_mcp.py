@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+from collections import UserDict
 import json
 import os
 from pathlib import Path
@@ -18,6 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import evaluate_native as runner
 import native_evaluation as ne
 import native_mcp as mcp
+import preflight_mcp
 from test_native_evaluation import example_case
 from test_native_runner import definition
 
@@ -83,6 +85,12 @@ class Session:
             "Set-Cookie": "must-not-save",
             "Location": "https://example.invalid/?access_token=must-not-save",
         }
+        self.notification_body = b""
+        self.notification_mime = "text/plain; charset=utf-8"
+        self.notification_status = 202
+        self.session_id = f"transport-session-{index}"
+        self.delete_status = 204
+        self.deletes = []
 
     def post(self, url, **kwargs):
         message = json.loads(kwargs["data"])
@@ -94,9 +102,11 @@ class Session:
             payload = {"jsonrpc": "2.0", "id": 1, "result": {
                 "protocolVersion": mcp.PROTOCOL_VERSION, "capabilities": {"tools": {}},
             }}
-            headers["Mcp-Session-Id"] = f"transport-session-{self.index}"
+            if self.session_id is not None:
+                headers["Mcp-Session-Id"] = self.session_id
         elif method == "notifications/initialized":
-            payload, status = None, 202
+            payload, status = self.notification_body, self.notification_status
+            headers["Content-Type"] = self.notification_mime
         elif method == "tools/list":
             payload = {"jsonrpc": "2.0", "id": 2, "result": {"tools": self.tools}}
         elif method == "tools/call":
@@ -107,6 +117,12 @@ class Session:
             raise AssertionError("Unexpected request method")
         body = payload if isinstance(payload, bytes) else (ne.encode(payload) if payload else b"")
         response = Response(body, status, kwargs["data"], headers)
+        self.responses.append(response)
+        return response
+
+    def delete(self, url, **kwargs):
+        self.deletes.append({"url": url, **kwargs, "headers": dict(kwargs["headers"])})
+        response = Response(b"", self.delete_status, None)
         self.responses.append(response)
         return response
 
@@ -285,6 +301,176 @@ class ProtocolTests(unittest.TestCase):
         _, issues = mcp.native_view(native)
         self.assertEqual(issues, [])
         self.assertFalse(mcp.observability()["strict_acceptance_eligible"])
+
+    def test_preflight_discovers_without_question_or_callback(self):
+        result = self.client.preflight(self.emit)
+        self.assertIsInstance(result, mcp.McpDiscovery)
+        self.assertEqual(result.question_submissions, 0)
+        self.assertFalse(result.strict_acceptance_eligible)
+        self.assertEqual(result.tool_name, "fixture_tool")
+        self.assertEqual(result.question_argument, "userQuestion")
+        self.assertEqual(len(result.input_schema_sha256), 64)
+        session = self.factory.sessions[0]
+        self.assertEqual([call["message"]["method"] for call in session.calls],
+                         ["initialize", "notifications/initialized", "tools/list"])
+        self.assertEqual(len(session.deletes), 1)
+        self.assertTrue(session.closed)
+        self.assertNotIn("question-request.body", self.emitted)
+        self.assertEqual(self.submissions, 0)
+
+    def test_native_notification_plaintext_ack_is_not_rpc(self):
+        self.factory.configure = lambda session: setattr(session, "notification_body", b"Accepted")
+        self.client.preflight(self.emit)
+        self.assertEqual(self.emitted["initialized-reply.body"], b"Accepted")
+        self.assertEqual(json.loads(self.emitted["initialized-http.json"])["status"], 202)
+
+    def test_arbitrary_notification_body_or_error_is_not_ignored(self):
+        for status, body, mime in (
+            (202, b"Error", "text/plain"), (200, b"Accepted", "text/plain"),
+            (202, b"Accepted!", "text/plain"), (202, b"Accepted", "application/json"),
+            (202, b'{"error":{"code":-1}}', "application/json"),
+        ):
+            factory = Factory()
+            def configure(session):
+                session.notification_status = status
+                session.notification_body = body
+                session.notification_mime = mime
+            factory.configure = configure
+            client = mcp.NativeMcpClient(config(), self.credential, 17, session_factory=factory)
+            with self.subTest(status=status, body=body), self.assertRaises(mcp.McpFailure):
+                client.preflight(lambda *_: None)
+            self.assertEqual(len(factory.sessions[0].calls), 2)
+            self.assertTrue(factory.sessions[0].closed)
+
+    def test_every_preflight_and_cleanup_request_carries_skill_attribution(self):
+        client = mcp.NativeMcpClient(config(), self.credential, 17, session_factory=self.factory, skill_name="spark-cli")
+        client.preflight(self.emit)
+        session = self.factory.sessions[0]
+        for call in session.calls + session.deletes:
+            self.assertEqual(call["headers"]["x-ms-fabric-skill"], "spark-cli")
+            self.assertEqual(call["headers"]["Authorization"], "Bearer offline-placeholder")
+        self.assertNotIn(b"offline-placeholder", b"".join(self.emitted.values()))
+
+    def test_question_requests_also_carry_attribution(self):
+        self.client.ask("Fixture", self.emit, self.submitted)
+        self.assertTrue(all(call["headers"]["x-ms-fabric-skill"] == mcp.SKILL
+                            for call in self.factory.sessions[0].calls))
+
+    def test_stateless_preflight_has_no_invented_cleanup_handle(self):
+        self.factory.configure = lambda session: setattr(session, "session_id", None)
+        self.assertIsNone(self.client.preflight(self.emit).mcp_session_id)
+        self.assertEqual(self.factory.sessions[0].deletes, [])
+
+    def test_cleanup_failure_cannot_report_success(self):
+        self.factory.configure = lambda session: setattr(session, "delete_status", 500)
+        with self.assertRaises(mcp.McpFailure):
+            self.client.preflight(self.emit)
+        self.assertIn("session-close-http.json", self.emitted)
+        self.assertTrue(self.factory.sessions[0].closed)
+
+    def test_failed_discovery_keeps_original_error_and_cleanup_evidence(self):
+        def configure(session):
+            session.tools = []
+            session.delete_status = 500
+        self.factory.configure = configure
+        with self.assertRaisesRegex(ne.EvaluationError, "exactly one"):
+            self.client.preflight(self.emit)
+        self.assertIn("session-close-error.json", self.emitted)
+
+    def test_bad_timeout_or_skill_rejected_without_authentication(self):
+        for timeout in (0, -1, True, float("nan"), float("inf")):
+            with self.assertRaises(ne.EvaluationError):
+                mcp.NativeMcpClient(config(), self.credential, timeout)
+        for skill in ("", "person@example.com", "name\r\nOther: value"):
+            with self.assertRaises(ne.EvaluationError):
+                mcp.NativeMcpClient(config(), self.credential, 17, skill_name=skill)
+        self.assertEqual(self.credential.scopes, [])
+
+
+class NotebookCredentialTests(unittest.TestCase):
+    def setUp(self):
+        self.context = UserDict({
+            "productType": "Fabric", "currentNotebookId": str(UUID(int=3)),
+            "currentNotebookName": "Owned_Preflight", "currentWorkspaceId": str(UUID(int=1)),
+            "isForPipeline": False, "isReferenceRun": False, "isForInteractive": False,
+            "defaultLakehouseId": None,
+        })
+        self.provider = MagicMock(return_value="offline-managed-token")
+        self.module = SimpleNamespace(runtime=SimpleNamespace(context=self.context),
+                                      credentials=SimpleNamespace(getToken=self.provider))
+        self.credential = mcp.NotebookMcpCredential(
+            self.module, notebook_id=str(UUID(int=3)), notebook_name="Owned_Preflight",
+            workspace_id=str(UUID(int=1)),
+        )
+
+    def test_non_dict_mapping_uses_documented_managed_auth(self):
+        self.assertNotIsInstance(self.context, dict)
+        self.assertEqual(self.credential.get_token(mcp.SCOPE).token, "offline-managed-token")
+        self.provider.assert_called_once_with("pbi")
+
+    def test_identity_execution_and_source_gates_hold_before_authentication(self):
+        for key, value in (
+            ("productType", "Another"), ("currentNotebookId", str(UUID(int=4))),
+            ("currentWorkspaceId", str(UUID(int=4))), ("currentNotebookName", "Another"),
+            ("isForPipeline", True), ("isReferenceRun", True),
+            ("isForInteractive", None), ("defaultLakehouseId", str(UUID(int=4))),
+        ):
+            previous = self.context[key]
+            self.context[key] = value
+            with self.subTest(key=key), self.assertRaises(ne.EvaluationError):
+                self.credential.get_token(mcp.SCOPE)
+            self.context[key] = previous
+        self.provider.assert_not_called()
+
+    def test_missing_field_is_not_silently_defaulted(self):
+        del self.context["defaultLakehouseId"]
+        with self.assertRaises(ne.EvaluationError):
+            self.credential.get_token(mcp.SCOPE)
+        self.provider.assert_not_called()
+
+    def test_scope_and_token_guards_do_not_fall_back(self):
+        with self.assertRaises(ne.EvaluationError):
+            self.credential.get_token("https://other.invalid")
+        self.provider.assert_not_called()
+        for token in ("", "value\nheader", None):
+            self.provider.return_value = token
+            with self.assertRaises(ne.EvaluationError):
+                self.credential.get_token(mcp.SCOPE)
+
+
+class PreflightCommandTests(unittest.TestCase):
+    def args(self, path):
+        return ["--workspace-id", str(UUID(int=1)), "--data-agent-id", str(UUID(int=2)),
+                "--out", str(path)]
+
+    def test_no_connection_without_explicit_authority(self):
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / "unused"
+            with patch.object(preflight_mcp, "NativeMcpClient") as client:
+                with self.assertRaises(SystemExit):
+                    preflight_mcp.main(self.args(out))
+            client.assert_not_called()
+            self.assertFalse(out.exists())
+
+    def test_used_intent_is_never_reset(self):
+        with tempfile.TemporaryDirectory() as temp:
+            with patch.object(preflight_mcp, "NativeMcpClient") as client:
+                with self.assertRaises(SystemExit):
+                    preflight_mcp.main(self.args(Path(temp)) + ["--allow-connect"])
+            client.assert_not_called()
+
+    def test_command_has_no_question_path_and_records_native_discovery(self):
+        with tempfile.TemporaryDirectory() as temp:
+            out = Path(temp) / "preflight"
+            discovery = mcp.McpDiscovery("fixture", "question", "a" * 64, None)
+            with patch("azure.identity.AzureCliCredential", return_value=Credential()):
+                with patch.object(preflight_mcp, "NativeMcpClient") as client:
+                    client.return_value.config = config()
+                    client.return_value.preflight.return_value = discovery
+                    self.assertEqual(preflight_mcp.main(self.args(out) + ["--allow-connect"]), 0)
+                    client.return_value.ask.assert_not_called()
+            self.assertEqual(json.loads((out / "intent.json").read_bytes())["questionSubmissionsAllowed"], 0)
+            self.assertEqual(json.loads((out / "result.json").read_bytes())["question_submissions"], 0)
 
 
 class CaptureAndGradeTests(unittest.TestCase):

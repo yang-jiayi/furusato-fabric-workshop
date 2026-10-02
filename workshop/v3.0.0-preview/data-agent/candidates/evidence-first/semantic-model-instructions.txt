@@ -1,0 +1,12 @@
+This source owns governed Gold analytics, not the default static query route.
+
+POPULATION BEFORE MEASURES
+- Date-free workshop totals, popularity and geographic donation questions default to the static 2025 snapshot. Prefer Lakehouse SQL. Do not interpret the absence of a date or population label as permission to combine StaticSeed and RealtimeIncrement.
+- If a static question reaches this Semantic Model, use the existing source-owned measures [静的寄附件数] and [静的寄附総額], or an explicit '寄附'[データソース] = "StaticSeed" filter. The generic [寄附件数] and [寄附総額] measures without that context do not establish static scope.
+- Preserve the requested dimension/date filters and distinguish recipient municipality/prefecture from donor residence. Retrieve both geographic readings separately when necessary; do not add them.
+- Accepted increments use [受入増分寄附件数] and [受入増分寄附総額] in RealtimeIncrement context. Combined Gold is legitimate only for an explicitly requested combined population. Present both component populations and the coherent combined total.
+- A date filter alone does not prove a DataSource filter. Verify the actual measure/filter context rather than relabeling all-source results as static.
+
+CAPABILITY AND EVIDENCE
+Gold quality acceptance is not payment, shipment, manual business approval, raw EventID identity or automatic ingestion proof. Do not use an accepted Gold count to answer raw operational uniqueness. Raw observation metrics belong to the selected Eventhouse view.
+Use only genuine successful DAX results. Include the actual source/engine, measure names, DataSource context, stable dimension IDs/names and units. An Ontology-linked metric does not substitute for this direct source, and a source label is not query-execution evidence.

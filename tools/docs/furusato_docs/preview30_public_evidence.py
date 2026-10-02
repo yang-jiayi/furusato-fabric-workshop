@@ -16,12 +16,13 @@ from . import preview30_evidence as private
 SCHEMA = "furusato-preview30-public-evidence/v1"
 DEFAULT_RELATIVE = Path("docs") / "assets" / "v3-preview-evidence" / "manifest.json"
 SCOPE = "historical-observed-run"
-ROOT_FIELDS = {"schemaVersion", "scope", "approved", "reviewedAt", "reviewer", "freezeStatus", "captures", "labs", "originalSuiteRuns", "evaluationReport"}
+LEGACY_ORIGINAL_SUITE_RUN_ID = "compat-native-ui-final"
+ROOT_FIELDS = {"schemaVersion", "scope", "approved", "reviewedAt", "reviewer", "freezeStatus", "captures", "labs", "originalSuiteRuns", "evaluationReport", "selectedOriginalSuiteRunId"}
 FREEZE_STATUSES = {"awaiting-final-consumer-proof", "evidence-frozen-awaiting-runtime-seal", "frozen-for-build"}
 CAPTURE_FIELDS = {"id", "file", "sha256", "originalSha256", "capturedAt", "reviewedAt", "actualUI", "experience", "privacyReview", "completionEvidence", "caption"}
 LAB_FIELDS = {"status", "reason", "evidenceIds", "executionAndReadbackObserved", "functionalBindingVerified", "intent", "invariants", "approvedDelta", "observedDelta", "knownIssue"}
 RUN_FIELDS = {"id", "label", "observedAt", "questionCount", "conditionCount", "submittedQuestions", "preblockedQuestions", "counts", "failureCounts", "independentExecutionTraces", "freshBackendProof", "promoted", "accepted", "summary"}
-RUN_OPTIONAL_FIELDS = {"notApplicableReason", "method"}
+RUN_OPTIONAL_FIELDS = {"notApplicableReason", "method", "caseAggregates"}
 VERDICTS = {"pass", "fail", "executionUnverified", "blocked", "notApplicable"}
 PRIVATE_TEXT = re.compile(
     private.PRIVATE_TEXT.pattern + r"|https?://|\\\\[^\\\s]+\\|/(?:Users|home|tmp|mnt|var)/|"
@@ -73,9 +74,12 @@ def integer(value, field, maximum=84):
 
 def run_method(value, submitted, traced_questions, fresh_backend):
     fields = {"surface", "transport", "stage", "runtime", "recordedModel", "judgment", "distinctBackendConversationsProven", "sourceExecutions", "causalAbClaimed"}
-    exact_fields(value, fields, "run method", fields)
+    optional = {"successfulSourceExecutions", "rejectedSourceAttempts"}
+    exact_fields(value, fields | optional, "run method", fields)
     if value["surface"] not in {"published-mcp", "native-ui"} or value["transport"] not in {"mcp", "responses"}:
         raise ValueError("Unknown evaluation surface/transport; diagnostics are separate records")
+    if (value["surface"], value["transport"]) not in {("published-mcp", "mcp"), ("native-ui", "responses")}:
+        raise ValueError("Evaluation surface and transport do not match")
     if value["judgment"] not in {"recorded-rubric-assessment", "manual-fixed-rubric-offline"}:
         raise ValueError("Unknown fixed-rubric judgment method")
     for key in ("stage", "runtime", "recordedModel"):
@@ -86,14 +90,96 @@ def run_method(value, submitted, traced_questions, fresh_backend):
         raise ValueError("Fresh-backend proof requires distinct conversation proof for every submitted question")
     executions = value["sourceExecutions"]
     if executions is not None:
-        exact_fields(executions, {"sql", "gql", "kql"}, "source executions", {"sql", "gql", "kql"})
+        exact_fields(executions, {"sql", "gql", "kql", "dax"}, "source executions", {"sql", "gql", "kql"})
         if sum(integer(executions[key], key, 1000) for key in executions) < traced_questions:
             raise ValueError("Execution-call counts cannot be smaller than independently traced question slots")
     elif traced_questions:
         raise ValueError("Traced questions require actual execution counts in the method record")
+    if optional.intersection(value):
+        if not optional.issubset(value) or executions is None:
+            raise ValueError("Separate success/rejection counts require both records and attempt counts")
+        for field in optional:
+            exact_fields(value[field], set(executions), field, set(executions))
+            for key in executions:
+                integer(value[field][key], field + " " + key, 1000)
+        for key in executions:
+            if value["successfulSourceExecutions"][key] + value["rejectedSourceAttempts"][key] != executions[key]:
+                raise ValueError("Successful/rejected source calls do not reconcile to attempts")
+        if sum(value["successfulSourceExecutions"].values()) < traced_questions:
+            raise ValueError("Successful source calls cannot be smaller than successfully traced question slots")
     if value["causalAbClaimed"] is not False:
         raise ValueError("These differently routed/transported runs do not establish a causal A/B")
     return value
+
+
+def case_aggregates(values, run):
+    """Only aggregate decisions/call counts; no questions, answers or criteria."""
+    if not isinstance(values, list) or len(values) != 10:
+        raise ValueError("Case aggregates must retain all ten original cases")
+    totals = {key: 0 for key in VERDICTS}
+    attempts, successful, rejected, traced, native_failures = 0, 0, 0, 0, 0
+    condition_counts = (7, 6, 6, 11, 14, 10, 8, 7, 8, 7)
+    fields = {"case", "counts", "sourceAttempts", "successfulSourceExecutions", "rejectedSourceAttempts", "nativeGate"}
+    optional = {"completedNativeResponse", "successfulQueryLanguages"}
+    for index, value in enumerate(values):
+        exact_fields(value, fields | optional, "case aggregate", fields)
+        if value["case"] != f"T{index + 1:02d}" or type(value["nativeGate"]) is not bool:
+            raise ValueError("Original case order and explicit native-gate flag are required")
+        exact_fields(value["counts"], VERDICTS, "case counts", VERDICTS)
+        counts = {key: integer(value["counts"][key], "case " + key) for key in VERDICTS}
+        if sum(counts.values()) != condition_counts[index]:
+            raise ValueError("An original case condition denominator changed")
+        for key in totals:
+            totals[key] += counts[key]
+        current_attempts = integer(value["sourceAttempts"], "sourceAttempts", 1000)
+        current_success = integer(value["successfulSourceExecutions"], "successfulSourceExecutions", 1000)
+        current_rejected = integer(value["rejectedSourceAttempts"], "rejectedSourceAttempts", 1000)
+        if current_success + current_rejected != current_attempts:
+            raise ValueError("Case source attempts do not reconcile")
+        if "completedNativeResponse" in value and type(value["completedNativeResponse"]) is not bool:
+            raise ValueError("Native response completion must be an explicit boolean")
+        if "successfulQueryLanguages" in value:
+            languages = value["successfulQueryLanguages"]
+            if (
+                not isinstance(languages, list)
+                or any(not isinstance(language, str) or language not in {"sql", "gql", "kql", "dax"} for language in languages)
+                or len(set(languages)) != len(languages)
+                or len(languages) > current_success
+            ):
+                raise ValueError("Successful query languages need distinct actual successful calls")
+        attempts += current_attempts
+        successful += current_success
+        rejected += current_rejected
+        traced += current_success > 0
+        if value["nativeGate"]:
+            if counts["pass"] or counts["fail"] != condition_counts[index]:
+                raise ValueError("A native fixed block cannot receive contextual acceptance")
+            native_failures += counts["fail"]
+    if totals != run["counts"] or native_failures != run["failureCounts"]["nativeAcceptance"] or traced != run["independentExecutionTraces"]:
+        raise ValueError("Case decisions/proof do not reconcile to the reviewed run")
+    method = run.get("method", {})
+    for field, expected in (("sourceExecutions", attempts), ("successfulSourceExecutions", successful), ("rejectedSourceAttempts", rejected)):
+        if field not in method or sum(method[field].values()) != expected:
+            raise ValueError("Case call counts do not reconcile to the reviewed method")
+    return values
+
+
+def original_execution_proof(run, traced_questions):
+    if traced_questions == 10:
+        return True
+    cases = run.get("caseAggregates")
+    if not cases or run.get("method", {}).get("surface") != "native-ui":
+        return False
+    required = (
+        {"sql"}, {"sql"}, {"sql"}, {"gql"}, {"sql", "gql"},
+        {"kql"}, {"kql"}, set(), {"sql", "kql", "gql"}, set(),
+    )
+    # Contextual refusals need a completed native response, not invented queries.
+    return all(
+        case.get("completedNativeResponse") is True
+        and languages.issubset(case.get("successfulQueryLanguages", []))
+        for case, languages in zip(cases, required)
+    )
 
 
 def suite_runs(values):
@@ -132,12 +218,38 @@ def suite_runs(values):
         traces = integer(value["independentExecutionTraces"], "independentExecutionTraces", submitted)
         if any(type(value[key]) is not bool for key in ("freshBackendProof", "promoted", "accepted")):
             raise ValueError("Run proof/promotion/acceptance flags must be explicit booleans")
-        if value["accepted"] and (counts["pass"] < 1 or counts["pass"] + counts["notApplicable"] != 84 or submitted != 10 or traces != 10 or not value["freshBackendProof"]):
-            raise ValueError("Aggregate agreement without complete execution proof is not original-suite acceptance")
         if "method" in value:
             run_method(value["method"], submitted, traces, value["freshBackendProof"])
-        result.append({**value, "counts": counts, "failureCounts": failures})
+        normalized = {**value, "counts": counts, "failureCounts": failures}
+        if "caseAggregates" in value:
+            case_aggregates(value["caseAggregates"], normalized)
+        if value["accepted"] and (
+            counts["pass"] < 1 or counts["pass"] + counts["notApplicable"] != 84
+            or submitted != 10 or not value["freshBackendProof"]
+            or not original_execution_proof(normalized, traces)
+        ):
+            raise ValueError("Aggregate agreement without complete execution proof is not original-suite acceptance")
+        result.append(normalized)
     return result
+
+
+def selected_original_suite_run(value, *, required=False):
+    explicit = "selectedOriginalSuiteRunId" in value
+    ident = value["selectedOriginalSuiteRunId"] if explicit else LEGACY_ORIGINAL_SUITE_RUN_ID
+    if not isinstance(ident, str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", ident):
+        raise ValueError("Selected original-suite run needs a portable run id")
+    safe_text(ident, "selected original-suite run id")
+    matches = [run for run in value.get("originalSuiteRuns", []) if run["id"] == ident]
+    if not matches and not explicit and not required:
+        return None
+    if len(matches) != 1:
+        raise ValueError("Selected original-suite run must identify exactly one originalSuiteRuns entry")
+    selected = matches[0]
+    if ident != LEGACY_ORIGINAL_SUITE_RUN_ID:
+        if "caseAggregates" not in selected:
+            raise ValueError("A nonlegacy selected run requires fully validated caseAggregates")
+        selected = suite_runs([selected])[0]
+    return selected
 
 
 def public_file(base: Path, value: str, expected: str, root: Path):
@@ -159,7 +271,15 @@ def load(path: Path, *, root: Path | None = None):
     path = path.resolve()
     if not path.is_relative_to(root) or not path.is_file():
         raise ValueError("Public projection must be an existing file inside the clean source root")
-    data = json.loads(path.read_text(encoding="utf-8"))
+    def selection_fields(pairs):
+        value = {}
+        for key, item in pairs:
+            if key == "selectedOriginalSuiteRunId" and key in value:
+                raise ValueError("Duplicate selectedOriginalSuiteRunId field")
+            value[key] = item
+        return value
+
+    data = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=selection_fields)
     required_root = {"schemaVersion", "scope", "approved", "reviewedAt", "reviewer", "captures", "labs"}
     exact_fields(data, ROOT_FIELDS, "public projection", required_root)
     if data["schemaVersion"] != SCHEMA or data["scope"] != SCOPE or data["approved"] is not True:
@@ -233,6 +353,8 @@ def load(path: Path, *, root: Path | None = None):
     runs = suite_runs(data.get("originalSuiteRuns", []))
     if any(timestamp(run["observedAt"], "run observedAt") > reviewed_at for run in runs):
         raise ValueError("A run observed after the public review cannot be approved by that review")
+    if "selectedOriginalSuiteRunId" in data:
+        selected_original_suite_run({**data, "originalSuiteRuns": runs}, required=True)
     if labs["evaluation"]["status"] == "passed" and not any(run["accepted"] for run in runs):
         raise ValueError("Evaluation cannot pass while all supplied original-suite runs are unaccepted")
     projected_evaluation = None
@@ -243,13 +365,16 @@ def load(path: Path, *, root: Path | None = None):
         public_strings(projected_evaluation, "public evaluator text")
         if timestamp(projected_evaluation["generated_at_utc"], "evaluator timestamp") > reviewed_at:
             raise ValueError("Evaluator snapshot postdates the public review")
-    return {
+    result = {
         "captures": captures, "labs": labs, "complete": complete,
         "scope": SCOPE, "publicProjection": True, "reviewedAt": data["reviewedAt"],
         "freezeStatus": freeze_status,
         "projectionSha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "originalSuiteRuns": runs, "evaluationProjection": projected_evaluation,
     }
+    if "selectedOriginalSuiteRunId" in data:
+        result["selectedOriginalSuiteRunId"] = data["selectedOriginalSuiteRunId"]
+    return result
 
 
 def resolve(private_path=None, public_path=None, *, root=None):

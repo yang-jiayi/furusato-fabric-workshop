@@ -22,16 +22,18 @@ from furusato_html.model import Block, Document, Section, Text, build_document
 from . import preview30_evidence
 from . import preview30_evaluation
 from . import preview30_public_evidence
+from . import preview30_reporting
+from . import preview30_release as release
 from .context import load_context
 from .facts import compute_facts
 from .oox import StyleCarrier
 from .tests10 import build_tests
 
-VERSION = "3.0.0-preview"
+VERSION = release.PREVIEW.version
 PREVIEW_NOTICE_JA = "実装・検証結果を収録したPreview — AI回答品質は未合格／GAではありません"
 PREVIEW_NOTICE_EN = "Preview with implementation and verification results — AI answer quality not accepted; not GA"
-WORD_NAME = "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-preview.docx"
-HTML_NAME = "furusato-workshop-v3-0-0-preview-complete.html"
+WORD_NAME = release.PREVIEW.word_name
+HTML_NAME = release.PREVIEW.html_name
 OFFICIAL_BASE = "https://learn.microsoft.com/en-us/fabric/iq/ontology/"
 DEFINITION_DOC = "https://learn.microsoft.com/en-us/rest/api/fabric/articles/item-management/definitions/ontology-definition"
 CREATE_DOC = "https://learn.microsoft.com/en-us/rest/api/fabric/ontology/items/create-ontology"
@@ -1042,9 +1044,19 @@ def runtime_candidate_sections(roots, root):
             "gate"),
     ])
 
-def current_receipt_sections(roots):
+def current_receipt_sections(roots, selected_run=None):
     r = {section.chapter: section for section in roots if section.chapter}
-    sub(r[1], "4", ("実装・検証結果を収録したPreviewの範囲", "Scope of the implementation-and-verification Preview"), [
+    suite_progress = [
+        ("最終Compat NativeUIは10問各1回、48 PASS/36 FAIL、未検証/N/A/前提blockedは0。", "Final Compat NativeUI: ten questions once,48 PASS/36 FAIL, zero unverified/N/A/preblocked."),
+        ("FAIL29は内容/要求証拠、7はT10 native gate。過去MCPと因果A/Bにせず、main未promotion・品質未合格。", "29 FAILs concern content/required evidence; seven are the T10 native gate. Not a causal MCP A/B; main unpromoted and quality not accepted."),
+    ]
+    if selected_run is not None:
+        suite_progress = [
+            (f"明示選択 {selected_run['id']}: {preview30_reporting.counts_text(selected_run)}。",
+             f"Explicit selection {selected_run['id']}: {preview30_reporting.counts_text(selected_run)}."),
+            preview30_reporting.selection_notice(selected_run),
+        ]
+    overview = sub(r[1], "4", ("実装・検証結果を収録したPreviewの範囲", "Scope of the implementation-and-verification Preview"), [
         p(
             "2026-09-30のローカル統合では、既存の実画面・保存定義・実行receiptを読んで反映しました。通常認証済みのiframe-aware Edgeで取得された記録であり、古い認証待ち状態ではありません。この文書作業自体はクラウド操作・再質問・再取込・GitHub公開を行っていません。",
             "This 2026-09-30 local integration reviews existing native captures, saved definitions and execution receipts. They were obtained through normally authenticated iframe-aware Edge, not the earlier authentication-blocked state. This document phase performs no cloud action, new question, re-ingestion or GitHub publication."),
@@ -1061,8 +1073,7 @@ def current_receipt_sections(roots):
                  ("15,000 raw file行はEventhouse到着数ではない。", "15,000 raw file rows are not Eventhouse arrival counts.")],
                 [("native TS query、static companion Graph、CI smoke、RDF構造往復を別々に実証。", "Native TS querying, static-companion Graph, CI smoke and structural RDF cycle verified separately."),
                  ("TS Graph、direct dashboard、Metric-rich復元、全AI評価へ一般化しない。", "Do not generalize to TS Graph, direct dashboard, Metric-rich restore or full AI acceptance.")],
-                [("最終Compat NativeUIは10問各1回、48 PASS/36 FAIL、未検証/N/A/前提blockedは0。", "Final Compat NativeUI: ten questions once,48 PASS/36 FAIL, zero unverified/N/A/preblocked."),
-                 ("FAIL29は内容/要求証拠、7はT10 native gate。過去MCPと因果A/Bにせず、main未promotion・品質未合格。", "29 FAILs concern content/required evidence; seven are the T10 native gate. Not a causal MCP A/B; main unpromoted and quality not accepted.")],
+                suite_progress,
             ], ("証拠のある部分成功を記録し、失敗・未確認を保持", "Record evidenced subtest success without erasing failures or unknowns")),
         note(
             "これは観測runの証拠で、次の新配置がreadyであるというruntime契約ではありません。PreviewはGAではなく、既知の失敗・環境条件付き未提供laneを残します。各章のstatusと最終AI候補の独立評価を読み、局所成功やローカル文書testを全機能/84条件の合格へ変換しません。",
@@ -1149,6 +1160,13 @@ def current_receipt_sections(roots):
             "Goldの受入済みはNotebook05のquality gateを通過した分析行という意味です。manual approval、支払・発送状態、Eventhouse自動配送や元84条件の合格を推測しません。添付の生成・再buildは所有者のfreeze工程で行い、読者の本番環境へ自動適用しません。",
             "Gold accepted means analytical rows passing Notebook05 quality gates. Infer neither manual approval, payment/shipment state, Eventhouse automatic delivery nor original84 acceptance. Attachment regeneration belongs to the owner's freeze workflow, not automatic application to a reader's production environment.",
             "gate"),
+        p(
+            "その後の別のmatched Plan比較では、同一の新しいpromptをfresh会話で各1回送信し、Aは添付0、Bは現行Gold-awareのPDF・辞書TXT・方向付きPNG・改訂要求TXTの4ファイルを使用しました。Aは未提供のレイヤー定義を作らず、Bは資料中のStaticSeed／品質受入増分と実Bindingを区別しました。両方でDonationQualityScopeとDataLayer:Stringのkeyless／unboundなreadonly提案を開き、保存定義は不変でした。",
+            "A later, separate matched Plan comparison submitted the same new prompt once in each fresh conversation: A used no attachments; B used the current Gold-aware PDF, dictionary TXT, directed PNG and revision-request TXT. A did not invent absent layer definitions; B distinguished document-defined StaticSeed/quality-accepted increment from actual bindings. Both opened a readonly, keyless/unbound DonationQualityScope proposal with DataLayer:String; the saved definition remained unchanged."),
+        note(
+            "この比較ではApprove／Act／Save／materializeを行っていません。BのError0／Warning1はnative応答の報告であり、独立した内部実行traceや提案全体のstable IDs／shared refs検査ではありません。旧3ファイルの比較、実データ取込、元84条件の合格、一般母集団の精度とは別に記録します。",
+            "No Approve, Act, Save or materialization was performed. B's reported Error0/Warning1 is native response content, not an independently exposed internal trace or a complete proposed stable-ID/shared-reference check. Keep this comparison separate from the earlier three-file pair, physical ingestion, original84 acceptance and general-population accuracy.",
+            "gate"),
     ])
     sub(r[17], "4", ("主DraftのSQL＋CI実行と標準評価の分離", "Main-Draft SQL/CI execution, separate from standard evaluation"), [
         p(
@@ -1193,10 +1211,16 @@ def current_receipt_sections(roots):
             "The 100% denominator is the reduced candidate's 98 objects. Candidate→export rewrote 73 labels, widened 41 xsd:long ranges to xsd:integer, changed the ontology label and lost its comment/versionInfo. Original custom Fabric annotations/SKOS altLabel/bindings/keys/TS behavior were omitted from the candidate: this is not a lossless legacy round trip. Its 73 datatype declarations are also distinct from the primary core's 73 static plus one TS.",
             "gate"),
     ])
-    completion30_sections(roots)
+    if selected_run is not None:
+        overview.blocks.insert(0, note(
+            "下のfeature receiptは既存のscope付き履歴です。選択runの新規再確認へ流用せず、元suiteの現在の選択を19.10節で区別します。",
+            "The feature receipts below retain their existing historical scopes. They are not new rechecks by the selected run; its original-suite selection is separated in19.10.",
+            "gate",
+        ))
+    completion30_sections(roots, selected_run)
 
 
-def completion30_sections(roots):
+def completion30_sections(roots, selected_run=None):
     r = {section.chapter: section for section in roots if section.chapter}
     sub(r[4], "5", ("観測済みrunと新環境のreadyを分ける", "Separate observed runs from readiness in a new environment"), [
         note(
@@ -1252,7 +1276,7 @@ def completion30_sections(roots):
             "Use only the actual capture excluding the private Source header; keep the raw environment-bearing image private. UI smoke or selected-subset counts are not original84 answer credit or revalidation of the entire graph.",
             "gate"),
     ])
-    sub(r[17], "5", ("Graph readinessとData Agent consumer互換性の分離", "Graph readiness is not Data Agent consumer compatibility"), [
+    connector_history = sub(r[17], "5", ("Graph readinessとData Agent consumer互換性の分離", "Graph readiness is not Data Agent consumer compatibility"), [
         p(
             "Contextのpublished-MCP採点とは別に、native UIのT04診断で正しいgeneration2 Relationships itemへのconnector stepを確認しました。Publishから約40分後でも、次の実エラーでした。Graphとnative Ontology agentのdirect routeは既に動作確認済みなので、Graph/data不在をこの診断のroot causeと説明しません。",
             "Separately from published-MCP grading, native UI T04 diagnostics captured a connector step targeting the correct generation2 Relationships item. About40 minutes after publication, it returned the actual error below. Direct Graph and native Ontology agent routes already work; do not describe Graph/data absence as the root cause of this diagnostic."),
@@ -1264,7 +1288,7 @@ def completion30_sections(roots):
             "This is a failure of the Data Agent generation2 connector consumer path in this run. It is not a universal product/tenant limitation, an explanation of every FAIL in another run, correct contextual refusal or successful query execution. Keep native UI/SDK qualification and fresh-conversation evidence separate from the MCP39/38/4/3 ledger.",
             "stop"),
     ])
-    sub(r[17], "6", ("Clear chatの確認と独立native UI診断", "Confirm Clear chat and keep native UI diagnostics separate"), [
+    native_history = sub(r[17], "6", ("Clear chatの確認と独立native UI診断", "Confirm Clear chat and keep native UI diagnostics separate"), [
         p(
             "Clear chatを押しただけでは新会話とは限りません。CONFIRMまで完了し、公式diagnosticsのconversation IDが前runと異なること、user messageが1件であることをprivateに確認します。最初に確認を完了しなかった共有会話T06のclarificationは保存し、独立runの証明から除外しました。",
             "Clicking Clear chat alone does not prove a new conversation. Complete CONFIRM, then privately verify the official diagnostic conversation ID differs from the prior run and contains one user message. Retain the earlier shared-conversation T06 clarification whose confirmation was not completed, but exclude it from isolated-run proof."),
@@ -1276,7 +1300,7 @@ def completion30_sections(roots):
             "Do not infer the model/runtime from the UI banner; record official diagnostic recordedModel/runtime/stage when present. This diagnostic recorded gpt-5.6-terra / preview / sandbox. It does not isolate transport, isolation or stochastic variation as the cause. Final prose called business-observation periods arrival periods without querying actual upload/ingestion timing, so do not call the answer perfect.",
             "gate"),
     ])
-    sub(r[17], "7", ("最終Compat NativeUIの方法とpostcheck", "Final Compat NativeUI method and postcheck"), [
+    consumer = sub(r[17], "7", ("最終Compat NativeUIの方法とpostcheck", "Final Compat NativeUI method and postcheck"), [
         p(
             "最終固定rubric判定はcoordinatorがofflineで行い、元10問を各1回、84条件を変更せず48 PASS/36 FAILでした。公式diagnosticsで異なる10 backend会話を確認し、source実行は9回（SQL5/GQL2/KQL2）、実行証拠がある質問slotは7です。runtime=preview、stage=sandbox、recorded model=gpt-5.6-terraで、UI bannerの推測ではありません。",
             "The coordinator completed offline judgment against the unchanged fixed rubric: ten original questions once,84 conditions,48 PASS/36 FAIL. Official diagnostics prove ten distinct backend conversations and nine source executions (SQL5/GQL2/KQL2), covering seven question slots with execution evidence. Runtime=preview, stage=sandbox and recorded model=gpt-5.6-terra come from diagnostics, not banner inference."),
@@ -1299,10 +1323,93 @@ def completion30_sections(roots):
         p(OFFICIAL_BASE + "how-to-use-namespaces", OFFICIAL_BASE + "how-to-use-namespaces"),
         p(OFFICIAL_BASE + "how-to-use-ontology-mcp-server", OFFICIAL_BASE + "how-to-use-ontology-mcp-server"),
     ])
-    sub(r[20], "6", ("外部Responses SDK資格確認の限定blocker", "Scoped blocker in external Responses SDK qualification"), [
+    sdk = sub(r[20], "6", ("外部Responses SDK資格確認の限定blocker", "Scoped blocker in external Responses SDK qualification"), [
         p(
             "外部SDKはimportとmetadata認証まで確認できましたが、当該Windows/Python環境ではFabric runtime service-discovery module不足によりruntime discoveryがblockedとなり、質問送信は0でした。native UIのconsumer証拠とは別で、全環境・tenantでSDKが使えないとは主張しません。dependency/hostを別途資格確認し、未取得の実行証拠を捏造しません。",
             "The external SDK imported and authenticated metadata, but runtime discovery was blocked in this Windows/Python environment by a missing Fabric runtime service-discovery module; zero questions were submitted. This is separate from native UI consumer evidence and does not claim universal SDK failure across environments or tenants. Qualify the dependency/host separately; do not invent missing execution proof."),
+    ])
+    if selected_run is not None:
+        context = preview30_reporting.selected_context()
+        for section in (connector_history, native_history):
+            section.blocks.insert(0, note(
+                "この診断は保存した過去runだけの観測です。選択runのT04/期間/connector状態として再使用しません。",
+                "This diagnostic is an observation of its retained historical run only, not the selected run's T04/window/connector status.",
+                "gate",
+            ))
+        consumer.title = t("17.7 明示選択runの方法と未再確認のcontext", "17.7 Explicitly selected method and context not newly rechecked")
+        consumer.blocks = [
+            p(*preview30_reporting.selection_notice(selected_run)),
+            table([("記録", "Record"), ("値", "Value")], preview30_reporting.method_rows(selected_run),
+                  ("選択runの記録だけ。別会話・native完了・query traceは別", "Selected records only; distinct conversations, native completion and query traces differ")),
+            note(*preview30_reporting.execution_completeness_notice(), "gate"),
+            *[note(value["reason"]["ja"], value["reason"]["en"], "gate")
+              for key, value in context.items() if key != "externalSdk"],
+        ]
+        sdk.title = t("20.6 選択runの外部SDK資格確認は未検証", "20.6 External SDK qualification is unverified for the selected run")
+        sdk.blocks = [note(context["externalSdk"]["reason"]["ja"], context["externalSdk"]["reason"]["en"], "gate")]
+    sub(r[20], "7", ("Ontology文脈と実行先を分ける新連携", "Separate Ontology context from source-native execution"), [
+        p(
+            "新しいOntology-as-context連携では、OntologyはEntity・property・relationship・定義・synonym・mapping・bindingの読取専用文脈を提供し、実照会は接続先のSQL/KQL/DAXで行います。旧Ontology GQLのconsumer pathやGraph実体化とは別の経路です。",
+            "In the new Ontology-as-context integration, Ontology supplies read-only entities, properties, relationships, definitions, synonyms, mappings and bindings. The underlying source executes SQL/KQL/DAX. This is distinct from the legacy Ontology GQL consumer path and Graph materialization."),
+        Block("list", {"numbered": True, "items": [t(*step) for step in [
+            ("実UIでSources→Add sources→Add an ontologyが提供される場合だけ対象Ontologyを追加し、Ontology data sourcesの実一覧を確認します。旧Add data画面や警告だけで新経路の成功とはしません。",
+             "Only when Sources → Add sources → Add an ontology is available in the actual UI, add the approved ontology and inspect its real Ontology data sources. An old Add data experience or a warning is not new-path success."),
+            ("補助source instructions・description・example queriesは、eligibleなunderlying sourceをmountしてから設定します。Ontologyの定義を書き換える操作とは分離し、Semantic Modelへの補助contextを仮定しません。",
+             "Configure supplemental instructions, descriptions and examples only after mounting an eligible underlying source. Separate this from editing Ontology definitions; do not assume supplemental context for semantic models."),
+            ("Download ontology contextを実行し、read-only contextのEntity・関係・bindingが対象モデルと一致するか確認します。文脈変更の反映は最大10分、提供されたRefreshで再読込できますが、ダウンロードした文脈を編集して動作を変更しません。",
+             "Use Download ontology context and verify the read-only entities, relationships and bindings against the intended model. Context updates can take up to ten minutes or be refreshed through the provided control; editing the downloaded context cannot change behavior."),
+            ("run stepsの選択source・実行したSQL/KQL/DAX・返却結果・errorを別々に保存します。1問でのcross-source joinやfederated execution、GQL実行、metadata表示だけの回答品質合格は仮定しません。",
+             "Retain the selected source, executed SQL/KQL/DAX, returned results and errors separately. Do not assume cross-source joins, federated execution, GQL execution or answer-quality acceptance from metadata display alone."),
+        ]]}),
+        note(
+            "新経路はPreviewです。選択後もNo data added、無効なsource、context-download未提供などで止まる場合は、定義readbackと実画面を保全してblockedにします。deleted-or-permissionという汎用警告だけで削除や権限不足を断定せず、role・tenant・rollout flagを勝手に変更しません。",
+            "This path is preview. If selection leaves No data added, a disabled source or no context-download control, preserve definition readback and actual UI and mark blocked. A generic deleted-or-permission warning does not establish deletion or denied permissions; never change roles, tenant settings or rollout flags autonomously.",
+            "gate"),
+        p(
+            "今回の別qualification itemでは、native catalogから主generation2 Ontologyを1回選択しましたが、画面はNo data addedのまま、保存定義のdatasource partも0でした。保護対象の10 Agentは不変、質問・publishは0です。新context-source mountingとDownload ontology contextがこの環境で成立したという証拠にはしません。",
+            "In a separate qualification item, the primary generation2 ontology was selected once through the native catalog, but the UI remained No data added and the saved definition contained zero datasource parts. Ten protected agents remained unchanged; questions and publications were zero. This does not qualify new context-source mounting or Download ontology context in this environment."),
+        p("https://learn.microsoft.com/fabric/data-science/data-agent-ontology-sources",
+          "https://learn.microsoft.com/fabric/data-science/data-agent-ontology-sources"),
+    ])
+    sub(r[20], "10", ("SDK管理planeとMCP runtimeの境界", "SDK management plane versus MCP runtime"), [
+        p(
+            "現行公式SDK手順は、作成・source設定・instructions・publishを管理plane、公開済みData Agentへの質問をMCP runtimeとして分離します。20.6節の旧外部Responses診断を、新しいMCP実行やSDKの普遍的な非対応へ読み替えません。",
+            "Current SDK guidance separates creation, source settings, instructions and publication on the management plane from questions to a published Data Agent on the MCP runtime. Do not reinterpret the historical external Responses diagnostic in20.6 as a new MCP execution or universal SDK failure."),
+        code("https://api.fabric.microsoft.com/v1/mcp/workspaces/<WORKSPACE_ID>/dataagents/<DATA_AGENT_ID>/agent", "text"),
+        Block("list", {"numbered": True, "items": [t(*step) for step in [
+            ("endpointは公開済みAgentのSettings→Model Context Protocolから取得し、workspace/itemをprivate receiptと照合します。Data Agent未publishの状態、Ontology endpoint、別のAgentを代用しません。",
+             "Obtain the endpoint from a published Agent's Settings → Model Context Protocol and reconcile workspace/item identities to private receipts. Do not substitute an unpublished Agent, an Ontology endpoint or another Agent."),
+            ("通常のFabric notebook-managed認証または正式なOAuth/Entra認証を使い、token・cookieは表示・配布しません。SDK内部metadata clientへ必要なheaderが届くか未確認なら、private monkeypatchや推測hostで通さず、SDK経路を別の未qualified laneとして残します。",
+             "Use normal Fabric notebook-managed authentication or official OAuth/Entra authentication; never display or distribute tokens or cookies. If required headers cannot be qualified on SDK-owned metadata clients, retain a separate unqualified SDK lane rather than using private monkeypatches or guessed hosts."),
+            ("MCPでinitialize→tools/listを実行して実tool名とschemaを確認し、承認したboundedなread-only質問を1回だけ送ります。発見だけ、completedだけ、本文中のExecuted SQLという説明だけを実source traceへ昇格しません。",
+             "Initialize MCP, discover actual tool names and schemas, then submit an approved bounded read-only question once. Discovery, completed status or prose claiming Executed SQL is not independent source-execution trace."),
+            ("旧external-clientサンプルのAssistants APIは2026-08-26でsunsetしたため、新しい演習へそのままコピーしません。元10問/84条件やheldoutをruntime smokeで再送・置換せず、別の質問・receipt・判定として保全します。",
+             "Do not copy the legacy external client's Assistants API into a new exercise after its2026-08-26 sunset. A runtime smoke must not resubmit or replace the original ten/84 or heldout; retain its different question, receipt and judgment separately."),
+        ]]}),
+        note(
+            "質問を含まない接続検査はinitialize／notifications/initialized／tools/listとcleanupだけに限定し、質問・会話・source実行の実績に数えません。全明示API要求に必須headerを付け、実HTTP／native error／完全なstdoutまたはexitValueをprivateに保全します。NotebookのCompletedだけでは接続成功や出力の完全性を証明せず、Notebook Resourcesはsession入力であって質問の永続journalではありません。質問は独立した永続intentと1回限りの送信を確保するまで無効にします。",
+            "A zero-question preflight is limited to initialize, notifications/initialized, tools/list and cleanup; it earns no question, conversation or source-execution credit. Include the required header on every explicit API request and privately retain actual HTTP/native errors and complete stdout or exitValue. A Completed notebook proves neither connectivity nor output completeness. Notebook Resources are session inputs, not a question-journal durability proof; keep questions disabled until a separate durable intent and once-only submission are established.",
+            "gate"),
+        p(
+            "専用の通常Fabric Notebookによる今回の1回の接続検査jobはCompletedでしたが、実snapshotのstdout／ExitValueではruntime-context guardが認証前に停止していました。MCP HTTP・managed token取得・質問は0です。公開Settingsのendpoint照合、Notebook実行成功、guardの失敗を分け、MCP接続成功やAgent／認証サービスの障害とはしません。失敗したonce journalは保全し、同じrunの再送や推測contextでのguard迂回は行いません。",
+            "The single preflight job in a dedicated normal Fabric notebook reached Completed, but its actual snapshot stdout/ExitValue showed a runtime-context guard failure before authentication. MCP HTTP, managed-token retrieval and questions were zero. Separate published endpoint reconciliation, notebook completion and the failed guard; claim neither MCP connectivity nor an Agent/authentication-service failure. Preserve the failed once journal without resubmitting the same run or bypassing its guard using an assumed context."),
+        p(
+            "その後の別のruntime-shape-only検査で、実contextはbuiltin dictではなくpy4jのJavaMapで、Mappingとして利用でき、Fabric・Notebook／Workspace identity・非pipeline／reference・default Lakehouseなしの各条件が実値で成立しました。dict限定のguardをMapping対応へ修正した別版でも、元のチェックと失敗原本は保持しています。",
+            "A separate runtime-shape-only diagnostic then observed a py4j JavaMap rather than a builtin dict. It implements Mapping, and actual Fabric, notebook/workspace identities, non-pipeline/non-reference flags and no-default-Lakehouse checks passed. A separately frozen Mapping-compatible variant preserves the original checks and failure records."),
+        p(
+            "さらにnativeのnotifications/initializedはHTTP202・text/plainのAcceptedを返しました。これをJSON-RPC結果としてdecodeしたlocal errorを保持し、同一の明示的なackだけを認識する別版を検証しました。最終の別宣言preflightでは、通常Notebook管理認証でinitialize200→initialized202→tools/list200、実tool名・必須string質問parameterを確認し、完全なnative frameをhash照合してtransportをcloseしました。質問・source query・source書込みは0で、SDK内部metadata-header laneと元84条件の合格は依然別の検査です。",
+            "Native notifications/initialized returned HTTP202 with text/plain Accepted. Retain the local error that tried to decode this as a JSON-RPC result; a separately qualified variant recognizes only this exact explicit acknowledgement. The final separately declared preflight used normal notebook-managed authentication for initialize200 → initialized202 → tools/list200, observed the real tool and required string question parameter, hash-verified complete native frames and closed the transport. Questions, source queries and source writes were zero; the SDK-owned metadata-header lane and original84 acceptance remain separate checks."),
+        p(
+            "再利用用のtools/data-agent/preflight_mcp.pyは、明示した接続許可と新しいprivate出力先を要求し、質問の送信経路を持ちません。NativeMcpClient.preflightとNotebookMcpCredentialを使う場合も、通常認証・期待する実行Notebook・必須header・実応答・cleanupを確認します。接続成功を理由に元質問を別経路で再送したり、回答や実行証跡を補完したりしません。",
+            "The reusable tools/data-agent/preflight_mcp.py requires explicit connection permission and a fresh private output directory, and has no question-submission path. NativeMcpClient.preflight and NotebookMcpCredential preserve normal authentication, expected notebook identity, required attribution, actual replies and cleanup. Successful connectivity is not permission to resend original questions through another route or invent answers/execution traces."),
+        note(
+            "最終用途のWord／HTML／ZIP生成にはRequireAcceptanceを使用します。明示選択した原10問・84条件、native実行証拠、全必須lab・26必須画面、正確なevidence hashに結びついた公開承認を検査し、未達なら出力前に停止します。通常のDRAFT作成や補助画像の追加は、この最終受入を代替しません。",
+            "Use RequireAcceptance for final-use Word/HTML/ZIP generation. It checks the explicitly selected original ten/84, native evidence, all required labs and 26 completion captures, plus publication approval bound to the exact evidence hash; unmet conditions stop artifact creation. Ordinary DRAFT generation and supplementary images do not replace this final admission.",
+            "gate"),
+        p("https://learn.microsoft.com/fabric/data-science/fabric-data-agent-sdk",
+          "https://learn.microsoft.com/fabric/data-science/fabric-data-agent-sdk"),
+        p("https://learn.microsoft.com/fabric/data-science/consume-data-agent-python",
+          "https://learn.microsoft.com/fabric/data-science/consume-data-agent-python"),
     ])
     sub(r[21], "5", ("binding付きlabのnative Version restore", "Native Version restore of a bound lab"), [
         p(
@@ -1311,6 +1418,13 @@ def completion30_sections(roots):
         note(
             "これは定義の復元＋既存bindingの再照合で、source-data rollbackではありません。projected Metrics/backingMeasureを持つMetric-rich itemの復元証明にも一般化せず、21.4節のnative link検査を残します。",
             "This verifies definition restoration and existing bindings, not source-data rollback. Do not generalize to restoration of Metric-rich items with projected Metrics/backingMeasure; retain the native-link checks in21.4.",
+            "gate"),
+        p(
+            "Restore確認でCreate a version of my current work firstを選ぶと、現作業を保全するVersion name／Description欄が現れます。別の画面確認ではこの状態を取得してCancelし、保存定義が完全一致のままであることを再照合しました。確認画面の取得を新しい版の作成や復元の再実行として数えず、証跡のためだけにRestoreを繰り返しません。",
+            "Selecting Create a version of my current work first in the Restore confirmation exposes Version name/Description fields for preserving current work. A separate screen inspection captured this state, cancelled and reconciled the unchanged saved definition. A confirmation capture is not a new version or another restoration; never repeat Restore merely to obtain evidence."),
+        note(
+            "別のMetric-rich検証用Ontologyでは、実10Metricのsource Model参照と現定義を固定してからnative New version→Saveを1回だけ操作しました。実consoleはHTTP400を記録し、Version historyを読取で開き直してもNo versions yetでした。基準版を確認できないため、予定した説明変更とRestoreはどちらも実行していません。Ontologyと元Semantic Modelの定義は前後完全一致です。private endpoint再送やTMDL全体の再適用はせず、この保存障害を製品側調査へ引き継ぎます。特定原因や全環境での非対応、Metric-rich復元成功は主張しません。",
+            "For a separate Metric-rich lab ontology, ten native source-model Metric links and its definition were frozen before one native New version → Save attempt. The real console recorded HTTP400, and a readonly reopen still showed No versions yet. Without a confirmed baseline version, neither the planned description edit nor Restore was performed. Ontology and source semantic-model definitions remained byte-identical. Do not resend private endpoints or replay full TMDL; retain this save failure for product investigation. No specific cause, universal lack of support or successful Metric-rich restoration is claimed.",
             "gate"),
     ])
     sub(r[23], "4", ("read-only governanceと未成立のnegative identity検査", "Read-only governance and unproven negative-identity tests"), [
@@ -1335,7 +1449,7 @@ def completion30_sections(roots):
             "The companion is create-only/CLI-only: it does not adopt an existing private item, alter primary/KQL bindings/Agent routing, or rerun/copy Notebook/data outputs. Obtain the managed Graph ID through native readback, not inference from a name. Eligible is not Completed or query acceptance. Portable implementation is not evidence of a successful new deployment.",
             "gate"),
     ])
-    sub(r[24], "10", ("隔離generation1 consumer互換性projectionの条件", "Conditions for an isolated generation1 consumer-compatibility projection"), [
+    compatibility_history = sub(r[24], "10", ("隔離generation1 consumer互換性projectionの条件", "Conditions for an isolated generation1 consumer-compatibility projection"), [
         p(
             "公開Create Ontology契約はdefinition partsからgenerationを推定します。Tempの隔離consumer projectionは1回create後、実generation1と53parts/10Entity/72 static/0TS/15Relationship、同じLakehouse mappingをreadbackで確認しました。これは作成/定義受入れであり、consumer互換性の合格ではありません。",
             "The public Create Ontology contract infers generation from definition parts. One isolated Temp consumer projection was created and read back as actual generation1 with53 parts/ten entities/72 static/zero TS/fifteen relationships and the same Lakehouse mappings. This accepts creation/definition readback, not consumer compatibility."),
@@ -1371,9 +1485,81 @@ def completion30_sections(roots):
             "gate"),
         p(CREATE_DOC, CREATE_DOC),
     ])
+    if selected_run is not None:
+        compatibility_history.blocks.insert(0, note(
+            "以下のreadback・consumer・品質の状態は保存した旧scopeの履歴です。選択runの互換性や品質の新規確認ではありません。現在の選択は19.10節だけで判定します。",
+            "The readback, consumer and quality states below retain the old historical scope, not new compatibility/quality checks of the selected run. Its current selection is assessed only in19.10.",
+            "gate",
+        ))
 
 
-def original_suite_run_sections(roots, runs):
+def selected_original_suite_sections(roots, evidence):
+    run = preview30_public_evidence.selected_original_suite_run(evidence, required=True)
+    chapter = next(section for section in roots if section.chapter == 19)
+    sub(chapter, "4", ("source-owned元84条件の履歴と明示選択", "Source-owned original84 history and explicit selection"), [
+        p(
+            "審査済みsource aggregateを元の順序・分母のまま保持します。最高点・最新時刻で選ばず、UI/SDK/smoke診断を元suiteへ加算しません。",
+            "Retain reviewed source aggregates in their original order and denominators. Do not choose the highest score/latest timestamp or add UI/SDK/smoke diagnostics to the original suite."),
+        table(
+            [("Run", "Run"), ("選択", "Selection"), "PASS / FAIL / U / B / N/A", ("受入/promotion（記録）", "Accepted/promoted, recorded")],
+            [
+                [(item["label"]["ja"], item["label"]["en"]),
+                 ("明示選択", "Explicitly selected") if item["id"] == run["id"] else ("保存履歴", "Retained history"),
+                 " / ".join(str(item["counts"][key]) for key in preview30_reporting.VERDICT_KEYS),
+                 f"{item['accepted']} / {item['promoted']}"]
+                for item in evidence["originalSuiteRuns"]
+            ],
+            ("元10問/84条件。選択は受入・promotionではない", "Original ten/84; selection is not acceptance or promotion")),
+    ])
+    sub(chapter, "5", ("明示選択した審査済みAI aggregate", "Explicitly selected reviewed AI aggregate"), [
+        p(*preview30_reporting.selection_notice(run)),
+        note(run["summary"]["ja"], run["summary"]["en"], "gate"),
+        p(
+            "public projectionの承認は公開可能な集計の審査です。84 PASSから受入flagを推測せず、元のvalidatorと審査記録だけを使います。",
+            "Approval of the public projection reviews publishable aggregates. Do not infer an acceptance flag from84 PASS; use only the unchanged validator and reviewed record."),
+    ])
+    blocks = [
+        p(*preview30_reporting.selection_notice(run)),
+        table([("記録", "Record"), ("値", "Value")], preview30_reporting.method_rows(run),
+              ("試行・成功・拒否、trace slot、別会話、native完了は別の分母", "Attempts, successes, rejections, traced slots, distinct conversations and native completion differ")),
+        table(
+            [("言語", "Language"), ("試行", "Attempts"), ("成功", "Successes"), ("拒否", "Rejections")],
+            preview30_reporting.source_rows(run),
+            ("DAXは独立。未提供は未検証でゼロではない", "DAX is separate; missing values are unverified, not zero")),
+        note(*preview30_reporting.execution_completeness_notice(), "gate"),
+        table(
+            ["Case", "PASS", "FAIL", ("未検証", "Unverified"), "BLOCKED", "N/A", ("native gate", "Native gate")],
+            preview30_reporting.case_verdict_rows(run),
+            ("選択runの10 ordered casesだけ。旧CASE_ROWSを借用しない", "Only the selected run's ten ordered cases; no legacy CASE_ROWS reuse")),
+        table(
+            ["Case", ("試行", "Attempts"), ("成功", "Successes"), ("拒否", "Rejections"),
+             ("native応答終端", "Native response terminal state"), ("成功query言語", "Successful query languages")],
+            preview30_reporting.case_execution_rows(run),
+            ("native固定blockは受入FAIL。完了応答とquery成功を混同しない", "Native fixed blocks are acceptance FAILs; completion is not query success")),
+        note(
+            "native固定blockはFAILのままで、適切なcontextual refusalへ置換しません。実行回数は一般母集団の正確性・因果MCP A/Bを証明せず、case集計から欠陥原因やfeature修復を推測しません。",
+            "A native fixed block remains FAIL, not successful contextual refusal. Call counts prove neither general-population accuracy nor a direct causal MCP A/B; case aggregates do not diagnose defects or prove feature repair.",
+            "gate"),
+    ]
+    if "notApplicableReason" in run:
+        blocks.append(note(run["notApplicableReason"]["ja"], run["notApplicableReason"]["en"], "gate"))
+    blocks += [
+        note(value["reason"]["ja"], value["reason"]["en"], "gate")
+        for value in preview30_reporting.selected_context().values()
+    ]
+    blocks.append(note(
+        "元suiteの審査記録上の受入と最終user受入・全機能合格は別です。残る演習の実証と別の明示承認が必要で、publicationは延期のままです。文書作業は再質問・データ/モデル変更・promotionを行いません。",
+        "Reviewed original-suite acceptance is separate from final user/all-feature acceptance. Actual remaining-feature evidence and separate explicit approval are required; publication remains deferred. Document work performs no question, data/model change or promotion.",
+        "stop"))
+    sub(chapter, "10", ("選択runの判定・実行・未確認の境界", "Selected decisions, executions and unverified boundaries"), blocks)
+
+
+def original_suite_run_sections(roots, runs, *, evidence=None):
+    if evidence is not None and "selectedOriginalSuiteRunId" in evidence:
+        selected = preview30_public_evidence.selected_original_suite_run(evidence, required=True)
+        if selected["id"] != preview30_public_evidence.LEGACY_ORIGINAL_SUITE_RUN_ID:
+            selected_original_suite_sections(roots, evidence)
+            return
     chapter = next(section for section in roots if section.chapter == 19)
     sub(chapter, "4", ("元84条件の履歴を新runへ流用しない", "Do not reuse historical original84 grades for a new run"), [
         table(
@@ -1548,7 +1734,16 @@ def _legacy_copy(source: Section, parent: Section, index: int) -> Section:
     return value
 
 
-def build(root: Path, evidence_path: Path | None = None, evaluation_path: Path | None = None, *, public_evidence_path: Path | None = None):
+def build(
+    root: Path, evidence_path: Path | None = None, evaluation_path: Path | None = None, *,
+    public_evidence_path: Path | None = None, release_profile=release.PREVIEW,
+    release_approval: Path | None = None,
+):
+    profile = release.get_profile(release_profile)
+    evidence, document_release = release.resolve_evidence(
+        root, evidence_path, evaluation_path, public_evidence_path=public_evidence_path,
+        release_profile=profile, release_approval=release_approval,
+    )
     context = load_context(root, document_edition="unified-20260923", source_version="2.7.0")
     facts = compute_facts(context)
     tests = build_tests(context, facts)
@@ -1574,10 +1769,16 @@ def build(root: Path, evidence_path: Path | None = None, evaluation_path: Path |
     original = {s.chapter if s.chapter else s.appendix: s for s in legacy.sections}
     if set(original) != set(range(1, 20)) | set("ABCDE"):
         raise ValueError("The baseline curriculum shape changed")
-    evidence = preview30_public_evidence.resolve(evidence_path, public_evidence_path, root=root)
     if evidence.get("publicProjection") and evaluation_path is not None:
         raise ValueError("Export the evaluator aggregate into the public projection; do not mix a private override")
     evaluation = evidence.get("evaluationProjection") if evidence.get("publicProjection") else preview30_evaluation.load(evaluation_path)
+    selected = (
+        preview30_public_evidence.selected_original_suite_run(evidence, required=True)
+        if "selectedOriginalSuiteRunId" in evidence else None
+    )
+    selected_nonlegacy = selected if selected is not None and selected["id"] != preview30_public_evidence.LEGACY_ORIGINAL_SUITE_RUN_ID else None
+    if selected is not None and selected_nonlegacy is None:
+        preview30_reporting.require_legacy_run(selected)
     roots = [Section(
         ident=f"ch-{n}", level=1, number=str(n), title=t(f"{n}. {ja}", f"{n}. {en}"), chapter=n,
     ) for n, (ja, en) in enumerate(CHAPTERS, 1)]
@@ -1591,13 +1792,22 @@ def build(root: Path, evidence_path: Path | None = None, evaluation_path: Path |
     appendices(roots[24:], context, tests)
     runtime_candidate_sections(roots, root)
     evaluation_sections(roots, evaluation)
-    current_receipt_sections(roots)
-    original_suite_run_sections(roots, evidence.get("originalSuiteRuns", []))
-    roots[0].blocks.insert(0, note(
-        PREVIEW_NOTICE_JA + "。最終Compat native UIの元84条件は48 PASS/36 FAIL。mainは未promotionで、既知の失敗・partial・blocked laneを保持します。",
-        PREVIEW_NOTICE_EN + ". The final Compat native-UI original84 result is48 PASS/36 FAIL. Main is not promoted; known failures, partial and blocked lanes remain explicit.",
-        "stop",
-    ))
+    current_receipt_sections(roots, selected_nonlegacy)
+    original_suite_run_sections(roots, evidence.get("originalSuiteRuns", []), evidence=evidence)
+    if selected_nonlegacy is not None:
+        roots[0].blocks.insert(0, note(*preview30_reporting.selection_notice(selected_nonlegacy), "stop"))
+    else:
+        roots[0].blocks.insert(0, note(
+            PREVIEW_NOTICE_JA + "。最終Compat native UIの元84条件は48 PASS/36 FAIL。mainは未promotionで、既知の失敗・partial・blocked laneを保持します。",
+            PREVIEW_NOTICE_EN + ". The final Compat native-UI original84 result is48 PASS/36 FAIL. Main is not promoted; known failures, partial and blocked lanes remain explicit.",
+            "stop",
+        ))
+    if document_release is not None:
+        roots[0].blocks.insert(0, note(
+            "文書版3.0.0はユーザー承認の既知制約付きリリースです。選択した実結果76 PASS/8 FAIL、全履歴、partial/blocked/failedの状態を保持します。製品機能・APIは引き続きPreviewです。--release-profile v3.0.0と別のhash-bound --release-approvalは文書配布だけを承認し、AI回答品質・GA・全機能合格・Fabric Agent promotionを承認しません。厳格な--require-acceptanceは独立して残り、このsnapshotは未合格です。",
+            "Document edition 3.0.0 is a user-authorized release with known limitations. The selected 76 PASS/8 FAIL result, complete historical ledgers and partial/blocked/failed states are retained. Product features and APIs remain Preview. --release-profile v3.0.0 with a separate hash-bound --release-approval authorizes document distribution only, not AI acceptance, GA, all-feature success or Fabric Agent promotion. The strict --require-acceptance gate remains independent; this snapshot is unaccepted.",
+            "stop",
+        ))
     request_list = preview30_evidence.requests()
     for section in roots:
         key = section.chapter if section.chapter else section.appendix
@@ -1655,7 +1865,7 @@ def build(root: Path, evidence_path: Path | None = None, evaluation_path: Path |
         raise ValueError("Standard 84-condition evaluation changed")
     serial = json.dumps(asdict(document), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     metadata = {
-        "version": VERSION, "baselineVersion": context.version, "baselineEdition": context.document_edition,
+        "version": profile.version, "baselineVersion": context.version, "baselineEdition": context.document_edition,
         "counts": counts, "contentSha256": hashlib.sha256(serial.encode("utf-8")).hexdigest(),
         "retainedLegacyChapters": 19, "retainedLegacyAppendices": 5,
         "omittedLegacyUICaptures": sum(1 for b in legacy.figures if b["source_kind"] == "screenshot"),
@@ -1674,6 +1884,12 @@ def build(root: Path, evidence_path: Path | None = None, evaluation_path: Path |
         metadata["releaseFreezeStatus"] = evidence["freezeStatus"]
     if evidence.get("originalSuiteRuns"):
         metadata["originalSuiteRuns"] = evidence["originalSuiteRuns"]
+    if selected is not None:
+        metadata.update(preview30_reporting.selection_metadata(evidence))
+        metadata["finalUserAcceptanceCertified"] = False
     if evaluation is not None:
         metadata["evaluationProjection"] = evaluation
+    if document_release is not None:
+        metadata["documentRelease"] = document_release
+        release.require_metadata_profile(metadata, profile)
     return document, context, facts, carrier, evidence, metadata

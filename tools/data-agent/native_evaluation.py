@@ -40,6 +40,44 @@ def platform_content_block(text: str) -> bool:
     return "There's content here I can't work with." in text
 
 
+def diagnostic_source_calls(
+    calls: list[dict[str, Any]],
+) -> list[tuple[str, dict[str, Any]]]:
+    """Select execution attempts, excluding discovery, generators and wrappers.
+
+    The separate AskPBI DAX execution is not an analyze.database.execute call.
+    Selection proves an attempt, not successful execution or rubric acceptance.
+    """
+    languages = {
+        "LakehouseTables": "SQL", "Kusto": "KQL",
+        "Ontology": "GQL", "SemanticModel": "DAX",
+    }
+    if not isinstance(calls, list) or any(not isinstance(call, dict) for call in calls):
+        raise EvaluationError("Native diagnostic calls must be a list of objects.")
+    result, seen = [], set()
+    for call in calls:
+        if call.get("kind") != "tool-call" or call.get("title") not in {
+            "analyze.database.execute", "askPBI.tool.execute",
+        }:
+            continue
+        inputs = call.get("input")
+        if not isinstance(inputs, dict):
+            raise EvaluationError("Native source execution input is missing.")
+        source = inputs.get("datasource_type")
+        if not isinstance(source, str) or source not in languages or (
+            call["title"] == "askPBI.tool.execute" and source != "SemanticModel"
+        ):
+            raise EvaluationError("Unknown native source execution family.")
+        ident = call.get("callId")
+        if not isinstance(ident, str) or not ident or ident in seen:
+            raise EvaluationError("Native source execution call identity is missing or reused.")
+        if call.get("status") not in TERMINAL or "output" not in call:
+            raise EvaluationError("Native source execution has no terminal output.")
+        seen.add(ident)
+        result.append((languages[source], call))
+    return result
+
+
 def now_utc() -> str:
     return datetime.now(timezone.utc).isoformat()
 

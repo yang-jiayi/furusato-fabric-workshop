@@ -6,11 +6,21 @@ import html
 import hashlib
 import json
 
-from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME, PREVIEW_NOTICE_JA, PREVIEW_NOTICE_EN
+from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME
+from furusato_docs import preview30_release as release
 from .assets import build_library, encode_screenshot, screenshot_size
 from .mirror import load_ui_strings
 from .model import Text
 from .render import RenderContext, esc, plain_bilingual, render_block
+
+
+# Keep the two final MCP references with the preceding content, not on a URL-only page.
+RELEASE_PRINT_CSS = """
+@media print {
+ html[data-lang="en"] #ch-20-10 > .callout:last-of-type { margin-bottom:2mm; }
+ html[data-lang="en"] #ch-20-10 > p:nth-last-child(-n+2) { margin-block:0; }
+}
+"""
 
 
 def register_reviewed_captures(assets, captures):
@@ -33,13 +43,17 @@ def register_reviewed_captures(assets, captures):
     return capture_aliases
 
 
-def render(document, context, facts, carrier, evidence, metadata, word_sha, root):
+def render(
+    document, context, facts, carrier, evidence, metadata, word_sha, root, *,
+    release_profile=release.PREVIEW,
+):
+    profile = release.require_metadata_profile(metadata, release_profile)
     diagram_keys = sorted({b["source_key"] for b in document.figures if b["source_kind"] == "diagram"})
     assets = build_library(context, carrier, diagram_keys, [])
     capture_aliases = register_reviewed_captures(assets, evidence["captures"])
     ctx = RenderContext(
         ui=load_ui_strings(public_documents_only=True, context=context), assets=assets,
-        version=VERSION, fingerprint=metadata["contentSha256"][:16], runtime_fingerprint="",
+        version=profile.version, fingerprint=metadata["contentSha256"][:16], runtime_fingerprint="",
         facts=facts, context=context, stats={},
     )
     counter = {"code": 0}
@@ -84,35 +98,38 @@ def render(document, context, facts, carrier, evidence, metadata, word_sha, root
 
     toc = "".join(f'<li><a href="#{s.ident}">{plain_bilingual(s.title)}</a></li>' for s in document.sections)
     content = "".join(section_markup(s) for s in document.sections)
-    state = Text(PREVIEW_NOTICE_JA, PREVIEW_NOTICE_EN)
+    notice = release.presentation(metadata, profile)
+    state = Text(notice["ja"], notice["en"])
     public_metadata = {
-        **metadata, "wordFilename": WORD_NAME, "wordSha256": word_sha,
-        "htmlFilename": HTML_NAME,
+        **metadata, "wordFilename": profile.word_name, "wordSha256": word_sha,
+        "htmlFilename": profile.html_name,
         "captureDigests": {ident: entry["sha256"] for ident, entry in evidence["captures"].items()},
         "captureResourceAliases": capture_aliases,
         "languages": ["ja", "en"],
     }
     encoded_metadata = json.dumps(public_metadata, ensure_ascii=False).replace("<", "\\u003c")
     css = (root / "tools" / "html" / "assets" / "preview30.css").read_text(encoding="utf-8")
+    if profile.is_release:
+        css += RELEASE_PRINT_CSS
     js = (root / "tools" / "html" / "assets" / "preview30.js").read_text(encoding="utf-8")
     return f"""<!doctype html>
 <html lang="ja" data-lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Complete 24-chapter bilingual Furusato Workshop 3.0 Preview; honest per-lab evidence status.">
-<title>Furusato Workshop 3.0 Preview</title><style>{css}</style></head>
+<meta name="description" content="Complete 24-chapter bilingual {profile.title}; honest per-lab evidence status.">
+<title>{profile.title}</title><style>{css}</style></head>
 <body>
 <a class="skip-link" href="#main">{plain_bilingual(Text("本文へ", "Skip to content"))}</a>
 <header>
- <a href="#top" class="brand">Furusato / Fabric IQ · 3.0 Preview</a>
+ <a href="#top" class="brand">Furusato / Fabric IQ · {profile.display_version}</a>
  <nav aria-label="Language"><button type="button" data-language="ja" aria-pressed="true">日本語</button>
  <button type="button" data-language="en" aria-pressed="false">English</button></nav>
  <button type="button" id="print">{plain_bilingual(Text("印刷", "Print"))}</button>
 </header>
 <div id="top" class="hero"><p class="eyebrow">MICROSOFT FABRIC · SYNTHETIC HANDS-ON WORKSHOP</p>
- <h1>Furusato Workshop<br>3.0 Preview</h1>
+ <h1>Furusato Workshop<br>{profile.display_version}</h1>
  <p>{plain_bilingual(Text("24章・5付録／Wordと同じ共有原稿／全19章の旧教材も保持", "24 chapters · 5 appendices · shared Word source · complete 19-chapter baseline retained"))}</p>
  <p class="status" role="status">{plain_bilingual(state)}</p>
- <p><a download href="{WORD_NAME}" id="word-download">{plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide"))}</a></p>
+ <p><a download href="{profile.word_name}" id="word-download">{plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide"))}</a></p>
  <p class="digest">Word SHA-256: <code>{word_sha}</code></p>
 </div>
 <aside class="controls"><label for="search">{plain_bilingual(Text("この言語の全文を検索", "Search the full text in this language"))}</label>

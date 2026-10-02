@@ -1,0 +1,25 @@
+Use the selected dbo.ot_* tables for the complete immutable static donation snapshot. One dbo.ot_donation row is one Donation. The snapshot label is not a year predicate or _WorkshopGenerationId value. Preserve leading-zero MunicipalityId strings. Do not add static rows/amounts to raw operational observations.
+
+STATIC METRICS
+- A date-free total uses COUNT_BIG(*) and SUM(DonationAmountYen) on ot_donation. State the snapshot, transaction grain and source.
+- Unspecified popularity uses both donation-count and amount leaders, the exact municipality ID/name and nationwide or explicitly filtered scope. Derive count rank from the count ordering. Stored amount ranks are not count ranks. Tie-break by stable ID ascending.
+- Bare prefecture donation questions have recipient PrefReceived* and donor-residence PrefResident* readings. Retrieve both together from ot_prefecture and label them, or clarify first. Never add the readings.
+- Pre-aggregated tables have their own entity/pair grains; do not sum ranks or re-aggregate across a different grain. The supplier-gift catalog bridge must never enter a donation-total aggregation.
+
+FULL DONATION TRACE
+Filter the exact DonationId and return the COMPLETE SQL attribute ledger, even when a separately executed GQL query has already returned some properties. Do not omit suppliers because the caller also requested graph connectivity. Include source-owned provenance columns: 'Lakehouse SQL' AS AttributeSource, 'static 2025 snapshot' AS AttributeDataset, and 'Donation x catalog Supplier; amount belongs to one Donation' AS AttributeGrain.
+Return ALL required ID/name pairs in the SQL projection:
+d.DonationId, d.DonationAmountYen,
+donor.DonorId, donor.DonorName,
+donor.PrefectureId AS DonorResidencePrefectureId, donor_pref.PrefectureName AS DonorResidencePrefectureName,
+municipality.MunicipalityId, municipality.MunicipalityName,
+municipality.PrefectureId AS RecipientPrefectureId, recipient_pref.PrefectureName AS RecipientPrefectureName,
+gift.GiftId, gift.GiftName, category.CategoryId, category.CategoryName, supplier.SupplierId, supplier.SupplierName,
+supplier.PrefectureId AS SupplierPrefectureId, supplier_pref.PrefectureName AS SupplierPrefectureName.
+Join the real foreign keys via ot_donor, donor/recipient/supplier aliases of ot_prefecture, ot_municipality, ot_gift, ot_gift_category, ot_supplier_gift and ot_supplier. Return every catalog supplier for the exact GiftId, ordered by SupplierId. Never derive a municipality name from a prefecture, omit category/prefecture IDs, or drop the returned columns when answering. The repeated amount remains one Donation's amount, not a total across supplier rows.
+Clearly attribute these business attributes, including every catalog supplier, to Lakehouse SQL in a separate source-role ledger; attribute modeled connectivity to separately executed Ontology GQL. Do not substitute graph-returned supplier properties for the SQL projection or claim a missing SQL column was returned. Supplier registration proves neither manufacture, shipment nor fulfillment.
+Attribute each displayed field to its actual returned source. If an optional field occurs only in the GQL result, label it separately as a GQL-returned property, obtain its verified SQL column, or omit that optional field. Never use a blanket "all attributes and IDs came from SQL" claim when any displayed value came only from another engine.
+
+CROSS-SOURCE COMPARISON
+A KQL leader's MunicipalityID is an exact string key. Select MunicipalityId, MunicipalityName, MunicipalityDisplayName, MunicipalityStaticCount, MunicipalityStaticTotalYen, MunicipalityAmountRank and MunicipalityPrefAmountRank for that key, labeling the nationwide amount rank and its optional prefecture-limited rank distinctly. The Ontology supplies the Prefecture relationship; do not use a SQL foreign-key count as GQL proof.
+Keep raw observations, static Donation and quality-accepted Gold separate. Do not use selected static data or a model's accepted count to prove raw event uniqueness. The Agent has no selected raw EventID.

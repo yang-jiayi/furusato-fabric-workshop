@@ -1,0 +1,27 @@
+{
+  "courseVersion": "3.0.0",
+  "tag": "v3.0.0",
+  "publicationPolicy": "user-authorized-release-with-disclosed-limitations",
+  "guideDirectory": "docs/v3.0.0/guide",
+  "reportDirectory": "docs/v3.0.0/reports",
+  "evidenceProjection": "docs/assets/v3.0.0-evidence/manifest.json",
+  "portableRuntimeDirectory": "workshop/v3.0.0-preview",
+  "retainedLegacyRuntimeVersion": "2.7.0",
+  "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
+  "originalQuestionCount": 10,
+  "originalConditionCount": 84,
+  "selectedCounts": {
+    "pass": 76,
+    "fail": 8,
+    "executionUnverified": 0,
+    "blocked": 0,
+    "notApplicable": 0
+  },
+  "aiQualityAccepted": false,
+  "allFeaturesPassed": false,
+  "fabricPreviewFeaturesClaimedGA": false,
+  "mainAgentPromoted": false,
+  "historicalVerdictsChanged": false,
+  "new100CaseEvaluationIncluded": false,
+  "privateOriginalsOrDiagnosticsIncluded": false
+}

@@ -1,4 +1,4 @@
-"""Create a deterministic private DRAFT bundle, never a release or live pass."""
+"""Package an explicitly selected document edition, never a live or AI pass."""
 
 from __future__ import annotations
 
@@ -13,10 +13,14 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
 from furusato_docs.preview30_content import HTML_NAME, WORD_NAME, build  # noqa: E402
+from furusato_docs import preview30_public_evidence as public  # noqa: E402
+from furusato_docs import preview30_reporting as reporting  # noqa: E402
+from furusato_docs import preview30_release as release  # noqa: E402
+from furusato_docs.preview30_acceptance import require_public_acceptance  # noqa: E402
 from furusato_docs.validators import Report  # noqa: E402
 from validate_preview30 import inspect_word, inspect_html, check_capture_fidelity  # noqa: E402
 
-PACKAGE_NAME = "Furusato_Workshop_v3.0.0-preview_DRAFT.zip"
+PACKAGE_NAME = release.PREVIEW.package_name
 ATTACHMENTS = (
     "business-requirements.pdf", "data-dictionary.txt", "domain-model.png",
     "revision-requirements.txt", "manifest.json", "SHA256SUMS.txt",
@@ -74,12 +78,17 @@ def require_full_validation(validation):
     return validation
 
 
-def load_validated_inputs(pair, validation_path):
-    if {p.name for p in pair.iterdir()} != {WORD_NAME, HTML_NAME}:
+def load_validated_inputs(pair, validation_path, *, release_profile=release.PREVIEW):
+    profile = release.get_profile(release_profile)
+    if {p.name for p in pair.iterdir()} != {profile.word_name, profile.html_name}:
         raise ValueError("Guide input must be the exact two-file pair")
     validation = require_full_validation(json.loads(validation_path.read_text(encoding="utf-8")))
+    identity = validation.get("documentIdentity")
+    if profile.is_release or identity is not None:
+        if not isinstance(identity, dict) or identity.get("releaseProfile") != profile.name or identity.get("version") != profile.version:
+            raise ValueError("Validation receipt does not match the explicit document release profile")
     files = {}
-    for name in (WORD_NAME, HTML_NAME):
+    for name in (profile.word_name, profile.html_name):
         data = (pair / name).read_bytes()
         if sha(data) != validation.get("files", {}).get(name):
             raise ValueError("The pair changed since full validation: " + name)
@@ -87,16 +96,45 @@ def load_validated_inputs(pair, validation_path):
     return validation, files
 
 
-def collect_public_reports(metadata, root=ROOT):
-    final_runs = [run for run in metadata.get("originalSuiteRuns", []) if run["id"] == "compat-native-ui-final"]
-    if not final_runs:
+def collect_public_reports(metadata, root=ROOT, *, reports_path=None, release_profile=release.PREVIEW):
+    profile = release.get_profile(release_profile)
+    if profile.is_release:
+        release.require_metadata_profile(metadata, profile)
+    final = public.selected_original_suite_run(metadata)
+    if final is None:
         return {}
-    reports = root / "docs" / "v3-preview" / "reports"
+    reports = release.reports_directory(root, profile, reports_path)
+    for name in PUBLIC_REPORTS:
+        path = (reports / name).resolve()
+        if not path.is_relative_to(reports) or not path.is_file():
+            raise ValueError("Public report files must remain inside the approved reports directory")
     summary = json.loads((reports / "evaluation-summary.json").read_text(encoding="utf-8"))
     if summary["evidenceProjectionSha256"] != metadata.get("publicEvidenceProjectionSha256"):
         raise ValueError("Public reports do not match the selected source evidence projection")
-    if summary["finalEvaluation"] != final_runs[0] or summary["qualityAccepted"] is not False or summary["mainPromoted"] is not False:
+    if summary["finalEvaluation"] != final or summary["qualityAccepted"] is not final["accepted"] or summary["mainPromoted"] is not final["promoted"]:
         raise ValueError("Public report acceptance/method differs from the paired guide")
+    if summary["historicalRuns"] != [run for run in metadata["originalSuiteRuns"] if run["id"] != final["id"]]:
+        raise ValueError("Public reports changed or mixed historical original-suite ledgers")
+    if "selectedOriginalSuiteRunId" in metadata:
+        expected = reporting.selection_metadata(metadata)
+        if (
+            summary.get("selectedOriginalSuiteRunId") != final["id"]
+            or summary.get("originalSuiteAccepted") is not final["accepted"]
+            or any(metadata.get(key) != value for key, value in expected.items())
+            or summary.get("presentation") != expected["previewPresentation"]
+        ):
+            raise ValueError("Public reports and paired guide disagree on the explicit selected run")
+        if final["id"] != public.LEGACY_ORIGINAL_SUITE_RUN_ID and (
+            summary.get("caseAggregates") != final["caseAggregates"]
+            or summary.get("executionEvidence") != expected["selectedSuiteExecutionEvidence"]
+            or any(summary.get(key) != value for key, value in expected["selectedRunContext"].items())
+            or summary.get("labStates") != metadata["labStates"]
+            or summary.get("allFeaturesPassedClaimed") is not False
+            or summary.get("finalUserAcceptanceCertified") is not False
+            or summary.get("generalPopulationAccuracyClaimed") is not False
+            or summary.get("directCausalMcpAbClaimed") is not False
+        ):
+            raise ValueError("Public report cases, counters or context differ from the selected projection")
     entries = (reports / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines()
     expected_names = set(PUBLIC_REPORTS) - {"SHA256SUMS.txt"}
     seen = set()
@@ -110,18 +148,107 @@ def collect_public_reports(metadata, root=ROOT):
     return {"reports/" + name: (reports / name).read_bytes() for name in PUBLIC_REPORTS}
 
 
-def package(pair: Path, validation_path: Path, output: Path, evidence_path: Path | None, evaluation_path: Path | None = None, *, public_evidence_path: Path | None = None):
+def selected_package_status(metadata, *, release_profile=release.PREVIEW):
+    profile = release.get_profile(release_profile)
+    if profile.is_release:
+        release.require_metadata_profile(metadata, profile)
+    if "selectedOriginalSuiteRunId" not in metadata:
+        return {}
+    selected = reporting.selection_metadata(metadata)
+    result = {
+        "selectedOriginalSuiteRunId": selected["selectedOriginalSuiteRunId"],
+        "originalSuiteAccepted": selected["originalSuiteAccepted"],
+        "aiAnswerQualityAccepted": selected["aiAnswerQualityAccepted"],
+        "mainPromoted": selected["mainPromoted"],
+        "finalUserAcceptanceCertified": False,
+        "publicEvidenceProjectionSha256": metadata["publicEvidenceProjectionSha256"],
+    }
+    if profile.is_release:
+        result["documentIdentity"] = release.document_identity(metadata, profile)
+        result["documentRelease"] = result["documentIdentity"]["documentRelease"]
+    return result
+
+
+def start_here(metadata, *, release_profile=release.PREVIEW):
+    profile = release.get_profile(release_profile)
+    if profile.is_release:
+        notice = release.presentation(metadata, profile)
+        return f"""{profile.title} — User-authorized document release with known limitations
+
+{notice["ja"]}
+{notice["en"]}
+Selected original suite: {metadata["selectedOriginalSuiteRunId"]}.
+Original ten questions/84 conditions and complete historical ledgers are retained.
+Partial captures and blocked/failed labs remain partial, blocked or failed.
+This release does not pass the independent --require-acceptance gate.
+
+Open guide/{profile.html_name} locally.
+Word and HTML are together in guide/; the Word-download link stays local.
+Use the Japanese/English switch, search, progress checklist, zoom and print.
+attachments/ contains the synthetic business PDF, dictionary TXT, domain PNG,
+and optional revision TXT: conversation context, not data ingestion.
+Source asset references to {release.SOURCE_ASSET_FOLDER} are intentional;
+the document edition does not relabel Preview product features or runtime APIs as GA.
+
+通常のMicrosoft認証と配置scope確認は引き続き必須です。この文書リリースは
+Fabric Agent promotion、write承認、新規認証、全lab完了を証明しません。
+Normal Microsoft authentication and proven deployment scope remain prerequisites.
+Never bypass authentication or extract/inject tokens or cookies.
+Historical captures describe their capture time, not current sign-in or a live pass.
+No private approval record, raw answers, original screenshots or private AI scores
+are included. Local document checks are not AI accuracy scores.
+
+reports/ contains only sanitized public progress/evaluation reports.
+Stable v2.7 and the historical Preview assets are retained, not replaced.
+Inspect {profile.status_name} for the document/source profiles, selected run,
+exact projection hash and unaccepted release status. Verify SHA256SUMS.txt:
+Get-FileHash .\\guide\\{profile.word_name} -Algorithm SHA256
+Get-FileHash .\\guide\\{profile.html_name} -Algorithm SHA256
+"""
+    if "selectedOriginalSuiteRunId" not in metadata:
+        return START_HERE
+    selected = public.selected_original_suite_run(metadata, required=True)
+    ja, en = reporting.selection_notice(selected)
+    return START_HERE.replace(
+        "AI回答品質は未合格。GA・全機能合格・main promotionの主張ではありません。\n"
+        "AI answer quality is not accepted. Not GA, all-feature acceptance or main promotion.",
+        ja + "\n" + en,
+    )
+
+
+def package(
+    pair: Path, validation_path: Path, output: Path, evidence_path: Path | None,
+    evaluation_path: Path | None = None, *, public_evidence_path: Path | None = None,
+    public_reports_path: Path | None = None, require_acceptance: bool = False,
+    acceptance_approval: Path | None = None, release_profile=release.PREVIEW,
+    release_approval: Path | None = None,
+):
+    profile = release.get_profile(release_profile)
+    release.check_options(
+        profile, release_approval, evidence_path=evidence_path, evaluation_path=evaluation_path,
+    )
+    if acceptance_approval and not require_acceptance:
+        raise ValueError("Publication approval cannot be supplied without the acceptance gate.")
+    if require_acceptance:
+        if evidence_path:
+            raise ValueError("Final admission requires a reviewed public projection.")
+        require_public_acceptance(public_evidence_path or ROOT / profile.evidence_relative,
+                                  acceptance_approval, root=ROOT)
     pair, validation_path, output = pair.resolve(), validation_path.resolve(), output.resolve()
     if any(path.is_relative_to(ROOT) for path in (pair, validation_path, output)):
-        raise ValueError("Builds, validation and DRAFT package must remain in external private staging")
+        raise ValueError("Builds, validation and package must remain in external private staging")
     if output.exists():
         raise ValueError("Refusing to overwrite an existing package directory")
-    validation, files = load_validated_inputs(pair, validation_path)
-    document, _, _, _, evidence, metadata = build(ROOT, evidence_path, evaluation_path, public_evidence_path=public_evidence_path)
-    report = Report(target="DRAFT package input recheck")
-    inspect_word(pair / WORD_NAME, document, metadata, report)
-    inspect_html(pair, document, metadata, report)
-    check_capture_fidelity(pair, document, evidence, report)
+    document, _, _, _, evidence, metadata = build(
+        ROOT, evidence_path, evaluation_path, public_evidence_path=public_evidence_path,
+        release_profile=profile, release_approval=release_approval,
+    )
+    validation, files = load_validated_inputs(pair, validation_path, release_profile=profile)
+    release.require_validation_identity(validation, metadata, profile)
+    report = Report(target=profile.kind + " package input recheck")
+    inspect_word(pair / profile.word_name, document, metadata, report, release_profile=profile)
+    inspect_html(pair, document, metadata, report, release_profile=profile)
+    check_capture_fidelity(pair, document, evidence, report, release_profile=profile)
     if not report.passed:
         raise ValueError("Current model/input recheck failed: " + "; ".join(f.check for f in report.failures))
     attachment_root = ROOT / "workshop" / "v3.0.0-preview" / "attachments"
@@ -134,12 +261,12 @@ def package(pair: Path, validation_path: Path, output: Path, evidence_path: Path
             if len(payload) > 5 * 1024 * 1024:
                 raise ValueError("Attachment exceeds the documented upload limit")
         files["attachments/" + name] = payload
-    public_reports = collect_public_reports(metadata)
+    public_reports = collect_public_reports(metadata, root=ROOT, reports_path=public_reports_path, release_profile=profile)
     files.update(public_reports)
-    files["START_HERE.txt"] = START_HERE.encode("utf-8")
+    files["START_HERE.txt"] = start_here(metadata, release_profile=profile).encode("utf-8")
     state = {
-        "schemaVersion": "furusato-local-draft-package/v1",
-        "edition": "3.0.0-preview", "kind": "DRAFT",
+        "schemaVersion": "furusato-document-release-package/v1" if profile.is_release else "furusato-local-draft-package/v1",
+        "edition": profile.version, "kind": profile.kind,
         "liveVerificationCertified": False, "writeAuthorizationGranted": False,
         "authenticationVerifiedByPackage": False, "privateAIScoresIncluded": False,
         "rawEvidenceIncluded": False, "originalScreenshotsIncluded": False,
@@ -158,17 +285,18 @@ def package(pair: Path, validation_path: Path, output: Path, evidence_path: Path
         "note": "Local file checks are not live execution, current authentication or AI accuracy scores.",
         "contentFiles": {name: {"bytes": len(blob), "sha256": sha(blob)} for name, blob in sorted(files.items())},
     }
+    state.update(selected_package_status(metadata, release_profile=profile))
     if metadata.get("evaluationProjection") is not None:
         state["independentEvaluationApprovedProjection"] = metadata["evaluationProjection"]
     if metadata.get("originalSuiteRuns") is not None:
         state["approvedOriginalSuiteAggregates"] = metadata["originalSuiteRuns"]
-    files["DRAFT_STATUS.json"] = (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    files[profile.status_name] = (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     files["SHA256SUMS.txt"] = "".join(f"{sha(blob)}  {name}\n" for name, blob in sorted(files.items())).encode("utf-8")
-    for name in (WORD_NAME, HTML_NAME):
+    for name in (profile.word_name, profile.html_name):
         if (pair / name).read_bytes() != files["guide/" + name]:
             raise ValueError("Source pair changed during packaging")
     output.mkdir(parents=True)
-    archive_path = output / PACKAGE_NAME
+    archive_path = output / profile.package_name
     with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for name, data in sorted(files.items()):
             info = zipfile.ZipInfo(name, date_time=(2026, 9, 29, 0, 0, 0))
@@ -182,13 +310,15 @@ def package(pair: Path, validation_path: Path, output: Path, evidence_path: Path
             if archive.read(name) != blob:
                 raise ValueError("Package bytes changed: " + name)
     digest = sha(archive_path.read_bytes())
-    (output / "SHA256SUMS.txt").write_text(f"{digest}  {PACKAGE_NAME}\n", encoding="utf-8")
+    (output / "SHA256SUMS.txt").write_text(f"{digest}  {profile.package_name}\n", encoding="utf-8")
     result = {
-        "archive": PACKAGE_NAME, "bytes": archive_path.stat().st_size, "sha256": digest,
-        "kind": "DRAFT", "entries": len(files),
+        "archive": profile.package_name, "bytes": archive_path.stat().st_size, "sha256": digest,
+        "kind": profile.kind, "entries": len(files),
         "localInputRechecks": len(report.findings), "liveVerificationCertified": False,
         "rawEvidenceIncluded": False, "privateAIScoresIncluded": False,
     }
+    if profile.is_release:
+        result["documentIdentity"] = release.document_identity(metadata, profile)
     (output / "package-result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return result
 
@@ -202,5 +332,14 @@ if __name__ == "__main__":
     inputs.add_argument("--evidence", type=Path)
     inputs.add_argument("--public-evidence", type=Path)
     parser.add_argument("--evaluation-report", type=Path)
+    parser.add_argument("--public-reports", type=Path, help="Reviewed source reports within the selected document profile's reports directory")
+    parser.add_argument("--require-acceptance", action="store_true")
+    parser.add_argument("--acceptance-approval", type=Path)
+    release.add_arguments(parser)
     args = parser.parse_args()
-    print(json.dumps(package(args.pair, args.validation, args.out, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence), ensure_ascii=False, indent=2))
+    print(json.dumps(package(
+        args.pair, args.validation, args.out, args.evidence, args.evaluation_report,
+        public_evidence_path=args.public_evidence, public_reports_path=args.public_reports,
+        require_acceptance=args.require_acceptance, acceptance_approval=args.acceptance_approval,
+        release_profile=args.release_profile, release_approval=args.release_approval,
+    ), ensure_ascii=False, indent=2))

@@ -1,5 +1,12 @@
 # v3.0.0 Preview runtime — portable candidate
 
+This compatibility-stable source path is also shipped by the
+[Workshop3.0.0 course release](../../docs/v3.0.0/README.md). The course version
+does not change the preview status of Fabric features or qualify a new deployment.
+Evaluation adapters may evolve, but the originalv2.7 data, ten/84 rubric and
+reference assets remain protected. Current adapter/runtime bytes are separately
+pinned in each new candidate plan and resealed Notebook02–04 package.
+
 This directory is **not a claim of successful cloud deployment, UI validation, AI accuracy, or general availability**. The generation2 contract and safety code have offline checks. The exact tenant's native feature availability must still be observed.
 
 ## Stable source paths

@@ -34,7 +34,9 @@ General ラベルは内容の分類であり、公開承認・権利確認・秘
 
 ### Microsoft Purview 秘密度分類: General
 
-この分類は、本 v2.7.0 ワークショップ配布物に含まれる**すべてのファイル**に適用されます。
+この分類は、審査済みのv3.0.0と保持しているv2.7.0ワークショップ配布物に含まれる
+**すべてのファイル**に適用されます。新しい教材版の公開も、既知の制約・評価FAILの解消を
+意味しません。版ごとの公開済みペアとtagを保持し、private資料を追加しないでください。
 
 #### Office ドキュメント
 
@@ -46,7 +48,8 @@ Office ドキュメント（`.docx`、`.xlsx`）には、Microsoft Purview の *
 | Label ID | `f42aa342-8706-4288-bd11-ebb85995028c` |
 | Tenant/Site ID | `72f988bf-86f1-41af-91ab-2d7cd011db47` |
 
-リリースされたバイト列は `RELEASE_SHA256SUMS.txt` で検証してください。
+3.0.0のバイト列は `docs/v3.0.0/guide/SHA256SUMS.txt` とGitHub Releaseの
+チェックサムで検証してください。`RELEASE_SHA256SUMS.txt` は保持するv2.7のペアを指します。
 
 #### Git ネイティブ形式のファイル
 
@@ -55,7 +58,7 @@ Git ネイティブなソース、データ、Web／図版の各形式（`.md`�
 関連する定義ファイル）は、ここに記載したパッケージ単位の **General**
 分類を継承します。
 
-自己完結 HTML のリリースバイト列も `RELEASE_SHA256SUMS.txt` に記載しています。
+自己完結HTMLのリリースバイト列も、それぞれの版のチェックサムに記載しています。
 
 #### ラベルを埋め込まない理由
 
@@ -105,8 +108,10 @@ errors. This does not reduce the set of rejected identifiers.
 
 ### Microsoft Purview sensitivity classification: General
 
-This classification applies to **every file** in this v2.7.0 workshop
-distribution.
+This classification applies to **every file** in the reviewedv3.0.0 and retained
+v2.7.0 workshop distributions. Publishing a new course edition does not resolve
+known limitations or evaluation failures. Keep versioned public pairs/tags and
+do not add private material.
 
 #### Office documents
 
@@ -118,7 +123,8 @@ Office documents (`.docx`, `.xlsx`) carry the embedded Microsoft Purview
 | Label ID | `f42aa342-8706-4288-bd11-ebb85995028c` |
 | Tenant/Site ID | `72f988bf-86f1-41af-91ab-2d7cd011db47` |
 
-Verify their release bytes with `RELEASE_SHA256SUMS.txt`.
+Verify3.0.0 bytes with `docs/v3.0.0/guide/SHA256SUMS.txt` and the GitHub Release
+checksum file. `RELEASE_SHA256SUMS.txt` continues to identify the retainedv2.7 pair.
 
 #### Git-native formats
 
@@ -127,8 +133,8 @@ Git-native source, data, and web/diagram formats (`.md`, `.html`, `.svg`,
 related definition files) inherit the package-level **General**
 classification stated here.
 
-The self-contained HTML release bytes are also listed in
-`RELEASE_SHA256SUMS.txt`.
+The self-contained HTML bytes are listed in the corresponding edition's
+checksum file.
 
 #### Why no label is embedded
 

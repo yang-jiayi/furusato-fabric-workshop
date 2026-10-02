@@ -22,6 +22,7 @@ sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
 from furusato_docs.console import use_utf8_streams  # noqa: E402
 from furusato_docs.preview30_content import HTML_NAME, WORD_NAME, build  # noqa: E402
+from furusato_docs import preview30_release as release  # noqa: E402
 from furusato_docs.render_audit import export_pdf, TOP_MARGIN_PT, BOTTOM_MARGIN_PT, PageReport  # noqa: E402
 from furusato_docs.typography import ascii_parentheses  # noqa: E402
 from furusato_docs import validators as old  # noqa: E402
@@ -36,6 +37,8 @@ class HtmlInspection(HTMLParser):
         self.images_without_alt = []
         self.in_metadata = False
         self.metadata_parts = []
+        self.title_parts = []
+        self.document_title_count = 0
         self.stack = []
         self.text = {"ja": [], "en": []}
         self.figure_id = None
@@ -60,6 +63,8 @@ class HtmlInspection(HTMLParser):
         if tag == "script" and attrs.get("id") == "preview30-provenance":
             self.in_metadata = True
         previous = self.stack[-1] if self.stack else ("", None, False)
+        if tag == "title" and previous[0] == "head":
+            self.document_title_count += 1
         language = attrs.get("data-l", previous[1])
         ignored = previous[2] or tag in {"script", "style"}
         if tag not in {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}:
@@ -76,6 +81,8 @@ class HtmlInspection(HTMLParser):
                 break
 
     def handle_data(self, data):
+        if len(self.stack) >= 2 and self.stack[-1][0] == "title" and self.stack[-2][0] == "head":
+            self.title_parts.append(data)
         if self.in_metadata:
             self.metadata_parts.append(data)
         if self.stack and self.stack[-1][2]:
@@ -113,7 +120,8 @@ def model_texts(document):
                 yield block["caption"]
 
 
-def inspect_word(word, document, metadata, report):
+def inspect_word(word, document, metadata, report, *, release_profile=release.PREVIEW):
+    profile = release.require_metadata_profile(metadata, release_profile)
     parts = old.check_package(word, report)
     old.check_authorship(parts, report, scope="word")
     old.check_no_foreign_label_guids(parts, report, scope="word")
@@ -158,11 +166,15 @@ def inspect_word(word, document, metadata, report):
     report_check(report, "word.noTrackedChanges", not re.search(r"<w:(ins|del|moveFrom|moveTo)\b", parts["word/document.xml"].decode("utf-8")))
     core = parts["docProps/core.xml"].decode("utf-8")
     report_check(report, "word.contentFingerprint", "Content SHA256: " + metadata["contentSha256"] in core)
+    title = ET.fromstring(core).find("{http://purl.org/dc/elements/1.1/}title")
+    report_check(report, "word.documentTitle", title is not None and title.text == profile.title + " — participant guide")
+    report_check(report, "word.coverEdition", normalized(profile.title) in all_text and normalized(profile.version) in all_text)
     return parts
 
 
-def inspect_html(pair, document, metadata, report):
-    path = pair / HTML_NAME
+def inspect_html(pair, document, metadata, report, *, release_profile=release.PREVIEW):
+    profile = release.require_metadata_profile(metadata, release_profile)
+    path = pair / profile.html_name
     source = path.read_text(encoding="utf-8")
     inspection = HtmlInspection()
     inspection.feed(source)
@@ -171,9 +183,19 @@ def inspect_html(pair, document, metadata, report):
     missing = [href for href in inspection.links if href.startswith("#") and href[1:] not in inspection.ids]
     report_check(report, "html.internalLinks", not missing, str(missing))
     local = [href for href in inspection.links if href and not href.startswith(("#", "https://", "http://", "mailto:"))]
-    report_check(report, "html.exactWordLink", local == [WORD_NAME], str(local))
-    report_check(report, "html.wordExists", (pair / WORD_NAME).is_file())
-    report_check(report, "html.actualWordDigest", provenance["wordSha256"] == hashlib.sha256((pair / WORD_NAME).read_bytes()).hexdigest())
+    actual_title = "".join(inspection.title_parts)
+    report_check(report, "html.documentTitle", inspection.document_title_count == 1 and actual_title == profile.title,
+                 f"{inspection.document_title_count} document head title(s): {actual_title!r}")
+    report_check(report, "html.exactWordLink", local == [profile.word_name], str(local))
+    report_check(report, "html.wordExists", (pair / profile.word_name).is_file())
+    report_check(report, "html.actualWordDigest", provenance["wordSha256"] == hashlib.sha256((pair / profile.word_name).read_bytes()).hexdigest())
+    report_check(report, "html.profileFilenames", provenance.get("wordFilename") == profile.word_name and provenance.get("htmlFilename") == profile.html_name)
+    report_check(report, "html.documentProfile", provenance.get("version") == profile.version and provenance.get("documentRelease") == metadata.get("documentRelease"))
+    report_check(report, "html.selectedProjection", all(provenance.get(key) == metadata.get(key) for key in (
+        "selectedOriginalSuiteRunId", "publicEvidenceProjectionSha256", "originalSuiteRuns", "finalEvaluation",
+        "originalSuiteAccepted", "aiAnswerQualityAccepted", "mainPromoted", "allFeaturesPassedClaimed",
+        "finalUserAcceptanceCertified",
+    )))
     report_check(report, "html.sharedFingerprint", provenance["contentSha256"] == metadata["contentSha256"])
     report_check(report, "html.shape", provenance["counts"] == metadata["counts"])
     report_check(report, "html.offlineResources", all(uri.startswith("data:") for uri in inspection.resources))
@@ -200,7 +222,7 @@ def inspect_html(pair, document, metadata, report):
     return provenance
 
 
-def check_capture_fidelity(pair, document, evidence, report):
+def check_capture_fidelity(pair, document, evidence, report, *, release_profile=release.PREVIEW):
     """Compare approved capture pixels and placement, not just model metadata."""
     from PIL import Image
 
@@ -208,9 +230,10 @@ def check_capture_fidelity(pair, document, evidence, report):
         with Image.open(io.BytesIO(blob)) as image:
             return image.size, hashlib.sha256(image.convert("RGB").tobytes()).hexdigest()
 
+    profile = release.get_profile(release_profile)
     inspection = HtmlInspection()
-    inspection.feed((pair / HTML_NAME).read_text(encoding="utf-8"))
-    with zipfile.ZipFile(pair / WORD_NAME) as archive:
+    inspection.feed((pair / profile.html_name).read_text(encoding="utf-8"))
+    with zipfile.ZipFile(pair / profile.word_name) as archive:
         document_xml = ET.fromstring(archive.read("word/document.xml"))
         relationships = ET.fromstring(archive.read("word/_rels/document.xml.rels"))
         targets = {
@@ -377,27 +400,32 @@ def main(argv=None):
     parser.add_argument("--render", action="store_true")
     parser.add_argument("--interactions", action="store_true")
     parser.add_argument("--print-html", action="store_true")
+    release.add_arguments(parser)
     args = parser.parse_args(argv)
+    profile = release.get_profile(args.release_profile)
+    document, _, _, _, evidence, metadata = build(
+        ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
+        release_profile=profile, release_approval=args.release_approval,
+    )
     pair, review = args.pair.resolve(), args.review.resolve()
     if review.is_relative_to(ROOT) or review.is_relative_to(pair):
         parser.error("Raw review artifacts must be outside the public tree and exact pair")
-    review.mkdir(parents=True, exist_ok=True)
-    if {p.name for p in pair.iterdir()} != {WORD_NAME, HTML_NAME}:
+    if {p.name for p in pair.iterdir()} != {profile.word_name, profile.html_name}:
         parser.error("The pair directory must contain exactly the matching Word and HTML")
-    document, _, _, _, evidence, metadata = build(ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence)
-    report = old.Report(target="Furusato 3.0 Preview actual pair")
-    inspect_word(pair / WORD_NAME, document, metadata, report)
-    inspect_html(pair, document, metadata, report)
-    check_capture_fidelity(pair, document, evidence, report)
+    review.mkdir(parents=True, exist_ok=True)
+    report = old.Report(target="Furusato " + profile.display_version + " actual pair")
+    inspect_word(pair / profile.word_name, document, metadata, report, release_profile=profile)
+    inspect_html(pair, document, metadata, report, release_profile=profile)
+    check_capture_fidelity(pair, document, evidence, report, release_profile=profile)
     if args.render:
         pdf = review / "word.pdf"
-        error = export_pdf(pair / WORD_NAME, pdf)
+        error = export_pdf(pair / profile.word_name, pdf)
         report_check(report, "word.renderAvailable", not error, error or "Current Word COM renderer")
         if not error:
             review_pdf(pdf, review, report, "word")
     if args.interactions:
         try:
-            local_interactions(pair / HTML_NAME, review, report, args.print_html)
+            local_interactions(pair / profile.html_name, review, report, args.print_html)
         except Exception as error:
             report.fail("interaction.runner", f"{error.__class__.__name__}: {error}")
     result = {
@@ -408,9 +436,15 @@ def main(argv=None):
         "evidenceScope": metadata["evidenceScope"], "newDeploymentReadinessCertified": False,
         "knownIssueLabs": metadata["knownIssueLabs"],
         "releaseFreezeStatus": metadata.get("releaseFreezeStatus", "not-frozen"),
+        "documentIdentity": release.document_identity(metadata, profile),
     }
     if report.passed and evidence["complete"]:
         result["status"] = "evidence-backed" if args.render and args.interactions and args.print_html else "more-local-validation-required"
+    if report.passed and profile.is_release:
+        result["status"] = (
+            "locally-validated-known-limitations-release"
+            if args.render and args.interactions and args.print_html else "more-local-validation-required"
+        )
     (review / "validation.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
         "passed": sum(f.level == "PASS" for f in report.findings),

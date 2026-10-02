@@ -12,22 +12,12 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 from furusato_docs import preview30_public_evidence as public
+from furusato_docs import preview30_reporting as reporting
 from furusato_docs.preview30_content import PREVIEW_NOTICE_EN, PREVIEW_NOTICE_JA
 
 REPORT_NAMES = ("evaluation-summary.json", "evaluation-report.md", "progress-report.md")
-FINAL_RUN_ID = "compat-native-ui-final"
-CASE_ROWS = (
-    ("T01", 7, 0, 1, False),
-    ("T02", 6, 0, 1, False),
-    ("T03", 6, 0, 2, False),
-    ("T04", 6, 5, 1, False),
-    ("T05", 9, 5, 2, False),
-    ("T06", 2, 8, 1, False),
-    ("T07", 5, 3, 1, False),
-    ("T08", 5, 2, 0, False),
-    ("T09", 2, 6, 0, False),
-    ("T10", 0, 7, 0, True),
-)
+FINAL_RUN_ID = public.LEGACY_ORIGINAL_SUITE_RUN_ID
+CASE_ROWS = reporting.LEGACY_CASE_ROWS
 REMEDIATIONS = (
     ("T04", "親集約grain・表現", "Parent aggregation grain/presentation",
      "親粒度でengine集約し、child rowsを親集計として扱わない。必要な関係/方向の説明を確認。",
@@ -61,27 +51,236 @@ def publication_link(value, kind):
     return value
 
 
+def markdown_table(headers, rows):
+    def cell(value):
+        if isinstance(value, tuple):
+            return "<br>".join(cell(part) for part in value)
+        return str(value).replace("|", r"\|").replace("\n", "<br>")
+    return "\n".join([
+        "| " + " | ".join(cell(value) for value in headers) + " |",
+        "| " + " | ".join("---" for _ in headers) + " |",
+        *["| " + " | ".join(cell(value) for value in row) + " |" for row in rows],
+    ])
+
+
+def selected_report_payloads(evidence, *, branch_url=None, release_url=None):
+    selected = reporting.selection_metadata(evidence)
+    final = selected["finalEvaluation"]
+    runs = evidence["originalSuiteRuns"]
+    context = selected["selectedRunContext"]
+    publication = {
+        "previewBranchUrl": publication_link(branch_url, "branch"),
+        "previewReleaseUrl": publication_link(release_url, "release"),
+        "stableVersion": "v2.7.0 / unified-20260923", "stableArtifactsReplaced": False,
+    }
+    summary = {
+        "kind": "sanitized-preview-evaluation-and-progress",
+        "presentation": selected["previewPresentation"],
+        "scope": public.SCOPE, "reviewedAt": evidence["reviewedAt"],
+        "evidenceProjectionSha256": evidence["projectionSha256"],
+        "freezeStatus": evidence["freezeStatus"],
+        "pairBuildAuthorized": evidence["freezeStatus"] == "frozen-for-build",
+        "selectedOriginalSuiteRunId": final["id"], "finalEvaluation": final,
+        "historicalRuns": [run for run in runs if run["id"] != final["id"]],
+        "caseAggregates": final["caseAggregates"],
+        "executionEvidence": selected["selectedSuiteExecutionEvidence"],
+        "originalSuiteAccepted": final["accepted"], "qualityAccepted": final["accepted"],
+        "mainPromoted": final["promoted"], "allFeaturesPassedClaimed": False,
+        "finalUserAcceptanceCertified": False, "generalPopulationAccuracyClaimed": False,
+        "directCausalMcpAbClaimed": False,
+        **context,
+        "labStates": {lab: value["status"] for lab, value in evidence["labs"].items()},
+        "labEvidence": {
+            lab: {key: value[key] for key in ("status", "reason", "evidenceIds")}
+            for lab, value in evidence["labs"].items()
+        },
+        "nativeCapturePlacements": len(evidence["captures"]),
+        "uniqueSanitizedImages": len({value["sha256"] for value in evidence["captures"].values()}),
+        "publication": publication,
+        "privacy": {
+            "rawAnswersIncluded": False, "answerKeysIncluded": False, "privateCriterionTextIncluded": False,
+            "liveIdsEndpointsMachinePathsIncluded": False, "internalReasoningIncluded": False,
+        },
+    }
+    public.public_strings({key: value for key, value in summary.items() if key != "publication"}, "public report")
+    notice_ja, notice_en = reporting.selection_notice(final)
+    run_table = markdown_table(
+        [("run / 選択", "Run / selection"), ("送信/前提blocked", "Submitted/preblocked questions"),
+         "PASS / FAIL / U / B / N/A", ("受入/promotion（審査記録）", "Accepted/promoted, reviewed record")],
+        [
+            [(run["label"]["ja"], run["label"]["en"]),
+             f"{run['submittedQuestions']} / {run['preblockedQuestions']}",
+             " / ".join(str(run["counts"][key]) for key in reporting.VERDICT_KEYS),
+             f"{run['accepted']} / {run['promoted']}"]
+            for run in runs
+        ],
+    )
+    method_table = markdown_table([("記録", "Record"), ("値", "Value")], reporting.method_rows(final))
+    source_table = markdown_table(
+        [("言語", "Language"), ("試行", "Attempts"), ("成功", "Successes"), ("拒否", "Rejections")],
+        reporting.source_rows(final),
+    )
+    case_table = markdown_table(
+        ["Case", "PASS", "FAIL", ("未検証", "Unverified"), "BLOCKED", "N/A", ("native gate", "Native gate")],
+        reporting.case_verdict_rows(final),
+    )
+    execution_table = markdown_table(
+        ["Case", ("試行", "Attempts"), ("成功", "Successes"), ("拒否", "Rejections"),
+         ("native応答終端", "Native response terminal state"), ("成功query言語", "Successful query languages")],
+        reporting.case_execution_rows(final),
+    )
+    context_text = "\n\n".join(
+        f"**{key} — {value['status']}**\n\n{value['reason']['ja']}\n\n{value['reason']['en']}"
+        for key, value in context.items()
+    )
+    applicability = ""
+    if "notApplicableReason" in final:
+        applicability = f"\nN/A: {final['notApplicableReason']['ja']}\n\n{final['notApplicableReason']['en']}\n"
+    completeness_ja, completeness_en = reporting.execution_completeness_notice()
+    evaluation_md = f"""# 明示選択したPreview評価 / Explicitly selected Preview evaluation
+
+{selected['previewPresentation']['ja']}
+
+{selected['previewPresentation']['en']}
+
+**{notice_ja}**
+
+**{notice_en}**
+
+## 選択と方法 / Selection and method
+
+観測時刻 / Observed: **{final['observedAt']}**。source projectionの審査済みIDだけを選択します。
+最高点・最新時刻で選ばず、選択はpromotion・再実行・公開ではありません。
+
+Only the explicitly reviewed source-projection ID is selected, never the highest score or latest
+timestamp. Selection does not promote, rerun or publish anything.
+
+{method_table}
+
+{source_table}
+
+試行・成功・拒否、独立trace付きQUESTION slot、別backend会話、native応答完了は別の分母です。
+未提供は未検証で、ゼロや旧runの値を補いません。DAXはSQL/GQL/KQLへ合算しません。
+
+Attempts, successes, rejections, independently traced QUESTION slots, distinct backend
+conversations and completed native responses are separate denominators. Missing facts are
+unverified, not zero or values borrowed from the old run. DAX is not folded into SQL/GQL/KQL.
+These counts do not establish general-population accuracy or a direct causal MCP A/B.
+
+{completeness_ja}
+
+{completeness_en}
+
+## 元10問/84条件の履歴 / Original ten/84 ledgers
+
+{run_table}
+
+sourceの履歴順・集計は不変で、選択runだけを下に詳述します。UI/SDK/smoke証拠を合算しません。
+Source history order and aggregates are unchanged. Only the selected run is detailed below;
+separate UI/SDK/smoke evidence does not rewrite those ledgers.
+
+## case判定と実行 / Case decisions and executions
+
+{case_table}
+
+{execution_table}
+{applicability}
+native固定blockはFAILのまま保持し、適切なcontextual refusalや成功queryへ置換しません。
+完了応答だけでは内容の合格・source実行・fresh backendを証明しません。
+
+A native fixed block remains FAIL, not a successful contextual refusal or query. Native
+completion alone proves neither content acceptance, source execution nor a fresh backend.
+
+## contextの再確認境界 / Context recheck boundaries
+
+{context_text}
+
+## 残る確認と受入の境界 / Remaining checks and acceptance boundary
+
+失敗・未検証・blocked・N/Aを削除せず、元の固定rubricで審査します。集計だけから欠陥原因や
+T04/SDK修復を推測しません。元suiteの受入flagは審査記録の値で、84 PASSから自動設定しません。
+全機能と最終user受入には、残る演習の実証と別の明示承認が必要です。
+
+Retain every FAIL, unverified, blocked and N/A cell under the unchanged rubric. Aggregate
+counts do not diagnose a defect or prove T04/SDK repair. Original-suite acceptance is the
+reviewed flag, never inferred from84 PASS. All-feature and final user acceptance require
+actual remaining-feature evidence and separate explicit approval.
+
+See [source-scoped progress](progress-report.md) and [approved summary](evaluation-summary.json).
+"""
+    lab_table = markdown_table(
+        ["Lab", ("状態", "State"), ("sourceのscope", "Source scope")],
+        [[lab, value["status"], (value["reason"]["ja"], value["reason"]["en"])]
+         for lab, value in evidence["labs"].items()],
+    )
+    publication_rows = [
+        f"- {label}: [{url}]({url})" if url else
+        f"- {label}: 未確認のためlinkなし / no verified URL supplied; no link is fabricated."
+        for label, url in (("Preview branch", publication["previewBranchUrl"]),
+                           ("Preview release", publication["previewReleaseUrl"]))
+    ]
+    progress_md = f"""# 明示選択したPreview進捗 / Explicitly selected Preview progress
+
+{selected['previewPresentation']['ja']}
+
+{selected['previewPresentation']['en']}
+
+{notice_ja}
+
+{notice_en}
+
+{completeness_ja}
+
+{completeness_en}
+
+Content scope: **24 chapters / 5 appendices**; original ten questions /84 conditions,
+synthetic data and stable v2.7 remain unchanged. Source-reviewed native placements:
+**{summary['nativeCapturePlacements']}**, unique sanitized images: **{summary['uniqueSanitizedImages']}**.
+
+## source-owned lab状態 / Source-owned lab status
+
+{lab_table}
+
+各状態はsource projectionに記録されたscopeだけです。選択runによる新しいUI/SDK/postcheckや
+残る演習の再確認を推定しません。部分観測・失敗・blockedを保持します。
+
+Each state retains its own source-projection scope, not a new UI/SDK/postcheck or
+remaining-feature recheck inferred from selection. Partial observations, failures and blocked lanes remain.
+
+## context / Context
+
+{context_text}
+
+## 再現・公開の境界 / Reproduction and publication boundary
+
+- Explicit selected original-suite run: **{final['id']}**.
+- Evidence projection SHA-256: `{evidence['projectionSha256']}`.
+- Freeze state: **{evidence['freezeStatus']}**; this is not publication or final user acceptance.
+- No Word/HTML/ZIP build, cloud call, question, data/model/instruction change, promotion or publication is performed by report generation.
+- [Input contract](../evidence-contract.md) / [selected evaluation](evaluation-report.md).
+
+{chr(10).join(publication_rows)}
+- Stable **v2.7.0 / unified-20260923** is retained, not replaced.
+"""
+    return {
+        "evaluation-summary.json": (json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8"),
+        "evaluation-report.md": evaluation_md.encode("utf-8"),
+        "progress-report.md": progress_md.encode("utf-8"),
+    }
+
+
 def report_payloads(projection: Path, *, root=ROOT, branch_url=None, release_url=None):
     evidence = public.load(projection, root=root)
+    if "selectedOriginalSuiteRunId" in evidence:
+        selected = public.selected_original_suite_run(evidence, required=True)
+        if selected["id"] != FINAL_RUN_ID:
+            return selected_report_payloads(evidence, branch_url=branch_url, release_url=release_url)
     runs = evidence["originalSuiteRuns"]
     matches = [run for run in runs if run["id"] == FINAL_RUN_ID]
     if len(matches) != 1:
         raise ValueError("The approved final NativeUI aggregate is required")
     final = matches[0]
-    expected = {"pass": 48, "fail": 36, "executionUnverified": 0, "blocked": 0, "notApplicable": 0}
-    if final["counts"] != expected or final["accepted"] or final["promoted"]:
-        raise ValueError("This frozen Preview decision is48 PASS/36 FAIL, quality-unaccepted and unpromoted")
-    method = final.get("method", {})
-    if (
-        method.get("surface") != "native-ui" or method.get("transport") != "responses"
-        or method.get("stage") != "sandbox" or method.get("runtime") != "preview"
-        or method.get("recordedModel") != "gpt-5.6-terra"
-        or method.get("judgment") != "manual-fixed-rubric-offline"
-        or method.get("sourceExecutions") != {"sql": 5, "gql": 2, "kql": 2}
-        or method.get("distinctBackendConversationsProven") != 10
-        or final["independentExecutionTraces"] != 7
-    ):
-        raise ValueError("Final method/evidence changed; review before regenerating public reports")
+    reporting.require_legacy_run(final)
     publication = {
         "previewBranchUrl": publication_link(branch_url, "branch"),
         "previewReleaseUrl": publication_link(release_url, "release"),
@@ -133,6 +332,9 @@ def report_payloads(projection: Path, *, root=ROOT, branch_url=None, release_url
             "liveIdsEndpointsMachinePathsIncluded": False, "internalReasoningIncluded": False,
         },
     }
+    if "selectedOriginalSuiteRunId" in evidence:
+        summary["selectedOriginalSuiteRunId"] = final["id"]
+        summary["originalSuiteAccepted"] = final["accepted"]
     public.public_strings({key: value for key, value in summary.items() if key != "publication"}, "public report")
     run_rows = "\n".join(
         f"| {run['label']['en']} | {run['submittedQuestions']} | "
@@ -289,19 +491,30 @@ The382px Gold panes were not enlarged to satisfy a600px completion gate.
 
 def generate(projection, output, *, check=False, root=ROOT, branch_url=None, release_url=None):
     output = output.resolve()
-    if not output.is_relative_to((root / "docs" / "v3-preview").resolve()):
-        raise ValueError("Public reports must remain under source docs/v3-preview")
+    report_roots = ((root / "docs" / "v3-preview").resolve(), (root / "docs" / "v3.0.0").resolve())
+    if not any(output.is_relative_to(base) for base in report_roots):
+        raise ValueError("Public reports must remain under source docs/v3-preview or docs/v3.0.0")
     payloads = report_payloads(projection, root=root, branch_url=branch_url, release_url=release_url)
     hashes = {name: hashlib.sha256(blob).hexdigest() for name, blob in sorted(payloads.items())}
     payloads["SHA256SUMS.txt"] = "".join(f"{digest}  {name}\n" for name, digest in hashes.items()).encode("utf-8")
+    summary = json.loads(payloads["evaluation-summary.json"])
     if check:
         if any(not (output / name).is_file() or (output / name).read_bytes() != blob for name, blob in payloads.items()):
             raise ValueError("Public reports do not match the frozen source projection")
     else:
+        if "selectedOriginalSuiteRunId" in summary and any((output / name).exists() for name in payloads):
+            if any(not (output / name).is_file() or (output / name).read_bytes() != blob for name, blob in payloads.items()):
+                raise ValueError("Selected-run reports need a fresh reviewed directory; existing historical reports are not overwritten")
         output.mkdir(parents=True, exist_ok=True)
         for name, blob in payloads.items():
             (output / name).write_bytes(blob)
-    return {"files": hashes, "sourceOnly": True, "wordHtmlZipBuilds": 0, "qualityAccepted": False, "mainPromoted": False}
+    result = {
+        "files": hashes, "sourceOnly": True, "wordHtmlZipBuilds": 0,
+        "qualityAccepted": summary["qualityAccepted"], "mainPromoted": summary["mainPromoted"],
+    }
+    if "selectedOriginalSuiteRunId" in summary:
+        result["selectedOriginalSuiteRunId"] = summary["selectedOriginalSuiteRunId"]
+    return result
 
 
 if __name__ == "__main__":

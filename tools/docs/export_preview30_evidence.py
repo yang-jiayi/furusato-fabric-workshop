@@ -27,6 +27,7 @@ def export_projection(
     evidence_path: Path, output: Path, *, reviewed_at: str, reviewer: str,
     approved: bool, runs_path: Path | None = None, evaluation_path: Path | None = None,
     root: Path | None = None, freeze_status: str = "awaiting-final-consumer-proof",
+    selected_original_suite_run_id: str | None = None,
 ):
     root = (root or ROOT).resolve()
     evidence_path, output = evidence_path.resolve(), output.resolve()
@@ -64,6 +65,8 @@ def export_projection(
         if runs_path.resolve().is_relative_to(root):
             raise ValueError("Supply the review-only aggregate input privately before export")
         data["originalSuiteRuns"] = public.suite_runs(json.loads(runs_path.read_text(encoding="utf-8")))
+    if selected_original_suite_run_id is not None:
+        data["selectedOriginalSuiteRunId"] = selected_original_suite_run_id
     if evaluation_path is not None:
         data["evaluationReport"] = evaluation.load(evaluation_path)
     public.timestamp(reviewed_at, "reviewedAt")
@@ -102,6 +105,7 @@ def main(argv=None):
     parser.add_argument("--reviewer", required=True, help="Portable reviewer role, not an account/UPN")
     parser.add_argument("--approve-public-projection", action="store_true")
     parser.add_argument("--original-suite-runs", type=Path, help="Private approved aggregate list; never raw answers or a condition matrix")
+    parser.add_argument("--selected-original-suite-run-id", help="Explicitly reviewed originalSuiteRuns id; no automatic highest/latest selection")
     parser.add_argument("--evaluation-report", type=Path, help="Optional private normalized report; existing approved projection only")
     parser.add_argument("--freeze-status", choices=sorted(public.FREEZE_STATUSES), default="awaiting-final-consumer-proof")
     args = parser.parse_args(argv)
@@ -110,6 +114,7 @@ def main(argv=None):
         approved=args.approve_public_projection, runs_path=args.original_suite_runs,
         evaluation_path=args.evaluation_report,
         freeze_status=args.freeze_status,
+        selected_original_suite_run_id=args.selected_original_suite_run_id,
     )
     print(json.dumps(result, indent=2))
     return 0

@@ -1,4 +1,4 @@
-"""Build the actual v3 Preview Word/HTML pair from one complete bilingual model."""
+"""Build an explicit v3 document edition from one complete bilingual model."""
 
 from __future__ import annotations
 
@@ -19,11 +19,18 @@ from furusato_docs.oox import (  # noqa: E402
     apply_japanese_typography, apply_package_metadata, normalise_package_metadata, tidy_contents_tail,
 )
 from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME, PREVIEW_NOTICE_JA, build  # noqa: E402
+from furusato_docs import preview30_release as release  # noqa: E402
+from furusato_docs.preview30_acceptance import require_public_acceptance  # noqa: E402
+from furusato_docs.typography import ascii_parentheses  # noqa: E402
 from furusato_docs.word_refresh import refresh_with_word  # noqa: E402
 from furusato_html.preview30 import render as render_html  # noqa: E402
 
 
-def write_word(document, context, carrier, evidence, metadata, target: Path, review: Path, lang="ja"):
+def write_word(
+    document, context, carrier, evidence, metadata, target: Path, review: Path, lang="ja", *,
+    release_profile=release.PREVIEW,
+):
+    profile = release.require_metadata_profile(metadata, release_profile)
     builder = DocumentBuilder(carrier, review / "participant-shell.docx")
     # Reserve room for the real TOC field-end and section boundary. Normal-style
     # inherited spacing can otherwise strand those two hairlines on a blank page.
@@ -33,13 +40,13 @@ def write_word(document, context, carrier, evidence, metadata, target: Path, rev
             style.paragraph_format.space_before = Pt(0)
             style.paragraph_format.space_after = Pt(1)
             style.paragraph_format.line_spacing = 1.0
-    status = PREVIEW_NOTICE_JA
+    status = release.presentation(metadata, profile).get(lang, PREVIEW_NOTICE_JA)
     cover_page(
         builder,
-        title="Furusato Workshop 3.0 Preview",
+        title=profile.title,
         title_break_after="Furusato Workshop",
         subtitle="新Ontology体験・24章・5付録／実データbinding・Metrics・Rules・Copilot添付・Graph・MCP・変更管理",
-        version=VERSION,
+        version=profile.version,
         tagline=status,
         footer_lines=(
             "Furusato Fabric Workshop", "Microsoft Learn 確認日 2026-09-29",
@@ -88,8 +95,8 @@ def write_word(document, context, carrier, evidence, metadata, target: Path, rev
     builder.save(target)
     apply_package_metadata(
         target,
-        title="Furusato Workshop 3.0 Preview — participant guide",
-        subject=status,
+        title=profile.title + " — participant guide",
+        subject=ascii_parentheses(status),
         keywords="Fabric IQ, Ontology, Preview, bilingual, synthetic, 24 chapters",
         description="Complete 24-chapter/5-appendix guide. Content SHA256: " + metadata["contentSha256"],
         label_info=carrier.label_info(), custom_properties=carrier.custom_properties(),
@@ -104,11 +111,27 @@ def main(argv=None):
     parser.add_argument("--review", required=True, type=Path, help="Private build/review directory outside the pair and repository")
     inputs = parser.add_mutually_exclusive_group()
     inputs.add_argument("--evidence", type=Path, help="Coordinator's private original+sanitized evidence manifest")
-    inputs.add_argument("--public-evidence", type=Path, help="Approved source-owned public projection; defaults to docs/assets/v3-preview-evidence/manifest.json when present")
+    inputs.add_argument("--public-evidence", type=Path, help="Approved source-owned projection; default is selected by the explicit document profile")
     parser.add_argument("--evaluation-report", type=Path, help="Private normalized evaluator report; approved fields only")
     parser.add_argument("--require-evidence", action="store_true", help="Reject an incomplete evidence handoff; does not turn blockers into passes")
     parser.add_argument("--skip-word", action="store_true", help="Draft only: leave fields unrefreshed")
+    parser.add_argument("--require-acceptance", action="store_true", help="Final-use gate: reject every unresolved original-suite, lab, capture or publication-approval condition")
+    parser.add_argument("--acceptance-approval", type=Path, help="Explicit approval bound to the selected public evidence hash and run")
+    release.add_arguments(parser)
     args = parser.parse_args(argv)
+    profile = release.get_profile(args.release_profile)
+    release.check_options(
+        profile, args.release_approval, evidence_path=args.evidence, evaluation_path=args.evaluation_report,
+    )
+    if profile.is_release and args.skip_word:
+        parser.error("--skip-word is Preview/DRAFT-only; a release requires refreshed Word fields")
+    if args.acceptance_approval and not args.require_acceptance:
+        parser.error("--acceptance-approval requires --require-acceptance")
+    if args.require_acceptance:
+        if args.evidence or args.skip_word:
+            parser.error("Final-use admission requires a reviewed public projection and refreshed Word fields.")
+        require_public_acceptance(args.public_evidence or ROOT / profile.evidence_relative,
+                                  args.acceptance_approval, root=ROOT)
     if args.require_evidence and args.skip_word:
         parser.error("--skip-word is draft-only and cannot be combined with --require-evidence")
     out, review = args.out.resolve(), args.review.resolve()
@@ -116,7 +139,10 @@ def main(argv=None):
         parser.error("Pair and review must be separate private locations outside the public repository")
     if out.exists():
         parser.error("Refusing to overwrite any existing pair directory; choose a fresh stage")
-    document, context, facts, carrier, evidence, metadata = build(ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence)
+    document, context, facts, carrier, evidence, metadata = build(
+        ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
+        release_profile=profile, release_approval=args.release_approval,
+    )
     if args.require_evidence and (
         not evidence["complete"]
         or (evidence.get("publicProjection") and evidence.get("freezeStatus") != "frozen-for-build")
@@ -124,10 +150,11 @@ def main(argv=None):
         parser.error("Actual reviewed evidence is incomplete or not finally frozen. Build a visibly labelled draft without --require-evidence.")
     out.mkdir(parents=True)
     review.mkdir(parents=True, exist_ok=True)
-    word = out / WORD_NAME
+    word = out / profile.word_name
     report = {
-        **metadata, "status": "draft",
-        "word": write_word(document, context, carrier, evidence, metadata, word, review),
+        **metadata, "status": "known-limitations-release-build" if profile.is_release else "draft",
+        "documentIdentity": release.document_identity(metadata, profile),
+        "word": write_word(document, context, carrier, evidence, metadata, word, review, release_profile=profile),
         "wordRefresh": {"ok": False, "detail": "Skipped by explicit draft option"},
     }
     if not args.skip_word:
@@ -140,10 +167,12 @@ def main(argv=None):
     report["typography"] = apply_japanese_typography(word)
     report["metadataNormalization"] = normalise_package_metadata(word)
     word_sha = hashlib.sha256(word.read_bytes()).hexdigest()
-    html = render_html(document, context, facts, carrier, evidence, metadata, word_sha, ROOT)
-    (out / HTML_NAME).write_text(html, encoding="utf-8", newline="\n")
-    report["files"] = {name: hashlib.sha256((out / name).read_bytes()).hexdigest() for name in (WORD_NAME, HTML_NAME)}
+    html = render_html(document, context, facts, carrier, evidence, metadata, word_sha, ROOT, release_profile=profile)
+    (out / profile.html_name).write_text(html, encoding="utf-8", newline="\n")
+    report["files"] = {name: hashlib.sha256((out / name).read_bytes()).hexdigest() for name in (profile.word_name, profile.html_name)}
     report["status"] = "awaiting-layout-and-interaction-validation" if evidence["complete"] else "usable-draft-awaiting-ui-evidence"
+    if profile.is_release:
+        report["status"] = "user-authorized-release-awaiting-layout-and-interaction-validation"
     (review / "build.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (review / "shared-content.json").write_text(json.dumps(asdict(document), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (review / "SHA256SUMS.txt").write_text("".join(f"{value}  {name}\n" for name, value in report["files"].items()), encoding="utf-8")

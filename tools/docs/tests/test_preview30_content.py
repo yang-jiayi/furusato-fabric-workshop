@@ -84,6 +84,49 @@ class Preview30ContentTests(unittest.TestCase):
             self.assertEqual(sorted(order), order)
             self.assertEqual(len(order), len(set(order)))
 
+    def test_matched_attachment_preview_stays_unapplied_and_separate(self):
+        section = next(s for s in self.doc.walk() if s.ident == "ch-15-6")
+        text = json.dumps(asdict(section), ensure_ascii=False)
+        for token in (
+            "separate matched Plan comparison", "same new prompt once",
+            "DonationQualityScope", "DataLayer:String", "keyless/unbound",
+            "saved definition remained unchanged",
+            "No Approve, Act, Save or materialization", "complete proposed stable-ID",
+            "earlier three-file pair", "original84 acceptance",
+        ):
+            self.assertIn(token, text)
+
+    def test_zero_question_preflight_and_failed_mount_are_not_quality_credit(self):
+        sections = {s.ident: s for s in self.doc.walk()}
+        context = json.dumps(asdict(sections["ch-20-7"]), ensure_ascii=False)
+        runtime = json.dumps(asdict(sections["ch-20-10"]), ensure_ascii=False)
+        restore = json.dumps(asdict(sections["ch-21-5"]), ensure_ascii=False)
+        for token in ("zero datasource parts", "Ten protected agents", "questions and publications were zero"):
+            self.assertIn(token, context)
+        for token in (
+            "zero-question preflight", "notifications/initialized",
+            "no question, conversation or source-execution credit",
+            "complete stdout or exitValue", "question-journal durability proof",
+            "keep questions disabled", "separate durable intent",
+            "runtime-context guard failure before authentication",
+            "managed-token retrieval and questions were zero",
+            "claim neither MCP connectivity nor an Agent/authentication-service failure",
+            "py4j JavaMap rather than a builtin dict",
+            "HTTP202 with text/plain Accepted",
+            "recognizes only this exact explicit acknowledgement",
+            "initialize200", "tools/list200", "complete native frames",
+            "Questions, source queries and source writes were zero",
+        ):
+            self.assertIn(token, runtime)
+        for token in (
+            "Create a version of my current work first", "cancelled",
+            "unchanged saved definition", "not a new version or another restoration",
+            "one native New version", "HTTP400", "No versions yet",
+            "neither the planned description edit nor Restore was performed",
+            "definitions remained byte-identical", "Do not resend private endpoints",
+        ):
+            self.assertIn(token, restore)
+
     def test_new_features_keep_required_limits(self):
         text = json.dumps(asdict(self.doc), ensure_ascii=False)
         for token in (
@@ -128,6 +171,25 @@ class Preview30ContentTests(unittest.TestCase):
         )
         self.assertIn("KEEPFILTERS", section.blocks[-1]["text"].en)
         self.assertIn("14,900", section.blocks[-1]["text"].en)
+
+    def test_new_ontology_context_and_mcp_runtime_do_not_relabel_legacy_execution(self):
+        context = next(s for s in self.doc.walk() if s.ident == "ch-20-7")
+        runtime = next(s for s in self.doc.walk() if s.ident == "ch-20-10")
+        context_text = json.dumps(asdict(context), ensure_ascii=False)
+        runtime_text = json.dumps(asdict(runtime), ensure_ascii=False)
+        for token in (
+            "read-only", "SQL/KQL/DAX", "legacy Ontology GQL", "Download ontology context",
+            "ten minutes", "No data added", "does not establish deletion or denied permissions",
+            "do not assume cross-source joins",
+        ):
+            self.assertIn(token.lower(), context_text.lower())
+        for token in (
+            "management plane", "MCP runtime", "Model Context Protocol", "unpublished Agent",
+            "private monkeypatches", "not independent source-execution trace", "2026-08-26",
+            "must not resubmit or replace the original ten/84",
+            "<WORKSPACE_ID>", "<DATA_AGENT_ID>",
+        ):
+            self.assertIn(token, runtime_text)
 
     def test_v3_parameter_defaults_are_literal_not_comments(self):
         section = next(s for s in self.doc.walk() if s.ident == "appendix-b-2")
@@ -350,6 +412,24 @@ class Preview30ContentTests(unittest.TestCase):
                 self.assertIn(request["id"], text)
             self.assertGreaterEqual(request["chapter"], 1)
             self.assertLessEqual(request["chapter"], 24)
+
+    def test_supplementary_context_does_not_replace_required_capture_inventory(self):
+        requests = evidence.requests()
+        self.assertEqual(26, sum(item.get("completionRequired", True) for item in requests))
+        optional = {item["id"] for item in requests if not item.get("completionRequired", True)}
+        self.assertIn("p30-09-copy-001-manual", optional)
+        self.assertIn("p30-20-data-agent-mcp-settings", optional)
+        self.assertIn("p30-15-noattachment-preview", optional)
+        self.assertIn("p30-11-executed-parameters", optional)
+        self.assertIn("p30-21-metric-rich-version", optional)
+        self.assertNotIn("p30-20-mcp", optional)
+
+    def test_reusable_preflight_and_final_admission_remain_separate(self):
+        section = next(s for s in self.doc.walk() if s.ident == "ch-20-10")
+        text = json.dumps(asdict(section), ensure_ascii=False)
+        for token in ("preflight_mcp.py", "no question-submission path", "RequireAcceptance",
+                      "26 completion captures", "unmet conditions stop artifact creation"):
+            self.assertIn(token, text)
 
 
 class EvidenceBoundaryTests(unittest.TestCase):

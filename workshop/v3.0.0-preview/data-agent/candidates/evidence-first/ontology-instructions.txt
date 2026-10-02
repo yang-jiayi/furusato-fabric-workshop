@@ -1,0 +1,28 @@
+This is the explicitly selected, materialized static business Ontology. Use actual GQL for membership/containment, reverse traversal, multihop paths and relationship-backed counts; SQL attribute lookups do not replace connectivity evidence. No operational time-series Graph is selected. Preserve actual labels, key types and stored directions.
+
+PARENT COUNT CONTRACT
+For the number of child entities belonging to a parent, request ONE aggregate row per parent: parent ID, parent name, COUNT(DISTINCT child key). Group ONLY by parent ID/name. Do not select or group by child key/name in that aggregate. The child-list projection is a different query and must never turn a count request into many child rows with count=1.
+This is ISO GQL, not SQL window syntax or Cypher. Do not generate OVER, PARTITION BY, or WITH to mix child rows with a parent count. Explicitly exclude individual child IDs/names from both the natural-language request and aggregate result. The stable-ID rule applies to the returned parent only.
+For Prefecture membership the stored direction is Municipality -MunicipalityInPrefecture-> Prefecture. From the Prefecture question anchor the traversal is reverse. Return the declared relation and direction with the parent-level count; resolve the exact parent identity from grounding.
+The aggregate projection must also return constant scalar provenance columns: Relationship and Traversal. For a Prefecture anchor these are the exact canonical stored MunicipalityInPrefecture declaration and its reverse traversal. Derive the constants from the actual matched declared edge, preserving case. Do not group by or select an individual edge/child property to produce them. Alias names such as prefecture_id are not labels, and reverse traversal does not create a new inverse "contains" relationship.
+Use this parameterized query shape with the actual declared types/properties and resolved parent filter:
+MATCH (child:`ChildType`)-[edge:`StoredRelationship`]->(parent:`ParentType`)
+WHERE <resolved parent filter>
+RETURN parent.`ParentKey` AS ParentId, parent.`ParentName` AS ParentName,
+       COUNT(DISTINCT child.`ChildKey`) AS ChildCount,
+       "<canonical stored declaration>" AS Relationship,
+       "<canonical anchor traversal>" AS Traversal
+GROUP BY ParentId, ParentName
+The reverse-anchor walk uses the same stored edge, not a fabricated inverse type. Never add child columns to this shape.
+
+PATH CONTRACT
+A donation trace uses GQL to prove actual connectivity along DonorMadeDonation, DonationToMunicipality, MunicipalityInPrefecture, DonorLivesInPrefecture, DonationSelectedGift, GiftInCategory and SupplierProvidesGift where applicable. Preserve stable instance IDs and edge direction; SQL returns exact attributes, category and all prefecture/supplier IDs and names. A catalog supplier is not an order-level manufacturer or fulfiller; multiple suppliers must not multiply one Donation amount.
+For an operational/static comparison, filter the exact SQL/KQL Municipality string key, return its Prefecture ID/name through MunicipalityInPrefecture, and keep each source's metrics separate.
+
+RESPONSE DIRECTION EVIDENCE
+Use the actual saved relation metadata AND executed GQL. Return relation/traversal provenance as scalar output for the answer composer, rather than leaving it to infer labels from aliased columns. Include plain ASCII lines:
+Relationship: <stored source> -<relation>-> <stored target>
+Traversal: <question anchor> <-<relation>- <neighbor> (reverse)
+or Traversal: <question anchor> -<relation>-> <neighbor> (forward).
+Do not reverse the stored direction or omit the label because it was not returned as a scalar property. If grounding or actual execution cannot establish it, state that limitation, not a fabricated path.
+Do not claim query execution from schema inspection, an inferred SQL join, a self-reported answer, or a query someone else ran. Respect native errors and disclose them.

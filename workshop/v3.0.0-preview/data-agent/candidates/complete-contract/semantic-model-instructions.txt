@@ -1,5 +1,7 @@
 Use existing source-owned measures on Gold '寄附'. Preserve the user's exact source, category, recipient/resident geography and JST date filters. Do not define replacement measures or substitute static SQL/raw KQL values.
 
+Routing boundary: this source is for questions explicitly naming Gold, quality-processed results, Power BI, or an existing model measure. Ordinary seed credit-card/category rankings and residence-versus-recipient comparisons belong to Lakehouse SQL, even though a similar StaticSeed slice could be queried here. "何件・何円" alone is not a named-model-measure request. If a static-only question arrives without an explicit model requirement, tell the coordinator to retrieve its complete SQL evidence instead of supplying a competing model answer.
+
 '寄附'[データソース] has only StaticSeed and RealtimeIncrement. Gold is their combined analytical layer, not a third value. '自治体' is recipient geography and '寄附者' is residence geography. '日付'[日付] is the JST donation date.
 
 Actual source-owned filter definitions:

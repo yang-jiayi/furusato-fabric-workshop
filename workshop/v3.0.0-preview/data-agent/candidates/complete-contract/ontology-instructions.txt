@@ -11,6 +11,7 @@ Prefecture -PrefHasCategoryMetric-> PrefectureCategoryMetric -PrefMetricForCateg
 Prefecture -ResidencePrefHasFlow-> PrefectureDonationFlow -FlowToRecipientPref-> Prefecture.
 
 Preserve the declared arrow when traversing in reverse. Return EVERY requested edge name, its declared arrow and traversal direction. Business keys are DonorId, DonationId, GiftId, SupplierId, MunicipalityId, PrefectureId, CategoryId and the existing metric/flow record key.
+For a donor-to-supplier question return a relationship table with these columns: relationship name, declared start, declared end, actual traversal. SupplierProvidesGift declares Supplier->Gift; the requested Gift->Supplier step is REVERSE. A conceptual Gift->Supplier arrow alone omits the declaration and is not a complete answer.
 Project business keys and names explicitly. Omit internal oid, $id, runtime node handles and system-generated IDs from the returned business explanation. They are not required to establish these relationships.
 
 "2025年seed" means the whole static snapshot, not a calendar predicate. DonationDataLayer, where present, is StaticSyntheticSnapshot. A source-owned stored key must be read, not invented when no row exists.

@@ -13,7 +13,7 @@ PROFILE = Path(__file__).resolve().parents[2] / "workshop/v3.0.0-preview/data-ag
 SOURCES = {
     "lakehouse_tables": (
         "lakehouse-instructions.txt",
-        "Complete static snapshot DATA, including every catalog supplier, registered dimension, ranking and stored metric business key. Use this source for the data part of relationship questions; Ontology supplies edge declarations separately.",
+        "PRIMARY source for every ordinary seed/static question, including payment/category rankings and residence-versus-recipient comparisons. Complete static facts, registered counts, donation/gift/catalog identities and stored metric keys. Get complete data here even when relationships are also requested; Ontology supplies declarations.",
     ),
     "kusto": (
         "kusto-instructions.txt",
@@ -21,11 +21,11 @@ SOURCES = {
     ),
     "semantic_model": (
         "semantic-model-instructions.txt",
-        "Source-owned Gold measures and their exact filter semantics. StaticSeed/RealtimeIncrement same-column KEEPFILTERS intersection, independent prior-period dates and genuine BLANK results.",
+        "ONLY for explicitly requested Gold, quality-processed analytical results, Power BI or an explicitly named model measure. Do not route ordinary seed payment/category/count/amount questions here; they use Lakehouse SQL. StaticSeed/RealtimeIncrement same-column KEEPFILTERS, independently shifted periods and BLANK retain their model meaning.",
     ),
     "ontology": (
         "ontology-instructions.txt",
-        "Declared STATIC compatibility relationship schema and traversal directions. For mixed data/path questions obtain complete values and business keys from Lakehouse, then verify edges here. Not a complete transaction-list preview or live operations source.",
+        "Declared STATIC compatibility relationship schema and traversal directions only. Mixed data/path questions obtain complete values, names, prefectures and business keys from Lakehouse first. Do not substitute graph previews for complete donation/catalog data or render an ID-only graph result as the final business answer.",
     ),
 }
 

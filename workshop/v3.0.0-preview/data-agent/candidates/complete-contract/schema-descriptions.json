@@ -2,6 +2,8 @@
   "agent_municipality_snapshot.PrefectureId": "Recipient prefecture business ID. Retain this ID AND PrefectureName in every municipality ranking table, even if the user only asks for municipality codes.",
   "agent_municipality_snapshot.DonationCount": "Count over ALL static-snapshot donations, not a JST-calendar-year subset. Count ties use MunicipalityId.",
   "agent_municipality_snapshot.AmountYen": "Total yen over ALL static-snapshot donations. The label 2025 seed does not filter dates.",
+  "agent_municipality_snapshot.RegisteredMunicipalitiesInPrefecture": "Full registered municipality population for this prefecture, independent of TOP/sample and DonationCount. Required for count-plus-sample questions. Read once or MAX; never SUM.",
+  "agent_supplier_catalog.GiftId": "Catalog gift join key. To answer a specific DonationId's suppliers, first read agent_donation_detail.GiftId and filter/join THIS column. The absence of DonationId here does not mean the catalog link is unavailable.",
   "agent_donation_detail.DonationDateJst": "JST calendar date. Filter only for an explicitly requested calendar interval, NEVER just because the user says 2025 seed; that snapshot includes a JST year-boundary spill.",
   "agent_donation_detail.DonationYearMonthJst": "JST calendar month. Used for explicit calendar grouping/filtering, not to restrict the whole 2025 seed snapshot.",
   "agent_donation_detail.DonatedAtUtc": "UTC donation event timestamp. A snapshot year label alone does not request a predicate on this column.",

@@ -46,6 +46,11 @@
       "query": "SELECT DonationYearMonthJst,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.agent_donation_detail WHERE DonationDateJst >= '2025-04-01' AND DonationDateJst < '2025-07-01' GROUP BY DonationYearMonthJst ORDER BY DonationYearMonthJst"
     },
     {
+      "sourceType": "lakehouse_tables",
+      "question": "seedの寄付5000300を業者までつなぐと行が増える？ 元の寄付件数・金額と、返礼品のカタログ業者数・一覧を分けて教えて。",
+      "query": "SELECT d.DonationId,d.GiftId,d.GiftName,d.OriginalDonationCount,d.OriginalDonationAmountYen,c.CatalogSupplierCount,s.SupplierId,s.SupplierName,s.SupplierType,s.PrefectureId,s.PrefectureName FROM (SELECT DonationId,GiftId,GiftName,COUNT_BIG(*) AS OriginalDonationCount,SUM(DonationAmountYen) AS OriginalDonationAmountYen FROM dbo.agent_donation_detail WHERE DonationId='5000300' GROUP BY DonationId,GiftId,GiftName) AS d CROSS APPLY (SELECT COUNT(DISTINCT SupplierId) AS CatalogSupplierCount FROM dbo.agent_supplier_catalog WHERE GiftId=d.GiftId) AS c LEFT JOIN dbo.agent_supplier_catalog AS s ON s.GiftId=d.GiftId ORDER BY s.SupplierId"
+    },
+    {
       "sourceType": "kusto",
       "question": "2026年8月5日の生観測をUTCの1時間単位にまとめて、全ファイル合算の件数・金額・実際の観測開始終了UTCを出して。",
       "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-05T00:00:00Z) and EventMinute < datetime(2026-08-06T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| order by UtcHour asc"

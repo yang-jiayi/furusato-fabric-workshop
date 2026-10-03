@@ -9,7 +9,9 @@ This configuration is not an external answering service, answer cache, benchmark
 - Normalize the Japanese seed-year label to the whole snapshot before sending a SQL question.
 - Require complete business identity/context columns and reconcile exhaustive supplier lists with the source-owned distinct count.
 - Put exact observation grain, synthetic-publication semantics and source-owned filter intersection in both retrieval and response guidance.
-- Add selected SQL column descriptions and nine SQL/five KQL examples using reusable patterns, not development-case expected answers.
+- Add selected SQL column descriptions and ten SQL/five KQL examples using reusable patterns, not development-case expected answers.
+- Use closed response blocks, source-layer captions and the declared relationship dictionary rather than optional narrative that can contradict correct data.
+- Preserve the original donation through a gift-key catalog join, distinguish registry counts from donation counts, and require consecutive ordinal positions for tied ranking rows.
 
 [`answer_contract_profile.py`](../../../../../tools/data-agent/answer_contract_profile.py)
 rebases the isolated Agent's Draft from its Published definition, replaces the instruction/example bundles and updates only the named selected column descriptions.

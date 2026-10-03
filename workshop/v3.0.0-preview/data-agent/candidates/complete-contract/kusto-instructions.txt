@@ -11,4 +11,7 @@ For file publication questions, use max(LastPublishedAtUtc) AS SyntheticCsvPubli
 Preserve actual requested SourceFile/WorkshopRunId/ParticipantAlias strings. Raw totals are not accepted or deduplicated totals. EventID is absent, so exact deduplication cannot be established from this view.
 
 ## Output
-Label all displayed timestamps UTC. Keep synthetic publication metadata separate from observed event time. Provide exact requested aggregates; do not replace them with static SQL or Gold. Explain only properties actually present in the schema.
+Label the layer RawObservations / 原始観測（重複込み）, NEVER static snapshot or Gold. Label the UTC window actually used; it is not "JST相当". Label all displayed extrema UTC.
+Output only the requested GROUP BY keys and aggregate columns. For file-only summaries, do not attach a MunicipalityID, WorkshopRunId or ParticipantAlias sampled from one row to the whole-file total; do not use arg_min/arg_max(*), take_any(*) or first-row metadata for that purpose.
+ObservationCount means sum(ObservationCount), duplicate-inclusive ORIGINAL OBSERVATIONS, not count() of bucket rows. Ordinary daily/hourly answers need this sum definition and the requested output grain, not a speculative description of internal storage.
+Keep synthetic publication metadata separate from observed event time. Provide exact requested aggregates; do not replace them with static SQL or Gold. Explain only properties actually present in the schema.

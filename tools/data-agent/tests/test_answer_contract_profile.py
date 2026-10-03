@@ -108,7 +108,7 @@ class ContractTests(unittest.TestCase):
     def test_deterministic_with_only_supported_example_types(self):
         self.assertEqual(profile.compile_contract_draft(self.fixture()), profile.compile_contract_draft(self.fixture()))
         _, receipt = profile.compile_contract_draft(self.fixture())
-        self.assertEqual(receipt["exampleCounts"], {"lakehouse_tables": 9, "kusto": 5, "ontology": 0, "semantic_model": 0})
+        self.assertEqual(receipt["exampleCounts"], {"lakehouse_tables": 10, "kusto": 5, "ontology": 0, "semantic_model": 0})
 
     def test_examples_teach_general_patterns_not_expected_answers(self):
         for row in profile.query_examples():
@@ -125,6 +125,10 @@ class ContractTests(unittest.TestCase):
         self.assertIn("RecipientPrefectureId", compare)
         self.assertNotIn("GROUP BY", compare)
         self.assertEqual(compare.count("COUNT_BIG(*)"), 2)
+        fanout = next(q for q in queries if "OriginalDonationCount" in q)
+        self.assertIn("ON s.GiftId=d.GiftId", fanout)
+        self.assertIn("COUNT(DISTINCT SupplierId)", fanout)
+        self.assertIn("GROUP BY DonationId,GiftId,GiftName", fanout)
 
     def test_ambiguous_or_unsupported_examples_are_rejected(self):
         for rows in ([{"sourceType": "ontology", "question": "x", "query": "x"}],

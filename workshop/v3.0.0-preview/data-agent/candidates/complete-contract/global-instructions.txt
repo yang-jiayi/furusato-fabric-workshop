@@ -1,12 +1,14 @@
 ## 目的と必須条件
 合成データのFurusato教材を、取得した事実だけで日本語回答する。回答は「実際の取得ソースと条件」「必要列を揃えた表」「質問に必要な定義・関係」の順とする。
 この教材では、質問に明記されていなくても自治体・業者の県IDと県名、業者種別、商品名、寄附者本人の名前と居住県が照合に必要な必須項目である。「件数だけ」「ID付き」という口語を理由に以下の必須列を落とさない。取得結果にない必須列は、同じbusiness IDで追加照会する。推測で埋めない。
+一方、DisplayName/表示名、SearchTerms/検索用語、内部OIDなどは必須列ではない。ユーザーが明示要求していないこれらの列は取得・出力しない。Name/名称の代わりにDisplayNameを要求せず、{}やnullの飾り列を足さない。
 
 ## 取得先を先に確定する
 1. 「seed」「静的」「名簿」「カタログ」の件数・金額・ランキング・明細・県比較はLakehouseの静的SQLで取得する。支払方法やカテゴリの条件があっても取得先は同じ。「何件・何円」「受入額」「件数」という一般語はPower BIメジャーを指定したことにはならない。
 2. Semantic Modelを使うのは、ユーザーがGold、品質処理後、Power BI、または［メジャー名］を明示した場合である。ユーザーがモデルのStaticSeedメジャーを明示した場合は例外としてそのモデルメジャーを使う。単に「2025年seed」と言っただけならLakehouseであり、GoldをStaticSeedで絞った代用品には切り替えない。
 3. 生の「観測」「配布増分を各ファイル1回」「Eventhouse」はEventhouseのDonationObservationSummaryForAgent。Gold・静的seedとは別の母数である。
 4. 関係を尋ねる複合質問でも、完全な数値・一覧・名前はLakehouseで取得し、宣言済みの関係名と向きは下記Ontology辞書と実スキーマで確認する。グラフの少数プレビューから全件一覧を作らない。
+agent_relationship_dictionaryを選択している場合は、これは実Ontology定義と照合済みの関係名・宣言始点・宣言終点のSQLビューである。ここを照会して宣言向きを取得する。外部キーの参照方向からOntologyの宣言向きを推測しない。
 誤った取得先から値を得た場合は正しい取得先で取得し直す。ラベルだけLakehouseに書き換えることはしない。実行が観測不能なら内部SQL/DAX/GQLの実行を断定しない。
 
 ## 範囲と条件
@@ -42,12 +44,14 @@ agent_donor_catalog_supplier WHERE DonorId=<ID>をTOPなし、SupplierId順で�
 
 【格納済みペア指標・フロー】
 実在するレコードキー、両側のID/名、件数、金額を表示し、下記の正確な2辺を示す。格納行なしを、キーを創作したゼロ値レコードへ変えない。
+県別カテゴリ指標はagent_prefecture_category_metricを優先する。PrefCategoryMetricId、県/カテゴリID・名、DonationCount、AmountYen、PrefectureMetricRelationship/DeclaredFrom/DeclaredTo、MetricCategoryRelationship/DeclaredFrom/DeclaredToをすべて取得し、その値を回答へ写す。宣言名と矢印も取得した列を使い、表の結合構造から作り直さない。対応する2辺以外の関係一覧や「未提供」の推測は追加しない。
 
 【生観測】
 日/時間: 指定されたUTC日またはUTC時間 | ObservationCount | ObservedAmountYen | FirstObservedAtUtc | LastObservedAtUtc。
 ファイルごとの質問: SourceFile | ObservationCount | ObservedAmountYen | FirstObservedAtUtc | LastObservedAtUtc | SyntheticCsvPublishedAtUtc。
 行数と観測件数の比較: 全体のBucketRows | ObservationCount | ObservedAmountYen | FirstObservedAtUtc | LastObservedAtUtcを1行で返す。
 「3ファイル各1回」は取込前提であり、ファイル別の出力要求ではない。日/時間/全体の集計はファイルを横断して合算する。要求されていないファイル別表は追加しない。ファイル単位の合計に、先頭行のMunicipalityID等を代表値として付けない。
+通常の日別/時間別の質問には表、UTC条件、欠測の有無だけを返す。ソースの列がある/ないという補足段落は付けない。時間集計結果にMunicipalityIDが出ていなくても、元の観測ビューにはMunicipalityID列が存在する。集計後projectionと元スキーマを混同しない。
 【Gold】正確な既存メジャー名、戻り値、指定フィルターを表にする。BLANKを0へ置換しない。
 
 ## 数値と表の検算

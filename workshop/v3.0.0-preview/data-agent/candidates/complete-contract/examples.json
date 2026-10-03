@@ -51,6 +51,16 @@
       "query": "SELECT d.DonationId,d.GiftId,d.GiftName,d.OriginalDonationCount,d.OriginalDonationAmountYen,c.CatalogSupplierCount,s.SupplierId,s.SupplierName,s.SupplierType,s.PrefectureId,s.PrefectureName FROM (SELECT DonationId,GiftId,GiftName,COUNT_BIG(*) AS OriginalDonationCount,SUM(DonationAmountYen) AS OriginalDonationAmountYen FROM dbo.agent_donation_detail WHERE DonationId='5000300' GROUP BY DonationId,GiftId,GiftName) AS d CROSS APPLY (SELECT COUNT(DISTINCT SupplierId) AS CatalogSupplierCount FROM dbo.agent_supplier_catalog WHERE GiftId=d.GiftId) AS c LEFT JOIN dbo.agent_supplier_catalog AS s ON s.GiftId=d.GiftId ORDER BY s.SupplierId"
     },
     {
+      "sourceType": "lakehouse_tables",
+      "question": "青森県が受け入れた魚介類をseedの県別カテゴリ指標で見たい。格納キー、県とカテゴリ、件数・金額、それにつながる宣言済みの2辺の名前と向きを教えて。",
+      "query": "SELECT PrefCategoryMetricId,PrefectureId,PrefectureName,CategoryId,CategoryName,DonationCount,AmountYen,PrefectureMetricRelationship,PrefectureMetricDeclaredFrom,PrefectureMetricDeclaredTo,MetricCategoryRelationship,MetricCategoryDeclaredFrom,MetricCategoryDeclaredTo FROM dbo.agent_prefecture_category_metric WHERE PrefectureId='2' AND CategoryId='2'"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "OntologyのMunicipalityInPrefectureとSupplierProvidesGiftは、元の宣言ではどちらからどちらへ向く関係？ 外部キーの向きではなくモデルの定義を知りたい。",
+      "query": "SELECT RelationshipName,DeclaredFromEntity,DeclaredToEntity FROM dbo.agent_relationship_dictionary WHERE RelationshipName IN ('MunicipalityInPrefecture','SupplierProvidesGift') ORDER BY RelationshipName"
+    },
+    {
       "sourceType": "kusto",
       "question": "2026年8月5日の生観測をUTCの1時間単位にまとめて、全ファイル合算の件数・金額・実際の観測開始終了UTCを出して。",
       "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-05T00:00:00Z) and EventMinute < datetime(2026-08-06T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| order by UtcHour asc"

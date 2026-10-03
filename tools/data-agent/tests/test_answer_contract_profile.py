@@ -108,7 +108,7 @@ class ContractTests(unittest.TestCase):
     def test_deterministic_with_only_supported_example_types(self):
         self.assertEqual(profile.compile_contract_draft(self.fixture()), profile.compile_contract_draft(self.fixture()))
         _, receipt = profile.compile_contract_draft(self.fixture())
-        self.assertEqual(receipt["exampleCounts"], {"lakehouse_tables": 10, "kusto": 5, "ontology": 0, "semantic_model": 0})
+        self.assertEqual(receipt["exampleCounts"], {"lakehouse_tables": 12, "kusto": 5, "ontology": 0, "semantic_model": 0})
 
     def test_examples_teach_general_patterns_not_expected_answers(self):
         for row in profile.query_examples():
@@ -138,6 +138,81 @@ class ContractTests(unittest.TestCase):
                 (path / "examples.json").write_text(json.dumps({"examples": rows}), encoding="utf-8")
                 with self.assertRaises(ValueError):
                     profile.query_examples(path)
+
+    def grounding_fixture(self):
+        docs = decoded_parts(self.fixture())
+        published = "Files/Config/published/lakehouse_tables/datasource.json"
+        schema = docs[published]["elements"][0]["children"][0]
+        schema["children"].append({
+            "type": "table_grouping", "is_selected": True, "children": [{
+                "type": "lakehouse_tables.table", "display_name": "ot_pref_category_metric",
+                "id": "metric-base", "is_selected": True,
+                "children": [{"id": "metric-base-key", "is_selected": True}],
+            }],
+        })
+        draft = published.replace("/published/", "/draft/")
+        docs[draft] = copy.deepcopy(docs[published])
+        views = docs[draft]["elements"][0]["children"][0]["children"][0]["children"]
+        columns = []
+        for name in profile.SCHEMA_VIEWS:
+            names = ("RelationshipName", "DeclaredFromEntity", "DeclaredToEntity") if name.endswith("dictionary") else (
+                "PrefCategoryMetricId", "PrefectureName", "CategoryName",
+            )
+            columns.extend({"TABLE_NAME": name, "COLUMN_NAME": column, "DATA_TYPE": "varchar"} for column in names)
+            views.append({
+                "type": "lakehouse_tables.view", "display_name": name, "id": "native-" + name,
+                "is_selected": True, "description": None, "children": [{
+                    "type": "lakehouse_tables.column", "display_name": column,
+                    "id": "native-" + name + "-" + column, "data_type": "varchar",
+                    "is_selected": True, "description": None,
+                } for column in names],
+            })
+        return {"parts": [inline_part(p, v) for p, v in docs.items()]}, columns
+
+    def test_schema_views_use_native_ids_without_changing_published(self):
+        original, columns = self.grounding_fixture()
+        saved = copy.deepcopy(original)
+        compiled, receipt = profile.compile_schema_grounded_draft(original, columns)
+        self.assertEqual(original, saved)
+        before, after = decoded_parts(original), decoded_parts(compiled)
+        for path, value in before.items():
+            if "/published/" in path:
+                self.assertEqual(after[path], value)
+        schema = after["Files/Config/draft/lakehouse_tables/datasource.json"]["elements"][0]["children"][0]
+        views = schema["children"][0]["children"]
+        added = [v for v in views if v["display_name"] in profile.SCHEMA_VIEWS]
+        self.assertEqual({v["id"] for v in added}, {"native-" + n for n in profile.SCHEMA_VIEWS})
+        self.assertEqual(len(added), 2)
+        base = schema["children"][1]["children"][0]
+        self.assertFalse(base["is_selected"])
+        self.assertFalse(base["children"][0]["is_selected"])
+        self.assertFalse(receipt["sourceIdentitiesAndSelectionsPreserved"])
+        self.assertTrue(receipt["sourceIdentitiesPreserved"])
+        self.assertEqual(receipt["retiredTableSelections"], ["ot_pref_category_metric"])
+        self.assertEqual(profile.compile_schema_grounded_draft(compiled, columns), (compiled, receipt))
+
+    def test_schema_views_reject_wrong_sql_types_and_missing_native_nodes(self):
+        original, columns = self.grounding_fixture()
+        columns[0]["DATA_TYPE"] = "bigint"
+        with self.assertRaisesRegex(ValueError, "SQL metadata"):
+            profile.compile_schema_grounded_draft(original, columns)
+        original, columns = self.grounding_fixture()
+        docs = decoded_parts(original)
+        views = docs["Files/Config/draft/lakehouse_tables/datasource.json"]["elements"][0]["children"][0]["children"][0]["children"]
+        views.pop()
+        with self.assertRaisesRegex(ValueError, "identities"):
+            profile.compile_schema_grounded_draft({"parts": [inline_part(p, v) for p, v in docs.items()]}, columns)
+
+    def test_schema_view_definitions_carry_metadata_not_case_answers(self):
+        views = profile.PROFILE / "views"
+        dictionary = (views / "agent_relationship_dictionary.sql").read_text(encoding="utf-8")
+        metric = (views / "agent_prefecture_category_metric.sql").read_text(encoding="utf-8")
+        self.assertEqual(dictionary.count("UNION ALL"), 14)
+        self.assertIn("'PrefMetricForCategory','PrefectureCategoryMetric','GiftCategory'", dictionary)
+        self.assertIn("m.PrefCategoryMetricId", metric)
+        self.assertIn("m.PrefCategoryStaticCount AS DonationCount", metric)
+        self.assertNotIn("45-01", metric)
+        self.assertNotIn("32985000", metric)
 
 
 if __name__ == "__main__":

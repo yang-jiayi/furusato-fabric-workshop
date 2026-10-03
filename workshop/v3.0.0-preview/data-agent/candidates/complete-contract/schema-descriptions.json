@@ -1,0 +1,17 @@
+{
+  "agent_municipality_snapshot.PrefectureId": "Recipient prefecture business ID. Retain this ID AND PrefectureName in every municipality ranking table, even if the user only asks for municipality codes.",
+  "agent_municipality_snapshot.DonationCount": "Count over ALL static-snapshot donations, not a JST-calendar-year subset. Count ties use MunicipalityId.",
+  "agent_municipality_snapshot.AmountYen": "Total yen over ALL static-snapshot donations. The label 2025 seed does not filter dates.",
+  "agent_donation_detail.DonationDateJst": "JST calendar date. Filter only for an explicitly requested calendar interval, NEVER just because the user says 2025 seed; that snapshot includes a JST year-boundary spill.",
+  "agent_donation_detail.DonationYearMonthJst": "JST calendar month. Used for explicit calendar grouping/filtering, not to restrict the whole 2025 seed snapshot.",
+  "agent_donation_detail.DonatedAtUtc": "UTC donation event timestamp. A snapshot year label alone does not request a predicate on this column.",
+  "agent_donation_detail.ResidentPrefectureId": "Donor residence geography, for '在住者からの寄附'. Independent of recipient geography.",
+  "agent_donation_detail.RecipientPrefectureId": "Recipient municipality geography, for '自治体が受け取った寄附'. Independent of donor residence.",
+  "agent_supplier_catalog.SupplierType": "Source-owned supplier business type. Include together with supplier ID/name and prefecture ID/name in catalog answers.",
+  "agent_supplier_catalog.PrefectureId": "Supplier prefecture ID. Retain it with PrefectureName even for a catalog-count/sample question.",
+  "agent_supplier_catalog.CatalogGiftCount": "Complete distinct gift count for the supplier before TOP/sample filtering. Do not recount sample rows.",
+  "agent_donor_catalog_supplier.CatalogSupplierCount": "Exact complete distinct supplier count across ALL of this donor's donations and gifts, computed before preview/paging. Displayed unique SupplierIds must match this count.",
+  "agent_donor_catalog_supplier.SupplierId": "One distinct catalog supplier for this donor, across all Donation/Gift paths. Retrieve all rows for DonorId, not suppliers from a donation sample.",
+  "agent_donor_catalog_supplier.ResidentPrefectureId": "Donor residence prefecture ID. Include with donor name and residence prefecture name before the complete supplier table.",
+  "agent_donor_catalog_supplier.SupplierPrefectureId": "Supplier prefecture ID, separate from donor residence. Include with supplier name/type and SupplierPrefectureName."
+}

@@ -1,0 +1,14 @@
+## Source meaning
+DonationObservationSummaryForAgent contains raw, duplicate-inclusive observations. Its exact row key is MunicipalityID + EventMinute + WorkshopRunId + ParticipantAlias + SourceFile. Its remaining columns are ObservationCount, ObservedAmountYen, FirstObservedAt, LastObservedAt, LastPublishedAtUtc. There is NO donor, gift, supplier, EventID, DataSource or processing-status field.
+
+## Query plan
+Filter EventMinute with the requested half-open absolute UTC interval. The distributed August2026 fixture label uses UTC unless the user explicitly requests a JST day/month. Convert JST boundaries to UTC.
+SUM(ObservationCount) and SUM(ObservedAmountYen) provide observations and money. COUNT counts aggregated buckets, NOT observations or unique events.
+Always project min(FirstObservedAt) AS FirstObservedAtUtc and max(LastObservedAt) AS LastObservedAtUtc for each output group. These are observed DonatedAt extrema, not the requested interval boundaries.
+Group only by the requested time/file/municipality grain. For day/hour totals, aggregate across ALL files; "each file once" is the ingestion premise, not a request to group by file. Display every requested day/hour, not a sample. Check missing days against the full calendar.
+For bucket-versus-observation questions, return BucketRows=count(), ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), both extrema, and the exact five-field grain. Do not add donor identity.
+For file publication questions, use max(LastPublishedAtUtc) AS SyntheticCsvPublishedAtUtc. This is a synthetic PublishedAtUtc value supplied IN THE CSV, not actual Eventhouse publication, ingestion, upload or pipeline telemetry. Include file, count, money and both DonatedAt extrema. State "CSVに用意された合成の配信時刻。実際の取込・公開・処理完了時刻ではない。"
+Preserve actual requested SourceFile/WorkshopRunId/ParticipantAlias strings. Raw totals are not accepted or deduplicated totals. EventID is absent, so exact deduplication cannot be established from this view.
+
+## Output
+Label all displayed timestamps UTC. Keep synthetic publication metadata separate from observed event time. Provide exact requested aggregates; do not replace them with static SQL or Gold. Explain only properties actually present in the schema.

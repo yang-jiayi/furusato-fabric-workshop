@@ -1,0 +1,74 @@
+{
+  "examples": [
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "2025年seedで受入金額の多い自治体は？ 上位4つを件数とコード付きで見たい。",
+      "query": "SELECT TOP 4 ROW_NUMBER() OVER (ORDER BY AmountYen DESC,MunicipalityId ASC) AS OrdinalRank,MunicipalityId,MunicipalityName,PrefectureId,PrefectureName,DonationCount,AmountYen FROM dbo.agent_municipality_snapshot ORDER BY AmountYen DESC,MunicipalityId ASC"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seed名簿の県ID38には何自治体ある？ 自治体ID順に最初の4つの名前も見たい。",
+      "query": "SELECT TOP 4 MunicipalityId,MunicipalityName,PrefectureId,PrefectureName,RegisteredMunicipalitiesInPrefecture AS RegisteredCount FROM dbo.agent_municipality_snapshot WHERE PrefectureId='38' ORDER BY MunicipalityId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄付5000400の詳細を、寄附者の居住地、受入自治体、返礼品まで追いたい。",
+      "query": "SELECT DonationId,DonationAmountYen,DonationPaymentMethod,DonatedAtUtc,DonatedAtJstText,DonorId,DonorName,ResidentPrefectureId,ResidentPrefectureName,MunicipalityId,MunicipalityName,RecipientPrefectureId,RecipientPrefectureName,GiftId,GiftName,CategoryId,CategoryName FROM dbo.agent_donation_detail WHERE DonationId='5000400'"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "2025年seedのカテゴリID3について、受入額が多い4自治体を件数と一緒に出して。",
+      "query": "SELECT TOP 4 ROW_NUMBER() OVER (ORDER BY SUM(DonationAmountYen) DESC,MunicipalityId ASC) AS OrdinalRank,MunicipalityId,MunicipalityName,RecipientPrefectureId AS PrefectureId,RecipientPrefectureName AS PrefectureName,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.agent_donation_detail WHERE CategoryId='3' GROUP BY MunicipalityId,MunicipalityName,RecipientPrefectureId,RecipientPrefectureName ORDER BY SUM(DonationAmountYen) DESC,MunicipalityId ASC"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "商品3000008をカタログに登録している業者を全部知りたい。実際の発送担当とは区別して。",
+      "query": "SELECT DISTINCT GiftId,GiftName,SupplierId,SupplierName,SupplierType,PrefectureId,PrefectureName FROM dbo.agent_supplier_catalog WHERE GiftId='3000008' ORDER BY SupplierId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "業者4000100のカタログは何品？ 商品ID順の最初の4品の名前も知りたい。",
+      "query": "SELECT TOP 4 SupplierId,SupplierName,SupplierType,PrefectureId,PrefectureName,GiftId,GiftName,CatalogGiftCount FROM dbo.agent_supplier_catalog WHERE SupplierId='4000100' ORDER BY GiftId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄附者2000314がseedで選んだ商品のカタログ業者を重複なしで全部知りたい。寄付と商品を経由する関係で、人と業者の直接の関係ではないよ。",
+      "query": "SELECT ROW_NUMBER() OVER (ORDER BY SupplierId) AS SupplierOrdinal,DonorId,DonorName,ResidentPrefectureId,ResidentPrefectureName,SupplierId,SupplierName,SupplierType,SupplierPrefectureId,SupplierPrefectureName,CatalogSupplierCount FROM dbo.agent_donor_catalog_supplier WHERE DonorId='2000314' ORDER BY SupplierId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "2025年seedのカテゴリID3で、大阪府在住者の分と北海道の自治体が受け取った分を別々に件数と金額で比べて。seed全体が対象。",
+      "query": "SELECT 'DonorResidence' AS GeographyRole,p.PrefectureId,p.PrefectureName,c.CategoryId,c.CategoryName,a.DonationCount,a.AmountYen FROM dbo.ot_prefecture AS p CROSS JOIN dbo.ot_gift_category AS c CROSS JOIN (SELECT COUNT_BIG(*) AS DonationCount,COALESCE(SUM(DonationAmountYen),0) AS AmountYen FROM dbo.agent_donation_detail WHERE ResidentPrefectureId='27' AND CategoryId='3') AS a WHERE p.PrefectureId='27' AND c.CategoryId='3' UNION ALL SELECT 'Recipient',p.PrefectureId,p.PrefectureName,c.CategoryId,c.CategoryName,a.DonationCount,a.AmountYen FROM dbo.ot_prefecture AS p CROSS JOIN dbo.ot_gift_category AS c CROSS JOIN (SELECT COUNT_BIG(*) AS DonationCount,COALESCE(SUM(DonationAmountYen),0) AS AmountYen FROM dbo.agent_donation_detail WHERE RecipientPrefectureId='1' AND CategoryId='3') AS a WHERE p.PrefectureId='1' AND c.CategoryId='3' ORDER BY GeographyRole"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seedの2025年4月から6月を、日本時間の月ごとに件数と金額で見たい。",
+      "query": "SELECT DonationYearMonthJst,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.agent_donation_detail WHERE DonationDateJst >= '2025-04-01' AND DonationDateJst < '2025-07-01' GROUP BY DonationYearMonthJst ORDER BY DonationYearMonthJst"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "2026年8月5日の生観測をUTCの1時間単位にまとめて、全ファイル合算の件数・金額・実際の観測開始終了UTCを出して。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-05T00:00:00Z) and EventMinute < datetime(2026-08-06T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| order by UtcHour asc"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "配布増分の2026年8月の生観測をUTC日付別に全ファイル合算し、抜けている日も確認したい。",
+      "query": "let Daily = DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcDay=bin(EventMinute,1d);\nrange UtcDay from datetime(2026-08-01) to datetime(2026-08-31) step 1d\n| join kind=leftouter Daily on UtcDay\n| project UtcDay, HasObservation=isnotnull(ObservationCount), ObservationCount=coalesce(ObservationCount,0), ObservedAmountYen=coalesce(ObservedAmountYen,0), FirstObservedAtUtc, LastObservedAtUtc\n| order by UtcDay asc"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "日本時間2026年8月20日の生観測について、重複込み件数・金額と対応する実観測UTC開始終了を見たい。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-19T15:00:00Z) and EventMinute < datetime(2026-08-20T15:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt)\n| extend RequestedJstDate='2026-08-20', Timezone='UTC'"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "2026年8月のCSVごとに記録上の最終配信日時とイベント時刻、件数、金額を比べたい。実際の取込完了時刻とは区別して。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), SyntheticCsvPublishedAtUtc=max(LastPublishedAtUtc) by SourceFile\n| extend PublicationSemantics='Synthetic CSV PublishedAtUtc metadata; not actual Eventhouse publication, ingestion or pipeline completion', Timezone='UTC'\n| order by SourceFile asc"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "2026年8月の観測データで、集約ビューの行数と元の観測件数と金額を比較したい。1行の粒度も説明して。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize BucketRows=count(), ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt)\n| extend RowGrain='MunicipalityID, EventMinute, WorkshopRunId, ParticipantAlias, SourceFile', Timezone='UTC'"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+## Scope
+This is the complete static synthetic snapshot. Translate "2025年seed"/"2025 seed" to ALL snapshot rows WITHOUT a date or year predicate, including its JST year-boundary spill. An explicitly requested calendar day/month/interval is different and uses the stated timezone.
+Read-only SQL. Query each donation once; catalog eligibility is not an assignment, revenue or fulfillment fact.
+
+## Authoritative query plans
+- Date-free municipality totals/ranks and registered municipality counts: agent_municipality_snapshot. It includes zero-donation registered municipalities and has no date column. Select MunicipalityId, MunicipalityName, PrefectureId, PrefectureName, DonationCount, AmountYen; supply ordinal rank. For count ties sort by MunicipalityId immediately after the count.
+- Payment/category/date filters and exact DonationId: agent_donation_detail, one row per donation with all IDs/names prejoined. Aggregate DonationAmountYen and COUNT_BIG(*). An identifier such as "寄付5000400" is DonationId, not an amount.
+- Two geography conditions: compute each population independently, using ResidentPrefectureId/Name for "在住/居住者から" and RecipientPrefectureId/Name for "自治体が受け取る/受入". Resolve the category, then use the same category predicate in both populations. Snapshot questions add NO calendar predicate.
+- Supplier catalog count/sample: agent_supplier_catalog. Always project SupplierId, SupplierName, SupplierType, PrefectureId, PrefectureName, CatalogGiftCount together with GiftId/GiftName. CatalogGiftCount is source-computed before TOP and must not be replaced by the sample size.
+- A donor's complete catalog supplier set, INCLUDING questions about the modeled path: agent_donor_catalog_supplier WHERE DonorId=<requested ID>, with no TOP. Return DonorId/DonorName/ResidentPrefectureId/ResidentPrefectureName, SupplierId/SupplierName/SupplierType/SupplierPrefectureId/SupplierPrefectureName, CatalogSupplierCount and ROW_NUMBER() OVER (ORDER BY SupplierId) AS SupplierOrdinal. This view already follows ALL Donation/Gift/catalog pairs before DISTINCT. Never rebuild the supplier set from a preview of the donor's donations. If paging is needed, preserve the same full count and get every page.
+- Existing municipality/category, prefecture/category and residence/recipient flow record values: the selected ot_* pair-metric/flow tables, joined to selected dimensions for names. Return the actual stored key plus component IDs/names, count and amount. Get relationship declarations separately from Ontology.
+
+## Output
+Retain the requested identity/context columns in result rows, even for colloquial questions that mention only a name or code. A donor's residence is not the supplier's or recipient's prefecture. Count a registered dimension by its stable ID, not by donation facts. Read a repeated full count once; never SUM it.
+Return successful query evidence only. A missing stored metric row differs from a computed zero. Do not add opaque graph IDs or infer physical operations from catalog relationships.

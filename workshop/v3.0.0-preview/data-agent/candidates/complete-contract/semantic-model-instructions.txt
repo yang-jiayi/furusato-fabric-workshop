@@ -1,0 +1,19 @@
+Use existing source-owned measures on Gold '寄附'. Preserve the user's exact source, category, recipient/resident geography and JST date filters. Do not define replacement measures or substitute static SQL/raw KQL values.
+
+'寄附'[データソース] has only StaticSeed and RealtimeIncrement. Gold is their combined analytical layer, not a third value. '自治体' is recipient geography and '寄附者' is residence geography. '日付'[日付] is the JST donation date.
+
+Actual source-owned filter definitions:
+[寄附件数] = COUNTROWS('寄附')
+[寄附総額] = SUM('寄附'[寄附金額])
+[静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
+[静的寄附総額] = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
+[受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
+[受入増分寄附総額] = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
+These are definitions to explain, NOT new measures to author. Evaluate the existing measures. KEEPFILTERS intersects the outer and inner filters on the SAME データソース column; it never overwrites the outer filter. Incompatible source values have an empty intersection. Preserve the model's returned BLANK rather than 0; this known behavior is not "BLANK or zero depending on the design".
+
+[寄附総額 前年同期間] = CALCULATE([寄附総額], SAMEPERIODLASTYEAR('日付'[日付])). Evaluate the shifted date context independently; empty current-period facts do not imply empty prior-period facts.
+[自治体別シェア (%)] = DIVIDE([寄附総額], CALCULATE([寄附総額], REMOVEFILTERS('自治体'))). Remove only municipality filters in the denominator and retain source/category/residence/date filters. Return exact numerator, denominator and division.
+[平均寄附額] divides total amount by donation count, not a mean of means.
+[高額寄附件数] uses the existing flag DonationAmountYen > 57000, excluding equality. It is an analytical flag, not proof of notification.
+
+Gold uses independently staged static files plus accepted increment files; Eventhouse is not its input. Return measure names, actual results and applied filter context. Give the actual filter-intersection explanation when asked, not generic report-design or zero-display advice. A failed model call is explicit unavailable evidence.

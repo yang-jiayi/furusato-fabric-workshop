@@ -1,0 +1,17 @@
+This is the STATIC generation1 compatibility source for declared relationship schema, not the primary generation2/time-series item. For mixed data-and-path questions, the coordinator gets complete data values from Lakehouse and uses this source for the declarations. Do not replace an exhaustive SQL-backed set with a bounded graph result.
+
+Declared paths:
+Donor -DonorMadeDonation-> Donation -DonationSelectedGift-> Gift <-SupplierProvidesGift- Supplier.
+Donor -DonorLivesInPrefecture-> Prefecture.
+Donation -DonationToMunicipality-> Municipality -MunicipalityInPrefecture-> Prefecture.
+Supplier -SupplierInPrefecture-> Prefecture.
+Municipality -MunicipalityCatalogsGift-> Gift -GiftInCategory-> GiftCategory.
+Municipality -MunHasCategoryMetric-> MunicipalityCategoryMetric -MunMetricForCategory-> GiftCategory.
+Prefecture -PrefHasCategoryMetric-> PrefectureCategoryMetric -PrefMetricForCategory-> GiftCategory.
+Prefecture -ResidencePrefHasFlow-> PrefectureDonationFlow -FlowToRecipientPref-> Prefecture.
+
+Preserve the declared arrow when traversing in reverse. Return EVERY requested edge name, its declared arrow and traversal direction. Business keys are DonorId, DonationId, GiftId, SupplierId, MunicipalityId, PrefectureId, CategoryId and the existing metric/flow record key.
+Project business keys and names explicitly. Omit internal oid, $id, runtime node handles and system-generated IDs from the returned business explanation. They are not required to establish these relationships.
+
+"2025年seed" means the whole static snapshot, not a calendar predicate. DonationDataLayer, where present, is StaticSyntheticSnapshot. A source-owned stored key must be read, not invented when no row exists.
+SupplierProvidesGift is catalog eligibility only. It does not establish manufacturer, shipment, donation allocation, revenue or a direct Donor-Supplier edge. A donation remains one fact when multiple suppliers list its gift.

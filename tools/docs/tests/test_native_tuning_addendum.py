@@ -52,6 +52,27 @@ class TuningAddendumTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "contradict"):
             validate_study(study)
 
+    def test_expanded_cohort_is_not_relabelled_as_independent(self):
+        study = self.fixture()
+        study["unseen"] = {"label": "first unused", "caseCount": 12,
+                           "content": {"PASS": 9, "FAIL": 3, "UNKNOWN": 0},
+                           "factual": {"PASS": 10, "FAIL": 2, "UNKNOWN": 0}}
+        study["expandedDevelopment"] = {
+            "label": "known32", "caseCount": 32,
+            "content": {"PASS": 32, "FAIL": 0, "UNKNOWN": 0},
+            "factual": {"PASS": 32, "FAIL": 0, "UNKNOWN": 0},
+            "formerlyUnusedQuestionsNowUsedForTuning": True,
+        }
+        page = render_html(study, "a" * 64)
+        self.assertIn("9 / 3 / 0", page)
+        self.assertIn("32 / 0 / 0", page)
+        self.assertIn("新しい独立検証でもありません", page)
+        study["expandedDevelopment"]["caseCount"] = 31
+        study["expandedDevelopment"]["content"]["PASS"] = 31
+        study["expandedDevelopment"]["factual"]["PASS"] = 31
+        with self.assertRaisesRegex(ValueError, "both complete"):
+            validate_study(study)
+
     def test_escapes_content_and_preserves_input(self):
         study = self.fixture()
         study["changesEn"] = ["<script>not executable</script>"]

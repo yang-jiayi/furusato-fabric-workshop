@@ -61,6 +61,21 @@
       "query": "SELECT RelationshipName,DeclaredFromEntity,DeclaredToEntity FROM dbo.agent_relationship_dictionary WHERE RelationshipName IN ('MunicipalityInPrefecture','SupplierProvidesGift') ORDER BY RelationshipName"
     },
     {
+      "sourceType": "lakehouse_tables",
+      "question": "静的seedの支払方法とデータ層は、実データではどんな文字列で保存されている？ 空結果の前に正しい条件値を確認したい。",
+      "query": "SELECT DISTINCT DonationDataLayer,DonationPaymentMethod FROM dbo.agent_donation_detail ORDER BY DonationDataLayer,DonationPaymentMethod"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seed全体で銀行振込の寄付だけなら、受入額が多い2自治体はどこ？ 件数と自治体・県のIDと名前も出して。",
+      "query": "SELECT TOP 2 ROW_NUMBER() OVER (ORDER BY SUM(DonationAmountYen) DESC,MunicipalityId ASC) AS OrdinalRank,MunicipalityId,MunicipalityName,RecipientPrefectureId AS PrefectureId,RecipientPrefectureName AS PrefectureName,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.agent_donation_detail WHERE DonationPaymentMethod='銀行振込' GROUP BY MunicipalityId,MunicipalityName,RecipientPrefectureId,RecipientPrefectureName ORDER BY SUM(DonationAmountYen) DESC,MunicipalityId ASC"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄附者2000314のカタログ業者を調べる前に、本人のIDと名前、居住県のIDと名前を確認して。",
+      "query": "SELECT n.DonorId,n.DonorName,n.PrefectureId AS ResidentPrefectureId,p.PrefectureName AS ResidentPrefectureName FROM dbo.ot_donor AS n JOIN dbo.ot_prefecture AS p ON p.PrefectureId=n.PrefectureId WHERE n.DonorId='2000314'"
+    },
+    {
       "sourceType": "kusto",
       "question": "2026年8月5日の生観測をUTCの1時間単位にまとめて、全ファイル合算の件数・金額・実際の観測開始終了UTCを出して。",
       "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-05T00:00:00Z) and EventMinute < datetime(2026-08-06T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| order by UtcHour asc"

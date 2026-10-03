@@ -167,8 +167,18 @@ def compile_schema_grounded_draft(original: dict, columns: list[dict], profile: 
         "agent_prefecture_category_metric for existing metric keys plus both declared edges; "
         "do not infer relation direction from foreign-key layout."
     )
-    receipt.update(sourceIdentitiesAndSelectionsPreserved=False, sourceIdentitiesPreserved=True,
-                   addedViewSelections=sorted(SCHEMA_VIEWS),
-                   retiredTableSelections=["ot_pref_category_metric"],
+    published_path = path.replace("/draft/", "/published/")
+    published_nodes = list(walk(before[published_path]["elements"]))
+    selection_map = lambda items: {n["id"]: n.get("is_selected") for n in walk(items) if "id" in n}
+    added = [name for name in SCHEMA_VIEWS if not any(
+        n.get("type") == "lakehouse_tables.view" and n.get("display_name") == name and n.get("is_selected")
+        for n in published_nodes)]
+    retired_names = ["ot_pref_category_metric"] if any(
+        n.get("type") == "lakehouse_tables.table" and n.get("display_name") == "ot_pref_category_metric"
+        and n.get("is_selected") for n in published_nodes) else []
+    receipt.update(sourceIdentitiesAndSelectionsPreserved=(
+                       selection_map(before[published_path]["elements"]) == selection_map(wanted[path]["elements"])),
+                   sourceIdentitiesPreserved=True, addedViewSelections=sorted(added),
+                   retiredTableSelections=retired_names, groundingViewsVerified=sorted(SCHEMA_VIEWS),
                    serviceOwnedViewIdsPreserved=True)
     return {"parts": [inline_part(p, v) for p, v in wanted.items()]}, receipt

@@ -9,10 +9,12 @@ This configuration is not an external answering service, answer cache, benchmark
 - Normalize the Japanese seed-year label to the whole snapshot before sending a SQL question.
 - Require complete business identity/context columns and reconcile exhaustive supplier lists with the source-owned distinct count.
 - Put exact observation grain, synthetic-publication semantics and source-owned filter intersection in both retrieval and response guidance.
-- Add selected SQL column descriptions and twelve SQL/five KQL examples using reusable patterns, not development-case expected answers.
+- Add selected SQL column descriptions and fifteen SQL/five KQL examples using reusable patterns, not development-case expected answers.
 - Use closed response blocks, source-layer captions and the declared relationship dictionary rather than optional narrative that can contradict correct data.
 - Preserve the original donation through a gift-key catalog join, distinguish registry counts from donation counts, and require consecutive ordinal positions for tied ranking rows.
 - Expose verified Ontology declarations as queryable schema data, rather than asking query generation to infer declared arrows from foreign-key dependencies.
+- Preserve the actual static-layer/payment value domains and verify suspicious empty results before reporting that a population does not exist.
+- Retain donor identity/residence for short as well as long supplier lists, and explain the source-owned high-value flag as strictly greater than 57,000 yen, excluding equality. This is a business rule, not an embedded answer count.
 
 [`answer_contract_profile.py`](../../../../../tools/data-agent/answer_contract_profile.py)
 contains a pure instruction compiler and a structural compiler. Both rebase the isolated Agent's Draft from its Published definition, replace the instruction/example bundles and update the named selected column descriptions.
@@ -47,3 +49,5 @@ Each materially changed candidate is evaluated with the same frozen development 
 Every failure, unknown and incomplete delivery stays in the denominator; answers are never pooled across rounds.
 Only a complete passing development round permits a new, unused source-derived holdout evaluation.
 Historical evaluations, release tags and the main Agent remain unchanged until an explicit adoption decision.
+
+If a previously unused question exposes a failure and is then used to tune a later configuration, it becomes a **known development case**. Preserve its first validation result and re-evaluate the complete expanded cohort on the new configuration. Do not call that rerun independent validation, add earlier passing answers to it, or omit any failed case.

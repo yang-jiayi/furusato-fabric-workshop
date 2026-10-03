@@ -108,7 +108,7 @@ class ContractTests(unittest.TestCase):
     def test_deterministic_with_only_supported_example_types(self):
         self.assertEqual(profile.compile_contract_draft(self.fixture()), profile.compile_contract_draft(self.fixture()))
         _, receipt = profile.compile_contract_draft(self.fixture())
-        self.assertEqual(receipt["exampleCounts"], {"lakehouse_tables": 12, "kusto": 5, "ontology": 0, "semantic_model": 0})
+        self.assertEqual(receipt["exampleCounts"], {"lakehouse_tables": 15, "kusto": 5, "ontology": 0, "semantic_model": 0})
 
     def test_examples_teach_general_patterns_not_expected_answers(self):
         for row in profile.query_examples():
@@ -213,6 +213,19 @@ class ContractTests(unittest.TestCase):
         self.assertIn("m.PrefCategoryStaticCount AS DonationCount", metric)
         self.assertNotIn("45-01", metric)
         self.assertNotIn("32985000", metric)
+
+    def test_source_value_domains_and_strict_flag_are_preserved(self):
+        descriptions = json.loads((profile.PROFILE / "schema-descriptions.json").read_bytes())
+        self.assertIn("StaticSyntheticSnapshot", descriptions["agent_donation_detail.DonationDataLayer"])
+        self.assertIn("電子決済", descriptions["agent_donation_detail.DonationPaymentMethod"])
+        text = (profile.PROFILE / "global-instructions.txt").read_text(encoding="utf-8")
+        self.assertIn("DonationAmountYen > 57000", text)
+        self.assertNotIn("1157", text)
+        rows = profile.query_examples()
+        payment = next(row["query"] for row in rows if "DonationPaymentMethod='銀行振込'" in row["query"])
+        self.assertNotIn("DonationDataLayer=", payment)
+        self.assertNotIn("DonationDate", payment)
+        self.assertTrue(any("SELECT DISTINCT DonationDataLayer,DonationPaymentMethod" in row["query"] for row in rows))
 
 
 if __name__ == "__main__":

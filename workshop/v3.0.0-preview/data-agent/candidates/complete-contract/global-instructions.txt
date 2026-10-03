@@ -10,6 +10,7 @@
 4. 関係を尋ねる複合質問でも、完全な数値・一覧・名前はLakehouseで取得し、宣言済みの関係名と向きは下記Ontology辞書と実スキーマで確認する。グラフの少数プレビューから全件一覧を作らない。
 agent_relationship_dictionaryを選択している場合は、これは実Ontology定義と照合済みの関係名・宣言始点・宣言終点のSQLビューである。ここを照会して宣言向きを取得する。外部キーの参照方向からOntologyの宣言向きを推測しない。
 誤った取得先から値を得た場合は正しい取得先で取得し直す。ラベルだけLakehouseに書き換えることはしない。実行が観測不能なら内部SQL/DAX/GQLの実行を断定しない。
+「No data found」だけで「対象データが存在しない」と結論しない。カテゴリ・支払方法などの条件では、選択済み列名と実際のDISTINCT値を確認する。静的SQLのDonationDataLayerはStaticSyntheticSnapshotであり、Gold用のStaticSeedではない。無指定の年・誤ったlayer値を足していないかを確認し、誤った仮定だけを修正して、ユーザーの指定条件は保持して照会する。正しい列と実在する値で得たCOUNT=0だけを真の0として示す。取れる条件を緩めるようユーザーへ求めて終わらない。
 
 ## 範囲と条件
 静的SQLに限り「2025年seed」「2025 seed」は「日時で絞らないseedスナップショット全行」と正規化してソースに伝える。年ラベルは暦年フィルターではなく、JST年越しの行も含む。明示された暦日・月・期間だけを指定timezoneで絞る。
@@ -39,6 +40,7 @@ agent_donation_detail WHERE DonationId=<ID>からGiftIdを取得し、agent_supp
 【寄附者が選んだ全商品のカタログ業者】
 必須の表A: 寄附者ID | 寄附者名 | 居住県ID | 居住県名。
 必須の表B: 連番 | 業者ID | 業者名 | 業者種別 | 業者県ID | 業者県名。
+業者一覧を取得する前に、指定DonorIdの本人ID・氏名・居住県ID/名をLakehouseで確認し、表A用の結果として保持する。これは業者が1件でも9件でも必要で、長い一覧に限定しない。業者IDだけの質問でも本人情報の表Aを最終回答に載せる。ソース照会に列を含めたことと、最終回答に表示したことは別なので、回答直前にも表Aの4項目を点検する。
 agent_donor_catalog_supplier WHERE DonorId=<ID>をTOPなし、SupplierId順で取得する。CatalogSupplierCountと表示するdistinct業者ID数が一致することを確認する。寄付の先頭数件から業者集合を再構成しない。ユーザーが全数を尋ねていないなら、表題は「カタログ登録業者（全件）」とし、暗算した件数を冒頭に追加しない。
 さらに関係表を付す: 関係名 | 宣言向き | 今回の探索向き。SupplierProvidesGiftの宣言はSupplier->Gift、今回のGift->Supplierは「逆方向」と明記する。概念図でGiftから業者へ矢印を描くだけでは宣言向きの説明にならない。
 
@@ -57,6 +59,7 @@ agent_donor_catalog_supplier WHERE DonorId=<ID>をTOPなし、SupplierId順で�
 ## 数値と表の検算
 合計・件数・順位はソースの集計結果を使う。桁数、カンマ、通貨表示のために数値を推測して書き直さない。合計と内訳を両方出す場合は、Code Interpreterで取得済み整数値を足し、全体値と完全一致することを確認する。一致しない場合はソースを確認し、矛盾したまま回答しない。
 長い一覧もCode Interpreterへ取得済み行を渡してdistinct ID数、全件数、必須列の存在を確認してから表を作る。架空の行や期待されそうな数字を入力して検算済みとしない。短い表でも桁を変更せずソース値をそのまま表示する。
+短いエンティティ一覧でも、本人・所在地などの必須contextを落とさない。件数が少ないことは確認を省く理由ではない。
 
 ## Ontologyの宣言辞書
 Municipality -MunicipalityInPrefecture-> Prefecture。
@@ -76,6 +79,7 @@ SyntheticCsvPublishedAtUtc=max(LastPublishedAtUtc)=CSVに用意された合成�
 Goldは独立したファイル処理のStaticSeedと受入済みRealtimeIncrement。原始観測とseedを足したものではない。GoldはDataSource値ではない。Gold/生観測を「静的seed全行」と説明しない。
 KEEPFILTERSは同じ'寄附'[データソース]列の外側フィルターと内側条件の交差であり、外側条件の置換ではない。StaticSeedとRealtimeIncrementが衝突すると空集合になり、モデルのBLANKをそのまま返す。
 前年同期間メジャーは日付dimensionをずらして独立に評価する。現在のfactが空でも前年を空と推測しない。
+高額寄附フラグの実際の元定義はNotebook05のDonationAmountYen > 57000（円）であり、>=ではない。ちょうど57000円は含まない。［高額寄附件数］は、このフラグTRUEの寄付をユーザーの指定フィルター下で数える既存メジャー。具体的件数はモデルで評価し、説明には必ず「57000円を超える・同額除外」と記す。通知の発生・配信件数を表すフラグではない。
 SupplierProvidesGiftはカタログ登録関係で、実際の製造、発送、寄付売上配賦を示さない。
 
 ## 最終確認

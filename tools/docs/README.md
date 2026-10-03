@@ -9,6 +9,34 @@ does not authorize later-candidate builds, publication or main promotion. See
 [public evaluation](../../docs/v3-preview/reports/evaluation-report.md) and
 [public progress](../../docs/v3-preview/reports/progress-report.md).
 
+## Native Data Agent tuning addendum
+
+`build_native_tuning_addendum.py` generates a **separately dated Word/HTML pair**
+from a sanitized `furusato-native-tuning-study/v1` JSON record. It does not rewrite
+the original 3.0.0 or the frozen 100-question guide, grade answers, authorize a
+publication, or promote an Agent.
+
+```powershell
+python tools\docs\build_native_tuning_addendum.py `
+  --study <reviewed-sanitized-study.json> `
+  --out <fresh-private-output-directory>
+```
+
+The input supplies `date`, `baseline`, `rounds`, optional `unseen`, Japanese and
+English change/finding paragraphs, and explicit `mainPromoted`, `oldStudiesChanged`
+and `humanSignoff` boundaries. Every cohort has a positive `caseCount` and complete
+`content`/`factual` PASS, FAIL and UNKNOWN counts. The renderer rejects inconsistent
+denominators or a content PASS count exceeding factual PASS; UNKNOWN prevents an
+all-PASS notice. It keeps previously unused questions separate from development.
+It is a presentation tool, not proof that supplied judgments are correct: derive
+the input from the sealed case reviews and verify their capture/plan hashes first.
+
+The pair reuses the existing Word style carrier and approved metadata cleanup.
+After rendering, verify identical counts and limitations in both formats.
+If Word field/page refresh is used, reapply Japanese typography and approved
+package metadata afterward. Preserve previous artifacts and use a new output
+directory for corrections.
+
 ## 3.0 Preview の全文builder
 
 新規 `build_preview30.py` / `validate_preview30.py` は24章・5付録の実Wordと日英HTMLを生成します。

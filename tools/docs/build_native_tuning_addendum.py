@@ -22,7 +22,9 @@ def validate_study(study):
         raise ValueError("Unsupported study schema.")
     if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", study["date"]) or not study["rounds"]:
         raise ValueError("A dated, measured study is required.")
-    for run in [study["baseline"], *study["rounds"], *([study["unseen"]] if study["unseen"] else [])]:
+    expanded = study.get("expandedDevelopment")
+    for run in [study["baseline"], *study["rounds"], *([study["unseen"]] if study["unseen"] else []),
+                *([expanded] if expanded else [])]:
         size = run["caseCount"]
         if type(size) is not int or size <= 0:
             raise ValueError("Every cohort needs its actual positive denominator.")
@@ -36,6 +38,11 @@ def validate_study(study):
             raise ValueError("Complete-content counts contradict the factual judgments.")
     if any(run["caseCount"] != study["baseline"]["caseCount"] for run in study["rounds"]):
         raise ValueError("Development comparisons must use the same case count.")
+    if expanded:
+        if not study["unseen"] or not expanded["formerlyUnusedQuestionsNowUsedForTuning"]:
+            raise ValueError("Expanded development must disclose its formerly unused questions.")
+        if expanded["caseCount"] != study["baseline"]["caseCount"] + study["unseen"]["caseCount"]:
+            raise ValueError("Expanded cohort must retain both complete source cohorts.")
     if study["mainPromoted"] or study["oldStudiesChanged"] or study["humanSignoff"]:
         raise ValueError("This addendum does not authorize promotion, historical rewrites or human signoff.")
     return study
@@ -51,14 +58,18 @@ def all_pass(run):
 
 def sections(study):
     validate_study(study)
-    latest = study["rounds"][-1]
+    expanded = study.get("expandedDevelopment")
+    latest = expanded or study["rounds"][-1]
     notice = (
-        "最新の固定開発セットは全問PASSです。未使用セットの結果と区別して評価します。"
+        "最新の既知開発セットは全問PASSです。未使用セットの初回結果と区別して評価します。"
         if all_pass(latest) else
-        "最新の固定開発セットにもFAILまたはUNKNOWNが残っています。0 FAIL達成・品質受入とは扱いません。"
+        "最新の既知開発セットにもFAILまたはUNKNOWNが残っています。0 FAIL達成・品質受入とは扱いません。"
     )
     rows = [[run["label"], str(run["caseCount"]), count_text(run["factual"]), count_text(run["content"])]
             for run in [study["baseline"], *study["rounds"]]]
+    if expanded:
+        rows.append([expanded["label"], str(expanded["caseCount"]),
+                     count_text(expanded["factual"]), count_text(expanded["content"])])
     result = [
         {"title": "評価結果 / Measured results", "paragraphs": [
             notice, study["cohortNoteJa"],
@@ -69,6 +80,11 @@ def sections(study):
              if study["unseen"] is None else
              f"未使用{study['unseen']['caseCount']}問: 事実 {count_text(study['unseen']['factual'])}、"
              f"内容 {count_text(study['unseen']['content'])}。開発セットとは別の分母です。"),
+            ("この初回検証で見つかった問題を改善に使ったため、その質問は以後は既知の開発問題です。"
+             f"拡大{expanded['caseCount']}問の結果は、元の開発問題とこれらの質問をすべて同一の新構成で再評価したもので、"
+             "過去回答の合算でも新しい独立検証でもありません。拡大後の構成に対する別の未使用セットは未実施です。"
+             if expanded else
+             "未使用セットを改善へ流用した結果を、独立した再検証とは呼びません。"),
             "Previously unused questions are separate from the known development cohort. These measured results do not guarantee correctness for arbitrary future questions.",
         ]},
         {"title": "実装した改善 / Implemented changes", "paragraphs": study["changesJa"] + study["changesEn"]},

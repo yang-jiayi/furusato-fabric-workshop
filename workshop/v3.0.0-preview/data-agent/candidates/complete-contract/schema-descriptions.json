@@ -7,6 +7,8 @@
   "agent_donation_detail.DonationDateJst": "JST calendar date. Filter only for an explicitly requested calendar interval, NEVER just because the user says 2025 seed; that snapshot includes a JST year-boundary spill.",
   "agent_donation_detail.DonationYearMonthJst": "JST calendar month. Used for explicit calendar grouping/filtering, not to restrict the whole 2025 seed snapshot.",
   "agent_donation_detail.DonatedAtUtc": "UTC donation event timestamp. A snapshot year label alone does not request a predicate on this column.",
+  "agent_donation_detail.DonationDataLayer": "The only stored value is StaticSyntheticSnapshot. Do NOT filter this to StaticSeed, STATIC, seed or a year. StaticSeed is a different Gold-model DataSource value.",
+  "agent_donation_detail.DonationPaymentMethod": "Exact stored values: クレジットカード; コンビニ決済; 銀行振込; 電子決済. All have actual static rows. Resolve the exact stored value before claiming an empty payment population.",
   "agent_donation_detail.ResidentPrefectureId": "Donor residence geography, for '在住者からの寄附'. Independent of recipient geography.",
   "agent_donation_detail.RecipientPrefectureId": "Recipient municipality geography, for '自治体が受け取った寄附'. Independent of donor residence.",
   "agent_supplier_catalog.SupplierType": "Source-owned supplier business type. Include together with supplier ID/name and prefecture ID/name in catalog answers.",
@@ -14,6 +16,7 @@
   "agent_supplier_catalog.CatalogGiftCount": "Complete distinct gift count for the supplier before TOP/sample filtering. Do not recount sample rows.",
   "agent_donor_catalog_supplier.CatalogSupplierCount": "Exact complete distinct supplier count across ALL of this donor's donations and gifts, computed before preview/paging. Displayed unique SupplierIds must match this count.",
   "agent_donor_catalog_supplier.SupplierId": "One distinct catalog supplier for this donor, across all Donation/Gift paths. Retrieve all rows for DonorId, not suppliers from a donation sample.",
+  "agent_donor_catalog_supplier.DonorName": "Required anchor donor identity. Return DonorId/DonorName and both residence prefecture fields alongside every donor-to-supplier question, including ID-only requests and small supplier sets; display the anchor once before its suppliers.",
   "agent_donor_catalog_supplier.ResidentPrefectureId": "Donor residence prefecture ID. Include with donor name and residence prefecture name before the complete supplier table.",
   "agent_donor_catalog_supplier.SupplierPrefectureId": "Supplier prefecture ID, separate from donor residence. Include with supplier name/type and SupplierPrefectureName."
 }

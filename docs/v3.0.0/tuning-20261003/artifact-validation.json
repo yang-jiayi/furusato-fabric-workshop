@@ -1,0 +1,27 @@
+{
+  "kind": "document-and-profile-integrity-only",
+  "verifiedAtUtc": "2026-10-03T16:32:54.495937+00:00",
+  "wordPages": 4,
+  "wordFieldsRefreshed": true,
+  "wordApprovedAuthorMetadataRestored": true,
+  "pairedCountsAndBoundariesVerified": true,
+  "profileHashBindingsVerified": true,
+  "newLocalLinksVerified": true,
+  "publishedContentPrivacyVerified": true,
+  "htmlViewportWidth": 1425,
+  "htmlDocumentWidth": 1425,
+  "htmlHorizontalOverflow": false,
+  "htmlScriptCount": 0,
+  "focusedUnitTests": {
+    "profile": 25,
+    "pairedDocument": 7
+  },
+  "artifactSha256": {
+    "furusato-data-agent-tuning-20261003.docx": "ea111f241981e1c06dae98b33bd3b907b5c5d0ecb02bdd1bfa47840d5166f733",
+    "furusato-data-agent-tuning-20261003.html": "4c3145b3d6af795bcd37d0f68c9026753f315d2f89baff4d0b1424e80b3c2583",
+    "result-20261003b.json": "a3cdc657829f38afcbac47c038735c16d1e574ec6b9f584fccd000a23fac1b5a"
+  },
+  "aiAnswerQualityAccepted": false,
+  "artifactChecksAreNotAiAnswerPasses": true,
+  "mainAgentPromoted": false
+}

@@ -81,8 +81,9 @@ def sections(study):
              f"未使用{study['unseen']['caseCount']}問: 事実 {count_text(study['unseen']['factual'])}、"
              f"内容 {count_text(study['unseen']['content'])}。開発セットとは別の分母です。"),
             ("この初回検証で見つかった問題を改善に使ったため、その質問は以後は既知の開発問題です。"
-             f"拡大{expanded['caseCount']}問の結果は、元の開発問題とこれらの質問をすべて同一の新構成で再評価したもので、"
-             "過去回答の合算でも新しい独立検証でもありません。拡大後の構成に対する別の未使用セットは未実施です。"
+             f"拡大{expanded['caseCount']}問は、元の開発問題とこれらの質問を同一の新構成で再評価する枠として固定しました。"
+             "完了しない枠もUNKNOWNとして保持し、過去回答の合算や新しい独立検証とは扱いません。"
+             "拡大後の構成に対する別の未使用セットは未実施です。"
              if expanded else
              "未使用セットを改善へ流用した結果を、独立した再検証とは呼びません。"),
             "Previously unused questions are separate from the known development cohort. These measured results do not guarantee correctness for arbitrary future questions.",

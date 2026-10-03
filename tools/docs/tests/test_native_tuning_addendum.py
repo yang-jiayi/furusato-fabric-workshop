@@ -66,7 +66,7 @@ class TuningAddendumTests(unittest.TestCase):
         page = render_html(study, "a" * 64)
         self.assertIn("9 / 3 / 0", page)
         self.assertIn("32 / 0 / 0", page)
-        self.assertIn("新しい独立検証でもありません", page)
+        self.assertIn("新しい独立検証とは扱いません", page)
         study["expandedDevelopment"]["caseCount"] = 31
         study["expandedDevelopment"]["content"]["PASS"] = 31
         study["expandedDevelopment"]["factual"]["PASS"] = 31

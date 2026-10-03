@@ -1,6 +1,17 @@
 <a id="top"></a>
 
-> **2026-10-03 追加チューニング（実験候補）**
+> **2026-10-03 再チューニング — 最新結果と未達事項**
+> 同じ開発20問では **20 PASS／0 FAIL／0 UNKNOWN** の構成を確認しました。
+> その後の追加質問で見つかった問題も修正し、拡大した既知32枠を再検証した最新結果は
+> **29 PASS／2 FAIL／1 UNKNOWN**です。**全体の0 FAIL・品質受入は未達、主Agentは未昇格**です。
+> [経過・残件](docs/v3.0.0/tuning-20261003/README.md) ·
+> [Word追補](docs/v3.0.0/tuning-20261003/furusato-data-agent-tuning-20261003.docx) ·
+> [日英HTML追補](docs/v3.0.0/tuning-20261003/furusato-data-agent-tuning-20261003.html) ·
+> [実装profile](workshop/v3.0.0-preview/data-agent/candidates/complete-contract/README.md)。
+> Latest expanded known regression: **29 PASS /2 FAIL /1 UNKNOWN**.
+> The earlier20/0 result, first unused-question failures and one uncertain HTTP500 submission remain separate and preserved.
+
+> **2026-10-03 追加チューニング（前段の記録・保持）**
 > ソース別指示・回答形式・SQL読み取り用ビューを改善し、同じ開発用20問で
 > **3 PASS／17 FAIL → 12 PASS／7 FAIL／1 UNKNOWN**となりました。
 > **0 FAIL・独立評価・主Agent昇格ではありません。**

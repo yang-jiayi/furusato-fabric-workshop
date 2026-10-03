@@ -1,0 +1,1091 @@
+{
+  "baseline": {
+    "caseCount": 20,
+    "content": {
+      "FAIL": 7,
+      "PASS": 12,
+      "UNKNOWN": 1
+    },
+    "factual": {
+      "FAIL": 4,
+      "PASS": 15,
+      "UNKNOWN": 1
+    },
+    "label": "Before / Round3"
+  },
+  "capturedBusinessReplies": 123,
+  "changesEn": [
+    "The native candidate separates static seed, raw observations and source-owned Gold measures, retains required business identities, and distinguishes declared relationship direction from traversal direction.",
+    "Two additive SQL views expose verified Ontology declarations and existing metric keys without changing base data, original views, the main Agent, the Ontology or model measures. Direct queries and native example admission are separate from answer-quality judgments.",
+    "Every configuration and first-pass failure is retained. The expanded run reuses complete question/oracle/criterion objects on one new configuration; formerly unused questions used for correction are now development cases, not independent validation."
+  ],
+  "changesJa": [
+    "全体指示と4ソースの指示を整理し、静的seed・原始観測・Goldを分離しました。質問の意味、必須のID/名前/県情報、全件一覧、UTC/JST、BLANK、宣言向きと探索向きを明示しています。数値の正しさだけでなく、必須項目と説明の正しさも判定しています。",
+    "既存4ビューに加え、実Ontology定義の15関係を照合したagent_relationship_dictionaryと、格納キー・両側のID/名前・指標・宣言方向を揃えたagent_prefecture_category_metricを追加しました。662指標行、80,000寄附、1,344,099,000円を維持し、全キー/値の一致とSQL定義のreadbackを確認しました。これはスキーマ情報のSQLビュー化であり、元データやOntology定義の変更ではありません。",
+    "比較用Agentだけで2ビューを選択し、重複する元の県別カテゴリ指標テーブルを選択解除しました。サービスが検出したview型・ID・列型を使用し、架空のtableノードを作っていません。主Agent、元の比較候補、主Ontology、モデルメジャー、Notebook01/05の実行回数は保持しています。",
+    "後続の質問で空結果の誤判定、本人情報の欠落、高額フラグの比較記号の誤説明が見つかったため、実データの値ドメイン、短い一覧でも必要な本人情報、Notebook05由来の厳密な57,000円超・同額除外を明示しました。最終例はSQL15件・KQL5件です。特定質問の正答件数や合計金額は埋め込まず、57,000円は元Notebookの既存ビジネスルールとして扱っています。"
+  ],
+  "cohortNoteJa": "過去の開発問題から選んだ同じ20問。質問・期待値・必須条件は不変です。100問全体の再評価でも、未知の質問を使った独立評価でもありません。",
+  "date": "2026-10-03",
+  "expandedDevelopment": {
+    "allSlotsCaptured": false,
+    "caseCount": 32,
+    "cases": [
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-S01"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-S02"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-S13"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-S18"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-G11"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-G14"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-T01"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-T05"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-T15"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-N01"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-N07"
+      },
+      {
+        "capture": "submission_uncertain",
+        "content": "UNKNOWN",
+        "factual": "UNKNOWN",
+        "helpfulness": "UNKNOWN",
+        "id": "F30-N10"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-O03"
+      },
+      {
+        "capture": "captured",
+        "content": "FAIL",
+        "factual": "FAIL",
+        "helpfulness": "FAIL",
+        "id": "F30-O08"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-O11"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-O12"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-O13"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-D01"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-D06"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F30-D09"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H01"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H02"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H03"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H04"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H05"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H06"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H07"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H08"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H09"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H10"
+      },
+      {
+        "capture": "captured",
+        "content": "FAIL",
+        "factual": "FAIL",
+        "helpfulness": "FAIL",
+        "id": "F31-H11"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H12"
+      }
+    ],
+    "content": {
+      "FAIL": 2,
+      "PASS": 29,
+      "UNKNOWN": 1
+    },
+    "factual": {
+      "FAIL": 2,
+      "PASS": 29,
+      "UNKNOWN": 1
+    },
+    "firstStoppedRun": {
+      "captureSha256": "5ed2fca6b701454732ca70a31611f26a0a91ae03539c0b618b61ec53a0cb2d6d",
+      "neverSubmittedSlots": 20,
+      "reviewSha256": "c77b5f325c19b3dd45927291e85c97f4c66651684ccc89491c9d1ff32520b901",
+      "uncertainQuestionPosts": 1
+    },
+    "formerlyUnusedQuestionsNowUsedForTuning": true,
+    "independentlyPreregisteredContinuation": false,
+    "label": "Expanded known regression / 拡大既知回帰",
+    "newIndependentValidation": false,
+    "planSha256": "ecd44555194282f7bf68613a3597b547f308be8a635aff0e9467121245038244",
+    "postStopAmendment": true,
+    "productionDefinitionSha256": "9bcf78b73ff1ab55062d099ee4b0aaa7d96e29eac2846cb9a0e95e7d99d0a6f0",
+    "sealedReviewSha256": "8821a9b39ff0d9f455806a46d65da315bb0d1519cc9c4d06e063d32e3e5282ef",
+    "singleConfigurationForAllSubmissions": true,
+    "subsets": {
+      "formerlyUnused": {
+        "caseCount": 12,
+        "content": {
+          "FAIL": 1,
+          "PASS": 11,
+          "UNKNOWN": 0
+        }
+      },
+      "originalDevelopment": {
+        "caseCount": 20,
+        "content": {
+          "FAIL": 1,
+          "PASS": 18,
+          "UNKNOWN": 1
+        }
+      }
+    }
+  },
+  "humanSignoff": false,
+  "mainPromoted": false,
+  "oldStudiesChanged": false,
+  "privacy": {
+    "answerKeys": false,
+    "liveIdsEndpoints": false,
+    "privateCriterionText": false,
+    "rawAnswers": false
+  },
+  "profileFileHashes": {
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/examples.json": "6867a34ca9a5fedfc46f1aefdd9b6729348b4d31c8679772d55e2af886e02c35",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/global-instructions.txt": "b8c162dd81b910aec10c76360e57d68e299612c92f2acde277a523b511b63f20",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/kusto-instructions.txt": "ba1e0f45d5b04121d19e5e5f00a606bf45d53ec48b31ca8b6b2094f1f5a40e9b",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/lakehouse-instructions.txt": "b75b035ed8b6d0a12a8f4cef75517573addd2e5a4392976f877f89c498964a18",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/ontology-instructions.txt": "21f3b4b9943b80d40fc78088f4a848e6a4c2cdedd298b900713dc524a3202e5e",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/schema-descriptions.json": "ce12898188418bd6738986ec359313a1648f2d153304dbd5efd9296de3bb783c",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/semantic-model-instructions.txt": "5381fdacde41a4472e5bb3b4e07fc7b85d5fc0055cd7015e2d23591c309c504a",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_prefecture_category_metric.sql": "674890bba1b8dba0b49c85501d4882623661cbd0f3cbb6c3d3456cd09b0dcaa9",
+    "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_relationship_dictionary.sql": "a08cfbec31761f8a8bb587e4b7865d2e4e01139f9070abcb572ac0d96738d4b7"
+  },
+  "remainingEn": [
+    "The final expanded32-slot result is29 PASS/2 FAIL/1 UNKNOWN. An explicit UTC request was interpreted as a JST day, and a Gold-measure explanation confused StaticSeed with the static-SQL value StaticSyntheticSnapshot. The three issues found in the initial12-question check were repaired on this configuration, but these new regressions remain; zero-failure acceptance is not claimed.",
+    "The expanded run first stopped after11business replies: one HTTP500 question has an uncertain outcome, followed by a definition-read timeout before the next question. A disclosed post-stop amendment continued only the20original never-submitted slots after a successful read-only configuration audit and captured20business replies. It never replayed the uncertain question or changed the original stop records; this continuation was not preregistered. All31business replies were reviewed and the unresolved slot remains UNKNOWN.",
+    "These are bounded measured cohorts, not a guarantee for arbitrary future questions, a replacement of the frozen100-case study, product GA or main-Agent promotion.",
+    "A missing supplemental high-value provenance pointer was linked after capture to the already frozen source hash and unchanged strict-threshold facts. The original failed reply, criteria and verdict remain intact; no independent preregistration claim is made."
+  ],
+  "remainingJa": [
+    "拡大32枠の最終結果は29 PASS /2 FAIL /1 UNKNOWNです。UTCと明示された時間集計をJST日に読み替える問題、GoldメジャーのStaticSeed条件を静的SQLのStaticSyntheticSnapshotと取り違えて説明する問題が残りました。0 FAIL・全問合格としては扱いません。追加試験で発見した電子決済の空結果、本人情報の省略、高額フラグの同額包含の3問題は、この構成では改善を確認しましたが、別の退行を隠していません。",
+    "拡大32枠の初回実行は11業務回答の後、1問のHTTP500（native内部エラー）と、次の問の送信前定義取得タイムアウトで停止しました。送信結果不明の1問は再送せず保持しています。定義の読み取りが再び成功し同一構成を確認できた後、元の未送信20枠だけを各1回処理する、事後の明示的な手順変更を行い、20業務回答を取得しました。これは事前登録済みの再開機能ではなく、元の停止記録・不明送信・全32枠を保存した追加続行です。取得済み31回答を審査し、不明1枠をUNKNOWNのまま残しています。",
+    "任意の将来質問に対する無誤答や、100問全体の品質合格を保証する結果ではありません。追加の質問を改善に用いた後は、その質問を独立した未使用検証として扱いません。主Agentへは昇格していません。",
+    "審査はAI補助であり、人間による独立sign-offではありません。内部クエリ、内部返却rowset、実行回数、backend会話IDはUNOBSERVABLEです。新しいHTTPクライアントは、内部会話の新規性を独立に証明しません。",
+    "追加質問の高額フラグ期待値には、実行前から57,000円・同額除外と元Notebookのhashが固定されていましたが、1つの補足provenance参照名が欠けていました。実行後に同じsource hashへのリンクだけを追記し、質問・期待値・基準・実回答・FAIL判定は変更していません。この補足は事前登録済みとは扱いません。",
+    "元の3.0.0と2026-10-02のrelease tag、Word/HTML、元100枠の33 PASS/57 FAIL/10 UNKNOWNを保持しています。今回の教材は別日付の追補です。UIの例検証と実SQL検証の成功を、Data Agentの回答PASSへ加算していません。"
+  ],
+  "rounds": [
+    {
+      "caseCount": 20,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S02"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S13"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G14"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T05"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-T15"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-N01"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-N07"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-N10"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O03"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O12"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O13"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D06"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        }
+      ],
+      "content": {
+        "FAIL": 11,
+        "PASS": 9,
+        "UNKNOWN": 0
+      },
+      "factual": {
+        "FAIL": 10,
+        "PASS": 10,
+        "UNKNOWN": 0
+      },
+      "label": "Round4: source contracts / source別契約",
+      "planSha256": "82fceb2861cf58d49c112c636acbd8d52b218cd76d27f5c3d9811a3276d6ef07",
+      "productionDefinitionSha256": "1e689a4f398a642b8d0c9b40ca71fc429b0d719462fbfc4033983b6bd3480fd0",
+      "round": "regression-04",
+      "sealedReviewSha256": "7e8b21d1ab01f121a3e5e9ba0bd2388ac8979f83ee60255c0f10d27010a7da59"
+    },
+    {
+      "caseCount": 20,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S02"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S13"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G14"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T05"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T15"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N07"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N10"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O03"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O12"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O13"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D06"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        }
+      ],
+      "content": {
+        "FAIL": 5,
+        "PASS": 15,
+        "UNKNOWN": 0
+      },
+      "factual": {
+        "FAIL": 1,
+        "PASS": 19,
+        "UNKNOWN": 0
+      },
+      "label": "Round5: table-first / 表中心の回答",
+      "planSha256": "345ca56e3e91c0442e0d8519fa93eea363793482f0d2f9d58c80970478a57e82",
+      "productionDefinitionSha256": "ce69edf403de6a6cc9b4cad383b85a2b1e78367c3eab712e7aec8f8b3ce2089e",
+      "round": "regression-05",
+      "sealedReviewSha256": "e3ee1d333ec9ed27a35dd7a02129861af225ae4bccecaafefa8a773d95906aca"
+    },
+    {
+      "caseCount": 20,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S02"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S13"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G14"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T05"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T15"
+        },
+        {
+          "capture": "captured",
+          "content": "UNKNOWN",
+          "factual": "UNKNOWN",
+          "helpfulness": "PASS",
+          "id": "F30-N01"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-N07"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N10"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O03"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O12"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O13"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D06"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        }
+      ],
+      "content": {
+        "FAIL": 2,
+        "PASS": 17,
+        "UNKNOWN": 1
+      },
+      "factual": {
+        "FAIL": 2,
+        "PASS": 17,
+        "UNKNOWN": 1
+      },
+      "label": "Round6: Japanese source contract / 日本語ソース契約",
+      "planSha256": "0ad1d512ecca3e311be8f173b3e4b1a93851e957adf18cdb9d29fc62e8721a61",
+      "productionDefinitionSha256": "40d17a3e999b8bca99b5009e93e07364dc65379abd300216bc8fe3790ee79c56",
+      "round": "regression-06",
+      "sealedReviewSha256": "6c7e6687364d7b236bb207147e4f6c28a4d90f7821400c63f640742cccf41d1d"
+    },
+    {
+      "caseCount": 20,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S02"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S13"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-G14"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T05"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-T15"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N07"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-N10"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O03"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O12"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O13"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D06"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        }
+      ],
+      "content": {
+        "FAIL": 0,
+        "PASS": 20,
+        "UNKNOWN": 0
+      },
+      "factual": {
+        "FAIL": 0,
+        "PASS": 20,
+        "UNKNOWN": 0
+      },
+      "label": "Round7: schema-grounded views / 宣言スキーマを照会可能に",
+      "planSha256": "fbfd9526167348a6c192b1fd733648adda7ee54b3d6f3c97c5ae214f7241b869",
+      "productionDefinitionSha256": "9cf0c72e29eb0d2b6944b373e0fe2a08a70248c841470a275df24a4d767f8c9c",
+      "round": "regression-07",
+      "sealedReviewSha256": "aff1d0677060c05418235e1eea0eca90b34d02f56c6c15ad37f3452209ead592"
+    }
+  ],
+  "sameConfigurationRetries": 0,
+  "schemaVersion": "furusato-native-tuning-study/v1",
+  "sourceCallsAndBackendConversations": "UNOBSERVABLE",
+  "submissionCount": 124,
+  "unseen": {
+    "caseCount": 12,
+    "cases": [
+      {
+        "capture": "captured",
+        "content": "FAIL",
+        "factual": "FAIL",
+        "helpfulness": "FAIL",
+        "id": "F31-H01"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H02"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H03"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H04"
+      },
+      {
+        "capture": "captured",
+        "content": "FAIL",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H05"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H06"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H07"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H08"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H09"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H10"
+      },
+      {
+        "capture": "captured",
+        "content": "PASS",
+        "factual": "PASS",
+        "helpfulness": "PASS",
+        "id": "F31-H11"
+      },
+      {
+        "capture": "captured",
+        "content": "FAIL",
+        "factual": "FAIL",
+        "helpfulness": "FAIL",
+        "id": "F31-H12"
+      }
+    ],
+    "content": {
+      "FAIL": 3,
+      "PASS": 9,
+      "UNKNOWN": 0
+    },
+    "factual": {
+      "FAIL": 2,
+      "PASS": 10,
+      "UNKNOWN": 0
+    },
+    "independentHumanReview": false,
+    "label": "Previously unused source-derived variants / 未使用の派生質問",
+    "planSha256": "8bb2dcb66c1082c2738c76c6a0ce1c862aca417949d0c1ce313daa388a349d63",
+    "preparationSha256": "044cacdb1ae7b89cf34083b74ed9e2431c5191c5c18437d075bb0ffe141ec8ca",
+    "productionDefinitionSha256": "9cf0c72e29eb0d2b6944b373e0fe2a08a70248c841470a275df24a4d767f8c9c",
+    "randomPopulationSample": false,
+    "samePublishedConfiguration": true,
+    "sealedReviewSha256": "e57bef276b71eaad45ceae79bb237c8ca221c4c1c193b6dea4e94709ce3570d7",
+    "usedForSubsequentTuning": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "examples": [
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seedスナップショット全体の受入額上位4自治体を、自治体と県のID・名前、寄付件数と金額付きで見たい。",
+      "query": "SELECT TOP 4 ROW_NUMBER() OVER (ORDER BY AmountYen DESC,MunicipalityId ASC) AS OrdinalRank,MunicipalityId,MunicipalityName,PrefectureId,PrefectureName,DonationCount,AmountYen FROM dbo.agent_municipality_snapshot ORDER BY AmountYen DESC,MunicipalityId ASC"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seed名簿の県ID38に登録された自治体数と、ID順の先頭4自治体の名前と県を見たい。",
+      "query": "SELECT TOP 4 MunicipalityId,MunicipalityName,PrefectureId,PrefectureName,RegisteredMunicipalitiesInPrefecture AS RegisteredCount FROM dbo.agent_municipality_snapshot WHERE PrefectureId='38' ORDER BY MunicipalityId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄付ID5000400を、金額・支払い方法・UTCとJST日時・寄附者と居住県・自治体と受入県・商品とカテゴリのIDと名前まで見たい。",
+      "query": "SELECT DonationId,DonationAmountYen,DonationPaymentMethod,DonatedAtUtc,DonatedAtJstText,DonorId,DonorName,ResidentPrefectureId,ResidentPrefectureName,MunicipalityId,MunicipalityName,RecipientPrefectureId,RecipientPrefectureName,GiftId,GiftName,CategoryId,CategoryName FROM dbo.agent_donation_detail WHERE DonationId='5000400'"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seed全体でカテゴリID3を選んだ寄付の受入額上位4自治体を、ID・名前・県・件数付きで見たい。",
+      "query": "SELECT TOP 4 ROW_NUMBER() OVER (ORDER BY SUM(DonationAmountYen) DESC,MunicipalityId ASC) AS OrdinalRank,MunicipalityId,MunicipalityName,RecipientPrefectureId AS PrefectureId,RecipientPrefectureName AS PrefectureName,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.agent_donation_detail WHERE CategoryId='3' GROUP BY MunicipalityId,MunicipalityName,RecipientPrefectureId,RecipientPrefectureName ORDER BY SUM(DonationAmountYen) DESC,MunicipalityId ASC"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "商品ID3000008を登録しているカタログ業者を、業者ID・名前・種別・県IDと名前で全部見たい。実際の製造元ではないよ。",
+      "query": "SELECT DISTINCT GiftId,GiftName,SupplierId,SupplierName,SupplierType,PrefectureId,PrefectureName FROM dbo.agent_supplier_catalog WHERE GiftId='3000008' ORDER BY SupplierId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "業者ID4000100のカタログの総品数と、商品ID順の先頭4品を、業者名・種別・県IDと名前付きで見たい。",
+      "query": "SELECT TOP 4 SupplierId,SupplierName,SupplierType,PrefectureId,PrefectureName,GiftId,GiftName,CatalogGiftCount FROM dbo.agent_supplier_catalog WHERE SupplierId='4000100' ORDER BY GiftId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄附者ID2000314がseedで選んだ商品のカタログ業者について、重複なしの業者ID一覧・名前・種別・県・正確な総数を見たい。",
+      "query": "SELECT DonorId,DonorName,ResidentPrefectureId,ResidentPrefectureName,SupplierId,SupplierName,SupplierType,SupplierPrefectureId,SupplierPrefectureName,CatalogSupplierCount FROM dbo.agent_donor_catalog_supplier WHERE DonorId='2000314' ORDER BY SupplierId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seedの2025年4月から6月を、日本時間の月ごとに件数と金額で見たい。",
+      "query": "SELECT DonationYearMonthJst,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.agent_donation_detail WHERE DonationDateJst >= '2025-04-01' AND DonationDateJst < '2025-07-01' GROUP BY DonationYearMonthJst ORDER BY DonationYearMonthJst"
+    }
+  ]
+}

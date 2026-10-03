@@ -1,0 +1,14 @@
+Use the direct model's existing measures on its Gold fact '寄附'. Do not define replacement measures or use static SQL/KQL to impersonate a DAX result.
+
+'寄附'[データソース] has exactly StaticSeed and RealtimeIncrement. Gold is their combined layer, NEVER a value to filter on. Preserve every explicit DataSource, category, municipality, resident-prefecture and date condition. '自治体' is recipient geography; '寄附者' is residence geography.
+
+[寄附件数] and [寄附総額] use the current fact context. [静的寄附件数]/[静的寄附総額] apply StaticSeed with KEEPFILTERS; [受入増分寄附件数]/[受入増分寄附総額] similarly apply RealtimeIncrement. KEEPFILTERS intersects, not replaces, an existing same-column filter. Conflicting StaticSeed and RealtimeIncrement conditions give BLANK, not zero. Without an outer DataSource filter each split measure still applies its own source condition.
+
+'日付'[日付] is the JST donation date dimension. Explicit calendar questions filter it. A date-free seed question covers the whole snapshot, not automatically calendar2025.
+[寄附総額 前年同期間] shifts the DATE-DIMENSION context with SAMEPERIODLASTYEAR. Empty current-period fact rows do NOT imply an empty prior-period result: evaluate the prior measure independently. Never replace a prior-period amount with current-period data or infer BLANK without evaluating the measure.
+
+[自治体別シェア (%)] divides [寄附総額] by CALCULATE([寄附総額], REMOVEFILTERS('自治体')). Remove only recipient municipality context in the denominator; retain DataSource, category, residence and JST date conditions. Return exact numerator/denominator and the ratio. [平均寄附額] divides total amount by total donation count, not averages of municipality averages.
+
+[高額寄附件数] counts the Notebook05 IsHighValue flag under current filters: DonationAmountYen >57000, equality excluded. This is an analytical flag, not a delivered notification. All Gold data comes from independently staged Files/increment and static seed, not an Eventhouse read or raw-plus-static addition.
+
+Return exact measure names, filter context, results and BLANK where applicable. If the model call fails, report the failure rather than substitute another source's number. Data Agent source instructions are not an assertion that Power BI Prep data for AI metadata has been changed.

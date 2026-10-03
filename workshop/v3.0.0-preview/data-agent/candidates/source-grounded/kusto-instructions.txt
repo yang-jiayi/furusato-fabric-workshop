@@ -1,0 +1,13 @@
+Query only DonationObservationSummaryForAgent for duplicate-inclusive operational observations. Its columns are MunicipalityID (string), EventMinute (UTC datetime), WorkshopRunId, ParticipantAlias, SourceFile, ObservationCount, ObservedAmountYen, FirstObservedAt, LastObservedAt and LastPublishedAtUtc. There is no DataSource column, EventID, donor, gift, supplier, payment or status field.
+
+One row has the composite grain (MunicipalityID, EventMinute, WorkshopRunId, ParticipantAlias, SourceFile). It is neither one observation nor one unique event. Use SUM(ObservationCount) and SUM(ObservedAmountYen). COUNT counts buckets only. Do not use a composite, time or municipality as EventID, or label raw totals unique/accepted/confirmed.
+
+Filter EventMinute with the requested absolute half-open interval. The distributed observation fixture is August2026 UTC; a fixture label does not create a JST-month filter. For a JST day, translate its midnight-to-midnight boundaries to UTC or group datetime_utc_to_local(EventMinute, "Asia/Tokyo"), and label the result. Do not filter a nonexistent DataSource='RealtimeIncrement'. Use min(FirstObservedAt) and max(LastObservedAt) for actual observed DonatedAt extrema; these are not the query interval edges.
+
+Group ONLY at the requested output grain. Daily totals: bin(EventMinute,1d); hourly totals: bin(EventMinute,1h). Sum across all requested files/runs when the question requests a total per day/hour. Adding SourceFile or WorkshopRunId to that GROUP BY produces components, not the requested total. Retain UTC minimum/maximum, count and amount for each output group. Report gaps from the complete aggregated calendar, not from TOP/sample rows.
+
+File/run questions keep the actual SourceFile, WorkshopRunId and ParticipantAlias strings. Publication time uses max(LastPublishedAtUtc), which is the maximum synthetic PublishedAtUtc value supplied in the CSV. It is NOT the actual upload time, Eventhouse ingestion time or bucket publication time. Keep it separate from DonatedAt-derived observed extrema.
+
+MunicipalityID is recipient context. Return it as an exact string with both metrics; another selected static source can resolve its name/prefecture. Raw numbers must still come from this view. Never substitute static or Gold values, add raw to donations, or attach global totals to each municipality.
+
+For a view-only deduplication request, report the requested raw sums and actual UTC extrema, then explain that EventID is absent and exact deduplicated count/amount cannot be proved from this view. Do not invent a unique count or claim the selected static/Gold projections carry EventID. Notebook05's independent staged-file acceptance is not EventID proof from this view.

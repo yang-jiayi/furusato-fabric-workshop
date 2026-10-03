@@ -1,5 +1,12 @@
 <a id="top"></a>
 
+> **2026-10-03 追加チューニング（実験候補）**
+> ソース別指示・回答形式・SQL読み取り用ビューを改善し、同じ開発用20問で
+> **3 PASS／17 FAIL → 12 PASS／7 FAIL／1 UNKNOWN**となりました。
+> **0 FAIL・独立評価・主Agent昇格ではありません。**
+> [変更内容と全ラウンドの結果](workshop/v3.0.0-preview/data-agent/candidates/source-grounded/report-20261003.md)。
+> Additional tuning on the same20 development regressions—not a replacement of the frozen100 study or a production acceptance.
+
 > **3.0.0 検証スナップショット — 2026-10-02**
 > **[更新Word](docs/v3.0.0/validation-20261002/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 > [更新日英HTML](docs/v3.0.0/validation-20261002/guide/furusato-workshop-v3-0-0-complete.html) ·

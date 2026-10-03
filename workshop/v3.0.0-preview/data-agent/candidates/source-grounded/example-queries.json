@@ -1,0 +1,64 @@
+{
+  "examples": [
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seed名簿で県ID38の登録自治体数と、自治体ID順の先頭4自治体のID・名前・県を一緒に見たい。",
+      "query": "SELECT counts.RegisteredCount, sample.MunicipalityId, sample.MunicipalityName, sample.PrefectureId, sample.PrefectureName FROM (SELECT COUNT(DISTINCT MunicipalityId) AS RegisteredCount FROM dbo.ot_municipality WHERE PrefectureId = '38') AS counts OUTER APPLY (SELECT TOP 4 m.MunicipalityId, m.MunicipalityName, p.PrefectureId, p.PrefectureName FROM dbo.ot_municipality AS m JOIN dbo.ot_prefecture AS p ON m.PrefectureId=p.PrefectureId WHERE m.PrefectureId='38' ORDER BY m.MunicipalityId) AS sample ORDER BY sample.MunicipalityId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seed全体でカテゴリID3の返礼品を選んだ寄付について、受入額の多い4自治体をID・名前・県・件数・金額付きで見たい。",
+      "query": "SELECT TOP 4 ROW_NUMBER() OVER (ORDER BY SUM(d.DonationAmountYen) DESC, m.MunicipalityId ASC) AS OrdinalRank, m.MunicipalityId, m.MunicipalityName, p.PrefectureId, p.PrefectureName, COUNT_BIG(*) AS DonationCount, SUM(d.DonationAmountYen) AS AmountYen FROM dbo.ot_donation AS d JOIN dbo.ot_municipality AS m ON d.MunicipalityId=m.MunicipalityId JOIN dbo.ot_prefecture AS p ON m.PrefectureId=p.PrefectureId JOIN dbo.ot_gift AS g ON d.GiftId=g.GiftId WHERE g.CategoryId='3' GROUP BY m.MunicipalityId,m.MunicipalityName,p.PrefectureId,p.PrefectureName ORDER BY SUM(d.DonationAmountYen) DESC,m.MunicipalityId ASC"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄付ID5000400のseed記録を、金額・支払い方法・UTCとJST日時・寄附者と居住県・受入自治体と県・返礼品とカテゴリのIDと名前付きで見たい。",
+      "query": "SELECT d.DonationId,d.DonationAmountYen,d.DonationPaymentMethod,d.DonatedAtUtc,d.DonatedAtJstText,d.DonationDateJst,n.DonorId,n.DonorName,n.PrefectureId AS ResidentPrefectureId,rp.PrefectureName AS ResidentPrefectureName,m.MunicipalityId,m.MunicipalityName,m.PrefectureId AS RecipientPrefectureId,mp.PrefectureName AS RecipientPrefectureName,g.GiftId,g.GiftName,c.CategoryId,c.CategoryName FROM dbo.ot_donation AS d JOIN dbo.ot_donor AS n ON d.DonorId=n.DonorId JOIN dbo.ot_prefecture AS rp ON n.PrefectureId=rp.PrefectureId JOIN dbo.ot_municipality AS m ON d.MunicipalityId=m.MunicipalityId JOIN dbo.ot_prefecture AS mp ON m.PrefectureId=mp.PrefectureId JOIN dbo.ot_gift AS g ON d.GiftId=g.GiftId JOIN dbo.ot_gift_category AS c ON g.CategoryId=c.CategoryId WHERE d.DonationId='5000400' ORDER BY d.DonationId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "商品ID3000008をカタログ登録している業者を、業者ID・名前・種別・県IDと県名で全部見たい。実際の製造や発送担当ではなく登録関係だけ。",
+      "query": "SELECT DISTINCT g.GiftId,g.GiftName,s.SupplierId,s.SupplierName,s.SupplierType,p.PrefectureId,p.PrefectureName FROM dbo.ot_gift AS g JOIN dbo.ot_supplier_gift AS sg ON g.GiftId=sg.GiftId JOIN dbo.ot_supplier AS s ON sg.SupplierId=s.SupplierId JOIN dbo.ot_prefecture AS p ON s.PrefectureId=p.PrefectureId WHERE g.GiftId='3000008' ORDER BY s.SupplierId"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "寄付ID5000300の元の寄付件数と金額、別にカタログ業者数を知りたい。業者まで結んだ行を寄付件数にしないで。",
+      "query": "SELECT base.DonationId,base.DonationCount,base.AmountYen,catalog.CatalogSupplierCount FROM (SELECT DonationId,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.ot_donation WHERE DonationId='5000300' GROUP BY DonationId) AS base CROSS APPLY (SELECT COUNT(DISTINCT sg.SupplierId) AS CatalogSupplierCount FROM dbo.ot_donation AS d JOIN dbo.ot_supplier_gift AS sg ON d.GiftId=sg.GiftId WHERE d.DonationId=base.DonationId) AS catalog"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seedの居住県ID28から受入県ID40へのフローを、フローキー・両県のIDと名前・寄付件数・金額で見たい。",
+      "query": "SELECT f.PrefDonationFlowId,f.ResidencePrefectureId,rp.PrefectureName AS ResidencePrefectureName,f.RecipientPrefectureId,tp.PrefectureName AS RecipientPrefectureName,f.PrefFlowStaticCount AS DonationCount,f.PrefFlowTotalYen AS AmountYen FROM dbo.ot_pref_donation_flow AS f JOIN dbo.ot_prefecture AS rp ON f.ResidencePrefectureId=rp.PrefectureId JOIN dbo.ot_prefecture AS tp ON f.RecipientPrefectureId=tp.PrefectureId WHERE f.ResidencePrefectureId='28' AND f.RecipientPrefectureId='40'"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "seedを日本時間の2025年4月から6月まで、月別の寄付件数と金額で見たい。",
+      "query": "SELECT DonationYearMonthJst,COUNT_BIG(*) AS DonationCount,SUM(DonationAmountYen) AS AmountYen FROM dbo.ot_donation WHERE DonationDateJst >= '2025-04-01' AND DonationDateJst < '2025-07-01' GROUP BY DonationYearMonthJst ORDER BY DonationYearMonthJst"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "業者ID4000100のカタログ品数と商品ID順の先頭4品を、業者種別・県IDと県名も含めて見たい。",
+      "query": "SELECT s.SupplierId,s.SupplierName,s.SupplierType,p.PrefectureId,p.PrefectureName,counts.CatalogGiftCount,sample.GiftId,sample.GiftName FROM dbo.ot_supplier AS s JOIN dbo.ot_prefecture AS p ON s.PrefectureId=p.PrefectureId CROSS APPLY (SELECT COUNT(DISTINCT sg.GiftId) AS CatalogGiftCount FROM dbo.ot_supplier_gift AS sg WHERE sg.SupplierId=s.SupplierId) AS counts OUTER APPLY (SELECT TOP 4 g.GiftId,g.GiftName FROM dbo.ot_gift AS g WHERE EXISTS (SELECT 1 FROM dbo.ot_supplier_gift AS sg WHERE sg.SupplierId=s.SupplierId AND sg.GiftId=g.GiftId) ORDER BY g.GiftId) AS sample WHERE s.SupplierId='4000100' ORDER BY sample.GiftId"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "2026年8月5日の生観測をUTCの1時間単位にまとめて、全ファイル合算の件数・金額・実際の観測開始終了UTCを出して。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-05T00:00:00Z) and EventMinute < datetime(2026-08-06T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| order by UtcHour asc"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "配布増分の2026年8月の生観測をUTC日付別に全ファイル合算し、抜けている日も確認したい。",
+      "query": "let Daily = DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcDay=bin(EventMinute,1d);\nrange UtcDay from datetime(2026-08-01) to datetime(2026-08-31) step 1d\n| join kind=leftouter Daily on UtcDay\n| project UtcDay, HasObservation=isnotnull(ObservationCount), ObservationCount=coalesce(ObservationCount,0), ObservedAmountYen=coalesce(ObservedAmountYen,0), FirstObservedAtUtc, LastObservedAtUtc\n| order by UtcDay asc"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "日本時間2026年8月20日の生観測について、重複込み件数・金額と対応する実観測UTC開始終了を見たい。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-19T15:00:00Z) and EventMinute < datetime(2026-08-20T15:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt)\n| extend RequestedJstDate='2026-08-20', Timezone='UTC'"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "2026年8月の配布生観測をSourceFileと実行ラベルごとに、件数・金額・実観測UTC開始終了・CSVに記録された最終配信UTCを並べて。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), RecordedPublishedAtUtc=max(LastPublishedAtUtc) by SourceFile,WorkshopRunId,ParticipantAlias\n| order by SourceFile asc,WorkshopRunId asc,ParticipantAlias asc"
+    }
+  ]
+}

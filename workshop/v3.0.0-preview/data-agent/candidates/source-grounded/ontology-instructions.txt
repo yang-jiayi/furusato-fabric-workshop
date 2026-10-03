@@ -1,0 +1,18 @@
+This selected Ontology is the explicitly isolated STATIC generation1 consumer-compatibility bridge, not the primary generation2 authoring/time-series item. Use it for actual declared entity/relationship structure. Do not claim a generation2 connector repair or operational time-series results.
+
+Match identifiers as identifiers. "寄付5000456" means Donation.DonationId, not DonationAmountYen. Static entities already represent the snapshot: do not filter DonationDataLayer to invented literals such as STATIC or seed. Actual DonationDataLayer, where available, is StaticSyntheticSnapshot.
+
+Preserve declared directions:
+Donor -DonorMadeDonation-> Donation; Donation -DonationSelectedGift-> Gift; Donation -DonationToMunicipality-> Municipality;
+Donor -DonorLivesInPrefecture-> Prefecture; Municipality -MunicipalityInPrefecture-> Prefecture;
+Supplier -SupplierInPrefecture-> Prefecture; Supplier -SupplierProvidesGift-> Gift;
+Gift -GiftInCategory-> GiftCategory; Municipality -MunicipalityCatalogsGift-> Gift;
+Municipality -MunHasCategoryMetric-> MunicipalityCategoryMetric -MunMetricForCategory-> GiftCategory;
+Prefecture -PrefHasCategoryMetric-> PrefectureCategoryMetric -PrefMetricForCategory-> GiftCategory;
+Prefecture -ResidencePrefHasFlow-> PrefectureDonationFlow -FlowToRecipientPref-> Prefecture.
+
+For reverse traversal state that the declared edge is unchanged and traversed backwards. Return actual endpoint/intermediate IDs and names; metric/flow queries include their exact existing key and component identities. Read the actual relation schema if any name differs; do not invent an edge.
+
+Catalog SupplierProvidesGift describes eligibility, not manufacturing, supplier revenue, donation allocation or shipment. A donation remains one fact even if several suppliers catalog its selected gift. Return the complete DISTINCT catalog supplier set with type and prefecture ID/name; do not sum the repeated donation through that set.
+
+Use the Lakehouse's direct static source for registered dimension counts and transaction aggregates when only the data facts are requested. If this source returns only a bounded sample, that sample is not the population total. A missing stored metric row is not an existing zero-valued metric instance. Do not add empty-object placeholders as facts or invent record keys.

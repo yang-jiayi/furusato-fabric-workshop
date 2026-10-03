@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "furusato-source-grounding-experiment/v1",
+  "experimentDate": "2026-10-03",
+  "status": "measured-experimental-not-promoted",
+  "uniquePriorDevelopmentCases": 20,
+  "newQuestionSubmissions": 60,
+  "allResponsesCaptured": true,
+  "sameConfigurationRetries": 0,
+  "priorHeldoutQuestionsSelected": false,
+  "prior100StudyChanged": false,
+  "historicalSameSlice": {
+    "content": {
+      "FAIL": 17,
+      "PASS": 3,
+      "UNKNOWN": 0
+    },
+    "factual": {
+      "FAIL": 9,
+      "PASS": 8,
+      "UNKNOWN": 3
+    }
+  },
+  "rounds": [
+    {
+      "captured": 20,
+      "content": {
+        "FAIL": 12,
+        "PASS": 7,
+        "UNKNOWN": 1
+      },
+      "denominator": 20,
+      "factual": {
+        "FAIL": 4,
+        "PASS": 15,
+        "UNKNOWN": 1
+      },
+      "helpfulness": {
+        "FAIL": 7,
+        "PASS": 13
+      },
+      "planSha256": "9522f069f5b19b37f901fe648517584c6affb059a3425f009ad5d9f72b348cb5",
+      "productionDefinitionSha256": "74b63928ea15cb4826662055c68b2008959033f3333fc7e915a5dbb3c8d8ac1a",
+      "round": "regression-01",
+      "submissions": 20
+    },
+    {
+      "captured": 20,
+      "content": {
+        "FAIL": 8,
+        "PASS": 11,
+        "UNKNOWN": 1
+      },
+      "denominator": 20,
+      "factual": {
+        "FAIL": 4,
+        "PASS": 14,
+        "UNKNOWN": 2
+      },
+      "helpfulness": {
+        "FAIL": 7,
+        "PASS": 13
+      },
+      "planSha256": "f669eb188b9eb02d5b87bfa020620d2901619803502d9431a20a14fd8c99b4f1",
+      "productionDefinitionSha256": "b36f9a1d50111f14a761bc3f5e7ddce1c21e731c3f209267e8a5a1fc61b767a3",
+      "round": "regression-02",
+      "submissions": 20
+    },
+    {
+      "captured": 20,
+      "content": {
+        "FAIL": 7,
+        "PASS": 12,
+        "UNKNOWN": 1
+      },
+      "denominator": 20,
+      "factual": {
+        "FAIL": 4,
+        "PASS": 15,
+        "UNKNOWN": 1
+      },
+      "helpfulness": {
+        "FAIL": 5,
+        "PASS": 15
+      },
+      "planSha256": "ef9af0a0e7c9e549ff82f368fe48dc74eef8aeba36abf6b40026a5e125a6ca93",
+      "productionDefinitionSha256": "ea15e3f88251c229f476b997bac79d4f27a538ec5cffe7bb809f2917c2c64e5e",
+      "round": "regression-03",
+      "submissions": 20
+    }
+  ],
+  "finalRound": "regression-03",
+  "zeroFailAchieved": false,
+  "independentValidationPerformed": false,
+  "bestOfAnswerPooling": false,
+  "humanSignoff": false,
+  "reviewMode": "ai-assisted",
+  "nativeSourceExecution": "UNOBSERVABLE",
+  "backendConversationIdentity": "UNOBSERVABLE",
+  "mainAgentPromoted": false,
+  "sourceDataRowsChanged": false,
+  "sourceOwnedMeasuresChanged": false,
+  "sourceItemIdentitiesChanged": false,
+  "additiveSqlViews": 4,
+  "overlappingBaseSelectionsRemovedOnlyOnIsolatedAgent": [
+    "ot_donation",
+    "ot_municipality",
+    "ot_supplier",
+    "ot_supplier_gift"
+  ],
+  "draftNativeSqlExamplesBeforeFinalPublish": {
+    "visible": 8,
+    "sqlErrors": 0,
+    "pendingOrErrorMessages": 0,
+    "actualRetrievalNotProven": true
+  },
+  "methodLimits": [
+    "known-development-regressions-not-independent-heldout",
+    "third-round-results-not-pooled-with-earlier-answers",
+    "second-round-draft-runtime-diagnostics-with-published-definition-unchanged-and-cache-state-unobservable",
+    "native-runtime-behavior-and-execution-not-certified"
+  ],
+  "privateFinalReportSha256": "85a81d22c55a52aa70690da17de77655555689e156318d000231f0a2a2901f42",
+  "profileFileHashes": {
+    "example-queries.json": "09a2d9b244b02994733da8b140e0609359a52add1f922304c551618b91b6315a",
+    "global-instructions.txt": "04fb52544a01af7454538d01962273d7c0fb5267bbd3f25adadbb52c8218a73c",
+    "kusto-instructions.txt": "7ed21ea5b19718127e0f45f416fa85ed867f0632b79671dfd1343020c6d7065d",
+    "lakehouse-instructions.txt": "f25c2d195f3e243614333247e35f5899b17f11cf30a66c9a2b7c97317ade792d",
+    "ontology-instructions.txt": "57530b1f6217be9fc19f5d29c1ee1837781cc334634f5c18fb9fb5f34dc92cdd",
+    "semantic-model-instructions.txt": "1dff1653707a91782fcd4ac4fc1edb3895bf7c08aa5590472b6692d3957568e3",
+    "view-backed-instructions.txt": "427c97cb59b99009eda1ca1207025934844c76936da8423d6380534c64004990",
+    "view-example-queries.json": "9aafc08212c5ca808e13ee250e13444f9ab889a0041d6623a76af67b89d2fc57",
+    "views/agent_donation_detail.sql": "171cb0f4bff2677a19a97ef8175330b917d91655bddecdd367eca81426c15832",
+    "views/agent_donor_catalog_supplier.sql": "fca2ad0a5ed73af4d6ee216851cacb04af117ec2ba36debf7246abacddee1102",
+    "views/agent_municipality_snapshot.sql": "4430639c72ca66e3f334f9d8bbdc044c3512c7e522d8ae3090172d6c69cd6655",
+    "views/agent_supplier_catalog.sql": "9db665d242c9261895496676536f7beea08a90fc6ee2fb1db0e69e88b9d0351e"
+  }
+}

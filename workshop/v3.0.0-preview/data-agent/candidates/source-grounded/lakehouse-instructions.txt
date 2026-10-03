@@ -1,0 +1,26 @@
+## Scope and keys
+Query dbo.ot_* for the complete static snapshot. No implicit calendar or _WorkshopGenerationId filter. DonationId, DonorId, GiftId, SupplierId and MunicipalityId are identities, not monetary values. MunicipalityId is a string; preserve leading zeros. Use an explicit JST date/month filter only when requested. DonationDataLayer's actual value is StaticSyntheticSnapshot, not STATIC, seed, 2025 or Gold.
+
+dbo.ot_donation has exactly one row per DonationId. COUNT_BIG(*) on this table, before any one-to-many join, counts donations. SUM(DonationAmountYen) counts each amount once. If a many-to-many condition is needed, use EXISTS to select qualifying donations, then aggregate the original fact. Do not join ot_supplier_gift into a donation SUM or COUNT. DISTINCT on the monetary value is also wrong: different donations can have the same amount.
+
+## Dimensions and joins
+ot_donation.DonorId -> ot_donor.DonorId; ot_donor.PrefectureId -> resident alias of ot_prefecture.PrefectureId.
+ot_donation.MunicipalityId -> ot_municipality.MunicipalityId; ot_municipality.PrefectureId -> recipient alias of ot_prefecture.PrefectureId.
+ot_donation.GiftId -> ot_gift.GiftId; ot_gift.CategoryId -> ot_gift_category.CategoryId.
+For catalog suppliers ONLY: exact GiftId -> ot_supplier_gift.GiftId -> ot_supplier.SupplierId -> supplier alias of ot_prefecture.
+
+Registered municipality count means COUNT(DISTINCT MunicipalityId) in ot_municipality, optionally filtered by its PrefectureId. Registered donors use ot_donor.DonorId; active donors use DISTINCT DonorId in ot_donation. Catalog gifts use ot_gift.GiftId or DISTINCT GiftId in the exact supplier bridge. These SQL registry/count questions ARE supported here. Ontology is needed only to establish a declared modeled relation, not to forbid an ordinary dimension count.
+
+Count the full filtered dimension before taking the requested ID-ordered sample. Use a scalar aggregate plus OUTER APPLY for a sample so a zero total can still be returned. Display registeredCount separately from returnedSampleCount.
+
+## Metrics and complete projection
+For recipient municipality ranks, return MunicipalityId, MunicipalityName, recipient PrefectureId/PrefectureName, DonationCount and AmountYen. For donor ranks return DonorId, DonorName, residence PrefectureId/PrefectureName, count and amount. For gift/category ranks return ID, name, count and amount. Include ordinal rank and stable-ID ascending tie breaks. A stored amount rank is never a count rank.
+
+ot_prefecture distinguishes PrefReceived* (recipient) from PrefResident* (residence). Alternatively join both roles from ot_donation and aggregate each role separately. Retain ALL requested category, payment, date and geographic conditions; recipient and residence comparisons are not their intersection unless requested.
+
+ot_mun_category_metric, ot_pref_category_metric and ot_pref_donation_flow are already summarized records. Select their exact record plus component keys, names and metrics once. Do not sum ranks or multiply metric rows through a fact join. If the record is absent, report that; compute a requested donation aggregate separately rather than fabricate a metric instance. Flow origin is donor residence and destination is recipient.
+
+## Exact donation and catalog response
+Fetch a single DonationId with donor/residence, recipient/prefecture, gift/category, amount, payment and timestamps using many-to-one joins only. If supplier details are requested, fetch the distinct supplier set in a SECOND query; include SupplierId, SupplierName, SupplierType, PrefectureId and PrefectureName. Catalog count/eligibility is not supplier sales or actual fulfillment.
+
+Use successful returned values and requested filters, not snippets or column-name guesses. A missing requested column must be checked against the actual schema; do not declare the whole dataset unavailable after a misspelled identifier. Use the example queries as patterns, substitute only the question's actual values, and return the full requested projection.

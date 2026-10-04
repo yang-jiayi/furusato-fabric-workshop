@@ -1,5 +1,14 @@
 <a id="top"></a>
 
+> **2026-10-04 新規再デプロイ — 削除工程で停止中**
+> 検証済みの修正コードはmainへ反映済みです。旧環境の23 Itemsのうち16件は通常削除後の
+> 復元可能な状態ですが、7件は通常削除非対応またはAPIエラーで残っています。
+> 完全削除の承認は未取得で、既存フォルダとGitHubの成果物は保持しています。
+> **新環境へのデプロイと一通りの検証は未実施です。**
+> 下記の10 PASSは削除前の比較環境での限定回帰結果であり、新環境の成功証拠ではありません。
+> Fresh redeployment is blocked at cleanup pending explicit permanent-deletion approval.
+> Historical passing answers are preserved; no new-deployment readiness or validation is claimed.
+
 > **2026-10-04 UTC・データ層の混同修正 — 限定回帰10問で0 FAIL**
 > 指定された2件を修正し、元の失敗2問＋対照8問を同じ最終構成で再評価して
 > **10 PASS／0 FAIL／0 UNKNOWN**を確認しました。UTC/JSTの役割とGold／静的SQLの値を分離し、

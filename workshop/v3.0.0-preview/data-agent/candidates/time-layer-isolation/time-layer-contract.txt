@@ -8,6 +8,11 @@
 時刻を含むUTC区間が明示された場合は、そのUTC境界をそのまま使用する。両方の指定がなく生観測の配布日/月だけが指定された場合の既定はUTC。
 ソースには、対象のcalendar date、FilterTimezone、UTCの半開区間、DisplayTimezone、集計粒度を明示する。回答前に、返ったWindowStartUtc/WindowEndUtcまたは時間帯の最初/最後が、元の質問で確定した区間と一致することを確認する。UTCをJSTへ変えた結果を、UTCと書き直すだけで回答しない。
 
+## 最優先: 検索区間と実際の観測期間は別の値
+WindowStartUtc/WindowEndUtcは検索に使った境界であり、実際にレコードがあった最初/最後の時刻ではない。
+FirstObservedAtUtc=min(FirstObservedAt)、LastObservedAtUtc=max(LastObservedAt)は、該当する観測の実際の最初/最後である。これらを検索境界で代用しない。
+生観測の件数・金額・「対応するUTC範囲」を答える時は、全体集計でもファイル別でも、実際のFirstObservedAtUtcとLastObservedAtUtcを必ず取得して表に表示する。検索区間も示す場合は別欄で明記し、WindowStartUtc/WindowEndUtcだけの表で終わらない。観測のない区間で実時刻を検索境界から創作しない。
+
 ## 最優先: 値は「ソース + 列」の組で扱う
 Goldの'寄附'[データソース]に存在する値はStaticSeedとRealtimeIncrementの2つだけ。Goldはその分析層の名前であり、3つ目の値ではない。
 Lakehouseは物理的に静的seedへ限定した読取ソースである。Agentには業務質問に不要な固定由来タグを選択させない。静的seedの照会に、他ソースのデータソース値や未選択タグの条件を足さない。

@@ -12,6 +12,9 @@ a static-SQL provenance value.
   JST target day may still request UTC display.
 - Pair UTC and JST examples for the same calendar date. Their KQL returns the actual
   UTC filter boundaries and both timezone roles alongside the aggregates.
+- Keep query-window boundaries separate from actual observation extrema.
+  `WindowStartUtc`/`WindowEndUtc` cannot replace `FirstObservedAtUtc`/
+  `LastObservedAtUtc` in a requested observation-range answer.
 - Deselect only `dbo.agent_donation_detail.DonationDataLayer` in the isolated Agent.
   This constant provenance tag is not needed for the supported business questions.
   Its physical SQL column and data are not deleted or changed.
@@ -46,6 +49,8 @@ in this lane; do not restore it through an instruction-only shortcut.
 5. Publish and compare the actual Published parts with the planned Draft.
 6. Evaluate the original two failing questions and timezone/source contrast cases
    under unchanged criteria. Keep service failures and uncertainty visible.
+   In particular, check that an explicitly JST target day still displays its actual
+   observed UTC minimum/maximum, not just the converted midnight boundaries.
 
 No Eventhouse function/table, base data, Power BI measure, role, main Agent or
 historical evaluation is changed by the compiler. The previous uncertain question

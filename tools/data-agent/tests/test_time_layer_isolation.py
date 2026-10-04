@@ -114,6 +114,16 @@ class TimeLayerIsolationTests(unittest.TestCase):
             self.assertIn("min(FirstObservedAt)", query)
             self.assertIn("max(LastObservedAt)", query)
 
+    def test_observation_span_is_not_replaced_by_query_boundaries(self):
+        result, _ = isolation.compile_isolated_draft(self.fixture())
+        draft = decoded_parts(result)
+        text = draft["Files/Config/draft/stage_config.json"]["aiInstructions"]
+        self.assertIn("検索区間と実際の観測期間は別の値", text)
+        self.assertIn("WindowStartUtc/WindowEndUtcだけの表で終わらない", text)
+        kusto = draft["Files/Config/draft/kusto/datasource.json"]["dataSourceInstructions"]
+        self.assertIn("including whole-day and per-file totals", kusto)
+        self.assertIn("query boundaries, not observed extrema", kusto)
+
     def test_rejects_ambiguous_examples(self):
         docs = decoded_parts(self.fixture())
         rows = docs["Files/Config/published/kusto/fewshots.json"]["fewShots"]

@@ -1,0 +1,23 @@
+{
+  "replacements": [
+    {
+      "sourceType": "lakehouse_tables",
+      "matchQuery": "SELECT DISTINCT DonationDataLayer,DonationPaymentMethod FROM dbo.agent_donation_detail ORDER BY DonationDataLayer,DonationPaymentMethod",
+      "question": "静的seedの支払方法は、実データではどんな文字列で保存されている？ 空結果の前に正しい条件値を確認したい。",
+      "query": "SELECT DISTINCT DonationPaymentMethod FROM dbo.agent_donation_detail ORDER BY DonationPaymentMethod"
+    },
+    {
+      "sourceType": "kusto",
+      "matchQuestion": "2026年8月5日の生観測をUTCの1時間単位にまとめて、全ファイル合算の件数・金額・実際の観測開始終了UTCを出して。",
+      "question": "2026年8月5日の生観測をUTCの日付のままUTC1時間ごとに、全ファイル合算の件数・金額・観測開始終了で出して。日本時間の日には変換しないで。",
+      "query": "let WindowStartUtc=datetime(2026-08-05T00:00:00Z);\nlet WindowEndUtc=WindowStartUtc+1d;\nDonationObservationSummaryForAgent\n| where EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| extend FilterTimezone='UTC', DisplayTimezone='UTC', WindowStartUtc=WindowStartUtc, WindowEndUtc=WindowEndUtc\n| order by UtcHour asc"
+    }
+  ],
+  "additions": [
+    {
+      "sourceType": "kusto",
+      "question": "日本時間の2026年8月5日の生観測を対象に、時間帯と観測開始終了だけはUTC表示にして、1時間ごとの件数と金額を全ファイル合算して。",
+      "query": "let WindowStartUtc=datetime_local_to_utc(datetime(2026-08-05T00:00:00),'Asia/Tokyo');\nlet WindowEndUtc=datetime_local_to_utc(datetime(2026-08-06T00:00:00),'Asia/Tokyo');\nDonationObservationSummaryForAgent\n| where EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| extend FilterTimezone='Asia/Tokyo', DisplayTimezone='UTC', WindowStartUtc=WindowStartUtc, WindowEndUtc=WindowEndUtc\n| order by UtcHour asc"
+    }
+  ]
+}

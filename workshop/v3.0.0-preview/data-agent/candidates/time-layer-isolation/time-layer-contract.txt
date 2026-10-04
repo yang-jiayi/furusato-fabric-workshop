@@ -1,0 +1,21 @@
+## 最優先: 対象日のtimezoneと表示のtimezoneを分離
+生観測の照会前に、元の質問から次の2つを別々に確定してソースへ渡す。
+- FilterTimezone: どのtimezoneの日付・時刻で対象レコードを絞るか。
+- DisplayTimezone: 取得した時刻・時間帯をどのtimezoneで表示するか。
+日本語で質問されたこと、ユーザーの所在地、Power BIの日付dimensionは、生観測をJST日に変換する理由ではない。
+「○月○日の動きをUTCの1時間ごと」のようにUTCが指定され、対象日にJST/日本時間の指定がない場合、FilterTimezone=UTC、DisplayTimezone=UTC。その日の00:00:00Z以上、翌日の00:00:00Z未満を使い、前日15:00Zにずらさない。
+対象日が「日本時間/JSTの○日」と明示され、最小/最大や時間帯だけUTC表示を求められた場合は、FilterTimezone=Asia/Tokyo、DisplayTimezone=UTC。JST日の00:00から翌00:00をUTCへ一度だけ換算する。文中にUTCがあるという理由だけで、明示されたJST対象日をUTC日に変更しない。
+時刻を含むUTC区間が明示された場合は、そのUTC境界をそのまま使用する。両方の指定がなく生観測の配布日/月だけが指定された場合の既定はUTC。
+ソースには、対象のcalendar date、FilterTimezone、UTCの半開区間、DisplayTimezone、集計粒度を明示する。回答前に、返ったWindowStartUtc/WindowEndUtcまたは時間帯の最初/最後が、元の質問で確定した区間と一致することを確認する。UTCをJSTへ変えた結果を、UTCと書き直すだけで回答しない。
+
+## 最優先: 値は「ソース + 列」の組で扱う
+Goldの'寄附'[データソース]に存在する値はStaticSeedとRealtimeIncrementの2つだけ。Goldはその分析層の名前であり、3つ目の値ではない。
+Lakehouseは物理的に静的seedへ限定した読取ソースである。Agentには業務質問に不要な固定由来タグを選択させない。静的seedの照会に、他ソースのデータソース値や未選択タグの条件を足さない。
+Kustoの観測ビューにはDataSource列がなく、Goldの値で絞らない。
+モデルの「静的」「増分」の意味を説明する時は、名称の日本語から値を推測せず、次の実際のモデル定義を使う。
+[静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
+[静的寄附総額] = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
+[受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
+[受入増分寄附総額] = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
+これらは既存メジャーの定義であり、新しいメジャーを作成しない。戻り値はモデルで評価する。外側RealtimeIncrementで静的メジャーを評価する時、内側値は正確にStaticSeed。外側StaticSeedで増分メジャーを評価する時、内側値は正確にRealtimeIncrement。KEEPFILTERSは同じ列の外側と内側の集合の交差で、外側の置換ではない。共通行がない時のモデルのBLANKを0に置き換えない。
+説明には、外側の列/値、実際の内側の列/値、交差という操作を区別して記す。静的SQLやOntologyの由来タグをモデルの列値として転記しない。設定に記録した定義を説明することと、内部クエリを観測したことは区別する。

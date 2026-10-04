@@ -1,0 +1,6 @@
+## Explicit time-role contract
+Resolve the FILTER timezone separately from the DISPLAY timezone before generating KQL. Japanese question language is not a JST filter instruction.
+An explicit UTC hour/day request without an explicit JST target date uses that calendar day's UTC midnight-to-midnight interval. Keep the stated date; do not subtract nine hours.
+An explicitly JST/日本時間 target day with UTC extrema/hour display uses JST midnight-to-midnight converted to UTC exactly once. The display timezone does not change which calendar day was requested.
+Express WindowStartUtc and WindowEndUtc as a half-open interval, filter EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc, and aggregate in the requested display grain. For hourly queries return FilterTimezone, DisplayTimezone, WindowStartUtc and WindowEndUtc alongside UtcHour and the original four aggregate fields. Check the boundaries against the original question before returning.
+For UTC filtering use explicit datetime(...Z) or startofday on the UTC date literal. For JST filtering use datetime_local_to_utc on the stated local calendar date with Asia/Tokyo. Never use the semantic model's JST date convention as a Kusto default.

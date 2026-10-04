@@ -19,7 +19,9 @@ class ArtifactConsistencyDocumentTests(unittest.TestCase):
     def roots(self):
         return [Section(ident=f"ch-{n}", level=1, number=str(n), title=content.t(str(n)), chapter=n)
                 for n in range(1, 25)] + [
-                    Section(ident="appendix-b", level=1, number="B", title=content.t("B"), appendix="B")]
+                    Section(ident="appendix-b", level=1, number="B", title=content.t("B"), appendix="B",
+                            children=[Section(ident="appendix-b-2", level=2, number="B.2",
+                                              title=content.t("Existing parameter index"), appendix="B")])]
 
     def test_shared_sections_bind_real_notebooks_and_no_temp_policy(self):
         manifest = v3_artifacts.snapshot()
@@ -32,6 +34,8 @@ class ArtifactConsistencyDocumentTests(unittest.TestCase):
         self.assertEqual(binding["manifestSha256"], hashlib.sha256(raw).hexdigest())
         self.assertEqual(binding["notebookCount"], 5)
         self.assertFalse(binding["tempRequired"])
+        ids = [section.ident for root in roots for section in root.walk()]
+        self.assertEqual(len(ids), len(set(ids)))
         text = json.dumps([asdict(s) for s in roots], ensure_ascii=False)
         self.assertIn("Temp不要", text)
         self.assertIn("NOTEBOOK_VERSION", text)

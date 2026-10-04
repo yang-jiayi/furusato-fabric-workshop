@@ -25,7 +25,7 @@ from . import preview30_evaluation100 as study100
 from . import preview30_public_evidence
 from . import preview30_reporting
 from . import preview30_release as release
-from .context import load_context, load_notebook
+from .context import load_context
 from .facts import compute_facts
 from .oox import StyleCarrier
 from .tests10 import build_tests
@@ -131,6 +131,21 @@ def note(ja: str, en: str, tone: str = "note") -> Block:
 
 def code(value: str, language: str) -> Block:
     return Block("code", {"text": value, "language": t(language)})
+
+
+def literal_notebook_parameters(notebook, name):
+    cells = [cell for cell in notebook["cells"] if "parameters" in cell.get("metadata", {}).get("tags", [])]
+    if len(cells) != 1:
+        raise ValueError("Expected one tagged v3 parameter cell: " + name)
+    parameters = {}
+    for node in ast.parse("".join(cells[0]["source"])).body:
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    if target.id in parameters:
+                        raise ValueError("Duplicate Notebook parameter: " + target.id)
+                    parameters[target.id] = ast.literal_eval(node.value)
+    return parameters
 
 
 def prompt(ja: str, en: str) -> Block:
@@ -995,15 +1010,7 @@ def runtime_candidate_sections(roots, root):
     for path in sorted((edition / "notebooks").glob("Notebook_0[234]*.ipynb")):
         payload = path.read_bytes()
         notebook = json.loads(payload)
-        parameter_cells = [cell for cell in notebook["cells"] if "parameters" in cell.get("metadata", {}).get("tags", [])]
-        if len(parameter_cells) != 1:
-            raise ValueError("Expected one tagged v3 parameter cell: " + path.name)
-        parameters = {}
-        for node in ast.parse("".join(parameter_cells[0]["source"])).body:
-            if isinstance(node, ast.Assign):
-                for target in node.targets:
-                    if isinstance(target, ast.Name):
-                        parameters[target.id] = ast.literal_eval(node.value)
+        parameters = literal_notebook_parameters(notebook, path.name)
         if set(parameters) != set(descriptions):
             raise ValueError("v3 parameter inventory changed; document it explicitly: " + path.name)
         notebooks.append((path.name, parameters, hashlib.sha256(payload).hexdigest()))
@@ -1950,10 +1957,10 @@ def artifact_consistency_sections(roots, root, manifest_path):
     ])
     rows = []
     for number, item in manifest["notebooks"].items():
-        notebook = load_notebook(root / item["path"], root)
-        for name, value in notebook.parameters.items():
+        notebook = json.loads((root / item["path"]).read_bytes())
+        for name, value in literal_notebook_parameters(notebook, item["path"]).items():
             rows.append([number, name, json.dumps(value, ensure_ascii=False)])
-    sub(appendix, "2", ("現行v3 Notebookの実ファイル由来パラメーター", "Current v3 Notebook parameters from the actual files"), [
+    sub(appendix, "3", ("現行v3 Notebookの実ファイル由来パラメーター", "Current v3 Notebook parameters from the actual files"), [
         p("以下は現行artifact-setの配布Notebookから抽出した初期値です。環境ごとのID・参加者・apply承認は配置時に設定します。後続のv2.7参考表は旧版比較用であり、本配置の初期値ではありません。",
           "These defaults are extracted from the current artifact-set Notebooks. Supply environment identities, participant and apply approval during deployment. The retained v2.7 tables are comparison material, not current production defaults."),
         table(["Notebook", ("パラメーター", "Parameter"), ("配布初期値", "Distributed default")],

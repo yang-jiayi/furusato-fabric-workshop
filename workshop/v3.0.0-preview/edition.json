@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "furusato-workshop-edition/v1",
+  "workshopVersionFile": "WORKSHOP_VERSION",
+  "workshopVersion": "3.0.0",
+  "runtimeProfile": "v3.0.0-preview",
+  "baselineRuntimeVersion": "2.7.0",
+  "datasetVersion": "2.7.0-realistic.1",
+  "eventSchemaVersion": "furusato-donation-events-synthetic/v1",
+  "primaryOntologyGeneration": 2,
+  "explicitStaticConsumerGeneration": 1,
+  "correctedAgentProfile": "time-layer-isolation",
+  "productionPlacement": "specified-folder-direct",
+  "createTempByDefault": false,
+  "csvContentChanged": false,
+  "internalPublicationKeysChanged": false,
+  "releaseTagsRewritten": false
+}

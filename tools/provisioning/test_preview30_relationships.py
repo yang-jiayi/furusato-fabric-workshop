@@ -155,7 +155,10 @@ class RelationshipsBuilderTests(unittest.TestCase):
             prefix + "ontology/relationships/contract.json",
         }
         inputs = {name: hashlib.sha256(base64.b64decode(value)).hexdigest()
-                  for name, value in files.items() if name in exact or name.startswith(roots)}
+                  for name, value in files.items() if name in exact or name.startswith(roots)
+                  or (any(name.startswith(prefix + "data-agent/candidates/" + profile + "/")
+                          for profile in rt.CORRECTED_PROFILE_DIRECTORIES)
+                      and Path(name).suffix in {".json", ".txt", ".sql"})}
         self.assertEqual(rt.digest(inputs), rt.candidate_fingerprint())
 
 

@@ -469,7 +469,7 @@ def load_notebook(path: Path, root: Path) -> NotebookInfo:
     notebook = json.loads(raw)
     cells = notebook["cells"]
     header_markdown = "".join(cells[0]["source"])
-    version_match = re.search(r"\*\*Workshop version:\*\*\s*([0-9][0-9.]*)", header_markdown)
+    version_match = re.search(r"\*\*Workshop version(?: / 教材版)?:\*\*\s*([0-9][0-9.]*)", header_markdown)
     purpose_lines = [
         line.strip()
         for line in header_markdown.splitlines()

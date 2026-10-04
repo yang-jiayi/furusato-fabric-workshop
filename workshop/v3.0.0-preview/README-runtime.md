@@ -1,5 +1,13 @@
 # v3.0.0 Preview runtime — portable candidate
 
+**Current course/Notebook edition: 3.0.0**, from `WORKSHOP_VERSION`.
+The directory name remains a technical runtime profile. See
+[the explicit component versions](edition.json) and
+[the current artifact-set procedure](../../docs/v3.0.0/current/README.md).
+Production targets the approved folder directly; **Temp is not a default
+deployment dependency**. Explicit evaluation-only folders must be cleaned up
+after adopted dependencies and the formal Agent are verified.
+
 This compatibility-stable source path is also shipped by the
 [Workshop3.0.0 course release](../../docs/v3.0.0/README.md). The course version
 does not change the preview status of Fabric features or qualify a new deployment.
@@ -27,7 +35,10 @@ This directory is **not a claim of successful cloud deployment, UI validation, A
 | Gold publication catalog | `provisioning/gold-contract.json` |
 | Notebook package fingerprints | `provisioning/notebook-bundle-manifest.json` |
 
-Notebook01 and Notebook05 retain the tested v2.7 code cells unchanged. Their data contract and technical generation identifiers retain their original v2.7 names. This is distinct from the **Ontology generation**, which must be **2** for this edition. The original v2.7 directory and standard 10-question/84-condition benchmark remain untouched.
+Notebook01 and Notebook05 retain the tested v2.7 data-processing code. The only
+Notebook01 code delta is its explicit `NOTEBOOK_VERSION` audit/display value,
+which identifies the current distributed3.0.0 Notebook. Existing run audit
+records are not rewritten. Their data contract and technical generation identifiers retain their original v2.7 names. This is distinct from the **Ontology generation**, which must be **2** for this edition. The original v2.7 directory and standard 10-question/84-condition benchmark remain untouched.
 
 The 10 core entity types, 72 **explicitly modeled static properties**, 15 relationships and 11 static backing tables are preserved as business definitions, but are emitted as **new TMDL**, not as old `EntityTypes/.../definition.json` parts. Do not confuse those entity declarations with the 14 additional relationship-key column occurrences in entity backing tables or the junction table's two columns. See [property-versus-column counts](ontology/PROPERTY-COUNTS.md) for the native inventory and the 86/88 backing-column distinction. Four native natural-language Business Rules are included. The sole operational time-series property is explicitly **unbound** in the portable candidate until its native Eventhouse source contract is captured and validated.
 
@@ -219,7 +230,7 @@ python tools\provisioning\preview30_compatibility.py prepare `
   --environment dev --scope $Scope `
   --inventory "<private-timestamped-inventory.json>" `
   --owned-state "<private-deployment-state.json>" `
-  --temp-folder-id "<approved-Temp-folder-GUID>" `
+  --target-folder-id "<same-approved-root-folder-GUID>" `
   --output-dir "<NEW-private-compat-plan-directory>"
 ```
 
@@ -227,10 +238,15 @@ This is **offline preparation**, not deployment. Inventory uses the existing
 preflight shape: `capturedUtc`, `workspace` (`id`, `displayName`), `folders`
 (`id`, `displayName`, `parentFolderId`), `items` and `recoverableItems`. The helper
 requires matching runtime-owned source/core receipts, verified static sources,
-a generation2 primary receipt, the approved root's exact **Temp** child, and no
+a generation2 primary receipt, the approved root folder, and no
 active/recoverable name collision. It writes private `compat-plan.json` and
 `compat-create-body.json`; the plan pins exact body and input hashes. A stored
 snapshot is not a fresh cloud ownership check or mutation approval.
+
+Omitting `--target-folder-id` uses the approved root directly. The legacy
+`--temp-folder-id` option is only for an explicitly requested isolated evaluation.
+Any adopted dependencies must be retained in the production folder before
+unused evaluation Items and the empty Temp are removed.
 
 Before any write, separately approve the exact plan/body/scope, refresh all
 ownership/absence/protection checks, and persist an exclusive one-attempt intent.

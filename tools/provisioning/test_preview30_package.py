@@ -29,14 +29,26 @@ class PackageTests(unittest.TestCase):
         for number in ("01", "05"):
             old = rt.load(next((rt.BASE / "notebooks").glob(f"Notebook_{number}_*.ipynb")))
             new = rt.load(next((rt.PREVIEW / "notebooks").glob(f"Notebook_{number}_*.ipynb")))
+            if number == "01":
+                parameter = next(c for c in new["cells"] if "parameters" in c["metadata"].get("tags", []))
+                current = f'NOTEBOOK_VERSION = "{rt.WORKSHOP_VERSION}"\n'
+                self.assertEqual(parameter["source"].count(current), 1)
+                parameter["source"] = [
+                    'NOTEBOOK_VERSION = "2.7.0"\n' if line == current else line
+                    for line in parameter["source"]
+                ]
             code = lambda n: [c["source"] for c in n["cells"] if c["cell_type"] == "code"]
-            self.assertEqual(code(old), code(new))
+            self.assertEqual(code(old), code(new), "Only the explicitly checked Notebook01 audit/display version may differ.")
 
     def test_all_five_notebooks_output_free_and_compile(self):
         notebooks = list((rt.PREVIEW / "notebooks").glob("*.ipynb"))
         self.assertEqual(len(notebooks), 5)
         for path in notebooks:
             notebook = rt.load(path)
+            self.assertEqual(notebook["metadata"]["furusato"]["version"], rt.WORKSHOP_VERSION)
+            self.assertEqual(notebook["metadata"]["furusato"]["edition"], "v" + rt.WORKSHOP_VERSION)
+            self.assertEqual(notebook["metadata"]["furusato"]["dataContract"], "2.7.0-realistic.1")
+            self.assertIn("Furusato Workshop " + rt.WORKSHOP_VERSION, "".join(notebook["cells"][0]["source"]))
             self.assertEqual(sum("parameters" in c["metadata"].get("tags", []) for c in notebook["cells"]), 1)
             for index, cell in enumerate(notebook["cells"]):
                 if cell["cell_type"] == "code":
@@ -70,8 +82,16 @@ class PackageTests(unittest.TestCase):
                 prefix + "provisioning/gold-contract.json", prefix + "powerbi/native-metrics-contract.json",
                 prefix + "ontology/relationships/contract.json"}
             candidate_inputs = {name: hashlib.sha256(base64.b64decode(value)).hexdigest()
-                                for name, value in files.items() if name in exact or name.startswith(roots)}
+                                for name, value in files.items() if name in exact or name.startswith(roots)
+                                or (any(name.startswith(prefix + "data-agent/candidates/" + profile + "/")
+                                        for profile in rt.CORRECTED_PROFILE_DIRECTORIES)
+                                    and Path(name).suffix in {".json", ".txt", ".sql"})}
             self.assertEqual(rt.digest(candidate_inputs), rt.candidate_fingerprint())
+            self.assertEqual(base64.b64decode(files["WORKSHOP_VERSION"]).decode().strip(), rt.WORKSHOP_VERSION)
+            for profile in rt.CORRECTED_PROFILE_DIRECTORIES:
+                for path in (rt.PREVIEW / "data-agent/candidates" / profile).rglob("*"):
+                    if path.is_file() and path.suffix in {".json", ".txt", ".sql"}:
+                        self.assertEqual(base64.b64decode(files[path.relative_to(rt.REPO).as_posix()]), path.read_bytes())
 
     def test_four_source_candidate_is_not_accuracy_claim(self):
         contract = rt.load(rt.PREVIEW / "data-agent/candidate-contract.json")

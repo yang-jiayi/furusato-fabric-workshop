@@ -27,6 +27,7 @@ BASELINE_COMMIT = "40921a0006394340f1284fd25c2824549d430c1c"
 REPO = Path(__file__).resolve().parents[2]
 BASE = REPO / "workshop" / "v2.7.0"
 PREVIEW = REPO / "workshop" / EDITION
+WORKSHOP_VERSION = (REPO / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip()
 API = "https://api.fabric.microsoft.com/v1"
 OFFICIAL_DEFINITION = (
     "https://learn.microsoft.com/en-us/rest/api/fabric/articles/"
@@ -34,13 +35,18 @@ OFFICIAL_DEFINITION = (
 )
 GUID = re.compile(r"^[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$")
 RUNTIME_INPUT_FILES = (
+    "WORKSHOP_VERSION", "VERSION", "workshop/v3.0.0-preview/edition.json",
+    "tools/provisioning/v3_artifacts.py",
     "tools/provisioning/preview30_runtime.py", "tools/provisioning/preview30_deploy.py",
     "tools/provisioning/preview30_verify.py", "tools/provisioning/preview30_ontology.py",
     "tools/provisioning/preview30_activation.py", "tools/provisioning/preview30_agent.py",
     "tools/provisioning/workshop_runtime.py", "tools/provisioning/activation_runtime.py",
     "tools/provisioning/reference_kql.py", "tools/data-agent/native_evaluation.py",
     "tools/data-agent/native_mcp.py",
+    "tools/data-agent/source_grounded_profile.py", "tools/data-agent/answer_contract_profile.py",
+    "tools/data-agent/time_layer_isolation.py", "tools/data-agent/fresh_grounded_profile.py",
 )
+CORRECTED_PROFILE_DIRECTORIES = ("source-grounded", "complete-contract", "time-layer-isolation")
 BASELINE_PROTECTED_PATHS = (
     "workshop/v2.7.0",
     "tools/docs/furusato_docs/tests10.py",
@@ -130,6 +136,9 @@ def candidate_fingerprint() -> str:
     for relative in ("ontology/definition", "ontology/relationships/definition", "data-agent/definition",
                      "powerbi/Furusato_Analytics.SemanticModel"):
         paths.extend(p for p in (PREVIEW / relative).rglob("*") if p.is_file())
+    for profile in CORRECTED_PROFILE_DIRECTORIES:
+        paths.extend(p for p in (PREVIEW / "data-agent/candidates" / profile).rglob("*")
+                     if p.is_file() and p.suffix in {".json", ".txt", ".sql"})
     paths.extend(PREVIEW / p for p in (
         "provisioning/gold-contract.json", "powerbi/native-metrics-contract.json",
         "ontology/relationships/contract.json"))
@@ -343,11 +352,14 @@ def build_plan(scope: dict[str, Any], inventory: dict[str, Any],
             blockers.append(f"Owned item receipt no longer resolves: {r['displayName']}")
     plan = {
         "schemaVersion": "furusato-preview30-plan/v1", "edition": EDITION,
+        "workshopVersion": WORKSHOP_VERSION,
         "sourceBaselineCommit": BASELINE_COMMIT, "scope": scope,
         "scopeSha256": scope_fingerprint(scope), "resources": resources,
         "generatedResources": ["Lakehouse SQL endpoint", "Eventhouse KQL database"],
-        "folders": [{"displayName": "Temp", "parent": "targetFolder",
-                     "purpose": "isolated coordinator-owned new-feature labs"}],
+        "folders": [],
+        "productionPlacement": "specified-folder-direct",
+        "correctedAgentProfile": "data-agent/candidates/time-layer-isolation",
+        "evaluationArtifacts": "Explicit opt-in only; remove after evaluation without deleting adopted dependencies.",
         "immutableBaselineTreeSha256": baseline["treeSha256"],
         "candidateSourceSha256": candidate_fingerprint(),
         "notebookSourceSha256": notebook_source_hashes(),

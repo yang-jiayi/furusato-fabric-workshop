@@ -1,5 +1,6 @@
 {
   "edition": "v3.0.0-preview",
+  "workshopVersion": "3.0.0",
   "baselineEdition": "2.7.0",
   "baselineTreeSha256": "0e18da23f0ab3f286eab51f632fa1419272c85dcb9c85927925d79518ec8ea6b",
   "dataContract": {
@@ -24,5 +25,8 @@
   ],
   "privateEvidenceRequired": true,
   "cloudStatus": "not-deployed-by-build",
+  "productionPlacement": "specified-folder-direct",
+  "createTempByDefault": false,
+  "correctedAgentProfile": "data-agent/candidates/time-layer-isolation",
   "attachmentsOwner": "documents-workstream"
 }

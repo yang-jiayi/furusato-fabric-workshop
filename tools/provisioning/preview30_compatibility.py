@@ -104,7 +104,8 @@ def build_template(original: dict[str, Any]) -> tuple[dict[str, Any], dict[str, 
                            "omittedProperty": "Municipality.IncomingDonationAmountYen",
                            "omittedBindingParts": removed, "emptyOverviewRetained": True},
         "deployment": {"mode": "offline-private-handoff-only", "createOnly": True,
-                       "approvedTempAncestryRequired": True, "newItemOwnershipReadbackRequired": True,
+                       "defaultPlacement": "specified-folder-direct",
+                       "explicitEvaluationTempAllowed": True, "newItemOwnershipReadbackRequired": True,
                        "rerunNotebooks": False, "sourceDdlAllowed": False, "policiesOrRolesChanged": False},
         "graph": {"automaticRefreshByHelper": False, "actualManagedChildDiscoveryRequired": True,
                   "possibleServiceManagedChildren": ["GraphModel", "Lakehouse", "SQLEndpoint"],
@@ -154,15 +155,18 @@ def render_definition(template: dict[str, Any], scope: dict[str, Any], lakehouse
 
 
 def check_scope(scope, inventory, owned_state, temp_folder_id):
-    require(GUID.fullmatch(temp_folder_id) is not None, "Temp folder must be an externalized GUID.")
+    require(GUID.fullmatch(temp_folder_id) is not None, "Destination folder must be an externalized GUID.")
     require(owned_state.get("scopeSha256") == scope_fingerprint(scope), "Owned receipts belong to another scope.")
     require(scope["folderMappingVerified"] is True, "Explicit root folder mapping proof is required.")
     require(inventory["workspace"]["id"] == scope["workspaceId"]
             and inventory["workspace"].get("displayName") == scope["workspaceName"], "Inventory workspace differs.")
     require(inventory.get("capturedUtc"), "A timestamped read-only inventory is required.")
     folders = [f for f in inventory["folders"] if f["id"] == temp_folder_id]
-    require(len(folders) == 1 and folders[0].get("displayName") == "Temp"
-            and folders[0].get("parentFolderId") == scope["folderId"], "Target must be the exact approved root's Temp child.")
+    require(len(folders) == 1, "Destination folder must resolve exactly once.")
+    if temp_folder_id != scope["folderId"]:
+        require(folders[0].get("displayName") == "Temp"
+                and folders[0].get("parentFolderId") == scope["folderId"],
+                "An explicitly selected evaluation folder must be the approved root's Temp child.")
     require(any(f["id"] == scope["folderId"] for f in inventory["folders"]), "Approved root is absent.")
     for key, kind, prefix in (("lakehouse", "Lakehouse", "LH_Furusato_"), ("ontology", "Ontology", "ONT_Furusato_")):
         receipt = owned_state.get("items", {}).get(key, {})
@@ -181,7 +185,8 @@ def require_absent(name, inventory):
             "Active/recoverable name collision; no adoption, update, restore or purge.")
 
 
-def prepare(scope, inventory, owned_state, temp_folder_id):
+def prepare(scope, inventory, owned_state, temp_folder_id=None):
+    temp_folder_id = temp_folder_id or scope["folderId"]
     check_scope(scope, inventory, owned_state, temp_folder_id)
     template, contract = build_template(load(TEMPLATE))
     definition = render_definition(template, scope, owned_state["items"]["lakehouse"]["id"])
@@ -205,8 +210,8 @@ def prepare(scope, inventory, owned_state, temp_folder_id):
                    "headers": {"Content-Type": "application/json", "x-ms-fabric-skill": "fabriciq-ontology-cli"}},
         "allowCloudMutations": False,
         "requiredBeforeWrite": [
-            "Obtain separate approval of this exact plan hash, body hash, target name and Temp ancestry.",
-            "Re-read workspace, Temp ancestry, owned primary/source metadata and protected definitions; recheck active/recoverable name absence.",
+            "Obtain approval of this exact plan hash, body hash and target folder; production defaults directly to the approved folder.",
+            "Re-read the destination, owned primary/source metadata and protected definitions; recheck active/recoverable name absence. Any explicit evaluation Temp must retain its approved ancestry.",
             "Acquire an exclusive operation window; persist an exclusive create-intent BEFORE one exact-body POST. Never repeat an ambiguous or failed request.",
             "Send the exact saved UTF-8 body bytes. Capture HTTP status, headers and response. For 202 poll the original public operations/{x-ms-operation-id}; honor Retry-After and bound the wait.",
             "Discover the actual new item ID and verify exact name/type/Temp folder, new ownership and properties.generation == 1. Reject missing/2; never retry another format/name.",
@@ -366,7 +371,9 @@ def main() -> int:
     parser.add_argument("--environment", required=True, choices=["dev", "test", "prod"])
     for name in ("scope", "inventory", "owned-state", "output-dir"):
         parser.add_argument("--" + name, required=True, type=Path)
-    parser.add_argument("--temp-folder-id", required=True)
+    destination = parser.add_mutually_exclusive_group()
+    destination.add_argument("--target-folder-id", help="Defaults to the explicitly approved root folder.")
+    destination.add_argument("--temp-folder-id", help="Legacy explicit evaluation-only Temp placement; not the production default.")
     for name in ("compat-receipt", "compat-definition", "graph-evidence", "frozen-agent-definition"):
         parser.add_argument("--" + name, type=Path)
     parser.add_argument("--stage", choices=["draft", "published"])
@@ -374,11 +381,12 @@ def main() -> int:
     try:
         scope = scope_from_document(load(args.scope), args.environment)
         inventory, owned = load(args.inventory), load(args.owned_state)
+        target_folder_id = args.target_folder_id or args.temp_folder_id or scope["folderId"]
         output = private_directory(args.output_dir)
         require(not any((output / name).exists() for name in ("approval.json", "create-intent.json", "created.json")),
                 "An approved/attempted output directory is immutable; do not regenerate.")
         if args.command == "prepare":
-            body, plan = prepare(scope, inventory, owned, args.temp_folder_id)
+            body, plan = prepare(scope, inventory, owned, target_folder_id)
             persist(output, "compat-create-body.json", body)
             persist(output, "compat-plan.json", plan)
             print(json.dumps({"status": plan["status"], "planSha256": plan["planSha256"],
@@ -387,7 +395,7 @@ def main() -> int:
             require(all((args.compat_receipt, args.compat_definition, args.graph_evidence,
                          args.frozen_agent_definition, args.stage)), "Agent handoff requires all explicit frozen readbacks and --stage.")
             draft, handoff = agent_handoff(
-                scope, inventory, owned, args.temp_folder_id, load(args.compat_receipt),
+                scope, inventory, owned, target_folder_id, load(args.compat_receipt),
                 load(args.compat_definition), load(args.graph_evidence), load(args.frozen_agent_definition), args.stage)
             persist(output, "compat-agent-draft-definition.json", draft)
             persist(output, "compat-agent-handoff.json", handoff)

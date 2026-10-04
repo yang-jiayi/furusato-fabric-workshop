@@ -11,6 +11,25 @@ does not authorize later-candidate builds, publication or main promotion. See
 
 ## Native Data Agent tuning addendum
 
+### Current v3 artifact consistency
+
+`WORKSHOP_VERSION` identifies the course and distributed Notebook edition.
+The root `VERSION` remains the compatible legacy processing baseline; CSV
+dataset and Fabric protocol versions have distinct roles.
+
+Build the v3 source assets, then run `tools\provisioning\v3_artifacts.py --out
+workshop\v3.0.0-preview\provisioning\artifact-set.json` from the verified source
+revision. For a separately generated current Word/HTML pair, pass that exact
+file using `--artifact-manifest` to `build_preview30.py`, `validate_preview30.py`
+and `package_preview30.py`. The shared document adds the component-version map,
+actual current Notebook defaults and production-without-Temp procedure.
+The build refuses stale file hashes; both output formats retain the manifest
+SHA, and the HTML also records the actual paired Word SHA.
+
+Use a new output location such as `docs\v3.0.0\current`; do not replace an old
+release tag or its guide assets. Artifact consistency is not AI-answer or
+all-feature acceptance. The normal release/evidence/acceptance gates still apply.
+
 `build_native_tuning_addendum.py` generates a **separately dated Word/HTML pair**
 from a sanitized `furusato-native-tuning-study/v1` JSON record. It does not rewrite
 the original 3.0.0 or the frozen 100-question guide, grade answers, authorize a

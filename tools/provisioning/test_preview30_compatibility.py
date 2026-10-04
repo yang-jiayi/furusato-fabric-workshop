@@ -86,6 +86,14 @@ def handoff_fixtures():
 
 
 class CompatibilityBuilderTests(unittest.TestCase):
+    def test_production_defaults_to_root_without_temp(self):
+        s, inventory, owned = fixtures()
+        inventory["folders"] = [f for f in inventory["folders"] if f["id"] != TEMP]
+        body, plan = compat.prepare(s, inventory, owned)
+        self.assertEqual(body["folderId"], s["folderId"])
+        self.assertEqual(plan["contract"]["deployment"]["defaultPlacement"], "specified-folder-direct")
+        self.assertFalse(plan["allowCloudMutations"])
+
     def test_exact_static_template_and_unchanged_baseline(self):
         original = rt.load(compat.TEMPLATE)
         before = copy.deepcopy(original)

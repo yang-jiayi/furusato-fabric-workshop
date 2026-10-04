@@ -6,12 +6,20 @@ import hashlib
 import json
 from pathlib import Path
 
-from preview30_runtime import BASE, PREVIEW, REPO, RUNTIME_INPUT_FILES, immutable_baseline
+from preview30_runtime import (
+    BASE, PREVIEW, REPO, WORKSHOP_VERSION, RUNTIME_INPUT_FILES,
+    CORRECTED_PROFILE_DIRECTORIES, immutable_baseline,
+)
 
 MODULES = (
     "preview30_runtime.py", "preview30_deploy.py", "preview30_verify.py",
     "preview30_ontology.py", "preview30_agent.py", "preview30_activation.py",
+    "preview30_compatibility.py", "v3_artifacts.py",
     "workshop_runtime.py", "reference_kql.py", "activation_runtime.py",
+)
+DATA_AGENT_MODULES = (
+    "source_grounded_profile", "answer_contract_profile", "time_layer_isolation",
+    "fresh_grounded_profile", "native_evaluation", "native_mcp",
 )
 PARAMETERS = '''# Fabric parameter cell — environment identities remain in private JSON files.
 PARTICIPANT_ID = "001"
@@ -153,7 +161,11 @@ def package(*, data: bool) -> bytes:
         folders.append(BASE / "data")
     for folder in folders:
         for path in sorted(folder.rglob("*")):
-            if path.is_file() and path.name != "notebook-bundle-manifest.json":
+            if path.is_file() and path.name not in {"notebook-bundle-manifest.json", "artifact-set.json"}:
+                files[path.relative_to(REPO).as_posix()] = base64.b64encode(path.read_bytes()).decode("ascii")
+    for profile in CORRECTED_PROFILE_DIRECTORIES:
+        for path in sorted((PREVIEW / "data-agent/candidates" / profile).rglob("*")):
+            if path.is_file() and path.suffix in {".json", ".txt", ".sql"}:
                 files[path.relative_to(REPO).as_posix()] = base64.b64encode(path.read_bytes()).decode("ascii")
     for number in ("01", "05"):
         for root in (BASE, PREVIEW):
@@ -191,10 +203,17 @@ def build_notebooks() -> dict:
         encoded = base64.b64encode(compressed).decode("ascii")
         name = f"Notebook_{number}_Furusato_{title}"
         cells = [
-            cell("markdown", f"# {name}\n\n**Edition:** v3.0.0-preview\n\n{note}\n\n"
+            cell("markdown", f"# Furusato Workshop {WORKSHOP_VERSION} — {name}\n\n"
+                 f"**Workshop version / 教材版:** {WORKSHOP_VERSION}\n\n"
+                 "**Runtime profile:** v3.0.0-preview. **Data contract:** 2.7.0-realistic.1 (unchanged CSVs).\n\n"
+                 "**Production placement:** the specified folder directly; no Temp folder is required.\n\n"
+                 f"{note}\n\n"
                  "Use the same private resource plan, gate and deployment-state evidence across stages. "
                  "Environment identities are parameters, never embedded in this notebook. "
-                 "CLI deployment is the primary cross-machine orchestration path; this frontend uses normal NotebookUtils authentication.\n"),
+                 "CLI deployment is the primary cross-machine orchestration path; this frontend uses normal NotebookUtils authentication. "
+                 "The sealed package includes the source-grounded, complete-contract and time-layer-isolation compilers, "
+                 "their SQL views and query examples. Apply the corrected profile only to verified fresh sources; "
+                 "the historical four-source baseline alone is not the corrected Agent.\n"),
             cell("code", PARAMETERS.format(action=action), ["parameters"]),
             cell("code", "import base64, gzip, hashlib, json, sys, tempfile\nfrom pathlib import Path\n_PAYLOAD_CHUNKS = []\n"),
         ]
@@ -216,8 +235,9 @@ for _relative, _encoded in _FILES.items():
         raise ValueError("Existing package bytes changed; use a clean driver session.")
     _path.write_bytes(_raw)
 sys.path.insert(0, str(_ROOT / "tools/provisioning"))
-for _module in {repr(tuple(name[:-3] for name in MODULES))}:
-    if _module in sys.modules and Path(sys.modules[_module].__file__).resolve().parent != (_ROOT / "tools/provisioning").resolve():
+sys.path.insert(0, str(_ROOT / "tools/data-agent"))
+for _module, _directory in {repr({**{name[:-3]: "tools/provisioning" for name in MODULES}, **{name: "tools/data-agent" for name in DATA_AGENT_MODULES}})}.items():
+    if _module in sys.modules and Path(sys.modules[_module].__file__).resolve().parent != (_ROOT / _directory).resolve():
         del sys.modules[_module]
 print("Sealed portable package loaded. No Fabric mutation has occurred.")
 '''
@@ -236,7 +256,9 @@ print("Sealed portable package loaded. No Fabric mutation has occurred.")
                     "metadata": {"kernelspec": {"display_name": "Synapse PySpark", "language": "Python",
                                                 "name": "synapse_pyspark"},
                                  "language_info": {"name": "python"},
-                                 "furusato": {"edition": "v3.0.0-preview", "outputFree": True,
+                                 "furusato": {"edition": "v" + WORKSHOP_VERSION, "version": WORKSHOP_VERSION,
+                                              "runtimeProfile": "v3.0.0-preview", "sourceRuntimeEdition": "2.7.0",
+                                              "dataContract": "2.7.0-realistic.1", "outputFree": True,
                                               "defaultMutation": False, "bundleSha256": sha}}}
         path = PREVIEW / "notebooks" / (name + ".ipynb")
         path.write_bytes((json.dumps(notebook, ensure_ascii=False, indent=1) + "\n").encode("utf-8"))

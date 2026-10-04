@@ -25,7 +25,7 @@ from . import preview30_evaluation100 as study100
 from . import preview30_public_evidence
 from . import preview30_reporting
 from . import preview30_release as release
-from .context import load_context
+from .context import load_context, load_notebook
 from .facts import compute_facts
 from .oox import StyleCarrier
 from .tests10 import build_tests
@@ -1913,10 +1913,71 @@ def _legacy_copy(source: Section, parent: Section, index: int) -> Section:
     return value
 
 
+def artifact_consistency_sections(roots, root, manifest_path):
+    raw = manifest_path.read_bytes()
+    manifest = json.loads(raw)
+    if manifest.get("schemaVersion") != "furusato-v3-artifact-set/v1":
+        raise ValueError("Expected a verified v3 artifact-set manifest.")
+    version = (root / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip()
+    if manifest["workshopVersion"] != version or manifest["tempRequired"] is not False:
+        raise ValueError("Workshop edition or production placement differs from the artifact set.")
+    for relative, expected in manifest["files"].items():
+        path = (root / relative).resolve()
+        if not path.is_relative_to(root.resolve()) or not path.is_file():
+            raise ValueError("Artifact manifest path is invalid.")
+        if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise ValueError("Artifact changed after its manifest was frozen: " + relative)
+    binding = hashlib.sha256(raw).hexdigest()
+    chapters = {section.chapter: section for section in roots if section.chapter}
+    appendix = next(section for section in roots if section.appendix == "B")
+    chapters[1].blocks.insert(0, note(
+        "現行配布物の整合性: 教材版は" + version + "です。Notebook・CSV・モデル・Agent profileは同じartifact-setに結び付けています。以下の過去の評価・画面記録は、その撮影・実行時点の履歴であり、新配置の合格とは区別してください。",
+        "Current artifact consistency: course edition " + version + ". Notebooks, CSVs, models and the Agent profile are bound to one artifact set. Historical evaluation and screen records below remain dated evidence, not acceptance of a new deployment.",
+        "gate"))
+    sub(chapters[1], "12", ("現行v3成果物の版とデータ仕様", "Current v3 artifact and data-contract versions"), [
+        table([("項目", "Component"), ("識別子と意味", "Identity and meaning")], [
+            [("教材・Notebook配布版", "Course and Notebook edition"), version + " / WORKSHOP_VERSION"],
+            [("技術的な配置パス", "Technical deployment path"), manifest["runtimeProfile"]],
+            [("再利用する処理基線", "Retained processing baseline"), manifest["edition"]["baselineRuntimeVersion"] + " / VERSION"],
+            [("CSVデータ仕様", "CSV data contract"), manifest["edition"]["datasetVersion"]],
+            [("本配置", "Production placement"), ("指定フォルダ直下。Temp不要", "Directly in the specified folder; no Temp required")],
+        ], ("異なる役割のversionを一律置換しない", "Do not conflate versions with different roles")),
+        p("CSVの値・件数・SHAを変更してv3と見せかけることはしません。Notebook01のNOTEBOOK_VERSIONは配布版・監査表示を示します。内部のpublication keyと既存実行の監査履歴は互換性と来歴のため保持します。",
+          "CSV values, counts and hashes are not changed merely to relabel them v3. Notebook01 NOTEBOOK_VERSION identifies the distributed edition/audit display. Internal publication keys and existing run audit history remain unchanged for compatibility and provenance."),
+        p("Artifact-set SHA-256: " + binding, "Artifact-set SHA-256: " + binding),
+        p("実装source commit: " + manifest["sourceCommit"] + "。このhashは成果物整合性の証拠であり、AI回答・全機能の合格証明ではありません。",
+          "Implementation source commit: " + manifest["sourceCommit"] + ". This hash proves artifact binding, not AI-answer or all-feature acceptance."),
+    ])
+    rows = []
+    for number, item in manifest["notebooks"].items():
+        notebook = load_notebook(root / item["path"], root)
+        for name, value in notebook.parameters.items():
+            rows.append([number, name, json.dumps(value, ensure_ascii=False)])
+    sub(appendix, "2", ("現行v3 Notebookの実ファイル由来パラメーター", "Current v3 Notebook parameters from the actual files"), [
+        p("以下は現行artifact-setの配布Notebookから抽出した初期値です。環境ごとのID・参加者・apply承認は配置時に設定します。後続のv2.7参考表は旧版比較用であり、本配置の初期値ではありません。",
+          "These defaults are extracted from the current artifact-set Notebooks. Supply environment identities, participant and apply approval during deployment. The retained v2.7 tables are comparison material, not current production defaults."),
+        table(["Notebook", ("パラメーター", "Parameter"), ("配布初期値", "Distributed default")],
+              rows, ("現行5 Notebookのパラメーター", "Parameters from all five current Notebooks")),
+    ])
+    sub(chapters[24], "12", ("Tempを使わない本デプロイ", "Production deployment without Temp"), [
+        p("本デプロイでは、指定フォルダに必要なItemsを直接作成し、1つの承認済みplanとして依存順に最後まで実行します。複数APIをまとめた一括手順であり、Fabric全Itemsの単一トランザクションではありません。途中の失敗は記録し、不明な書き込みやCSVを再送しません。",
+          "Create required Items directly in the specified folder and execute one approved plan in dependency order. This is a coordinated multi-API deployment, not one atomic Fabric transaction. Record intermediate failures; never replay ambiguous writes or CSV deliveries."),
+        p("修正版Agentに必要な静的consumer Ontologyとそのmanaged childrenは正式な依存Itemsであり、Tempへ置きません。generation2の主Ontologyと用途を区別し、同じ寄附データを重複加算しません。採用するAgentは正式名へ反映し、評価用の比較Agentを第2の本番として残しません。",
+          "The static consumer Ontology and its managed children are production dependencies of the corrected Agent, not Temp artifacts. Distinguish their role from the primary generation2 Ontology and never add their identical donation populations. Apply the adopted profile to the formal Agent; do not retain comparison Agents as a second production service."),
+        p("評価用Tempを明示的に使用した場合は、必要な依存の正式配置と参照を確認し、評価証拠をprivateに保存してから不要なItemsと空のTempを削除します。Notebook02–04のsealed packageには最新の3段階Agent compiler、6 SQL views、SQL/KQL例を含めています。",
+          "If an evaluation Temp is explicitly used, first establish production dependencies and references, preserve evidence privately, then delete unused Items and the empty Temp. Notebook02–04 sealed packages include the current three-stage Agent compilers, six SQL views and SQL/KQL examples."),
+    ])
+    return {"manifestSha256": binding, "sourceCommit": manifest["sourceCommit"],
+            "sourceTreeSha256": manifest["sourceTreeSha256"], "workshopVersion": version,
+            "csvFiles": manifest["csvFiles"], "notebookCount": len(manifest["notebooks"]),
+            "tempRequired": False}
+
+
 def build(
     root: Path, evidence_path: Path | None = None, evaluation_path: Path | None = None, *,
     public_evidence_path: Path | None = None, release_profile=release.PREVIEW,
     release_approval: Path | None = None, evaluation100_path: Path | None = None,
+    artifact_manifest_path: Path | None = None,
 ):
     profile = release.get_profile(release_profile)
     evidence, document_release = release.resolve_evidence(
@@ -1999,6 +2060,7 @@ def build(
     if "evaluation100" in evidence:
         study_notice = study100.notice(evidence["evaluation100"])
         roots[0].blocks.insert(0, note(study_notice["ja"], study_notice["en"], "gate"))
+    artifact_binding = artifact_consistency_sections(roots, root, artifact_manifest_path) if artifact_manifest_path else None
     request_list = preview30_evidence.requests()
     for section in roots:
         key = section.chapter if section.chapter else section.appendix
@@ -2085,4 +2147,6 @@ def build(
     if document_release is not None:
         metadata["documentRelease"] = document_release
         release.require_metadata_profile(metadata, profile)
+    if artifact_binding:
+        metadata["currentArtifactSet"] = artifact_binding
     return document, context, facts, carrier, evidence, metadata

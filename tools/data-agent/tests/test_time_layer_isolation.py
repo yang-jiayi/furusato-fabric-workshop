@@ -133,6 +133,20 @@ class TimeLayerIsolationTests(unittest.TestCase):
         self.assertIn("every statement agrees with the result table", model)
         self.assertIn(isolation.MODEL_STATIC, model)
 
+    def test_source_bucket_grain_is_not_an_hourly_result_count(self):
+        result, _ = isolation.compile_isolated_draft(self.fixture())
+        kusto = decoded_parts(result)["Files/Config/draft/kusto/datasource.json"]["dataSourceInstructions"]
+        self.assertIn("BEFORE hourly/daily summarize", kusto)
+        self.assertIn("HourlyGroupRows, never the five-field source bucket count", kusto)
+        self.assertIn("do not add an unrequested day-summary", kusto)
+
+    def test_model_context_does_not_invent_filters_or_drop_other_columns(self):
+        result, _ = isolation.compile_isolated_draft(self.fixture())
+        model = decoded_parts(result)["Files/Config/draft/semantic_model/datasource.json"]["dataSourceInstructions"]
+        self.assertIn("leave '寄附'[データソース] unfiltered unless the user explicitly restricts it", model)
+        self.assertIn("Conditions on DIFFERENT columns are both retained", model)
+        self.assertIn("only high-value StaticSeed rows", model)
+
     def test_static_ranking_cannot_split_recipient_by_residence(self):
         result, _ = isolation.compile_isolated_draft(self.fixture())
         sql = decoded_parts(result)["Files/Config/draft/lakehouse_tables/datasource.json"]["dataSourceInstructions"]

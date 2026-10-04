@@ -7,7 +7,7 @@ from pathlib import Path
 import shutil
 import ast
 from preview30_ontology import generate, generate_relationships
-from preview30_runtime import BASE, PREVIEW, immutable_baseline, load, save
+from preview30_runtime import BASE, PREVIEW, WORKSHOP_VERSION, immutable_baseline, load, save
 
 
 def write(path: Path, data: bytes) -> None:
@@ -79,15 +79,28 @@ def build() -> dict:
         path = next((BASE / "notebooks").glob(f"Notebook_{number}_*.ipynb"))
         notebook = load(path)
         notebook["metadata"].setdefault("furusato", {}).update({
-            "edition": "v3.0.0-preview", "sourceRuntimeEdition": "2.7.0",
-            "dataContractPreserved": True,
+            "edition": "v" + WORKSHOP_VERSION, "version": WORKSHOP_VERSION,
+            "runtimeProfile": "v3.0.0-preview", "sourceRuntimeEdition": "2.7.0",
+            "dataContract": "2.7.0-realistic.1", "dataContractPreserved": True,
         })
         notebook["cells"][0]["source"] = [
-            "# " + path.stem + "\n", "\n",
-            "**Edition:** v3.0.0-preview. The independently verified v2.7 data/quality runtime is retained unchanged.\n",
-            "**Data contract:** 2.7.0-realistic.1. This notebook does not create a legacy ontology.\n",
+            "# Furusato Workshop " + WORKSHOP_VERSION + " — " + path.stem + "\n", "\n",
+            "**Workshop version / 教材版:** " + WORKSHOP_VERSION + "\n",
+            "**Runtime profile / 技術的な配置識別子:** v3.0.0-preview\n",
+            "**Compatible processing baseline / 処理基線:** 2.7.0. The data-processing algorithm is preserved.\n",
+            "**Data contract / 不変のデータ仕様:** 2.7.0-realistic.1. CSV values and publication keys are unchanged.\n",
             "**Input boundary:** Lakehouse static/staging tables and released CSV files; never Eventhouse-to-Gold.\n",
+            "**Deployment:** the specified folder directly; no Temp folder is required for production.\n",
         ]
+        if number == "01":
+            parameters = [cell for cell in notebook["cells"]
+                          if "parameters" in cell.get("metadata", {}).get("tags", [])]
+            if len(parameters) != 1 or parameters[0]["source"].count('NOTEBOOK_VERSION = "2.7.0"\n') != 1:
+                raise ValueError("Expected one presentation/audit version assignment in Notebook01.")
+            parameters[0]["source"] = [
+                f'NOTEBOOK_VERSION = "{WORKSHOP_VERSION}"\n' if line == 'NOTEBOOK_VERSION = "2.7.0"\n' else line
+                for line in parameters[0]["source"]
+            ]
         write(PREVIEW / "notebooks" / path.name,
               (json.dumps(notebook, ensure_ascii=False, indent=1) + "\n").encode("utf-8"))
         if number == "05":
@@ -113,13 +126,15 @@ def build() -> dict:
         save(PREVIEW / "data-agent/definition" / path, content)
     save(PREVIEW / "data-agent/candidate-contract.json", agent_contract)
     save(PREVIEW / "provisioning" / "preview-contract.json", {
-        "edition": "v3.0.0-preview", "baselineEdition": "2.7.0",
+        "edition": "v3.0.0-preview", "workshopVersion": WORKSHOP_VERSION, "baselineEdition": "2.7.0",
         "baselineTreeSha256": baseline["treeSha256"],
         "dataContract": {k: v for k, v in baseline.items() if k not in {"files", "treeSha256"}},
         "generation2": True, "legacyFallback": False,
         "ontologyContract": "../ontology/generation2-contract.json",
         "environmentParameterRequired": ["dev", "test", "prod"],
         "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
+        "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
+        "correctedAgentProfile": "data-agent/candidates/time-layer-isolation",
         "attachmentsOwner": "documents-workstream",
     })
     from preview30_notebooks import build_notebooks

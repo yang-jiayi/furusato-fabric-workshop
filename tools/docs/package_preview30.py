@@ -271,6 +271,7 @@ def package(
     acceptance_approval: Path | None = None, release_profile=release.PREVIEW,
     release_approval: Path | None = None,
     evaluation100_path: Path | None = None,
+    artifact_manifest_path: Path | None = None,
 ):
     profile = release.get_profile(release_profile)
     release.check_options(
@@ -293,6 +294,7 @@ def package(
         ROOT, evidence_path, evaluation_path, public_evidence_path=public_evidence_path,
         release_profile=profile, release_approval=release_approval,
         evaluation100_path=evaluation100_path,
+        **({"artifact_manifest_path": artifact_manifest_path} if artifact_manifest_path else {}),
     )
     if metadata.get("evaluation100", {}).get("evidenceKind") == "synthetic-private-test":
         raise ValueError("Synthetic private study fixtures cannot be packaged or published")
@@ -316,12 +318,36 @@ def package(
         files["attachments/" + name] = payload
     public_reports = collect_public_reports(metadata, root=ROOT, reports_path=public_reports_path, release_profile=profile)
     files.update(public_reports)
+    if artifact_manifest_path is not None:
+        artifact_blob = artifact_manifest_path.read_bytes()
+        binding = metadata["currentArtifactSet"]
+        if sha(artifact_blob) != binding["manifestSha256"]:
+            raise ValueError("Current artifact manifest changed during packaging.")
+        artifact_set = json.loads(artifact_blob)
+        for relative, expected in artifact_set["files"].items():
+            path = (ROOT / relative).resolve()
+            if not path.is_relative_to(ROOT) or not path.is_file():
+                raise ValueError("Current artifact path is invalid.")
+            payload = path.read_bytes()
+            if sha(payload) != expected:
+                raise ValueError("Current artifact bytes changed: " + relative)
+            files["source/" + relative] = payload
+        files["source/artifact-set.json"] = artifact_blob
     if evaluation100_path is not None:
         study_blob = evaluation100_path.read_bytes()
         if sha(study_blob) != metadata.get("evaluation100Sha256"):
             raise ValueError("Public frozen100 study changed during packaging")
         files["reports/evaluation100.json"] = study_blob
     files["START_HERE.txt"] = start_here(metadata, release_profile=profile).encode("utf-8")
+    if "currentArtifactSet" in metadata:
+        files["START_HERE.txt"] += (
+            "\nCURRENT V3 ARTIFACT SET\nCourse: " + metadata["currentArtifactSet"]["workshopVersion"]
+            + "\nSource commit: " + metadata["currentArtifactSet"]["sourceCommit"]
+            + "\nManifest: source/artifact-set.json\nProduction: specified folder directly, no Temp."
+            + "\nCSV/runtime2.7 compatibility identifiers are intentional, not the course edition."
+            + "\nUse the pinned Git checkout for CLI preflight, or the sealed Notebook04 package."
+            + "\nHistorical evaluation is not new-environment acceptance.\n"
+        ).encode("utf-8")
     state = {
         "schemaVersion": "furusato-document-release-package/v1" if profile.is_release else "furusato-local-draft-package/v1",
         "edition": profile.version, "kind": profile.kind,
@@ -392,6 +418,7 @@ if __name__ == "__main__":
     inputs.add_argument("--evidence", type=Path)
     inputs.add_argument("--public-evidence", type=Path)
     parser.add_argument("--evaluation-report", type=Path)
+    parser.add_argument("--artifact-manifest", type=Path)
     parser.add_argument("--public-reports", type=Path, help="Reviewed source reports within the selected document profile's reports directory")
     parser.add_argument("--require-acceptance", action="store_true")
     parser.add_argument("--acceptance-approval", type=Path)
@@ -403,4 +430,5 @@ if __name__ == "__main__":
         require_acceptance=args.require_acceptance, acceptance_approval=args.acceptance_approval,
         release_profile=args.release_profile, release_approval=args.release_approval,
         evaluation100_path=args.evaluation100,
+        artifact_manifest_path=args.artifact_manifest,
     ), ensure_ascii=False, indent=2))

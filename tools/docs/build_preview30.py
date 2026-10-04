@@ -115,6 +115,8 @@ def main(argv=None):
     inputs.add_argument("--evidence", type=Path, help="Coordinator's private original+sanitized evidence manifest")
     inputs.add_argument("--public-evidence", type=Path, help="Approved source-owned projection; default is selected by the explicit document profile")
     parser.add_argument("--evaluation-report", type=Path, help="Private normalized evaluator report; approved fields only")
+    parser.add_argument("--artifact-manifest", type=Path,
+                        help="Bind a separately generated current guide to verified v3 source artifacts; historical files stay unchanged.")
     parser.add_argument("--require-evidence", action="store_true", help="Reject an incomplete evidence handoff; does not turn blockers into passes")
     parser.add_argument("--skip-word", action="store_true", help="Draft only: leave fields unrefreshed")
     parser.add_argument("--require-acceptance", action="store_true", help="Final-use gate: reject every unresolved original-suite, lab, capture or publication-approval condition")
@@ -146,6 +148,7 @@ def main(argv=None):
         ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
         release_profile=profile, release_approval=args.release_approval,
         evaluation100_path=args.evaluation100,
+        **({"artifact_manifest_path": args.artifact_manifest} if args.artifact_manifest else {}),
     )
     if args.require_evidence and (
         not evidence["complete"]

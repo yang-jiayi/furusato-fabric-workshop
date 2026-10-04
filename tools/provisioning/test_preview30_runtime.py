@@ -24,6 +24,14 @@ class PreviewRuntimeTests(unittest.TestCase):
     def test_source_paths_are_explicit(self):
         self.assertTrue((runtime.REPO / "tools" / "provisioning" / "preview30_runtime.py").is_file())
         self.assertEqual(runtime.PREVIEW.name, "v3.0.0-preview")
+        self.assertEqual(runtime.WORKSHOP_VERSION, "3.0.0")
+
+    def test_production_does_not_plan_a_temp_folder(self):
+        plan = runtime.build_plan(scope(), {"items": [], "recoverableItems": []},
+                                  {"treeSha256": "b" * 64, "files": {}})
+        self.assertEqual(plan["folders"], [])
+        self.assertEqual(plan["productionPlacement"], "specified-folder-direct")
+        self.assertEqual(plan["workshopVersion"], runtime.WORKSHOP_VERSION)
 
     def test_private_evidence_required(self):
         with self.assertRaises(runtime.SafetyError):

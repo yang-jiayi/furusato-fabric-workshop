@@ -1,13 +1,38 @@
 <a id="top"></a>
 
-> **2026-10-04 新規再デプロイ — 削除工程で停止中**
-> 検証済みの修正コードはmainへ反映済みです。旧環境の23 Itemsのうち16件は通常削除後の
-> 復元可能な状態ですが、7件は通常削除非対応またはAPIエラーで残っています。
-> 完全削除の承認は未取得で、既存フォルダとGitHubの成果物は保持しています。
-> **新環境へのデプロイと一通りの検証は未実施です。**
-> 下記の10 PASSは削除前の比較環境での限定回帰結果であり、新環境の成功証拠ではありません。
-> Fresh redeployment is blocked at cleanup pending explicit permanent-deletion approval.
-> Historical passing answers are preserved; no new-deployment readiness or validation is claimed.
+# Furusato Workshop 3.0.0
+
+**現行教材の入口です。Notebook・CSV・モデル・Agent設定・Word/HTMLを、版の対応とSHA-256で照合します。**
+
+[v3整合版の構成と利用手順](docs/v3.0.0/current/README.md) ·
+[Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
+[デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
+[修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)
+
+| 版の種類 | 値 | 意味 |
+|---|---|---|
+| 教材・配布Notebook | **3.0.0** | [`WORKSHOP_VERSION`](WORKSHOP_VERSION)が正本 |
+| 技術的な配置パス | `v3.0.0-preview` | 互換性のためパスを維持。製品Previewと教材版は別 |
+| 再利用する処理基線 | `2.7.0` | [`VERSION`](VERSION)は既存ツール用の基線識別子 |
+| CSVデータ仕様 | `2.7.0-realistic.1` | 値・行数・hashを維持する不変の合成データ契約 |
+
+本デプロイは**指定フォルダ直下、Tempなし**です。正式Agentに必要なconsumer Ontologyは
+正式な依存Itemとして同じフォルダへ配置します。評価用の比較AgentやTempは、
+必要な依存と参照を正式配置で確認してから削除します。
+
+> **2026-10-04 再デプロイの経過**
+> 旧23 Itemsは完全削除済みです。新配置の静的80,000件、raw15,000件、受入14,900件、
+> Gold94,900件とDAX・静的GQLを確認しました。初回の新環境10問は**7 PASS／3 FAIL／0 UNKNOWN**で、
+> 元のUTC/JST・データ層修正とは別に、集約行数の説明と追加フィルターの誤りが見つかりました。
+> v3の版表記・sealed package・正式配置と、この追加の回答修正を整合させて再検証しています。
+> 下の過去の10 PASSを、新環境の最終合格として流用しません。
+
+The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
+identifiers are explicitly versioned compatibility contracts, not stale course
+labels. Production uses the specified folder directly, with no Temp dependency.
+
+<details>
+<summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>
 
 > **2026-10-04 UTC・データ層の混同修正 — 限定回帰10問で0 FAIL**
 > 指定された2件を修正し、元の失敗2問＋対照8問を同じ最終構成で再評価して
@@ -1448,3 +1473,5 @@ municipalities.
 ---
 
 [Back to top ↑](#top) · [日本語 →](#日本語) · [License](LICENSE) · [Security & distribution](SECURITY.md)
+
+</details>

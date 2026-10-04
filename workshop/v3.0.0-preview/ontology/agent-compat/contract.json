@@ -50,7 +50,8 @@
   "deployment": {
     "mode": "offline-private-handoff-only",
     "createOnly": true,
-    "approvedTempAncestryRequired": true,
+    "defaultPlacement": "specified-folder-direct",
+    "explicitEvaluationTempAllowed": true,
     "newItemOwnershipReadbackRequired": true,
     "rerunNotebooks": false,
     "sourceDdlAllowed": false,

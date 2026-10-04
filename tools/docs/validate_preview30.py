@@ -171,6 +171,9 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
     report_check(report, "word.coverEdition", normalized(profile.title) in all_text and normalized(profile.version) in all_text)
     if "evaluation100" in metadata:
         report_check(report, "word.evaluation100Hash", metadata["evaluation100Sha256"] in all_text)
+    if "currentArtifactSet" in metadata:
+        report_check(report, "word.currentArtifactSetHash",
+                     metadata["currentArtifactSet"]["manifestSha256"] in all_text)
     return parts
 
 
@@ -197,7 +200,7 @@ def inspect_html(pair, document, metadata, report, *, release_profile=release.PR
         "selectedOriginalSuiteRunId", "publicEvidenceProjectionSha256", "originalSuiteRuns", "finalEvaluation",
         "originalSuiteAccepted", "aiAnswerQualityAccepted", "mainPromoted", "allFeaturesPassedClaimed",
         "finalUserAcceptanceCertified",
-        "evaluation100", "evaluation100Sha256",
+        "evaluation100", "evaluation100Sha256", "currentArtifactSet",
     )))
     report_check(report, "html.sharedFingerprint", provenance["contentSha256"] == metadata["contentSha256"])
     report_check(report, "html.shape", provenance["counts"] == metadata["counts"])
@@ -400,6 +403,7 @@ def main(argv=None):
     inputs.add_argument("--evidence", type=Path)
     inputs.add_argument("--public-evidence", type=Path)
     parser.add_argument("--evaluation-report", type=Path)
+    parser.add_argument("--artifact-manifest", type=Path)
     parser.add_argument("--render", action="store_true")
     parser.add_argument("--interactions", action="store_true")
     parser.add_argument("--print-html", action="store_true")
@@ -410,6 +414,7 @@ def main(argv=None):
         ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
         release_profile=profile, release_approval=args.release_approval,
         evaluation100_path=args.evaluation100,
+        **({"artifact_manifest_path": args.artifact_manifest} if args.artifact_manifest else {}),
     )
     pair, review = args.pair.resolve(), args.review.resolve()
     if review.is_relative_to(ROOT) or review.is_relative_to(pair):

@@ -24,6 +24,11 @@ a static-SQL provenance value.
 - Replace the static value-domain example with a payment-only query. Existing
   payment filters, schema-grounding views, source-owned measures and all other
   business fields remain available.
+- Require actual scalar model results under the requested outer filter before
+  explaining a measure. Preserve all-BLANK rows and make the conclusion agree with
+  the effective source-set intersection, not with global source-row existence.
+- Keep recipient-municipality rankings at one row per municipality; donor-residence
+  components must not become separate recipient municipalities.
 
 [`time_layer_isolation.py`](../../../../../tools/data-agent/time_layer_isolation.py)
 compiles a Draft from the existing Published definition. It preserves source IDs,

@@ -58,7 +58,7 @@ def compile_isolated_draft(original: dict, profile: Path = PROFILE) -> tuple[dic
     sql_lines = sql["dataSourceInstructions"].splitlines()
     if sum(PROVENANCE_LITERAL in line for line in sql_lines) != 1:
         raise ValueError("Expected one SQL provenance rule.")
-    sql["dataSourceInstructions"] = "\n".join(
+    sql["dataSourceInstructions"] = (profile / "static-ranking-contract.txt").read_text(encoding="utf-8").strip() + "\n\n" + "\n".join(
         "This source is physically scoped to static seed. The fixed provenance-tag column is not selected: "
         "do not add a provenance/layer predicate or borrow a model DataSource value."
         if PROVENANCE_LITERAL in line else line for line in sql_lines
@@ -80,6 +80,7 @@ def compile_isolated_draft(original: dict, profile: Path = PROFILE) -> tuple[dic
     if MODEL_STATIC not in model["dataSourceInstructions"] or MODEL_INCREMENT not in model["dataSourceInstructions"]:
         raise ValueError("The existing source-owned measure definitions differ.")
     model["dataSourceInstructions"] = (
+        (profile / "model-result-contract.txt").read_text(encoding="utf-8").strip() + "\n\n"
         "MODEL-ONLY NAMESPACE: the column '寄附'[データソース] contains exactly StaticSeed and RealtimeIncrement. "
         "Static-measure inner filters use the literal StaticSeed; increment-measure inner filters use RealtimeIncrement. "
         "Do not import a Lakehouse/Ontology provenance tag into this column. Explain outer and inner values using "

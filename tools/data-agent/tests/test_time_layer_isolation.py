@@ -124,6 +124,23 @@ class TimeLayerIsolationTests(unittest.TestCase):
         self.assertIn("including whole-day and per-file totals", kusto)
         self.assertIn("query boundaries, not observed extrema", kusto)
 
+    def test_model_scalar_query_keeps_outer_filter_and_blank_rows(self):
+        result, _ = isolation.compile_isolated_draft(self.fixture())
+        model = decoded_parts(result)["Files/Config/draft/semantic_model/datasource.json"]["dataSourceInstructions"]
+        self.assertIn('ROW("静的寄附件数", [静的寄附件数]', model)
+        self.assertIn('TREATAS({"RealtimeIncrement"},', model)
+        self.assertIn("EVEN WHEN the model contains both sources globally", model)
+        self.assertIn("every statement agrees with the result table", model)
+        self.assertIn(isolation.MODEL_STATIC, model)
+
+    def test_static_ranking_cannot_split_recipient_by_residence(self):
+        result, _ = isolation.compile_isolated_draft(self.fixture())
+        sql = decoded_parts(result)["Files/Config/draft/lakehouse_tables/datasource.json"]["dataSourceInstructions"]
+        self.assertIn("exactly ONE result row per MunicipalityId", sql)
+        self.assertIn("RecipientPrefectureId AS PrefectureId", sql)
+        self.assertIn("ResidentPrefectureId/ResidentPrefectureName belong to the donor", sql)
+        self.assertIn("final ranked MunicipalityIds are distinct", sql)
+
     def test_rejects_ambiguous_examples(self):
         docs = decoded_parts(self.fixture())
         rows = docs["Files/Config/published/kusto/fewshots.json"]["fewShots"]

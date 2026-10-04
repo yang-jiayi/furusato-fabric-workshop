@@ -1,5 +1,18 @@
 <a id="top"></a>
 
+> **2026-10-04 UTC・データ層の混同修正 — 限定回帰10問で0 FAIL**
+> 指定された2件を修正し、元の失敗2問＋対照8問を同じ最終構成で再評価して
+> **10 PASS／0 FAIL／0 UNKNOWN**を確認しました。UTC/JSTの役割とGold／静的SQLの値を分離し、
+> 実メジャーの結果と説明、受入自治体の集計単位を一致させています。
+> **既知10問の限定評価であり、元32枠・100枠全体の合格や主Agent昇格ではありません。**
+> 過去のFAIL、送信結果不明の1問（再送なし）、旧版のWord・HTML・タグは保持しています。
+> [全構成の経過・適用範囲](docs/v3.0.0/tuning-20261004/README.md) ·
+> [Word追補](docs/v3.0.0/tuning-20261004/furusato-data-agent-tuning-20261004.docx) ·
+> [日英HTML追補](docs/v3.0.0/tuning-20261004/furusato-data-agent-tuning-20261004.html) ·
+> [実装profile](workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)。
+> Both requested failures are repaired; the unchanged focused10 returned **10 PASS /0 FAIL /0 UNKNOWN**.
+> This is a known regression, not a full-study rerun, independent acceptance or general correctness guarantee.
+
 > **2026-10-03 再チューニング — 最新結果と未達事項**
 > 同じ開発20問では **20 PASS／0 FAIL／0 UNKNOWN** の構成を確認しました。
 > その後の追加質問で見つかった問題も修正し、拡大した既知32枠を再検証した最新結果は

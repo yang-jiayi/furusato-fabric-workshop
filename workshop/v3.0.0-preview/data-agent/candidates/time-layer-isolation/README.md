@@ -5,6 +5,11 @@ Focused, opt-in native correction for the two remaining
 an explicitly UTC day interpreted as JST, and a Gold measure explanation borrowing
 a static-SQL provenance value.
 
+The [2026-10-04 measured addendum](../../../../../docs/v3.0.0/tuning-20261004/README.md)
+records all three configurations. The final same10 known regression returned
+**10 PASS /0 FAIL /0 UNKNOWN**; earlier9/1 and8/2 outcomes remain visible.
+This is not a full32/100 rerun, independent holdout or main-Agent promotion.
+
 ## Narrow changes
 
 - Resolve **filter timezone** separately from **display timezone**. A UTC hour/day

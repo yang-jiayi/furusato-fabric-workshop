@@ -1,0 +1,355 @@
+{
+  "baseline": {
+    "caseCount": 10,
+    "content": {
+      "FAIL": 2,
+      "PASS": 8,
+      "UNKNOWN": 0
+    },
+    "factual": {
+      "FAIL": 2,
+      "PASS": 8,
+      "UNKNOWN": 0
+    },
+    "label": "同じ10問の前回記録 / Previous same10"
+  },
+  "capturedBusinessReplies": 30,
+  "changesEn": [
+    "Filter timezone and display timezone are separate. Explicit UTC is not shifted because the question is Japanese; an explicitly JST target date may still request UTC output.",
+    "One unused constant SQL provenance column is deselected only in the isolated Agent, and its literal is removed from Draft prompt context. The physical source and source-owned model measures remain unchanged."
+  ],
+  "changesJa": [
+    "FilterTimezone（対象日を絞る基準）とDisplayTimezone（表示時刻）を分け、明示されたUTC日付を日本語やモデルのJST規則から変換しない契約を追加しました。明示的なJST対象日をUTC表示する場合は別の分岐として維持します。",
+    "同じcalendar dateのUTC/JST例を用意し、UTCの半開区間、FilterTimezone、DisplayTimezoneをKQL結果へ付与しました。直接照会で両例の全24時間と異なる正しいUTC境界を確認し、ネイティブ画面の例検証も確認しました。実際の回答でどの例を参照したかは観測不能です。",
+    "業務質問に不要な静的SQLの固定由来タグ列dbo.agent_donation_detail.DonationDataLayerだけを比較用Agentの選択から外し、その値を全体・SQL・Ontology指示と列説明から除去しました。物理列・データは変更していません。Goldの値は'寄附'[データソース]のStaticSeed/RealtimeIncrementに限定し、実際の既存メジャー定義で説明します。",
+    "最初の構成では対象2問は改善しましたが、JST対照問で検索境界だけを表示し、実際の観測開始・終了を省く退行が見つかりました。検索区間WindowStart/Endと実データのFirst/LastObservedAtは別の値として、両方が必要な質問では別々に取得・表示する指示を追加しました。初回の9 PASS/1 FAILは保持しています。",
+    "次の構成では観測期間の省略は直りましたが、正しいメジャー定義と矛盾した結論、および同じ自治体を居住県別の複数順位へ分ける回答が発生しました。その8 PASS/2 FAILも保持し、モデルの実戻り値を先に取得して説明と一致させる契約、受入自治体を1ID1行で順位付けする契約を追加しました。実メジャーやデータを変えたものではありません。",
+    "ソースID、既存業務列、実データ、Eventhouseオブジェクト、モデルメジャー、runtime設定、主Agentと前の比較候補は保持しています。最終例はSQL15件・KQL6件です。"
+  ],
+  "cohortNoteJa": "前回のUTC/JST・Gold/静的SQL混同の失敗2問と、明示的なJST日付、逆側のモデルフィルター、静的SQLの支払い方法、前年同期間、高額フラグなど8対照問の計10問です。質問・期待値・必須条件は前回から不変です。32問全体の再評価や新しい独立未使用セットではありません。",
+  "date": "2026-10-04",
+  "excludedUncertainCaseIds": [
+    "F30-N10"
+  ],
+  "expandedDevelopment": null,
+  "humanSignoff": false,
+  "mainPromoted": false,
+  "oldStudiesChanged": false,
+  "privacy": {
+    "answerKeys": false,
+    "liveResourceIds": false,
+    "machinePaths": false,
+    "privateCriteria": false,
+    "rawAnswers": false
+  },
+  "profileFileHashes": {
+    "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/example-overrides.json": "9b0e58fa7d051cb32a18dacac9fad6c8af5349da9cf7be735cfdf375b147f36b",
+    "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/kusto-time-contract.txt": "d285303b21d79c265b65213fc134029bb809633bd5146a17b2b4bc225f15b57c",
+    "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/model-result-contract.txt": "adb337d9c0e0b6637bef64d54c4d5b465121ab12be6f7e358fdf2aafafcaee00",
+    "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/static-ranking-contract.txt": "9230f4c11d614379396eaec53eb4f73857bf91097d4915a45e9522894f94ba1f",
+    "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/time-layer-contract.txt": "a4256f73e5ad026af65b63a8af75ea7975557a32a0dc88f8282a9f5c283143f7"
+  },
+  "projectionAtUtc": "2026-10-04T03:48:41.779052+00:00",
+  "remainingEn": [
+    "This is a focused known regression, not a full32-case reevaluation, an independent holdout, a general correctness guarantee or main-Agent promotion.",
+    "The prior uncertain HTTP500 question is excluded and never replayed. Historical results and released artifacts remain unchanged; internal query execution and backend conversation identity remain unobservable."
+  ],
+  "remainingJa": [
+    "この評価は依頼された2項目と対照問に絞った既知の回帰確認です。任意の将来質問の無誤答、元32枠全体の合格、独立した人間のsign-off、主Agentへの昇格を意味しません。",
+    "前回のHTTP500で送信結果不明となったF30-N10は対象外で、再送も判定の上書きもしていません。前回32枠の29 PASS/2 FAIL/1 UNKNOWNおよび元100枠の記録は保存したままです。",
+    "判定はAI補助で、内部SQL/KQL/DAX、内部rowset、backend会話IDはUNOBSERVABLEです。引用の一致、ソース例の成功、定義readbackだけをAI回答のPASSとして加算していません。"
+  ],
+  "rounds": [
+    {
+      "caseCount": 10,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H11"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H10"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H12"
+        }
+      ],
+      "content": {
+        "FAIL": 1,
+        "PASS": 9,
+        "UNKNOWN": 0
+      },
+      "factual": {
+        "FAIL": 0,
+        "PASS": 10,
+        "UNKNOWN": 0
+      },
+      "label": "Timezone / source namespace isolation",
+      "planSha256": "1346d0a8890a35a8bd95b1a06ac56a107a1326a0ec1e3916eebfb39471135096",
+      "productionDefinitionSha256": "324eac5f2c5bd35234304f0e10cc07665a285bf7c6ada50f6999c86a3ea6bf88",
+      "reviewSha256": "14b50e2095f7ba772719f6bc4ed144d2bd60e3b7a2d188f71b72c6a436f95bf3"
+    },
+    {
+      "caseCount": 10,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F31-H11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H10"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "FAIL",
+          "factual": "FAIL",
+          "helpfulness": "FAIL",
+          "id": "F31-H01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H12"
+        }
+      ],
+      "content": {
+        "FAIL": 2,
+        "PASS": 8,
+        "UNKNOWN": 0
+      },
+      "factual": {
+        "FAIL": 2,
+        "PASS": 8,
+        "UNKNOWN": 0
+      },
+      "label": "Preserve actual observation spans",
+      "planSha256": "bc2a1806a90282ef3ce885701c4bde6b9867f93fbb49814c72d0c399c9dbeb02",
+      "productionDefinitionSha256": "877ef2ccb9f43451371aeec7f7157d3bbcbcef1960fd554c39bf05250f69b021",
+      "reviewSha256": "140904adefa5ad7d4e8c5414b83840423d33ebe3fb4e7ad2e88cf5490b5ae347"
+    },
+    {
+      "caseCount": 10,
+      "cases": [
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-O11"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H08"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D09"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-D01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H10"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F30-S18"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H01"
+        },
+        {
+          "capture": "captured",
+          "content": "PASS",
+          "factual": "PASS",
+          "helpfulness": "PASS",
+          "id": "F31-H12"
+        }
+      ],
+      "content": {
+        "FAIL": 0,
+        "PASS": 10,
+        "UNKNOWN": 0
+      },
+      "factual": {
+        "FAIL": 0,
+        "PASS": 10,
+        "UNKNOWN": 0
+      },
+      "label": "Model-result and ranking consistency",
+      "planSha256": "00e9abd2d953391fcad2e2468ec8d3dc6211ccbf11bed9f542d98114d67df74e",
+      "productionDefinitionSha256": "7dc55a8ab882bfddf4779d81d0d73ca0c85e6881fc9393a7ba56bbe56c8494a6",
+      "reviewSha256": "1b2357ed43537b595e77e5b68ff3e5e5a3c76832a17cc87a34b1ce22225a019f"
+    }
+  ],
+  "sameConfigurationRetries": 0,
+  "schemaVersion": "furusato-native-tuning-study/v1",
+  "submissionCount": 30,
+  "targetCaseIds": [
+    "F30-O08",
+    "F31-H11"
+  ],
+  "targetOutcomes": [
+    {
+      "capture": "captured",
+      "content": "PASS",
+      "factual": "PASS",
+      "helpfulness": "PASS",
+      "id": "F30-O08"
+    },
+    {
+      "capture": "captured",
+      "content": "PASS",
+      "factual": "PASS",
+      "helpfulness": "PASS",
+      "id": "F31-H11"
+    }
+  ],
+  "unseen": null
+}

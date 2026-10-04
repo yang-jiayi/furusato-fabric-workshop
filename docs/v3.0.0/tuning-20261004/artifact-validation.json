@@ -1,0 +1,32 @@
+{
+  "aiAnswerQualityAccepted": false,
+  "artifactChecksAreNotAiAnswerPasses": true,
+  "artifactSha256": {
+    "furusato-data-agent-tuning-20261004.docx": "bbd0b44cd4902422632f4cdd9c90ea8f626fc8470052ea22c4992bd4508cdfb2",
+    "furusato-data-agent-tuning-20261004.html": "7f7c7aedc0717629c757176a6a54b1d12538a7bb0b2c7908638b83ec3afaf1db",
+    "result-20261004.json": "4c23a78aeccdb828e91c93932c0715605dff1a4a6fe3f2a43dfaeb2ee0e1ec5c"
+  },
+  "focusedUnitTests": {
+    "existingProfiles": 25,
+    "isolationAndConsistency": 10,
+    "pairedDocument": 7
+  },
+  "htmlDocumentWidth": 1425,
+  "htmlHorizontalOverflow": false,
+  "htmlScriptCount": 0,
+  "htmlSectionCount": 6,
+  "htmlSectionsClipped": 0,
+  "htmlViewportWidth": 1440,
+  "kind": "document-and-profile-integrity-only",
+  "mainAgentPromoted": false,
+  "pairedCountsAndBoundariesVerified": true,
+  "previousDatedArtifactsUnchanged": true,
+  "profileHashBindingsVerified": true,
+  "publishedContentPrivacyVerified": true,
+  "tableCellsComparedExactly": true,
+  "textComparison": "NFKC and whitespace; Word style normalizes full-width parentheses",
+  "verifiedAtUtc": "2026-10-04T03:56:47.534613+00:00",
+  "wordApprovedAuthorMetadataRestored": true,
+  "wordFieldsRefreshed": true,
+  "wordPages": 3
+}

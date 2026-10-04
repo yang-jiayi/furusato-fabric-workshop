@@ -32,15 +32,15 @@ def write_word(
 ):
     profile = release.require_metadata_profile(metadata, release_profile)
     builder = DocumentBuilder(carrier, review / "participant-shell.docx")
-    # The dated title and extra snapshot TOC entries must not strand a footer or
-    # final entry on its own page. Keep the original editions' spacing unchanged.
+    # Extra snapshot/artifact entries must not strand the last TOC rows.
+    compact_contents = profile.is_snapshot or "currentArtifactSet" in metadata
     for style in builder.document.styles:
         if profile.is_snapshot and style.style_id == "Title":
             style.font.size = Pt(25)
         if style.style_id in {"TOC1", "TOC2"}:
             style.font.size = Pt(11)
             style.paragraph_format.space_before = Pt(0)
-            style.paragraph_format.space_after = Pt(0 if profile.is_snapshot else 1)
+            style.paragraph_format.space_after = Pt(0 if compact_contents else 1)
             style.paragraph_format.line_spacing = 1.0
     status = release.presentation(metadata, profile).get(lang, PREVIEW_NOTICE_JA)
     cover_page(

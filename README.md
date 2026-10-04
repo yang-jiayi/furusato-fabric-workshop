@@ -4,7 +4,10 @@
 
 **現行教材の入口です。Notebook・CSV・モデル・Agent設定・Word/HTMLを、版の対応とSHA-256で照合します。**
 
-[v3整合版の構成と利用手順](docs/v3.0.0/current/README.md) ·
+[Word整合版](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[日英HTML整合版](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
+[Notebook・CSVを含む整合パッケージ](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261004.zip) ·
+[構成・検証結果](docs/v3.0.0/current/README.md) ·
 [Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
 [修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)
@@ -20,16 +23,21 @@
 正式な依存Itemとして同じフォルダへ配置します。評価用の比較AgentやTempは、
 必要な依存と参照を正式配置で確認してから削除します。
 
-> **2026-10-04 再デプロイの経過**
-> 旧23 Itemsは完全削除済みです。新配置の静的80,000件、raw15,000件、受入14,900件、
-> Gold94,900件とDAX・静的GQLを確認しました。初回の新環境10問は**7 PASS／3 FAIL／0 UNKNOWN**で、
-> 元のUTC/JST・データ層修正とは別に、集約行数の説明と追加フィルターの誤りが見つかりました。
-> v3の版表記・sealed package・正式配置と、この追加の回答修正を整合させて再検証しています。
-> 下の過去の10 PASSを、新環境の最終合格として流用しません。
+> **2026-10-04 整合性・正式配置の結果**
+> 旧23 Itemsは完全削除済みです。新配置は指定フォルダ直下の**21 Items・正式Agent1件・Temp0件**です。
+> 配布/配置Notebook5件の版・内容・結合先、変更しないCSV11件、305成果物のGit blobとSHAを照合し、
+> **232ページのWordと日英HTMLは203検査／0 FAIL**でした。Notebook01/05は各1回のみで、再実行していません。
+> 回答評価は別です。同じ既知10問で初回7 PASS／3 FAIL、正式Agentでの再確認は
+> **8 PASS／2 FAIL／0 UNKNOWN**でした。**AI回答の0 FAIL・全機能合格ではありません。**
+> 月またぎJST観測の誤った空結果と、DAXフィルター説明の誤りを残件として公開しています。
+> [詳細と制約](docs/v3.0.0/current/deployment-verification.md) ·
+> [検証JSON](docs/v3.0.0/current/verification.json)。
 
 The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
 identifiers are explicitly versioned compatibility contracts, not stale course
 labels. Production uses the specified folder directly, with no Temp dependency.
+Artifact checks pass; the final known10 answer check is **8 PASS /2 FAIL**,
+not zero-failure AI acceptance.
 
 <details>
 <summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>

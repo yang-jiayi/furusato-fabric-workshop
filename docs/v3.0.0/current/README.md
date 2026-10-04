@@ -3,6 +3,16 @@
 このディレクトリは現行mainの整合版用です。元の`v3.0.0`タグ・配布物と日付付き過去評価は
 変更せず保持します。教材版、データ仕様、FabricのgenerationやAPI versionを混同しません。
 
+[Word（232ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
+[Notebook・CSV・モデル等を含むZIP](Furusato_Workshop_v3.0.0_current-20261004.zip) ·
+[Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
+[検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt)
+
+**成果物整合性とTemp整理は確認済みです。** 正式配置は21 Items・Agent1件・Temp0件です。
+ただし、正式Agentの既知10問の回答評価は**8 PASS／2 FAIL／0 UNKNOWN**で、
+AI回答品質の0 FAILを意味しません。文書203検査の成功はAI回答のPASSに加算していません。
+
 ## 版の正本
 
 | 成果物・識別子 | 正本と扱い |

@@ -56,7 +56,8 @@
   document.getElementById("progress-reset").addEventListener("click",() => {
     records={}; steps.forEach(input => { input.checked=false; }); save(); progress();
   });
-  document.getElementById("legacy-toggle").addEventListener("click",() => {
+  const legacyToggle=document.getElementById("legacy-toggle");
+  if(legacyToggle) legacyToggle.addEventListener("click",() => {
     const details=[...document.querySelectorAll("details.legacy")], open=details.some(d => !d.open);
     details.forEach(d => { d.open=open; });
   });

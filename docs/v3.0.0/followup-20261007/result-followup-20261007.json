@@ -28,7 +28,7 @@
       "done": [
         "handoff-ontology stage recorded with the approved source"
       ],
-      "blocked": "The Eventhouse time-series binding has no documented definition format and Generate Ontology has no API; both are UI-only. Runbook covers binding values, the 331 / 5,737,000 check, Notebook02 (98 objects) and Metrics under Temp."
+      "blocked": "The Eventhouse time-series binding has no documented definition format and Generate Ontology has no API; both are UI-only. Runbook covers binding values, the 331 / 5,737,000 check, rule metadata in the Ontology editor (Notebook02 refuses after the handoff; corrected in the fifth report) and Metrics under Temp."
     },
     {
       "id": 4,
@@ -277,6 +277,81 @@
       "status": "not performed",
       "reason": "Activator and Ontology editors run in separate-domain frames the in-app browser cannot operate; another signed-in browser window was minimized and exposed no page content",
       "kqlData": "left intact (not cleared)"
+    }
+  },
+  "fifthReport": {
+    "date": "2026-10-08",
+    "instruction": "Run B15-B19 on R8, evaluate, merge; proofread the Word and HTML guide, including procedure screenshots; distribute only procedure content to participants.",
+    "regressionB15toB19": {
+      "configuration": "R8 (live definition equal to the R8 restore record, 17 parts)",
+      "runs": 1,
+      "resubmissions": 0,
+      "transportFailures": 0,
+      "cases": {
+        "B15": {
+          "fact": "PASS",
+          "content": "PASS"
+        },
+        "B16": {
+          "fact": "PASS",
+          "content": "FAIL",
+          "reason": "per-file counts and amounts not shown"
+        },
+        "B17": {
+          "fact": "PASS",
+          "content": "PASS"
+        },
+        "B18": {
+          "fact": "PASS",
+          "content": "PASS"
+        },
+        "B19": {
+          "fact": "FAIL",
+          "content": "FAIL",
+          "reason": "claimed the amount column is missing (it is hidden); expected 384"
+        }
+      },
+      "totals": {
+        "fact": {
+          "PASS": 4,
+          "FAIL": 1
+        },
+        "content": {
+          "PASS": 3,
+          "FAIL": 2
+        }
+      },
+      "nineteenQuestionsWithB01toB14": {
+        "fact": {
+          "PASS": 16,
+          "FAIL": 2,
+          "UNKNOWN": 1
+        },
+        "content": {
+          "PASS": 14,
+          "FAIL": 4,
+          "UNKNOWN": 1
+        }
+      },
+      "agentConfigurationChanged": false
+    },
+    "participantGuide": {
+      "edition": "participant (build option --participant-edition)",
+      "structure": "per chapter: what you will do, steps, completion checks, reference tables, references",
+      "removed": [
+        "v2.7 reference copy",
+        "evaluation results and run records",
+        "capture times and evidence notes",
+        "release notices",
+        "artifact hashes and commits",
+        "working notes"
+      ],
+      "packageWithoutReports": true,
+      "screenshotsReviewed": 48,
+      "screenshotsUsed": null,
+      "diagramsUsed": 0,
+      "wordPages": null,
+      "documentChecks": null
     }
   }
 }

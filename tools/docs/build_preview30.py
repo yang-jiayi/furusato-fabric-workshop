@@ -24,6 +24,7 @@ from furusato_docs.preview30_acceptance import require_public_acceptance  # noqa
 from furusato_docs.typography import ascii_parentheses  # noqa: E402
 from furusato_docs.word_refresh import refresh_with_word  # noqa: E402
 from furusato_html.preview30 import render as render_html  # noqa: E402
+from furusato_docs.participant30 import TAGLINE as PARTICIPANT_TAGLINE  # noqa: E402
 
 
 def write_word(
@@ -43,14 +44,23 @@ def write_word(
             style.paragraph_format.space_after = Pt(0 if compact_contents else 1)
             style.paragraph_format.line_spacing = 1.0
     status = release.presentation(metadata, profile).get(lang, PREVIEW_NOTICE_JA)
+    participant = bool(metadata.get("participantEdition"))
+    if participant:
+        status = PARTICIPANT_TAGLINE[lang]
     cover_page(
         builder,
         title=profile.title,
         title_break_after="Furusato Workshop",
-        subtitle="新Ontology体験・24章・5付録／実データbinding・Metrics・Rules・Copilot添付・Graph・MCP・変更管理",
+        subtitle=(
+            "参加者用手順書／Lakehouse・Eventhouse・Ontology・Data Agent のハンズオン" if participant else
+            "新Ontology体験・24章・5付録／実データbinding・Metrics・Rules・Copilot添付・Graph・MCP・変更管理"
+        ),
         version=profile.version,
         tagline=status,
         footer_lines=(
+            "Furusato Fabric Workshop", "Microsoft Learn 確認日 2026-09-29",
+            "データはすべて合成データです。自治体名とコードだけが実在の参照ラベルです。",
+        ) if participant else (
             "Furusato Fabric Workshop", "Microsoft Learn 確認日 2026-09-29",
             "合成教材／元の10問・84条件を保持／Wordと日英HTMLは同じ共有原稿",
             "v2.7の全本文・表・コードは比較参考として保持。旧UI写真は新UIの証拠にしない。",
@@ -64,7 +74,8 @@ def write_word(
             if kind == "paragraph":
                 builder.body(block["text"].get(lang))
             elif kind == "list":
-                builder.bullets([value.get(lang) for value in block["items"]], numbered=block["numbered"])
+                builder.bullets([value.get(lang) for value in block["items"]], numbered=block["numbered"],
+                                start=block.get("start") or 1)
             elif kind == "callout":
                 title = block.get("title")
                 builder.callout(block["tone"], block["text"].get(lang), title=title.get(lang) if title else None, **block.get("word_layout", {}))
@@ -95,12 +106,18 @@ def write_word(
                 raise ValueError("Unknown shared-content block: " + kind)
     builder.update_fields_on_open()
     builder.save(target)
+    description = "Complete 24-chapter/5-appendix guide. Content SHA256: " + metadata["contentSha256"]
+    if participant:
+        description = "Participant guide, 24 chapters and 5 appendices. Content SHA256: " + metadata["contentSha256"]
+        if "currentArtifactSet" in metadata:
+            description += ". Artifact-set SHA256: " + metadata["currentArtifactSet"]["manifestSha256"]
     apply_package_metadata(
         target,
         title=profile.title + " — participant guide",
         subject=ascii_parentheses(status),
-        keywords="Fabric IQ, Ontology, Preview, bilingual, synthetic, 24 chapters",
-        description="Complete 24-chapter/5-appendix guide. Content SHA256: " + metadata["contentSha256"],
+        keywords=("Fabric IQ, Ontology, hands-on, bilingual, synthetic, 24 chapters" if participant
+                  else "Fabric IQ, Ontology, Preview, bilingual, synthetic, 24 chapters"),
+        description=description,
         label_info=carrier.label_info(), custom_properties=carrier.custom_properties(),
     )
     return {"figures": len(builder.figures), "tables": len(builder.tables), "paragraphs": len(builder.document.paragraphs)}
@@ -149,6 +166,7 @@ def main(argv=None):
         release_profile=profile, release_approval=args.release_approval,
         evaluation100_path=args.evaluation100,
         **({"artifact_manifest_path": args.artifact_manifest} if args.artifact_manifest else {}),
+        **({"participant_edition": True} if args.participant_edition else {}),
     )
     if args.require_evidence and (
         not evidence["complete"]

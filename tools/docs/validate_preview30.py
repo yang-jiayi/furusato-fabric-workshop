@@ -173,8 +173,25 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
         report_check(report, "word.evaluation100Hash", metadata["evaluation100Sha256"] in all_text)
     if "currentArtifactSet" in metadata:
         report_check(report, "word.currentArtifactSetHash",
-                     metadata["currentArtifactSet"]["manifestSha256"] in all_text)
+                     metadata["currentArtifactSet"]["manifestSha256"] in (core if metadata.get("participantEdition") else all_text))
+    if metadata.get("participantEdition"):
+        found = working_content(" ".join(paragraphs))
+        report_check(report, "word.participantProcedureOnly", not found, str(found[:10]))
     return parts
+
+
+#: Wording that belongs to working records or history, not to a participant procedure.
+WORKING_CONTENT = re.compile(
+    r"v2\.7参考|v2\.7 reference|記録時刻|Recorded:|撮影時点|State at capture|実施証拠|Execution evidence"
+    r"|合格判定とは別|not a pass judgment|\d+\s*PASS\s*/\s*\d+\s*FAIL|original84|frozen100|promotion|receipt"
+    r"|Artifact-set SHA|source commit|未合格|not accepted|snapshot|スナップショット|\bseed\b|\braw\b",
+    re.IGNORECASE,
+)
+LITERAL_NAMES = re.compile(r"(?:Files|data)(?:/furusato)?/seed|StaticSeed|/seed/|\\seed\\")
+
+
+def working_content(value):
+    return sorted({match.group(0) for match in WORKING_CONTENT.finditer(LITERAL_NAMES.sub("", value))})
 
 
 def inspect_html(pair, document, metadata, report, *, release_profile=release.PREVIEW):
@@ -224,6 +241,9 @@ def inspect_html(pair, document, metadata, report, *, release_profile=release.PR
             if b.kind == "code" and normalized(b["text"]) not in code_text
         ]
         report_check(report, f"html.{language}.codeComplete", not missing_code, str(missing_code[:10]))
+        if metadata.get("participantEdition"):
+            found = working_content("".join(inspection.text[language]))
+            report_check(report, f"html.{language}.participantProcedureOnly", not found, str(found[:10]))
     report.stats["externalLinks"] = sorted({link for link in inspection.links if link.startswith("https://")})
     return provenance
 
@@ -342,7 +362,7 @@ def local_interactions(target, review, report, print_pdf=False):
         report_check(report, "interaction.englishVisible", page.locator("#ch-15 h2 [data-l=en]").is_visible())
         page.reload(wait_until="load")
         report_check(report, "interaction.languagePersists", page.locator("html").get_attribute("lang") == "en")
-        page.fill("#search", "registration")
+        page.fill("#search", "Lakehouse")
         found = page.locator("main > .chapter:visible").count()
         report_check(report, "interaction.englishSearch", found > 0 and page.locator("#search-status").inner_text().startswith(f"{found} "))
         page.fill("#search", "NO_SUCH_PHRASE_f9ca2")
@@ -361,9 +381,10 @@ def local_interactions(target, review, report, print_pdf=False):
         page.locator('button[data-copy-target^="prompt-"]:visible').first.click()
         page.wait_for_function("() => document.getElementById('copy-status').textContent.length > 0")
         report_check(report, "interaction.copyFeedback", bool(page.locator("#copy-status").inner_text()))
-        page.click("#legacy-toggle")
-        # Search may already have opened all legacy sections; ensure at least one is open.
-        page.locator("details.legacy").first.evaluate("(element) => element.open=true")
+        if page.locator("#legacy-toggle").count():
+            page.click("#legacy-toggle")
+            # Search may already have opened all legacy sections; ensure at least one is open.
+            page.locator("details.legacy").first.evaluate("(element) => element.open=true")
         page.locator("[data-lightbox]").first.click()
         report_check(report, "interaction.figureZoom", page.locator("#lightbox").is_visible())
         page.keyboard.press("Escape")
@@ -415,6 +436,7 @@ def main(argv=None):
         release_profile=profile, release_approval=args.release_approval,
         evaluation100_path=args.evaluation100,
         **({"artifact_manifest_path": args.artifact_manifest} if args.artifact_manifest else {}),
+        **({"participant_edition": True} if args.participant_edition else {}),
     )
     pair, review = args.pair.resolve(), args.review.resolve()
     if review.is_relative_to(ROOT) or review.is_relative_to(pair):

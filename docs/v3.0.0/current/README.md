@@ -64,13 +64,20 @@ Word、Edge、`python-docx`・`pymupdf`・`playwright`が必要です。
 
 ```powershell
 $Manifest = "workshop\v3.0.0-preview\provisioning\artifact-set.json"
-$Release = @("--release-profile", "v3.0.0", "--release-approval", $Approval, "--artifact-manifest", $Manifest)
+$Release = @("--release-profile", "v3.0.0", "--participant-edition", "--release-approval", $Approval, "--artifact-manifest", $Manifest)
 python -B tools\docs\build_preview30.py --out "$Stage\pair" --review "$Stage\review" @Release
 python -B tools\docs\validate_preview30.py --pair "$Stage\pair" --review "$Stage\checks" `
   --render --interactions --print-html @Release
 python -B tools\docs\package_preview30.py --pair "$Stage\pair" `
   --validation "$Stage\checks\validation.json" --out "$Stage\package" @Release
 ```
+
+`--participant-edition`は参加者に配布する版を作ります。各章は目的・準備・操作手順・完了の確認・参照表・
+参考資料だけで構成し、評価の記録や過去の実行履歴、旧版の参考、リリースの注記、ハッシュは本文に入れません
+（成果物との結び付けは文書のプロパティとHTML内のメタデータに残します）。本文の文章は
+[`participant30_text.py`](../../../tools/docs/furusato_docs/participant30_text.py)、画面の説明は
+[`participant30_figures.py`](../../../tools/docs/furusato_docs/participant30_figures.py)にあり、
+表は同じソースから生成します。パッケージにも評価レポートは含めません。
 
 ## Tempを使わない本デプロイ
 

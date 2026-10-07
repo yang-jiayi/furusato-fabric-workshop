@@ -534,7 +534,11 @@ format, so it is configured in the Ontology editor:
 2. Wait for the Ontology update, then confirm 452025 shows 331 observations /
    5,737,000 JPY for August 2026 UTC
    ([checklist §6](../../docs/data-validation-checklist.md#6-municipality-time-series-binding-chapter-14)).
-3. Run Notebook02 preview/apply; it expects 10 + 72 + 1 + 15 = 98 objects and stops
-   with 97 if the binding is missing (checklist §7).
+3. Business Rule metadata: Notebook02 preview/apply only works **before**
+   `handoff-ontology`; afterwards it refuses by design, so that a TMDL round trip
+   cannot overwrite native UI state. Once the handoff is recorded (as in the
+   2026-10-07 deployment), edit rule statements in the Ontology editor
+   (**Overview → Rules**) instead. The 98/97 object count in the 2.7 checklist
+   (§7) belongs to the 2.7 Notebook and does not apply to the v3 Notebook02.
 4. Native Metrics (**Generate Ontology** from the semantic model) and other UI labs
    go into isolated items under **Temp**; do not overwrite the main Ontology.

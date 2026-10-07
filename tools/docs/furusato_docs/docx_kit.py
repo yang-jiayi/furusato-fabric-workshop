@@ -392,9 +392,9 @@ class DocumentBuilder:
         paragraph.paragraph_format.line_spacing = 1.12
         return paragraph
 
-    def bullets(self, items: Iterable[str], *, numbered: bool = False):
+    def bullets(self, items: Iterable[str], *, numbered: bool = False, start: int = 1):
         style = "List Number" if numbered else "List Bullet"
-        num_id = self._restart_numbering() if numbered else None
+        num_id = self._restart_numbering(start) if numbered else None
         for item in items:
             paragraph = self.document.add_paragraph(style=style)
             if num_id is not None:
@@ -403,12 +403,13 @@ class DocumentBuilder:
             paragraph.paragraph_format.space_after = Pt(2)
             paragraph.paragraph_format.line_spacing = 1.1
 
-    def _restart_numbering(self) -> int:
-        """Return a fresh numbering instance so each numbered list starts at 1.
+    def _restart_numbering(self, first: int = 1) -> int:
+        """Return a fresh numbering instance so each numbered list starts at ``first``.
 
         The ``List Number`` style points at a single numbering instance, so every
         numbered list in the document would otherwise continue the previous one
-        and a step list in chapter 6 would open at "16.".
+        and a step list in chapter 6 would open at "16.". A step list that is
+        split by a figure continues with an explicit ``first`` number.
         """
         numbering = self.document.part.numbering_part.element
         abstract_id = self._list_number_abstract_id(numbering)
@@ -426,7 +427,7 @@ class DocumentBuilder:
         override = OxmlElement("w:lvlOverride")
         override.set(qn("w:ilvl"), "0")
         start = OxmlElement("w:startOverride")
-        start.set(qn("w:val"), "1")
+        start.set(qn("w:val"), str(first))
         override.append(start)
         num.append(override)
         numbering.append(num)

@@ -112,6 +112,8 @@ def snapshot():
         "tools/docs/build_preview30.py", "tools/docs/validate_preview30.py",
         "tools/docs/package_preview30.py", "tools/docs/furusato_docs/preview30_content.py",
         "tools/docs/furusato_docs/context.py", "tools/docs/furusato_docs/preview30_release.py",
+        "tools/docs/furusato_docs/participant30.py", "tools/docs/furusato_docs/participant30_text.py",
+        "tools/docs/furusato_docs/participant30_figures.py",
         "tools/html/furusato_html/preview30.py",
     ))
     for folder in ("data", "kql", "notebooks", "ontology", "powerbi", "data-agent", "provisioning"):

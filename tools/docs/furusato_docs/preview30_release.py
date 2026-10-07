@@ -124,6 +124,10 @@ def add_arguments(parser):
         help="Explicit document edition; Preview/DRAFT remains the default",
     )
     parser.add_argument(
+        "--participant-edition", action="store_true",
+        help="Build only the participant procedure (v3.0.0 profile with --artifact-manifest)",
+    )
+    parser.add_argument(
         "--release-approval", type=Path,
         help="External private, hash-bound release or fresh dated-snapshot approval; not strict acceptance",
     )

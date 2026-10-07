@@ -63,6 +63,24 @@ Get-FileHash .\\guide\\Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0-p
 Get-FileHash .\\guide\\furusato-workshop-v3-0-0-preview-complete.html -Algorithm SHA256
 """
 
+PARTICIPANT_START_HERE = """Furusato Workshop 3.0.0 — 参加者用パッケージ / Participant package
+
+guide/        手順書。Word と日英 HTML は同じ内容です。
+              The guide. The Word file and the Japanese/English HTML have the same content.
+source/       手順で使う Notebook・データ・モデル・設定ファイル（workshop/v3.0.0-preview が中心）。
+              Notebooks, data, model and configuration files used in the steps (mainly workshop/v3.0.0-preview).
+attachments/  第15章で Ontology Copilot に添付する4つのファイル（合成データ）。
+              The four synthetic files you attach to Ontology Copilot in chapter 15.
+SHA256SUMS.txt  ファイルが壊れていないことを確かめるためのハッシュ値。
+              Hashes to confirm that the files are intact.
+
+はじめに guide/ の手順書を開き、第4章の準備から進めてください。
+Open the guide in guide/ and start with the preparation in chapter 4.
+
+PowerShell でのハッシュの確認例 / Example hash check in PowerShell:
+Get-FileHash .\\guide\\Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx -Algorithm SHA256
+"""
+
 
 def sha(blob):
     return hashlib.sha256(blob).hexdigest()
@@ -272,6 +290,7 @@ def package(
     release_approval: Path | None = None,
     evaluation100_path: Path | None = None,
     artifact_manifest_path: Path | None = None,
+    participant_edition: bool = False,
 ):
     profile = release.get_profile(release_profile)
     release.check_options(
@@ -295,6 +314,7 @@ def package(
         release_profile=profile, release_approval=release_approval,
         evaluation100_path=evaluation100_path,
         **({"artifact_manifest_path": artifact_manifest_path} if artifact_manifest_path else {}),
+        **({"participant_edition": True} if participant_edition else {}),
     )
     if metadata.get("evaluation100", {}).get("evidenceKind") == "synthetic-private-test":
         raise ValueError("Synthetic private study fixtures cannot be packaged or published")
@@ -316,7 +336,8 @@ def package(
             if len(payload) > 5 * 1024 * 1024:
                 raise ValueError("Attachment exceeds the documented upload limit")
         files["attachments/" + name] = payload
-    public_reports = collect_public_reports(metadata, root=ROOT, reports_path=public_reports_path, release_profile=profile)
+    public_reports = {} if participant_edition else collect_public_reports(
+        metadata, root=ROOT, reports_path=public_reports_path, release_profile=profile)
     files.update(public_reports)
     if artifact_manifest_path is not None:
         artifact_blob = artifact_manifest_path.read_bytes()
@@ -338,8 +359,11 @@ def package(
         if sha(study_blob) != metadata.get("evaluation100Sha256"):
             raise ValueError("Public frozen100 study changed during packaging")
         files["reports/evaluation100.json"] = study_blob
-    files["START_HERE.txt"] = start_here(metadata, release_profile=profile).encode("utf-8")
-    if "currentArtifactSet" in metadata:
+    if participant_edition:
+        files["START_HERE.txt"] = PARTICIPANT_START_HERE.encode("utf-8")
+    else:
+        files["START_HERE.txt"] = start_here(metadata, release_profile=profile).encode("utf-8")
+    if "currentArtifactSet" in metadata and not participant_edition:
         files["START_HERE.txt"] += (
             "\nCURRENT V3 ARTIFACT SET\nCourse: " + metadata["currentArtifactSet"]["workshopVersion"]
             + "\nSource commit: " + metadata["currentArtifactSet"]["sourceCommit"]
@@ -376,7 +400,8 @@ def package(
         state["approvedOriginalSuiteAggregates"] = metadata["originalSuiteRuns"]
     if profile.is_snapshot:
         state["schemaVersion"] = "furusato-document-validation-snapshot-package/v1"
-    files[profile.status_name] = (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+    if not participant_edition:
+        files[profile.status_name] = (json.dumps(state, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     files["SHA256SUMS.txt"] = "".join(f"{sha(blob)}  {name}\n" for name, blob in sorted(files.items())).encode("utf-8")
     for name in (profile.word_name, profile.html_name):
         if (pair / name).read_bytes() != files["guide/" + name]:
@@ -431,4 +456,5 @@ if __name__ == "__main__":
         release_profile=args.release_profile, release_approval=args.release_approval,
         evaluation100_path=args.evaluation100,
         artifact_manifest_path=args.artifact_manifest,
+        participant_edition=args.participant_edition,
     ), ensure_ascii=False, indent=2))

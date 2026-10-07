@@ -8,6 +8,7 @@ import json
 
 from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME
 from furusato_docs import preview30_release as release
+from furusato_docs.participant30 import TAGLINE
 from .assets import build_library, encode_screenshot, screenshot_size
 from .mirror import load_ui_strings
 from .model import Text
@@ -48,6 +49,7 @@ def render(
     release_profile=release.PREVIEW,
 ):
     profile = release.require_metadata_profile(metadata, release_profile)
+    participant = bool(metadata.get("participantEdition"))
     diagram_keys = sorted({b["source_key"] for b in document.figures if b["source_kind"] == "diagram"})
     assets = build_library(context, carrier, diagram_keys, [])
     capture_aliases = register_reviewed_captures(assets, evidence["captures"])
@@ -85,10 +87,12 @@ def render(
             )
         check = ""
         if section.checklist_id:
+            label = (Text("この節の手順を完了しました", "I completed these steps") if participant
+                     else Text("実施記録済み (合格判定とは別)", "Recorded (not a pass judgment)"))
             check = (
                 '<label class="step-check"><input type="checkbox" '
                 f'data-step="{section.checklist_id}"> '
-                + plain_bilingual(Text("実施記録済み (合格判定とは別)", "Recorded (not a pass judgment)")) + "</label>"
+                + plain_bilingual(label) + "</label>"
             )
         return (
             f'<section id="{section.ident}" class="{"chapter" if section.level == 1 else "section"}" '
@@ -98,7 +102,7 @@ def render(
 
     toc = "".join(f'<li><a href="#{s.ident}">{plain_bilingual(s.title)}</a></li>' for s in document.sections)
     content = "".join(section_markup(s) for s in document.sections)
-    notice = release.presentation(metadata, profile)
+    notice = TAGLINE if participant else release.presentation(metadata, profile)
     state = Text(notice["ja"], notice["en"])
     public_metadata = {
         **metadata, "wordFilename": profile.word_name, "wordSha256": word_sha,
@@ -112,10 +116,26 @@ def render(
     if profile.is_release:
         css += RELEASE_PRINT_CSS
     js = (root / "tools" / "html" / "assets" / "preview30.js").read_text(encoding="utf-8")
+    if participant:
+        description = f"Bilingual participant guide for {profile.title}: 24 chapters and 5 appendices."
+        hero_line = Text("24章・5付録／Word版と同じ内容の日英版", "24 chapters · 5 appendices · the same content as the Word guide, in Japanese and English")
+        digest_line = ""
+        legacy_button = ""
+        footer_note = Text(
+            "Microsoft Learn の内容は2026-09-29に確認しました。機能は段階的に提供されるため、画面が手順と異なる場合は講師に確認してください。",
+            "Microsoft Learn content was reviewed on 2026-09-29. Features roll out gradually; if your screen differs from the steps, ask the instructor.")
+        footer_hash = ""
+    else:
+        description = f"Complete 24-chapter bilingual {profile.title}; honest per-lab evidence status."
+        hero_line = Text("24章・5付録／Wordと同じ共有原稿／全19章の旧教材も保持", "24 chapters · 5 appendices · shared Word source · complete 19-chapter baseline retained")
+        digest_line = f'<p class="digest">Word SHA-256: <code>{word_sha}</code></p>'
+        legacy_button = f'<button type="button" id="legacy-toggle">{plain_bilingual(Text("旧版参考をすべて開閉", "Toggle all baseline references"))}</button>'
+        footer_note = Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed.")
+        footer_hash = f'<p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p>'
     return f"""<!doctype html>
 <html lang="ja" data-lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Complete 24-chapter bilingual {profile.title}; honest per-lab evidence status.">
+<meta name="description" content="{description}">
 <title>{profile.title}</title><style>{css}</style></head>
 <body>
 <a class="skip-link" href="#main">{plain_bilingual(Text("本文へ", "Skip to content"))}</a>
@@ -127,22 +147,22 @@ def render(
 </header>
 <div id="top" class="hero"><p class="eyebrow">MICROSOFT FABRIC · SYNTHETIC HANDS-ON WORKSHOP</p>
  <h1>Furusato Workshop<br>{profile.display_version}</h1>
- <p>{plain_bilingual(Text("24章・5付録／Wordと同じ共有原稿／全19章の旧教材も保持", "24 chapters · 5 appendices · shared Word source · complete 19-chapter baseline retained"))}</p>
+ <p>{plain_bilingual(hero_line)}</p>
  <p class="status" role="status">{plain_bilingual(state)}</p>
  <p><a download href="{profile.word_name}" id="word-download">{plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide"))}</a></p>
- <p class="digest">Word SHA-256: <code>{word_sha}</code></p>
+ {digest_line}
 </div>
 <aside class="controls"><label for="search">{plain_bilingual(Text("この言語の全文を検索", "Search the full text in this language"))}</label>
  <input id="search" type="search" autocomplete="off"><button type="button" id="search-clear">{plain_bilingual(Text("検索解除", "Clear search"))}</button>
  <p id="search-status" role="status" aria-live="polite"></p>
- <button type="button" id="legacy-toggle">{plain_bilingual(Text("旧版参考をすべて開閉", "Toggle all baseline references"))}</button>
+ {legacy_button}
  <button type="button" id="progress-reset">{plain_bilingual(Text("学習記録をリセット", "Reset learning progress"))}</button>
  <p id="progress" role="status"></p>
 </aside>
 <nav class="toc" aria-label="Contents"><h2>{plain_bilingual(Text("目次", "Contents"))}</h2><ol>{toc}</ol></nav>
 <main id="main">{content}</main>
-<footer><p>{plain_bilingual(Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed."))}</p>
- <p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p></footer>
+<footer><p>{plain_bilingual(footer_note)}</p>
+ {footer_hash}</footer>
 <dialog id="lightbox" aria-label="Figure"><button id="lightbox-close" type="button">{plain_bilingual(Text("閉じる", "Close"))}</button><div id="lightbox-content"></div></dialog>
 <p class="sr-only" id="copy-status" aria-live="polite"></p>
 <script type="application/json" id="preview30-provenance">{encoded_metadata}</script>

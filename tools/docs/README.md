@@ -26,6 +26,18 @@ actual current Notebook defaults and production-without-Temp procedure.
 The build refuses stale file hashes; both output formats retain the manifest
 SHA, and the HTML also records the actual paired Word SHA.
 
+Add `--participant-edition` (v3.0.0 profile with `--artifact-manifest`) to all
+three commands to build the guide that is distributed to participants. It keeps
+only the procedure: for every chapter what you will do, the numbered steps,
+completion checks, generated reference tables and official references. Release
+notices, evaluation records, the v2.7 reference copy, capture times and hashes are
+left out of the body (the manifest SHA stays in the Word document properties and
+the HTML metadata), and the package omits `reports/` and the release status file.
+The prose lives in `furusato_docs/participant30_text.py`, screenshot captions in
+`furusato_docs/participant30_figures.py`, and `furusato_docs/participant30.py`
+composes them; `validate_preview30.py` additionally fails if working or history
+wording reaches the participant Word or HTML.
+
 Use a new output location such as `docs\v3.0.0\current`; do not replace an old
 release tag or its guide assets. Artifact consistency is not AI-answer or
 all-feature acceptance. The normal release/evidence/acceptance gates still apply.

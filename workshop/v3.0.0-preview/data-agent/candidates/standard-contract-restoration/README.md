@@ -22,6 +22,9 @@ rule recorded before their results. The user then reviewed the results and appro
 R10) were evaluated afterwards and not adopted under their pre-recorded rules; their
 scores, the R8→R10 diff and a fresh held-out run on R8 are in the
 [follow-up record](../../../../../docs/v3.0.0/followup-20261007/README.md).
+On 2026-10-08 the five added regression questions B15–B19 were run once on R8:
+fact 4/5 and content 3/5 (B16 omitted the per-file counts and amounts; B19 said the
+hidden amount column was missing instead of counting 384 donations).
 
 R8 adds to the R6 contracts: the composite question runs three separate queries
 (Eventhouse leader, Lakehouse values and national ranks **without** prefecture

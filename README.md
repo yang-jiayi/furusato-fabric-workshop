@@ -4,9 +4,9 @@
 
 **現行教材の入口です。Notebook・CSV・モデル・Agent設定・Word/HTMLを、版の対応とSHA-256で照合します。**
 
-[Word整合版](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
-[日英HTML整合版](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
-[Notebook・CSVを含む整合パッケージ](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261007.zip) ·
+[参加者用手順書（Word）](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[参加者用手順書（日英HTML）](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
+[参加者用パッケージ（Notebook・CSVを含む）](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261007.zip) ·
 [構成・検証結果](docs/v3.0.0/current/README.md) ·
 [Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
@@ -49,6 +49,11 @@
 > Fabric の管理ポータルから起票し、公開の回帰スイートを19問にしました。Activator の自動配送と時系列の
 > 設定はポータルの画面での作業が残り、KQL のデータは消していません。
 > [第4報の詳細](docs/v3.0.0/followup-20261007/README.md)。
+>
+> **第5報（10/8）:** 本番の R8 で追加の回帰5問（B15〜B19）を実行し、事実 4／5・内容 3／5 でした
+> （19問の合計は事実 16・内容 14 PASS）。Word と HTML の手順書は参加者に配布する版に作り直し、
+> 評価の記録・過去の履歴・旧版の写し・作業用のメモを除いて、画面のキャプチャと説明もすべて見直しました。
+> [第5報の詳細](docs/v3.0.0/followup-20261007/README.md)。
 
 The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
 identifiers are explicitly versioned compatibility contracts, not stale course

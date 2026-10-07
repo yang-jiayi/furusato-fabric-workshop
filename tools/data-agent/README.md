@@ -239,6 +239,9 @@ the historical evidence.
    Semantic Model の TMDL・Notebook05・Ontology 契約から再計算し、コミット済みの
    [`regression/extended-suite.json`](regression/extended-suite.json) と一致することをテストで確認します。
    期待値は採点用です。Agent の指示・例・profile へ写しません。
+   現在の本番（R8）の結果: B01–B14 は事実 12／内容 11（1問は通信のタイムアウト、2026-10-07）、
+   B15–B19 は事実 4／内容 3（B16 はファイルごとの件数と金額を示さず、B19 は非表示の金額列を
+   「ない」と答えた。2026-10-08）。
 3. **未使用の held-out を1回**（構成の採用規則を記録した後、最後に1回だけ）。一度使った held-out は
    次の候補では回帰用として扱います。
 
@@ -266,6 +269,10 @@ element is present). `regression_suite.py` recomputes every expected value from
 the packaged CSVs, the Semantic Model TMDL, Notebook05 and the Ontology contract;
 a test keeps the committed JSON equal to that rebuild. Expected values are
 grading keys: never copy them into Agent instructions, examples or profiles.
+On the current production profile (R8), B01–B14 scored fact 12 / content 11 (one
+transport timeout, 2026-10-07) and B15–B19 scored fact 4 / content 3 (B16 omitted
+the per-file counts and amounts; B19 said the hidden amount column was missing,
+2026-10-08).
 A question answered by the platform content block stays FAIL in every strict
 denominator; `platform_blocked_*` and `observable_condition_applicable` are a
 diagnostic breakdown based on the native block text, never acceptance.

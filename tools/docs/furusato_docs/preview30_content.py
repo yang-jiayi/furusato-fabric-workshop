@@ -1922,7 +1922,7 @@ def _legacy_copy(source: Section, parent: Section, index: int) -> Section:
     return value
 
 
-def artifact_consistency_sections(roots, root, manifest_path):
+def verify_artifact_manifest(root, manifest_path):
     raw = manifest_path.read_bytes()
     manifest = json.loads(raw)
     if manifest.get("schemaVersion") != "furusato-v3-artifact-set/v1":
@@ -1936,7 +1936,17 @@ def artifact_consistency_sections(roots, root, manifest_path):
             raise ValueError("Artifact manifest path is invalid.")
         if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
             raise ValueError("Artifact changed after its manifest was frozen: " + relative)
-    binding = hashlib.sha256(raw).hexdigest()
+    binding = {"manifestSha256": hashlib.sha256(raw).hexdigest(), "sourceCommit": manifest["sourceCommit"],
+               "sourceTreeSha256": manifest["sourceTreeSha256"], "workshopVersion": version,
+               "csvFiles": manifest["csvFiles"], "notebookCount": len(manifest["notebooks"]),
+               "tempRequired": False}
+    return manifest, binding
+
+
+def artifact_consistency_sections(roots, root, manifest_path):
+    manifest, artifact_binding = verify_artifact_manifest(root, manifest_path)
+    version = artifact_binding["workshopVersion"]
+    binding = artifact_binding["manifestSha256"]
     chapters = {section.chapter: section for section in roots if section.chapter}
     appendix = next(section for section in roots if section.appendix == "B")
     chapters[1].blocks.insert(0, note(
@@ -1976,19 +1986,18 @@ def artifact_consistency_sections(roots, root, manifest_path):
         p("評価用Tempを明示的に使用した場合は、必要な依存の正式配置と参照を確認し、評価証拠をprivateに保存してから不要なItemsと空のTempを削除します。Notebook02–04のsealed packageには最新の4段階Agent compiler（source-grounded、complete-contract、time-layer-isolation、standard-contract-restoration）、6 SQL views、SQL/KQL例を含めています。",
           "If an evaluation Temp is explicitly used, first establish production dependencies and references, preserve evidence privately, then delete unused Items and the empty Temp. Notebook02–04 sealed packages include the current four-stage Agent compilers (source-grounded, complete-contract, time-layer-isolation and standard-contract-restoration), six SQL views and SQL/KQL examples."),
     ])
-    return {"manifestSha256": binding, "sourceCommit": manifest["sourceCommit"],
-            "sourceTreeSha256": manifest["sourceTreeSha256"], "workshopVersion": version,
-            "csvFiles": manifest["csvFiles"], "notebookCount": len(manifest["notebooks"]),
-            "tempRequired": False}
+    return artifact_binding
 
 
 def build(
     root: Path, evidence_path: Path | None = None, evaluation_path: Path | None = None, *,
     public_evidence_path: Path | None = None, release_profile=release.PREVIEW,
     release_approval: Path | None = None, evaluation100_path: Path | None = None,
-    artifact_manifest_path: Path | None = None,
+    artifact_manifest_path: Path | None = None, participant_edition: bool = False,
 ):
     profile = release.get_profile(release_profile)
+    if participant_edition and (profile != release.V300 or artifact_manifest_path is None):
+        raise ValueError("The participant edition requires the v3.0.0 profile and a verified artifact manifest")
     evidence, document_release = release.resolve_evidence(
         root, evidence_path, evaluation_path, public_evidence_path=public_evidence_path,
         release_profile=profile, release_approval=release_approval,
@@ -2036,42 +2045,53 @@ def build(
         ident=f"appendix-{letter.lower()}", level=1, number=letter,
         title=t(f"付録 {letter}　{ja}", f"Appendix {letter} — {en}"), appendix=letter,
     ) for letter, (ja, en) in zip("ABCDE", APPENDICES)]
-    current_lessons(roots[:24], context)
-    reference_tables(roots[:24], context, tests)
-    definition_contract_sections(roots[:24])
-    appendices(roots[24:], context, tests)
-    runtime_candidate_sections(roots, root)
-    evaluation_sections(roots, evaluation)
-    current_receipt_sections(roots, selected_nonlegacy)
-    original_suite_run_sections(roots, evidence.get("originalSuiteRuns", []), evidence=evidence)
-    if "evaluation100" in evidence:
+    participant_figures = None
+    if participant_edition:
+        from . import participant30
+        participant_manifest, artifact_binding = verify_artifact_manifest(root, artifact_manifest_path)
+        participant_figures = participant30.compose(
+            roots, root=root, context=context, facts=facts, tests=tests, evidence=evidence,
+            manifest=participant_manifest, legacy_original=original,
+        )["figures"]
+    full_edition = not participant_edition
+    if full_edition:
+        current_lessons(roots[:24], context)
+        reference_tables(roots[:24], context, tests)
+        definition_contract_sections(roots[:24])
+        appendices(roots[24:], context, tests)
+        runtime_candidate_sections(roots, root)
+        evaluation_sections(roots, evaluation)
+        current_receipt_sections(roots, selected_nonlegacy)
+        original_suite_run_sections(roots, evidence.get("originalSuiteRuns", []), evidence=evidence)
+    if full_edition and "evaluation100" in evidence:
         evaluation100_sections(roots, evidence["evaluation100"], evidence["evaluation100Sha256"])
-    if selected_nonlegacy is not None:
+    if full_edition and selected_nonlegacy is not None:
         roots[0].blocks.insert(0, note(*preview30_reporting.selection_notice(selected_nonlegacy), "stop"))
-    else:
+    elif full_edition:
         roots[0].blocks.insert(0, note(
             PREVIEW_NOTICE_JA + "。最終Compat native UIの元84条件は48 PASS/36 FAIL。mainは未promotionで、既知の失敗・partial・blocked laneを保持します。",
             PREVIEW_NOTICE_EN + ". The final Compat native-UI original84 result is48 PASS/36 FAIL. Main is not promoted; known failures, partial and blocked lanes remain explicit.",
             "stop",
         ))
-    if profile.is_snapshot:
+    if full_edition and profile.is_snapshot:
         roots[0].blocks.insert(0, note(
             "2026-10-02公開後検証snapshot (文書版3.0.0)。元releaseを置換せず、frozen100を別分母で追加します。freshなstudy-bound approvalは既知制約の開示だけを承認し、AI回答品質・GA・全機能受入・Agent promotionは承認しません。",
             "Post-release validation snapshot2026-10-02 (course edition3.0.0). It adds frozen100 under a separate denominator without replacing the original release. Fresh study-bound approval authorizes known-limitations disclosure only, not AI-quality, GA, all-feature acceptance or Agent promotion.",
             "stop",
         ))
-    elif document_release is not None:
+    elif full_edition and document_release is not None:
         roots[0].blocks.insert(0, note(
             "文書版3.0.0はユーザー承認の既知制約付きリリースです。選択した実結果76 PASS/8 FAIL、全履歴、partial/blocked/failedの状態を保持します。製品機能・APIは引き続きPreviewです。--release-profile v3.0.0と別のhash-bound --release-approvalは文書配布だけを承認し、AI回答品質・GA・全機能合格・Fabric Agent promotionを承認しません。厳格な--require-acceptanceは独立して残り、このsnapshotは未合格です。",
             "Document edition 3.0.0 is a user-authorized release with known limitations. The selected 76 PASS/8 FAIL result, complete historical ledgers and partial/blocked/failed states are retained. Product features and APIs remain Preview. --release-profile v3.0.0 with a separate hash-bound --release-approval authorizes document distribution only, not AI acceptance, GA, all-feature success or Fabric Agent promotion. The strict --require-acceptance gate remains independent; this snapshot is unaccepted.",
             "stop",
         ))
-    if "evaluation100" in evidence:
+    if full_edition and "evaluation100" in evidence:
         study_notice = study100.notice(evidence["evaluation100"])
         roots[0].blocks.insert(0, note(study_notice["ja"], study_notice["en"], "gate"))
-    artifact_binding = artifact_consistency_sections(roots, root, artifact_manifest_path) if artifact_manifest_path else None
+    if full_edition:
+        artifact_binding = artifact_consistency_sections(roots, root, artifact_manifest_path) if artifact_manifest_path else None
     request_list = preview30_evidence.requests()
-    for section in roots:
+    for section in (roots if full_edition else []):
         key = section.chapter if section.chapter else section.appendix
         items = [item for item in request_list if item["chapter"] == section.chapter]
         if items:
@@ -2158,4 +2178,9 @@ def build(
         release.require_metadata_profile(metadata, profile)
     if artifact_binding:
         metadata["currentArtifactSet"] = artifact_binding
+    if participant_edition:
+        metadata.update({
+            "participantEdition": True, "retainedLegacyChapters": 0, "retainedLegacyAppendices": 0,
+            "participantFigures": participant_figures,
+        })
     return document, context, facts, carrier, evidence, metadata

@@ -185,8 +185,9 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
 
     if kind == "list":
         tag = "ol" if block["numbered"] else "ul"
+        start = f' start="{int(block["start"])}"' if block["numbered"] and block.get("start") else ""
         items = "".join(f"<li>{bilingual(item)}</li>" for item in block["items"])
-        return f"<{tag} data-search-block>{items}</{tag}>"
+        return f"<{tag}{start} data-search-block>{items}</{tag}>"
 
     if kind == "callout":
         tone, default_key = CALLOUT_TONES[block["tone"]]

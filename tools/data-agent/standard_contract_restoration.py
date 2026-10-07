@@ -17,6 +17,8 @@ from __future__ import annotations
 import copy
 import json
 from pathlib import Path
+import re
+import unicodedata
 import uuid
 
 from source_grounded_profile import decoded_parts, inline_part
@@ -46,6 +48,8 @@ GLOBAL_REPLACEMENTS = (
     ),
 )
 # Public standard ten/84 expected values. The overlay must teach contracts, not answers.
+# Numbers match as whole tokens with thousands separators and full-width forms
+# normalized, so "80,000", "80000" and "８００００" are the same guarded value.
 ANSWER_VALUE_GUARD = (
     "80,000", "1,344,099,000", "1344099000", "452025", "1,813", "41,151,000", "272132",
     "2,661", "45,930,000", "8,784", "146,543,000", "5000001", "2008242", "222097", "3002512",
@@ -53,6 +57,7 @@ ANSWER_VALUE_GUARD = (
     "increment-run-00", "2026-08-01T00:02:47Z", "2026-08-31T23:58:20Z", "14,900", "14900",
     "5,737,000", "藤田", "島田市", "熱海商店", "都城市", "泉佐野市", "95,000", "95000",
 )
+_NUMBER_TOKEN = re.compile(r"\d{1,3}(?:,\d{3})+|\d+")
 
 
 def _replace_once(text: str, old: str, new: str) -> str:
@@ -68,12 +73,28 @@ def _walk(nodes, names=()):
         yield from _walk(node.get("children", []), path)
 
 
+def _answer_values_in(text: str) -> list[str]:
+    text = unicodedata.normalize("NFKC", text)
+    numbers = {token.replace(",", "") for token in _NUMBER_TOKEN.findall(text)}
+    found = []
+    for value in ANSWER_VALUE_GUARD:
+        plain = value.replace(",", "")
+        if (plain in numbers) if plain.isdigit() else (value in text):
+            found.append(value)
+    return found
+
+
 def overlay_inputs(profile: Path = PROFILE) -> dict[str, str]:
-    """Return every overlay input as text after the answer-value guard."""
+    """Return every overlay input as text after the answer-value guard.
+
+    JSON inputs are checked as the compiler loads them, so escaped forms cannot hide a value.
+    """
     inputs = {path.name: path.read_text(encoding="utf-8") for path in sorted(profile.iterdir())
               if path.suffix in {".txt", ".json"}}
     for name, text in inputs.items():
-        leaked = [value for value in ANSWER_VALUE_GUARD if value in text]
+        checked = (json.dumps(json.loads((profile / name).read_bytes()), ensure_ascii=False)
+                   if name.endswith(".json") else text)
+        leaked = _answer_values_in(checked)
         if leaked:
             raise ValueError(f"{name} embeds benchmark answer values: {leaked}")
     return inputs

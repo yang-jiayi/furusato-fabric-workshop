@@ -157,6 +157,35 @@ class StandardContractRestorationTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "benchmark answer values"):
                 restoration.overlay_inputs(copy_dir)
 
+    def test_answer_guard_normalizes_separators_and_decodes_json(self):
+        def leaked_after(name, edit):
+            with tempfile.TemporaryDirectory() as directory:
+                copy_dir = Path(directory) / "profile"
+                shutil.copytree(restoration.PROFILE, copy_dir)
+                edit(copy_dir / name)
+                with self.assertRaisesRegex(ValueError, "benchmark answer values"):
+                    restoration.overlay_inputs(copy_dir)
+
+        def comma_less_query(path):
+            value = json.loads(path.read_text(encoding="utf-8"))
+            value["additions"][0]["query"] += " | where ObservedAmountYen == 5737000"
+            path.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
+
+        def escaped_name(path):
+            value = json.loads(path.read_text(encoding="utf-8"))
+            value["userDescriptions"]["kusto"] += " 都城市"
+            path.write_text(json.dumps(value), encoding="utf-8")
+            self.assertNotIn("都城市", path.read_text(encoding="utf-8"))
+
+        def full_width_number(path):
+            path.write_text(path.read_text(encoding="utf-8") + "\n静的は８０，０００件。\n", encoding="utf-8")
+
+        leaked_after("example-changes.json", comma_less_query)
+        leaked_after("description-overrides.json", escaped_name)
+        leaked_after("kusto-contract.txt", full_width_number)
+        self.assertEqual(restoration._answer_values_in("2025年と2026年8月、上位3件、+200%は3倍"), [])
+        self.assertEqual(restoration._answer_values_in("ID 4520251"), [])
+
     def test_deterministic(self):
         self.assertEqual(restoration.compile_restored_draft(self.original), (self.result, self.receipt))
 

@@ -1,10 +1,10 @@
 {
  "schemaVersion": "furusato-v3-current-verification/v1",
  "date": "2026-10-07",
- "projectedAtUtc": "2026-10-07T10:28:01.717196+00:00",
+ "projectedAtUtc": "2026-10-07T16:11:45.501972+00:00",
  "workshopVersion": "3.0.0",
- "sourceCommit": "02fdde18c7912f6426976a0ed8a8a95d23fd7d3e",
- "artifactSetSha256": "a073f52bc98d69cae9aeec0411bea908cc24732bea790c527579132503dfd163",
+ "sourceCommit": "9a541a27305cac2adcd26a85e8e9ee3fc913579b",
+ "artifactSetSha256": "a5f26d33e2234fa1cdd681a82d797159ba9217f17b0b5aa777ce944e824c1122",
  "gitBlobParityVerified": true,
  "sourceArtifacts": 313,
  "notebooksAligned": 5,
@@ -67,6 +67,11 @@
     34
    ],
    "adopted": [
+    76,
+    74
+   ],
+   "adoptedConfiguration": "R8",
+   "previouslyAdoptedR6": [
     74,
     73
    ],
@@ -79,6 +84,13 @@
     "contentPass": 10
    },
    "adopted": {
+    "configuration": "R8",
+    "factualPass": 12,
+    "contentPass": 11,
+    "unknown": 1,
+    "note": "the unknown answer was a transport timeout"
+   },
+   "previouslyAdoptedR6": {
     "factualPass": 14,
     "contentPass": 13
    }
@@ -88,10 +100,21 @@
    "contentPass": 11,
    "authorWritten": true,
    "independent": false,
-   "runs": 1
+   "runs": 1,
+   "configuration": "R6"
   },
   "configurationsEvaluated": 6,
-  "study": "../tuning-20261007/result-20261007.json"
+  "study": "../tuning-20261007/result-20261007.json",
+  "holdout3": {
+   "questions": 12,
+   "frozenBeforeAdoption": true,
+   "runs": 1,
+   "configuration": "R8",
+   "factualPass": 11,
+   "contentPass": 10,
+   "authorWritten": true,
+   "independent": false
+  }
  },
  "questionsOrCriteriaChanged": false,
  "independentHoldout": false,
@@ -99,17 +122,17 @@
  "generalAiQualityAccepted": false,
  "oldReleaseAssetsChanged": false,
  "remaining": [
-  "T10 is blocked by the native content filter and is reported as a failure, not bypassed (support draft prepared).",
-  "T09 takes the prefecture from Lakehouse instead of an Ontology traversal (confirmed by run steps; candidate R8 fixed it but was not adopted).",
-  "Duplicate-existence questions can still be answered as 'no duplicates' (holdout H09, holdout-2 N02).",
-  "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings require native UI hand-offs.",
-  "All Lakehouse SQL example queries fail service validation while runtime SQL works (support draft prepared)."
+  "T10 is blocked by the native content filter and is reported as a failure, not bypassed (support case filed).",
+  "A per-file duplicate question can omit the per-file counts and amounts, and a hidden model column can be described as missing (third holdout P02 and P03).",
+  "Some answers still use internal dataset names instead of plain wording; the plain-wording candidates R9 and R10 fixed this but missed the adoption rule recorded in advance.",
+  "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings still need portal steps.",
+  "All Lakehouse SQL example queries fail service validation while runtime SQL works (support case filed)."
  ],
  "artifactSha256": {
-  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "11bd4a8e381e81286b020e3c190525d01782b41e40e476337586cb6b06e2515e",
-  "guide/furusato-workshop-v3-0-0-complete.html": "312561f0797470f7ff47240c643c12199c8c6e7d493b951d552d75cfd2300f10",
-  "Furusato_Workshop_v3.0.0_current-20261007.zip": "0df826e4262982f28c95f173620817638412f6af422da82ad4a5464f849d377b",
-  "artifact-set.json": "a073f52bc98d69cae9aeec0411bea908cc24732bea790c527579132503dfd163"
+  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "3e57eaac2dc5683fc7122e318c824712f45a0bb949b4e8a203374b00e75c9503",
+  "guide/furusato-workshop-v3-0-0-complete.html": "442403785654c0751f50b23f1335336898e2a9a9e55fdda423b937fba45db3b9",
+  "Furusato_Workshop_v3.0.0_current-20261007.zip": "d9eb6b6a12dd235fa7578a69fba442ae587e682367f12c88344901e8e7ed8c8b",
+  "artifact-set.json": "a5f26d33e2234fa1cdd681a82d797159ba9217f17b0b5aa777ce944e824c1122"
  },
  "privacy": {
   "rawAnswers": false,
@@ -117,8 +140,8 @@
   "liveResourceIds": false
  },
  "tests": {
-  "dataAgent": 325,
-  "provisioning": 308,
+  "dataAgent": 326,
+  "provisioning": 311,
   "docs": {
    "total": 380,
    "pass": 379,
@@ -131,13 +154,14 @@
   "deviations": {
    "viewElements": "verified-by-service-api",
    "powerBiReport": "deployed-and-reconciled",
-   "activatorAutomaticDelivery": "ui-handoff",
-   "timeSeriesBindingAndMetrics": "ui-handoff (handoff-ontology recorded)"
+   "activatorAutomaticDelivery": "portal steps remain (the rule action targets this deployment's pipeline)",
+   "timeSeriesBindingAndMetrics": "portal steps remain (handoff-ontology recorded)"
   },
   "countermeasures": {
-   "E": "done",
-   "F": "done",
-   "G": "done"
+   "A-D": "R8 adopted on the owner's instruction; R9 and R10 not adopted",
+   "E": "done (two support cases filed)",
+   "F": "done (19-question regression suite)",
+   "G": "done (Activator hand-off corrected; Copy activity exporter)"
   },
   "candidates": {
    "R7": {
@@ -153,10 +177,34 @@
      74
     ],
     "extendedContentPass": 11,
+    "adopted": true,
+    "adoptedBy": "owner's instruction (fourth report)"
+   },
+   "R9": {
+    "standard84": [
+     76,
+     70
+    ],
+    "extended": {
+     "fact": 13,
+     "content": 13
+    },
+    "answersWithInternalTerms": 0,
+    "adopted": false
+   },
+   "R10": {
+    "standard84": [
+     77,
+     70
+    ],
+    "extended": {
+     "fact": 12,
+     "content": 12
+    },
     "adopted": false
    }
   },
-  "adoptedConfiguration": "unchanged (rollback verified part-for-part)",
+  "adoptedConfiguration": "R8 (14 Draft/Published parts equal the evaluated R8)",
   "holdout2": {
    "questions": 12,
    "runs": 1,
@@ -175,6 +223,23 @@
     "Kusto",
     "LakehouseTables"
    ]
-  }
+  },
+  "holdout3": {
+   "questions": 12,
+   "runs": 1,
+   "configuration": "R8",
+   "factualPass": 11,
+   "contentPass": 10,
+   "authorWritten": true,
+   "independent": false
+  },
+  "supportCases": {
+   "filed": 2,
+   "via": "Fabric admin portal Help + support",
+   "status": "open"
+  },
+  "serviceHealth": "Data Agents that rely on Ontology V2 cannot complete actions (since 2026-10-02, fix expected 2026-10-09); the formal Agent already uses the V1 compatibility ontology",
+  "portalStepsPerformed": false,
+  "kqlDataCleared": false
  }
 }

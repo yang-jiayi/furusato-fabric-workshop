@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.0.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "02fdde18c7912f6426976a0ed8a8a95d23fd7d3e",
+  "sourceCommit": "9a541a27305cac2adcd26a85e8e9ee3fc913579b",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -20,8 +20,8 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "dbc94f56da10954b826afff404ab10523f5b9a9c8236736dc4e90f70d29489f5",
-  "candidateSourceSha256": "1a071ed7463d7b5db3298b216782f6ca48c21b1a997486d7da9e58c15ca88cc5",
+  "sourceTreeSha256": "37db623eeb5732e2597aec3519424671b0a7f9b502a97ec9b2b2c52daead9918",
+  "candidateSourceSha256": "dcfebdc54d9147284aa78fdcddc07afc18af6e164e2054ce82d37857c3dac2ce",
   "files": {
     "tools/data-agent/answer_contract_profile.py": "6f08ea0a1edf02d2d5f30af229ae8b68edeefc3eefb28617c7b1c68cff56b7fb",
     "tools/data-agent/fresh_grounded_profile.py": "9728561823191f6316f020a0637317e493d90a7583942f11ce5b74c0bc6ce07b",
@@ -206,11 +206,11 @@
     "workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_supplier_catalog.sql": "9db665d242c9261895496676536f7beea08a90fc6ee2fb1db0e69e88b9d0351e",
     "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/description-overrides.json": "19b2e0fe9d88e01ef092b84e10561a0a185a5bad38d621e422caa8e230408927",
     "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/example-changes.json": "485aaf102d253d665ae353f7fa04d0ac29baa92d54784f790d692085347a7af3",
-    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt": "49384eda7777661a16883138fa6a8ac358cff1532df12e26681736b6d8ee9e51",
-    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt": "c6d3dcb5be890d251850eeb9e29f5bf21e977c9aa349ca2a0730d7a0db8b4271",
-    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt": "f747a204609d1320a01445177f70ae6cea74f4c2132500d5b09f9ac529306f8e",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt": "0fd37bbd628243d57016359f1989083f7b4979e4a8488f8bca0485f48f7fc963",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt": "b0f6977974853903cefec97431bd7a40c87a93f452bdc970565d4119a9d4981a",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt": "e5b55c8f5a89a60be066f7684b29955912acd906f7a9936dc25a600e185f975d",
     "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/ontology-contract.txt": "89f4d2dfe673dc4e8f0fe5e49213212439f4e2309a33f750a6c580649162812a",
-    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt": "33356ecbcf2e0dc8d27157adf5d4b98e8a31f412ac6835b73a203e2a3aef5a81",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt": "648e02277df1bf335cceed659d8ff647f6123955e72d1aa46d6c9da20f11cd38",
     "workshop/v3.0.0-preview/data-agent/candidates/static-first/instruction-addendum.txt": "e6a7ce525758ef23133903be9763212b8f7eb0093df68c77311151eacb20face",
     "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/example-overrides.json": "9b0e58fa7d051cb32a18dacac9fad6c8af5349da9cf7be735cfdf375b147f36b",
     "workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/kusto-time-contract.txt": "41c9e46716f1a187f42a3a83a79f41d350bff20030895edf600892b8f8deca12",
@@ -227,9 +227,9 @@
     "workshop/v3.0.0-preview/edition.json": "e79217ea1b920166d13e09b4ea63928babca68550a50ab7f7a7a1dc7d1152592",
     "workshop/v3.0.0-preview/kql/Furusato_Eventhouse_Setup_v2.7.0.kql": "598ac20f014218a811ac59a5ec3bb5455cc4ae4e6755b73371e82a9304535560",
     "workshop/v3.0.0-preview/notebooks/Notebook_01_Furusato_Prepare_Ontology_Data.ipynb": "96a735bef80fe573ae0bc8fd85c5b65f3305d3726430a95f8199f81fb224c25e",
-    "workshop/v3.0.0-preview/notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb": "7fc28e652c3cda8b580d366b2c5c0d72943683a062769e6dd5b575f6eb9dbb86",
-    "workshop/v3.0.0-preview/notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb": "8f19f97bae677fabd50aa6d16571687ad87472ac2987849912317dde66f789b8",
-    "workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb": "28006a22c87b0767cf03a0fe4876707f3edd8ce4ca638470cccd28a47745476e",
+    "workshop/v3.0.0-preview/notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb": "6b896a44b0e04a8b4a2dfaf8c49da343e7cf24a7ca3e4228269d1b414f1daf45",
+    "workshop/v3.0.0-preview/notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb": "4e9e1d534059229f5eb21fae56b5c3bbef7bb1285d3778d17a77d41866ad7130",
+    "workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb": "ea28f25cfc48498e4a3735fea3d6fcf51d3238a134b5580798339e884949a3a8",
     "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb": "c93c3a73a112847b1c9907a15498a503ebca98bd40490c0df8c0b1db42b7a67e",
     "workshop/v3.0.0-preview/ontology/agent-compat/contract.json": "f01478b24fe13ad42240919236d38480727c20d0bea201544a0adb021204e9c9",
     "workshop/v3.0.0-preview/ontology/agent-compat/definition-template.json": "db37892c6f827da0cab6fc82ee7542e0067355ed2106c3f52d7836ffc21d8da4",
@@ -332,7 +332,7 @@
     "workshop/v3.0.0-preview/powerbi/native-metrics-contract.json": "323e917207c6859a7cbe72f648eaac691fc0a89f7c59046f12fcfc1de8e5c037",
     "workshop/v3.0.0-preview/provisioning/baseline-hashes.json": "fba9170668efd66ebf7b9bfad6f75fdfca86d33e0646a3cd90207c6dd27387bf",
     "workshop/v3.0.0-preview/provisioning/gold-contract.json": "75c3109d34dd798538023da46cbf9ab9596e53020810c90e0a79c3579ae26844",
-    "workshop/v3.0.0-preview/provisioning/notebook-bundle-manifest.json": "f7f3899ec6016076f316512d8c7ae49c5b4f399619c1412e8edc0e11d3904c2c",
+    "workshop/v3.0.0-preview/provisioning/notebook-bundle-manifest.json": "553635da20e72c780ca0fccf5b809ff221561e9d41a8532a45a4a53933592123",
     "workshop/v3.0.0-preview/provisioning/preview-contract.json": "405030c575dda0ddba6ecfe0305201055a12729240ffdf20e9af79c6236ce96b",
     "workshop/v3.0.0-preview/provisioning/scope.example.json": "ed87249f8bf65876c7c61fa2d073fe344d861d2fffae173d20f38d77613a1cec",
     "WORKSHOP_VERSION": "b97c7f28087977393a99695de8e3a57be7f2c904d9f4132f04c5666a0be39be7"
@@ -345,31 +345,31 @@
     },
     "02": {
       "path": "workshop/v3.0.0-preview/notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb",
-      "sha256": "7fc28e652c3cda8b580d366b2c5c0d72943683a062769e6dd5b575f6eb9dbb86",
+      "sha256": "6b896a44b0e04a8b4a2dfaf8c49da343e7cf24a7ca3e4228269d1b414f1daf45",
       "workshopVersion": "3.0.0",
       "bundle": {
         "fileCount": 155,
-        "payloadSha256": "566956bb31f55c3c762e78b9899238165838b62092b215f750a891e3d519ae8b",
+        "payloadSha256": "899915e24eef2791c3d8a2a0d4c42da7e090fda45a528163ca0ae19f64ac92a7",
         "currentCorrectionProfilesIncluded": true
       }
     },
     "03": {
       "path": "workshop/v3.0.0-preview/notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb",
-      "sha256": "8f19f97bae677fabd50aa6d16571687ad87472ac2987849912317dde66f789b8",
+      "sha256": "4e9e1d534059229f5eb21fae56b5c3bbef7bb1285d3778d17a77d41866ad7130",
       "workshopVersion": "3.0.0",
       "bundle": {
         "fileCount": 155,
-        "payloadSha256": "566956bb31f55c3c762e78b9899238165838b62092b215f750a891e3d519ae8b",
+        "payloadSha256": "899915e24eef2791c3d8a2a0d4c42da7e090fda45a528163ca0ae19f64ac92a7",
         "currentCorrectionProfilesIncluded": true
       }
     },
     "04": {
       "path": "workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
-      "sha256": "28006a22c87b0767cf03a0fe4876707f3edd8ce4ca638470cccd28a47745476e",
+      "sha256": "ea28f25cfc48498e4a3735fea3d6fcf51d3238a134b5580798339e884949a3a8",
       "workshopVersion": "3.0.0",
       "bundle": {
         "fileCount": 170,
-        "payloadSha256": "e0f51a0216edb084eb62b077bc0539a007f23f575038602a964ad3b17ac33e28",
+        "payloadSha256": "f19375c865d404ddb6c0ad90a5a8ad4a5170b4fc9e0f497472972625affb1d62",
         "currentCorrectionProfilesIncluded": true
       }
     },

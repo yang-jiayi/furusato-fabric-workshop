@@ -348,10 +348,18 @@
       ],
       "packageWithoutReports": true,
       "screenshotsReviewed": 48,
-      "screenshotsUsed": null,
+      "screenshotsUsed": 28,
       "diagramsUsed": 0,
-      "wordPages": null,
-      "documentChecks": null
-    }
+      "wordPages": 94,
+      "documentChecks": {
+        "PASS": 155,
+        "FAIL": 0
+      },
+      "packageEntries": 327,
+      "artifactSetFiles": 316
+    },
+    "corrections": [
+      "Notebook02 refuses after handoff-ontology; the runbook step that ran it after the time-series binding (98/97 objects) was wrong and is corrected"
+    ]
   }
 }

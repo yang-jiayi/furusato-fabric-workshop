@@ -88,17 +88,17 @@ T10はnativeのコンテンツフィルターで遮断され、回避せずFAIL�
 | 追加の回帰5問（B15〜B19、R8 で1回） | 事実 4／5、内容 3／5。B16 はファイルごとの件数と金額を示さず、B19 は非表示の金額列を「ない」と答えた。実行前に本番の定義が R8 と一致することを確認 |
 | 回帰19問の合計（R8） | 事実 16 PASS・2 FAIL・1 判定不能、内容 14 PASS・4 FAIL・1 判定不能（B01〜B14 は 10/7 の測定） |
 | 参加者用の手順書 | 各章を目的・操作手順・完了の確認・参照表・参考資料だけにした版（`--participant-edition`）。旧版の写し、評価の記録、撮影日時の注記、リリースの注記、ハッシュを本文から除き、ふだんの言葉に書き直した |
-| 画面のキャプチャ | 48枚を確認し、<FIGURES> 枚を手順の該当箇所に配置して説明を書き直した。失敗した状態・古い手順・作業用のメモが写る画面と、旧版の構成図は使わない |
-| Word / HTML | <PAGES> ページ、<CHECKS> 検査／0 FAIL（参加者用の版に作業用・履歴の言葉がないことの検査を含む） |
+| 画面のキャプチャ | 48枚を確認し、28 枚を手順の該当箇所に配置して説明を書き直した。失敗した状態・古い手順・作業用のメモが写る画面と、旧版の構成図は使わない |
+| Word / HTML | 94 ページ、155 検査／0 FAIL（参加者用の版に作業用・履歴の言葉がないことの検査を含む） |
 ## 成果物の整合性
 
 | 項目 | 結果 |
 |---|---|
 | Agent compiler | 4段階（source-grounded → complete-contract → time-layer-isolation → standard-contract-restoration）。commitした入力から再compileした定義が公開中の定義と一致。回答値の混入防止は、桁区切り・全角数字・JSONのエスケープを正規化して検査 |
-| Notebook02–04 | 新しいcompilerとprofile入力で再封印。第3報で更新した評価モジュール（native_evaluation）も再封印。第4報で採用したR8のprofileで再び封印。再buildしてもbytesが一致 |
-| artifact-set | **313ファイル**。全ファイルのGit blobとSHA-256が一致（第4報のソースコミットに再結合） |
-| Word / HTML | **232ページ**。実Word描画・日英HTML・印刷・操作など**203検査／0 FAIL**（第3報で19章のT10注記を追加し、第4報で新しいartifact-setに結び付けて再生成） |
-| テスト | data-agent 326、provisioning 311がPASS。文書テストは380件中379件PASSで、残る1件はPython版に依存する既存の失敗（未変更の`main`でも同じ結果） |
+| Notebook02–04 | 新しいcompilerとprofile入力で再封印。第3報で更新した評価モジュール（native_evaluation）も再封印。第4報で採用したR8のprofileで再び封印し、第5報で成果物一覧のツールの更新にあわせて再封印。再buildしてもbytesが一致 |
+| artifact-set | **316ファイル**（第5報で参加者用の手順書の原稿3ファイルを追加）。全ファイルのGit blobとSHA-256が一致（第5報のソースコミットに再結合） |
+| Word / HTML | 第5報で参加者用の版に作り直し、**94ページ**。実Word描画・日英HTML・印刷・操作など**155検査／0 FAIL**（作業用・履歴の言葉が含まれていないことの検査を含む） |
+| テスト | data-agent 326、provisioning 311がPASS。文書テストは386件中385件PASS（参加者用の版のテスト6件を含む）で、残る1件はPython版に依存する既存の失敗（未変更の`main`でも同じ結果） |
 
 ## 検証範囲の境界
 
@@ -136,6 +136,14 @@ once on R8, scored fact 11/12 and content 10/12. Two product support cases were 
 through the Fabric admin portal, and the public regression suite grew to 19 questions.
 Activator delivery and the time-series steps still need the portal screens; the KQL
 data was not cleared.
+
+Fifth report (2026-10-08): the five added regression questions B15–B19 were run once
+on R8 (fact 4/5, content 3/5; B16 omitted the per-file counts and amounts, and B19
+said the hidden amount column was missing). The Word and HTML guide and the package
+were rebuilt as the participant edition: procedure only, in plain wording, with 28
+recaptioned screenshots and no evaluation records, history or hashes in the body
+(94 pages, 155 checks, 0 failures). The runbook now states that Notebook02 refuses to
+run after handoff-ontology.
 
 Fourth report: on the user's instruction R8 was adopted (76/84 and 74/84) and
 verified part-for-part. Plain-wording candidates R9 and R10 removed internal terms

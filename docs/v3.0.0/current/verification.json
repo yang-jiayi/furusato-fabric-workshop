@@ -1,17 +1,17 @@
 {
  "schemaVersion": "furusato-v3-current-verification/v1",
  "date": "2026-10-07",
- "projectedAtUtc": "2026-10-07T16:11:45.501972+00:00",
+ "projectedAtUtc": "2026-10-07T22:13:12.497500+00:00",
  "workshopVersion": "3.0.0",
- "sourceCommit": "9a541a27305cac2adcd26a85e8e9ee3fc913579b",
- "artifactSetSha256": "a5f26d33e2234fa1cdd681a82d797159ba9217f17b0b5aa777ce944e824c1122",
+ "sourceCommit": "3033f1c32d3a854abad61ad37cf664cada54bdf3",
+ "artifactSetSha256": "a6b5303ad43e77e632ed7fa26eaa1142df2159e203a11d28bf9a8baad2a7f670",
  "gitBlobParityVerified": true,
- "sourceArtifacts": 313,
+ "sourceArtifacts": 316,
  "notebooksAligned": 5,
  "csvFilesUnchanged": 11,
- "wordPages": 232,
+ "wordPages": 94,
  "documentChecks": {
-  "PASS": 203,
+  "PASS": 155,
   "FAIL": 0
  },
  "correctedAgentProfile": "standard-contract-restoration",
@@ -123,16 +123,16 @@
  "oldReleaseAssetsChanged": false,
  "remaining": [
   "T10 is blocked by the native content filter and is reported as a failure, not bypassed (support case filed).",
-  "A per-file duplicate question can omit the per-file counts and amounts, and a hidden model column can be described as missing (third holdout P02 and P03).",
   "Some answers still use internal dataset names instead of plain wording; the plain-wording candidates R9 and R10 fixed this but missed the adoption rule recorded in advance.",
   "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings still need portal steps.",
-  "All Lakehouse SQL example queries fail service validation while runtime SQL works (support case filed)."
+  "All Lakehouse SQL example queries fail service validation while runtime SQL works (support case filed).",
+  "Per-file duplicate questions can omit the per-file counts and amounts, and a hidden model column can be described as missing (third holdout P02/P03; regression B16/B19 on R8)."
  ],
  "artifactSha256": {
-  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "3e57eaac2dc5683fc7122e318c824712f45a0bb949b4e8a203374b00e75c9503",
-  "guide/furusato-workshop-v3-0-0-complete.html": "442403785654c0751f50b23f1335336898e2a9a9e55fdda423b937fba45db3b9",
-  "Furusato_Workshop_v3.0.0_current-20261007.zip": "d9eb6b6a12dd235fa7578a69fba442ae587e682367f12c88344901e8e7ed8c8b",
-  "artifact-set.json": "a5f26d33e2234fa1cdd681a82d797159ba9217f17b0b5aa777ce944e824c1122"
+  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "d72b7111515344083488b423a520d39df04ae111eeee02ce7a935092ebd8ef5b",
+  "guide/furusato-workshop-v3-0-0-complete.html": "d51c1f8c51c8d639e45c493fbcd243bc3849bc9ad82a5492696064ccb62ef7b5",
+  "Furusato_Workshop_v3.0.0_current-20261007.zip": "fccec32988f3cd12072e4f36dd40d3b0b5e6a1c5c34f3192d579166dcee49b0b",
+  "artifact-set.json": "a6b5303ad43e77e632ed7fa26eaa1142df2159e203a11d28bf9a8baad2a7f670"
  },
  "privacy": {
   "rawAnswers": false,
@@ -143,8 +143,8 @@
   "dataAgent": 326,
   "provisioning": 311,
   "docs": {
-   "total": 380,
-   "pass": 379,
+   "total": 386,
+   "pass": 385,
    "knownPreexistingFailure": 1
   }
  },
@@ -240,6 +240,52 @@
   },
   "serviceHealth": "Data Agents that rely on Ontology V2 cannot complete actions (since 2026-10-02, fix expected 2026-10-09); the formal Agent already uses the V1 compatibility ontology",
   "portalStepsPerformed": false,
-  "kqlDataCleared": false
+  "kqlDataCleared": false,
+  "regressionB15toB19": {
+   "configuration": "R8",
+   "runs": 1,
+   "fact": {
+    "PASS": 4,
+    "FAIL": 1
+   },
+   "content": {
+    "PASS": 3,
+    "FAIL": 2
+   },
+   "failures": {
+    "B16": "per-file counts and amounts not shown",
+    "B19": "hidden amount column called missing"
+   },
+   "nineteenQuestions": {
+    "fact": {
+     "PASS": 16,
+     "FAIL": 2,
+     "UNKNOWN": 1
+    },
+    "content": {
+     "PASS": 14,
+     "FAIL": 4,
+     "UNKNOWN": 1
+    }
+   }
+  },
+  "runbookCorrection": "Notebook02 refuses to run after handoff-ontology (fifth report)"
+ },
+ "guideEdition": {
+  "kind": "participant",
+  "buildOption": "--participant-edition",
+  "content": "per chapter: what you will do, steps, completion checks, reference tables, references",
+  "screenshots": 28,
+  "diagrams": 0,
+  "excludedFromBody": [
+   "evaluation records",
+   "run history",
+   "v2.7 reference copy",
+   "capture times",
+   "release notices",
+   "artifact hashes and commits"
+  ],
+  "artifactBinding": "Word document properties and HTML metadata",
+  "packageReportsIncluded": false
  }
 }

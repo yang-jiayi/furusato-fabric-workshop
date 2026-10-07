@@ -3,8 +3,8 @@
 このディレクトリは現行mainの整合版用です。元の`v3.0.0`タグ・配布物と日付付き過去評価は
 変更せず保持します。教材版、データ仕様、FabricのgenerationやAPI versionを混同しません。
 
-[Word（232ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
-[日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
+[参加者用 Word（94ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[参加者用 日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
 [Notebook・CSV・モデル等を含むZIP](Furusato_Workshop_v3.0.0_current-20261007.zip) ·
 [Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
 [検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt) ·
@@ -19,7 +19,7 @@ Power BIレポートを追加）・Agent1件・Temp0件です。
 11 PASS／1 FAILです。AI回答品質の0 FAILではなく、文書203検査の成功はAI回答のPASSに加算していません。
 第3報の残件候補R7・R8は、その時点では事前に記録した採用規則を満たしませんでしたが、第4報でご指示により
 **R8を採用**しました（標準10問・84条件 **76/84・74/84**）。言葉づかいを直した候補R9・R10は採用基準に届かず、
-正式AgentはR8です。
+正式AgentはR8です。第5報で、Word・HTMLと配布用ZIPを参加者に配布する版（手順だけを収録）に作り直しました。
 
 ## 版の正本
 
@@ -124,3 +124,5 @@ The same-day follow-up completed the remaining deviations where an API path exis
 UI-only hand-offs and added the public regression gate and runbook tools. In the
 fourth report the user approved adopting R8 (76/84 and 74/84); plain-wording
 candidates R9 and R10 missed the pre-recorded bar, so the formal Agent is R8.
+In the fifth report the Word/HTML guide and the package were rebuilt as the
+participant edition (procedure only; build option --participant-edition).

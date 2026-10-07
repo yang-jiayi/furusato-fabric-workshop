@@ -16,9 +16,19 @@ a guarantee for arbitrary questions; see the dated addendum for every round.
 
 Follow-up candidates R7 and R8 (same day) targeted the remaining T09 provenance,
 duplicate-existence, completeness and KEEPFILTERS issues. Neither met the adoption
-rule recorded before their results, so the files in this folder remain the adopted
-R6 profile; the R8 contract diff and all scores are in the
+rule recorded before their results. The user then reviewed the results and approved
+**adopting R8**, so the files in this folder are now the R8 profile (standard ten/84:
+**76/84 and 74/84**; T09 complete in both runs). Two plain-wording candidates (R9,
+R10) were evaluated afterwards and not adopted under their pre-recorded rules; their
+scores, the R8→R10 diff and a fresh held-out run on R8 are in the
 [follow-up record](../../../../../docs/v3.0.0/followup-20261007/README.md).
+
+R8 adds to the R6 contracts: the composite question runs three separate queries
+(Eventhouse leader, Lakehouse values and national ranks **without** prefecture
+columns, Ontology forward lookup) and starts with the matching-key line; duplicate
+existence inside or across files is undecidable without EventID; a final
+completeness check before answering; popularity answers carry the values; and the
+KEEPFILTERS explanation states that a plain CALCULATE would not return an empty result.
 
 ## Root causes and the restored contracts
 

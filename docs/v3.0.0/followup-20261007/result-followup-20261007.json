@@ -8,10 +8,11 @@
       "id": 1,
       "item": "Activator automatic increment delivery",
       "status": "blocked-handoff",
-      "reason": "The bundle-created rule action references the bundle's Pipeline connection; only the native Activator UI (Edit action / Apply / Save) can bind this deployment's Pipeline, and the editor is not automatable here. The increments were already ingested manually; re-delivery would duplicate KQL rows without an approved reset.",
+      "reason": "The rule's action already targets this deployment's Pipeline (the fabricItemAction entity inside the same Activator; the third report wrongly said it referenced the bundle's pipeline). The adapter still requires the native UI persistence (Edit action / Apply / Save) that adds delayToleranceMs, and verify-delivery needs FileCreated event exports from the Activator UI. The increments were ingested manually; re-delivery would duplicate KQL rows without an approved reset.",
       "done": [
         "live rule settings read back (stopped, historical application off)",
-        "hand-off runbook with readback criteria and the approved reset sequence"
+        "hand-off runbook with readback criteria and the approved reset sequence",
+        "read-only Copy activity export helper (tools/provisioning/export_copy_activity.py), tested on a real run"
       ]
     },
     {
@@ -138,7 +139,7 @@
       "composite provenance (no Ontology/join key)",
       "duplicate existence concluded",
       "BLANK reason without KEEPFILTERS",
-      "addition refusal used the whole snapshot instead of the requested month",
+      "addition refusal used the whole 2025 donation data instead of the requested month",
       "exact-threshold count claimed unavailable"
     ],
     "note": "Author-written; frozen with SHA-256 before R7; not an independent evaluation"
@@ -178,5 +179,104 @@
   "boundaries": [
     "AI-assisted review of answer text; no independent human sign-off",
     "no live IDs, raw answers or holdout questions published"
-  ]
+  ],
+  "fourthReport": {
+    "instruction": "Handle everything in countermeasure order; avoid uncommon terms such as seed or snapshot.",
+    "adopted": "R8 (user-approved); production verified equal to the evaluated R8 (14 Draft/Published parts)",
+    "candidates": {
+      "R8": {
+        "standard84": [
+          76,
+          74
+        ],
+        "extended": {
+          "fact": 12,
+          "content": 11,
+          "unknown": 1
+        },
+        "holdout2Regression": {
+          "fact": 11,
+          "content": 8
+        }
+      },
+      "R9": {
+        "standard84": [
+          76,
+          70
+        ],
+        "extended": {
+          "fact": 13,
+          "content": 13
+        },
+        "holdout2Regression": {
+          "fact": 12,
+          "content": 12
+        },
+        "answersWithInternalTerms": {
+          "R8": 28,
+          "R9": 0
+        },
+        "decision": "not adopted (standard mean 73.0; one answer lost to a network failure)"
+      },
+      "R10": {
+        "standard84": [
+          77,
+          70
+        ],
+        "extended": {
+          "fact": 12,
+          "content": 12
+        },
+        "holdout2Regression": {
+          "fact": 10,
+          "content": 10
+        },
+        "decision": "not adopted (standard mean 73.5; extended fact 12); last candidate"
+      }
+    },
+    "adoptionRule": "standard mean >= 74.5; regression content >= R8 + 2 (excluding unknowns); extended fact >= 13; at most 2 answers with internal terms; recorded before each candidate's results",
+    "holdout3": {
+      "questions": 12,
+      "frozenBeforeAdoption": true,
+      "runs": 1,
+      "configuration": "R8",
+      "fact": {
+        "PASS": 11,
+        "FAIL": 1
+      },
+      "content": {
+        "PASS": 10,
+        "FAIL": 2
+      },
+      "note": "author-written; not an independent evaluation"
+    },
+    "supportCases": {
+      "filed": 2,
+      "via": "Fabric admin portal Help + support (Azure Support API returns SupportRedirected for Microsoft Fabric)",
+      "severity": "C",
+      "diagnosticAccess": "not allowed"
+    },
+    "serviceHealth": {
+      "issue": "Users can't complete actions using Data Agents that rely on Ontology V2",
+      "since": "2026-10-02",
+      "expectedFix": "2026-10-09",
+      "workaround": "use the V1 ontology",
+      "formalAgent": "already uses the V1 compatibility ontology"
+    },
+    "regressionSuite": {
+      "cases": 19,
+      "added": [
+        "B15 composite rank-n",
+        "B16 duplicates across files",
+        "B17 BLANK for another measure",
+        "B18 period-specific addition",
+        "B19 exact-amount count in the model"
+      ]
+    },
+    "portalSteps": {
+      "status": "not performed",
+      "reason": "Activator and Ontology editors run in separate-domain frames the in-app browser cannot operate; another signed-in browser window was minimized and exposed no page content",
+      "kqlData": "left intact (not cleared)"
+    }
+  }
 }

@@ -1,4 +1,4 @@
-# 製品サポートへの報告案 / Product support drafts — 2026-10-07
+# 製品サポートへの報告 / Product support cases — 2026-10-07
 
 2026-10-07 の再デプロイと評価で見つかった、Agent の指示では解決できない2件の報告案です。
 ワークスペース・Item の ID と応答の原文は非公開の証跡にあります。公開版には入れていません。
@@ -6,6 +6,13 @@
 
 Two issues found in the 2026-10-07 redeployment cannot be fixed by Agent instructions.
 Workspace/item IDs and raw responses stay in private evidence; add them when filing.
+
+> **状態（2026-10-07 23:38 JST）:** 2件とも起票済みです。Azure のサポート API は Microsoft Fabric の問い合わせを
+> Fabric の管理ポータルへ案内するため、管理ポータルの「Help + support」（Fabric Data Science › Fabric Data Agent）から
+> 重大度 C で起票しました。診断データへのアクセスは許可していません。受付番号は非公開の記録にあります。
+>
+> **Status:** both cases were filed through the Fabric admin portal (the Azure Support API redirects Microsoft
+> Fabric there), severity C, without granting diagnostic-data access. Request numbers are kept privately.
 
 ---
 

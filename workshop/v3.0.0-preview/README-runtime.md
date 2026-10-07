@@ -485,16 +485,31 @@ export to PDF instead, check the page visually, and reconcile its totals with DA
 
 ### Hand-off: Activator native action (UI, required for automatic delivery)
 
-A rule created from the bundle carries the bundle's Pipeline connection document
-in its action. Delivery cannot be verified until a person initializes the action in
-the native Activator UI, which the API cannot do:
+The deployed rule's action already references this deployment's Pipeline: its
+`fabricJobConnectionDocumentId` is the `fabricItemAction` entity inside the same
+Activator definition, whose `itemId` is the deployed Pipeline. What the API cannot do
+is the native persistence the adapter requires before delivery (an explicit
+`delayToleranceMs`); do it in the native Activator UI:
 
-1. Keep the rule stopped. Open the rule → **Edit action**, select this deployment's
-   Pipeline, confirm the dynamic `Type`/`Subject`/`Source` mappings, **Apply**, **Save**.
-2. Read the definition back: the connection document differs from the bundle's,
+1. Keep the rule stopped. Open the rule → **Edit action**, confirm this deployment's
+   Pipeline and the dynamic `Type`/`Subject`/`Source` mappings, **Apply**, **Save**.
+2. Read the definition back: the action still targets the deployed Pipeline,
    `shouldApplyRuleOnUpdate` is `false` and `delayToleranceMs` ≥ `120000`.
 3. Run `start-activator`, then for increments 1–3 in order: `deliver-increment`,
-   export the native events and Copy activity, `verify-delivery`. Finish with `stop-activator`.
+   export the native FileCreated events from the Activator UI, export the Copy
+   activity record with the read-only API helper below, `verify-delivery`. Finish
+   with `stop-activator`.
+
+```powershell
+python tools/provisioning/export_copy_activity.py --workspace-id <workspace> `
+  --pipeline-job-id <new pipeline job id> --out <private dir>\copy-001.json
+```
+
+The helper writes the service's own activity-runs record (`pipelineRunId`,
+`activityType`, `status`, `rowsRead`, `rowsCopied`) and stops unless the run has
+exactly one Copy activity. The FileCreated events (`___subject`, `___type`,
+`___source`, `api`, `contentLength`, `___id`) have no public API and must come from
+the Activator UI.
 
 If the increments were already ingested manually, `deliver-increment` stops (the
 CSV exists, PutBlob `If-None-Match: *` returns 412) and re-delivery would double the

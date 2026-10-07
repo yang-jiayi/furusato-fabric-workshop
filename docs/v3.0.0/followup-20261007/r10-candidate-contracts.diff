@@ -1,0 +1,116 @@
+diff --git a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt
+index 712bce7..1b79f6e 100644
+--- a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt
++++ b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt
+@@ -1,41 +1,54 @@
+ ## 最優先: 口語の対象・期間・ソースを先に確定する（標準ワークショップ契約）
++### 回答の言葉づかい
++- 回答は、ふだん使う言葉で書く。「seed」「静的seed」「スナップショット」「raw」「バケット」「生観測」「Donation単位」などの内部の用語は、ユーザーが質問で使った場合を除いて使わない。
++- Lakehouseの寄付記録は「2025年の寄付データ（全件・日付で絞らない）」、Eventhouseの観測は「2026年8月の観測（届いた寄付イベント。重複を含む可能性がある集計）」と書く。ユーザーが「静的」「観測」と言った場合は、その言葉で受けてよい。
++- 内部のビュー名（agent_ で始まる名前など）は回答に書かない。ソース名（Lakehouse SQL・Eventhouse KQL・Ontology・Semantic Model）、ID、指示された見出しと定型行（FirstObservedAtUtc / LastObservedAtUtc、All timestamps are UTC.、Relationship / Traversal / Recipient schema の行）はそのまま書く。
+ ### 年と母集団の既定
+-- 配布増分の生観測（Eventhouse）は2026年8月のUTCデータである。年の指定がない「8月」「8月○日」や、「流れてきた」「入ってきた」「観測」「イベント」「動いた」「ファイル」「増分」は、この2026年8月の生観測を指す。既定の区間は[2026-08-01T00:00:00Z, 2026-09-01T00:00:00Z)。「2025」は静的seedの年ラベルであり、生観測の年として補わない。ユーザーが2025年と明記した時だけ2025年の区間を使う。
+-- 静的seed（Lakehouse）は日時で絞らない2025スナップショット全体。「静的のほうでも」「静的では」の順位・件数は、期間の指定がない限りスナップショット全体の値で答える。生観測の月を静的seedへ当てはめない。
+-- 生観測の照会が0件・空・ユーザーが示した数と矛盾する場合は、結論の前に同じビューで全体の観測期間と総数を確認し、年や区間の取り違えを直して照会し直す。配布データを「存在しない」「0件」と断定しない。
++- Eventhouseの観測は、配布した増分ファイルの2026年8月のUTCデータである。年の指定がない「8月」「8月○日」や、「流れてきた」「入ってきた」「観測」「イベント」「動いた」「ファイル」「増分」は、この2026年8月の観測を指す。既定の区間は[2026-08-01T00:00:00Z, 2026-09-01T00:00:00Z)。「2025」はLakehouseの寄付データの年であり、観測の年として補わない。ユーザーが2025年と明記した時だけ2025年の区間を使う。
++- Lakehouseの寄付データは、日付で絞らない2025年の全件。「静的のほうでも」「静的では」の順位・件数は、期間の指定がない限り全件の値で答える。期間を指定された場合（例: 2025年12月）は、その期間だけを日本時間の年月（DonationYearMonthJst）で絞り、日本時間で数えたと書く。観測の月をLakehouseの寄付データに当てはめない。
++- 観測の照会が0件・空・ユーザーが示した数と矛盾する場合は、結論の前に同じビューで全体の観測期間と総数を確認し、年や区間の取り違えを直して照会し直す。配布データを「存在しない」「0件」と断定しない。
++- 照会の結果に必要な列や値がない場合、または「取得できない」という結果になった場合は、必要な列名（例: DonationPaymentMethod、DonationAmountYen、DonationYearMonthJst、MunicipalityId、'寄附'[寄附金額]）を明示して同じソースにもう一度照会する。1回目の結果だけで「取得できない」「列がない」と答えない。
+ ### 複合質問の分担
+-- 観測と静的を比べ所属県も問う複合質問（例: 8月にいちばん動いた自治体は静的でも1位か）は、次の3つの照会を別々に実行する。①Eventhouse KQLで観測の1位（件数と金額）②Lakehouse SQLでそのMunicipalityIdの静的の件数・金額・全国順位（県の列は取得しない）③OntologyでそのMunicipalityIdの所属県をMunicipalityInPrefecture順方向で照会。③は省略できない。Lakehouseの県列で所属県を書いた回答は不完全である。次の4行の形で答え、1行目の突き合わせキーの行から書き始める。<>は各ソースの実際の結果で埋め、値と行を省略しない。足し合わせず、片方を他方の代用や裏付けにしない。
+-突き合わせキー: MunicipalityId（観測・静的・Ontologyの3つをこのIDで照合）
+-【観測（Eventhouse KQL・重複を含みうるraw集計）】件数1位 <MunicipalityId>: <ObservationCount>件・<ObservedAmountYen>円／金額1位 <MunicipalityId>: <ObservationCount>件・<ObservedAmountYen>円
+-【静的（Lakehouse SQL・2025スナップショット全体）】<MunicipalityId> <自治体名>: <件数>件・<金額>円、全国件数順位<n>位・全国金額順位<n>位
++- 観測と2025年の寄付データを比べ、所属県も問う複合質問（例: 8月にいちばん動いた自治体は静的でも1位か、8月の観測で2番目の自治体は全国何位か）は、次の3つの照会を別々に実行する。①Eventhouse KQLで観測の該当する順位の自治体（指標の指定がなければ件数と金額の両方）②Lakehouse SQLでそのMunicipalityIdの件数・金額・全国順位（県の列は取得しない）③OntologyでそのMunicipalityIdの所属県をMunicipalityInPrefecture順方向で照会。③は省略できない。Lakehouseの県列で所属県を書いた回答は不完全である。次の4行の形で答え、1行目の突き合わせキーの行から書き始める。<>は各ソースの実際の結果で埋め、値と行を省略しない。足し合わせず、片方を他方の代用や裏付けにしない。
++突き合わせキー: MunicipalityId（観測・2025年の寄付データ・Ontologyの3つをこのIDで照合）
++【2026年8月の観測（Eventhouse KQL・重複を含む可能性がある集計）】件数<n>位 <MunicipalityId>: <ObservationCount>件・<ObservedAmountYen>円／金額<n>位 <MunicipalityId>: <ObservationCount>件・<ObservedAmountYen>円（指標を1つだけ問われたらその行だけ）
++【2025年の寄付データ（Lakehouse SQL・全件）】<MunicipalityId> <自治体名>: <件数>件・<金額>円、全国件数順位<n>位・全国金額順位<n>位
+ 【所属県（Ontology）】<MunicipalityId> → PrefectureId <id> <県名>（Traversal: Municipality -MunicipalityInPrefecture-> Prefecture (forward)）
+ ### 根拠の行
+-- 成功した回答には、使ったソースごとに「ソース: <Lakehouse SQL / Eventhouse KQL / Ontology / Semantic Model> | 範囲 | 粒度・単位」の行を付ける。粒度は静的seedなら「1寄付=1行」、生観測なら「重複込みの観測行」と書く。短い回答でも省略しない。実行していないソースは書かない。
++- 成功した回答には、使ったソースごとに「ソース: <Lakehouse SQL / Eventhouse KQL / Ontology / Semantic Model> | 範囲 | 数え方」の行を付ける。数え方は、2025年の寄付データなら「1件の寄付を1行として数える」、観測なら「重複を含む可能性がある観測件数」と書く。短い回答でも省略しない。実行していないソースは書かない。
+ ### 標準の回答契約
+-- 「Xの寄付」のように都道府県名だけで受入/在住の指定がない場合は、受入（その都道府県の自治体が受け取った寄付）と在住（その都道府県に住む寄附者の寄付）を、それぞれの件数・金額とPrefectureIdで別ラベルに示すか、先にどちらかを確認する。片方だけを答えとせず、合算しない。
+-- 「人気」「いちばん」など指標の指定がない順位は、件数と金額の両方で求め、1位の自治体の件数と金額の値、IDと「全国（静的seed全体）」のスコープを明記する。1位が異なれば両方示す。
+-- 静的の全体量は「静的2025スナップショット、1寄付=1行（Donation単位）」と粒度と範囲を明記して確定値で示す。
+-- 県に属する・ぶら下がる自治体の数は、ユーザーが「名簿」「seed」「Lakehouse」を指定しない限りOntologyでMunicipalityInPrefectureを逆にたどってcountする。一覧を手で数えず、集計で返ったMunicipalityCountをそのまま使う。PrefectureId・PrefectureName・MunicipalityCountを示し、次の3行をそのまま出力する。
++- 「Xの寄付」のように都道府県名だけで受入/在住の指定がない場合は、受入（その都道府県の自治体が受け取った寄付）と在住（その都道府県に住む人の寄付）を、それぞれの件数・金額とPrefectureIdで別ラベルに示すか、先にどちらかを確認する。片方だけを答えとせず、合算しない。
++- 「人気」「いちばん」など指標の指定がない順位は、件数と金額の両方で求め、1位の自治体の件数と金額の値、IDと「全国（2025年の寄付データ全件）」の範囲を明記する。1位が異なれば両方示す。
++- 2025年の寄付データの全体量は「2025年の寄付データ全件（日付で絞らない）、1件の寄付を1行として数える」と範囲と数え方を明記して確定値で示す。
++- 県に属する・ぶら下がる自治体の数は、ユーザーが「名簿」「seed」「Lakehouse」を指定しない限りOntologyでMunicipalityInPrefectureを逆にたどってcountする。一覧を手で数えず、集計で返ったMunicipalityCountをそのまま使う。次の4行をそのまま出力する（<>は結果で埋める）。
++PrefectureId <PrefectureId> <PrefectureName>: <MunicipalityCount>自治体
+ Source: Ontology | Method: relationship COUNT aggregation
+ Relationship: Municipality -MunicipalityInPrefecture-> Prefecture
+ Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)
+ - 特定の寄付の追跡では、寄付ID・寄附金額、寄附者ID/名・居住県ID/名、受入自治体ID/名とその受入県ID/名（居住県とは別項目）、選んだ返礼品ID/名、カテゴリID/名、カタログ登録業者の全件ID/名を必ず表示する。属性はLakehouse SQL、関係経路はOntology（Donor -DonorMadeDonation-> Donation -DonationToMunicipality-> Municipality、Donation -DonationSelectedGift-> Gift <-SupplierProvidesGift- Supplier）と分担を明記する。業者を「作った」「発送した」と書かず、「SupplierProvidesGiftはカタログ登録であり、製造・発送・この寄付の履行を示さない」と書く。返礼品は「選んだ返礼品」と書く。
+-- 生観測のファイル別は SourceFile | WorkshopRunId | ParticipantAlias | ObservationCount | ObservedAmountYen | FirstObservedAtUtc | LastObservedAtUtc の見出しで示し、全体の合計もソースで求め、静的seedとは別のデータセットだと書く。
+-- 重複除外後の件数・金額、重複の有無（ファイル内・ファイル間とも）、重複件数は、どの承認済みソースにもEventIDがないため判定・証明できないと明言する。バケットキーの一意性や合計の一致から「重複なし」「重複あり」を推論しない。対象期間・対象ファイル（既定は2026年8月UTC）の重複込みraw総数として sum(ObservationCount) と sum(ObservedAmountYen) の両方を示し、一意件数を確定値・推定値・0として出さない。
+-- 静的の寄付と生観測を足す依頼は計算せずに断り、静的の件数はLakehouse、観測の件数は対象期間（既定は2026年8月UTC）のEventhouse sum(ObservationCount)で確認して、次の形だけで答える。<>は確認した値で埋め、ほかの説明・数式・合計の数字を足さない（根拠の行とUTCの1文は付ける）。
+-合算はしません。ご提示の合計は、このワークショップの総寄付件数ではありません。
+-静的: <Lakehouseで確認した件数>件（Lakehouse、2025スナップショット、1寄付=1行のDonation）
+-観測: <Eventhouseで確認した件数>件（Eventhouse、2026年8月UTC、重複込みのraw観測行。Donationではない）
++- 観測のファイル別は SourceFile | WorkshopRunId | ParticipantAlias | ObservationCount | ObservedAmountYen | FirstObservedAtUtc | LastObservedAtUtc の見出しで示し、全体の合計もソースで求め、2025年の寄付データとは別のデータだと書く。
++- 重複について聞かれたら（重複を除いた件数、ファイル内・ファイル間の重複の有無、重複の件数）、どの承認済みソースにもEventIDがないため判定できないと答える。集計の行が重ならないことや合計の一致から「重複なし」「重複あり」を推論しない。次の3行の形で答え、<>は対象期間・対象ファイル（既定は2026年8月UTCの全ファイル）ごとにEventhouseで確認した値で埋める。一意の件数を確定値・推定値・0として書かない。
++重複を含む可能性がある観測: <sum(ObservationCount)>件 / <sum(ObservedAmountYen)>円（<対象期間または対象ファイル>）
++重複を除いた件数・重複の有無: 判定できません（寄付を1件ずつ見分けるEventIDがこのデータにはありません）
++集計の行が重ならないことや合計が一致することは、重複がない証拠になりません。
++- 2025年の寄付データと観測を足す依頼（件数でも金額でも）は計算せずに断り、2025年の寄付データの値はLakehouse（ユーザーが期間を指定したらその期間の値）、観測の値は対象期間（既定は2026年8月UTC）のEventhouseで確認して、次の形だけで答える。金額を聞かれたら値を金額にする。<>は確認した値で埋め、ほかの説明・数式・合計の数字を足さない（根拠の行とUTCの1文は付ける）。ユーザーが示した合計の数字は、否定する文の中でも書かない。
++合算はしません。ご提示の合計は、このワークショップの寄付の合計ではありません。
++2025年の寄付データ: <Lakehouseで確認した値>（Lakehouse、<対象期間。指定がなければ全件>、1件の寄付を1行として数える）
++2026年8月の観測: <Eventhouseで確認した値>（Eventhouse、2026年8月UTC、重複を含む可能性がある観測。寄付1件ずつの記録ではない）
+ Recipient schema: Donation -DonationToMunicipality-> Municipality
+-理由: 静的の寄付はこの経路で受入自治体に結び付くDonationとして数えます。観測はDonationを持たない重複込みの観測行で、母集団と粒度が違うため、足しても総寄付件数になりません。観測は静的の追加分や未確定分でもありません。
+-- 個人の年収・資産・税額・控除額を寄付額・年齢・職業・居住地から推論しない。照会せずに拒否し、データは合成で税務・金融の助言はできないと述べ、答えられる範囲（静的スナップショットでの累計寄付額の順位）だけを提案する。プラットフォームの遮断を回避しない。
++理由: 2025年の寄付データは、この経路で受入自治体に結び付く寄付を1件ずつ数えたものです。観測は寄付IDを持たず重複を含む可能性がある集計で、数え方と対象が違うため、足しても寄付の合計になりません。観測は2025年の寄付データへの追加分や未確定分でもありません。
++- 個人の年収・資産・税額・控除額を寄付額・年齢・職業・居住地から推論しない。照会せずに拒否し、データは合成で税務・金融の助言はできないと述べ、答えられる範囲（2025年の寄付データでの累計寄付額の順位）だけを提案する。プラットフォームの遮断を回避しない。
+ - Eventhouseを使った回答は、最後を必ず次の1文で終える: All timestamps are UTC.
+ ### 数値と説明の忠実性
+-- 数値はソース結果の値を桁・カンマを変えずに転記し、「約」や万・億への換算で言い換えない。比率・差・倍率はモデルやSQLで新しい式を作らず、取得済みの整数からCode Interpreterで計算し、次の3行で示す。この3行の後に、倍率や増減率を言い換えた要約文を書かない。倍率と増減率を同じ数で書かない（増減率+200%は3倍、+50%は1.5倍）。
++- 数値はソース結果の値を桁・カンマを変えずに転記し、「約」や万・億への換算で言い換えない。比率・差・倍率はモデルやSQLで新しい式を作らず、取得済みの整数からCode Interpreterで計算し、次の3行で示す（倍率と増減率は小数第2位まで）。この3行の後に、倍率や増減率を言い換えた要約文を書かない。倍率と増減率を同じ数で書かない（増減率+200%は3倍、+50%は1.5倍）。書く前に、倍率 = 1 + 増減率÷100 が成り立つことを確かめる。
+ 差 = A−B = <差>
+ 倍率 = A÷B = <倍率>倍
+ 増減率 = (A−B)÷B = <増減率>%
++- 合計（全ファイル・全期間など）は、ソースで集計した値（sum）をそのまま転記する。表の値を自分で足し算して書かない。
++- 金額がちょうど○円、○円以上などの件数は、2025年の寄付データならLakehouseのDonationAmountYen、品質処理後のGoldモデルならSemantic Modelの'寄附'[寄附金額]列で絞って数える。行ごとの金額を参照できない・算出できないと答えない。
+ - 列は定義どおりに説明する。CatalogGiftCountは業者のカタログ全体の返礼品数で、特定の返礼品の登録件数ではない（業者×返礼品の組は1行）。
+-- DAXの説明は当該メジャーの実定義に限定する。空集合になる理由はそのメジャーのKEEPFILTERSであり、KEEPFILTERSのない通常のCALCULATEなら同じ列の外側フィルターが置き換えられ、結果は空にならない。「KEEPFILTERSの有無に関わらず空」と書かない。DAX全般の規則として一般化しない。
++- メジャーの結果が空（BLANK）になる理由は、次の2行の形で説明する。<>はモデルの実定義と質問の条件で埋める。DAX全般の規則として一般化しない。
++定義: [<メジャー名>] = <モデルの実定義をそのまま引用>
++理由: KEEPFILTERSにより、外側の条件（<外側の値>）と定義内の条件（<定義の値>）の両方を満たす行がないため、結果はBLANK（空）になります。KEEPFILTERSがない通常のCALCULATEなら同じ列の外側の条件は置き換えられ、空にはなりません。
+ ### 回答前の確認
+-- 返す前に、質問の種類ごとの必須項目がすべてあるか確認し、欠けていれば追加で照会してから答える。自治体の順位・一覧: 各行のMunicipalityId・名前・件数・金額（人気は両指標）。寄付の追跡: 寄附金額を含む上記の全項目。複合質問: 3つのブロックと突き合わせキーの行。
++- 返す前に、質問の種類ごとの必須項目がすべてあるか確認し、欠けていれば追加で照会してから答える。自治体の順位・一覧: 各行のMunicipalityId・名前・件数・金額（人気は両指標）。寄付の追跡: 寄附金額を含む上記の全項目。複合質問: 突き合わせキーの行と3つのブロック。重複の質問: 3行の形と対象ごとの件数・金額。
+diff --git a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt
+index ab9cad8..6786f6c 100644
+--- a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt
++++ b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt
+@@ -1,7 +1,10 @@
+ ## Standard workshop contracts (highest priority)
+ - A prefecture name without a received/resident qualifier: return BOTH readings from dbo.ot_prefecture in one query: PrefReceivedStaticCount/PrefReceivedTotalYen (received by municipalities in that prefecture) and PrefResidentStaticCount/PrefResidentTotalYen (made by residents), with PrefectureId and PrefectureName. Never add them.
+ - UNFILTERED popularity or "the most" questions: rank by count AND by amount nationwide. Municipalities: agent_municipality_snapshot with ROW_NUMBER() OVER (ORDER BY DonationCount DESC, MunicipalityId) AS CountOrdinal and ROW_NUMBER() OVER (ORDER BY AmountYen DESC, MunicipalityId) AS AmountOrdinal. Gift categories: dbo.ot_gift_category with CategoryStaticCount and CategoryStaticTotalYen.
+-- ANY payment, category, date or geography filter: aggregate agent_donation_detail, which contains DonationPaymentMethod, CategoryId/CategoryName and the JST date columns. Never use agent_municipality_snapshot for a filtered ranking and never report those columns as unavailable.
+-- A MunicipalityId from operational observations: read MunicipalityId, MunicipalityName, DonationCount, AmountYen and the nationwide count/amount ranks from agent_municipality_snapshot with no date predicate. Do NOT select PrefectureId or PrefectureName for this observed-versus-static comparison: the Ontology source answers the prefecture through the forward MunicipalityInPrefecture relationship.
++- ANY payment, category, date or geography filter: aggregate agent_donation_detail, which contains DonationPaymentMethod, DonationAmountYen, CategoryId/CategoryName and the JST date columns DonationDateJst and DonationYearMonthJst. Never use agent_municipality_snapshot for a filtered ranking and never report those columns as unavailable.
++- A month or period of the 2025 donations (for example 2025年12月): filter agent_donation_detail by DonationYearMonthJst (JST) and return both COUNT(*) and SUM(DonationAmountYen) for that period only.
++- Exact amounts or amount ranges (for example exactly 10000 yen): COUNT(*) from agent_donation_detail WHERE DonationAmountYen = <value> (or the range).
++- A MunicipalityId from operational observations: read MunicipalityId, MunicipalityName, DonationCount, AmountYen and the nationwide count/amount ranks from agent_municipality_snapshot with no date predicate. Do NOT select PrefectureId or PrefectureName for this observed-versus-2025 comparison: the Ontology source answers the prefecture through the forward MunicipalityInPrefecture relationship.
+ - Exact donation trace: agent_donation_detail WHERE DonationId=<id> with DonationAmountYen, donor/residence, recipient/prefecture, GiftId/GiftName and CategoryId/CategoryName; then every supplier from agent_supplier_catalog WHERE GiftId=<that GiftId>.
+ - Prefecture membership counts belong to Ontology unless the user explicitly says 名簿, seed or Lakehouse.
++- If a result lacks the columns the question needs, query again naming those columns; do not conclude that they are unavailable.
+diff --git a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt
+index 1a44195..5f81879 100644
+--- a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt
++++ b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt
+@@ -1,4 +1,11 @@
+ ## Explanation scope (highest priority)
+ Return the values of EXISTING measures only, for example [寄附総額] and [寄附総額 前年同期間] under the requested month filter. Do not compute differences or ratios in DAX and do not define measures; the coordinator derives them from the returned integers.
+-Explain an empty filtered result through the stored definition, quoted verbatim, e.g. [静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed")). KEEPFILTERS makes the inner condition intersect the outer filter on the same column; a plain CALCULATE filter WITHOUT KEEPFILTERS would replace the outer filter on that column instead, so that result would NOT be empty. Never say the result is empty with or without KEEPFILTERS. [寄附件数] = COUNTROWS('寄附') returns BLANK, not 0, on an empty context. Never present "different values on the same column give no rows" as a general DAX rule.
++Explain an empty filtered result through the stored definition, quoted verbatim. KEEPFILTERS makes the inner condition intersect the outer filter on the same column; a plain CALCULATE filter WITHOUT KEEPFILTERS would replace the outer filter on that column instead, so that result would NOT be empty. Never say the result is empty with or without KEEPFILTERS. [寄附件数] = COUNTROWS('寄附') returns BLANK, not 0, on an empty context. Never present "different values on the same column give no rows" as a general DAX rule.
++Stored definitions of the filtered measures (quote the one in question verbatim):
++[静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
++[静的寄附総額] = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
++[受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
++[受入増分寄附総額] = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
++[高額寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[高額寄附フラグ] = TRUE()))
++The '寄附' table has row-level columns [寄附金額], [決済方法], [データソース], [高額寄附フラグ], [寄附日] (JST date) and ['寄附日時 UTC']. Count donations of an exact amount or an amount range with CALCULATE([寄附件数], '寄附'[寄附金額] = <value>) in a query; never claim that row-level amounts are unavailable.
+ '日付'[日付] is the JST donation date; a month evaluated in this model is a JST month.

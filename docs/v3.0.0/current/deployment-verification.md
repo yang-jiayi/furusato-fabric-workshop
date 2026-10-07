@@ -1,8 +1,8 @@
 # 新規配置・回答精度改善の検証 — 2026-10-07
 
-**旧フォルダ（20261006）を空にし、指定フォルダ（20261007）へ21 Itemsを新規配置しました。
-正式Agentの標準10問・84条件は初回36/84・34/84で、回答契約の復元後は74/84・73/84です。
-成果物の整合性とAI回答品質は別の判定です。**
+**旧フォルダ（20261006）を空にし、指定フォルダ（20261007）へ21 Itemsを新規配置しました（第3報で22 Items）。
+正式Agentの標準10問・84条件は初回36/84・34/84で、回答契約の復元後は74/84・73/84、第4報でご指示により
+採用したR8は76/84・74/84です。成果物の整合性とAI回答品質は別の判定です。**
 
 2026-10-04の記録は[history/20261004](history/20261004/deployment-verification.md)に変更せず保持しています。
 
@@ -48,7 +48,7 @@ Semantic Model1、Pipeline1、Activator1、Data Agent1）。Activatorは停止�
 | 採用構成（standard-contract-restoration） | **74 ／ 73** | **14 ／ 13** |
 
 主な原因は、修正チェーンが元の統合指示を置き換えて標準10問の回答契約が失われたこと、
-年なしの「8月」を静的seedの2025年と解釈して2026年8月の観測を0件としたことでした。
+年の指定がない「8月」を2025年の寄付データの8月と解釈して2026年8月の観測を0件としたことでした。
 6構成の全経過、事前登録holdout（11 PASS／1 FAIL）、残件は
 [2026-10-07追補](../tuning-20261007/README.md)にあります。
 T10はnativeのコンテンツフィルターで遮断され、回避せずFAILとして数えています（上限77）。
@@ -60,24 +60,36 @@ T10はnativeのコンテンツフィルターで遮断され、回避せずFAIL�
 | Agent の SQL ビュー要素 | 公開の Data Agent 管理 API で、6 views が View・Available・選択済み、列が INFORMATION_SCHEMA と一致することを確認 |
 | 任意の Power BI レポート | 既存モデルに接続するレポートだけを配置。PDF で表示を確認し、DAX で Gold 94,900件／1,596,157,000円・高額1,392件と一致 |
 | `handoff-ontology` | 承認済みコミットのソースで記録（配置時の source fingerprint を維持） |
-| Activator の自動配送 | **UI での引き継ぎ**。ルールのアクションがバンドル側の Pipeline 接続を参照しており、Edit action → Apply → Save が必要。手動取り込み済みのため、再配送の前に承認されたリセットが必要 |
+| Activator の自動配送 | **UI での引き継ぎ**。ルールのアクションはこの配置の Pipeline を指している（当初「バンドル側の Pipeline 接続を参照」と書いたのは誤りで、第4報で訂正）。遅延の許容時間の保存（Edit action → Apply → Save）と、配送ごとのイベントの書き出しが UI でのみ可能。手動取り込み済みのため、再配送の前に承認されたリセットが必要 |
 | 時系列バインド・native Metrics | **UI での引き継ぎ**（定義形式と Generate Ontology の API が公開されていない） |
 | Example queries の検証状態 | KQL 9件は Valid、Lakehouse の SQL 17件はすべて Invalid（検証がエンドポイントに接続できない。実行時の SQL は成功）。製品サポートへの報告案を作成 |
-| 残件への候補 R7・R8 | 事前に記録した採用規則を満たさず不採用（R7: 69／76、R8: 76／74・拡張の内容 11）。正式 Agent を R6 に戻し、14 パーツの一致を確認 |
-| 新しい事前登録 holdout 12問 | R6 で1回だけ実行。事実 9／12、内容 7／12 |
+| 残件への候補 R7・R8 | 第3報の時点では事前に記録した採用規則を満たさず不採用（R7: 69／76、R8: 76／74・拡張の内容 11）。正式 Agent を R6 に戻し、14 パーツの一致を確認 |
+| 事前に固定した未公開の確認問題12問（2回目のセット） | R6 で1回だけ実行。事実 9／12、内容 7／12 |
 | 実行ソースの観測 | Temp の一時ノートブックで SDK の run steps を取得（使用後に削除）。T09 は Kusto と LakehouseTables だけを実行し、Ontology は実行していない |
 
-詳細は[第3報](../followup-20261007/README.md)と[製品サポートへの報告案](../followup-20261007/platform-support-cases.md)にあります。
+詳細は[第3報](../followup-20261007/README.md)と[製品サポートへの報告](../followup-20261007/platform-support-cases.md)にあります。
+
+## 第4報（同日）: 対策の順にすべて対応
+
+| 項目 | 結果 |
+|---|---|
+| R8 の採用（ご指示） | 公開して、評価した R8 と定義の14パーツが一致することを確認。標準10問・84条件 76／74、公開の回帰14問 事実12／内容11（1問は通信タイムアウト） |
+| 言葉づかいを直した候補 R9・R10 | 専門用語を含む回答は 28件 → 0件。ただし標準の平均が 73.0・73.5 で採用基準（74.5）に届かず不採用。本番を R8 に戻して一致を確認 |
+| 3回目の未公開の確認問題12問 | R8 の採用前に固定し、R8 で1回だけ実行。事実 11／12、内容 10／12 |
+| 製品サポート | Azure のサポート API は Fabric を管理ポータルへ案内するため、管理ポータルから2件を起票（重大度 C） |
+| サービス正常性 | 「Ontology V2 を使う Data Agent で操作が完了しない」障害（10-02〜、10-09 修正予定、回避策は V1）。正式 Agent は V1 の互換 Ontology を使用 |
+| 回帰スイート | 14問 → 19問（B15〜B19 を追加。期待値はリポジトリのデータから計算） |
+| Activator・時系列・Metrics | ポータルの画面での作業が残る（この環境のブラウザーでは編集画面を操作できない）。KQL のデータは消していない。Copy の記録を API から取得する読み取り専用ツールを追加 |
 
 ## 成果物の整合性
 
 | 項目 | 結果 |
 |---|---|
 | Agent compiler | 4段階（source-grounded → complete-contract → time-layer-isolation → standard-contract-restoration）。commitした入力から再compileした定義が公開中の定義と一致。回答値の混入防止は、桁区切り・全角数字・JSONのエスケープを正規化して検査 |
-| Notebook02–04 | 新しいcompilerとprofile入力で再封印。第3報で更新した評価モジュール（native_evaluation）も再封印。再buildしてもbytesが一致 |
-| artifact-set | **313ファイル**。全ファイルのGit blobとSHA-256が一致（第3報のソースコミットに再結合） |
-| Word / HTML | **232ページ**。実Word描画・日英HTML・印刷・操作など**203検査／0 FAIL**（第3報で19章のT10注記を追加して再生成） |
-| テスト | data-agent 325、provisioning 308がPASS。文書テストは380件中379件PASSで、残る1件はPython版に依存する既存の失敗（未変更の`main`でも同じ結果）。全体実行中に一時フォルダーのアクセス拒否が1件出たテストは、単独の再実行で32件すべてPASS |
+| Notebook02–04 | 新しいcompilerとprofile入力で再封印。第3報で更新した評価モジュール（native_evaluation）も再封印。第4報で採用したR8のprofileで再び封印。再buildしてもbytesが一致 |
+| artifact-set | **313ファイル**。全ファイルのGit blobとSHA-256が一致（第4報のソースコミットに再結合） |
+| Word / HTML | **232ページ**。実Word描画・日英HTML・印刷・操作など**203検査／0 FAIL**（第3報で19章のT10注記を追加し、第4報で新しいartifact-setに結び付けて再生成） |
+| テスト | data-agent 326、provisioning 311がPASS。文書テストは380件中379件PASSで、残る1件はPython版に依存する既存の失敗（未変更の`main`でも同じ結果） |
 
 ## 検証範囲の境界
 
@@ -105,3 +117,22 @@ and R8 missed the pre-recorded adoption rule, so the Agent was rolled back to th
 adopted configuration and verified; a new pre-registered 12-question holdout scored
 fact 9/12 and content 7/12 on it. SDK run steps showed T09 executing Kusto and
 Lakehouse only.
+
+Fourth same-day report: on the owner's instruction R8 was adopted and verified part
+for part (standard ten/84: 76/84 and 74/84). Plain-wording candidates R9 and R10
+removed internal terms from the answers (28 answers to 0) but missed the adoption rule
+recorded in advance (standard mean 73.0 and 73.5 against 74.5), so production stays on
+R8. A third author-written 12-question holdout, frozen before the adoption and run
+once on R8, scored fact 11/12 and content 10/12. Two product support cases were filed
+through the Fabric admin portal, and the public regression suite grew to 19 questions.
+Activator delivery and the time-series steps still need the portal screens; the KQL
+data was not cleared.
+
+Fourth report: on the user's instruction R8 was adopted (76/84 and 74/84) and
+verified part-for-part. Plain-wording candidates R9 and R10 removed internal terms
+from the answers but missed the pre-recorded bar, so production stayed on R8. A
+third frozen 12-question check set scored fact 11/12 and content 10/12 on R8. Both
+support cases were filed through the Fabric admin portal, a Fabric advisory about
+Data Agents with Ontology V2 was recorded (the formal Agent uses V1), the public
+regression suite grew to 19 cases, and the Activator and Ontology steps still need
+the native portal UI (KQL data left intact).

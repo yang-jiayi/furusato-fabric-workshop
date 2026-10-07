@@ -29,14 +29,24 @@ class RegressionSuiteTests(unittest.TestCase):
         committed = json.loads(rs.SUITE_FILE.read_text(encoding="utf-8"))
         self.assertEqual(ne.digest(committed), ne.digest(self.suite))
 
-    def test_shape_is_fourteen_fact_and_content_pairs(self):
+    def test_shape_is_fact_and_content_pairs(self):
         ne.validate_suite(self.suite)
         self.assertEqual(self.suite["kind"], "regression")
-        self.assertEqual([c["id"] for c in self.suite["cases"]], [f"B{i:02}" for i in range(1, 15)])
+        self.assertEqual([c["id"] for c in self.suite["cases"]], [f"B{i:02}" for i in range(1, 20)])
         for case in self.suite["cases"]:
             self.assertEqual([c["id"] for c in case["conditions"]],
                              [f"{case['id']}.fact", f"{case['id']}.content"])
             self.assertTrue(set(case["required_query_languages"]) <= {"SQL", "KQL", "GQL"})
+
+    def test_follow_up_cases_are_bound_to_sources(self):
+        values = {c["id"]: c["expected_values"] for c in self.suite["cases"]}
+        self.assertEqual(values["B16"]["donation_events_002.csv"]["count"], 5000)
+        self.assertEqual(values["B17"]["result"], "BLANK")
+        self.assertIn("KEEPFILTERS", values["B17"]["definition"])
+        b19 = values["B19"]
+        self.assertEqual(b19["gold_count"], b19["static_seed"] + b19["accepted_increment"])
+        self.assertEqual(values["B18"]["observed_2026_08"]["count"], 15000)
+        self.assertEqual(values["B15"]["observed_amount_rank"], 3)
 
     def test_gold_layers_agree_with_the_dataset_manifest(self):
         values = {c["id"]: c["expected_values"] for c in self.suite["cases"]}

@@ -595,11 +595,162 @@
           "text": "上位5自治体を順位・ID・名前・件数・金額で示す。"
         }
       ]
+    },
+    {
+      "id": "B15",
+      "area": "composite-provenance-rank",
+      "question": "8月の観測で金額が3番目に多かった自治体は、2025年の寄付データでは金額で全国何位ですか？所属する都道府県も教えてください。",
+      "expected_source": "Eventhouse + Lakehouse + Ontology",
+      "required_query_languages": [
+        "KQL",
+        "SQL",
+        "GQL"
+      ],
+      "expected": "観測（Eventhouse、2026年8月UTC、重複を含みうる集計）金額3位 012190 紋別市: 128件 / 2,192,000円。2025年の寄付データ（Lakehouse、全件）704件 / 8,965,000円、全国金額順位 3位。所属県 1 北海道（Ontology の MunicipalityInPrefecture、順方向）。",
+      "expected_values": {
+        "observed_amount_rank": 3,
+        "municipality_id": "012190",
+        "municipality_name": "紋別市",
+        "prefecture_name": "北海道",
+        "prefecture_id": "1",
+        "observed": {
+          "count": 128,
+          "amount_yen": 2192000
+        },
+        "static": {
+          "count": 704,
+          "amount_yen": 8965000,
+          "national_amount_rank": 3
+        }
+      },
+      "conditions": [
+        {
+          "id": "B15.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 観測（Eventhouse、2026年8月UTC、重複を含みうる集計）金額3位 012190 紋別市: 128件 / 2,192,000円。2025年の寄付データ（Lakehouse、全件）704件 / 8,965,000円、全国金額順位 3位。所属県 1 北海道（Ontology の MunicipalityInPrefecture、順方向）。"
+        },
+        {
+          "id": "B15.content",
+          "text": "観測値・2025年の値・所属県をそれぞれのソース（Eventhouse / Lakehouse / Ontology）で示し、突き合わせキーが MunicipalityId であることを示す。足さない。観測を「重複なし」「確定」と呼ばない。"
+        }
+      ]
+    },
+    {
+      "id": "B16",
+      "area": "duplicate-existence-across-files",
+      "question": "donation_events_002.csv と donation_events_003.csv の両方に、同じ寄付が入っていることはありますか？",
+      "expected_source": "Eventhouse",
+      "required_query_languages": [
+        "KQL"
+      ],
+      "expected": "承認済みソースにEventIDがないため、ファイル間の重複の有無は判定できない。002 は 5,000件 / 84,687,000円、003 は 5,000件 / 84,101,000円（重複を含みうる集計）。",
+      "expected_values": {
+        "donation_events_002.csv": {
+          "count": 5000,
+          "amount_yen": 84687000
+        },
+        "donation_events_003.csv": {
+          "count": 5000,
+          "amount_yen": 84101000
+        }
+      },
+      "conditions": [
+        {
+          "id": "B16.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 承認済みソースにEventIDがないため、ファイル間の重複の有無は判定できない。002 は 5,000件 / 84,687,000円、003 は 5,000件 / 84,101,000円（重複を含みうる集計）。"
+        },
+        {
+          "id": "B16.content",
+          "text": "判定できない理由（EventIDがない）を示し、「重複なし」「重複あり」「重複件数」を断定しない。2ファイルそれぞれの件数と金額を示す。"
+        }
+      ]
+    },
+    {
+      "id": "B17",
+      "area": "model-DAX-explanation-count",
+      "question": "Goldモデルで、データソースをStaticSeedに絞った状態で［受入増分寄附件数］を評価すると、結果はどうなりますか？理由も説明してください。",
+      "expected_source": "SemanticModel",
+      "required_query_languages": [],
+      "expected": "BLANK（空）。［受入増分寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))。外側のデータソース=StaticSeedと交差して空集合。",
+      "expected_values": {
+        "result": "BLANK",
+        "measure": "受入増分寄附件数",
+        "definition": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))",
+        "outer_filter": "StaticSeed"
+      },
+      "conditions": [
+        {
+          "id": "B17.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: BLANK（空）。［受入増分寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))。外側のデータソース=StaticSeedと交差して空集合。"
+        },
+        {
+          "id": "B17.content",
+          "text": "BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない。件数を返すとしない。"
+        }
+      ]
+    },
+    {
+      "id": "B18",
+      "area": "incompatible-addition-period",
+      "question": "2025年3月の寄付金額と、8月に観測された寄付金額を合わせると、いくらになりますか？",
+      "expected_source": "Lakehouse + Eventhouse",
+      "required_query_languages": [
+        "SQL",
+        "KQL"
+      ],
+      "expected": "合算しない。2025年3月 74,352,000円（4,444件、日本時間の月。UTCの月なら 74,603,000円 / 4,453件）、2026年8月の観測 253,886,000円（15,000件、重複を含みうる）。",
+      "expected_values": {
+        "static_2025_03_jst": {
+          "count": 4444,
+          "amount_yen": 74352000
+        },
+        "static_2025_03_utc": {
+          "count": 4453,
+          "amount_yen": 74603000
+        },
+        "observed_2026_08": {
+          "count": 15000,
+          "amount_yen": 253886000
+        }
+      },
+      "conditions": [
+        {
+          "id": "B18.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 合算しない。2025年3月 74,352,000円（4,444件、日本時間の月。UTCの月なら 74,603,000円 / 4,453件）、2026年8月の観測 253,886,000円（15,000件、重複を含みうる）。"
+        },
+        {
+          "id": "B18.content",
+          "text": "合計値を出さずに断り、理由を説明し、2025年3月の値（全期間の値で代用しない）と8月の観測の値を別々に示す。"
+        }
+      ]
+    },
+    {
+      "id": "B19",
+      "area": "model-exact-amount-count",
+      "question": "Goldモデルで、寄附金額がちょうど100,000円の寄付は何件ありますか？",
+      "expected_source": "SemanticModel",
+      "required_query_languages": [],
+      "expected": "384件（StaticSeed 311件、RealtimeIncrement 73件）。",
+      "expected_values": {
+        "amount_yen": 100000,
+        "gold_count": 384,
+        "static_seed": 311,
+        "accepted_increment": 73
+      },
+      "conditions": [
+        {
+          "id": "B19.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 384件（StaticSeed 311件、RealtimeIncrement 73件）。"
+        },
+        {
+          "id": "B19.content",
+          "text": "Goldモデルの件数を示す。行ごとの金額を参照できない・算出できないとしない。"
+        }
+      ]
     }
   ],
   "provenance": {
     "builder": "tools/data-agent/regression_suite.py::build_suite",
-    "origin": "2026-10-07 development questions B01-B14 (exposed; not a held-out set)",
+    "origin": "2026-10-07 development questions B01-B14 and follow-up regression cases B15-B19 (exposed; not a held-out set)",
     "rubric": "fact = every stated value matches; content = every listed element present",
     "files": {
       "workshop/v3.0.0-preview/data/seed/business_gifts.csv": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",

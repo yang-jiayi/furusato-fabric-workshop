@@ -1,9 +1,13 @@
-"""Public extended regression suite (B01-B14) for the formal Data Agent.
+"""Public extended regression suite (B01-B19) for the formal Data Agent.
 
-The 14 development questions were exposed during the 2026-10-07 tuning, so
-they are regression material, not a held-out set. Every expected value is
-recomputed here from the packaged workshop CSVs and source definitions, and
-the committed ``regression/extended-suite.json`` must equal ``build_suite``.
+B01-B14 are the development questions exposed during the 2026-10-07 tuning;
+B15-B19 were added in the third follow-up for failure types that the held-out
+runs found (composite rank-n provenance, duplicates across files, BLANK for
+another measure, a period-specific addition refusal and an exact-amount count
+in the model). They are regression material, not a held-out set. Every
+expected value is recomputed here from the packaged workshop CSVs and source
+definitions, and the committed ``regression/extended-suite.json`` must equal
+``build_suite``.
 
 Expected values are grading keys for reviewers. Never copy them into Agent
 instructions, examples or profiles. ``screen`` only lists which expected
@@ -203,6 +207,34 @@ def compute_facts(repo: Path = REPO) -> tuple[dict[str, Any], list[Path]]:
                     "category_name": categories["2"]["CategoryName"], **totals(hokkaido_fish)}
     facts["B14"] = {"top5": national[:5]}
 
+    # B15-B19 (added in the third follow-up): failure types found by the held-out runs.
+    observed = ranked(raw)
+    amounts = [row["amount_yen"] for row in observed]
+    if len(set(amounts[1:4])) != 3:
+        raise EvaluationError("Observed amount ranks 2-4 are tied; choose another rank.")
+    third = observed[2]
+    static_row = next(r for r in national if r["municipality_id"] == third["municipality_id"])
+    facts["B15"] = {
+        "observed_amount_rank": 3, "municipality_id": third["municipality_id"],
+        "municipality_name": third["municipality_name"], "prefecture_name": third["prefecture_name"],
+        "prefecture_id": municipalities[third["municipality_id"]]["PrefectureID"],
+        "observed": {"count": third["count"], "amount_yen": third["amount_yen"]},
+        "static": {"count": static_row["count"], "amount_yen": static_row["amount_yen"],
+                   "national_amount_rank": 1 + sum(r["amount_yen"] > static_row["amount_yen"] for r in national)},
+    }
+    by_file = {path.name: _rows(path) for path in increment_files}
+    facts["B16"] = {name: totals(by_file[name]) for name in ("donation_events_002.csv", "donation_events_003.csv")}
+    facts["B17"] = {"result": "BLANK", "measure": "受入増分寄附件数",
+                    "definition": _measure(tmdl, "受入増分寄附件数"), "outer_filter": "StaticSeed"}
+    march_jst = [r for r in static if _utc(r["DonatedAt"]).astimezone(JST).strftime("%Y-%m") == "2025-03"]
+    march_utc = [r for r in static if _utc(r["DonatedAt"]).strftime("%Y-%m") == "2025-03"]
+    facts["B18"] = {"static_2025_03_jst": totals(march_jst), "static_2025_03_utc": totals(march_utc),
+                    "observed_2026_08": totals(raw)}
+    exact = [r for _, r in gold if int(r["DonationAmountYen"]) == 100000]
+    facts["B19"] = {"amount_yen": 100000, "gold_count": len(exact),
+                    "static_seed": sum(1 for layer, r in gold if layer == "StaticSeed" and int(r["DonationAmountYen"]) == 100000),
+                    "accepted_increment": sum(1 for layer, r in gold if layer == "RealtimeIncrement" and int(r["DonationAmountYen"]) == 100000)}
+
     sources = sorted((data / "seed").glob("*.csv")) + increment_files + [
         data / "dataset-manifest.json", data / "SHA256SUMS.txt", tmdl_path, notebook_path, contract_path,
     ]
@@ -250,6 +282,16 @@ QUESTIONS = {
     "B13": ("static-metric", "Lakehouse", ["SQL"],
             "北海道の自治体が受け入れた「魚介類・海産物」カテゴリの寄付を、県別カテゴリ指標で件数と金額を教えて。"),
     "B14": ("static-ranking", "Lakehouse", ["SQL"], "静的seedで受入金額が多い自治体トップ5を、件数も一緒に教えて。"),
+    "B15": ("composite-provenance-rank", "Eventhouse + Lakehouse + Ontology", ["KQL", "SQL", "GQL"],
+            "8月の観測で金額が3番目に多かった自治体は、2025年の寄付データでは金額で全国何位ですか？所属する都道府県も教えてください。"),
+    "B16": ("duplicate-existence-across-files", "Eventhouse", ["KQL"],
+            "donation_events_002.csv と donation_events_003.csv の両方に、同じ寄付が入っていることはありますか？"),
+    "B17": ("model-DAX-explanation-count", "SemanticModel", [],
+            "Goldモデルで、データソースをStaticSeedに絞った状態で［受入増分寄附件数］を評価すると、結果はどうなりますか？理由も説明してください。"),
+    "B18": ("incompatible-addition-period", "Lakehouse + Eventhouse", ["SQL", "KQL"],
+            "2025年3月の寄付金額と、8月に観測された寄付金額を合わせると、いくらになりますか？"),
+    "B19": ("model-exact-amount-count", "SemanticModel", [],
+            "Goldモデルで、寄附金額がちょうど100,000円の寄付は何件ありますか？"),
 }
 
 FACT_RULE = "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: "
@@ -314,6 +356,34 @@ def _content(case_id: str, f: dict[str, Any]) -> tuple[str, str]:
     if case_id == "B14":
         return ("; ".join(f"{r['rank']} {_municipality(r)}" for r in f["top5"]) + "。",
                 "上位5自治体を順位・ID・名前・件数・金額で示す。")
+    if case_id == "B15":
+        return (f"観測（Eventhouse、2026年8月UTC、重複を含みうる集計）金額{f['observed_amount_rank']}位 {f['municipality_id']} "
+                f"{f['municipality_name']}: {_count(f['observed']['count'])} / {_yen(f['observed']['amount_yen'])}。"
+                f"2025年の寄付データ（Lakehouse、全件）{_count(f['static']['count'])} / {_yen(f['static']['amount_yen'])}、"
+                f"全国金額順位 {f['static']['national_amount_rank']}位。所属県 {f['prefecture_id']} {f['prefecture_name']}"
+                "（Ontology の MunicipalityInPrefecture、順方向）。",
+                "観測値・2025年の値・所属県をそれぞれのソース（Eventhouse / Lakehouse / Ontology）で示し、"
+                "突き合わせキーが MunicipalityId であることを示す。足さない。観測を「重複なし」「確定」と呼ばない。")
+    if case_id == "B16":
+        a, b = f["donation_events_002.csv"], f["donation_events_003.csv"]
+        return (f"承認済みソースにEventIDがないため、ファイル間の重複の有無は判定できない。002 は {_count(a['count'])} / "
+                f"{_yen(a['amount_yen'])}、003 は {_count(b['count'])} / {_yen(b['amount_yen'])}（重複を含みうる集計）。",
+                "判定できない理由（EventIDがない）を示し、「重複なし」「重複あり」「重複件数」を断定しない。"
+                "2ファイルそれぞれの件数と金額を示す。")
+    if case_id == "B17":
+        return (f"BLANK（空）。［{f['measure']}］= {f['definition']}。外側のデータソース={f['outer_filter']}と交差して空集合。",
+                "BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。"
+                "KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない。件数を返すとしない。")
+    if case_id == "B18":
+        j, u, o = f["static_2025_03_jst"], f["static_2025_03_utc"], f["observed_2026_08"]
+        return (f"合算しない。2025年3月 {_yen(j['amount_yen'])}（{_count(j['count'])}、日本時間の月。UTCの月なら "
+                f"{_yen(u['amount_yen'])} / {_count(u['count'])}）、2026年8月の観測 {_yen(o['amount_yen'])}"
+                f"（{_count(o['count'])}、重複を含みうる）。",
+                "合計値を出さずに断り、理由を説明し、2025年3月の値（全期間の値で代用しない）と8月の観測の値を別々に示す。")
+    if case_id == "B19":
+        return (f"{_count(f['gold_count'])}（StaticSeed {_count(f['static_seed'])}、RealtimeIncrement "
+                f"{_count(f['accepted_increment'])}）。",
+                "Goldモデルの件数を示す。行ごとの金額を参照できない・算出できないとしない。")
     raise EvaluationError(f"Unknown regression case: {case_id}")
 
 
@@ -335,7 +405,7 @@ def build_suite(repo: Path = REPO) -> dict[str, Any]:
         "schema_version": 1, "kind": "regression", "cases": cases,
         "provenance": {
             "builder": "tools/data-agent/regression_suite.py::build_suite",
-            "origin": "2026-10-07 development questions B01-B14 (exposed; not a held-out set)",
+            "origin": "2026-10-07 development questions B01-B14 and follow-up regression cases B15-B19 (exposed; not a held-out set)",
             "rubric": "fact = every stated value matches; content = every listed element present",
             "files": {path.relative_to(repo).as_posix(): file_digest(path) for path in sources},
         },

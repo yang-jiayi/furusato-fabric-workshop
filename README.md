@@ -27,8 +27,9 @@
 > 旧フォルダを空にし、指定フォルダ直下へ**21 Items・正式Agent1件・Temp0件**を新規配置しました。
 > 正式Agentの標準10問・84条件は、配置直後の**36/84・34/84**から、標準の回答契約を復元した
 > 採用構成で**74/84・73/84**になりました（T10はnativeのコンテンツフィルターで遮断され、回避せず上限77）。
+> 第4報で、ご指示によりR8を採用し**76/84・74/84**になりました。
 > 主な原因は、修正チェーンが元の統合指示を置き換えて回答契約が失われたことと、
-> 年なしの「8月」を静的seedの2025年と解釈したことです。6構成の経過はすべて公開しています。
+> 年の指定がない「8月」を2025年の寄付データの8月と解釈したことです。6構成の経過はすべて公開しています。
 > 事前登録holdout12問は**11 PASS／1 FAIL**です。313成果物のGit blob・SHAを照合し、
 > **232ページのWordと日英HTMLは203検査／0 FAIL**でした。**AI回答の0 FAIL・全機能合格ではありません。**
 > [回答精度の改善と残件](docs/v3.0.0/tuning-20261007/README.md) ·
@@ -39,8 +40,15 @@
 > （計22 Items）を完了しました。Activator の自動配送と時系列バインド・native Metrics は UI でしか行えないため、
 > 引き継ぎ手順を整備しました。対策 E（T10 の遮断区分・教材の注記・サポート報告案）、F（公開の回帰スイート
 > B01–B14 と評価ツール）、G（手順書とヘルパー）を実施しました。残件への候補 R7・R8 は事前に記録した採用規則を
-> 満たさず、本番は R6 のままです。新しい事前登録 holdout 12問（R6 で1回）は事実 9 / 内容 7 でした。
+> 満たさず、本番は R6 のままでした（第4報で、ご指示により R8 を採用）。新しい事前登録 holdout 12問（R6 で1回）は事実 9 / 内容 7 でした。
 > [第3報の詳細](docs/v3.0.0/followup-20261007/README.md)。
+>
+> **第4報（同日）:** ご指示により R8 を採用しました（標準10問・84条件 76/84・74/84）。言葉づかいを
+> ふだんの言葉に直した候補 R9・R10 は、事前に決めた採用基準に届かず、本番は R8 です。
+> 新しく固定した未公開の確認問題12問（R8 で1回）は事実 11 / 内容 10 でした。製品サポートへの報告2件を
+> Fabric の管理ポータルから起票し、公開の回帰スイートを19問にしました。Activator の自動配送と時系列の
+> 設定はポータルの画面での作業が残り、KQL のデータは消していません。
+> [第4報の詳細](docs/v3.0.0/followup-20261007/README.md)。
 
 The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
 identifiers are explicitly versioned compatibility contracts, not stale course
@@ -48,7 +56,9 @@ labels. Production uses the specified folder directly, with no Temp dependency.
 Artifact checks pass. On the protected ten/84 the formal Agent moved from
 **36/84 and 34/84** to **74/84 and 73/84** after the standard-contract restoration
 (ceiling 77; T10 is blocked natively), with an author-written holdout of
-**11 PASS /1 FAIL** — not zero-failure AI acceptance.
+**11 PASS /1 FAIL** — not zero-failure AI acceptance. In the fourth same-day report the
+R8 refinement was adopted on the owner's instruction (**76/84 and 74/84**); a third
+author-written holdout run once on R8 scored fact 11/12 and content 10/12.
 
 <details>
 <summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>

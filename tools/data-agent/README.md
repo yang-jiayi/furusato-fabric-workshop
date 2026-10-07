@@ -231,16 +231,20 @@ the historical evidence.
 見逃したための対策です。
 
 1. **標準10問・84条件を2回**（`--repeats 2`）。質問・条件は変更しません。
-2. **拡張回帰14問（B01–B14）を1回**（`--regression-suite`）。2026-10-07 の調整で公開済みになった
-   開発用の質問で、held-out ではありません。各問は「事実（書いた値がすべて期待値と一致）」と
+2. **公開の回帰19問（B01–B19）を1回**（`--regression-suite`）。B01–B14 は 2026-10-07 の調整で
+   公開済みになった開発用の質問、B15–B19 は同日の追加評価で見つかった失敗の種類（3ソースの
+   複合質問の順位違い、ファイル間の重複、別のメジャーの BLANK、期間を指定した合算の依頼、
+   モデルでの金額ちょうどの件数）を確かめる質問です。どれも held-out ではありません。各問は「事実（書いた値がすべて期待値と一致）」と
    「内容（必要な要素がすべてある）」の2条件です。期待値は `regression_suite.py` が同梱 CSV・
    Semantic Model の TMDL・Notebook05・Ontology 契約から再計算し、コミット済みの
    [`regression/extended-suite.json`](regression/extended-suite.json) と一致することをテストで確認します。
    期待値は採点用です。Agent の指示・例・profile へ写しません。
-3. **未使用の held-out を1回**（構成の採用規則を記録した後、最後に1回だけ）。
+3. **未使用の held-out を1回**（構成の採用規則を記録した後、最後に1回だけ）。一度使った held-out は
+   次の候補では回帰用として扱います。
 
 採用規則（例: 標準2回の平均と拡張の内容 PASS 数の下限）は、候補の結果を見る前に記録します。
-FAIL を削除したり、期待値を現在の回答に合わせたりしません。
+FAIL を削除したり、期待値を現在の回答に合わせたりしません。通信の失敗で回答がない問も、
+厳密な採点では FAIL のまま数え、送り直しません（規則で別扱いにする場合は、結果を見る前に書いておきます）。
 
 **プラットフォーム遮断の扱い:** 回答がサービスの定型文
 「There's content here I can't work with.」に置き換わった問は、厳密な分母では FAIL のままです。
@@ -250,10 +254,13 @@ FAIL を削除したり、期待値を現在の回答に合わせたりしませ
 標準 T10 は 2026-10-07 の配置でこの遮断を 12 回すべてで受けました（回避しません）。
 
 Run all three before publishing changes to the formal Agent's instructions,
-examples or source selection: the standard ten/84 **twice**, the public extended
-regression suite B01–B14 **once**, and an unused held-out suite **once** after
-recording the adoption rule. B01–B14 were exposed during the 2026-10-07 tuning,
-so they are regression material, not a held-out set. Each case has a *fact*
+examples or source selection: the standard ten/84 **twice**, the public
+regression suite B01–B19 **once**, and an unused held-out suite **once** after
+recording the adoption rule. B01–B14 were exposed during the 2026-10-07 tuning;
+B15–B19 cover failure types found by the same-day held-out runs (composite rank-n
+provenance, duplicates across files, BLANK for another measure, a period-specific
+addition request and an exact-amount count in the model). None is a held-out set,
+and a held-out suite becomes regression material once used. Each case has a *fact*
 condition (every stated value matches) and a *content* condition (every required
 element is present). `regression_suite.py` recomputes every expected value from
 the packaged CSVs, the Semantic Model TMDL, Notebook05 and the Ontology contract;

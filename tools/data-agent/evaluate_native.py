@@ -1145,9 +1145,11 @@ def main(argv: list[str] | None = None) -> int:
             if args.held_out_input:
                 freeze_suite(store, args.held_out_out, store.read(args.held_out_input))
             if args.regression:
-                freeze_suite(store, args.regression_out, regression_suite(REPO))
+                regression = regression_suite(REPO)
+                freeze_suite(store, args.regression_out, regression)
             print("Frozen original: 10 questions / 84 conditions"
-                  + ("; regression: 14 questions / 28 conditions" if args.regression else "")
+                  + (f"; regression: {len(regression['cases'])} questions / "
+                     f"{sum(len(c['conditions']) for c in regression['cases'])} conditions" if args.regression else "")
                   + ". No questions submitted.")
         elif args.command == "plan":
             path = create_plan(

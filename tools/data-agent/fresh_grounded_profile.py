@@ -7,6 +7,7 @@ from source_grounded_profile import (
 )
 from answer_contract_profile import SCHEMA_VIEWS, compile_schema_grounded_draft
 from time_layer_isolation import compile_isolated_draft
+from standard_contract_restoration import compile_restored_draft
 
 
 def compiler_snapshot(definition):
@@ -39,7 +40,8 @@ def compile_fresh_profile(service_definition, columns):
     contract, contract_receipt = compile_schema_grounded_draft(
         compiler_snapshot(views), [row for row in columns if row["TABLE_NAME"] in SCHEMA_VIEWS])
     isolated, isolation_receipt = compile_isolated_draft(compiler_snapshot(contract))
-    output = decoded_parts(isolated)
+    restored, restoration_receipt = compile_restored_draft(isolated)
+    output = decoded_parts(restored)
     for path, value in output.items():
         if path.startswith("Files/Config/draft/") and path.endswith("/datasource.json"):
             original = sources[value["type"]]
@@ -48,6 +50,6 @@ def compile_fresh_profile(service_definition, columns):
                     raise ValueError("A source identity changed during compilation.")
     return {"parts": [inline_part(path, value) for path, value in output.items()
                       if "/published/" not in path]}, {
-        "compilerStages": [source_receipt, view_receipt, contract_receipt, isolation_receipt],
+        "compilerStages": [source_receipt, view_receipt, contract_receipt, isolation_receipt, restoration_receipt],
         "sourceIdentitiesPreserved": True, "publishedByCompiler": False, "cloudCalls": 0,
     }

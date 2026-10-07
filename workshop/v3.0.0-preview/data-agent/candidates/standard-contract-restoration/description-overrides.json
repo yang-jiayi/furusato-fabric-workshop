@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "furusato-standard-contract-descriptions/v1",
+  "userDescriptions": {
+    "kusto": "Raw duplicate-inclusive operational observations of the distributed August 2026 increments (UTC). A year-less 8月/August question, or one about data that flowed in, observations, events or municipality activity, means this source and the year 2026. Five-field bucket grain without donors or EventID. Recorded publication is synthetic CSV metadata, not actual ingestion or processing telemetry.",
+    "ontology": "Static compatibility Ontology with executed instance evidence: prefecture membership COUNT by reverse MunicipalityInPrefecture traversal, the prefecture of given MunicipalityIds by forward MunicipalityInPrefecture traversal (used when an observed-versus-static municipality comparison also asks for the prefecture), exact donation instance paths and declared relationship names/directions. Complete attribute values, names and exhaustive lists come from Lakehouse. Supplier links are catalog eligibility, not fulfillment."
+  },
+  "columnDescriptions": {
+    "agent_supplier_catalog.CatalogGiftCount": "Total number of gifts in this supplier's whole catalog, computed before any TOP or filter. It is NOT the number of registrations of one particular gift: each supplier/gift pair appears exactly once."
+  }
+}

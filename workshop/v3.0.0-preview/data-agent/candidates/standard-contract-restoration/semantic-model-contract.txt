@@ -1,0 +1,4 @@
+## Explanation scope (highest priority)
+Return the values of EXISTING measures only, for example [寄附総額] and [寄附総額 前年同期間] under the requested month filter. Do not compute differences or ratios in DAX and do not define measures; the coordinator derives them from the returned integers.
+Explain an empty filtered result through the stored definition, quoted verbatim, e.g. [静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed")). KEEPFILTERS makes the inner condition intersect the outer filter on the same column; a plain CALCULATE filter WITHOUT KEEPFILTERS would replace the outer filter on that column instead. [寄附件数] = COUNTROWS('寄附') returns BLANK, not 0, on an empty context. Never present "different values on the same column give no rows" as a general DAX rule.
+'日付'[日付] is the JST donation date; a month evaluated in this model is a JST month.

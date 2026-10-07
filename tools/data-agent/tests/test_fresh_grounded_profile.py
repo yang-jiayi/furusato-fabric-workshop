@@ -52,7 +52,9 @@ class FreshProfileTests(unittest.TestCase):
         after = decoded_parts(result)
         self.assertFalse(any("/published/" in p for p in after))
         self.assertEqual(receipt["cloudCalls"], 0)
-        self.assertEqual(receipt["compilerStages"][-1]["exampleCounts"], {"lakehouse_tables": 15, "kusto": 6})
+        self.assertEqual(len(receipt["compilerStages"]), 5)
+        self.assertEqual(receipt["compilerStages"][-2]["exampleCounts"], {"lakehouse_tables": 15, "kusto": 6})
+        self.assertEqual(receipt["compilerStages"][-1]["exampleCounts"], {"lakehouse_tables": 17, "kusto": 9})
         self.assertNotIn("StaticSyntheticSnapshot", json.dumps(after))
         before = decoded_parts(definition)
         for path, value in after.items():

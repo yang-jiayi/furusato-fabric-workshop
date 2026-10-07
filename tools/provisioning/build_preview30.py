@@ -134,7 +134,7 @@ def build() -> dict:
         "environmentParameterRequired": ["dev", "test", "prod"],
         "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
         "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
-        "correctedAgentProfile": "data-agent/candidates/time-layer-isolation",
+        "correctedAgentProfile": "data-agent/candidates/standard-contract-restoration",
         "attachmentsOwner": "documents-workstream",
     })
     from preview30_notebooks import build_notebooks

@@ -8,7 +8,7 @@
   "eventSchemaVersion": "furusato-donation-events-synthetic/v1",
   "primaryOntologyGeneration": 2,
   "explicitStaticConsumerGeneration": 1,
-  "correctedAgentProfile": "time-layer-isolation",
+  "correctedAgentProfile": "standard-contract-restoration",
   "productionPlacement": "specified-folder-direct",
   "createTempByDefault": false,
   "csvContentChanged": false,

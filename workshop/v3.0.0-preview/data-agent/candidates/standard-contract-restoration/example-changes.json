@@ -1,0 +1,38 @@
+{
+  "schemaVersion": "furusato-standard-contract-examples/v1",
+  "replacements": [
+    {
+      "sourceType": "kusto",
+      "matchQuestion": "2026年8月のCSVごとに記録上の最終配信日時とイベント時刻、件数、金額を比べたい。実際の取込完了時刻とは区別して。",
+      "question": "2026年8月のCSVごとに記録上の最終配信日時とイベント時刻、件数、金額を比べたい。実際の取込完了時刻とは区別して。",
+      "query": "DonationObservationSummaryForAgent | where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z) | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), SyntheticCsvPublishedAtUtc=max(LastPublishedAtUtc) by SourceFile, WorkshopRunId, ParticipantAlias | extend PublicationSemantics='Synthetic CSV PublishedAtUtc metadata; not actual Eventhouse publication, ingestion or pipeline completion', Timezone='UTC' | order by SourceFile asc"
+    }
+  ],
+  "additions": [
+    {
+      "sourceType": "kusto",
+      "question": "年の指定がない「8月」の生観測全体について、重複込みの件数・金額と実際の観測開始・終了を知りたい。",
+      "query": "let WindowStartUtc=datetime(2026-08-01T00:00:00Z); let WindowEndUtc=datetime(2026-09-01T00:00:00Z); DonationObservationSummaryForAgent | where EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), Files=dcount(SourceFile) | extend WindowStartUtc=WindowStartUtc, WindowEndUtc=WindowEndUtc, OperationalYear='2026', DuplicateCaveat='raw observations; EventID is not available', Timezone='UTC'"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "8月の生観測で、件数と金額それぞれの上位3自治体を両方の値つきで見たい。",
+      "query": "let Base = DonationObservationSummaryForAgent | where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z) | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen) by MunicipalityID; let ByCount = Base | order by ObservationCount desc, MunicipalityID asc | take 3 | extend LeaderMetric='ObservationCount'; let ByAmount = Base | order by ObservedAmountYen desc, MunicipalityID asc | take 3 | extend LeaderMetric='ObservedAmountYen'; union ByCount, ByAmount | extend DuplicateCaveat='raw observations may include duplicates', Timezone='UTC' | order by LeaderMetric asc, ObservationCount desc"
+    },
+    {
+      "sourceType": "kusto",
+      "question": "生観測の照会が0件だった。このビューに実際にある観測期間と総数を確認したい。",
+      "query": "DonationObservationSummaryForAgent | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), Files=dcount(SourceFile) | extend Scope='whole view extent', Timezone='UTC'"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "宮城の寄付の規模は？ 受入と在住を分けて、件数と金額で知りたい。",
+      "query": "SELECT PrefectureId, PrefectureName, PrefReceivedStaticCount AS ReceivedDonationCount, PrefReceivedTotalYen AS ReceivedAmountYen, PrefResidentStaticCount AS ResidentDonationCount, PrefResidentTotalYen AS ResidentAmountYen FROM dbo.ot_prefecture WHERE PrefectureName LIKE N'宮城%'"
+    },
+    {
+      "sourceType": "lakehouse_tables",
+      "question": "静的seed全体で、受入件数と受入金額のそれぞれで全国1位の自治体を確認したい。",
+      "query": "SELECT MunicipalityId, MunicipalityName, PrefectureId, PrefectureName, DonationCount, AmountYen, CountOrdinal, AmountOrdinal FROM (SELECT MunicipalityId, MunicipalityName, PrefectureId, PrefectureName, DonationCount, AmountYen, ROW_NUMBER() OVER (ORDER BY DonationCount DESC, MunicipalityId ASC) AS CountOrdinal, ROW_NUMBER() OVER (ORDER BY AmountYen DESC, MunicipalityId ASC) AS AmountOrdinal FROM dbo.agent_municipality_snapshot) AS ranked WHERE CountOrdinal = 1 OR AmountOrdinal = 1 ORDER BY AmountOrdinal"
+    }
+  ]
+}

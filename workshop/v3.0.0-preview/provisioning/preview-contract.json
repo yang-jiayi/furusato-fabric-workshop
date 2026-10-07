@@ -27,6 +27,6 @@
   "cloudStatus": "not-deployed-by-build",
   "productionPlacement": "specified-folder-direct",
   "createTempByDefault": false,
-  "correctedAgentProfile": "data-agent/candidates/time-layer-isolation",
+  "correctedAgentProfile": "data-agent/candidates/standard-contract-restoration",
   "attachmentsOwner": "documents-workstream"
 }

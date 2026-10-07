@@ -19,7 +19,7 @@ MODULES = (
 )
 DATA_AGENT_MODULES = (
     "source_grounded_profile", "answer_contract_profile", "time_layer_isolation",
-    "fresh_grounded_profile", "native_evaluation", "native_mcp",
+    "standard_contract_restoration", "fresh_grounded_profile", "native_evaluation", "native_mcp",
 )
 PARAMETERS = '''# Fabric parameter cell — environment identities remain in private JSON files.
 PARTICIPANT_ID = "001"
@@ -211,7 +211,8 @@ def build_notebooks() -> dict:
                  "Use the same private resource plan, gate and deployment-state evidence across stages. "
                  "Environment identities are parameters, never embedded in this notebook. "
                  "CLI deployment is the primary cross-machine orchestration path; this frontend uses normal NotebookUtils authentication. "
-                 "The sealed package includes the source-grounded, complete-contract and time-layer-isolation compilers, "
+                 "The sealed package includes the source-grounded, complete-contract, time-layer-isolation and "
+                 "standard-contract-restoration compilers, "
                  "their SQL views and query examples. Apply the corrected profile only to verified fresh sources; "
                  "the historical four-source baseline alone is not the corrected Agent.\n"),
             cell("code", PARAMETERS.format(action=action), ["parameters"]),

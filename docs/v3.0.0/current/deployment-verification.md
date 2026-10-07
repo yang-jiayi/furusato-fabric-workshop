@@ -1,114 +1,79 @@
-# v3成果物整合性・正式配置の検証 — 2026-10-04
+# 新規配置・回答精度改善の検証 — 2026-10-07
 
-**指定フォルダへの正式配置と、Notebook・CSV・Word/HTMLの整合性を確認しました。
-AI回答品質は別の判定で、最新の既知10問には2 FAILが残っています。**
+**旧フォルダ（20261006）を空にし、指定フォルダ（20261007）へ21 Itemsを新規配置しました。
+正式Agentの標準10問・84条件は初回36/84・34/84で、回答契約の復元後は74/84・73/84です。
+成果物の整合性とAI回答品質は別の判定です。**
 
-## 削除とTemp
+2026-10-04の記録は[history/20261004](history/20261004/deployment-verification.md)に変更せず保持しています。
 
-旧環境の23 Itemsは完全削除し、active/recoverableの両方から消えたことを確認しました。
-最初の通常削除が失敗した理由は次のとおりです。
+## 旧フォルダの削除
 
 | 対象 | 実際の応答・対応 |
 |---|---|
-| Semantic Model、Activator、Eventhouse、KQL Database | `ItemTypeNotSupportedForSoftDeletion`。承認済みの完全削除に切り替えて成功 |
-| Lakehouse、Pipeline | 通常削除では非再試行の`UnknownError`。同じ通常削除を繰り返さず、完全削除APIで成功。内部原因は公開応答からは特定不能 |
-| SQL Endpoint・その他managed children | 親からの削除が必要。確認済みの親子関係に沿って親の削除により除去 |
-| 復元可能なItems | active用APIではなく、専用`recoverableItems` APIで完全削除 |
+| 20261006直下とTempの29 Items | 通常削除から開始。managed children 10件は親の削除で既に消えていたため再削除なし |
+| Eventhouse | 公開APIの完全削除は`UnknownError`（再試行不可）。内部のmetadata削除応答で`AssociationPreventsArtifactDeletion`を確認し、原因の通常削除済みAutoProbe PipelineとNotebookを完全削除した後に成功 |
+| Tempフォルダ | 中身が空になった後に削除。20261006フォルダ自体は空のまま保持 |
+| 復元可能なItems | Notebook5件、Lakehouse、Ontology2件（managed childrenを含む）は通常削除のため2026-10-14まで復元可能 |
 
-新環境のTempは、比較用Agentと静的consumer Ontologyの隔離に使われていました。
-修正版Agentに必要なOntologyとmanaged childrenを消してしまわないよう、まず親のMoveItemで
-**4 Itemsを正式フォルダ直下へ移動**し、ID・定義・source bindingが変わらないことを確認しました。
-正式Agentへ修正版profileを反映して評価した後、不要な比較Agent2件と空のTempを削除しました。
-この2 Agentは通常削除のため復元可能です。旧環境23 Itemsの完全削除とは別の操作です。
+削除前に旧Agent2件の定義を非公開で保存しました。削除後のworkspaceのactive Itemsは0件でした。
 
-最終のactive状態は**21 Items、Data Agent1件、Tempフォルダ0件**です。
-正式Agentの4ソースもすべて同じ指定フォルダ直下にあります。
-旧root/旧Tempは最後の再取得時には既に存在しなかったため、再作成や追加の削除はしていません。
+## 新規配置
 
-## v2.7表記とv3の整合性
+ポータルはWindows Helloを要求するため、[runtime](../../../workshop/v3.0.0-preview/README-runtime.md)の
+API経路で配置しました。番号付きのsubfolder参照は、内部のfolder一覧で実際のGUIDとの対応を確認してから使用しています。
 
-| 項目 | 最終確認 |
+| 段階 | 結果 |
 |---|---|
-| 教材・配布Notebook版 | `WORKSHOP_VERSION=3.0.0`。全5 Notebookの見出し・metadataを一致 |
-| Notebook01の`NOTEBOOK_VERSION` | 配布版・監査表示として3.0.0へ変更 |
-| Notebook01/05の処理ロジック | 上記Notebook01の監査・表示用値を除いて元コードと一致 |
-| 既存実行の監査記録 | 実行当時の2.7.0等の来歴を保存。新しい版として偽装する更新はしない |
-| CSV | 11ファイルすべて元のbytesと一致。データ仕様`2.7.0-realistic.1`を保持 |
-| 内部publication key・generation・API互換性番号 | データ/API契約として維持。教材版3.0に一律置換しない |
-| Notebook02–04のsealed package | 最新の3段階Agent compiler、6 SQL views、SQL/KQL例を収録。内部モジュールのhashとGit blobを照合 |
-| Word / HTML | 同じ共有原稿・artifact-set SHAで生成。実Notebookのliteralパラメーターを掲載 |
+| preflight・sources・Notebook01 | 静的80,000件／1,344,099,000円。Notebook01は1回のみ |
+| notebooks・realtime・core | Notebook02–05を配置。generation2の主Ontologyを読み戻し |
+| 増分 | 3ファイルを各1回PutBlobし、Pipelineを**手動で**3回実行。raw 15,000件／253,886,000円 |
+| 静的consumer Ontology | generation1互換Ontologyを作成し53 partsを読み戻し。Graph refresh完了、109,592 nodes／297,303 edges |
+| SQL views | 6 viewsを作成し、列と件数を確認 |
+| 品質処理・Gold | Notebook05のpreview hashを確認してapply（1回）。受入14,900件／252,058,000円、隔離100件、Gold 94,900件／1,596,157,000円 |
+| Semantic Model | Direct Lake refresh完了。実DAXで静的・増分・BLANKを確認 |
+| Data Agent | 4ソースで作成・公開後、正式profileを適用。SQL/KQL例は実ソースで全件が行を返すことを確認 |
 
-整合性manifestは**305ファイル**を対象とし、Gitに格納されたbytesと作業ファイルが一致することを
-確認しました。技術的パス`v3.0.0-preview`、基線用`VERSION=2.7.0`、CSV仕様2.7と、
-教材版3.0.0はそれぞれ役割が異なります。
+最終のactive状態は**21 Items・Data Agent1件・Tempフォルダ0件**です
+（Notebook5、Lakehouse2、SQL Endpoint2、Eventhouse2、KQL Database2、Ontology2、GraphModel2、
+Semantic Model1、Pipeline1、Activator1、Data Agent1）。Activatorは停止状態で、自動イベント配送は検証していません。
 
-Wordは**232ページ**です。実Word描画、日英HTML、印刷、操作、内部リンク、共有本文、
-対応するWordのSHA等の**203検査は0 FAIL**でした。
-途中で見つけた付録anchorの重複と目次末尾の孤立ページは修正し、失敗時のprivate証拠を保持しています。
+## 回答精度の評価と改善
 
-## データ・実行・モデル
+公開Data Agent MCPで、元の10問・84条件を各2回、拡張14問を1回評価しました。
 
-| 検証対象 | 実結果 |
-|---|---:|
-| 静的寄附 | 80,000件／1,344,099,000円 |
-| Pipelineの手動Copy | 3回、各5,000行。全列・重複込みの元CSVと照合 |
-| Eventhouse raw | 15,000件／253,886,000円 |
-| 品質処理後の受入増分 | 14,900件／252,058,000円 |
-| 隔離 | 100件 |
-| Gold全体 | 94,900件／1,596,157,000円 |
-| Notebook01・05 | 各1回Completed。版/定義更新に伴う再実行0回 |
-| Model | Direct Lake refresh Completed。実DAXの静的・増分値と、両向きの相反するsource filterのBLANKを確認 |
-| 静的consumer Graph | 109,592 nodes／297,303 directed edges。3 GQL検査と経路連続性を確認 |
-| Agent source例 | SQL15件・KQL6件を実ソースで検証し、native例検証のerror/pendingなしを確認 |
-
-GoldはEventhouseから作ったものではなく、検証済みのLakehouse staged CSVから独立に処理しました。
-Pipelineの3回は**手動**です。自動イベント配送と読み替えません。
-Activatorは停止状態・安全な既定値を維持しています。
-
-## 既知10問の回答評価
-
-質問・oracle・必須条件は変更していません。各構成の各問は1回のみで、
-過去の正答の選び集め、同一構成の再送、旧UNKNOWN質問の再実行はありません。
-
-| 構成 | 事実 P / F / U | 必須条件を含む内容 P / F / U |
+| 構成 | 標準84条件 | 拡張14問 事実／内容PASS |
 |---|---:|---:|
-| 初回の新環境・比較用Agent | 8 /2 /0 | 7 /3 /0 |
-| 整合版・正式フォルダの正式Agent | **8 /2 /0** | **8 /2 /0** |
+| 配置直後（time-layer-isolation） | 36 ／ 34 | 13 ／ 10 |
+| 採用構成（standard-contract-restoration） | **74 ／ 73** | **14 ／ 13** |
 
-初回の3問題（時間集約行をsource bucket行と説明、月指定だけのGoldへStaticSeedを追加、
-高額フラグ条件があるのにStaticSeed全行と説明）は、最後の構成で改善を確認しました。
-一方、最後の構成には以下の2件が残っています。
+主な原因は、修正チェーンが元の統合指示を置き換えて標準10問の回答契約が失われたこと、
+年なしの「8月」を静的seedの2025年と解釈して2026年8月の観測を0件としたことでした。
+6構成の全経過、事前登録holdout（11 PASS／1 FAIL）、残件は
+[2026-10-07追補](../tuning-20261007/README.md)にあります。
+T10はnativeのコンテンツフィルターで遮断され、回避せずFAILとして数えています（上限77）。
 
-| ケース | 残るFAIL |
+## 成果物の整合性
+
+| 項目 | 結果 |
 |---|---|
-| F30-O11 | JSTの月またぎ観測を「存在しない」と回答。実ソースでは178件／3,177,000円、UTCの実観測範囲は2026-08-31 15:00:05〜23:58:20 |
-| F30-D09 | BLANKという数値結果は正しいが、`KEEPFILTERS`固有の交差をDAX同一列filter全般へ誤って一般化。通常の`CALCULATE`は上書き得る |
-
-この2件はNotebook/CSVの版ずれや欠落で説明できる状態ではなく、
-native回答が検証済みソースや実メジャー定義と食い違ったものです。
-内部生成クエリは**UNOBSERVABLE**なので、見えていない具体的な生成条件を原因と断定しません。
-**AI回答0 FAIL、元32/100問全体の合格、独立holdout、人間による品質承認は主張しません。**
+| Agent compiler | 4段階（source-grounded → complete-contract → time-layer-isolation → standard-contract-restoration）。commitした入力から再compileした定義が公開中の定義と一致。回答値の混入防止は、桁区切り・全角数字・JSONのエスケープを正規化して検査 |
+| Notebook02–04 | 新しいcompilerとprofile入力で再封印。再buildしてもbytesが一致 |
+| artifact-set | **313ファイル**。全ファイルのGit blobとSHA-256が一致 |
+| Word / HTML | **232ページ**。実Word描画・日英HTML・印刷・操作など**203検査／0 FAIL** |
+| テスト | data-agent 312、provisioning 305、文書builder 9がPASS。文書テスト全体は380件中379件PASSで、残る1件はPython版に依存する既存の失敗（未変更の`main`でも同じ結果） |
 
 ## 検証範囲の境界
 
-主Ontologyのnative時系列・Metric binding、および自動イベント配送は、この配置での合格認定に
-含めていません。source-owned DAXや別の静的Graphの成功を、その代わりにしません。
-本配置で正式Agentを1件にしたのはユーザー指定の配置形態であり、一般的なAI品質合格とは別です。
-
-元3.0.0タグ、旧Word/HTML、過去の評価結果は保持しています。
-過去のUNKNOWNであるF30-N10は再送していません。
-版・配布物の整合性、実データの整合性、AI回答品質は別々に報告しています。
+自動イベント配送、主Ontologyのnative時系列・Metric binding、Example queries画面の検証状態は
+この配置の合格認定に含めていません。回答評価はAI補助審査で、内部クエリは**UNOBSERVABLE**です。
+**AI回答0 FAIL、独立した人間の品質承認、全機能合格は主張しません。**
 
 ## English summary
 
-The current v3 source set, five deployed Notebooks, unchanged CSVs and full
-Word/HTML guide are hash-bound and checked. Production now has21 active Items,
-one formal Data Agent and no Temp folder. Necessary compatibility dependencies
-were moved without changing their IDs; unused comparison Agents were deleted
-normally and remain recoverable.
-
-The232-page guide passed203 local checks. Data, explicit manual Copies, source-owned
-DAX and static GQL were verified without rerunning completed data notebooks.
-The final known10 native answer check is **8 PASS /2 FAIL /0 UNKNOWN**.
-Artifact consistency does not imply zero-failure AI acceptance, automatic event
-delivery, native time-series/Metric certification or a new independent holdout.
+The previous folder was emptied (29 Items; one Eventhouse required purging two
+soft-deleted probe Items first) and 21 Items were deployed to the target folder with
+one formal Data Agent and no Temp. Increments were delivered manually; automatic
+delivery remains unverified. The formal Agent scored 36/84 and 34/84 on the standard
+ten/84 as deployed and 74/84 and 73/84 after the standard-contract restoration
+(ceiling 77; T10 is blocked natively). The 313-file artifact set has Git blob parity,
+and the 232-page guide passed 203 checks. These are separate from AI-answer acceptance.

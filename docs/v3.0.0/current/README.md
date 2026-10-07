@@ -5,13 +5,16 @@
 
 [Word（232ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
-[Notebook・CSV・モデル等を含むZIP](Furusato_Workshop_v3.0.0_current-20261004.zip) ·
+[Notebook・CSV・モデル等を含むZIP](Furusato_Workshop_v3.0.0_current-20261007.zip) ·
 [Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
-[検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt)
+[検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt) ·
+[回答精度の改善（2026-10-07）](../tuning-20261007/README.md) ·
+[2026-10-04の記録](history/20261004/README.md)
 
-**成果物整合性とTemp整理は確認済みです。** 正式配置は21 Items・Agent1件・Temp0件です。
-ただし、正式Agentの既知10問の回答評価は**8 PASS／2 FAIL／0 UNKNOWN**で、
-AI回答品質の0 FAILを意味しません。文書203検査の成功はAI回答のPASSに加算していません。
+**成果物整合性と旧フォルダの整理は確認済みです。** 2026-10-07の正式配置は21 Items・Agent1件・Temp0件です。
+正式Agentの標準10問・84条件は、配置直後の**36/84・34/84**から、回答契約の復元後に
+**74/84・73/84**（T10のnative遮断により上限77）となりました。事前登録holdout12問は
+11 PASS／1 FAILです。AI回答品質の0 FAILではなく、文書203検査の成功はAI回答のPASSに加算していません。
 
 ## 版の正本
 
@@ -22,7 +25,7 @@ AI回答品質の0 FAILを意味しません。文書203検査の成功はAI回�
 | 版の対応表 | [`edition.json`](../../../workshop/v3.0.0-preview/edition.json) |
 | CSV | [`data`](../../../workshop/v3.0.0-preview/data)。`2.7.0-realistic.1`の値・行数・hashを保持。版表示のために再生成しません |
 | 再利用する処理コード | `2.7.0`基線。Notebook01/05の処理ロジックと内部publication keyは維持 |
-| 修正版Agent | [`time-layer-isolation`](../../../workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)。6 SQL views・全体/ソース指示・SQL15/KQL6例を同じ入力セットに含めます |
+| 修正版Agent | [`standard-contract-restoration`](../../../workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/README.md)（4段階compilerの最終段。前段は[`time-layer-isolation`](../../../workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)）。6 SQL views・全体/ソース指示・SQL17/KQL9例を同じ入力セットに含めます |
 | Word / HTML | 同じ共有原稿から生成し、同じartifact-set SHAを本文とmetadataに記録。HTMLは対応するWordの実hashも保持 |
 
 Notebook01の`NOTEBOOK_VERSION`は監査・表示用で、現行配布物では3.0.0です。
@@ -49,6 +52,21 @@ Word/HTMLのbuild・validate・packageには、同じ
 manifest生成後に構築コード、Notebook、CSV、profileが変われば拒否されます。
 現在の成果物検査はAI回答や全機能の合格判定とは別です。
 
+2026-10-07の整合版は、次の分割実行で生成しました。`$Stage`はリポジトリ外の新しい
+ディレクトリ、`$Approval`はリポジトリ外のprivateな文書配布承認（3.0.0の公開projectionと
+76/8 runに結び付くもの。AI品質の受入ではありません）です。描画とHTML操作の検査には
+Word、Edge、`python-docx`・`pymupdf`・`playwright`が必要です。
+
+```powershell
+$Manifest = "workshop\v3.0.0-preview\provisioning\artifact-set.json"
+$Release = @("--release-profile", "v3.0.0", "--release-approval", $Approval, "--artifact-manifest", $Manifest)
+python -B tools\docs\build_preview30.py --out "$Stage\pair" --review "$Stage\review" @Release
+python -B tools\docs\validate_preview30.py --pair "$Stage\pair" --review "$Stage\checks" `
+  --render --interactions --print-html @Release
+python -B tools\docs\package_preview30.py --pair "$Stage\pair" `
+  --validation "$Stage\checks\validation.json" --out "$Stage\package" @Release
+```
+
 ## Tempを使わない本デプロイ
 
 指定フォルダに必要なItemsを直接作成し、同じ承認済みplan・入力fingerprintを使って
@@ -63,6 +81,8 @@ generation2の主Ontologyとは用途を明示して、正式Agentと同じ指�
 
 修正版の新規構成は[`fresh_grounded_profile.py`](../../../tools/data-agent/fresh_grounded_profile.py)
 で、実サービスから取得した4ソースと、独立に検証した6 viewsのschemaを使って生成します。
+最終段の`standard-contract-restoration`が、標準10問の回答契約（年なしの8月＝2026年8月の観測、
+3ソースの分担、受入/在住、人気の両指標、Ontologyの所属COUNT、合算拒否、数値の忠実性）を復元します。
 このcompilerは書き込みを行いません。呼び出し側が実ソース、native例検証、staging/publicationの
 読み戻しと回答評価を完了させます。未検証のschema IDを作ったり、旧環境のItem IDを流用したりしません。
 
@@ -82,3 +102,8 @@ Ontology/Graph resources remain explicit production dependencies. Temporary
 comparison Agents and evaluation folders are removed after the adopted Agent's
 references and behavior are verified. Historical records and release assets are
 not rewritten, and file-integrity checks are not AI-answer acceptance.
+
+The 2026-10-07 deployment restored the standard answer contracts in the formal
+Agent: the protected ten/84 moved from 36/84 and 34/84 to 74/84 and 73/84 (ceiling
+77; T10 is blocked natively and never bypassed), and a pre-registered author-written
+holdout returned 11 PASS /1 FAIL. See the dated addendum for every configuration.

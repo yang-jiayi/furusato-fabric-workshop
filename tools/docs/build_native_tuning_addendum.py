@@ -45,6 +45,34 @@ def validate_study(study):
             raise ValueError("Expanded cohort must retain both complete source cohorts.")
     if study["mainPromoted"] or study["oldStudiesChanged"] or study["humanSignoff"]:
         raise ValueError("This addendum does not authorize promotion, historical rewrites or human signoff.")
+    for ja, en, kind in (("applyVerifyJa", "applyVerifyEn", list), ("adoptionJa", "adoptionEn", str)):
+        if (ja in study) != (en in study):
+            raise ValueError("Optional narrative overrides need both Japanese and English text.")
+        for key in (ja, en):
+            if key not in study:
+                continue
+            value = study[key]
+            texts = value if kind is list else [value]
+            if not isinstance(value, kind) or not texts or not all(isinstance(t, str) and t.strip() for t in texts):
+                raise ValueError("Optional narrative overrides must be nonempty text.")
+    standard = study.get("standardBenchmark")
+    if standard:
+        size, repetitions, ceiling = standard["conditions"], standard["repetitions"], standard.get("ceiling")
+        if type(size) is not int or size <= 0 or type(repetitions) is not int or repetitions <= 0:
+            raise ValueError("The standard benchmark needs positive conditions and repetitions.")
+        if ceiling is not None and (type(ceiling) is not int or not 0 < ceiling <= size):
+            raise ValueError("The standard benchmark ceiling must lie within its conditions.")
+        labels = [study["baseline"]["label"], *(run["label"] for run in study["rounds"])]
+        if [row["label"] for row in standard["rows"]] != labels:
+            raise ValueError("Standard benchmark rows must match every measured configuration in order.")
+        if not all(isinstance(standard.get(key), str) and standard[key].strip() for key in ("noteJa", "noteEn")):
+            raise ValueError("The standard benchmark needs Japanese and English notes.")
+        for row in standard["rows"]:
+            scores = row["scores"]
+            if len(scores) != repetitions or any(
+                    type(score) is not int or not 0 <= score <= (size if ceiling is None else ceiling)
+                    for score in scores):
+                raise ValueError("Every standard benchmark repetition needs an in-range score.")
     return study
 
 
@@ -75,6 +103,26 @@ def sections(study):
             notice, study["cohortNoteJa"],
             "P / F / U = PASS / FAIL / UNKNOWN。表の値は各構成の全回答であり、異なるラウンドの正答を選び集めていません。",
         ], "table": {"headers": ["構成 / Configuration", "問数", "事実 P / F / U", "内容 P / F / U"], "rows": rows}},
+    ]
+    standard = study.get("standardBenchmark")
+    if standard:
+        size = standard["conditions"]
+        result.append({"title": "標準10問・84条件 / Standard ten, 84 conditions", "paragraphs": [
+            standard["noteJa"], standard["noteEn"],
+        ], "table": {
+            "headers": ["構成 / Configuration", *(f"{index}回目 / Run {index}" for index in range(1, standard["repetitions"] + 1))],
+            "rows": [[row["label"], *(f"{score}/{size}" for score in row["scores"])] for row in standard["rows"]],
+            "widths": [3.4, *([1.4] * standard["repetitions"])],
+        }})
+    apply_verify = study.get("applyVerifyJa", [
+        "比較用Agentを使い、既存の主Agentと履歴を保持します。データ取得先・関係スキーマ・最終回答列を分けて設定します。",
+        "SQL/KQL例は実ソースで確認した後、Setup > 各データソース > Example queries でエラーと検証待ちがないことを確認します。直接SQLが成功しただけではAgent内の例の参照を証明しません。",
+        "設定の前後と公開後に定義を読み戻します。質問・期待値・必須条件を固定し、構成ごとに各問1回だけ送信します。通信エラー、不明、未送信を分母から除外しません。",
+        "一覧はソース側の全件数と表示ID集合を照合し、ランキングは安定IDで順序を確定します。暦年とsnapshot名、観測時刻と合成配信メタデータ、BLANKと0を区別します。",
+    ]) + study.get("applyVerifyEn", [])
+    adoption_ja = study.get("adoptionJa", "主Agentへは昇格していません。元3.0.0と2026-10-02のWord・HTML、100問評価、release tagは変更していません。本資料は別日付の追補です。")
+    adoption_en = study.get("adoptionEn", "The main Agent, original studies and existing releases are preserved. No general-population accuracy, native execution-trace proof, product GA or independent human acceptance is claimed.")
+    result += [
         {"title": "未使用セット / Previously unused questions", "paragraphs": [
             ("未使用セットは未実施です。開発セットの結果だけでは未知の質問への品質を主張しません。"
              if study["unseen"] is None else
@@ -89,18 +137,13 @@ def sections(study):
             "Previously unused questions are separate from the known development cohort. These measured results do not guarantee correctness for arbitrary future questions.",
         ]},
         {"title": "実装した改善 / Implemented changes", "paragraphs": study["changesJa"] + study["changesEn"]},
-        {"title": "適用と確認 / Apply and verify", "paragraphs": [
-            "比較用Agentを使い、既存の主Agentと履歴を保持します。データ取得先・関係スキーマ・最終回答列を分けて設定します。",
-            "SQL/KQL例は実ソースで確認した後、Setup > 各データソース > Example queries でエラーと検証待ちがないことを確認します。直接SQLが成功しただけではAgent内の例の参照を証明しません。",
-            "設定の前後と公開後に定義を読み戻します。質問・期待値・必須条件を固定し、構成ごとに各問1回だけ送信します。通信エラー、不明、未送信を分母から除外しません。",
-            "一覧はソース側の全件数と表示ID集合を照合し、ランキングは安定IDで順序を確定します。暦年とsnapshot名、観測時刻と合成配信メタデータ、BLANKと0を区別します。",
-        ]},
+        {"title": "適用と確認 / Apply and verify", "paragraphs": apply_verify},
         {"title": "残る事項 / Remaining findings", "paragraphs": study["remainingJa"] + study["remainingEn"]},
         {"title": "証拠と採用境界 / Evidence and adoption boundary", "paragraphs": [
-            "主Agentへは昇格していません。元3.0.0と2026-10-02のWord・HTML、100問評価、release tagは変更していません。本資料は別日付の追補です。",
+            adoption_ja,
             "判定は固定期待値と実回答を照合したAI補助審査です。独立した人間のsign-offではありません。内部SQL/KQL/GQL/DAXとbackend会話IDはUNOBSERVABLEです。",
             "元100問の33 PASS /57 FAIL /10 UNKNOWNを本資料の小さい分母で置き換えていません。構成テストや例の検証成功をAI回答のPASSへ加算しません。",
-            "The main Agent, original studies and existing releases are preserved. No general-population accuracy, native execution-trace proof, product GA or independent human acceptance is claimed.",
+            adoption_en,
         ]},
     ]
     return result
@@ -156,7 +199,7 @@ def build(study_path, output):
             if "table" in section:
                 table = section["table"]
                 builder.table(table["headers"], table["rows"], caption=section["title"],
-                              widths=[2.8, 0.5, 1.4, 1.4], font_size=9)
+                              widths=table.get("widths", [2.8, 0.5, 1.4, 1.4]), font_size=9)
         builder.paragraph("Source study SHA-256: " + input_sha, size=8)
         builder.save(word)
     apply_japanese_typography(word)

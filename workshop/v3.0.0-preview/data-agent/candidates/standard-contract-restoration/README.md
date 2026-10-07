@@ -41,7 +41,10 @@ is the last of the four Agent compilers chained by
 standard-contract-restoration). It changes Draft parts only, preserves source IDs,
 selections, runtime switches, Published parts, base data and model measures, makes
 no cloud calls, enforces the documented 15,000-character instruction limit and
-refuses benchmark answer values (`ANSWER_VALUE_GUARD`). Two existing coordinator
+refuses benchmark answer values (`ANSWER_VALUE_GUARD`). Numbers are matched as whole
+tokens after normalizing thousands separators and full-width forms, and JSON inputs are
+checked as the compiler loads them, so `80,000`, `80000` or an escaped name cannot slip
+through. Two existing coordinator
 clauses that contradicted the contracts are replaced exactly once or the compile
 stops.
 

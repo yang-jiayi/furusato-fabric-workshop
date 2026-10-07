@@ -50,6 +50,15 @@ all-PASS notice. It keeps previously unused questions separate from development.
 It is a presentation tool, not proof that supplied judgments are correct: derive
 the input from the sealed case reviews and verify their capture/plan hashes first.
 
+Optional fields keep older studies unchanged when absent. `standardBenchmark`
+(`conditions`, `repetitions`, optional `ceiling`, `noteJa`/`noteEn`, and one `rows`
+entry per measured configuration in order) adds a per-run score table such as the
+protected ten/84; scores above the declared ceiling or rows that skip a configuration
+are rejected. `applyVerifyJa`/`applyVerifyEn` (text lists) and `adoptionJa`/`adoptionEn`
+(text) replace the default comparison-Agent apply and adoption wording when a study
+was applied differently, for example directly to a user's formal Agent. Both languages
+are required; the AI-assisted/UNOBSERVABLE boundary paragraphs are always kept.
+
 The pair reuses the existing Word style carrier and approved metadata cleanup.
 After rendering, verify identical counts and limitations in both formats.
 If Word field/page refresh is used, reapply Japanese typography and approved

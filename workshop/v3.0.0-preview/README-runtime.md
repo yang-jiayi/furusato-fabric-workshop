@@ -380,3 +380,45 @@ Initial Direct Lake framing is separate from definition import. `refresh-model` 
 The Data Agent is created as a **candidate draft** with Lakehouse, KQL, generation2 Ontology and **direct SemanticModel** sources plus Code Interpreter configuration. `publish-agent` uses the documented staging/publish API and reads back all four published sources; publication is explicitly a preview-candidate operation, not an accuracy promotion. Native feature use, actual tool execution, fresh-conversation comparisons and original/new-feature evaluation remain separate checks. A successful definition import or publication is not proof of answer accuracy.
 
 UI labs—Copilot attachments, namespaces/inheritance/shared properties, native Metrics, versions, import/export and selective Graph/GQL—belong in isolated items under **Temp** within the target tree. Only their assigned coordinator writes those items. The runtime never edits their definitions or substitutes schema-only tests for native lab evidence.
+
+### Formal Agent profile (standard-contract restoration)
+
+`publish-agent` publishes the base candidate only. Apply the formal profile afterwards
+with [`fresh_grounded_profile.py`](../../tools/data-agent/fresh_grounded_profile.py),
+which chains four offline compilers: source-grounded → complete-contract →
+time-layer-isolation → [standard-contract-restoration](data-agent/candidates/standard-contract-restoration/README.md).
+The last stage restores the standard ten/84 answer contracts; without it a clean
+2026-10-07 deployment scored only 36/84 and 34/84.
+
+1. Read the published Agent definition and the `INFORMATION_SCHEMA.COLUMNS` rows of the
+   six verified SQL views; keep both privately.
+2. `compile_fresh_profile(definition, columns)` returns the Draft and a receipt. Require
+   `globalInstructionsCharacters` ≤ 15,000, SQL 17 / KQL 9 examples, unchanged source
+   identities and `cloudCalls: 0`.
+3. Execute every SQL/KQL example read-only against the real sources; each must return rows.
+4. `updateDefinition` with the compiled Draft plus the unchanged Published parts, read it
+   back, then publish through the staging API and confirm Published equals Draft. The
+   service may rename the Ontology datasource folder to the source display name; map
+   the compiled part to the live path instead of creating a second source.
+5. Evaluate the unchanged ten/84 at least twice
+   ([`evaluate_native.py`](../../tools/data-agent/evaluate_native.py) supports the public
+   MCP transport) and keep every failure. T10 may be blocked by the native content filter;
+   report it, never bypass it. Run any holdout once, on the final configuration only.
+
+### API-only operation notes (observed 2026-10-07)
+
+- When the portal requires Windows Hello, the runtime CLI with Azure CLI tokens is
+  sufficient. Never inject browser tokens or cookies.
+- A numeric portal `subfolderId` is not a folder GUID. Resolve it from the workspace
+  folder metadata that returns both identifiers, record the mapping privately, and only
+  then target the folder.
+- An Eventhouse hard delete can fail with a non-retriable `UnknownError` while a
+  soft-deleted Item still references it; the portal's metadata delete reported
+  `AssociationPreventsArtifactDeletion`. Permanently delete the referencing recoverable
+  Items first (here a probe Pipeline and Notebook), then retry once.
+- If the Activator is not armed and verified, deliver each increment once with PutBlob
+  and run the Pipeline manually once per file. Record this as manual ingestion, not
+  automatic delivery.
+- Generated queries: KQL `top` accepts one sort key (use `order by … | take N`); GQL
+  reserved words such as `nodes`/`edges` cannot be aliases; in the static consumer graph
+  `MunicipalityId` is a STRING and `PrefectureName` is the Japanese suffixed name.

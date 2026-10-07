@@ -1,229 +1,117 @@
 {
-  "schemaVersion": "furusato-v3-current-verification/v1",
-  "date": "2026-10-04",
-  "projectedAtUtc": "2026-10-04T14:40:25.784948+00:00",
-  "workshopVersion": "3.0.0",
-  "sourceCommit": "378762e67eb2260f6ea91b8eccd79f62ab631421",
-  "artifactSetSha256": "edb0e247691bc278948166c09be4ab4ce3d56cda1f9418206d027b58ad7f6b92",
-  "gitBlobParityVerified": true,
-  "sourceArtifacts": 305,
-  "notebooksAligned": 5,
-  "csvFilesUnchanged": 11,
-  "wordPages": 232,
-  "documentChecks": {
-    "PASS": 203,
-    "FAIL": 0
+ "schemaVersion": "furusato-v3-current-verification/v1",
+ "date": "2026-10-07",
+ "projectedAtUtc": "2026-10-07T06:22:10.789219+00:00",
+ "workshopVersion": "3.0.0",
+ "sourceCommit": "82cb1111e40c6f5b1cbfbea76245f5af790d43c6",
+ "artifactSetSha256": "064a2f3f8101ca32f7bb304fac81048ac523940c9d54ab222e5fc1f485339e9b",
+ "gitBlobParityVerified": true,
+ "sourceArtifacts": 313,
+ "notebooksAligned": 5,
+ "csvFilesUnchanged": 11,
+ "wordPages": 232,
+ "documentChecks": {
+  "PASS": 203,
+  "FAIL": 0
+ },
+ "correctedAgentProfile": "standard-contract-restoration",
+ "agentCompilerStages": [
+  "source-grounded",
+  "complete-contract",
+  "time-layer-isolation",
+  "standard-contract-restoration"
+ ],
+ "previousFolderCleanup": {
+  "targets": 29,
+  "alreadyRemovedWithParent": 10,
+  "remainingActiveItems": 0,
+  "blockedEventhouseResolvedByPurgingSoftDeletedProbeItems": true,
+  "recoverableUntil": "2026-10-14",
+  "tempFolderDeleted": true
+ },
+ "production": {
+  "activeItems": 21,
+  "activeDataAgents": 1,
+  "tempFolders": 0,
+  "allSourcesInTargetFolder": true,
+  "notebook01Runs": 1,
+  "notebook05Runs": 1,
+  "manualPipelineRuns": 3,
+  "automaticDeliveryVerified": false,
+  "activatorStopped": true,
+  "portalUsed": false
+ },
+ "data": {
+  "staticRows": 80000,
+  "staticYen": 1344099000,
+  "rawRows": 15000,
+  "rawYen": 253886000,
+  "acceptedRows": 14900,
+  "acceptedYen": 252058000,
+  "quarantinedRows": 100,
+  "goldRows": 94900,
+  "goldYen": 1596157000
+ },
+ "graph": {
+  "generation1PartsReadBack": 53,
+  "nodes": 109592,
+  "directedEdges": 297303,
+  "explicitStaticConsumer": true
+ },
+ "answerEvaluation": {
+  "transport": "Fabric Data Agent MCP (published); answer text only",
+  "standardTen84": {
+   "asDeployed": [
+    36,
+    34
+   ],
+   "adopted": [
+    74,
+    73
+   ],
+   "ceilingWithNativeT10Block": 77,
+   "releaseRecord": 76
   },
-  "oldItemsPermanentlyDeleted": 23,
-  "production": {
-    "activeItems": 21,
-    "activeDataAgents": 1,
-    "tempFolders": 0,
-    "allSourcesInTargetRoot": true,
-    "evaluationAgentsDeleted": 2,
-    "evaluationAgentsRecoverable": 2,
-    "notebook01Runs": 1,
-    "notebook05Runs": 1,
-    "manualPipelineRuns": 3,
-    "automaticDeliveryVerified": false
+  "extended14": {
+   "asDeployed": {
+    "factualPass": 13,
+    "contentPass": 10
+   },
+   "adopted": {
+    "factualPass": 14,
+    "contentPass": 13
+   }
   },
-  "data": {
-    "staticRows": 80000,
-    "staticYen": 1344099000,
-    "rawRows": 15000,
-    "rawYen": 253886000,
-    "acceptedRows": 14900,
-    "acceptedYen": 252058000,
-    "quarantinedRows": 100,
-    "goldRows": 94900,
-    "goldYen": 1596157000
+  "holdout12": {
+   "factualPass": 11,
+   "contentPass": 11,
+   "authorWritten": true,
+   "independent": false,
+   "runs": 1
   },
-  "graph": {
-    "gqlChecks": 3,
-    "nodes": 109592,
-    "directedEdges": 297303,
-    "explicitStaticConsumer": true,
-    "generation2ConsumerRepairClaimed": false
-  },
-  "knownRegressionRounds": [
-    {
-      "label": "Initial fresh deployment",
-      "caseCount": 10,
-      "content": {
-        "FAIL": 3,
-        "PASS": 7,
-        "UNKNOWN": 0
-      },
-      "factual": {
-        "FAIL": 2,
-        "PASS": 8,
-        "UNKNOWN": 0
-      },
-      "cases": [
-        {
-          "id": "F30-O08",
-          "capture": "captured",
-          "content": "FAIL",
-          "factual": "FAIL"
-        },
-        {
-          "id": "F31-H11",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-O11",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H08",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-D09",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-D01",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H10",
-          "capture": "captured",
-          "content": "FAIL",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-S18",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H01",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H12",
-          "capture": "captured",
-          "content": "FAIL",
-          "factual": "FAIL"
-        }
-      ],
-      "planSha256": "fd9be83777ab314889392d894f1b124f9e41c4790df6fd67ebe539e8262a7bc1",
-      "reviewSha256": "1dd842ff2d35b42f6eb8fe3ca3c1b7020edff5e132118df06c2de34bdc4e08c5"
-    },
-    {
-      "label": "Coherent v3 formal root Agent",
-      "caseCount": 10,
-      "content": {
-        "FAIL": 2,
-        "PASS": 8,
-        "UNKNOWN": 0
-      },
-      "factual": {
-        "FAIL": 2,
-        "PASS": 8,
-        "UNKNOWN": 0
-      },
-      "cases": [
-        {
-          "id": "F30-O08",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H11",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-O11",
-          "capture": "captured",
-          "content": "FAIL",
-          "factual": "FAIL"
-        },
-        {
-          "id": "F31-H08",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-D09",
-          "capture": "captured",
-          "content": "FAIL",
-          "factual": "FAIL"
-        },
-        {
-          "id": "F30-D01",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H10",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F30-S18",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H01",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        },
-        {
-          "id": "F31-H12",
-          "capture": "captured",
-          "content": "PASS",
-          "factual": "PASS"
-        }
-      ],
-      "planSha256": "85b515db22d7825ebd6d0c489145d90ac39f981091725128eb64b9b11b11d415",
-      "reviewSha256": "26a34fc7f247e9ebe58d4ee49d2b7924f1db6f15c81811e0985bf812541a5879"
-    }
-  ],
-  "questionsOrCriteriaChanged": false,
-  "sameConfigurationRetries": 0,
-  "independentHoldout": false,
-  "humanSignoff": false,
-  "generalAiQualityAccepted": false,
-  "historicalUnknownReplayed": false,
-  "oldReleaseAssetsChanged": false,
-  "remaining": [
-    "Native answer incorrectly reports no JST September1 spillover data.",
-    "Native explanation incorrectly generalizes KEEPFILTERS intersection to default same-column DAX filtering.",
-    "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings are not certified in this deployment."
-  ],
-  "artifactSha256": {
-    "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "404f4636a81888a3513b5c33c58386feb22be9abcbb311685fbb26c8da8e0bce",
-    "guide/furusato-workshop-v3-0-0-complete.html": "ead60a7141a5ca2003f081f937a16523f981970ffe8c9f6f4566dd752ac4656e",
-    "Furusato_Workshop_v3.0.0_current-20261004.zip": "f4fdc08d998c7c28232aca86f03de514fdb803299540b5464a2ebf25cea6559e",
-    "artifact-set.json": "edb0e247691bc278948166c09be4ab4ce3d56cda1f9418206d027b58ad7f6b92"
-  },
-  "privacy": {
-    "rawAnswers": false,
-    "privatePaths": false,
-    "liveResourceIds": false
-  }
+  "configurationsEvaluated": 6,
+  "study": "../tuning-20261007/result-20261007.json"
+ },
+ "questionsOrCriteriaChanged": false,
+ "independentHoldout": false,
+ "humanSignoff": false,
+ "generalAiQualityAccepted": false,
+ "oldReleaseAssetsChanged": false,
+ "remaining": [
+  "T10 is blocked by the native content filter and is reported as a failure, not bypassed.",
+  "T09 takes the prefecture from Lakehouse instead of an Ontology traversal.",
+  "Holdout H09 concluded 'no duplicates' from bucket-key uniqueness instead of stating that EventID is unavailable.",
+  "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings are not certified in this deployment."
+ ],
+ "artifactSha256": {
+  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "7b443edc6af70b84ce8b3c0c3bacd59b6dd3bf88c1eddf1adb7c9ad7957b9dcc",
+  "guide/furusato-workshop-v3-0-0-complete.html": "e135a6bd90ca2e93ce94b35519732c3e1064928c24fc64b6a5b419d6096e8791",
+  "Furusato_Workshop_v3.0.0_current-20261007.zip": "4745ec2bb817ce01de8294b5d6d1ad9d8cb40ec1444a1e135d837bb1deffa80e",
+  "artifact-set.json": "064a2f3f8101ca32f7bb304fac81048ac523940c9d54ab222e5fc1f485339e9b"
+ },
+ "privacy": {
+  "rawAnswers": false,
+  "privatePaths": false,
+  "liveResourceIds": false
+ }
 }

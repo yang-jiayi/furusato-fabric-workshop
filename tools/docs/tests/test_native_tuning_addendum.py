@@ -82,6 +82,45 @@ class TuningAddendumTests(unittest.TestCase):
         self.assertNotIn("<script>", page)
         self.assertEqual(study, before)
 
+    def test_standard_benchmark_table_matches_configurations(self):
+        study = self.fixture()
+        study["standardBenchmark"] = {
+            "conditions": 84, "repetitions": 2, "ceiling": 77, "noteJa": "T10は遮断。", "noteEn": "T10 blocked.",
+            "rows": [{"label": "baseline", "scores": [36, 34]}, {"label": "candidate", "scores": [74, 73]}],
+        }
+        page = render_html(study, "a" * 64)
+        self.assertIn("74/84", page)
+        self.assertIn("36/84", page)
+        self.assertEqual(sections(study)[1]["title"], "標準10問・84条件 / Standard ten, 84 conditions")
+        for change in ({"rows": [{"label": "candidate", "scores": [74, 73]}]},
+                       {"rows": [{"label": "baseline", "scores": [36]}, {"label": "candidate", "scores": [74, 73]}]},
+                       {"rows": [{"label": "baseline", "scores": [36, 34]}, {"label": "candidate", "scores": [78, 73]}]},
+                       {"noteEn": " "}):
+            broken = copy.deepcopy(study)
+            broken["standardBenchmark"].update(change)
+            with self.assertRaises(ValueError):
+                validate_study(broken)
+
+    def test_narrative_overrides_replace_defaults_in_pairs(self):
+        study = self.fixture()
+        study.update({"applyVerifyJa": ["正式Agentへ直接適用。"], "applyVerifyEn": ["Applied to the formal Agent."],
+                      "adoptionJa": "利用者の指示で正式Agentへ反映。", "adoptionEn": "Applied on user instruction."})
+        page = render_html(study, "a" * 64)
+        self.assertIn("正式Agentへ直接適用。", page)
+        self.assertIn("利用者の指示で正式Agentへ反映。", page)
+        self.assertNotIn("比較用Agentを使い", page)
+        self.assertNotIn("主Agentへは昇格していません", page)
+        self.assertIn("AI補助審査", page)
+        for key in ("applyVerifyEn", "adoptionJa"):
+            broken = copy.deepcopy(study)
+            del broken[key]
+            with self.assertRaisesRegex(ValueError, "both Japanese and English"):
+                validate_study(broken)
+        broken = copy.deepcopy(study)
+        broken["applyVerifyJa"] = []
+        with self.assertRaisesRegex(ValueError, "nonempty"):
+            validate_study(broken)
+
 
 if __name__ == "__main__":
     unittest.main()

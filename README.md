@@ -6,11 +6,11 @@
 
 [Word整合版](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [日英HTML整合版](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
-[Notebook・CSVを含む整合パッケージ](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261004.zip) ·
+[Notebook・CSVを含む整合パッケージ](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261007.zip) ·
 [構成・検証結果](docs/v3.0.0/current/README.md) ·
 [Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
-[修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)
+[修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/README.md)
 
 | 版の種類 | 値 | 意味 |
 |---|---|---|
@@ -23,6 +23,29 @@
 正式な依存Itemとして同じフォルダへ配置します。評価用の比較AgentやTempは、
 必要な依存と参照を正式配置で確認してから削除します。
 
+> **2026-10-07 新規配置と回答精度の改善**
+> 旧フォルダを空にし、指定フォルダ直下へ**21 Items・正式Agent1件・Temp0件**を新規配置しました。
+> 正式Agentの標準10問・84条件は、配置直後の**36/84・34/84**から、標準の回答契約を復元した
+> 採用構成で**74/84・73/84**になりました（T10はnativeのコンテンツフィルターで遮断され、回避せず上限77）。
+> 主な原因は、修正チェーンが元の統合指示を置き換えて回答契約が失われたことと、
+> 年なしの「8月」を静的seedの2025年と解釈したことです。6構成の経過はすべて公開しています。
+> 事前登録holdout12問は**11 PASS／1 FAIL**です。313成果物のGit blob・SHAを照合し、
+> **232ページのWordと日英HTMLは203検査／0 FAIL**でした。**AI回答の0 FAIL・全機能合格ではありません。**
+> [回答精度の改善と残件](docs/v3.0.0/tuning-20261007/README.md) ·
+> [配置の詳細と制約](docs/v3.0.0/current/deployment-verification.md) ·
+> [検証JSON](docs/v3.0.0/current/verification.json)。
+
+The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
+identifiers are explicitly versioned compatibility contracts, not stale course
+labels. Production uses the specified folder directly, with no Temp dependency.
+Artifact checks pass. On the protected ten/84 the formal Agent moved from
+**36/84 and 34/84** to **74/84 and 73/84** after the standard-contract restoration
+(ceiling 77; T10 is blocked natively), with an author-written holdout of
+**11 PASS /1 FAIL** — not zero-failure AI acceptance.
+
+<details>
+<summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>
+
 > **2026-10-04 整合性・正式配置の結果**
 > 旧23 Itemsは完全削除済みです。新配置は指定フォルダ直下の**21 Items・正式Agent1件・Temp0件**です。
 > 配布/配置Notebook5件の版・内容・結合先、変更しないCSV11件、305成果物のGit blobとSHAを照合し、
@@ -30,17 +53,8 @@
 > 回答評価は別です。同じ既知10問で初回7 PASS／3 FAIL、正式Agentでの再確認は
 > **8 PASS／2 FAIL／0 UNKNOWN**でした。**AI回答の0 FAIL・全機能合格ではありません。**
 > 月またぎJST観測の誤った空結果と、DAXフィルター説明の誤りを残件として公開しています。
-> [詳細と制約](docs/v3.0.0/current/deployment-verification.md) ·
-> [検証JSON](docs/v3.0.0/current/verification.json)。
-
-The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
-identifiers are explicitly versioned compatibility contracts, not stale course
-labels. Production uses the specified folder directly, with no Temp dependency.
-Artifact checks pass; the final known10 answer check is **8 PASS /2 FAIL**,
-not zero-failure AI acceptance.
-
-<details>
-<summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>
+> [詳細と制約](docs/v3.0.0/current/history/20261004/deployment-verification.md) ·
+> [検証JSON](docs/v3.0.0/current/history/20261004/verification.json)。
 
 > **2026-10-04 UTC・データ層の混同修正 — 限定回帰10問で0 FAIL**
 > 指定された2件を修正し、元の失敗2問＋対照8問を同じ最終構成で再評価して

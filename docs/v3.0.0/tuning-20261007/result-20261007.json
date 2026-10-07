@@ -1,0 +1,373 @@
+{
+  "schemaVersion": "furusato-native-tuning-study/v1",
+  "date": "2026-10-07",
+  "projectionAtUtc": "2026-10-07T06:14:29.359167+00:00",
+  "baseline": {
+    "label": "R1 デプロイ直後 / As deployed (time-layer-isolation)",
+    "caseCount": 34,
+    "factual": {
+      "PASS": 20,
+      "FAIL": 14,
+      "UNKNOWN": 0
+    },
+    "content": {
+      "PASS": 10,
+      "FAIL": 24,
+      "UNKNOWN": 0
+    },
+    "standard84": [
+      36,
+      34
+    ],
+    "standardAnswersFullyPassed": 0,
+    "extended": {
+      "caseCount": 14,
+      "factualPass": 13,
+      "contentPass": 10
+    }
+  },
+  "rounds": [
+    {
+      "label": "R2 標準契約の復元 / Restored standard contracts",
+      "caseCount": 34,
+      "factual": {
+        "PASS": 29,
+        "FAIL": 5,
+        "UNKNOWN": 0
+      },
+      "content": {
+        "PASS": 20,
+        "FAIL": 14,
+        "UNKNOWN": 0
+      },
+      "standard84": [
+        67,
+        65
+      ],
+      "standardAnswersFullyPassed": 9,
+      "extended": {
+        "caseCount": 14,
+        "factualPass": 12,
+        "contentPass": 11
+      }
+    },
+    {
+      "label": "R3 根拠行・数値と説明の忠実性 / Evidence lines and fidelity",
+      "caseCount": 34,
+      "factual": {
+        "PASS": 30,
+        "FAIL": 4,
+        "UNKNOWN": 0
+      },
+      "content": {
+        "PASS": 23,
+        "FAIL": 11,
+        "UNKNOWN": 0
+      },
+      "standard84": [
+        72,
+        68
+      ],
+      "standardAnswersFullyPassed": 10,
+      "extended": {
+        "caseCount": 14,
+        "factualPass": 13,
+        "contentPass": 13
+      }
+    },
+    {
+      "label": "R4 固定出力行・3ソース手順 / Literal lines, three-source steps",
+      "caseCount": 34,
+      "factual": {
+        "PASS": 32,
+        "FAIL": 2,
+        "UNKNOWN": 0
+      },
+      "content": {
+        "PASS": 27,
+        "FAIL": 7,
+        "UNKNOWN": 0
+      },
+      "standard84": [
+        73,
+        73
+      ],
+      "standardAnswersFullyPassed": 14,
+      "extended": {
+        "caseCount": 14,
+        "factualPass": 14,
+        "contentPass": 13
+      }
+    },
+    {
+      "label": "R5 合算拒否・比較の回答形式 / Fixed refusal and comparison forms",
+      "caseCount": 34,
+      "factual": {
+        "PASS": 29,
+        "FAIL": 5,
+        "UNKNOWN": 0
+      },
+      "content": {
+        "PASS": 27,
+        "FAIL": 7,
+        "UNKNOWN": 0
+      },
+      "standard84": [
+        75,
+        65
+      ],
+      "standardAnswersFullyPassed": 15,
+      "extended": {
+        "caseCount": 14,
+        "factualPass": 13,
+        "contentPass": 12
+      }
+    },
+    {
+      "label": "R6 名前照合・単一集計（採用） / Name matching, single aggregation (adopted)",
+      "caseCount": 34,
+      "factual": {
+        "PASS": 32,
+        "FAIL": 2,
+        "UNKNOWN": 0
+      },
+      "content": {
+        "PASS": 27,
+        "FAIL": 7,
+        "UNKNOWN": 0
+      },
+      "standard84": [
+        74,
+        73
+      ],
+      "standardAnswersFullyPassed": 14,
+      "extended": {
+        "caseCount": 14,
+        "factualPass": 14,
+        "contentPass": 13
+      }
+    }
+  ],
+  "unseen": {
+    "label": "事前登録holdout（著者作成・1回） / Pre-registered holdout (author-written, once)",
+    "caseCount": 12,
+    "factual": {
+      "PASS": 11,
+      "FAIL": 1,
+      "UNKNOWN": 0
+    },
+    "content": {
+      "PASS": 11,
+      "FAIL": 1,
+      "UNKNOWN": 0
+    },
+    "authorWritten": true,
+    "independent": false,
+    "frozenBeforeAnyProfileChange": true,
+    "usedForTuning": false,
+    "runsOnFinalConfiguration": 1,
+    "cases": [
+      {
+        "id": "H01",
+        "area": "time-bare-month",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H02",
+        "area": "time-bare-month-entity",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H03",
+        "area": "composite-routing",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H04",
+        "area": "place-ambiguity",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H05",
+        "area": "popularity",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H06",
+        "area": "sum-refusal",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H07",
+        "area": "donation-trace",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H08",
+        "area": "ontology-count",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H09",
+        "area": "dedupe-limit",
+        "factual": "FAIL",
+        "content": "FAIL"
+      },
+      {
+        "id": "H10",
+        "area": "numeric-derivation",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H11",
+        "area": "time-jst-day-bare",
+        "factual": "PASS",
+        "content": "PASS"
+      },
+      {
+        "id": "H12",
+        "area": "dax-explanation",
+        "factual": "PASS",
+        "content": "PASS"
+      }
+    ]
+  },
+  "expandedDevelopment": null,
+  "cohortNoteJa": "既知の開発34回答: 保護された標準10問×2回（質問・84条件は不変）と、本評価で作成した拡張14問×1回。各構成で同じ34回答を集計しました。T10はnativeのコンテンツフィルターで遮断され、回避せずFAILとして数えています。B05のモデル照会失敗後の診断再送3回とR1の診断2問は分母に含めていません。",
+  "standardBenchmark": {
+    "conditions": 84,
+    "repetitions": 2,
+    "ceiling": 77,
+    "noteJa": "保護された元10問・84条件を各構成2回評価しました。T10はnativeのコンテンツフィルターで遮断されるため0/7で、到達可能な上限は77です。3.0.0 release時の記録は76/84（T10 0/7）でした。",
+    "noteEn": "The protected original ten questions/84 conditions were evaluated twice per configuration. T10 is stopped by the native content filter and scores 0/7, so the attainable ceiling is 77. The 3.0.0 release recorded 76/84.",
+    "rows": [
+      {
+        "label": "R1 デプロイ直後 / As deployed (time-layer-isolation)",
+        "scores": [
+          36,
+          34
+        ]
+      },
+      {
+        "label": "R2 標準契約の復元 / Restored standard contracts",
+        "scores": [
+          67,
+          65
+        ]
+      },
+      {
+        "label": "R3 根拠行・数値と説明の忠実性 / Evidence lines and fidelity",
+        "scores": [
+          72,
+          68
+        ]
+      },
+      {
+        "label": "R4 固定出力行・3ソース手順 / Literal lines, three-source steps",
+        "scores": [
+          73,
+          73
+        ]
+      },
+      {
+        "label": "R5 合算拒否・比較の回答形式 / Fixed refusal and comparison forms",
+        "scores": [
+          75,
+          65
+        ]
+      },
+      {
+        "label": "R6 名前照合・単一集計（採用） / Name matching, single aggregation (adopted)",
+        "scores": [
+          74,
+          73
+        ]
+      }
+    ]
+  },
+  "changesJa": [
+    "time-layer-isolationまでの修正チェーンが元の統合指示を置き換え、標準10問の回答契約が失われていました。standard-contract-restorationを4つ目のAgent compilerとして追加し、最優先の全体契約と4ソースの契約を既存指示の先頭へ置きました。",
+    "年の指定がない「8月」、流入・観測・イベント・ファイル・増分は2026年8月UTCの生観測と定義しました。2025は静的seedの年ラベルで、明記された時だけ使います。0件や矛盾がある場合は全体期間を確認してから結論します。",
+    "複合質問は観測（Eventhouse・重複込み）、静的値と全国順位（Lakehouse）、所属県（Ontology）を分担し、MunicipalityIdで突き合わせ、足し合わせません。",
+    "受入/在住の両方の読み方、人気＝件数と金額・ID・全国スコープ、Ontologyの所属COUNTとliteral行、寄付追跡の全IDとカタログ登録・履行の境界、ファイル/実行の見出し、EventIDがないため重複除外件数を出さない契約を復元しました。",
+    "静的と観測の合算依頼は固定の回答形式で拒否し、利用者が示した合計値を書きません。比較は差・倍率・増減率の3行で示し、要約で言い換えません。数値は「約」や万・億へ換算しません。",
+    "生成クエリの脆弱性に対処しました。KQLの上位自治体は1回のsummarizeから両指標を取り、Ontologyは接尾辞付きの日本語名で照合して0件なら再試行し、MunicipalityIdは文字列として扱います。",
+    "例はKQL1件を置換し5件を追加しました（SQL17・KQL9）。全26例を実ソースで実行し、行を返すことを確認しました。ソースID・選択・Published部分・データ・メジャーは変更していません。"
+  ],
+  "changesEn": [
+    "The corrected profile chain had replaced the original unified instructions and lost the standard-question contracts. A fourth Agent compiler, standard-contract-restoration, prepends a highest-priority coordinator contract and four source contracts.",
+    "It restores the year-less August 2026 default, three-source composite routing, both prefecture readings, popularity on both metrics, Ontology membership COUNT, the complete donation trace, fixed refusal/comparison forms, numeric fidelity and robust generated-query rules. Source identities, selections, Published parts, data and measures are unchanged."
+  ],
+  "applyVerifyJa": [
+    "利用者の指示により、2026-10-07の正式配置（指定フォルダの正式Agent1件）へ直接適用しました。比較用Agentは作成していません。各構成の適用前に、直前の公開定義と一致することを読み戻しで確認してからDraftを更新し、公開後にPublishedとDraftの一致を確認しました。",
+    "SQL/KQLの全26例を実ソースで読み取り実行し、行を返すことを確認しました。ネイティブUIのExample queries画面での検証状態は確認していません（API経路のみ）。",
+    "標準10問は各構成2回、拡張14問は各構成1回送信しました。質問・期待値・84条件は変更していません。通信エラー・UNKNOWNは0件です。B05のモデル照会失敗後の診断再送3回（3回とも正答）は分母に含めていません。",
+    "最終構成の採用規則（第6構成の平均が73.0以上かつ拡張の内容PASSが12以上、満たさなければ第4〜6構成の最良を再適用）を第6構成の結果確認前に記録し、第6構成を採用してからholdoutを1回だけ実行しました。holdoutの採点基準は送信後・回答閲覧前に記録しました。"
+  ],
+  "applyVerifyEn": [
+    "Applied on the user's instruction directly to the formal Agent of the 2026-10-07 deployment; no comparison Agent was created. Each configuration was read back before update and after publication (Published equals Draft). All 26 SQL/KQL examples returned rows from the real sources; the native Example-queries UI status was not inspected.",
+    "The standard ten ran twice and the extended fourteen once per configuration, with unchanged questions and conditions and zero transport failures or UNKNOWN. The final-configuration rule was recorded before the round-6 results, and the holdout ran once on the adopted configuration."
+  ],
+  "remainingJa": [
+    "T10（高額寄附者の年収・控除額の推定）は全構成でnativeのコンテンツフィルターに遮断されました。指示では回避せず、FAILとして報告します。製品サポートへのエスカレーションを推奨します。",
+    "T09（8月の観測1位が静的でも1位か・所属県）は値と順位は正しいものの、所属県をOntologyでたどらずLakehouseの県列を使うため、3ソース表示と突き合わせキーの条件を満たしません（最終構成は2回とも6/8）。",
+    "最終構成でも再現しない欠落が残ります。T02でMunicipalityIdの欠落（1回）、T05で寄附金額の欠落（1回）、B02でKEEPFILTERSの有無に関わらず空になると一般化（1回）。過去構成ではT04の英語名照会による0件、B05のモデル照会失敗、B07の倍率表記の揺れも観測しました。",
+    "事前登録holdout12問（著者作成・1回）は11 PASS／1 FAILです。H09（特定CSV内の重複の有無）で、バケットキーの一意性から「重複なし」と断定しました。正しくはEventIDがないため判定不能です。重複除外の契約を「重複の有無」の質問へ広げる対策を提案しますが、未適用・未検証です。",
+    "評価は公開MCPで回答文だけを観測しました。内部クエリと実行ソースはUNOBSERVABLEで、回答中のソース表記は実行の証明ではありません。"
+  ],
+  "remainingEn": [
+    "T10 is blocked by the native content filter in every configuration and is reported, not bypassed. T09 states correct values and ranks but takes the prefecture from Lakehouse instead of an Ontology traversal (6/8 twice). Nonreproducible omissions remain (T02 ID, T05 amount, B02 KEEPFILTERS generalization once each).",
+    "The author-written holdout returned 11 PASS / 1 FAIL: H09 concluded that a file had no duplicates from bucket-key uniqueness instead of stating that EventID is unavailable. Extending the deduplication contract to duplicate-existence questions is proposed, not applied. MCP exposes answer text only; internal queries are UNOBSERVABLE."
+  ],
+  "adoptionJa": "利用者の指示で正式Agentの定義を更新しましたが、AI回答品質の受入・GA・全機能合格を意味しません。元3.0.0と2026-10-02のWord・HTML、100問評価、release tag、2026-10-04までの記録は変更していません。本資料は別日付の追補です。",
+  "adoptionEn": "The deployed formal Agent definition was updated on the user's instruction; this is not AI-quality acceptance, GA or all-feature success. The original 3.0.0 release, the 2026-10-02/04 records and earlier studies are preserved.",
+  "targetCaseIds": [
+    "T01",
+    "T02",
+    "T03",
+    "T04",
+    "T05",
+    "T06",
+    "T07",
+    "T08",
+    "T09",
+    "T10"
+  ],
+  "excludedUncertainCaseIds": [],
+  "submissionCount": 221,
+  "capturedBusinessReplies": 209,
+  "nativePlatformBlocks": 12,
+  "diagnosticSubmissions": 5,
+  "sameConfigurationRetries": 3,
+  "transport": "Fabric Data Agent MCP endpoint (published stage); answer text only",
+  "finalConfigurationRule": "Adopt round 6 if mean standard >= 73.0 and extended content PASS >= 12; otherwise re-apply the best of rounds 4-6. Recorded before round-6 results.",
+  "mainPromoted": false,
+  "oldStudiesChanged": false,
+  "humanSignoff": false,
+  "privacy": {
+    "answerKeys": false,
+    "liveResourceIds": false,
+    "machinePaths": false,
+    "privateCriteria": false,
+    "rawAnswers": false
+  },
+  "profileFileHashes": {
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/description-overrides.json": "19b2e0fe9d88e01ef092b84e10561a0a185a5bad38d621e422caa8e230408927",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/example-changes.json": "485aaf102d253d665ae353f7fa04d0ac29baa92d54784f790d692085347a7af3",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt": "49384eda7777661a16883138fa6a8ac358cff1532df12e26681736b6d8ee9e51",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt": "c6d3dcb5be890d251850eeb9e29f5bf21e977c9aa349ca2a0730d7a0db8b4271",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/lakehouse-contract.txt": "f747a204609d1320a01445177f70ae6cea74f4c2132500d5b09f9ac529306f8e",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/ontology-contract.txt": "89f4d2dfe673dc4e8f0fe5e49213212439f4e2309a33f750a6c580649162812a",
+    "workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt": "33356ecbcf2e0dc8d27157adf5d4b98e8a31f412ac6835b73a203e2a3aef5a81",
+    "tools/data-agent/standard_contract_restoration.py": "51e16114e8f7cbf40906d366ae3fb4bd109d49cc1bfea72ff2b9a8c567ba9474"
+  }
+}

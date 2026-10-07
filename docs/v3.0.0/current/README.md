@@ -9,12 +9,15 @@
 [Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
 [検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt) ·
 [回答精度の改善（2026-10-07）](../tuning-20261007/README.md) ·
+[第3報: 逸脱の完了と対策](../followup-20261007/README.md) ·
 [2026-10-04の記録](history/20261004/README.md)
 
-**成果物整合性と旧フォルダの整理は確認済みです。** 2026-10-07の正式配置は21 Items・Agent1件・Temp0件です。
+**成果物整合性と旧フォルダの整理は確認済みです。** 2026-10-07の正式配置は22 Items（第3報で任意の
+Power BIレポートを追加）・Agent1件・Temp0件です。
 正式Agentの標準10問・84条件は、配置直後の**36/84・34/84**から、回答契約の復元後に
 **74/84・73/84**（T10のnative遮断により上限77）となりました。事前登録holdout12問は
 11 PASS／1 FAILです。AI回答品質の0 FAILではなく、文書203検査の成功はAI回答のPASSに加算していません。
+第3報の残件候補R7・R8は事前に記録した採用規則を満たさず、正式Agentは上記の構成のままです。
 
 ## 版の正本
 
@@ -107,3 +110,7 @@ The 2026-10-07 deployment restored the standard answer contracts in the formal
 Agent: the protected ten/84 moved from 36/84 and 34/84 to 74/84 and 73/84 (ceiling
 77; T10 is blocked natively and never bypassed), and a pre-registered author-written
 holdout returned 11 PASS /1 FAIL. See the dated addendum for every configuration.
+The same-day follow-up completed the remaining deviations where an API path exists
+(service-verified views; the optional Power BI report, now 22 items), documented
+UI-only hand-offs, added the public regression gate and runbook tools, and kept this
+configuration because candidates R7 and R8 missed the pre-recorded adoption rule.

@@ -1,10 +1,10 @@
 {
  "schemaVersion": "furusato-v3-current-verification/v1",
  "date": "2026-10-07",
- "projectedAtUtc": "2026-10-07T06:22:10.789219+00:00",
+ "projectedAtUtc": "2026-10-07T10:28:01.717196+00:00",
  "workshopVersion": "3.0.0",
- "sourceCommit": "82cb1111e40c6f5b1cbfbea76245f5af790d43c6",
- "artifactSetSha256": "064a2f3f8101ca32f7bb304fac81048ac523940c9d54ab222e5fc1f485339e9b",
+ "sourceCommit": "02fdde18c7912f6426976a0ed8a8a95d23fd7d3e",
+ "artifactSetSha256": "a073f52bc98d69cae9aeec0411bea908cc24732bea790c527579132503dfd163",
  "gitBlobParityVerified": true,
  "sourceArtifacts": 313,
  "notebooksAligned": 5,
@@ -30,7 +30,7 @@
   "tempFolderDeleted": true
  },
  "production": {
-  "activeItems": 21,
+  "activeItems": 22,
   "activeDataAgents": 1,
   "tempFolders": 0,
   "allSourcesInTargetFolder": true,
@@ -39,7 +39,8 @@
   "manualPipelineRuns": 3,
   "automaticDeliveryVerified": false,
   "activatorStopped": true,
-  "portalUsed": false
+  "portalUsed": false,
+  "powerBiReportDeployed": true
  },
  "data": {
   "staticRows": 80000,
@@ -98,20 +99,82 @@
  "generalAiQualityAccepted": false,
  "oldReleaseAssetsChanged": false,
  "remaining": [
-  "T10 is blocked by the native content filter and is reported as a failure, not bypassed.",
-  "T09 takes the prefecture from Lakehouse instead of an Ontology traversal.",
-  "Holdout H09 concluded 'no duplicates' from bucket-key uniqueness instead of stating that EventID is unavailable.",
-  "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings are not certified in this deployment."
+  "T10 is blocked by the native content filter and is reported as a failure, not bypassed (support draft prepared).",
+  "T09 takes the prefecture from Lakehouse instead of an Ontology traversal (confirmed by run steps; candidate R8 fixed it but was not adopted).",
+  "Duplicate-existence questions can still be answered as 'no duplicates' (holdout H09, holdout-2 N02).",
+  "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings require native UI hand-offs.",
+  "All Lakehouse SQL example queries fail service validation while runtime SQL works (support draft prepared)."
  ],
  "artifactSha256": {
-  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "7b443edc6af70b84ce8b3c0c3bacd59b6dd3bf88c1eddf1adb7c9ad7957b9dcc",
-  "guide/furusato-workshop-v3-0-0-complete.html": "e135a6bd90ca2e93ce94b35519732c3e1064928c24fc64b6a5b419d6096e8791",
-  "Furusato_Workshop_v3.0.0_current-20261007.zip": "4745ec2bb817ce01de8294b5d6d1ad9d8cb40ec1444a1e135d837bb1deffa80e",
-  "artifact-set.json": "064a2f3f8101ca32f7bb304fac81048ac523940c9d54ab222e5fc1f485339e9b"
+  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "11bd4a8e381e81286b020e3c190525d01782b41e40e476337586cb6b06e2515e",
+  "guide/furusato-workshop-v3-0-0-complete.html": "312561f0797470f7ff47240c643c12199c8c6e7d493b951d552d75cfd2300f10",
+  "Furusato_Workshop_v3.0.0_current-20261007.zip": "0df826e4262982f28c95f173620817638412f6af422da82ad4a5464f849d377b",
+  "artifact-set.json": "a073f52bc98d69cae9aeec0411bea908cc24732bea790c527579132503dfd163"
  },
  "privacy": {
   "rawAnswers": false,
   "privatePaths": false,
   "liveResourceIds": false
+ },
+ "tests": {
+  "dataAgent": 325,
+  "provisioning": 308,
+  "docs": {
+   "total": 380,
+   "pass": 379,
+   "knownPreexistingFailure": 1
+  }
+ },
+ "followUp": {
+  "record": "../followup-20261007/README.md",
+  "result": "../followup-20261007/result-followup-20261007.json",
+  "deviations": {
+   "viewElements": "verified-by-service-api",
+   "powerBiReport": "deployed-and-reconciled",
+   "activatorAutomaticDelivery": "ui-handoff",
+   "timeSeriesBindingAndMetrics": "ui-handoff (handoff-ontology recorded)"
+  },
+  "countermeasures": {
+   "E": "done",
+   "F": "done",
+   "G": "done"
+  },
+  "candidates": {
+   "R7": {
+    "standard84": [
+     69,
+     76
+    ],
+    "adopted": false
+   },
+   "R8": {
+    "standard84": [
+     76,
+     74
+    ],
+    "extendedContentPass": 11,
+    "adopted": false
+   }
+  },
+  "adoptedConfiguration": "unchanged (rollback verified part-for-part)",
+  "holdout2": {
+   "questions": 12,
+   "runs": 1,
+   "factualPass": 9,
+   "contentPass": 7,
+   "authorWritten": true,
+   "independent": false
+  },
+  "exampleValidation": {
+   "lakehouseSqlInvalid": 17,
+   "kqlValid": 9
+  },
+  "observability": {
+   "method": "SDK run steps in a temporary Temp notebook (deleted)",
+   "t09ExecutedSources": [
+    "Kusto",
+    "LakehouseTables"
+   ]
+  }
  }
 }

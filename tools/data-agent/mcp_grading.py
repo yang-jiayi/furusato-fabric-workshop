@@ -75,6 +75,8 @@ def grade_case(
     response = record.get("response", {})
     view, native_errors = native_view(response)
     errors += native_errors
+    # Classification only; the blocked question stays FAIL in strict counts.
+    base["platform_blocked"] = "native_platform_content_block" in native_errors
     if contains_truncation(response):
         errors.append("truncated_native_evidence")
     if review is not None:

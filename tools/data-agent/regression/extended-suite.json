@@ -1,0 +1,623 @@
+{
+  "schema_version": 1,
+  "kind": "regression",
+  "cases": [
+    {
+      "id": "B01",
+      "area": "time-JST-boundary",
+      "question": "日本時間で2026年9月1日に当たる生の観測データはありますか？あれば件数と金額、実際に観測されたUTCの最初と最後の時刻も教えてください。",
+      "expected_source": "Eventhouse",
+      "required_query_languages": [
+        "KQL"
+      ],
+      "expected": "178件 / 3,177,000円。検索区間 UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z)。実観測 UTC 2026-08-31T15:00:05Z〜2026-08-31T23:58:20Z。",
+      "expected_values": {
+        "count": 178,
+        "amount_yen": 3177000,
+        "window_utc": [
+          "2026-08-31T15:00:00Z",
+          "2026-09-01T15:00:00Z"
+        ],
+        "first_observed_utc": "2026-08-31T15:00:05Z",
+        "last_observed_utc": "2026-08-31T23:58:20Z"
+      },
+      "conditions": [
+        {
+          "id": "B01.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 178件 / 3,177,000円。検索区間 UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z)。実観測 UTC 2026-08-31T15:00:05Z〜2026-08-31T23:58:20Z。"
+        },
+        {
+          "id": "B01.content",
+          "text": "件数・金額、UTCの検索区間、実際の最初と最後の観測時刻（UTC）をすべて示す。「存在しない」「0件」と断定しない。"
+        }
+      ]
+    },
+    {
+      "id": "B02",
+      "area": "model-DAX-explanation",
+      "question": "Power BIモデル（Gold）で、データソースをRealtimeIncrementに絞った状態で［静的寄附件数］を評価すると、結果はどうなりますか？メジャー定義に基づいて理由も説明してください。",
+      "expected_source": "SemanticModel",
+      "required_query_languages": [],
+      "expected": "BLANK（空）。［静的寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))。外側のデータソース=RealtimeIncrementと交差して空集合。",
+      "expected_values": {
+        "result": "BLANK",
+        "measure": "静的寄附件数",
+        "definition": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))",
+        "outer_filter": "RealtimeIncrement"
+      },
+      "conditions": [
+        {
+          "id": "B02.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: BLANK（空）。［静的寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))。外側のデータソース=RealtimeIncrementと交差して空集合。"
+        },
+        {
+          "id": "B02.content",
+          "text": "BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない（なしなら同一列の外側フィルターは置き換えられる）。80,000などの値を返すとしない。"
+        }
+      ]
+    },
+    {
+      "id": "B03",
+      "area": "time-UTC-hourly",
+      "question": "2026年8月17日（UTCの日付）の生観測を、UTCの1時間ごとに件数と金額で、全ファイル合算して出してください。日本時間には変換しないでください。",
+      "expected_source": "Eventhouse",
+      "required_query_languages": [
+        "KQL"
+      ],
+      "expected": "UTC 24時間すべて。合計 540件 / 9,846,000円。00時台 24件/391,000円、01時台 25件/476,000円、02時台 20件/602,000円…（全24時間は expected_values）。",
+      "expected_values": {
+        "count": 540,
+        "amount_yen": 9846000,
+        "hours_utc": [
+          {
+            "hour": 0,
+            "count": 24,
+            "amount_yen": 391000
+          },
+          {
+            "hour": 1,
+            "count": 25,
+            "amount_yen": 476000
+          },
+          {
+            "hour": 2,
+            "count": 20,
+            "amount_yen": 602000
+          },
+          {
+            "hour": 3,
+            "count": 23,
+            "amount_yen": 400000
+          },
+          {
+            "hour": 4,
+            "count": 28,
+            "amount_yen": 585000
+          },
+          {
+            "hour": 5,
+            "count": 19,
+            "amount_yen": 315000
+          },
+          {
+            "hour": 6,
+            "count": 19,
+            "amount_yen": 288000
+          },
+          {
+            "hour": 7,
+            "count": 24,
+            "amount_yen": 349000
+          },
+          {
+            "hour": 8,
+            "count": 21,
+            "amount_yen": 436000
+          },
+          {
+            "hour": 9,
+            "count": 25,
+            "amount_yen": 474000
+          },
+          {
+            "hour": 10,
+            "count": 26,
+            "amount_yen": 471000
+          },
+          {
+            "hour": 11,
+            "count": 27,
+            "amount_yen": 514000
+          },
+          {
+            "hour": 12,
+            "count": 20,
+            "amount_yen": 385000
+          },
+          {
+            "hour": 13,
+            "count": 19,
+            "amount_yen": 397000
+          },
+          {
+            "hour": 14,
+            "count": 20,
+            "amount_yen": 379000
+          },
+          {
+            "hour": 15,
+            "count": 24,
+            "amount_yen": 387000
+          },
+          {
+            "hour": 16,
+            "count": 18,
+            "amount_yen": 218000
+          },
+          {
+            "hour": 17,
+            "count": 22,
+            "amount_yen": 425000
+          },
+          {
+            "hour": 18,
+            "count": 25,
+            "amount_yen": 450000
+          },
+          {
+            "hour": 19,
+            "count": 29,
+            "amount_yen": 452000
+          },
+          {
+            "hour": 20,
+            "count": 21,
+            "amount_yen": 402000
+          },
+          {
+            "hour": 21,
+            "count": 24,
+            "amount_yen": 420000
+          },
+          {
+            "hour": 22,
+            "count": 19,
+            "amount_yen": 288000
+          },
+          {
+            "hour": 23,
+            "count": 18,
+            "amount_yen": 342000
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "id": "B03.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: UTC 24時間すべて。合計 540件 / 9,846,000円。00時台 24件/391,000円、01時台 25件/476,000円、02時台 20件/602,000円…（全24時間は expected_values）。"
+        },
+        {
+          "id": "B03.content",
+          "text": "UTCの00時〜23時の24時間すべてを全ファイル合算で示し、日本時間に変換しない。"
+        }
+      ]
+    },
+    {
+      "id": "B04",
+      "area": "time-JST-day",
+      "question": "日本時間の2026年8月12日の生観測は何件で、金額はいくらですか？検索に使ったUTCの区間と、実際の最初と最後の観測時刻（UTC）も示してください。",
+      "expected_source": "Eventhouse",
+      "required_query_languages": [
+        "KQL"
+      ],
+      "expected": "487件 / 7,755,000円。検索区間 UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z)。実観測 UTC 2026-08-11T15:02:09Z〜2026-08-12T14:57:31Z。",
+      "expected_values": {
+        "count": 487,
+        "amount_yen": 7755000,
+        "window_utc": [
+          "2026-08-11T15:00:00Z",
+          "2026-08-12T15:00:00Z"
+        ],
+        "first_observed_utc": "2026-08-11T15:02:09Z",
+        "last_observed_utc": "2026-08-12T14:57:31Z"
+      },
+      "conditions": [
+        {
+          "id": "B04.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 487件 / 7,755,000円。検索区間 UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z)。実観測 UTC 2026-08-11T15:02:09Z〜2026-08-12T14:57:31Z。"
+        },
+        {
+          "id": "B04.content",
+          "text": "件数・金額、UTCの検索区間、実際の最初と最後の観測時刻（UTC）をすべて示す。「存在しない」「0件」と断定しない。"
+        }
+      ]
+    },
+    {
+      "id": "B05",
+      "area": "model-gold-layers",
+      "question": "品質処理後のGoldモデルで、静的seedと受入済みの増分を、それぞれ件数と金額で教えてください。合計も出して。",
+      "expected_source": "SemanticModel",
+      "required_query_languages": [],
+      "expected": "StaticSeed 80,000件/1,344,099,000円、RealtimeIncrement 14,900件/252,058,000円、合計 94,900件/1,596,157,000円。",
+      "expected_values": {
+        "static_seed": {
+          "count": 80000,
+          "amount_yen": 1344099000
+        },
+        "accepted_increment": {
+          "count": 14900,
+          "amount_yen": 252058000
+        },
+        "gold_total": {
+          "count": 94900,
+          "amount_yen": 1596157000
+        },
+        "raw_increment_not_gold": {
+          "count": 15000,
+          "amount_yen": 253886000
+        }
+      },
+      "conditions": [
+        {
+          "id": "B05.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: StaticSeed 80,000件/1,344,099,000円、RealtimeIncrement 14,900件/252,058,000円、合計 94,900件/1,596,157,000円。"
+        },
+        {
+          "id": "B05.content",
+          "text": "静的・受入増分・合計の3つを件数と金額で示し、raw 15,000件/253,886,000円をGoldとして示さない。"
+        }
+      ]
+    },
+    {
+      "id": "B06",
+      "area": "model-flag",
+      "question": "Goldモデルの高額寄附フラグが付いた寄附は何件ありますか？静的seedと受入増分の内訳と、フラグの判定条件も教えてください。",
+      "expected_source": "SemanticModel",
+      "required_query_languages": [],
+      "expected": "1,392件（StaticSeed 1,157件、RealtimeIncrement 235件）。条件は寄附金額 > 57,000円。",
+      "expected_values": {
+        "threshold_yen_exclusive": 57000,
+        "total": 1392,
+        "static_seed": 1157,
+        "accepted_increment": 235
+      },
+      "conditions": [
+        {
+          "id": "B06.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 1,392件（StaticSeed 1,157件、RealtimeIncrement 235件）。条件は寄附金額 > 57,000円。"
+        },
+        {
+          "id": "B06.content",
+          "text": "合計と2つの内訳、判定条件（57,000円ちょうどは含まない）を示す。"
+        }
+      ]
+    },
+    {
+      "id": "B07",
+      "area": "model-time-intelligence",
+      "question": "Goldモデルで2026年8月の寄附総額はいくらですか？前年同期間（2025年8月）と比べてください。",
+      "expected_source": "SemanticModel",
+      "required_query_languages": [],
+      "expected": "2026年8月（JST日付）248,881,000円（14,722件）、2025年8月 67,051,000円（4,012件）。差 181,830,000円、倍率 約3.71倍、増加率 約271.2%。",
+      "expected_values": {
+        "current_2026_08_jst": {
+          "count": 14722,
+          "amount_yen": 248881000
+        },
+        "previous_2025_08_jst": {
+          "count": 4012,
+          "amount_yen": 67051000
+        },
+        "difference_yen": 181830000,
+        "ratio": 3.71,
+        "growth_percent": 271.2
+      },
+      "conditions": [
+        {
+          "id": "B07.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 2026年8月（JST日付）248,881,000円（14,722件）、2025年8月 67,051,000円（4,012件）。差 181,830,000円、倍率 約3.71倍、増加率 約271.2%。"
+        },
+        {
+          "id": "B07.content",
+          "text": "両期間の金額を示し、差・倍率・増減率を取り違えない（増加率を倍率として書かない）。"
+        }
+      ]
+    },
+    {
+      "id": "B08",
+      "area": "static-filter-ranking",
+      "question": "静的seedで、コンビニで支払われた寄付は何件・いくら？受入金額が多い自治体の上位3つもIDと名前つきで教えて。",
+      "expected_source": "Lakehouse",
+      "required_query_languages": [
+        "SQL"
+      ],
+      "expected": "コンビニ決済 5,566件 / 95,542,000円。上位3: 452025 都城市 125件 / 2,925,000円、272132 泉佐野市 40件 / 765,000円、442020 別府市 14件 / 740,000円。",
+      "expected_values": {
+        "payment_method": "コンビニ決済",
+        "count": 5566,
+        "amount_yen": 95542000,
+        "top3": [
+          {
+            "rank": 1,
+            "municipality_id": "452025",
+            "municipality_name": "都城市",
+            "prefecture_name": "宮崎県",
+            "count": 125,
+            "amount_yen": 2925000
+          },
+          {
+            "rank": 2,
+            "municipality_id": "272132",
+            "municipality_name": "泉佐野市",
+            "prefecture_name": "大阪府",
+            "count": 40,
+            "amount_yen": 765000
+          },
+          {
+            "rank": 3,
+            "municipality_id": "442020",
+            "municipality_name": "別府市",
+            "prefecture_name": "大分県",
+            "count": 14,
+            "amount_yen": 740000
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "id": "B08.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: コンビニ決済 5,566件 / 95,542,000円。上位3: 452025 都城市 125件 / 2,925,000円、272132 泉佐野市 40件 / 765,000円、442020 別府市 14件 / 740,000円。"
+        },
+        {
+          "id": "B08.content",
+          "text": "件数・金額と、上位3自治体のID・名前・金額を示す。"
+        }
+      ]
+    },
+    {
+      "id": "B09",
+      "area": "static-catalog",
+      "question": "返礼品3001234をカタログに載せている事業者をすべて教えてください。実際に発送した事業者かどうかの区別もお願いします。",
+      "expected_source": "Lakehouse or Ontology",
+      "required_query_languages": [],
+      "expected": "5社: 4001125 株式会社佐賀牧場、4001204 合同会社みやき牧場、4001266 協同組合江北醸造、4001572 有限会社有田牧場、4002146 有限会社基山海産。返礼品 3001234 嬉野市産 長期貯蔵 麦焼酎 1.8L。",
+      "expected_values": {
+        "gift_id": "3001234",
+        "gift_name": "嬉野市産 長期貯蔵 麦焼酎 1.8L",
+        "suppliers": [
+          {
+            "business_id": "4001125",
+            "business_name": "株式会社佐賀牧場"
+          },
+          {
+            "business_id": "4001204",
+            "business_name": "合同会社みやき牧場"
+          },
+          {
+            "business_id": "4001266",
+            "business_name": "協同組合江北醸造"
+          },
+          {
+            "business_id": "4001572",
+            "business_name": "有限会社有田牧場"
+          },
+          {
+            "business_id": "4002146",
+            "business_name": "有限会社基山海産"
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "id": "B09.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 5社: 4001125 株式会社佐賀牧場、4001204 合同会社みやき牧場、4001266 協同組合江北醸造、4001572 有限会社有田牧場、4002146 有限会社基山海産。返礼品 3001234 嬉野市産 長期貯蔵 麦焼酎 1.8L。"
+        },
+        {
+          "id": "B09.content",
+          "text": "全事業者をIDと名前で示し、カタログ登録は実際の発送・履行の証明ではないと区別する。"
+        }
+      ]
+    },
+    {
+      "id": "B10",
+      "area": "static-ambiguity",
+      "question": "大阪の寄付ってどれくらいですか。",
+      "expected_source": "Lakehouse",
+      "required_query_languages": [
+        "SQL"
+      ],
+      "expected": "受入（大阪府の自治体が受け取った）3,059件/46,532,000円、在住（大阪府在住者が寄付した）5,946件/100,641,000円。",
+      "expected_values": {
+        "received_by_osaka_municipalities": {
+          "count": 3059,
+          "amount_yen": 46532000
+        },
+        "donated_by_osaka_residents": {
+          "count": 5946,
+          "amount_yen": 100641000
+        }
+      },
+      "conditions": [
+        {
+          "id": "B10.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 受入（大阪府の自治体が受け取った）3,059件/46,532,000円、在住（大阪府在住者が寄付した）5,946件/100,641,000円。"
+        },
+        {
+          "id": "B10.content",
+          "text": "受入と在住の両方を区別して示すか、どちらかを確認する。2つを合算しない。"
+        }
+      ]
+    },
+    {
+      "id": "B11",
+      "area": "ontology-schema",
+      "question": "Ontologyで、寄附者と都道府県、寄附と自治体をつなぐ関係の名前と向きを教えてください。",
+      "expected_source": "Ontology",
+      "required_query_languages": [],
+      "expected": "DonorLivesInPrefecture: Donor → Prefecture。DonationToMunicipality: Donation → Municipality。",
+      "expected_values": {
+        "DonorLivesInPrefecture": {
+          "from": "Donor",
+          "to": "Prefecture"
+        },
+        "DonationToMunicipality": {
+          "from": "Donation",
+          "to": "Municipality"
+        }
+      },
+      "conditions": [
+        {
+          "id": "B11.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: DonorLivesInPrefecture: Donor → Prefecture。DonationToMunicipality: Donation → Municipality。"
+        },
+        {
+          "id": "B11.content",
+          "text": "2つの関係の名前と向き（from → to）を両方示す。"
+        }
+      ]
+    },
+    {
+      "id": "B12",
+      "area": "static-entity",
+      "question": "泉佐野市の静的データでの受入件数と金額、全国順位と府内順位を教えて。",
+      "expected_source": "Lakehouse",
+      "required_query_languages": [
+        "SQL"
+      ],
+      "expected": "272132 泉佐野市（大阪府）: 721件 / 13,266,000円、全国金額順位2位、府内1位。",
+      "expected_values": {
+        "municipality_id": "272132",
+        "municipality_name": "泉佐野市",
+        "prefecture_name": "大阪府",
+        "count": 721,
+        "amount_yen": 13266000,
+        "national_rank": 2,
+        "prefecture_rank": 1
+      },
+      "conditions": [
+        {
+          "id": "B12.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 272132 泉佐野市（大阪府）: 721件 / 13,266,000円、全国金額順位2位、府内1位。"
+        },
+        {
+          "id": "B12.content",
+          "text": "件数・金額・全国順位・府内順位をすべて示す。"
+        }
+      ]
+    },
+    {
+      "id": "B13",
+      "area": "static-metric",
+      "question": "北海道の自治体が受け入れた「魚介類・海産物」カテゴリの寄付を、県別カテゴリ指標で件数と金額を教えて。",
+      "expected_source": "Lakehouse",
+      "required_query_languages": [
+        "SQL"
+      ],
+      "expected": "格納キー 01-02、北海道×魚介類・海産物: 1,004件 / 16,642,000円。",
+      "expected_values": {
+        "metric_key": "01-02",
+        "prefecture_name": "北海道",
+        "category_name": "魚介類・海産物",
+        "count": 1004,
+        "amount_yen": 16642000
+      },
+      "conditions": [
+        {
+          "id": "B13.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 格納キー 01-02、北海道×魚介類・海産物: 1,004件 / 16,642,000円。"
+        },
+        {
+          "id": "B13.content",
+          "text": "県別カテゴリ指標の件数と金額を示す。"
+        }
+      ]
+    },
+    {
+      "id": "B14",
+      "area": "static-ranking",
+      "question": "静的seedで受入金額が多い自治体トップ5を、件数も一緒に教えて。",
+      "expected_source": "Lakehouse",
+      "required_query_languages": [
+        "SQL"
+      ],
+      "expected": "1 452025 都城市 1,813件 / 41,151,000円; 2 272132 泉佐野市 721件 / 13,266,000円; 3 012190 紋別市 704件 / 8,965,000円; 4 442020 別府市 216件 / 6,275,000円; 5 462209 南さつま市 134件 / 5,537,000円。",
+      "expected_values": {
+        "top5": [
+          {
+            "rank": 1,
+            "municipality_id": "452025",
+            "municipality_name": "都城市",
+            "prefecture_name": "宮崎県",
+            "count": 1813,
+            "amount_yen": 41151000
+          },
+          {
+            "rank": 2,
+            "municipality_id": "272132",
+            "municipality_name": "泉佐野市",
+            "prefecture_name": "大阪府",
+            "count": 721,
+            "amount_yen": 13266000
+          },
+          {
+            "rank": 3,
+            "municipality_id": "012190",
+            "municipality_name": "紋別市",
+            "prefecture_name": "北海道",
+            "count": 704,
+            "amount_yen": 8965000
+          },
+          {
+            "rank": 4,
+            "municipality_id": "442020",
+            "municipality_name": "別府市",
+            "prefecture_name": "大分県",
+            "count": 216,
+            "amount_yen": 6275000
+          },
+          {
+            "rank": 5,
+            "municipality_id": "462209",
+            "municipality_name": "南さつま市",
+            "prefecture_name": "鹿児島県",
+            "count": 134,
+            "amount_yen": 5537000
+          }
+        ]
+      },
+      "conditions": [
+        {
+          "id": "B14.fact",
+          "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 1 452025 都城市 1,813件 / 41,151,000円; 2 272132 泉佐野市 721件 / 13,266,000円; 3 012190 紋別市 704件 / 8,965,000円; 4 442020 別府市 216件 / 6,275,000円; 5 462209 南さつま市 134件 / 5,537,000円。"
+        },
+        {
+          "id": "B14.content",
+          "text": "上位5自治体を順位・ID・名前・件数・金額で示す。"
+        }
+      ]
+    }
+  ],
+  "provenance": {
+    "builder": "tools/data-agent/regression_suite.py::build_suite",
+    "origin": "2026-10-07 development questions B01-B14 (exposed; not a held-out set)",
+    "rubric": "fact = every stated value matches; content = every listed element present",
+    "files": {
+      "workshop/v3.0.0-preview/data/seed/business_gifts.csv": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",
+      "workshop/v3.0.0-preview/data/seed/businesses.csv": "41534c77287abe881ab33403ac10078097118c64ce694351fe24605f399f7c97",
+      "workshop/v3.0.0-preview/data/seed/categories.csv": "78bc570c40430d6b1970e8997adeec81e6442fda31601603efc69bbe687ebc26",
+      "workshop/v3.0.0-preview/data/seed/donation_orders.csv": "2995bf66896993614090e895ef1814b0383122bd837dba4b948b30e8a57cfadf",
+      "workshop/v3.0.0-preview/data/seed/donors.csv": "e5772173373ffb19c5203d6ecb26329327c002adc83292ada432341ff0cf4fb3",
+      "workshop/v3.0.0-preview/data/seed/gifts.csv": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869",
+      "workshop/v3.0.0-preview/data/seed/municipalities.csv": "8c344cbd7663b8c496e68a3cbe92136b3e5789da65d3795858f42f63b4d9ac63",
+      "workshop/v3.0.0-preview/data/seed/prefectures.csv": "0b534b8c5e9aacf659ef52599487096c9df9d6e9324ad659b9dcb0e36f1846cc",
+      "workshop/v3.0.0-preview/data/increment/donation_events_001.csv": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",
+      "workshop/v3.0.0-preview/data/increment/donation_events_002.csv": "e42e836638afc370f7a0fdc1d12e8d5126fcad05c266f87d4400834d52fc1fb3",
+      "workshop/v3.0.0-preview/data/increment/donation_events_003.csv": "bad72fc616c682839e120781579c21d3d313068f948d6fcccbec9c4d13222608",
+      "workshop/v3.0.0-preview/data/dataset-manifest.json": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+      "workshop/v3.0.0-preview/data/SHA256SUMS.txt": "9227c1b294d029a4603b86822998584d7d0caf65d7904acd773d8a7292934f1d",
+      "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.SemanticModel/definition/tables/寄附.tmdl": "48ef5403dbb8ae32963a523977f5b95d9e12a37858a764f6470cffca19057861",
+      "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb": "c93c3a73a112847b1c9907a15498a503ebca98bd40490c0df8c0b1db42b7a67e",
+      "workshop/v3.0.0-preview/ontology/generation2-contract.json": "77c2efbf3522a6b89b1fbaecad7e559f9830da64f417ef22f1078eaddb31e491"
+    }
+  }
+}

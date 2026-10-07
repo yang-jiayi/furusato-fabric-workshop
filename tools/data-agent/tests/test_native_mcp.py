@@ -626,6 +626,19 @@ class CaptureAndGradeTests(unittest.TestCase):
         review["platform_block_detected"] = True
         self.assertEqual(ne.grade_case(self.case, record, review)["pass"], 0)
 
+    def test_native_platform_block_is_classified_but_stays_failed(self):
+        self.factory.configure = lambda s: setattr(
+            s, "native", reply("There's content here I can't work with. Try asking a new question."))
+        record = self.capture()
+        score = ne.grade_case(self.case, record, approve(self.case, record))
+        count = len(self.case["conditions"])
+        self.assertTrue(score["platform_blocked"])
+        self.assertEqual((score["pass"], score["fail"]), (0, count))
+        summary = ne.summarize([score])
+        self.assertEqual(summary["platform_blocked_questions"], 1)
+        self.assertEqual(summary["condition_fail"], count)
+        self.assertEqual(summary["observable_condition_applicable"], 0)
+
     def test_plan_cli_freezes_mcp_without_auth_and_old_reports_are_read_only(self):
         original = {
             "schema_version": 1, "kind": "original", "cases": [

@@ -224,6 +224,110 @@ Run requests are bound to the frozen harness hash; read-only reporting of older
 plans is allowed and discloses a harness-version mismatch without modifying
 the historical evidence.
 
+### 公開前の回帰ゲート / Pre-publication regression gate
+
+正式 Agent の指示・例・ソース選択を変更して公開する前に、次の3つをすべて実行します。
+2026-10-07 の再デプロイで、旧ゲート（非公開の既知回帰のみ）が標準10問の退行（76/84 → 36/84）を
+見逃したための対策です。
+
+1. **標準10問・84条件を2回**（`--repeats 2`）。質問・条件は変更しません。
+2. **拡張回帰14問（B01–B14）を1回**（`--regression-suite`）。2026-10-07 の調整で公開済みになった
+   開発用の質問で、held-out ではありません。各問は「事実（書いた値がすべて期待値と一致）」と
+   「内容（必要な要素がすべてある）」の2条件です。期待値は `regression_suite.py` が同梱 CSV・
+   Semantic Model の TMDL・Notebook05・Ontology 契約から再計算し、コミット済みの
+   [`regression/extended-suite.json`](regression/extended-suite.json) と一致することをテストで確認します。
+   期待値は採点用です。Agent の指示・例・profile へ写しません。
+3. **未使用の held-out を1回**（構成の採用規則を記録した後、最後に1回だけ）。
+
+採用規則（例: 標準2回の平均と拡張の内容 PASS 数の下限）は、候補の結果を見る前に記録します。
+FAIL を削除したり、期待値を現在の回答に合わせたりしません。
+
+**プラットフォーム遮断の扱い:** 回答がサービスの定型文
+「There's content here I can't work with.」に置き換わった問は、厳密な分母では FAIL のままです。
+`summarize` はこれを `platform_blocked_questions` / `platform_blocked_conditions` として別に数え、
+診断用に `observable_condition_applicable`（遮断分を除いた分母）を出します。受入には使いません。
+分類はネイティブ回答の定型文が根拠で、レビュー担当の自己申告だけでは分類しません。
+標準 T10 は 2026-10-07 の配置でこの遮断を 12 回すべてで受けました（回避しません）。
+
+Run all three before publishing changes to the formal Agent's instructions,
+examples or source selection: the standard ten/84 **twice**, the public extended
+regression suite B01–B14 **once**, and an unused held-out suite **once** after
+recording the adoption rule. B01–B14 were exposed during the 2026-10-07 tuning,
+so they are regression material, not a held-out set. Each case has a *fact*
+condition (every stated value matches) and a *content* condition (every required
+element is present). `regression_suite.py` recomputes every expected value from
+the packaged CSVs, the Semantic Model TMDL, Notebook05 and the Ontology contract;
+a test keeps the committed JSON equal to that rebuild. Expected values are
+grading keys: never copy them into Agent instructions, examples or profiles.
+A question answered by the platform content block stays FAIL in every strict
+denominator; `platform_blocked_*` and `observable_condition_applicable` are a
+diagnostic breakdown based on the native block text, never acceptance.
+
+```powershell
+# Offline: rebuild the regression suite from sources and compare with the committed JSON.
+python -B .\tools\data-agent\regression_suite.py check
+
+# Freeze the standard suite, your private held-out suite and the regression suite:
+python -B .\tools\data-agent\evaluate_native.py freeze `
+  --held-out-input unseen-specification.json --regression
+
+# Pre-register standard x2, held-out x1 and regression x1:
+python -B .\tools\data-agent\evaluate_native.py plan `
+  --name candidate-next --deployment updated-deployment.json --transport mcp `
+  --repeats 2 --held-out-repeats 1 `
+  --regression-suite suites\regression.json --regression-repeats 1
+
+# ONLINE (explicit authorization): run the predeclared regression slot.
+python -B .\tools\data-agent\evaluate_native.py run `
+  --plan campaigns\candidate-next\plan.json --configuration candidate `
+  --suite regression --repeat 1 --allow-submit-native-questions
+
+# Optional reviewer aid: list expected numbers/IDs missing from private answer
+# texts ({"B01": "...", ...}). It never assigns PASS/FAIL.
+python -B .\tools\data-agent\regression_suite.py screen --answers <private-answers.json>
+```
+
+### 実行されたソースの観測 / Observing executed sources
+
+MCP は回答本文しか返さないため、回答の「ソース: Ontology」は実行の証明になりません。
+実際に実行されたツール呼び出しとクエリは、Fabric ノートブック内で Data Agent SDK の
+run steps から確認できます（ノートブック外ではワークロードホストを取得できません）。
+2026-10-07 には、対象フォルダーの **Temp** に一時ノートブックを作成し、ジョブ API で1回実行し、
+結果を Lakehouse の `Files/diagnostics/` に書き出して取得した後、ノートブック・出力ファイル・
+Temp フォルダーを削除しました。ジョブ実行では `%pip` が無効のため、`python -m pip` で SDK を
+入れます。診断の質問は採点に含めません。
+
+MCP returns answer text only, so a "Source: Ontology" label is not proof of
+execution. Inside a Fabric notebook, the SDK's run steps expose every executed
+tool call and query (outside a notebook the workload host is not discoverable).
+Run it in a temporary notebook under **Temp**, write the steps to a private
+location, then delete the notebook, the output and the folder. Job runs disable
+inline `%pip`; install with `python -m pip`. Diagnostic questions are never scored.
+
+```python
+import json, subprocess, sys, uuid
+subprocess.run([sys.executable, "-m", "pip", "install", "-q", "fabric-data-agent-sdk"], check=True)
+from fabric.dataagent.client import FabricOpenAI
+
+client = FabricOpenAI(artifact_name="<published agent name>", ai_skill_stage="production")
+tag = f"diag-{uuid.uuid4().hex[:8]}"
+thread = client.get_or_create_thread(tag=tag)
+assistant = client.beta.assistants.create(model="not used")
+client.beta.threads.messages.create(thread_id=thread.id, role="user", content="<question>")
+run = client.beta.threads.runs.create_and_poll(thread_id=thread.id, assistant_id=assistant.id)
+steps = client.beta.threads.runs.steps.list(thread_id=thread.id, run_id=run.id, limit=100)
+notebookutils.fs.put("Files/diagnostics/run-steps.json",
+                     json.dumps([s.model_dump() for s in steps.data], default=str), True)
+client.delete_thread(tag=tag)
+```
+
+Read `analyze.database.execute` calls: `datasource_type` (`LakehouseTables`,
+`Kusto`, `Ontology`, `SemanticModel`) and the executed query. On 2026-10-07 the
+standard T09 question executed only Kusto and LakehouseTables (the SQL selected
+the prefecture columns); Ontology never ran, which confirmed the T09 diagnosis.
+The same run steps showed 17 Lakehouse and 9 KQL examples loaded, with example
+matching returning results only for KQL.
+
 ### Optional Responses evidence
 
 `responses-http` is an optional SDK-aligned workload path, not a stable public

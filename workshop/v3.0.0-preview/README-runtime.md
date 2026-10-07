@@ -422,3 +422,104 @@ The last stage restores the standard ten/84 answer contracts; without it a clean
 - Generated queries: KQL `top` accepts one sort key (use `order by … | take N`); GQL
   reserved words such as `nodes`/`edges` cannot be aliases; in the static consumer graph
   `MunicipalityId` is a STRING and `PrefectureName` is the Japanese suffixed name.
+
+### Stages after the repository changed
+
+Every write stage is bound to the source fingerprint recorded by preflight
+(`candidateSourceSha256` in the private plan). A newer checkout is refused for an
+existing deployment. Run the remaining stages from a temporary worktree of the
+approved commit with the same private evidence directory, then remove it. Never
+edit the plan, state or checkpoints, and never rerun preflight to "refresh" the hash.
+
+```powershell
+git worktree add ..\approved-runtime <approved-commit>
+python ..\approved-runtime\tools\provisioning\preview30_runtime.py handoff-ontology @Write
+git worktree remove ..\approved-runtime
+```
+
+### Notebook05 plan hash
+
+`PLAN_SHA256` covers `ALLOW_AUTOMATED_APPLY` and, when it is true,
+`EXPECTED_WORKSPACE_NAME`. A preview run with different values prints a different
+hash, and the apply run then refuses it. Compute the hash offline with the
+notebook's own `build_plan` (no Spark or network), compare it with the real preview
+output, and only then apply with `APPLY_CHANGES=True`, `CONFIRMED_PLAN_SHA256=<hash>`
+and `EXCLUSIVE_APPLY_WINDOW_CONFIRMED=True`:
+
+```powershell
+python tools/provisioning/notebook05_plan_sha.py --participant-id 107 --workspace-name "<exact workspace name>"
+# add --manual-apply when the apply runs in the portal with ALLOW_AUTOMATED_APPLY=False
+```
+
+### Data Agent service checks (views and example validation)
+
+The service owns the element tree of each source. After `publish-agent` and after
+any profile change, read it through the public Data Agent management API instead
+of trusting the submitted definition:
+
+```powershell
+python tools/data-agent/agent_service_check.py --private-root <private dir> `
+  --workspace-id <workspace> --agent-id <agent> --view-columns <private INFORMATION_SCHEMA.COLUMNS json>
+```
+
+Require all six `agent_*` views as `View`, `Available`, selected, with service
+columns equal to `INFORMATION_SCHEMA.COLUMNS` (`agent_donation_detail` keeps
+`DonationDataLayer` unselected) and the overlapping `ot_*` tables unselected. If a
+view is missing or unavailable, select it in the Agent's Explorer; do not invent
+element IDs. The same report lists each example's service `validationStatus`.
+Examples that fail validation are not sent to the Agent. On 2026-10-07 all 17
+Lakehouse SQL examples were `Invalid` ("Failed to connect to server …") although the
+SQL endpoint and the Agent's runtime SQL worked, while all 9 KQL examples were
+`Valid`; this is filed as a product issue
+([support drafts](../../docs/v3.0.0/followup-20261007/platform-support-cases.md)).
+Never mark a failed example valid.
+
+### Optional Power BI report without the portal
+
+`tools/powerbi/Deploy-FurusatoPowerBI.ps1` creates the model and the report. When
+the model already exists, create only the report from the same definition with a
+`byConnection` reference to the existing model (never re-import the model), read
+the definition back, and render it. If the tenant disables report image export,
+export to PDF instead, check the page visually, and reconcile its totals with DAX
+(Gold 94,900 rows / 1,596,157,000 JPY; high-value 1,392).
+
+### Hand-off: Activator native action (UI, required for automatic delivery)
+
+A rule created from the bundle carries the bundle's Pipeline connection document
+in its action. Delivery cannot be verified until a person initializes the action in
+the native Activator UI, which the API cannot do:
+
+1. Keep the rule stopped. Open the rule → **Edit action**, select this deployment's
+   Pipeline, confirm the dynamic `Type`/`Subject`/`Source` mappings, **Apply**, **Save**.
+2. Read the definition back: the connection document differs from the bundle's,
+   `shouldApplyRuleOnUpdate` is `false` and `delayToleranceMs` ≥ `120000`.
+3. Run `start-activator`, then for increments 1–3 in order: `deliver-increment`,
+   export the native events and Copy activity, `verify-delivery`. Finish with `stop-activator`.
+
+If the increments were already ingested manually, `deliver-increment` stops (the
+CSV exists, PutBlob `If-None-Match: *` returns 412) and re-delivery would double the
+KQL rows because the Pipeline does not de-duplicate. A fresh delivery then needs an
+explicitly approved reset first: with the rule stopped, run
+`.clear table DonationEvents data` and
+`.clear materialized-view DonationObservationSummaryForAgent data`, delete the three
+CSVs under `Files/increment`, and confirm 0 rows. After `verify-delivery` of all
+three files, reconcile KQL again (15,000 rows / 253,886,000 JPY) and re-run the
+Data Agent checks for T06/T07. Without that approval, keep the manual ingestion and
+report it as manual, not automatic.
+
+### Hand-off: time-series binding, Notebook02 and native Metrics (UI)
+
+`handoff-ontology` records that automated TMDL writes stop at the generation2
+static core. The Eventhouse time-series binding has no documented definition
+format, so it is configured in the Ontology editor:
+
+1. Municipality → **Manage property bindings**: TimeSeries from Eventhouse
+   `DonationEvents`, timestamp `DonatedAt` (UTC), key `MunicipalityID` →
+   `MunicipalityId`, measure `DonationAmountYen` → `IncomingDonationAmountYen`.
+2. Wait for the Ontology update, then confirm 452025 shows 331 observations /
+   5,737,000 JPY for August 2026 UTC
+   ([checklist §6](../../docs/data-validation-checklist.md#6-municipality-time-series-binding-chapter-14)).
+3. Run Notebook02 preview/apply; it expects 10 + 72 + 1 + 15 = 98 objects and stops
+   with 97 if the binding is missing (checklist §7).
+4. Native Metrics (**Generate Ontology** from the semantic model) and other UI labs
+   go into isolated items under **Temp**; do not overwrite the main Ontology.

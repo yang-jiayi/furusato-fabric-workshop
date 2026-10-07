@@ -34,6 +34,13 @@
 > [回答精度の改善と残件](docs/v3.0.0/tuning-20261007/README.md) ·
 > [配置の詳細と制約](docs/v3.0.0/current/deployment-verification.md) ·
 > [検証JSON](docs/v3.0.0/current/verification.json)。
+>
+> **第3報（同日）:** 手順の逸脱4件のうち、Agent のビュー要素の確認と任意の Power BI レポート配置
+> （計22 Items）を完了しました。Activator の自動配送と時系列バインド・native Metrics は UI でしか行えないため、
+> 引き継ぎ手順を整備しました。対策 E（T10 の遮断区分・教材の注記・サポート報告案）、F（公開の回帰スイート
+> B01–B14 と評価ツール）、G（手順書とヘルパー）を実施しました。残件への候補 R7・R8 は事前に記録した採用規則を
+> 満たさず、本番は R6 のままです。新しい事前登録 holdout 12問（R6 で1回）は事実 9 / 内容 7 でした。
+> [第3報の詳細](docs/v3.0.0/followup-20261007/README.md)。
 
 The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
 identifiers are explicitly versioned compatibility contracts, not stale course

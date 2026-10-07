@@ -64,6 +64,7 @@ from native_mcp import (
     observability as mcp_observability, parse_rpc,
     validate_config as validate_mcp_config,
 )
+from regression_suite import build_suite as regression_suite
 
 
 REPO = Path(__file__).resolve().parents[2]
@@ -75,7 +76,7 @@ def harness_sources() -> dict[str, str]:
         name: file_digest(Path(__file__).resolve().parent / name)
         for name in (
             "evaluate_native.py", "native_evaluation.py", "native_responses_http.py",
-            "native_mcp.py", "mcp_grading.py",
+            "native_mcp.py", "mcp_grading.py", "regression_suite.py",
         )
     }
 
@@ -260,39 +261,43 @@ def validate_deployment(store: PrivateStore, value: dict[str, Any]) -> list[dict
 def create_plan(
     store: PrivateStore, name: str, deployment: dict[str, Any],
     original_file: str, heldout_file: str, repeats: int, heldout_repeats: int,
-    transport: str | None = None,
+    transport: str | None = None, regression_file: str | None = None,
+    regression_repeats: int = 1,
 ) -> str:
     label(name)
-    if repeats < 1 or heldout_repeats < 1:
+    if repeats < 1 or heldout_repeats < 1 or regression_repeats < 1:
         raise EvaluationError("All suite repetition counts must be positive.")
     suites = {
         "original": load_suite(store, original_file),
         "heldout": load_suite(store, heldout_file),
     }
-    if suites["original"]["kind"] != "original" or suites["heldout"]["kind"] != "heldout":
-        raise EvaluationError("Original and held-out suites cannot be interchanged.")
+    if regression_file is not None:
+        suites["regression"] = load_suite(store, regression_file)
+    if any(suite["kind"] != kind for kind, suite in suites.items()):
+        raise EvaluationError("Original, held-out and regression suites cannot be interchanged.")
     if transport is not None:
         # Transport is chosen before registration, never changed at run time.
         deployment = {**deployment, "configurations": [
             {**c, "transport": transport} for c in deployment.get("configurations", [])
         ]}
     configurations = validate_deployment(store, deployment)
+    defaults = {"original": repeats, "heldout": heldout_repeats, "regression": regression_repeats}
     schedules = {
-        c["label"]: {
-            "original": c.get("original_repeats", repeats),
-            "heldout": c.get("heldout_repeats", heldout_repeats),
-        }
+        c["label"]: {kind: c.get(f"{kind}_repeats", defaults[kind]) for kind in suites}
         for c in configurations
     }
     if any(type(n) is not int or n < 1 for schedule in schedules.values() for n in schedule.values()):
         raise EvaluationError("Per-configuration repetition counts must be positive integers.")
+    files = {"original": original_file, "heldout": heldout_file}
+    if regression_file is not None:
+        files["regression"] = regression_file
     plan = {
         "schema_version": 1, "name": name, "created_at_utc": now_utc(),
         "harness_sources": harness_sources(),
         "configurations": configurations,
-        "suite_files": {"original": original_file, "heldout": heldout_file},
+        "suite_files": files,
         "suite_sha256": {k: digest(v) for k, v in suites.items()},
-        "repetitions": {"original": repeats, "heldout": heldout_repeats},
+        "repetitions": {kind: defaults[kind] for kind in suites},
         "per_configuration_repetitions": schedules,
         "slots": [
             {"configuration": c["label"], "suite": suite, "repeat": repeat}
@@ -868,6 +873,8 @@ def run_batch(
     # The original prompts/rubric remain bound to the current shared source.
     if digest(original_suite(REPO)) != plan["suite_sha256"]["original"]:
         raise EvaluationError("Original guide/data changed; freeze and pre-register a new campaign.")
+    if slot["suite"] == "regression" and digest(regression_suite(REPO)) != plan["suite_sha256"]["regression"]:
+        raise EvaluationError("Regression suite sources changed; freeze and pre-register a new campaign.")
     relative = slot_path(plan, slot)
     store.write(f"{relative}/started.json", {
         "plan_sha256": digest(plan), "slot": slot, "at_utc": now_utc(),
@@ -1021,7 +1028,7 @@ def report_campaign(store: PrivateStore, plan: dict[str, Any]) -> dict[str, Any]
         })
     groups = []
     for config in plan["configurations"]:
-        for suite in ("original", "heldout"):
+        for suite in plan["suite_files"]:
             matching = [b for b in batches if b["configuration"] == config["label"] and b["suite"] == suite]
             best = max(matching, key=lambda b: (
                 b["summary"]["question_pass"], b["summary"]["condition_pass"]
@@ -1058,6 +1065,8 @@ def report_campaign(store: PrivateStore, plan: dict[str, Any]) -> dict[str, Any]
             "Finite evaluation is not a guarantee for all future questions.",
             "MCP is answer-only. Zero strict question passes caused by unobservable execution are not 0% factual accuracy.",
             "MCP condition PASS refers only to reviewed, provable answer content; native execution conditions remain FAIL.",
+            "A question whose native answer is the platform content block stays FAIL in every strict denominator; "
+            "platform_blocked_* and observable_condition_applicable are a diagnostic breakdown, never acceptance.",
         ],
     }
 
@@ -1072,19 +1081,24 @@ def parser() -> argparse.ArgumentParser:
     freeze.add_argument("--original-out", default="suites/original.json")
     freeze.add_argument("--held-out-input", help="Private JSON specification, not an agent instruction.")
     freeze.add_argument("--held-out-out", default="suites/heldout.json")
+    freeze.add_argument("--regression", action="store_true",
+                        help="Also freeze the public extended regression suite rebuilt from sources.")
+    freeze.add_argument("--regression-out", default="suites/regression.json")
     plan = commands.add_parser("plan", help="Offline: freeze all configurations, suites and repetitions.")
     plan.add_argument("--name", required=True)
     plan.add_argument("--deployment", required=True, help="Private relative path to ready deployment JSON.")
     plan.add_argument("--original-suite", default="suites/original.json")
     plan.add_argument("--held-out-suite", default="suites/heldout.json")
+    plan.add_argument("--regression-suite", help="Frozen regression suite; omit to plan without it.")
     plan.add_argument("--repeats", type=int, default=3)
     plan.add_argument("--held-out-repeats", type=int, default=1)
+    plan.add_argument("--regression-repeats", type=int, default=1)
     plan.add_argument("--transport", choices=["mcp", "sdk", "responses-http"],
                       help="Freeze this transport for all configurations; no run-time override.")
     run = commands.add_parser("run", help="ONLINE: submit one fresh complete batch, once only.")
     run.add_argument("--plan", required=True)
     run.add_argument("--configuration", required=True)
-    run.add_argument("--suite", choices=["original", "heldout"], required=True)
+    run.add_argument("--suite", choices=["original", "heldout", "regression"], required=True)
     run.add_argument("--repeat", type=int, required=True)
     run.add_argument("--credential", choices=["azure-cli", "default"], default="azure-cli")
     run.add_argument("--timeout", type=float, default=600)
@@ -1130,12 +1144,17 @@ def main(argv: list[str] | None = None) -> int:
             freeze_suite(store, args.original_out, suite)
             if args.held_out_input:
                 freeze_suite(store, args.held_out_out, store.read(args.held_out_input))
-            print("Frozen original: 10 questions / 84 conditions. No questions submitted.")
+            if args.regression:
+                freeze_suite(store, args.regression_out, regression_suite(REPO))
+            print("Frozen original: 10 questions / 84 conditions"
+                  + ("; regression: 14 questions / 28 conditions" if args.regression else "")
+                  + ". No questions submitted.")
         elif args.command == "plan":
             path = create_plan(
                 store, args.name, store.read(args.deployment), args.original_suite,
                 args.held_out_suite, args.repeats, args.held_out_repeats,
-                transport=args.transport,
+                transport=args.transport, regression_file=args.regression_suite,
+                regression_repeats=args.regression_repeats,
             )
             print(f"Pre-registered {path}. No questions submitted.")
         elif args.command == "run":

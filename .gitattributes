@@ -26,6 +26,7 @@ VERSION -text
 *.ttl   -text
 *.rdf   -text
 *.owl   -text
+*.diff  -text
 
 *.docx  binary
 *.xlsx  binary

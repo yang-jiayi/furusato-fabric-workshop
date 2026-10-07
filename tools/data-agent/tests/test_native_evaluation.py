@@ -98,6 +98,7 @@ class GradingTests(unittest.TestCase):
         )
         result = self.assertBlocked()
         self.assertIn("native_platform_content_block", result["gate_errors"])
+        self.assertTrue(result["platform_blocked"])
 
     def test_explicit_business_refusal_is_not_the_service_block(self):
         self.assertFalse(ne.platform_content_block(
@@ -140,7 +141,8 @@ class GradingTests(unittest.TestCase):
 
     def test_explicit_platform_block_detection(self):
         self.review["platform_block_detected"] = True
-        self.assertBlocked()
+        # A reviewer flag still fails closed but is not native block evidence.
+        self.assertFalse(self.assertBlocked()["platform_blocked"])
 
     def test_native_business_refusal_can_have_zero_queries(self):
         self.case = example_case("T10", [])
@@ -506,6 +508,24 @@ class StorageAndProvenanceTests(unittest.TestCase):
         self.assertEqual(summary["condition_total"], 8)
         self.assertEqual(summary["condition_applicable"], 5)
         self.assertFalse(summary["all_questions_pass"])
+        self.assertEqual(summary["platform_blocked_questions"], 0)
+
+    def test_platform_blocked_conditions_stay_in_strict_denominator(self):
+        summary = ne.summarize([
+            {"total_conditions": 7, "pass": 7, "fail": 0, "na": 0, "question_pass": True},
+            {"total_conditions": 7, "pass": 0, "fail": 7, "na": 0, "question_pass": False,
+             "platform_blocked": True},
+            {"total_conditions": 4, "pass": 2, "fail": 2, "na": 0, "question_pass": False},
+        ])
+        self.assertEqual((summary["condition_pass"], summary["condition_total"]), (9, 18))
+        self.assertEqual(summary["condition_fail"], 9)
+        self.assertEqual(summary["platform_blocked_questions"], 1)
+        self.assertEqual(summary["platform_blocked_conditions"], 7)
+        self.assertEqual(summary["condition_fail_excluding_platform_blocked"], 2)
+        self.assertEqual(summary["observable_condition_applicable"], 11)
+        with self.assertRaises(ne.EvaluationError):
+            ne.summarize([{"total_conditions": 1, "pass": 1, "fail": 0, "na": 0,
+                           "question_pass": True, "platform_blocked": True}])
 
 
 if __name__ == "__main__":

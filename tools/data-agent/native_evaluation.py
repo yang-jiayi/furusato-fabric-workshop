@@ -219,7 +219,7 @@ def original_suite(repo: Path) -> dict[str, Any]:
 
 
 def validate_suite(suite: dict[str, Any]) -> None:
-    if suite.get("schema_version") != 1 or suite.get("kind") not in {"original", "heldout"}:
+    if suite.get("schema_version") != 1 or suite.get("kind") not in {"original", "heldout", "regression"}:
         raise EvaluationError("Unsupported suite schema or suite kind.")
     cases = suite.get("cases")
     if not isinstance(cases, list) or not cases:
@@ -245,7 +245,7 @@ def validate_suite(suite: dict[str, Any]) -> None:
         if tuple(len(c["conditions"]) for c in cases) != ORIGINAL_COUNTS:
             raise EvaluationError("Original condition count changed.")
     elif any(case["id"].startswith("T") for case in cases):
-        raise EvaluationError("Held-out cases must not masquerade as original questions.")
+        raise EvaluationError("Held-out/regression cases must not masquerade as original questions.")
 
 
 def freeze_suite(store: PrivateStore, relative: str, suite: dict[str, Any]) -> str:
@@ -552,6 +552,9 @@ def grade_case(
     response = record.get("response", {})
     view, native_problems = native_view(response)
     problems += native_problems
+    # Classification only: a native service block stays FAIL in every strict
+    # denominator. A reviewer flag without the native text is not classified.
+    base["platform_blocked"] = "native_platform_content_block" in native_problems
     if contains_truncation(response):
         problems.append("truncated_native_evidence")
     branch = review.get("branch")
@@ -618,10 +621,20 @@ def summarize(cases: list[dict[str, Any]]) -> dict[str, Any]:
     passed, failed, na = (sum(c[k] for c in cases) for k in ("pass", "fail", "na"))
     if passed + failed + na != total:
         raise EvaluationError("Condition denominator mismatch.")
+    blocked = [c for c in cases if c.get("platform_blocked")]
+    if any(c["pass"] or c["question_pass"] for c in blocked):
+        raise EvaluationError("A platform-blocked question cannot pass.")
+    blocked_fail = sum(c["fail"] for c in blocked)
     return {
         "question_pass": sum(c["question_pass"] for c in cases),
         "question_total": len(cases), "condition_pass": passed,
         "condition_fail": failed, "condition_na": na, "condition_total": total,
         "condition_applicable": total - na,
         "all_questions_pass": bool(cases) and all(c["question_pass"] for c in cases),
+        # Diagnostic breakdown only. Platform-blocked conditions remain FAIL
+        # above; the observable view never replaces the strict denominator.
+        "platform_blocked_questions": len(blocked),
+        "platform_blocked_conditions": blocked_fail,
+        "condition_fail_excluding_platform_blocked": failed - blocked_fail,
+        "observable_condition_applicable": total - na - blocked_fail,
     }

@@ -14,6 +14,12 @@ content. One pre-registered, author-written holdout run returned
 **11 PASS / 1 FAIL / 0 UNKNOWN**. This is not an independent human acceptance or
 a guarantee for arbitrary questions; see the dated addendum for every round.
 
+Follow-up candidates R7 and R8 (same day) targeted the remaining T09 provenance,
+duplicate-existence, completeness and KEEPFILTERS issues. Neither met the adoption
+rule recorded before their results, so the files in this folder remain the adopted
+R6 profile; the R8 contract diff and all scores are in the
+[follow-up record](../../../../../docs/v3.0.0/followup-20261007/README.md).
+
 ## Root causes and the restored contracts
 
 | Root cause (round 1) | Restored contract |

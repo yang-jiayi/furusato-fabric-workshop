@@ -1,0 +1,182 @@
+{
+  "schemaVersion": "furusato-followup/v1",
+  "date": "2026-10-07",
+  "scope": "Complete every procedural deviation of the 2026-10-07 deployment and address all countermeasures in priority order",
+  "workspaceItemsInDeploymentFolder": 22,
+  "deviations": [
+    {
+      "id": 1,
+      "item": "Activator automatic increment delivery",
+      "status": "blocked-handoff",
+      "reason": "The bundle-created rule action references the bundle's Pipeline connection; only the native Activator UI (Edit action / Apply / Save) can bind this deployment's Pipeline, and the editor is not automatable here. The increments were already ingested manually; re-delivery would duplicate KQL rows without an approved reset.",
+      "done": [
+        "live rule settings read back (stopped, historical application off)",
+        "hand-off runbook with readback criteria and the approved reset sequence"
+      ]
+    },
+    {
+      "id": 2,
+      "item": "Data Agent SQL view elements",
+      "status": "verified",
+      "evidence": "Public Data Agent management API: 6 views type View, state Available, selected; service columns equal INFORMATION_SCHEMA (agent_donation_detail keeps DonationDataLayer unselected); overlapping ot_* tables unselected"
+    },
+    {
+      "id": 3,
+      "item": "Ontology time-series binding and native Metrics",
+      "status": "partially-done-handoff",
+      "done": [
+        "handoff-ontology stage recorded with the approved source"
+      ],
+      "blocked": "The Eventhouse time-series binding has no documented definition format and Generate Ontology has no API; both are UI-only. Runbook covers binding values, the 331 / 5,737,000 check, Notebook02 (98 objects) and Metrics under Temp."
+    },
+    {
+      "id": 4,
+      "item": "Optional Power BI report",
+      "status": "done",
+      "evidence": "report-only deployment bound to the existing model; definition read back; PDF render checked (tenant disables image export); DAX reconciliation Gold 94,900 rows / 1,596,157,000 JPY, high-value 1,392"
+    }
+  ],
+  "countermeasures": {
+    "E": {
+      "status": "done",
+      "items": [
+        "platform_blocked classification in the strict grader (denominators unchanged)",
+        "Chapter 19 teaching note in the guide",
+        "support drafts (T10 filter, SQL example validation)"
+      ],
+      "diagnostics": "T10 blocked 12/12; related prompts without specific individuals were not blocked and the Agent refused correctly"
+    },
+    "F": {
+      "status": "done",
+      "items": [
+        "public regression suite B01-B14 (expected values recomputed from repository sources)",
+        "evaluate_native regression suite kind (freeze/plan/run/report)",
+        "screen aid (never a verdict)"
+      ]
+    },
+    "G": {
+      "status": "done",
+      "items": [
+        "approved-commit stage execution",
+        "Notebook05 plan hash helper",
+        "service checks for views and example validation",
+        "report-only Power BI",
+        "Activator and time-series hand-offs"
+      ]
+    }
+  },
+  "residualCandidates": {
+    "adoptionRule": "mean(standard two runs) >= 73.5 AND extended content PASS >= 13 AND extended fact PASS >= 13, recorded before each candidate's results; otherwise roll back to R6",
+    "baselineR6": {
+      "standard": [
+        74,
+        73
+      ],
+      "extended": {
+        "fact": 14,
+        "content": 13
+      }
+    },
+    "R7": {
+      "standard": [
+        69,
+        76
+      ],
+      "extended": {
+        "fact": 13,
+        "content": 13
+      },
+      "decision": "not adopted (standard mean 72.5)",
+      "changes": [
+        "three ordered queries for the composite question; static query without prefecture columns",
+        "duplicate existence undecidable without EventID",
+        "final completeness check",
+        "KEEPFILTERS contrast"
+      ]
+    },
+    "R8": {
+      "standard": [
+        76,
+        74
+      ],
+      "extended": {
+        "fact": {
+          "PASS": 12,
+          "FAIL": 1,
+          "UNKNOWN": 1
+        },
+        "content": {
+          "PASS": 11,
+          "FAIL": 2,
+          "UNKNOWN": 1
+        }
+      },
+      "decision": "not adopted (extended content 11)",
+      "changes": [
+        "R7 + join-key line first in the composite template",
+        "popularity values required"
+      ],
+      "gains": "T09 8/8 in both runs",
+      "losses": "T07 raw totals omitted; B08 retrieval failure; B02 reason without KEEPFILTERS; B11 transport timeout"
+    },
+    "adopted": "R6 (rollback published; 14 Draft/Published parts equal R6)"
+  },
+  "holdout2": {
+    "questions": 12,
+    "preregistered": true,
+    "runs": 1,
+    "configuration": "R6",
+    "fact": {
+      "PASS": 9,
+      "FAIL": 3
+    },
+    "content": {
+      "PASS": 7,
+      "FAIL": 5
+    },
+    "failureCategories": [
+      "composite provenance (no Ontology/join key)",
+      "duplicate existence concluded",
+      "BLANK reason without KEEPFILTERS",
+      "addition refusal used the whole snapshot instead of the requested month",
+      "exact-threshold count claimed unavailable"
+    ],
+    "note": "Author-written; frozen with SHA-256 before R7; not an independent evaluation"
+  },
+  "observability": {
+    "method": "Data Agent SDK run steps in a temporary notebook under Temp (deleted after use)",
+    "T09_executed_sources_R6": [
+      "Kusto",
+      "LakehouseTables"
+    ],
+    "T09_ontology_executed": false,
+    "examplesLoaded": {
+      "LakehouseTables": 17,
+      "Kusto": 9
+    },
+    "exampleMatching": "results for Kusto only"
+  },
+  "serviceFindings": {
+    "exampleValidation": {
+      "LakehouseSql": {
+        "Invalid": 17
+      },
+      "Kql": {
+        "Valid": 9
+      },
+      "reason": "validation cannot connect to the SQL endpoint; runtime SQL works"
+    }
+  },
+  "submissions": {
+    "R7": 34,
+    "R8": 34,
+    "holdout2": 12,
+    "diagnosticOutsideScoring": 2,
+    "transportFailures": 1,
+    "platformBlocks": 4
+  },
+  "boundaries": [
+    "AI-assisted review of answer text; no independent human sign-off",
+    "no live IDs, raw answers or holdout questions published"
+  ]
+}

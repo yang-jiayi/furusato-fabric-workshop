@@ -494,7 +494,16 @@
     "guide": {
       "architectureDiagram": "v3 architecture diagram added to chapter 1",
       "portalScreenshotsRecaptured": false,
-      "reason": "the signed-in browser window (InPrivate) does not expose a verifiable address in this environment, so screen images are withheld"
+      "reason": "the signed-in browser window (InPrivate) does not expose a verifiable address in this environment, so screen images are withheld",
+      "wordPages": 95,
+      "documentChecks": {
+        "PASS": 157,
+        "FAIL": 0
+      },
+      "screenshotsUsed": 28,
+      "diagramsUsed": 1,
+      "packageEntries": 330,
+      "artifactSetFiles": 319
     },
     "nextCandidates": [
       "unhide the model columns 寄附金額 and 高額寄附フラグ (model change; needs approval; evaluate with the same procedure)",

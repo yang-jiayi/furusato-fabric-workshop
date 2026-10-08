@@ -1,17 +1,17 @@
 {
  "schemaVersion": "furusato-v3-current-verification/v1",
  "date": "2026-10-07",
- "projectedAtUtc": "2026-10-07T22:13:12.497500+00:00",
+ "projectedAtUtc": "2026-10-08T17:24:31.086854+00:00",
  "workshopVersion": "3.0.0",
- "sourceCommit": "3033f1c32d3a854abad61ad37cf664cada54bdf3",
- "artifactSetSha256": "a6b5303ad43e77e632ed7fa26eaa1142df2159e203a11d28bf9a8baad2a7f670",
+ "sourceCommit": "6942a19db8cd50cf4f64cef5c0d76606e4c1c4b6",
+ "artifactSetSha256": "86aa6adb2211151f71b99144dc10a1ef0c6169a719e117e23227163833d795f8",
  "gitBlobParityVerified": true,
- "sourceArtifacts": 316,
+ "sourceArtifacts": 319,
  "notebooksAligned": 5,
  "csvFilesUnchanged": 11,
- "wordPages": 94,
+ "wordPages": 95,
  "documentChecks": {
-  "PASS": 155,
+  "PASS": 157,
   "FAIL": 0
  },
  "correctedAgentProfile": "standard-contract-restoration",
@@ -122,17 +122,18 @@
  "generalAiQualityAccepted": false,
  "oldReleaseAssetsChanged": false,
  "remaining": [
-  "T10 is blocked by the native content filter and is reported as a failure, not bypassed (support case filed).",
-  "Some answers still use internal dataset names instead of plain wording; the plain-wording candidates R9 and R10 fixed this but missed the adoption rule recorded in advance.",
+  "T10 is sometimes blocked by the native content filter (R11: answered in both runs; R8: one of two informational runs blocked); a blocked answer is reported as a failure, not bypassed (support case filed).",
+  "Some answers still use internal dataset names instead of plain wording (fourth holdout: 7 of 12 answers); the plain-wording candidates R9 and R10 fixed this but missed the adoption rule recorded in advance.",
   "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings still need portal steps.",
   "All Lakehouse SQL example queries fail service validation while runtime SQL works (support case filed).",
-  "Per-file duplicate questions can omit the per-file counts and amounts, and a hidden model column can be described as missing (third holdout P02/P03; regression B16/B19 on R8)."
+  "A count or amount that needs a hidden model column (\u5bc4\u9644\u91d1\u984d, \u9ad8\u984d\u5bc4\u9644\u30d5\u30e9\u30b0) is refused because the Data Agent does not use hidden columns (regression B19, fourth holdout Q04); instructions alone did not fix it (R11), and unhiding the two columns needs approval. Per-file duplicate answers can omit the per-file counts and amounts on R8 (B16; fixed in R11, not adopted).",
+  "The portal screenshots for Version history, MCP settings, Data Agent sources and the Graph partial selection were not recaptured: the signed-in browser window cannot be captured from this environment."
  ],
  "artifactSha256": {
-  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "d72b7111515344083488b423a520d39df04ae111eeee02ce7a935092ebd8ef5b",
-  "guide/furusato-workshop-v3-0-0-complete.html": "d51c1f8c51c8d639e45c493fbcd243bc3849bc9ad82a5492696064ccb62ef7b5",
-  "Furusato_Workshop_v3.0.0_current-20261007.zip": "fccec32988f3cd12072e4f36dd40d3b0b5e6a1c5c34f3192d579166dcee49b0b",
-  "artifact-set.json": "a6b5303ad43e77e632ed7fa26eaa1142df2159e203a11d28bf9a8baad2a7f670"
+  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "7c55954ef68c1a14b9a11dd2381d9823e1ecdc2018120c9313152376ceed27ca",
+  "guide/furusato-workshop-v3-0-0-complete.html": "8ab04698e543ff23ce616fec91ed83890ad00155d528c834e610af135ea5b40c",
+  "Furusato_Workshop_v3.0.0_current-20261007.zip": "507e52727518a70a0624ca2d96fad3ba3bcd2293855b869424e0a70fb5d0cd8d",
+  "artifact-set.json": "86aa6adb2211151f71b99144dc10a1ef0c6169a719e117e23227163833d795f8"
  },
  "privacy": {
   "rawAnswers": false,
@@ -142,10 +143,18 @@
  "tests": {
   "dataAgent": 326,
   "provisioning": 311,
+  "html": 36,
+  "ontology": 18,
   "docs": {
    "total": 386,
    "pass": 385,
    "knownPreexistingFailure": 1
+  },
+  "publication": {
+   "total": 51,
+   "pass": 42,
+   "knownPreexistingFailure": 9,
+   "note": "README presentation tests written for the 2026-09-21 README; same result on 2026-10-04 main"
   }
  },
  "followUp": {
@@ -269,14 +278,62 @@
     }
    }
   },
-  "runbookCorrection": "Notebook02 refuses to run after handoff-ontology (fifth report)"
+  "runbookCorrection": "Notebook02 refuses to run after handoff-ontology (fifth report)",
+  "sixthReport": {
+   "r11": {
+    "standard84": [
+     84,
+     78
+    ],
+    "regression19": {
+     "fact": {
+      "PASS": 17,
+      "FAIL": 2
+     },
+     "content": {
+      "PASS": 15,
+      "FAIL": 4
+     }
+    },
+    "b16": "PASS/PASS",
+    "b19": "FAIL/FAIL",
+    "adopted": false,
+    "reason": "regression content 15 < 16 and B19 FAIL (rule recorded before evaluation)"
+   },
+   "production": "R8 (definition equals the R8 record except the plain published description)",
+   "holdout4": {
+    "runs": 1,
+    "configuration": "final (R8)",
+    "fact": {
+     "PASS": 11,
+     "FAIL": 1
+    },
+    "content": {
+     "PASS": 10,
+     "FAIL": 2
+    }
+   },
+   "t10R8InformationalRuns": {
+    "runs": 2,
+    "platformBlocked": 1,
+    "answered": 1,
+    "scored": false
+   },
+   "semanticModelDescriptions": {
+    "table": "\u5bc4\u9644",
+    "reworded": 7,
+    "deployed": true,
+    "readbackEqualsRepository": true,
+    "daxUnchanged": true
+   }
+  }
  },
  "guideEdition": {
   "kind": "participant",
   "buildOption": "--participant-edition",
   "content": "per chapter: what you will do, steps, completion checks, reference tables, references",
   "screenshots": 28,
-  "diagrams": 0,
+  "diagrams": 1,
   "excludedFromBody": [
    "evaluation records",
    "run history",
@@ -286,6 +343,15 @@
    "artifact hashes and commits"
   ],
   "artifactBinding": "Word document properties and HTML metadata",
-  "packageReportsIncluded": false
+  "packageReportsIncluded": false,
+  "participantFigures": {
+   "folder": "docs/assets/v3.0.0-participant",
+   "manifest": "manifest.json",
+   "figures": [
+    "pc-01-architecture (chapter 1, v3 architecture diagram)"
+   ],
+   "inArtifactSet": true
+  },
+  "portalScreenshotsRecaptured": false
  }
 }

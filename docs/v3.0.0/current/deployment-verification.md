@@ -90,15 +90,29 @@ T10はnativeのコンテンツフィルターで遮断され、回避せずFAIL�
 | 参加者用の手順書 | 各章を目的・操作手順・完了の確認・参照表・参考資料だけにした版（`--participant-edition`）。旧版の写し、評価の記録、撮影日時の注記、リリースの注記、ハッシュを本文から除き、ふだんの言葉に書き直した |
 | 画面のキャプチャ | 48枚を確認し、28 枚を手順の該当箇所に配置して説明を書き直した。失敗した状態・古い手順・作業用のメモが写る画面と、旧版の構成図は使わない |
 | Word / HTML | 94 ページ、155 検査／0 FAIL（参加者用の版に作業用・履歴の言葉がないことの検査を含む） |
+
+## 第6報（2026-10-09）: R11、モデルの説明の言葉、構成図
+
+| 項目 | 結果 |
+|---|---|
+| 候補 R11（B16・B19 の対策） | Agent の指示を2つ追加（重複を判定できないときもファイルごとの件数と金額を示す、非表示の列も DAX で使える）。採用基準は評価の前に記録 |
+| R11 の結果 | 標準10問・84条件 **84／78**（T10 は2回とも止められずに回答）、回帰19問 事実 17／内容 15。B16 は PASS、B19 は FAIL のまま、B06・B12・B18 が新しく FAIL。基準（内容 16 以上、B19 の PASS）に届かず**不採用** |
+| 本番の Agent | R8 に戻し、定義が R8 の記録と一致することを確認。違いは公開時の説明文だけ（ふだんの言葉の1文に変更） |
+| B19 の原因 | Data Agent はモデルで非表示の列（寄附金額・高額寄附フラグ）を使わない。指示だけでは直らず、列を表示にする変更（要承認）が次の候補 |
+| 4回目の未公開の確認問題12問 | R11 の前に固定し、本番の構成で1回だけ実行。事実 11／12、内容 10／12（Q04 は B19 と同じ原因、Q11 は登録と発送を分けて書かず） |
+| T10 | 本番の R8 で採点に含めずに2回送り、1回は止められ1回は回答。止められるかどうかはプラットフォーム側の判定で変わる |
+| Semantic model の説明 | 寄附テーブルの説明7か所（テーブル1、メジャー5、列1）をふだんの言葉に直し、本番に反映して読み戻しで一致を確認。式と DAX の結果は変わらない（94,900件・1,596,157,000円、高額 1,392件） |
+| 手順書 | 1章に v3 の構成図を追加（95 ページ、157 検査／0 FAIL）。ポータルの画面の撮り直しは、この環境から画面の画像を取得できないため未実施 |
+
 ## 成果物の整合性
 
 | 項目 | 結果 |
 |---|---|
 | Agent compiler | 4段階（source-grounded → complete-contract → time-layer-isolation → standard-contract-restoration）。commitした入力から再compileした定義が公開中の定義と一致。回答値の混入防止は、桁区切り・全角数字・JSONのエスケープを正規化して検査 |
-| Notebook02–04 | 新しいcompilerとprofile入力で再封印。第3報で更新した評価モジュール（native_evaluation）も再封印。第4報で採用したR8のprofileで再び封印し、第5報で成果物一覧のツールの更新にあわせて再封印。再buildしてもbytesが一致 |
-| artifact-set | **316ファイル**（第5報で参加者用の手順書の原稿3ファイルを追加）。全ファイルのGit blobとSHA-256が一致（第5報のソースコミットに再結合） |
-| Word / HTML | 第5報で参加者用の版に作り直し、**94ページ**。実Word描画・日英HTML・印刷・操作など**155検査／0 FAIL**（作業用・履歴の言葉が含まれていないことの検査を含む） |
-| テスト | data-agent 326、provisioning 311がPASS。文書テストは386件中385件PASS（参加者用の版のテスト6件を含む）で、残る1件はPython版に依存する既存の失敗（未変更の`main`でも同じ結果） |
+| Notebook02–04 | 新しいcompilerとprofile入力で再封印。第3報で更新した評価モジュール（native_evaluation）も再封印。第4報で採用したR8のprofileで再び封印し、第5報で成果物一覧のツールの更新にあわせて再封印。第6報でモデルの説明の変更と成果物一覧のツールの更新にあわせて再封印。再buildしてもbytesが一致 |
+| artifact-set | **319ファイル**（第5報で参加者用の手順書の原稿3ファイル、第6報で参加者用の画像3ファイルを追加）。全ファイルのGit blobとSHA-256が一致（第6報のソースコミットに再結合） |
+| Word / HTML | 第5報で参加者用の版に作り直し、第6報で構成図を追加して**95ページ**。実Word描画・日英HTML・印刷・操作など**157検査／0 FAIL**（作業用・履歴の言葉が含まれていないことの検査を含む） |
+| テスト | data-agent 326、provisioning 311、HTML 36（図形の配置のテストを含む）、Ontology 18がPASS。文書テストは386件中385件PASSで、残る1件はPython版に依存する既存の失敗。公開用のテストは51件中42件PASSで、残る9件は2026-09-21版のREADMEの見た目を前提にした既存の失敗（どちらも2026-10-04の`main`で同じ結果） |
 
 ## 検証範囲の境界
 
@@ -145,11 +159,15 @@ recaptioned screenshots and no evaluation records, history or hashes in the body
 (94 pages, 155 checks, 0 failures). The runbook now states that Notebook02 refuses to
 run after handoff-ontology.
 
-Fourth report: on the user's instruction R8 was adopted (76/84 and 74/84) and
-verified part-for-part. Plain-wording candidates R9 and R10 removed internal terms
-from the answers but missed the pre-recorded bar, so production stayed on R8. A
-third frozen 12-question check set scored fact 11/12 and content 10/12 on R8. Both
-support cases were filed through the Fabric admin portal, a Fabric advisory about
-Data Agents with Ontology V2 was recorded (the formal Agent uses V1), the public
-regression suite grew to 19 cases, and the Activator and Ontology steps still need
-the native portal UI (KQL data left intact).
+Sixth report (2026-10-09): candidate R11 added two instructions for B16 and B19 and
+was measured with the same procedure and a rule recorded in advance. It scored 84/84
+and 78/84 on the standard ten (T10 was not blocked in either run) and fact 17 /
+content 15 on the 19 regression questions; B16 was fixed, but B19 still failed and
+B06, B12 and B18 regressed, so R11 was not adopted and production was restored to R8
+(only the published description changed, to a plain sentence). B19 fails because the
+Data Agent does not use columns hidden in the semantic model. A fourth frozen
+12-question check set, run once on the final configuration, scored fact 11/12 and
+content 10/12. Seven semantic-model descriptions were reworded in plain language and
+deployed (read back; DAX results unchanged), the guide gained a v3 architecture
+diagram (95 pages, 157 checks, 0 failures), and the portal screenshots could not be
+recaptured from this environment.

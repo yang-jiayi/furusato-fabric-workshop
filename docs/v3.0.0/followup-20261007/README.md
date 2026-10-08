@@ -66,6 +66,7 @@ R11 を作る前に問題と期待値を固定し、採否を決めた後の本�
 ### 手順書
 
 - 1章に v3 の構成図（Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent のつながり）を加えました。
+  Word は 95 ページ、日英 HTML とあわせて 157 検査／0 FAIL です。
 - **ポータルの画面の撮り直し（Version history、MCP の設定、Data Agent のソース、Graph の一部の選択）は、まだできていません。**
   この環境では、サインイン済みのブラウザー（InPrivate）のアドレスを確認できないため、画面の画像を取得できない仕組みになっています。
 

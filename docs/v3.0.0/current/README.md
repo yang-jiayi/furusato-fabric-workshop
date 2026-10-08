@@ -3,13 +3,13 @@
 このディレクトリは現行mainの整合版用です。元の`v3.0.0`タグ・配布物と日付付き過去評価は
 変更せず保持します。教材版、データ仕様、FabricのgenerationやAPI versionを混同しません。
 
-[参加者用 Word（94ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[参加者用 Word（95ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [参加者用 日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
 [Notebook・CSV・モデル等を含むZIP](Furusato_Workshop_v3.0.0_current-20261007.zip) ·
 [Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
 [検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt) ·
 [回答精度の改善（2026-10-07）](../tuning-20261007/README.md) ·
-[第3報・第4報: 逸脱と対策](../followup-20261007/README.md) ·
+[第3報〜第6報: 逸脱と対策](../followup-20261007/README.md) ·
 [2026-10-04の記録](history/20261004/README.md)
 
 **成果物整合性と旧フォルダの整理は確認済みです。** 2026-10-07の正式配置は22 Items（第3報で任意の
@@ -20,6 +20,9 @@ Power BIレポートを追加）・Agent1件・Temp0件です。
 第3報の残件候補R7・R8は、その時点では事前に記録した採用規則を満たしませんでしたが、第4報でご指示により
 **R8を採用**しました（標準10問・84条件 **76/84・74/84**）。言葉づかいを直した候補R9・R10は採用基準に届かず、
 正式AgentはR8です。第5報で、Word・HTMLと配布用ZIPを参加者に配布する版（手順だけを収録）に作り直しました。
+第6報で、B16・B19の対策を加えた候補R11を同じ手順で評価しました（標準 **84/84・78/84**）が、回帰19問の内容が
+事前に決めた基準に届かず、正式AgentはR8のままです。Semantic modelの説明をふだんの言葉に直して本番に反映し、
+手順書の1章にv3の構成図を加えました。
 
 ## 版の正本
 
@@ -78,6 +81,8 @@ python -B tools\docs\package_preview30.py --pair "$Stage\pair" `
 [`participant30_text.py`](../../../tools/docs/furusato_docs/participant30_text.py)、画面の説明は
 [`participant30_figures.py`](../../../tools/docs/furusato_docs/participant30_figures.py)にあり、
 表は同じソースから生成します。パッケージにも評価レポートは含めません。
+参加者用に新しく作った画像（1章の構成図）は[`docs/assets/v3.0.0-participant`](../../assets/v3.0.0-participant/manifest.json)
+にあり、manifest の SHA-256 で照合してから Word と HTML に入れます（artifact-set にも含めます）。
 
 ## Tempを使わない本デプロイ
 
@@ -126,3 +131,7 @@ fourth report the user approved adopting R8 (76/84 and 74/84); plain-wording
 candidates R9 and R10 missed the pre-recorded bar, so the formal Agent is R8.
 In the fifth report the Word/HTML guide and the package were rebuilt as the
 participant edition (procedure only; build option --participant-edition).
+In the sixth report candidate R11 (instructions for B16/B19) scored 84/84 and 78/84
+but missed the pre-recorded regression rule, so the formal Agent stays R8; the
+semantic-model descriptions were reworded in plain language and deployed, and the
+guide gained a v3 architecture diagram in chapter 1.

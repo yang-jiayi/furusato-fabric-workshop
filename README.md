@@ -54,6 +54,13 @@
 > （19問の合計は事実 16・内容 14 PASS）。Word と HTML の手順書は参加者に配布する版に作り直し、
 > 評価の記録・過去の履歴・旧版の写し・作業用のメモを除いて、画面のキャプチャと説明もすべて見直しました。
 > [第5報の詳細](docs/v3.0.0/followup-20261007/README.md)。
+>
+> **第6報（10/9）:** B16・B19 の対策として Agent の指示を加えた候補 R11 を、同じ手順で評価しました。
+> 標準10問・84条件は 84／78 でしたが、回帰19問の内容 PASS が 15（基準は 16）で B19 も直らず、
+> 事前に決めた基準に届かないため本番は R8 のままです。B19 の原因は、Data Agent がモデルで非表示の列を使わないことです。
+> 本番の構成で1回だけ実行した4回目の確認問題12問は、事実 11 / 内容 10 でした。Semantic model の説明を
+> ふだんの言葉に直して本番に反映し、手順書の1章に v3 の構成図を加えました。
+> [第6報の詳細](docs/v3.0.0/followup-20261007/README.md)。
 
 The current course and distributed Notebooks are3.0.0. Retained2.7 runtime/data
 identifiers are explicitly versioned compatibility contracts, not stale course
@@ -63,7 +70,10 @@ Artifact checks pass. On the protected ten/84 the formal Agent moved from
 (ceiling 77; T10 is blocked natively), with an author-written holdout of
 **11 PASS /1 FAIL** — not zero-failure AI acceptance. In the fourth same-day report the
 R8 refinement was adopted on the owner's instruction (**76/84 and 74/84**); a third
-author-written holdout run once on R8 scored fact 11/12 and content 10/12.
+author-written holdout run once on R8 scored fact 11/12 and content 10/12. In the
+sixth report (2026-10-09) candidate R11 (instructions for B16/B19) scored 84/84 and
+78/84 but missed the pre-recorded regression rule, so production stays on R8; a
+fourth frozen check set run once on it scored fact 11/12 and content 10/12.
 
 <details>
 <summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>

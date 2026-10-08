@@ -8,7 +8,7 @@ import json
 
 from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME
 from furusato_docs import preview30_release as release
-from furusato_docs.participant30 import TAGLINE
+from furusato_docs.participant30 import TAGLINE, figure_path as participant_figure_path
 from .assets import build_library, encode_screenshot, screenshot_size
 from .mirror import load_ui_strings
 from .model import Text
@@ -53,6 +53,12 @@ def render(
     diagram_keys = sorted({b["source_key"] for b in document.figures if b["source_kind"] == "diagram"})
     assets = build_library(context, carrier, diagram_keys, [])
     capture_aliases = register_reviewed_captures(assets, evidence["captures"])
+    for block in document.figures:
+        if block["source_kind"] == "participant-capture":
+            blob = participant_figure_path(block["source_key"]).read_bytes()
+            assets.register_digest("participant-capture:" + block["source_key"], blob)
+            assets.screenshots[block["source_key"]] = encode_screenshot(blob)
+            assets.screenshot_sizes[block["source_key"]] = screenshot_size(blob)
     ctx = RenderContext(
         ui=load_ui_strings(public_documents_only=True, context=context), assets=assets,
         version=profile.version, fingerprint=metadata["contentSha256"][:16], runtime_fingerprint="",

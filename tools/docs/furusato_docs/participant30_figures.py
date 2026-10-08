@@ -6,6 +6,12 @@ internal notes are not used.
 """
 
 FIGURES = {
+    'pc-01-architecture': {
+        "caption": ('完成したときのデータの流れ。静的データ、8月の観測データ、品質処理とモデル、意味と AI での利用の4つに分かれます',
+                    'Data flow of the finished setup, in four lanes: static data, August observation data, quality processing and model, and meaning and AI'),
+        "alt": ('8つの CSV から Lakehouse、増分ファイルから Eventhouse、Notebook 05 から Gold と Semantic model、Ontology・Graph・Data Agent・MCP への流れを示す図',
+                'Diagram of the flows: CSV files to Lakehouse, increment files to Eventhouse, Notebook 05 to Gold and the semantic model, and Ontology, Graph, Data Agent and MCP'),
+    },
     'p30-06-entities': {
         "caption": ('Municipality の Configure 画面。キーは MunicipalityId で、静的 Property は ot_municipality にバインド済み。時系列 Property は10章でバインドするまで Unbound',
                     'Municipality Configure page: the key is MunicipalityId and the static properties are bound to ot_municipality. The time-series property stays Unbound until Chapter 10.'),

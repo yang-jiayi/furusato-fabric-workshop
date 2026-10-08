@@ -119,6 +119,9 @@ def snapshot():
     for folder in ("data", "kql", "notebooks", "ontology", "powerbi", "data-agent", "provisioning"):
         paths.update(p for p in (rt.PREVIEW / folder).rglob("*")
                      if p.is_file() and p.suffix != ".md" and p.name != "artifact-set.json")
+    participant_assets = rt.REPO / "docs" / "assets" / "v3.0.0-participant"
+    if participant_assets.is_dir():
+        paths.update(p for p in participant_assets.rglob("*") if p.is_file())
     paths.update(p for p in rt.BASE.rglob("*") if p.is_file())
     files = {p.relative_to(rt.REPO).as_posix(): sha(p.read_bytes()) for p in sorted(paths)}
     source_commit = subprocess.check_output(["git", "-C", str(rt.REPO), "rev-parse", "HEAD"], text=True).strip()

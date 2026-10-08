@@ -25,6 +25,11 @@ scores, the R8→R10 diff and a fresh held-out run on R8 are in the
 On 2026-10-08 the five added regression questions B15–B19 were run once on R8:
 fact 4/5 and content 3/5 (B16 omitted the per-file counts and amounts; B19 said the
 hidden amount column was missing instead of counting 384 donations).
+On 2026-10-09 candidate R11 added two instructions for B16 and B19 and was measured
+with the same procedure: standard ten/84 **84/84 and 78/84**, regression fact 17 /
+content 15. B16 was fixed, but B19 was not (the Data Agent does not use columns hidden
+in the semantic model), so R11 missed its pre-recorded rule and this folder stays R8;
+the R8→R11 diff is in the follow-up record.
 
 R8 adds to the R6 contracts: the composite question runs three separate queries
 (Eventhouse leader, Lakehouse values and national ranks **without** prefecture

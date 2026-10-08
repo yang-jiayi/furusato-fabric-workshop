@@ -1,24 +1,24 @@
-/// 静的seed寄附と重複排除済み増分イベントを統合した1寄附1行のファクト。金額・件数・時系列分析の基点です。
+/// 静的データ（配布した寄付データ全体）と、品質処理で重複を除いた受入済みの増分を合わせた、1寄付1行のファクトです。金額・件数・時系列分析の基点です。
 table 寄附
 	lineageTag: bf6c34fa-2f0c-4ba0-9296-ed5906d905e6
 
 
-	/// 不変の静的seed寄附のみ。運用上の生イベントや受入済み増分を合算しません。
+	/// 静的データ（StaticSeed）の寄附だけを集計します。Eventhouse の観測データや受入済みの増分は含めません。
 	measure 静的寄附総額 = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
 		formatString: ¥#,##0
 		displayFolder: Metrics検証
 
-	/// 不変の静的seedの寄附件数。現在のディメンションフィルターを維持します。
+	/// 静的データ（StaticSeed）の寄附件数です。現在のディメンションのフィルターを保ちます。
 	measure 静的寄附件数 = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
 		formatString: #,##0
 		displayFolder: Metrics検証
 
-	/// Notebook05で品質検証・重複排除した受入済み増分のみ。Eventhouseの生観測とは別です。
+	/// Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）だけを集計します。Eventhouse の観測データ（重複を含む）とは別です。
 	measure 受入増分寄附総額 = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
 		formatString: ¥#,##0
 		displayFolder: Metrics検証
 
-	/// Notebook05で品質検証・重複排除した受入済み増分の件数です。
+	/// Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）の件数です。
 	measure 受入増分寄附件数 = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
 		formatString: #,##0
 		displayFolder: Metrics検証
@@ -30,7 +30,7 @@ table 寄附
 		displayFolder: 主要KPI
 		lineageTag: 8c63fefe-17ca-485a-9419-febd9e21750b
 
-	/// 現在のフィルター条件に含まれる寄附件数。静的seedと重複排除済み増分イベントを含みます。
+	/// 現在のフィルター条件に含まれる寄附件数です。静的データと、重複を除いた受入済みの増分を含みます。
 	measure 寄附件数 = COUNTROWS('寄附')
 		formatString: #,##0
 		displayFolder: 主要KPI
@@ -106,7 +106,7 @@ table 寄附
 		summarizeBy: none
 		sourceColumn: PaymentMethod
 
-	/// StaticSeedまたはRealtimeIncrement。静的スナップショットと増分イベントを区別します。
+	/// StaticSeed（静的データ）または RealtimeIncrement（受入済みの増分）。データの種類を区別します。
 	column データソース
 		dataType: string
 		isNullable: false

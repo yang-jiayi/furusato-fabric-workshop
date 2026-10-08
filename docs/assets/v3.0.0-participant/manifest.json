@@ -1,0 +1,12 @@
+{
+  "schemaVersion": "furusato-participant-figures/v1",
+  "purpose": "Participant guide figures; separate from the historical evidence projection.",
+  "figures": [
+    {
+      "id": "pc-01-architecture",
+      "file": "architecture.png",
+      "sha256": "adcede5b0d4dd1d0f9069b3c252e7ca3066e0d3e87bb1ec45f1777710dd57daa",
+      "source": "architecture.svg"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+diff --git a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt
+index 712bce7..d86fad9 100644
+--- a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt
++++ b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/global-contract.txt
+@@ -21,7 +21,7 @@ Relationship: Municipality -MunicipalityInPrefecture-> Prefecture
+ Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)
+ - 特定の寄付の追跡では、寄付ID・寄附金額、寄附者ID/名・居住県ID/名、受入自治体ID/名とその受入県ID/名（居住県とは別項目）、選んだ返礼品ID/名、カテゴリID/名、カタログ登録業者の全件ID/名を必ず表示する。属性はLakehouse SQL、関係経路はOntology（Donor -DonorMadeDonation-> Donation -DonationToMunicipality-> Municipality、Donation -DonationSelectedGift-> Gift <-SupplierProvidesGift- Supplier）と分担を明記する。業者を「作った」「発送した」と書かず、「SupplierProvidesGiftはカタログ登録であり、製造・発送・この寄付の履行を示さない」と書く。返礼品は「選んだ返礼品」と書く。
+ - 生観測のファイル別は SourceFile | WorkshopRunId | ParticipantAlias | ObservationCount | ObservedAmountYen | FirstObservedAtUtc | LastObservedAtUtc の見出しで示し、全体の合計もソースで求め、静的seedとは別のデータセットだと書く。
+-- 重複除外後の件数・金額、重複の有無（ファイル内・ファイル間とも）、重複件数は、どの承認済みソースにもEventIDがないため判定・証明できないと明言する。バケットキーの一意性や合計の一致から「重複なし」「重複あり」を推論しない。対象期間・対象ファイル（既定は2026年8月UTC）の重複込みraw総数として sum(ObservationCount) と sum(ObservedAmountYen) の両方を示し、一意件数を確定値・推定値・0として出さない。
++- 重複除外後の件数・金額、重複の有無（ファイル内・ファイル間とも）、重複件数は、どの承認済みソースにもEventIDがないため判定・証明できないと明言する。バケットキーの一意性や合計の一致から「重複なし」「重複あり」を推論しない。対象期間・対象ファイル（既定は2026年8月UTC）の重複込みraw総数として sum(ObservationCount) と sum(ObservedAmountYen) の両方を示し、一意件数を確定値・推定値・0として出さない。ファイル名を指定された質問では、SourceFile でまとめて、指定されたファイルごとに1行ずつ（SourceFile・件数・金額）を必ず示す。ファイルごとの値がない回答は未完成とする。
+ - 静的の寄付と生観測を足す依頼は計算せずに断り、静的の件数はLakehouse、観測の件数は対象期間（既定は2026年8月UTC）のEventhouse sum(ObservationCount)で確認して、次の形だけで答える。<>は確認した値で埋め、ほかの説明・数式・合計の数字を足さない（根拠の行とUTCの1文は付ける）。
+ 合算はしません。ご提示の合計は、このワークショップの総寄付件数ではありません。
+ 静的: <Lakehouseで確認した件数>件（Lakehouse、2025スナップショット、1寄付=1行のDonation）
+@@ -38,4 +38,4 @@ Recipient schema: Donation -DonationToMunicipality-> Municipality
+ - 列は定義どおりに説明する。CatalogGiftCountは業者のカタログ全体の返礼品数で、特定の返礼品の登録件数ではない（業者×返礼品の組は1行）。
+ - DAXの説明は当該メジャーの実定義に限定する。空集合になる理由はそのメジャーのKEEPFILTERSであり、KEEPFILTERSのない通常のCALCULATEなら同じ列の外側フィルターが置き換えられ、結果は空にならない。「KEEPFILTERSの有無に関わらず空」と書かない。DAX全般の規則として一般化しない。
+ ### 回答前の確認
+-- 返す前に、質問の種類ごとの必須項目がすべてあるか確認し、欠けていれば追加で照会してから答える。自治体の順位・一覧: 各行のMunicipalityId・名前・件数・金額（人気は両指標）。寄付の追跡: 寄附金額を含む上記の全項目。複合質問: 3つのブロックと突き合わせキーの行。
++- 返す前に、質問の種類ごとの必須項目がすべてあるか確認し、欠けていれば追加で照会してから答える。自治体の順位・一覧: 各行のMunicipalityId・名前・件数・金額（人気は両指標）。寄付の追跡: 寄附金額を含む上記の全項目。複合質問: 3つのブロックと突き合わせキーの行。重複の有無: 判定できない理由と、指定されたファイルごとの件数・金額。Goldモデルの金額条件・高額フラグの件数: 非表示の列を使ったDAXの結果（列がないと答えない）。
+diff --git a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt
+index a6632be..37b45a8 100644
+--- a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt
++++ b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/kusto-contract.txt
+@@ -3,4 +3,4 @@ The only operational fixture in this view is the distributed August 2026 increme
+ If the requested window returns no rows, also return the overall extent of this view in the same response: sum(ObservationCount), sum(ObservedAmountYen), min(FirstObservedAt) AS FirstObservedAtUtc, max(LastObservedAt) AS LastObservedAtUtc and dcount(SourceFile). An empty window outside that extent is a scope mismatch to report, not proof that the distributed observations do not exist.
+ File or run questions group BY SourceFile, WorkshopRunId and ParticipantAlias together (one run per file in this fixture) and return those literal column names with ObservationCount, ObservedAmountYen, FirstObservedAtUtc and LastObservedAtUtc. Grouping by these keys is required here; it is not sampling a value from one row. Return the all-file total as a separate source-computed row when totals are relevant.
+ Municipality activity leaders: compute ObservationCount=sum(ObservationCount) and ObservedAmountYen=sum(ObservedAmountYen) in ONE summarize BY MunicipalityID over the whole window, then return the leaders by count AND by amount with both metrics taken from that same per-municipality row. Never take a metric from arg_max, a single bucket/day row or a different query. Keep MunicipalityID as a string with leading zeros. These are duplicate-inclusive raw observations.
+-Deduplication or duplicate-existence questions (duplicates inside one file or across files, how many, whether any exist): this view has no EventID. Return the full-scope or per-file sum(ObservationCount) and sum(ObservedAmountYen) and state that whether duplicates exist and the exact unique count cannot be determined here. Never infer "no duplicates" from unique bucket keys or matching totals, and never return dcount over bucket keys, a guessed number or zero as a deduplicated count.
++Deduplication or duplicate-existence questions (duplicates inside one file or across files, how many, whether any exist): this view has no EventID. When the user names files, summarize BY SourceFile and return one row per named file with sum(ObservationCount) and sum(ObservedAmountYen); the answer is incomplete without those per-file rows. Otherwise return the full-scope sums. State that whether duplicates exist and the exact unique count cannot be determined here. Never infer "no duplicates" from unique bucket keys or matching totals, and never return dcount over bucket keys, a guessed number or zero as a deduplicated count.
+diff --git a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt
+index 1a44195..fa4b1d6 100644
+--- a/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt
++++ b/workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/semantic-model-contract.txt
+@@ -2,3 +2,4 @@
+ Return the values of EXISTING measures only, for example [寄附総額] and [寄附総額 前年同期間] under the requested month filter. Do not compute differences or ratios in DAX and do not define measures; the coordinator derives them from the returned integers.
+ Explain an empty filtered result through the stored definition, quoted verbatim, e.g. [静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed")). KEEPFILTERS makes the inner condition intersect the outer filter on the same column; a plain CALCULATE filter WITHOUT KEEPFILTERS would replace the outer filter on that column instead, so that result would NOT be empty. Never say the result is empty with or without KEEPFILTERS. [寄附件数] = COUNTROWS('寄附') returns BLANK, not 0, on an empty context. Never present "different values on the same column give no rows" as a general DAX rule.
+ '日付'[日付] is the JST donation date; a month evaluated in this model is a JST month.
++Hidden columns still exist and can be queried in DAX: '寄附'[寄附金額] is the donation amount in JPY and '寄附'[高額寄附フラグ] is TRUE for a high-value donation. For a count or total by an exact amount, an amount range or the high-value flag, query them directly, for example COUNTROWS(FILTER('寄附', '寄附'[寄附金額] = <amount>)) or CALCULATE([寄附件数], KEEPFILTERS('寄附'[高額寄附フラグ] = TRUE())), split by '寄附'[データソース] when a breakdown is asked. This is the one exception to returning existing measures only. Never answer that these columns are missing or that such a count cannot be computed.

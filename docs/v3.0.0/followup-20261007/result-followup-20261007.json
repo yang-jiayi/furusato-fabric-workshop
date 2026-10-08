@@ -361,5 +361,173 @@
     "corrections": [
       "Notebook02 refuses after handoff-ontology; the runbook step that ran it after the time-series binding (98/97 objects) was wrong and is corrected"
     ]
+  },
+  "sixthReport": {
+    "date": "2026-10-09",
+    "instruction": "Proceed with the B16/B19 Agent-instruction countermeasure using the same evaluation procedure; recapture the portal screenshots; reword the semantic-model descriptions (静的seed and similar) shown on the chapter 12 Metrics screen.",
+    "semanticModelDescriptions": {
+      "table": "寄附",
+      "descriptionsReworded": {
+        "table": 1,
+        "measures": 5,
+        "columns": 1
+      },
+      "expressionsChanged": false,
+      "deployedToProduction": true,
+      "readbackEqualsRepository": true,
+      "otherTablesChanged": false,
+      "daxCheckAfterDeployment": {
+        "goldCount": 94900,
+        "goldAmountYen": 1596157000,
+        "highValueCount": 1392
+      },
+      "notebooksRebuilt": [
+        "Notebook02",
+        "Notebook03",
+        "Notebook04"
+      ],
+      "baseline270Unchanged": true
+    },
+    "r11": {
+      "change": [
+        "duplicate-existence answers (inside or across files) also show each file's count and amount",
+        "the hidden model columns 寄附金額 and 高額寄附フラグ exist and are usable in DAX"
+      ],
+      "ruleRecordedBeforeEvaluation": true,
+      "adoptIf": [
+        "mean of the standard ten/84 (two runs) >= 74.5",
+        "regression B01-B19 (one run): content PASS >= 16 and fact PASS >= 17",
+        "B16 content PASS and B19 content PASS"
+      ],
+      "onlyCandidate": true,
+      "standard84": [
+        84,
+        78
+      ],
+      "regression19": {
+        "fact": {
+          "PASS": 17,
+          "FAIL": 2
+        },
+        "content": {
+          "PASS": 15,
+          "FAIL": 4
+        }
+      },
+      "cases": {
+        "B16": {
+          "fact": "PASS",
+          "content": "PASS"
+        },
+        "B19": {
+          "fact": "FAIL",
+          "content": "FAIL",
+          "reason": "said no row-level amount column is exposed; expected 384"
+        },
+        "B06": {
+          "fact": "PASS",
+          "content": "FAIL",
+          "reason": "breakdown only; the total 1,392 not stated"
+        },
+        "B12": {
+          "fact": "FAIL",
+          "content": "FAIL",
+          "reason": "national rank given as 1; true rank 2"
+        },
+        "B18": {
+          "fact": "PASS",
+          "content": "FAIL",
+          "reason": "counts only; the requested amounts not shown"
+        }
+      },
+      "resubmissions": 0,
+      "transportFailures": 0,
+      "adopted": false,
+      "reason": "regression content 15 < 16 and B19 FAIL",
+      "diff": "r11-candidate-contracts.diff"
+    },
+    "production": {
+      "configuration": "R8",
+      "verification": "live definition equals the R8 record except Files/Config/publish_info.json",
+      "publishedDescription": "Furusato ワークショップの寄付データ（Lakehouse・Eventhouse・Ontology・Semantic model）について質問に答えます。Answers questions about the Furusato workshop donation data."
+    },
+    "t10": {
+      "r11": "answered in both runs without a platform block (7/7 each)",
+      "r8InformationalRuns": {
+        "runs": 2,
+        "platformBlocked": 1,
+        "answered": 1,
+        "scored": false
+      },
+      "interpretation": "the block depends on the platform, not on the Agent instructions; support case still open"
+    },
+    "holdout4": {
+      "frozenBefore": "R11",
+      "runs": 1,
+      "configuration": "R8 + plain published description (final)",
+      "fact": {
+        "PASS": 11,
+        "FAIL": 1
+      },
+      "content": {
+        "PASS": 10,
+        "FAIL": 2
+      },
+      "failures": {
+        "Q04": "count 1,392 correct; refused the amount 114,690,000 (same cause as B19)",
+        "Q11": "content: ten suppliers and IDs correct, but catalog registration and shipment not distinguished (strict call; lenient reading PASS)"
+      },
+      "authorWritten": true,
+      "answersWithInternalTerms": {
+        "count": 7,
+        "of": 12,
+        "terms": [
+          "seed",
+          "スナップショット",
+          "raw"
+        ]
+      }
+    },
+    "rootCause": {
+      "B19andQ04": "the Data Agent does not use columns hidden in the semantic model; instructions alone cannot fix it"
+    },
+    "guide": {
+      "architectureDiagram": "v3 architecture diagram added to chapter 1",
+      "portalScreenshotsRecaptured": false,
+      "reason": "the signed-in browser window (InPrivate) does not expose a verifiable address in this environment, so screen images are withheld"
+    },
+    "nextCandidates": [
+      "unhide the model columns 寄附金額 and 高額寄附フラグ (model change; needs approval; evaluate with the same procedure)",
+      "reword the Agent instructions and examples that still produce internal terms (do not put a year in the data label)"
+    ],
+    "regressionSuite": "unchanged questions and expected values; provenance hash of 寄附.tmdl updated",
+    "tests": {
+      "dataAgent": {
+        "ran": 326,
+        "failed": 0
+      },
+      "provisioning": {
+        "ran": 311,
+        "failed": 0
+      },
+      "html": {
+        "ran": 36,
+        "failed": 0
+      },
+      "ontology": {
+        "ran": 18,
+        "failed": 0
+      },
+      "docs": {
+        "ran": 386,
+        "failed": 1,
+        "note": "pre-existing since before 2026-10-04 (test_original_questions_and_84_condition_expressions_are_unchanged)"
+      },
+      "publication": {
+        "ran": 51,
+        "failed": 9,
+        "note": "pre-existing since before 2026-10-04 (README presentation tests written for the 2026-09-21 README)"
+      }
+    }
   }
 }

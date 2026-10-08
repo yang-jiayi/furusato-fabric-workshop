@@ -241,7 +241,9 @@ the historical evidence.
    期待値は採点用です。Agent の指示・例・profile へ写しません。
    現在の本番（R8）の結果: B01–B14 は事実 12／内容 11（1問は通信のタイムアウト、2026-10-07）、
    B15–B19 は事実 4／内容 3（B16 はファイルごとの件数と金額を示さず、B19 は非表示の金額列を
-   「ない」と答えた。2026-10-08）。
+   「ない」と答えた。2026-10-08）。B16・B19 の対策を加えた候補 R11（2026-10-09）は事実 17／内容 15 で、
+   B16 は直ったものの B19 は直らず、事前に記録した基準（内容 16 以上と B19 の PASS）に届かないため不採用です。
+   B19 は、Data Agent がモデルで非表示の列を使わないことが原因で、指示だけでは直りません。
 3. **未使用の held-out を1回**（構成の採用規則を記録した後、最後に1回だけ）。一度使った held-out は
    次の候補では回帰用として扱います。
 
@@ -272,7 +274,11 @@ grading keys: never copy them into Agent instructions, examples or profiles.
 On the current production profile (R8), B01–B14 scored fact 12 / content 11 (one
 transport timeout, 2026-10-07) and B15–B19 scored fact 4 / content 3 (B16 omitted
 the per-file counts and amounts; B19 said the hidden amount column was missing,
-2026-10-08).
+2026-10-08). Candidate R11 (2026-10-09), which added instructions for B16 and B19,
+scored fact 17 / content 15: B16 was fixed but B19 was not, so it missed the
+pre-recorded rule (content ≥ 16 and B19 PASS) and was not adopted. B19 fails
+because the Data Agent does not use columns hidden in the semantic model;
+instructions alone cannot fix it.
 A question answered by the platform content block stays FAIL in every strict
 denominator; `platform_blocked_*` and `observable_condition_applicable` are a
 diagnostic breakdown based on the native block text, never acceptance.

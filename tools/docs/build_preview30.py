@@ -24,7 +24,7 @@ from furusato_docs.preview30_acceptance import require_public_acceptance  # noqa
 from furusato_docs.typography import ascii_parentheses  # noqa: E402
 from furusato_docs.word_refresh import refresh_with_word  # noqa: E402
 from furusato_html.preview30 import render as render_html  # noqa: E402
-from furusato_docs.participant30 import TAGLINE as PARTICIPANT_TAGLINE  # noqa: E402
+from furusato_docs.participant30 import TAGLINE as PARTICIPANT_TAGLINE, figure_path as participant_figure_path  # noqa: E402
 
 
 def write_word(
@@ -99,6 +99,8 @@ def write_word(
                     image = context.diagrams[block["source_key"]]["png"]
                 elif block["source_kind"] == "reviewed-capture":
                     image = evidence["captures"][block["source_key"]]["path"]
+                elif block["source_kind"] == "participant-capture":
+                    image = participant_figure_path(block["source_key"])
                 else:
                     raise ValueError("Legacy or unreviewed screenshot cannot enter the preview Word")
                 builder.figure(image, caption=block["caption"].get(lang), alt_text=block["alt"].get(lang), **{"max_height_cm": 15.5, **block.get("word_layout", {})})

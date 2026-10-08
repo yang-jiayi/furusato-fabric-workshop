@@ -1,12 +1,100 @@
-# 手順の逸脱と対策 — 2026-10-07（第3報〜第5報）
+# 手順の逸脱と対策 — 2026-10-07（第3報〜第6報）
 
 [結果 JSON](result-followup-20261007.json) ·
 [製品サポートへの報告内容](platform-support-cases.md) ·
 [R8 の指示差分（採用）](r8-candidate-contracts.diff) ·
 [R10 の指示差分（不採用）](r10-candidate-contracts.diff) ·
+[R11 の指示差分（不採用）](r11-candidate-contracts.diff) ·
 [運用手順（引き継ぎ）](../../../workshop/v3.0.0-preview/README-runtime.md) ·
 [回帰ゲート](../../../tools/data-agent/README.md) ·
 [SHA-256](SHA256SUMS.txt)
+
+## 第6報 — Agent の指示の追加（R11）、モデルの説明の言葉、構成図（2026-10-09）
+
+**B16・B19 の対策として Agent の指示を2つ加えた候補 R11 を、これまでと同じ手順で評価しました。
+標準10問・84条件は 84／78 に上がりましたが、事前に決めた採用基準（回帰19問の内容 PASS 16 以上、B19 の PASS）に
+届かず、本番は R8 のままです。Semantic model の説明は、ふだんの言葉に直して本番のモデルに反映しました。
+手順書の1章には、v3 の構成図を加えました。**
+
+### R11 の評価（B16・B19 の対策）
+
+R8 に、次の2つの指示を加えました。
+
+- ファイルの中やファイル間の重複を聞かれたら、判定できない理由とあわせて、ファイルごとの件数と金額を示す。
+- 寄附金額と高額寄附フラグはモデルでは非表示だが、DAX では使える。
+
+採用基準は、評価の前に記録しました。標準2回の平均が 74.5 以上、回帰19問（1回）の内容 PASS が 16 以上・事実 PASS が 17 以上、
+B16 と B19 の内容がともに PASS。満たさなければ R8 に戻し、結果を見てから指示を直して再評価することはしない（候補は R11 だけ）、としました。
+
+| 構成 | 標準84（1回目／2回目） | 回帰19問 事実／内容 | B16 事実／内容 | B19 事実／内容 | 判定 |
+|---|---:|---:|:---:|:---:|---|
+| R8（本番） | 76 ／ 74 | 16 ／ 14（1問は判定不能） | PASS ／ FAIL | FAIL ／ FAIL | — |
+| R11 | **84 ／ 78** | 17 ／ 15 | PASS ／ PASS | FAIL ／ FAIL | 不採用（内容 15 が基準の 16 に届かず、B19 も FAIL） |
+
+- **B16 は直りました。** 判定できない理由とあわせて、ファイルごとの件数と金額を示しました。
+- **B19 は直りませんでした。** Agent は「行ごとの金額の列が公開されていないため数えられない」と答えます。
+  Data Agent はモデルで非表示の列を使わないため、指示を加えるだけでは直せないと判断しました（下の「次の対策の候補」の1）。
+- R11 で新しく失敗した問があります。B06（合計の 1,392件を書かずに内訳だけを示した）、B12（全国の順位を1位と答えた。正しくは2位）、
+  B18（件数だけで、聞かれた金額を示さなかった）。
+- 送り直しや通信の失敗はありません。各問は新しい会話で1回だけ送りました。
+- 本番は R8 に戻し、定義が R8 の記録と一致することを確かめました。違いは公開時の説明文だけで、内部の名前を並べた英語の説明から
+  「Furusato ワークショップの寄付データ（Lakehouse・Eventhouse・Ontology・Semantic model）について質問に答えます。」に変えました。
+
+**T10 について:** R11 では2回とも、プラットフォームに止められずに回答しました（7／7）。本番の R8 でも採点に含めずに2回送ったところ、
+1回目は止められ、2回目は回答しました。止められるかどうかは Agent の指示ではなく、プラットフォーム側の判定で変わると考えられます
+（製品サポートへの報告は継続中です）。
+
+### 4回目の未公開の確認問題12問（本番の構成で1回）
+
+R11 を作る前に問題と期待値を固定し、採否を決めた後の本番の構成（R8）で1回だけ実行しました。
+
+- **事実 11／12、内容 10／12。**
+- Q04: 高額寄附フラグが付いた寄付の件数（1,392件）は正しいが、金額（114,690,000円）を「取得できない」と答えた。B19 と同じ原因です。
+- Q11 の内容: 事業者の10社と ID は正しいが、カタログへの登録と実際の発送を分けて書いていない（厳しめに FAIL としました）。
+- 著者が作成した問題で、独立した評価ではありません。
+- 12問のうち7問の回答に「seed」「スナップショット」「raw」の言葉が残っています（下の「次の対策の候補」の2）。
+
+### Semantic model の説明の言葉
+
+- 寄附テーブルの説明7か所（テーブル1、メジャー5、列1）で、「静的seed」「静的スナップショット」「生観測」などの言葉を、
+  「静的データ（配布した寄付データ全体）」「受入済みの増分」「Eventhouse の観測データ」などのふだんの言葉に直しました。
+  12章の Metrics の画面に表示されます。メジャーの式は変えていません。
+- 本番のモデルに反映して読み戻し、リポジトリと一致すること、変わったのは寄附テーブルの説明だけであることを確かめました。
+  DAX の結果は変わりません（Gold 94,900件・1,596,157,000円、高額寄附 1,392件）。
+- 配布する Notebook02〜04 はモデルの定義を含むため、作り直しました。
+
+### 手順書
+
+- 1章に v3 の構成図（Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent のつながり）を加えました。
+- **ポータルの画面の撮り直し（Version history、MCP の設定、Data Agent のソース、Graph の一部の選択）は、まだできていません。**
+  この環境では、サインイン済みのブラウザー（InPrivate）のアドレスを確認できないため、画面の画像を取得できない仕組みになっています。
+
+### 次の対策の候補（未実施）
+
+1. **モデルの列「寄附金額」「高額寄附フラグ」を表示にする**（B19・Q04 の対策）。モデルの変更のため、ご承認をいただいてから、
+   同じ手順（採用基準を先に記録し、標準2回・回帰19問・新しい確認問題）で評価します。
+2. **Agent の回答に残る言葉を直す。** Agent の指示と例の言い方を直す必要があります。R9・R10 の経験から、データの呼び名に年を入れません。
+
+### English summary (sixth report)
+
+Candidate R11 added two instructions to R8: when duplicates cannot be determined,
+also show each file's count and amount; the hidden model columns 寄附金額 and
+高額寄附フラグ are usable in DAX. Measured with the same procedure and a rule recorded
+in advance, it scored 84/84 and 78/84 on the standard ten (T10 was not blocked by
+the platform in either run) and fact 17 / content 15 on the 19 regression questions.
+B16 was fixed, but B19 still failed and B06, B12 and B18 regressed, so R11 missed the
+rule (content ≥ 16 and B19 PASS) and production was restored to R8 and verified; only
+the published description changed, to a plain sentence. Two informational T10 runs
+on R8 were blocked once and answered once, so the block depends on the platform. The
+fourth frozen 12-question check set, run once on the final configuration, scored fact
+11/12 and content 10/12; Q04 failed for the same reason as B19 (the Data Agent does not
+use hidden model columns). Seven semantic-model descriptions were reworded in plain
+language and deployed (read back; DAX results unchanged), and a v3 architecture diagram
+was added to chapter 1 of the guide. The portal screenshots could not be recaptured
+from this environment. Next candidates: unhide the two model columns (needs approval)
+and reword the Agent's instructions and examples that still produce internal terms.
+
+---
 
 ## 第5報 — 追加5問の評価と参加者用の手順書（2026-10-08）
 
@@ -45,6 +133,7 @@
 - **訂正:** 第3報・第4報で「時系列の設定の後に Notebook02 を実行する（98 オブジェクト）」と書きましたが、v3 の Notebook02 は
   handoff-ontology の記録後は動かない仕様で、件数の確認もありません。運用手順書を訂正し、記録後の Business Rule の編集は Ontology の画面で行う手順にしました。
 - **確認:** Word 94 ページ、日英 HTML とあわせて 155 検査／0 FAIL。参加者用の版に作業用・履歴の言葉が含まれていないことも、検査で確かめています。
+
 ## 第4報 — 対策の順にすべて対応（同日 23:00 以降）
 
 **R8 をご指示どおり本番に採用しました（標準10問・84条件 76/84・74/84）。言葉づかいをふだんの言葉に

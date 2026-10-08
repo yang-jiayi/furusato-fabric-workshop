@@ -96,7 +96,7 @@ class ParticipantEditionTests(unittest.TestCase):
             spec = figures.FIGURES[ident]
             for key in ("caption", "alt"):
                 self.assertTrue(all(part.strip() for part in spec[key]), ident)
-            if not ident.startswith("diagram:"):
+            if not ident.startswith("diagram:") and ident not in participant30.participant_figures():
                 self.assertIn(ident, self.evidence["captures"])
 
     def test_protected_evaluation_questions_are_complete(self):

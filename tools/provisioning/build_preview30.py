@@ -39,6 +39,16 @@ def build_agent_compatibility() -> dict:
             "implicitFallback": False, "agentConfigurationChanged": False}
 
 
+V3_FACT_DESCRIPTIONS = (
+    ("/// 静的seed寄附と重複排除済み増分イベントを統合した1寄附1行のファクト。金額・件数・時系列分析の基点です。",
+     "/// 静的データ（配布した寄付データ全体）と、品質処理で重複を除いた受入済みの増分を合わせた、1寄付1行のファクトです。金額・件数・時系列分析の基点です。"),
+    ("\t/// 現在のフィルター条件に含まれる寄附件数。静的seedと重複排除済み増分イベントを含みます。",
+     "\t/// 現在のフィルター条件に含まれる寄附件数です。静的データと、重複を除いた受入済みの増分を含みます。"),
+    ("\t/// StaticSeedまたはRealtimeIncrement。静的スナップショットと増分イベントを区別します。",
+     "\t/// StaticSeed（静的データ）または RealtimeIncrement（受入済みの増分）。データの種類を区別します。"),
+)
+
+
 def build() -> dict:
     baseline = immutable_baseline()
     # No recursive destination delete/copy: attachments is another workstream's.
@@ -50,14 +60,19 @@ def build() -> dict:
     fact = fact_path.read_text(encoding="utf-8")
     native_metrics = [
         ("静的寄附総額", 'CALCULATE([寄附総額], KEEPFILTERS(\'寄附\'[データソース] = "StaticSeed"))',
-         "¥#,##0", "不変の静的seed寄附のみ。運用上の生イベントや受入済み増分を合算しません。"),
+         "¥#,##0", "静的データ（StaticSeed）の寄附だけを集計します。Eventhouse の観測データや受入済みの増分は含めません。"),
         ("静的寄附件数", 'CALCULATE([寄附件数], KEEPFILTERS(\'寄附\'[データソース] = "StaticSeed"))',
-         "#,##0", "不変の静的seedの寄附件数。現在のディメンションフィルターを維持します。"),
+         "#,##0", "静的データ（StaticSeed）の寄附件数です。現在のディメンションのフィルターを保ちます。"),
         ("受入増分寄附総額", 'CALCULATE([寄附総額], KEEPFILTERS(\'寄附\'[データソース] = "RealtimeIncrement"))',
-         "¥#,##0", "Notebook05で品質検証・重複排除した受入済み増分のみ。Eventhouseの生観測とは別です。"),
+         "¥#,##0", "Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）だけを集計します。Eventhouse の観測データ（重複を含む）とは別です。"),
         ("受入増分寄附件数", 'CALCULATE([寄附件数], KEEPFILTERS(\'寄附\'[データソース] = "RealtimeIncrement"))',
-         "#,##0", "Notebook05で品質検証・重複排除した受入済み増分の件数です。"),
+         "#,##0", "Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）の件数です。"),
     ]
+    # Plain wording for descriptions inherited from the immutable 2.7.0 model (v3 copy only).
+    for old, new in V3_FACT_DESCRIPTIONS:
+        if fact.count(old) != 1:
+            raise ValueError("Expected one inherited description to reword: " + old)
+        fact = fact.replace(old, new)
     measure_text = ""
     for name, dax, fmt, text in native_metrics:
         measure_text += (f"\t/// {text}\n\tmeasure {name} = {dax}\n"

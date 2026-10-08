@@ -22,6 +22,7 @@ sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
 from furusato_docs.console import use_utf8_streams  # noqa: E402
 from furusato_docs.preview30_content import HTML_NAME, WORD_NAME, build  # noqa: E402
+from furusato_docs.participant30 import figure_path as participant_figure_path  # noqa: E402
 from furusato_docs import preview30_release as release  # noqa: E402
 from furusato_docs.render_audit import export_pdf, TOP_MARGIN_PT, BOTTOM_MARGIN_PT, PageReport  # noqa: E402
 from furusato_docs.typography import ascii_parentheses  # noqa: E402
@@ -273,10 +274,12 @@ def check_capture_fidelity(pair, document, evidence, report, *, release_profile=
         ]
         cover_count = len(body_images) - len(document.figures)
         for figure in document.figures:
-            if figure["source_kind"] != "reviewed-capture":
+            if figure["source_kind"] not in {"reviewed-capture", "participant-capture"}:
                 continue
             ident = figure["source_key"]
-            expected = fingerprint(evidence["captures"][ident]["path"].read_bytes())
+            source = (evidence["captures"][ident]["path"] if figure["source_kind"] == "reviewed-capture"
+                      else participant_figure_path(ident))
+            expected = fingerprint(source.read_bytes())
             index = cover_count + figure["number"] - 1
             report_check(
                 report, "word.capturePixels." + ident,

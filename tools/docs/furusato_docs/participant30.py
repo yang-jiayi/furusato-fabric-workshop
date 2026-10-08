@@ -10,6 +10,7 @@ same repository sources as the rest of the guide so values cannot drift.
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -20,6 +21,28 @@ from . import participant30_figures as figure_source
 from . import participant30_text as text_source
 
 LEARN_BASE = "https://learn.microsoft.com/en-us/fabric/iq/ontology/"
+PARTICIPANT_ASSETS = Path(__file__).resolve().parents[3] / "docs" / "assets" / "v3.0.0-participant"
+
+
+def participant_figures() -> dict:
+    """Participant-only images (new screenshots and diagrams), separate from the evidence projection."""
+    path = PARTICIPANT_ASSETS / "manifest.json"
+    if not path.is_file():
+        return {}
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    if manifest.get("schemaVersion") != "furusato-participant-figures/v1":
+        raise ValueError("Unexpected participant figure manifest")
+    return {entry["id"]: entry for entry in manifest["figures"]}
+
+
+def figure_path(ident: str) -> Path:
+    entry = participant_figures()[ident]
+    path = (PARTICIPANT_ASSETS / entry["file"]).resolve()
+    if not path.is_relative_to(PARTICIPANT_ASSETS.resolve()) or not path.is_file():
+        raise ValueError("Participant figure path is invalid: " + ident)
+    if hashlib.sha256(path.read_bytes()).hexdigest() != entry["sha256"]:
+        raise ValueError("Participant figure changed after its manifest was written: " + ident)
+    return path
 
 TAGLINE = {
     "ja": "合成データを使い、Lakehouse・Eventhouse・Ontology・Data Agent を順に構築して確かめるハンズオン教材です。",
@@ -174,6 +197,9 @@ class FigureFactory:
             if key not in self.context.diagrams:
                 raise ValueError("Unknown diagram: " + key)
             source_kind, source_key = "diagram", key
+        elif ident in participant_figures():
+            figure_path(ident)
+            source_kind, source_key = "participant-capture", ident
         else:
             if ident not in self.evidence["captures"]:
                 raise ValueError("Capture is not in the reviewed public projection: " + ident)

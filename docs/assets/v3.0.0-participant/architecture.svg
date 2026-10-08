@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4a5568"/>
+    </marker>
+    <style>
+      .lane { fill: #f7fafc; stroke: #cbd5e0; stroke-width: 1.5; }
+      .lane-title { font-size: 19px; font-weight: 600; fill: #2d3748; }
+      .box { fill: #ffffff; stroke: #2b6cb0; stroke-width: 2; }
+      .box-data { fill: #ebf8ff; stroke: #2b6cb0; stroke-width: 2; }
+      .box-ai { fill: #f0fff4; stroke: #2f855a; stroke-width: 2; }
+      .name { font-size: 20px; font-weight: 600; fill: #1a202c; }
+      .sub { font-size: 15px; fill: #4a5568; }
+      .edge { stroke: #4a5568; stroke-width: 2; fill: none; marker-end: url(#arrow); }
+      .edge-dash { stroke: #4a5568; stroke-width: 2; fill: none; stroke-dasharray: 7 5; marker-end: url(#arrow); }
+      .edge-label { font-size: 14px; fill: #4a5568; }
+    </style>
+  </defs>
+  <rect width="1600" height="980" fill="#ffffff"/>
+  <text x="40" y="46" font-size="26" font-weight="700" fill="#1a202c">Furusato Workshop 3.0.0 — データの流れ / Data flow</text>
+
+  <rect class="lane" x="30" y="70" width="1540" height="170" rx="12"/>
+  <text class="lane-title" x="50" y="100">静的データ / Static data（5–7章 / Ch. 5–7）</text>
+  <rect class="box-data" x="60" y="120" width="300" height="96" rx="10"/>
+  <text class="name" x="80" y="157">8 CSV files</text>
+  <text class="sub" x="80" y="185">静的データ: 80,000件の寄付</text>
+  <text class="sub" x="80" y="205">Files/furusato/seed</text>
+  <rect class="box" x="450" y="120" width="230" height="96" rx="10"/>
+  <text class="name" x="470" y="157">Notebook 01</text>
+  <text class="sub" x="470" y="185">型付きテーブルを作成</text>
+  <rect class="box-data" x="770" y="120" width="360" height="96" rx="10"/>
+  <text class="name" x="790" y="157">Lakehouse</text>
+  <text class="sub" x="790" y="185">ot_* テーブル 11個</text>
+  <text class="sub" x="790" y="205">1,344,099,000 円</text>
+  <path class="edge" d="M360,168 L448,168"/>
+  <path class="edge" d="M680,168 L768,168"/>
+
+  <rect class="lane" x="30" y="255" width="1540" height="170" rx="12"/>
+  <text class="lane-title" x="50" y="285">8月の観測データ / August observation data（8–10章 / Ch. 8–10）</text>
+  <rect class="box-data" x="60" y="305" width="300" height="96" rx="10"/>
+  <text class="name" x="80" y="342">3 increment files</text>
+  <text class="sub" x="80" y="370">5,000行 × 3（重複を含む）</text>
+  <text class="sub" x="80" y="390">Files/increment</text>
+  <rect class="box" x="420" y="305" width="230" height="96" rx="10"/>
+  <text class="name" x="440" y="342">OneLake event</text>
+  <text class="sub" x="440" y="370">FileCreated</text>
+  <rect class="box" x="700" y="305" width="190" height="96" rx="10"/>
+  <text class="name" x="720" y="342">Activator</text>
+  <text class="sub" x="720" y="370">ルールで起動</text>
+  <rect class="box" x="940" y="305" width="190" height="96" rx="10"/>
+  <text class="name" x="960" y="342">Pipeline</text>
+  <text class="sub" x="960" y="370">Copy</text>
+  <rect class="box-data" x="1180" y="305" width="360" height="96" rx="10"/>
+  <text class="name" x="1200" y="342">Eventhouse (KQL)</text>
+  <text class="sub" x="1200" y="370">DonationEvents 15,000行</text>
+  <text class="sub" x="1200" y="390">253,886,000 円（重複を含む）</text>
+  <path class="edge" d="M360,353 L418,353"/>
+  <path class="edge" d="M650,353 L698,353"/>
+  <path class="edge" d="M890,353 L938,353"/>
+  <path class="edge" d="M1130,353 L1178,353"/>
+
+  <rect class="lane" x="30" y="440" width="1540" height="170" rx="12"/>
+  <text class="lane-title" x="1550" y="470" text-anchor="end">品質処理とモデル / Quality processing and model（11–12章 / Ch. 11–12）</text>
+  <rect class="box" x="60" y="490" width="300" height="96" rx="10"/>
+  <text class="name" x="80" y="527">Notebook 05</text>
+  <text class="sub" x="80" y="555">品質チェック・重複の隔離</text>
+  <text class="sub" x="80" y="575">入力: 静的テーブル + 増分ファイル</text>
+  <rect class="box-data" x="450" y="490" width="400" height="96" rx="10"/>
+  <text class="name" x="470" y="527">Gold (gold.donations)</text>
+  <text class="sub" x="470" y="555">94,900行（静的 80,000 + 増分 14,900）</text>
+  <text class="sub" x="470" y="575">1,596,157,000 円</text>
+  <rect class="box-data" x="940" y="490" width="400" height="96" rx="10"/>
+  <text class="name" x="960" y="527">Semantic model (DAX)</text>
+  <text class="sub" x="960" y="555">メジャー: 寄附総額・寄附件数 など</text>
+  <path class="edge" d="M360,538 L448,538"/>
+  <path class="edge" d="M850,538 L938,538"/>
+  <path class="edge-dash" d="M210,401 L210,488"/>
+  <rect class="lane" x="30" y="625" width="1540" height="330" rx="12"/>
+  <text class="lane-title" x="50" y="655">意味と AI での利用 / Meaning and AI（6–7章・10章・12–23章 / Ch. 6–7, 10, 12–23）</text>
+  <rect class="box-ai" x="60" y="680" width="430" height="150" rx="10"/>
+  <text class="name" x="80" y="717">Ontology</text>
+  <text class="sub" x="80" y="745">Entity type 10個・Relationship 15個</text>
+  <text class="sub" x="80" y="767">Lakehouse の列をバインド</text>
+  <text class="sub" x="80" y="789">時系列: Eventhouse から（10章）</text>
+  <text class="sub" x="80" y="811">Metrics: Semantic model から（12章）</text>
+  <rect class="box-ai" x="560" y="680" width="300" height="110" rx="10"/>
+  <text class="name" x="580" y="717">Graph (GQL)</text>
+  <text class="sub" x="580" y="745">必要な Entity だけを</text>
+  <text class="sub" x="580" y="767">選んで実体化（16章）</text>
+  <rect class="box-ai" x="930" y="680" width="400" height="150" rx="10"/>
+  <text class="name" x="950" y="717">Fabric Data Agent（1つ）</text>
+  <text class="sub" x="950" y="745">ソース: Lakehouse SQL・Eventhouse KQL</text>
+  <text class="sub" x="950" y="767">Ontology・Semantic model（DAX）</text>
+  <text class="sub" x="950" y="789">Code Interpreter で表・グラフ（17章）</text>
+  <rect class="box" x="1390" y="680" width="150" height="110" rx="10"/>
+  <text class="name" x="1410" y="717">MCP</text>
+  <text class="sub" x="1410" y="745">外部の</text>
+  <text class="sub" x="1410" y="767">クライアント</text>
+  <path class="edge" d="M490,735 L558,735"/>
+  <path class="edge" d="M1330,735 L1388,735"/>
+  <text class="sub" x="60" y="880">静的データと8月の観測データは別のデータです。足し合わせません。</text>
+  <text class="sub" x="60" y="905">Static data and August observation data are separate. Never add them together.</text>
+  <text class="sub" x="60" y="935">点線: 増分ファイルは Notebook 05 の入力にもなります。 / Dashed line: the increment files are also an input of Notebook 05.</text>
+</svg>

@@ -5,8 +5,11 @@ The directory name remains a technical runtime profile. See
 [the explicit component versions](edition.json) and
 [the current artifact-set procedure](../../docs/v3.0.0/current/README.md).
 Production targets the approved folder directly; **Temp is not a default
-deployment dependency**. Explicit evaluation-only folders must be cleaned up
-after adopted dependencies and the formal Agent are verified.
+deployment dependency**. The standard route uses exactly **one generation2
+Ontology and one Data Agent**. A native consumer API-version failure stays a
+recorded failure; no compatibility Ontology is added to the standard deployment.
+See the [current measured profile](data-agent/candidates/measured-contract-20261009/README.md)
+and [calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md).
 
 This compatibility-stable source path is also shipped by the
 [Workshop3.0.0 course release](../../docs/v3.0.0/README.md). The course version
@@ -26,8 +29,8 @@ This directory is **not a claim of successful cloud deployment, UI validation, A
 | Metadata / generation2 / staged deployment | `notebooks/Notebook_02_*.ipynb` through `Notebook_04_*.ipynb` |
 | Generation2 TMDL | `ontology/definition/` |
 | Actual portable entity/property/relationship inventory | `ontology/generation2-contract.json` |
-| Optional static Relationships companion (create-only) | `ontology/relationships/definition/`, `ontology/relationships/contract.json` |
-| Explicit legacy consumer bridge (offline handoff only) | `ontology/agent-compat/definition-template.json`, `ontology/agent-compat/contract.json` |
+| Historical opt-in static Relationships assets (outside the standard route) | `ontology/relationships/definition/`, `ontology/relationships/contract.json` |
+| Historical opt-in consumer bridge assets (outside the standard route) | `ontology/agent-compat/definition-template.json`, `ontology/agent-compat/contract.json` |
 | Source-owned Direct Lake DAX | `powerbi/Furusato_Analytics.SemanticModel/` |
 | Metric source contract | `powerbi/native-metrics-contract.json` |
 | Four directly configured Data Agent sources | `data-agent/definition/` |
@@ -110,6 +113,15 @@ Stop on any nonzero exit code. These are deliberate separate stages, not an unat
 `deploy-notebooks` imports Notebook02–05 but does not execute them. Notebook04 is a parameterized frontend; the CLI remains the primary cross-machine orchestration path. Preserve the same private plan and `deployment-state.json` across stages. Notebook02 previews/applies only the four declared rule statements, requires an exact current-definition SHA for apply, and refuses post-native-Metrics TMDL replacement.
 
 `deploy-core` produces **generation2 static-core readback**, not full native-feature completion. Complete the Eventhouse binding using the verified native contract/UI before claiming the time-series lab passed.
+
+<details>
+<summary>Historical optional companion/consumer experiments; excluded from the one-Ontology workshop</summary>
+
+The following retained procedures document separate earlier experiments. They are
+not required by the current workshop or a workaround that repairs Gen2 native
+consumers. Do not run them as standard deployment steps or create extra Ontologies
+in the participant folder. Use the single main Ontology; record unsupported native
+operations and follow the current calibration procedure.
 
 ## Optional static Relationships companion
 
@@ -314,6 +326,9 @@ candidate work; reseal Notebook02–04 only after all owners finish. Neither thi
 build nor the historical bounded consumer observation proves a new environment
 or its current candidate has passed the benchmark.
 
+
+</details>
+
 ## Activator and increments
 
 This edition reuses the unchanged tested native lifecycle and upload utilities. `shouldRun` definition metadata is not used as a substitute for formal native `start_rule`/`stop_rule`.
@@ -379,31 +394,46 @@ Initial Direct Lake framing is separate from definition import. `refresh-model` 
 
 The Data Agent is created as a **candidate draft** with Lakehouse, KQL, generation2 Ontology and **direct SemanticModel** sources plus Code Interpreter configuration. `publish-agent` uses the documented staging/publish API and reads back all four published sources; publication is explicitly a preview-candidate operation, not an accuracy promotion. Native feature use, actual tool execution, fresh-conversation comparisons and original/new-feature evaluation remain separate checks. A successful definition import or publication is not proof of answer accuracy.
 
-UI labs—Copilot attachments, namespaces/inheritance/shared properties, native Metrics, versions, import/export and selective Graph/GQL—belong in isolated items under **Temp** within the target tree. Only their assigned coordinator writes those items. The runtime never edits their definitions or substitutes schema-only tests for native lab evidence.
+The standard participant route keeps the existing main Ontology: inspect its schema,
+plan changes, query its owned managed Graph where supported, and export/read RDF
+without importing another Ontology. Source-owned DAX is tested directly through the
+Semantic Model. Native Metrics/time-series and unsupported consumers stay separate
+unfinished checks; creating another item is not their completion criterion.
+Historical isolated research assets above remain optional and outside this route.
 
-### Formal Agent profile (standard-contract restoration)
+### Current measured Agent profile
 
-`publish-agent` publishes the base candidate only. Apply the formal profile afterwards
-with [`fresh_grounded_profile.py`](../../tools/data-agent/fresh_grounded_profile.py),
-which chains four offline compilers: source-grounded → complete-contract →
-time-layer-isolation → [standard-contract-restoration](data-agent/candidates/standard-contract-restoration/README.md).
-The last stage restores the standard ten/84 answer contracts; without it a clean
-2026-10-07 deployment scored only 36/84 and 34/84.
+`publish-agent` publishes the base candidate. Afterwards compile and apply
+[measured-contract-20261009](data-agent/candidates/measured-contract-20261009/README.md)
+using [`measured_contract_profile.py`](../../tools/data-agent/measured_contract_profile.py).
+Notebook02–04 seal this compiler and the same profile inputs; compiling never writes
+to Fabric. Follow the profile README's exact input schema and local command.
 
-1. Read the published Agent definition and the `INFORMATION_SCHEMA.COLUMNS` rows of the
-   six verified SQL views; keep both privately.
-2. `compile_fresh_profile(definition, columns)` returns the Draft and a receipt. Require
-   `globalInstructionsCharacters` ≤ 15,000, SQL 17 / KQL 9 examples, unchanged source
-   identities and `cloudCalls: 0`.
-3. Execute every SQL/KQL example read-only against the real sources; each must return rows.
-4. `updateDefinition` with the compiled Draft plus the unchanged Published parts, read it
-   back, then publish through the staging API and confirm Published equals Draft. The
-   service may rename the Ontology datasource folder to the source display name; map
-   the compiled part to the live path instead of creating a second source.
-5. Evaluate the unchanged ten/84 at least twice
-   ([`evaluate_native.py`](../../tools/data-agent/evaluate_native.py) supports the public
-   MCP transport) and keep every failure. T10 may be blocked by the native content filter;
-   report it, never bypass it. Run any holdout once, on the final configuration only.
+1. Verify the six SQL views independently, including their column types and quality
+   generation. Read all four native Agent source metadata/selection trees and the
+   deployed Semantic Model TMDL into private storage outside Git.
+2. Compile from those actual objects. Require exactly one source per type, the same
+   resource identities and Code Interpreter configuration, native IDs for every
+   selected field, and at most **10,000 UTF-16 units** per instruction section.
+   The amount column must be visible and the two real source-filtered count measures
+   must match the source-owned definitions. Model visibility alone does not prove
+   that the Agent's `get_schema` exposes the column.
+3. Keep the nine KQL examples only after service validation reports Valid; SQL
+   examples rejected by the service connection validator are omitted. Read-only SQL
+   execution and native example-registration validation are distinct checks.
+4. Save the unchanged Published parts, stage only the compiled Draft through the
+   authorized operator workflow, read it back and publish once. Read Published back
+   and compare the actual normalized definition. Preserve all failures privately.
+5. Freeze questions, conditions, configuration/data fingerprints and attempt policy
+   before sending a new evaluation. Keep paired unchanged-condition comparisons,
+   targeted regressions and unseen questions separate; never retry an uncertain
+   question delivery. A completed native response or correct final prose cannot
+   override a failed tool/query or missing native execution evidence.
+
+The measured later adjustments have targeted evidence; the complete 51-question
+campaign has not been repeated on the latest combined profile. Keep historical
+FAIL/UNCLEAR/N/A verdicts and the native Ontology/schema/UI limitations. See the
+[bounded measured results](../../docs/v3.0.0/tuning-20261010/README.md).
 
 ### API-only operation notes (observed 2026-10-07)
 
@@ -540,5 +570,7 @@ format, so it is configured in the Ontology editor:
    2026-10-07 deployment), edit rule statements in the Ontology editor
    (**Overview → Rules**) instead. The 98/97 object count in the 2.7 checklist
    (§7) belongs to the 2.7 Notebook and does not apply to the v3 Notebook02.
-4. Native Metrics (**Generate Ontology** from the semantic model) and other UI labs
-   go into isolated items under **Temp**; do not overwrite the main Ontology.
+4. Test the existing source-owned measures directly through the Semantic Model.
+   Inspect native Metrics only if already bound to this same main Ontology. If the
+   available Generate Ontology flow would create another item, stop that flow and
+   record native Metrics as unfinished; the standard route keeps one Ontology.

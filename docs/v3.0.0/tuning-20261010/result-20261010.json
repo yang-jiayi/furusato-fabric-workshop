@@ -1,0 +1,294 @@
+{
+  "schema": "furusato-measured-contract-summary/v1",
+  "date": "2026-10-10",
+  "observationDateUtc": "2026-10-09",
+  "historicalDeploymentSourceCommit": "fa103f0ff99d6259b9a208c924320908ae4a1b66",
+  "method": {
+    "judgmentType": "Codex supplemental content review against fixed conditions and source evidence",
+    "independentHumanSignoff": false,
+    "strictNativeAcceptanceAssigned": false,
+    "strictGradersChanged": false,
+    "originalVerdictsPreserved": true,
+    "favorableRetrySelection": false,
+    "businessPopulationsUnchanged": true,
+    "transportSettingsMixedAtBaseline": true,
+    "causalEffectIsolatedFromCaptureAvailability": false,
+    "latestPublishedRevision": "R11",
+    "latestFull51Retested": false
+  },
+  "original": {
+    "questions": 10,
+    "conditionsPerRepetition": 84,
+    "repetitions": 3,
+    "baseline": {
+      "registeredConditions": 252,
+      "PASS": 125,
+      "FAIL": 118,
+      "UNCLEAR": 0,
+      "NA": 9,
+      "applicableConditions": 243,
+      "passPercent": 51.44
+    },
+    "R8": {
+      "registeredConditions": 252,
+      "PASS": 192,
+      "FAIL": 60,
+      "UNCLEAR": 0,
+      "NA": 0,
+      "applicableConditions": 252,
+      "passPercent": 76.19
+    }
+  },
+  "matchedOriginal": {
+    "conditions": 219,
+    "baseline": {
+      "PASS": 111,
+      "FAIL": 108,
+      "passPercent": 50.68
+    },
+    "R8": {
+      "PASS": 162,
+      "FAIL": 57,
+      "passPercent": 73.97
+    },
+    "deltaPercentagePoints": 23.29,
+    "exclusionsFromBothPhases": {
+      "baselineClarificationNotApplicable": 9,
+      "changedApprovedSourceAvailabilityPremise": 24
+    },
+    "original252JudgmentsModified": false
+  },
+  "regression": {
+    "questions": 19,
+    "conditions": 38,
+    "unclearIncludedInDenominator": true,
+    "baseline": {
+      "registeredConditions": 38,
+      "PASS": 17,
+      "FAIL": 18,
+      "UNCLEAR": 3,
+      "NA": 0,
+      "applicableConditions": 38,
+      "passPercent": 44.74
+    },
+    "R8": {
+      "registeredConditions": 38,
+      "PASS": 30,
+      "FAIL": 7,
+      "UNCLEAR": 1,
+      "NA": 0,
+      "applicableConditions": 38,
+      "passPercent": 78.95
+    }
+  },
+  "disjointUnusedSets": {
+    "questionsEachPhase": 2,
+    "conditionsEachPhase": 6,
+    "baseline": {
+      "registeredConditions": 6,
+      "PASS": 4,
+      "FAIL": 2,
+      "UNCLEAR": 0,
+      "NA": 0,
+      "applicableConditions": 6,
+      "passPercent": 66.67
+    },
+    "R8": {
+      "registeredConditions": 6,
+      "PASS": 6,
+      "FAIL": 0,
+      "UNCLEAR": 0,
+      "NA": 0,
+      "applicableConditions": 6,
+      "passPercent": 100.0
+    },
+    "sameQuestions": false,
+    "pairedImprovementClaimed": false
+  },
+  "qualitySupplement": {
+    "conditions": 4,
+    "baseline": {
+      "registeredConditions": 4,
+      "PASS": 0,
+      "FAIL": 4,
+      "UNCLEAR": 0,
+      "NA": 0,
+      "applicableConditions": 4,
+      "passPercent": 0.0
+    },
+    "R8": {
+      "registeredConditions": 4,
+      "PASS": 4,
+      "FAIL": 0,
+      "UNCLEAR": 0,
+      "NA": 0,
+      "applicableConditions": 4,
+      "passPercent": 100.0
+    },
+    "R8CaptureEvidenceIncomplete": true,
+    "includedInFull51": false
+  },
+  "captureSummary": {
+    "baseline": {
+      "registeredSlots": 51,
+      "questionPOSTs": 50,
+      "knownTerminalResponses": 49,
+      "unknownSubmittedOutcomes": 1,
+      "unsubmittedFailureSlots": 1
+    },
+    "R8": {
+      "registeredSlots": 51,
+      "questionPOSTs": 51,
+      "knownTerminalResponses": 51,
+      "unknownSubmittedOutcomes": 0,
+      "unsubmittedFailureSlots": 0,
+      "retainedSlotsWithNativeFailuresOrIncompleteEvidence": 19,
+      "completedResponseProvesInternalQuerySuccess": false
+    }
+  },
+  "latestTargetedChecks": [
+    {
+      "phase": "R9",
+      "questions": 4,
+      "conditions": {
+        "registeredConditions": 19,
+        "PASS": 19,
+        "FAIL": 0,
+        "UNCLEAR": 0,
+        "NA": 0,
+        "applicableConditions": 19,
+        "passPercent": 100.0
+      },
+      "captureStatuses": {
+        "completed": 3,
+        "evidence_incomplete": 1
+      },
+      "questionPOSTs": 4,
+      "knownTerminalResponses": 4,
+      "full51Retested": false
+    },
+    {
+      "phase": "R10",
+      "questions": 3,
+      "conditions": {
+        "registeredConditions": 6,
+        "PASS": 4,
+        "FAIL": 2,
+        "UNCLEAR": 0,
+        "NA": 0,
+        "applicableConditions": 6,
+        "passPercent": 66.67
+      },
+      "captureStatuses": {
+        "completed": 2,
+        "evidence_incomplete": 1
+      },
+      "questionPOSTs": 3,
+      "knownTerminalResponses": 3,
+      "full51Retested": false
+    },
+    {
+      "phase": "R11",
+      "questions": 2,
+      "conditions": {
+        "registeredConditions": 4,
+        "PASS": 4,
+        "FAIL": 0,
+        "UNCLEAR": 0,
+        "NA": 0,
+        "applicableConditions": 4,
+        "passPercent": 100.0
+      },
+      "captureStatuses": {
+        "completed": 2,
+        "evidence_incomplete": 0
+      },
+      "questionPOSTs": 2,
+      "knownTerminalResponses": 2,
+      "full51Retested": false
+    }
+  ],
+  "publishedCanonicalDefinitionSha256": {
+    "R8": "12405c4e3c80282a30a79e165cf9a64cd97cd2047b9512538b3f3ee070356c38",
+    "R9": "66603e36e0f3cbb19b7f32add9d172a1723407bdbb63b84ce1c28b09e6e0dc45",
+    "R10": "a9d804b8925f22ec2e85ff1ad71705fdfd8eb3e5abf9bb30e7842cab6bb4a40e",
+    "R11": "7a6e94d9aa56b90f2bcd1b5f1560373d52842dd2c8c1c921e13d93a1e7d835f9"
+  },
+  "remainingLimitations": [
+    "Data Agent Gen2 Ontology consumer retains an unsupported-API-version route; direct Graph/GQL success is separate.",
+    "The tested Agent native DAX route omitted the amount column and returned no executed amount-filtered result after the visibility/selection change; resolution is unconfirmed because R11 did not retrieve the schema.",
+    "Native Ontology Time Series/Metrics and Manage graph UI projection remain unverified or unconfigured.",
+    "Report browser rendering and Activator automatic delivery were not tested.",
+    "Service content blocks and missing data-limit explanations remain recorded failures."
+  ],
+  "privateEvidenceVerification": {
+    "immutableReferencesRehashed": 19,
+    "allRecordedHashesMatched": true,
+    "csvConditionRowsReconciled": 629,
+    "publicProjectionContainsCaseText": false,
+    "publicProjectionContainsExpectedOrActualAnswers": false,
+    "publicProjectionContainsNativeTraces": false,
+    "publicProjectionContainsLiveResourceIds": false,
+    "privateEvidencePublished": false
+  },
+  "privateEvidenceDigests": [
+    {
+      "role": "baselineOriginalContentReview",
+      "sha256": "8027e004cc7c87993a2f8f4224955b81706070973f828487003f13de42bdf5a9"
+    },
+    {
+      "role": "R8OriginalContentReview",
+      "sha256": "568cb94dfc9e9cd472776b6049907d495a6f7fbd29ac691a7da0e354b0435271"
+    },
+    {
+      "role": "baselineRegressionContentReview",
+      "sha256": "7c9822873b01aad890b6d725c5797bb17dcc5f10bec32474cae2d6e7db604a3c"
+    },
+    {
+      "role": "R8RegressionContentReview",
+      "sha256": "930d695b3c0d9550f85073f903559ba53ffa3bd88cb7bff7fdaaf0972797778e"
+    },
+    {
+      "role": "R9TargetedContentReview",
+      "sha256": "f62399c143f5248f173f9ce35da34296908c3f2a838f74e4327aa1f33cdf6e34"
+    },
+    {
+      "role": "R10TargetedContentReview",
+      "sha256": "fe2b9ce2303a9ae5260c0609351443442dcd62ab2279c8361149fb60497ddef7"
+    },
+    {
+      "role": "R11TargetedContentReview",
+      "sha256": "c66c1c785e43ce83ac315c48680a52130f23581feb4cc1742f37bdc0e86eb839"
+    },
+    {
+      "role": "baselineCaptureClosure",
+      "sha256": "2b150c04ccc10e3f69ccf82ecec60a0814caa915c4abbdac679925422591c1a0"
+    },
+    {
+      "role": "R8CaptureClosure",
+      "sha256": "31cba2ee3679752ad7b692e6201cdf16be44c45fe6b48d9b4a0c9247b53d8afb"
+    },
+    {
+      "role": "R9CaptureClosure",
+      "sha256": "f5f5c1d6e73bfe1ca834f231d5757f9a3c8288c93028cdd51754be3294224ae0"
+    },
+    {
+      "role": "R10CaptureClosure",
+      "sha256": "19a440b8d27d6640ac62e4fe0ebf5cf68bbbb9b529844524edda62c8c376df91"
+    },
+    {
+      "role": "R11CaptureClosure",
+      "sha256": "d39969a14fd2a46809d87496229918efe63e3b8c9c588c4abc94d38156380fb3"
+    },
+    {
+      "role": "R11PublicationReceipt",
+      "sha256": "ad3304c0707df7ca81a77347cb8ce445180e5f75884f6d5758827b0afcfe02fa"
+    }
+  ],
+  "publicationBoundary": {
+    "documentChecksAreAnswerQualityAcceptance": false,
+    "mainMergeIsAllFeatureAcceptance": false,
+    "portableDraftCompilesAreNewDestinationValidation": false
+  },
+  "artifactSourceDateEpoch": 1791578226
+}

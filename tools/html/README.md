@@ -28,10 +28,14 @@ resource. Print headings are kept together. Source preparation does not execute 
 
 ## 日本語
 
-最新版は
+現行の参加者用配布物は [v3.0.0 current](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current) のWord・日英HTMLです。
+校正と再生成は [現行の手順](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md) を参照してください。
+以下のv2.7ペアは過去版の再現用です。
+
+保持している過去版は
 [furusato-workshop-v2-7-0-complete_unified-20260923.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html)
 です。[同じ版の参加者 Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
-を日英で完全にミラーした自己完結の 1 ファイルで、現行の文書配布対象はこの 2 点だけです。
+を日英で完全にミラーした自己完結の 1 ファイルで、この過去版の配布ペアはこの 2 点です。
 検証済みペアをこの名前で配置しています。
 
 `unified-20260923` はActivatorの正式な `start_rule`／`stop_rule`、完成ファイルの
@@ -466,13 +470,14 @@ WebP エンコードと英語図版のフォント計測のための `Pillow` �
 
 ---
 
-## English
+## English — retained v2.7 workflow
 
-The latest HTML is
+For the current participant Word/HTML and checks, use [v3.0.0 current](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current).
+The retained historical HTML is
 [furusato-workshop-v2-7-0-complete_unified-20260923.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html),
 a complete Japanese/English mirror of the
 [same-edition participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
-in one self-contained file. Only this pair is the current document download set.
+in one self-contained file. This pair is the retained v2.7 document download set.
 The validated pair is installed under these names.
 
 The matching Word uses unified profile revision13. Both languages synchronize

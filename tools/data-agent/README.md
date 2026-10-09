@@ -1,3 +1,18 @@
+# Current measured Data Agent profile
+
+現行Workshopでは [measured-contract-20261009](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
+を使います。4ソースとOntology 1件を維持し、実在するnative要素・独立SQL metadata・公開modelの
+10メジャー定義を照合してDraftを生成する可搬compilerです。作成だけではサービスへ公開しません。
+実回答で確認した改善と残件は [2026-10-10実測資料](../../docs/v3.0.0/tuning-20261010/README.md)、
+導入・比較評価・Word/HTML校正は [校正手順](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
+を参照してください。最新構成で全51質問を再評価していません。
+
+Use the current measured profile linked above for the current course. It compiles
+locally from observed metadata, keeps one Ontology and all four source identities,
+and checks the actual ten model measures. Publication/readback and fresh answer
+validation are separate operator steps. Earlier reference-only and regression
+records below describe their own dated scopes; they are not the latest overall score.
+
 # Data Agent reference contracts
 
 ## 日本語

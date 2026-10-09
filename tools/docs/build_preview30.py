@@ -25,13 +25,15 @@ from furusato_docs.typography import ascii_parentheses  # noqa: E402
 from furusato_docs.word_refresh import refresh_with_word  # noqa: E402
 from furusato_html.preview30 import render as render_html  # noqa: E402
 from furusato_docs.participant30 import TAGLINE as PARTICIPANT_TAGLINE, figure_path as participant_figure_path  # noqa: E402
+from furusato_docs import participant_word  # noqa: E402
 
 
 def write_word(
     document, context, carrier, evidence, metadata, target: Path, review: Path, lang="ja", *,
-    release_profile=release.PREVIEW,
+    release_profile=release.PREVIEW, word_navigation="fields",
 ):
     profile = release.require_metadata_profile(metadata, release_profile)
+    participant_word.require_mode(word_navigation, participant_edition=bool(metadata.get("participantEdition")))
     builder = DocumentBuilder(carrier, review / "participant-shell.docx")
     # Extra snapshot/artifact entries must not strand the last TOC rows.
     compact_contents = profile.is_snapshot or "currentArtifactSet" in metadata
@@ -66,9 +68,17 @@ def write_word(
             "v2.7の全本文・表・コードは比較参考として保持。旧UI写真は新UIの証拠にしない。",
         ),
     )
-    builder.table_of_contents(levels="1-2")
-    for section in document.walk():
-        builder.heading(section.title.get(lang), section.level, **getattr(section, "word_layout", {}))
+    sections = list(document.walk())
+    if word_navigation == "headings":
+        participant_word.chapter_contents(builder, [
+            (index, section.title.get(lang)) for index, section in enumerate(sections, start=1) if section.level == 1
+        ])
+    else:
+        builder.table_of_contents(levels="1-2")
+    for index, section in enumerate(sections, start=1):
+        heading = builder.heading(section.title.get(lang), section.level, **getattr(section, "word_layout", {}))
+        if word_navigation == "headings" and section.level == 1:
+            participant_word.add_bookmark(heading, index)
         for block in section.blocks:
             kind = block.kind
             if kind == "paragraph":
@@ -106,8 +116,11 @@ def write_word(
                 builder.figure(image, caption=block["caption"].get(lang), alt_text=block["alt"].get(lang), **{"max_height_cm": 15.5, **block.get("word_layout", {})})
             else:
                 raise ValueError("Unknown shared-content block: " + kind)
-    builder.update_fields_on_open()
+    if word_navigation == "fields":
+        builder.update_fields_on_open()
     builder.save(target)
+    if word_navigation == "headings":
+        participant_word.remove_carried_fields(target)
     description = "Complete 24-chapter/5-appendix guide. Content SHA256: " + metadata["contentSha256"]
     if participant:
         description = "Participant guide, 24 chapters and 5 appendices. Content SHA256: " + metadata["contentSha256"]
@@ -138,10 +151,18 @@ def main(argv=None):
                         help="Bind a separately generated current guide to verified v3 source artifacts; historical files stay unchanged.")
     parser.add_argument("--require-evidence", action="store_true", help="Reject an incomplete evidence handoff; does not turn blockers into passes")
     parser.add_argument("--skip-word", action="store_true", help="Draft only: leave fields unrefreshed")
+    participant_word.add_arguments(parser)
     parser.add_argument("--require-acceptance", action="store_true", help="Final-use gate: reject every unresolved original-suite, lab, capture or publication-approval condition")
     parser.add_argument("--acceptance-approval", type=Path, help="Explicit approval bound to the selected public evidence hash and run")
     release.add_arguments(parser)
     args = parser.parse_args(argv)
+    try:
+        participant_word.require_mode(args.word_navigation, participant_edition=args.participant_edition,
+                                      require_acceptance=args.require_acceptance)
+    except ValueError as error:
+        parser.error(str(error))
+    if args.word_navigation == "headings" and args.skip_word:
+        parser.error("--word-navigation headings is a complete field-free export; do not combine it with draft --skip-word")
     profile = release.get_profile(args.release_profile)
     release.check_options(
         profile, args.release_approval, evidence_path=args.evidence, evaluation_path=args.evaluation_report,
@@ -181,10 +202,18 @@ def main(argv=None):
     report = {
         **metadata, "status": "known-limitations-release-build" if profile.is_release else "draft",
         "documentIdentity": release.document_identity(metadata, profile),
-        "word": write_word(document, context, carrier, evidence, metadata, word, review, release_profile=profile),
+        "word": write_word(document, context, carrier, evidence, metadata, word, review, release_profile=profile,
+                           **({"word_navigation": args.word_navigation} if args.word_navigation != "fields" else {})),
+        "wordNavigation": args.word_navigation,
         "wordRefresh": {"ok": False, "detail": "Skipped by explicit draft option"},
     }
-    if not args.skip_word:
+    if args.word_navigation == "headings":
+        report["wordRefresh"] = {
+            "ok": False, "required": False,
+            "detail": "Field-free participant chapter hyperlinks; Microsoft Word field refresh was not performed.",
+        }
+        report["microsoftWordLayoutVerified"] = False
+    elif not args.skip_word:
         result = refresh_with_word(word)
         trimmed = tidy_contents_tail(word) if result.ok else 0
         if trimmed:
@@ -192,6 +221,8 @@ def main(argv=None):
         report["wordRefresh"] = asdict(result)
         report["wordRefresh"]["trimmedContentsTail"] = trimmed
     report["typography"] = apply_japanese_typography(word)
+    if args.word_navigation == "headings":
+        report["wordFonts"] = participant_word.apply_fonts(word)
     report["metadataNormalization"] = normalise_package_metadata(word)
     word_sha = hashlib.sha256(word.read_bytes()).hexdigest()
     html = render_html(document, context, facts, carrier, evidence, metadata, word_sha, ROOT, release_profile=profile)

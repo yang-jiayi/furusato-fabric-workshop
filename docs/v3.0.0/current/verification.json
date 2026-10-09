@@ -1,357 +1,356 @@
 {
- "schemaVersion": "furusato-v3-current-verification/v1",
- "date": "2026-10-07",
- "projectedAtUtc": "2026-10-08T17:24:31.086854+00:00",
- "workshopVersion": "3.0.0",
- "sourceCommit": "6942a19db8cd50cf4f64cef5c0d76606e4c1c4b6",
- "artifactSetSha256": "86aa6adb2211151f71b99144dc10a1ef0c6169a719e117e23227163833d795f8",
- "gitBlobParityVerified": true,
- "sourceArtifacts": 319,
- "notebooksAligned": 5,
- "csvFilesUnchanged": 11,
- "wordPages": 95,
- "documentChecks": {
-  "PASS": 157,
-  "FAIL": 0
- },
- "correctedAgentProfile": "standard-contract-restoration",
- "agentCompilerStages": [
-  "source-grounded",
-  "complete-contract",
-  "time-layer-isolation",
-  "standard-contract-restoration"
- ],
- "previousFolderCleanup": {
-  "targets": 29,
-  "alreadyRemovedWithParent": 10,
-  "remainingActiveItems": 0,
-  "blockedEventhouseResolvedByPurgingSoftDeletedProbeItems": true,
-  "recoverableUntil": "2026-10-14",
-  "tempFolderDeleted": true
- },
- "production": {
-  "activeItems": 22,
-  "activeDataAgents": 1,
-  "tempFolders": 0,
-  "allSourcesInTargetFolder": true,
-  "notebook01Runs": 1,
-  "notebook05Runs": 1,
-  "manualPipelineRuns": 3,
-  "automaticDeliveryVerified": false,
-  "activatorStopped": true,
-  "portalUsed": false,
-  "powerBiReportDeployed": true
- },
- "data": {
-  "staticRows": 80000,
-  "staticYen": 1344099000,
-  "rawRows": 15000,
-  "rawYen": 253886000,
-  "acceptedRows": 14900,
-  "acceptedYen": 252058000,
-  "quarantinedRows": 100,
-  "goldRows": 94900,
-  "goldYen": 1596157000
- },
- "graph": {
-  "generation1PartsReadBack": 53,
-  "nodes": 109592,
-  "directedEdges": 297303,
-  "explicitStaticConsumer": true
- },
- "answerEvaluation": {
-  "transport": "Fabric Data Agent MCP (published); answer text only",
-  "standardTen84": {
-   "asDeployed": [
-    36,
-    34
-   ],
-   "adopted": [
-    76,
-    74
-   ],
-   "adoptedConfiguration": "R8",
-   "previouslyAdoptedR6": [
-    74,
-    73
-   ],
-   "ceilingWithNativeT10Block": 77,
-   "releaseRecord": 76
+  "schemaVersion": "furusato-v3-current-verification/v1",
+  "date": "2026-10-10",
+  "timeZone": "Asia/Tokyo",
+  "projectedAtUtc": "2026-10-09T21:33:21.416842+00:00",
+  "workshopVersion": "3.0.0",
+  "sourceCommit": "a93899fc4209976aee77f79dcf1c1288415ff7ac",
+  "artifactSetSha256": "efaa2e4daf3537c5c501d6538d023dd0414317ba396513155e92091d847c3cc0",
+  "sourceTreeSha256": "b809360e7f47316213f53e64a360a527cfdf896bc09b4211114dcbd0ea7e20fa",
+  "gitBlobParityVerified": true,
+  "sourceArtifacts": 345,
+  "notebooksAligned": 5,
+  "csvFilesUnchanged": 11,
+  "wordPages": null,
+  "wordNavigation": "headings",
+  "microsoftWordFieldRefreshPerformed": false,
+  "microsoftWordLayoutVerified": false,
+  "documentChecks": {
+    "PASS": 152,
+    "FAIL": 0
   },
-  "extended14": {
-   "asDeployed": {
-    "factualPass": 13,
-    "contentPass": 10
-   },
-   "adopted": {
-    "configuration": "R8",
-    "factualPass": 12,
-    "contentPass": 11,
-    "unknown": 1,
-    "note": "the unknown answer was a transport timeout"
-   },
-   "previouslyAdoptedR6": {
-    "factualPass": 14,
-    "contentPass": 13
-   }
-  },
-  "holdout12": {
-   "factualPass": 11,
-   "contentPass": 11,
-   "authorWritten": true,
-   "independent": false,
-   "runs": 1,
-   "configuration": "R6"
-  },
-  "configurationsEvaluated": 6,
-  "study": "../tuning-20261007/result-20261007.json",
-  "holdout3": {
-   "questions": 12,
-   "frozenBeforeAdoption": true,
-   "runs": 1,
-   "configuration": "R8",
-   "factualPass": 11,
-   "contentPass": 10,
-   "authorWritten": true,
-   "independent": false
-  }
- },
- "questionsOrCriteriaChanged": false,
- "independentHoldout": false,
- "humanSignoff": false,
- "generalAiQualityAccepted": false,
- "oldReleaseAssetsChanged": false,
- "remaining": [
-  "T10 is sometimes blocked by the native content filter (R11: answered in both runs; R8: one of two informational runs blocked); a blocked answer is reported as a failure, not bypassed (support case filed).",
-  "Some answers still use internal dataset names instead of plain wording (fourth holdout: 7 of 12 answers); the plain-wording candidates R9 and R10 fixed this but missed the adoption rule recorded in advance.",
-  "Automatic event-trigger delivery and the primary Ontology native time-series/Metric bindings still need portal steps.",
-  "All Lakehouse SQL example queries fail service validation while runtime SQL works (support case filed).",
-  "A count or amount that needs a hidden model column (\u5bc4\u9644\u91d1\u984d, \u9ad8\u984d\u5bc4\u9644\u30d5\u30e9\u30b0) is refused because the Data Agent does not use hidden columns (regression B19, fourth holdout Q04); instructions alone did not fix it (R11), and unhiding the two columns needs approval. Per-file duplicate answers can omit the per-file counts and amounts on R8 (B16; fixed in R11, not adopted).",
-  "The portal screenshots for Version history, MCP settings, Data Agent sources and the Graph partial selection were not recaptured: the signed-in browser window cannot be captured from this environment."
- ],
- "artifactSha256": {
-  "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "7c55954ef68c1a14b9a11dd2381d9823e1ecdc2018120c9313152376ceed27ca",
-  "guide/furusato-workshop-v3-0-0-complete.html": "8ab04698e543ff23ce616fec91ed83890ad00155d528c834e610af135ea5b40c",
-  "Furusato_Workshop_v3.0.0_current-20261007.zip": "507e52727518a70a0624ca2d96fad3ba3bcd2293855b869424e0a70fb5d0cd8d",
-  "artifact-set.json": "86aa6adb2211151f71b99144dc10a1ef0c6169a719e117e23227163833d795f8"
- },
- "privacy": {
-  "rawAnswers": false,
-  "privatePaths": false,
-  "liveResourceIds": false
- },
- "tests": {
-  "dataAgent": 326,
-  "provisioning": 311,
-  "html": 36,
-  "ontology": 18,
-  "docs": {
-   "total": 386,
-   "pass": 385,
-   "knownPreexistingFailure": 1
-  },
-  "publication": {
-   "total": 51,
-   "pass": 42,
-   "knownPreexistingFailure": 9,
-   "note": "README presentation tests written for the 2026-09-21 README; same result on 2026-10-04 main"
-  }
- },
- "followUp": {
-  "record": "../followup-20261007/README.md",
-  "result": "../followup-20261007/result-followup-20261007.json",
-  "deviations": {
-   "viewElements": "verified-by-service-api",
-   "powerBiReport": "deployed-and-reconciled",
-   "activatorAutomaticDelivery": "portal steps remain (the rule action targets this deployment's pipeline)",
-   "timeSeriesBindingAndMetrics": "portal steps remain (handoff-ontology recorded)"
-  },
-  "countermeasures": {
-   "A-D": "R8 adopted on the owner's instruction; R9 and R10 not adopted",
-   "E": "done (two support cases filed)",
-   "F": "done (19-question regression suite)",
-   "G": "done (Activator hand-off corrected; Copy activity exporter)"
-  },
-  "candidates": {
-   "R7": {
-    "standard84": [
-     69,
-     76
+  "documentStats": {
+    "externalLinks": [
+      "https://learn.microsoft.com/en-us/fabric/data-engineering/how-to-use-notebook",
+      "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview",
+      "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs",
+      "https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent",
+      "https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-add-metadata",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-bind-data",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-entity-types",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-relationship-types",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-generate-from-semantic-models",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-reuse-properties",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-inheritance",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-metrics",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-namespaces",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-rules",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history",
+      "https://learn.microsoft.com/en-us/fabric/iq/ontology/overview",
+      "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction",
+      "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"
     ],
-    "adopted": false
-   },
-   "R8": {
-    "standard84": [
-     76,
-     74
-    ],
-    "extendedContentPass": 11,
-    "adopted": true,
-    "adoptedBy": "owner's instruction (fourth report)"
-   },
-   "R9": {
-    "standard84": [
-     76,
-     70
-    ],
-    "extended": {
-     "fact": 13,
-     "content": 13
+    "html-ja": {
+      "pages": 100,
+      "blankPages": [],
+      "captionOnlyPages": [],
+      "clippedText": [],
+      "kinsokuLeading": []
     },
-    "answersWithInternalTerms": 0,
-    "adopted": false
-   },
-   "R10": {
-    "standard84": [
-     77,
-     70
-    ],
-    "extended": {
-     "fact": 12,
-     "content": 12
-    },
-    "adopted": false
-   }
-  },
-  "adoptedConfiguration": "R8 (14 Draft/Published parts equal the evaluated R8)",
-  "holdout2": {
-   "questions": 12,
-   "runs": 1,
-   "factualPass": 9,
-   "contentPass": 7,
-   "authorWritten": true,
-   "independent": false
-  },
-  "exampleValidation": {
-   "lakehouseSqlInvalid": 17,
-   "kqlValid": 9
-  },
-  "observability": {
-   "method": "SDK run steps in a temporary Temp notebook (deleted)",
-   "t09ExecutedSources": [
-    "Kusto",
-    "LakehouseTables"
-   ]
-  },
-  "holdout3": {
-   "questions": 12,
-   "runs": 1,
-   "configuration": "R8",
-   "factualPass": 11,
-   "contentPass": 10,
-   "authorWritten": true,
-   "independent": false
-  },
-  "supportCases": {
-   "filed": 2,
-   "via": "Fabric admin portal Help + support",
-   "status": "open"
-  },
-  "serviceHealth": "Data Agents that rely on Ontology V2 cannot complete actions (since 2026-10-02, fix expected 2026-10-09); the formal Agent already uses the V1 compatibility ontology",
-  "portalStepsPerformed": false,
-  "kqlDataCleared": false,
-  "regressionB15toB19": {
-   "configuration": "R8",
-   "runs": 1,
-   "fact": {
-    "PASS": 4,
-    "FAIL": 1
-   },
-   "content": {
-    "PASS": 3,
-    "FAIL": 2
-   },
-   "failures": {
-    "B16": "per-file counts and amounts not shown",
-    "B19": "hidden amount column called missing"
-   },
-   "nineteenQuestions": {
-    "fact": {
-     "PASS": 16,
-     "FAIL": 2,
-     "UNKNOWN": 1
-    },
-    "content": {
-     "PASS": 14,
-     "FAIL": 4,
-     "UNKNOWN": 1
+    "html-en": {
+      "pages": 102,
+      "blankPages": [],
+      "captionOnlyPages": [],
+      "clippedText": [],
+      "kinsokuLeading": []
     }
-   }
   },
-  "runbookCorrection": "Notebook02 refuses to run after handoff-ontology (fifth report)",
-  "sixthReport": {
-   "r11": {
-    "standard84": [
-     84,
-     78
-    ],
-    "regression19": {
-     "fact": {
-      "PASS": 17,
-      "FAIL": 2
-     },
-     "content": {
-      "PASS": 15,
-      "FAIL": 4
-     }
+  "libreOfficeRendering": {
+    "scope": "Actual final-Word LibreOffice PDF conversion, text, page geometry, fonts and page raster equivalence; does not verify Microsoft Word pagination or rendering",
+    "pages": 99,
+    "wordSha256": "1646983871e70946884a5303705ca7c6a7e9f846e0171746d21d4f51be6708c4",
+    "pdfSha256": "4384602de90f55d120fb598f90805032bb090f2d4aa7719db351d96bc1657216",
+    "auditSha256": "2066bf947aa798fe84cd3b2e9a0905cb9fb83878cf518159b9aedb8b3ec82bb2",
+    "nonemptyParagraphAndTableCellTexts": 1877,
+    "missingTextCount": 0,
+    "blankPages": [],
+    "outsidePageText": [],
+    "replacementCharacterPages": [],
+    "visualInspection": {
+      "status": "PASS",
+      "scope": "Final PDF directly re-inspected on changed selected pages 37 and 56 plus highest-raster-difference pages 16 and 87. Prior review of the other eight selected pages reused after exact pixel equivalence at 72 DPI and byte-identical final Word layout/media parts were proven.",
+      "pages": [
+        1,
+        2,
+        16,
+        37,
+        55,
+        56,
+        57,
+        60,
+        61,
+        62,
+        87,
+        96
+      ],
+      "directFinalPdfPages": [
+        16,
+        37,
+        56,
+        87
+      ],
+      "pixelIdenticalPriorReviewedPages": [
+        1,
+        2,
+        55,
+        57,
+        60,
+        61,
+        62,
+        96
+      ],
+      "priorAuditSha256": "1da5e5725d8e691d09c9fbf5226d0eb9b711d233507235c79300df03cbcad0c1",
+      "checks": [
+        "Japanese glyphs and Noto CJK body text readable",
+        "29-entry contents fits one page and all PDF destinations are valid",
+        "Source-owned KEEPFILTERS definitions readable on final page 37",
+        "Measured source-selection guidance readable on pages 55–57",
+        "Correct calibration-and-proofreading.md path wraps within final page 61",
+        "Evaluation table continuation repeats headers and complete rows on pages 61–62",
+        "Entity table and original evaluation/record tables readable on final pages 16 and 87",
+        "Appendix D multi-row Japanese table readable on final page 96"
+      ],
+      "issues": []
     },
-    "b16": "PASS/PASS",
-    "b19": "FAIL/FAIL",
-    "adopted": false,
-    "reason": "regression content 15 < 16 and B19 FAIL (rule recorded before evaluation)"
-   },
-   "production": "R8 (definition equals the R8 record except the plain published description)",
-   "holdout4": {
-    "runs": 1,
-    "configuration": "final (R8)",
-    "fact": {
-     "PASS": 11,
-     "FAIL": 1
-    },
-    "content": {
-     "PASS": 10,
-     "FAIL": 2
+    "tableRows": 485,
+    "tableRowsWithUniqueTextAnchors": 285,
+    "tableRowsWithAnchorsOnMultiplePages": [],
+    "microsoftWordLayoutVerified": false,
+    "finalPublicationProof": {
+      "actualLibreOfficeReconversionPerformed": true,
+      "changedDocxParts": [
+        "docProps/core.xml"
+      ],
+      "allWordLayoutAndMediaPartsByteIdentical": true,
+      "pagesWithExactPriorTextAndCharacterGeometry": 99,
+      "priorAuditSha256": "e1cdc756fe2abc0d3d9a51d651c66fd71a0d7d002a0d1f21aafe4ebde8bc57ee",
+      "finalVisualPages": [
+        37,
+        56,
+        61
+      ],
+      "finalVisualInspectionPending": false,
+      "finalVisualInspection": "PASS: final pages 37/56/61 have readable Japanese, code/table text, screenshots and calibration path"
     }
-   },
-   "t10R8InformationalRuns": {
-    "runs": 2,
-    "platformBlocked": 1,
-    "answered": 1,
-    "scored": false
-   },
-   "semanticModelDescriptions": {
-    "table": "\u5bc4\u9644",
-    "reworded": 7,
-    "deployed": true,
-    "readbackEqualsRepository": true,
-    "daxUnchanged": true
-   }
-  }
- },
- "guideEdition": {
-  "kind": "participant",
-  "buildOption": "--participant-edition",
-  "content": "per chapter: what you will do, steps, completion checks, reference tables, references",
-  "screenshots": 28,
-  "diagrams": 1,
-  "excludedFromBody": [
-   "evaluation records",
-   "run history",
-   "v2.7 reference copy",
-   "capture times",
-   "release notices",
-   "artifact hashes and commits"
+  },
+  "correctedAgentProfile": "measured-contract-20261009",
+  "portableDraftCompiledAgainstActualNativeMetadata": true,
+  "portableDraftIsDestinationPublicationOrAcceptance": false,
+  "standardConfiguration": {
+    "ontologies": 1,
+    "dataAgents": 1,
+    "tempFolders": 0
+  },
+  "historicalCloudObservation": {
+    "dateUtc": "2026-10-09",
+    "deploymentSourceCommit": "fa103f0ff99d6259b9a208c924320908ae4a1b66",
+    "activeItems": 18,
+    "ontologies": 1,
+    "dataAgents": 1,
+    "latestPublishedPhase": "R11",
+    "publishedCanonicalDefinitionSha256": "7a6e94d9aa56b90f2bcd1b5f1560373d52842dd2c8c1c921e13d93a1e7d835f9",
+    "newCloudWritesOrAgentQuestionsDuringMaterialSync": false,
+    "materialSyncIsNewDeploymentVerification": false
+  },
+  "data": {
+    "staticRows": 80000,
+    "staticYen": 1344099000,
+    "rawRows": 15000,
+    "rawYen": 253886000,
+    "acceptedRows": 14900,
+    "acceptedYen": 252058000,
+    "quarantinedRows": 100,
+    "goldRows": 94900,
+    "goldYen": 1596157000,
+    "populationsChangedByMaterialSync": false
+  },
+  "graph": {
+    "entities": 109592,
+    "directedRelationships": 297303,
+    "directGqlChecksPassed": 25,
+    "directGraphSuccessProvesDataAgentConsumerCompatibility": false
+  },
+  "answerEvaluation": {
+    "method": {
+      "judgmentType": "Codex supplemental content review against fixed conditions and source evidence",
+      "independentHumanSignoff": false,
+      "strictNativeAcceptanceAssigned": false,
+      "strictGradersChanged": false,
+      "originalVerdictsPreserved": true,
+      "favorableRetrySelection": false,
+      "businessPopulationsUnchanged": true,
+      "transportSettingsMixedAtBaseline": true,
+      "causalEffectIsolatedFromCaptureAvailability": false,
+      "latestPublishedRevision": "R11",
+      "latestFull51Retested": false
+    },
+    "matchedOriginal": {
+      "conditions": 219,
+      "baseline": {
+        "PASS": 111,
+        "FAIL": 108,
+        "passPercent": 50.68
+      },
+      "R8": {
+        "PASS": 162,
+        "FAIL": 57,
+        "passPercent": 73.97
+      },
+      "deltaPercentagePoints": 23.29,
+      "exclusionsFromBothPhases": {
+        "baselineClarificationNotApplicable": 9,
+        "changedApprovedSourceAvailabilityPremise": 24
+      },
+      "original252JudgmentsModified": false
+    },
+    "regression": {
+      "questions": 19,
+      "conditions": 38,
+      "unclearIncludedInDenominator": true,
+      "baseline": {
+        "registeredConditions": 38,
+        "PASS": 17,
+        "FAIL": 18,
+        "UNCLEAR": 3,
+        "NA": 0,
+        "applicableConditions": 38,
+        "passPercent": 44.74
+      },
+      "R8": {
+        "registeredConditions": 38,
+        "PASS": 30,
+        "FAIL": 7,
+        "UNCLEAR": 1,
+        "NA": 0,
+        "applicableConditions": 38,
+        "passPercent": 78.95
+      }
+    },
+    "latestTargetedChecks": [
+      {
+        "phase": "R9",
+        "questions": 4,
+        "conditions": {
+          "registeredConditions": 19,
+          "PASS": 19,
+          "FAIL": 0,
+          "UNCLEAR": 0,
+          "NA": 0,
+          "applicableConditions": 19,
+          "passPercent": 100.0
+        },
+        "captureStatuses": {
+          "completed": 3,
+          "evidence_incomplete": 1
+        },
+        "questionPOSTs": 4,
+        "knownTerminalResponses": 4,
+        "full51Retested": false
+      },
+      {
+        "phase": "R10",
+        "questions": 3,
+        "conditions": {
+          "registeredConditions": 6,
+          "PASS": 4,
+          "FAIL": 2,
+          "UNCLEAR": 0,
+          "NA": 0,
+          "applicableConditions": 6,
+          "passPercent": 66.67
+        },
+        "captureStatuses": {
+          "completed": 2,
+          "evidence_incomplete": 1
+        },
+        "questionPOSTs": 3,
+        "knownTerminalResponses": 3,
+        "full51Retested": false
+      },
+      {
+        "phase": "R11",
+        "questions": 2,
+        "conditions": {
+          "registeredConditions": 4,
+          "PASS": 4,
+          "FAIL": 0,
+          "UNCLEAR": 0,
+          "NA": 0,
+          "applicableConditions": 4,
+          "passPercent": 100.0
+        },
+        "captureStatuses": {
+          "completed": 2,
+          "evidence_incomplete": 0
+        },
+        "questionPOSTs": 2,
+        "knownTerminalResponses": 2,
+        "full51Retested": false
+      }
+    ],
+    "captureSummary": {
+      "baseline": {
+        "registeredSlots": 51,
+        "questionPOSTs": 50,
+        "knownTerminalResponses": 49,
+        "unknownSubmittedOutcomes": 1,
+        "unsubmittedFailureSlots": 1
+      },
+      "R8": {
+        "registeredSlots": 51,
+        "questionPOSTs": 51,
+        "knownTerminalResponses": 51,
+        "unknownSubmittedOutcomes": 0,
+        "unsubmittedFailureSlots": 0,
+        "retainedSlotsWithNativeFailuresOrIncompleteEvidence": 19,
+        "completedResponseProvesInternalQuerySuccess": false
+      }
+    },
+    "source": "../tuning-20261010/result-20261010.json",
+    "latestFull51Retested": false,
+    "nativeFailuresRetained": true,
+    "strictGradersChanged": false
+  },
+  "remainingLimitations": [
+    "Data Agent Gen2 Ontology consumer retains an unsupported-API-version route; direct Graph/GQL success is separate.",
+    "The tested Agent native DAX route omitted the amount column and returned no executed amount-filtered result after the visibility/selection change; resolution is unconfirmed because R11 did not retrieve the schema.",
+    "Native Ontology Time Series/Metrics and Manage graph UI projection remain unverified or unconfigured.",
+    "Report browser rendering and Activator automatic delivery were not tested.",
+    "Service content blocks and missing data-limit explanations remain recorded failures."
   ],
-  "artifactBinding": "Word document properties and HTML metadata",
-  "packageReportsIncluded": false,
-  "participantFigures": {
-   "folder": "docs/assets/v3.0.0-participant",
-   "manifest": "manifest.json",
-   "figures": [
-    "pc-01-architecture (chapter 1, v3 architecture diagram)"
-   ],
-   "inArtifactSet": true
+  "unitChecks": {
+    "runtime": {
+      "tests": 103,
+      "passed": true
+    },
+    "dataAgent": {
+      "tests": 335,
+      "passed": true
+    },
+    "documents": {
+      "tests": 407,
+      "passed": true,
+      "discovered": 407,
+      "unrun": 0
+    }
   },
-  "portalScreenshotsRecaptured": false
- }
+  "package": {
+    "name": "Furusato_Workshop_v3.0.0_current-20261010.zip",
+    "sha256": "bc51659835c390841ffa23b5ef3abfd99b6575a0ddebf2e46cbe33d0a8a8ac4c",
+    "bytes": 16725763,
+    "entries": 357,
+    "allEntryHashesVerified": true
+  },
+  "files": {
+    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "1646983871e70946884a5303705ca7c6a7e9f846e0171746d21d4f51be6708c4",
+    "furusato-workshop-v3-0-0-complete.html": "a0ea65d7dc6b1fd1097883b74b3d1c398b3467096c53fdf00e2db2db9241f2dc"
+  },
+  "privateAnswersTracesResourceIdsOrCredentialsPublished": false,
+  "documentChecksAreAIAnswerAcceptance": false,
+  "mainMergeIsAllFeatureAcceptance": false
 }

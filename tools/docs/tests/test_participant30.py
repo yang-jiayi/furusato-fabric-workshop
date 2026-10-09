@@ -117,6 +117,26 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertEqual(set(range(1, 25)), set(text.CHAPTER_TITLES))
         self.assertEqual(participant30.TAGLINE.keys(), {"ja", "en"})
 
+    def test_calibration_uses_existing_measure_definitions(self):
+        model = ROOT / "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.SemanticModel/definition/tables/寄附.tmdl"
+        definitions = dict(re.findall(r"^\s*measure ([^=\n]+?)\s*=\s*(.+)$", model.read_text(encoding="utf-8"), re.MULTILINE))
+        examples = "\n".join(step["code"][1] for step in text.CHAPTERS[12]["steps"] if "code" in step)
+        for name in ("静的寄附件数", "受入増分寄附件数"):
+            self.assertIn(f"[{name}] = {definitions[name]}", examples)
+
+    def test_standard_route_keeps_one_ontology_and_retains_execution_boundaries(self):
+        procedures = " ".join(step["text"][1] for chapter in text.CHAPTERS.values() for step in chapter["steps"])
+        for obsolete in ("create a separate ontology for this lab", "Create an empty ontology for this chapter",
+                         "Import the exported file into another new, empty ontology", "ONT_Furusato_Relationships_<PID>"):
+            self.assertNotIn(obsolete, procedures)
+        agent = " ".join(step["text"][1] for step in text.CHAPTERS[17]["steps"])
+        self.assertIn("measured-contract-20261009", agent)
+        self.assertIn("bronze.donation_events_raw", agent)
+        calibration = " ".join(step["text"][1] for step in text.CHAPTERS[19]["steps"])
+        self.assertIn("12 AM=00, 12 PM=12", calibration)
+        self.assertIn("Retain execution failures", calibration)
+        self.assertIn("Do not resubmit questions", calibration)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -72,7 +72,6 @@ table 寄附
 	/// 1件の寄附金額（日本円）。集計には明示メジャーを使用します。
 	column 寄附金額
 		dataType: int64
-		isHidden
 		isNullable: false
 		formatString: ¥#,##0
 		lineageTag: 2b4bc90f-a2f7-40bb-9c78-c0d009e97003

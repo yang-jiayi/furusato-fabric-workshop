@@ -114,7 +114,21 @@ def snapshot():
         "tools/docs/furusato_docs/context.py", "tools/docs/furusato_docs/preview30_release.py",
         "tools/docs/furusato_docs/participant30.py", "tools/docs/furusato_docs/participant30_text.py",
         "tools/docs/furusato_docs/participant30_figures.py",
+        "tools/docs/furusato_docs/participant_word.py",
         "tools/html/furusato_html/preview30.py",
+        "tools/html/furusato_html/diagrams.py",
+        "workshop/v3.0.0-preview/README-runtime.md",
+        "workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md",
+        "tools/data-agent/README.md",
+        "docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md",
+        "docs/v3.0.0/tuning-20261010/README.md",
+        "docs/v3.0.0/tuning-20261010/result-20261010.json",
+        "docs/v3.0.0/tuning-20261010/furusato-data-agent-tuning-20261010.docx",
+        "docs/v3.0.0/tuning-20261010/furusato-data-agent-tuning-20261010.html",
+        "docs/v3.0.0/tuning-20261010/artifact-validation.json",
+        "docs/v3.0.0/tuning-20261010/SHA256SUMS.txt",
+        "tools/docs/build_measured_tuning_report.py",
+        "tools/docs/README.md", "tools/html/README.md",
     ))
     for folder in ("data", "kql", "notebooks", "ontology", "powerbi", "data-agent", "provisioning"):
         paths.update(p for p in (rt.PREVIEW / folder).rglob("*")

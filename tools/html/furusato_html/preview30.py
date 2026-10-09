@@ -15,11 +15,22 @@ from .model import Text
 from .render import RenderContext, esc, plain_bilingual, render_block
 
 
-# Keep the two final MCP references with the preceding content, not on a URL-only page.
+# Keep terminal references with preceding content at print size.
+# Compact only affected chapters 7/15; preserve font sizes and the earlier MCP fix.
 RELEASE_PRINT_CSS = """
 @media print {
  html[data-lang="en"] #ch-20-10 > .callout:last-of-type { margin-bottom:2mm; }
  html[data-lang="en"] #ch-20-10 > p:nth-last-child(-n+2) { margin-block:0; }
+}
+@media print {
+ .chapter:is(#ch-7,#ch-15) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child { margin-bottom:0; }
+ .chapter:is(#ch-7,#ch-15) > .section:last-child:has(> ul > li > span > a[href]) { break-inside:avoid; }
+ .chapter:is(#ch-7,#ch-15) > .section:last-child:has(> ul > li > span > a[href]) > h3 { margin:1mm 0 0; }
+ .chapter:is(#ch-7,#ch-15) > .section:last-child:has(> ul > li > span > a[href]) > ul { margin-block:0; }
+}
+@media print {
+ .chapter:is(#ch-7,#ch-15) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child th,
+ .chapter:is(#ch-7,#ch-15) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child td { padding-block:1mm; }
 }
 """
 

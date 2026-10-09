@@ -6,11 +6,11 @@
 
 [参加者用手順書（Word）](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [参加者用手順書（日英HTML）](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
-[参加者用パッケージ（Notebook・CSVを含む）](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261007.zip) ·
+[参加者用パッケージ（Notebook・CSVを含む）](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261010.zip) ·
 [構成・検証結果](docs/v3.0.0/current/README.md) ·
 [Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
-[修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/README.md)
+[修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
 
 | 版の種類 | 値 | 意味 |
 |---|---|---|
@@ -19,9 +19,29 @@
 | 再利用する処理基線 | `2.7.0` | [`VERSION`](VERSION)は既存ツール用の基線識別子 |
 | CSVデータ仕様 | `2.7.0-realistic.1` | 値・行数・hashを維持する不変の合成データ契約 |
 
-本デプロイは**指定フォルダ直下、Tempなし**です。正式Agentに必要なconsumer Ontologyは
-正式な依存Itemとして同じフォルダへ配置します。評価用の比較AgentやTempは、
-必要な依存と参照を正式配置で確認してから削除します。
+現行の標準構成は、指定フォルダ内の **Ontology 1件・Data Agent 1件**です。
+Gen2 Ontologyのconsumerが対応しない場合は、実エラーと未完了の演習を記録します。
+別の互換Ontologyを追加して標準構成を増やす手順は採りません。
+
+**2026-10-10 教材整合版:** 実回答で確認したSQL・時刻・DAXフィルターの対策を、
+可搬profile、参加者用Word・日英HTML、Notebookの同梱資産、校正手順へそろえました。
+同じ219条件の比較は **111/219 (50.68%) → 162/219 (73.97%)、+23.29ポイント**です。
+後続のSQL修正は限定19条件、実メジャー定義の説明修正は限定4条件でPASSを確認しました。
+最新の後続修正を含む全51質問の再評価は行っていません。全質問への正答保証やnative機能の合格を意味しません。
+
+[検証した改善・残件・評価方法](docs/v3.0.0/tuning-20261010/README.md) ·
+[チューニングと資料の校正手順](docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md) ·
+[現行成果物と再生成](docs/v3.0.0/current/README.md)
+
+The standard route keeps **one Ontology and one Data Agent** in the specified folder.
+The current portable profile and paired participant guides incorporate measured SQL,
+time-conversion and source-owned DAX improvements. The matched 219-condition comparison
+increased from **50.68% to 73.97% (+23.29 percentage points)**. Later targeted checks
+remain separate; the latest profile has not undergone a complete 51-question rerun.
+Native Ontology consumer, model-schema exposure and UI-only features retain their limits.
+
+<details>
+<summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>
 
 > **2026-10-07 新規配置と回答精度の改善**
 > 旧フォルダを空にし、指定フォルダ直下へ**21 Items・正式Agent1件・Temp0件**を新規配置しました。
@@ -33,8 +53,8 @@
 > 事前登録holdout12問は**11 PASS／1 FAIL**です。313成果物のGit blob・SHAを照合し、
 > **232ページのWordと日英HTMLは203検査／0 FAIL**でした。**AI回答の0 FAIL・全機能合格ではありません。**
 > [回答精度の改善と残件](docs/v3.0.0/tuning-20261007/README.md) ·
-> [配置の詳細と制約](docs/v3.0.0/current/deployment-verification.md) ·
-> [検証JSON](docs/v3.0.0/current/verification.json)。
+> [配置の詳細と制約](https://github.com/yang-jiayi/furusato-fabric-workshop/blob/fa103f0ff99d6259b9a208c924320908ae4a1b66/docs/v3.0.0/current/deployment-verification.md) ·
+> [検証JSON](https://github.com/yang-jiayi/furusato-fabric-workshop/blob/fa103f0ff99d6259b9a208c924320908ae4a1b66/docs/v3.0.0/current/verification.json)。
 >
 > **第3報（同日）:** 手順の逸脱4件のうち、Agent のビュー要素の確認と任意の Power BI レポート配置
 > （計22 Items）を完了しました。Activator の自動配送と時系列バインド・native Metrics は UI でしか行えないため、
@@ -75,8 +95,7 @@ sixth report (2026-10-09) candidate R11 (instructions for B16/B19) scored 84/84 
 78/84 but missed the pre-recorded regression rule, so production stays on R8; a
 fourth frozen check set run once on it scored fact 11/12 and content 10/12.
 
-<details>
-<summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>
+
 
 > **2026-10-04 整合性・正式配置の結果**
 > 旧23 Itemsは完全削除済みです。新配置は指定フォルダ直下の**21 Items・正式Agent1件・Temp0件**です。

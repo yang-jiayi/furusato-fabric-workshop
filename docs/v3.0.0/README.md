@@ -1,5 +1,12 @@
 # Furusato Workshop 3.0.0
 
+現行mainの手順・Word・日英HTML・ZIPは [current](current/README.md) を使用してください。
+実測対策と校正手順は [2026-10-10資料](tuning-20261010/README.md) にあります。
+以下は元の3.0.0リリースを再現するための保持記録です。
+Use [current](current/README.md) for the current main workshop. The original 3.0.0
+release record below is retained separately.
+
+
 **既知の制約を開示した教材リリースです。AI回答品質・全機能の合格、Fabric機能のGAを意味しません。**
 
 [Word](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·

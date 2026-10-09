@@ -2,6 +2,7 @@ r"""Browser geometry and lossless-translation checks without rebuilding the guid
 
     python tools\html\tests\test_diagram_geometry.py
     python tools\html\tests\test_diagram_geometry.py --artifacts <directory>
+    python tools/html/tests/test_diagram_geometry.py --browser-executable /usr/bin/chromium
 
 The source artwork is read-only. Optional screenshots and the measured geometry
 are written only to the explicitly supplied artifact directory.
@@ -109,6 +110,25 @@ MEASURE = r"""source => {
         if (width > 1 && height > 1)
             overlaps.push({a:a.text,b:b.text,width,height,indices:[a.index,b.index]});
     }
+    const separatorCollisions = [];
+    for (const row of rows) {
+        if (row.tag !== 'rect' || row.shape === null) continue;
+        const ownerElement = shapes[row.shape];
+        for (const line of svg.querySelectorAll('line')) {
+            if (line.hasAttribute('marker-start') || line.hasAttribute('marker-end') ||
+                !(ownerElement.compareDocumentPosition(line) & Node.DOCUMENT_POSITION_FOLLOWING))
+                continue;
+            const x1=parseFloat(line.getAttribute('x1')), x2=parseFloat(line.getAttribute('x2'));
+            const y1=parseFloat(line.getAttribute('y1')), y2=parseFloat(line.getAttribute('y2'));
+            const left=Math.min(x1,x2), right=Math.max(x1,x2);
+            if (y1 !== y2 || right-left < row.owner.width*.5 ||
+                left < row.owner.x || right > row.owner.x+row.owner.width)
+                continue;
+            if (row.box.y < y1+.75 && row.box.y+row.box.height > y1-.75 &&
+                Math.min(row.box.x+row.box.width,right)-Math.max(row.box.x,left)>1.5)
+                separatorCollisions.push({text:row.text, y:y1});
+        }
+    }
     const coveredArrowheads = [];
     const connectors = [...svg.querySelectorAll('[marker-end]')];
     for (const e of connectors) {
@@ -121,7 +141,7 @@ MEASURE = r"""source => {
                     shape:shapes.indexOf(s), x:tip.x, y:tip.y});
         }
     }
-    return {rows, overlaps, outsideOutline, occluded, coveredArrowheads,
+    return {rows, overlaps, outsideOutline, occluded, coveredArrowheads, separatorCollisions,
         overflow:rows.filter(r => Object.values(r.overflow).some(n => n>1.5)),
         markerCount:svg.querySelectorAll('[marker-end],[marker-start]').length};
 }"""
@@ -149,11 +169,13 @@ def render(page, svg: str, width: int = 1600, *, lightbox: bool = False) -> None
     page.evaluate("() => document.fonts.ready")
 
 
-def audit(artifacts: Path | None = None) -> dict:
+def audit(artifacts: Path | None = None, browser_executable: Path | None = None) -> dict:
     mapping = diagrams.load_map()
     report = {}
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch()
+        browser = playwright.chromium.launch(
+            executable_path=str(browser_executable) if browser_executable else None
+        )
         page = browser.new_page(viewport={"width": 1600, "height": 1200})
         for path in sorted(ASSETS.glob("*.svg")):
             raw = path.read_text(encoding="utf-8")
@@ -176,7 +198,8 @@ def audit(artifacts: Path | None = None) -> dict:
                     render(page, english, width, lightbox=lightbox)
                     scaled = page.evaluate(MEASURE, source)
                     measured[name] = {key: scaled[key] for key in (
-                        "overflow", "overlaps", "outsideOutline", "occluded", "coveredArrowheads"
+                        "overflow", "overlaps", "outsideOutline", "occluded", "coveredArrowheads",
+                        "separatorCollisions"
                     )}
                     if artifacts:
                         page.locator("dialog" if lightbox else "svg").screenshot(
@@ -192,10 +215,12 @@ def audit(artifacts: Path | None = None) -> dict:
 
 
 class DiagramGeometryTests(unittest.TestCase):
+    browser_executable: Path | None = None
+
     @classmethod
     def setUpClass(cls):
         if not hasattr(cls, "report"):
-            cls.report = audit()
+            cls.report = audit(browser_executable=cls.browser_executable)
 
     def test_translations_have_complete_coverage(self):
         used = {
@@ -229,6 +254,11 @@ class DiagramGeometryTests(unittest.TestCase):
                 self.assertEqual(row["occluded"], [])
                 self.assertEqual(row["coveredArrowheads"], [])
 
+    def test_fixed_row_separators_do_not_cross_label_text(self):
+        for name, row in self.report.items():
+            with self.subTest(diagram=name):
+                self.assertEqual(row["separatorCollisions"], [])
+
     def test_normal_and_enlarged_english_views(self):
         for view in ("normal", "enlarged"):
             for check, failures in self.report["system-data-flow"][view].items():
@@ -241,6 +271,27 @@ class DiagramGeometryTests(unittest.TestCase):
             if owner["x"] in (96, 896, 918) and row["box"]["y"] > owner["y"] + 48:
                 with self.subTest(label=row["text"]):
                     self.assertEqual(row["size"], 11.2)
+
+    def test_local_callout_fitting_keeps_the_readable_type_size_floor(self):
+        for path in sorted(ASSETS.glob("*.svg")):
+            original = diagrams.parse_lines(path.read_text(encoding="utf-8"))
+            for row in self.report[path.stem]["rows"]:
+                with self.subTest(diagram=path.stem, label=row["text"]):
+                    self.assertGreaterEqual(row["size"], original[row["index"]].size * .78 - .02)
+
+    def test_card_reflow_preserves_existing_english_body_labels(self):
+        source = (ASSETS / "system-data-flow.svg").read_text(encoding="utf-8")
+        english, missing = diagrams.to_english(source, diagrams.load_map())
+        self.assertEqual(missing, [])
+        before = {line.text: line for line in diagrams.parse_lines(source)}
+        after = {line.text: line for line in diagrams.parse_lines(english)}
+        # These existing English rows follow a translated paragraph that gains
+        # a line in the supported DejaVu Sans font. They must move with the flow
+        # and retain their authored text and type size.
+        for text in ("preflight → preview → apply → verify", "98 = 10 + 72 + 1 + 15"):
+            with self.subTest(label=text):
+                self.assertEqual(after[text].size, before[text].size)
+                self.assertGreaterEqual(after[text].y, before[text].y)
 
     def test_browser_uses_the_measured_installed_typefaces(self):
         source = (
@@ -255,7 +306,9 @@ class DiagramGeometryTests(unittest.TestCase):
         )
         self.assertEqual(missing, [])
         with sync_playwright() as playwright:
-            browser = playwright.chromium.launch()
+            browser = playwright.chromium.launch(
+                executable_path=str(self.browser_executable) if self.browser_executable else None
+            )
             page = browser.new_page()
             render(page, english)
             cdp = page.context.new_cdp_session(page)
@@ -336,10 +389,13 @@ class DiagramGeometryTests(unittest.TestCase):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifacts", type=Path)
+    parser.add_argument("--browser-executable", type=Path,
+                        help="Use an installed Chromium executable instead of Playwright's downloaded browser.")
     parser.add_argument("--audit-only", action="store_true")
     options, remaining = parser.parse_known_args()
+    DiagramGeometryTests.browser_executable = options.browser_executable
     if options.artifacts or options.audit_only:
-        results = audit(options.artifacts)
+        results = audit(options.artifacts, options.browser_executable)
         for name, result in results.items():
             print(
                 f"{name}: {len(result['rows'])} lines, "
@@ -347,7 +403,8 @@ if __name__ == "__main__":
                 f"{len(result['overlaps'])} overlap, "
                 f"{len(result['outsideOutline'])} outside outlines, "
                 f"{len(result['occluded'])} occluded, "
-                f"{len(result['coveredArrowheads'])} covered arrowheads"
+                f"{len(result['coveredArrowheads'])} covered arrowheads, "
+                f"{len(result['separatorCollisions'])} separators crossing text"
             )
         if options.audit_only:
             sys.exit(0)

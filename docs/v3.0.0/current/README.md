@@ -62,6 +62,8 @@ python -B tools/docs/package_preview30.py --pair "$Stage/pair" `
 ```
 
 Linuxではvalidateに `--browser-executable /usr/bin/chromium` など実際のbrowser pathを指定できます。
+browserがfile URLを開けない場合は `--browser-transport loopback` を追加します。
+選んだHTMLだけを一時的なローカルHTTPで配信し、それ以外の通信は遮断して検査します。
 Wordは29章・付録への内部リンク目次を持ち、Officeの動的fieldと古いページ番号を含みません。
 この生成方法には Noto Sans CJK JP と Noto Sans Mono CJK JP を用意します。本文・表とコードに
 それぞれ明示して、日本語の字体の欠落を防ぎます。

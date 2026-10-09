@@ -8,7 +8,7 @@ Measured answer-content agreement improved from **111/219 (50.68%) to 162/219 (7
 
 ## 利用する資料 / Workshop materials
 
-- [現行参加者資料 / Current participant materials](../current/README.md)
+- [現行参加者資料 / Current participant materials](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current)
 - [実測を反映した portable profile / Portable measured-contract profile](../../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
 - [精度の校正と資料の校正手順 / Calibration and proofreading procedure](calibration-and-proofreading.md)
 - [公開用の集計と証跡ハッシュ / Public aggregates and evidence hashes](result-20261010.json)

@@ -12,9 +12,12 @@ import re
 import sys
 import posixpath
 import zipfile
+from contextlib import ExitStack, contextmanager
 from dataclasses import asdict
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from html.parser import HTMLParser
 from pathlib import Path
+from threading import Thread
 from xml.etree import ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -346,26 +349,85 @@ def review_pdf(path, review, report, label):
     return len(pages)
 
 
-def local_interactions(target, review, report, print_pdf=False, *, browser_executable=None):
-    """Only local file:// content, no signed-in browser and no Fabric operations."""
+def allowed_browser_request(url, target_url):
+    """Only this document and its two application-owned language states are allowed."""
+    return url in (target_url, target_url + "?lang=ja", target_url + "?lang=en")
+
+
+@contextmanager
+def local_browser_target(target, transport="file"):
+    """Expose one standalone HTML file; never expose its containing directory."""
+    target = target.resolve()
+    if transport == "file":
+        yield target.as_uri()
+        return
+    if transport != "loopback":
+        raise ValueError("Browser transport must be file or loopback")
+    payload = target.read_bytes()
+    document_path = "/workshop.html"
+
+    class StandaloneHtmlHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.serve_document(include_body=True)
+
+        def do_HEAD(self):
+            self.serve_document(include_body=False)
+
+        def serve_document(self, *, include_body):
+            if self.path not in (document_path, document_path + "?lang=ja", document_path + "?lang=en"):
+                self.send_error(404)
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Content-Length", str(len(payload)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            if include_body:
+                self.wfile.write(payload)
+
+        def log_message(self, format, *args):
+            pass  # No request paths or local filesystem paths in review output.
+
+    server = ThreadingHTTPServer(("127.0.0.1", 0), StandaloneHtmlHandler)
+    thread = Thread(target=lambda: server.serve_forever(poll_interval=.05), daemon=True,
+                    name="preview30-local-html")
+    try:
+        thread.start()
+        yield f"http://127.0.0.1:{server.server_port}{document_path}"
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join()
+
+
+def local_interactions(target, review, report, print_pdf=False, *, browser_executable=None,
+                       browser_transport="file"):
+    """Only the local document, no signed-in browser and no Fabric operations."""
     from playwright.sync_api import sync_playwright
     browser_work = review / "browser-work"
     browser_work.mkdir(exist_ok=True)
     os.environ["TEMP"] = os.environ["TMP"] = str(browser_work)
-    with sync_playwright() as playwright:
+    with local_browser_target(target, browser_transport) as target_url, sync_playwright() as playwright, ExitStack() as cleanup:
         browser = playwright.chromium.launch(
             **({"executable_path": str(browser_executable)} if browser_executable else {"channel": "msedge"}),
             headless=True,
         )
-        context = browser.new_context(viewport={"width": 1440, "height": 1000})
-        context.route("http://**", lambda route: route.abort())
-        context.route("https://**", lambda route: route.abort())
+        cleanup.callback(browser.close)
+        context = browser.new_context(viewport={"width": 1440, "height": 1000}, service_workers="block")
+        cleanup.callback(context.close)
+        def local_request(route):
+            if allowed_browser_request(route.request.url, target_url):
+                route.continue_()
+            else:
+                route.abort()
+        context.route("http://**", local_request)
+        context.route("https://**", local_request)
         page = context.new_page()
         errors = []
         requests = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on("request", lambda req: requests.append(req.url))
-        page.goto(target.as_uri(), wait_until="load")
+        page.goto(target_url, wait_until="load")
         report_check(report, "interaction.29sections", page.locator("main > .chapter").count() == 29)
         report_check(report, "interaction.defaultJapanese", page.locator("html").get_attribute("lang") == "ja")
         page.click('[data-language="en"]')
@@ -419,9 +481,10 @@ def local_interactions(target, review, report, print_pdf=False, *, browser_execu
                 page.emulate_media(media="screen")
                 review_pdf(pdf, review, report, f"html-{lang}")
         report_check(report, "interaction.noScriptErrors", not errors, str(errors))
-        report_check(report, "interaction.noExternalRequests", not any(url.startswith(("http:", "https:")) for url in requests))
-        context.close()
-        browser.close()
+        report_check(report, "interaction.noExternalRequests", not any(
+            url.startswith(("http:", "https:")) and not allowed_browser_request(url, target_url)
+            for url in requests
+        ))
     # Playwright owns and cleans its own per-run profile; the parent directory is not evidence.
     if not any(browser_work.iterdir()):
         browser_work.rmdir()
@@ -441,6 +504,8 @@ def main(argv=None):
     parser.add_argument("--interactions", action="store_true")
     parser.add_argument("--print-html", action="store_true")
     parser.add_argument("--browser-executable", type=Path, help="Explicit local Chromium/Edge binary; default is the msedge channel")
+    parser.add_argument("--browser-transport", choices=("file", "loopback"), default=None,
+                        help="Local browser transport; loopback serves only this HTML on 127.0.0.1 (default: file)")
     participant_word.add_arguments(parser)
     release.add_arguments(parser)
     args = parser.parse_args(argv)
@@ -452,6 +517,8 @@ def main(argv=None):
         parser.error("--word-navigation headings uses structural Word validation; --render is the Microsoft Word gate")
     if args.browser_executable and not args.interactions:
         parser.error("--browser-executable requires --interactions")
+    if args.browser_transport and not args.interactions:
+        parser.error("--browser-transport requires --interactions")
     profile = release.get_profile(args.release_profile)
     document, _, _, _, evidence, metadata = build(
         ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
@@ -480,7 +547,8 @@ def main(argv=None):
     if args.interactions:
         try:
             local_interactions(pair / profile.html_name, review, report, args.print_html,
-                               **({"browser_executable": args.browser_executable} if args.browser_executable else {}))
+                               **({"browser_executable": args.browser_executable} if args.browser_executable else {}),
+                               **({"browser_transport": args.browser_transport} if args.browser_transport else {}))
         except Exception as error:
             report.fail("interaction.runner", f"{error.__class__.__name__}: {error}")
     result = {
@@ -493,6 +561,7 @@ def main(argv=None):
         "releaseFreezeStatus": metadata.get("releaseFreezeStatus", "not-frozen"),
         "documentIdentity": release.document_identity(metadata, profile),
         "wordNavigation": args.word_navigation,
+        "browserTransport": args.browser_transport or "file",
         "participantEdition": bool(args.participant_edition),
         "microsoftWordLayoutVerified": bool(args.render and report.passed),
     }

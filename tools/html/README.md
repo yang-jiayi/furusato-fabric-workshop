@@ -28,7 +28,7 @@ resource. Print headings are kept together. Source preparation does not execute 
 
 ## 日本語
 
-現行の参加者用配布物は [v3.0.0 current](../../docs/v3.0.0/current/README.md) のWord・日英HTMLです。
+現行の参加者用配布物は [v3.0.0 current](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current) のWord・日英HTMLです。
 校正と再生成は [現行の手順](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md) を参照してください。
 以下のv2.7ペアは過去版の再現用です。
 
@@ -472,7 +472,7 @@ WebP エンコードと英語図版のフォント計測のための `Pillow` �
 
 ## English — retained v2.7 workflow
 
-For the current participant Word/HTML and checks, use [v3.0.0 current](../../docs/v3.0.0/current/README.md).
+For the current participant Word/HTML and checks, use [v3.0.0 current](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current).
 The retained historical HTML is
 [furusato-workshop-v2-7-0-complete_unified-20260923.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html),
 a complete Japanese/English mirror of the

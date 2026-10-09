@@ -12,7 +12,7 @@ does not authorize later-candidate builds, publication or main promotion. See
 ## Current measured workshop and proofreading
 
 The current participant pair and package are under
-[`docs/v3.0.0/current`](../../docs/v3.0.0/current/README.md). Use
+[`docs/v3.0.0/current`](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current). Use
 [`measured-contract-20261009`](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
 and the bilingual [calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
 for the measured changes. The standard route retains one Ontology. Dated earlier
@@ -25,7 +25,10 @@ For cross-platform participant output, explicitly pass `--participant-edition
 numbers. Install **Noto Sans CJK JP** and **Noto Sans Mono CJK JP** for this
 explicit cross-platform participant export. Its build/validation receipts record
 the actual font binding; the default Word-fields route keeps its existing fonts. Validate with `--interactions --print-html` and, when required on Linux,
-`--browser-executable <absolute Chromium path>`. The package's
+`--browser-executable <absolute Chromium path>`. If the managed browser blocks
+file URLs, add `--browser-transport loopback`; only the selected standalone HTML
+is served on an ephemeral loopback port, and other network requests remain blocked.
+The package's
 `DOCUMENT_VALIDATION.json` reports structural/browser checks and
 `microsoftWordLayoutVerified=false`; no Word pagination is certified.
 

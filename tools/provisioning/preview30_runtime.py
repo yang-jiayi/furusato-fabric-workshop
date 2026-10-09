@@ -46,9 +46,10 @@ RUNTIME_INPUT_FILES = (
     "tools/data-agent/source_grounded_profile.py", "tools/data-agent/answer_contract_profile.py",
     "tools/data-agent/time_layer_isolation.py", "tools/data-agent/fresh_grounded_profile.py",
     "tools/data-agent/standard_contract_restoration.py",
+    "tools/data-agent/measured_contract_profile.py",
 )
 CORRECTED_PROFILE_DIRECTORIES = ("source-grounded", "complete-contract", "time-layer-isolation",
-                                 "standard-contract-restoration")
+                                 "standard-contract-restoration", "measured-contract-20261009")
 BASELINE_PROTECTED_PATHS = (
     "workshop/v2.7.0",
     "tools/docs/furusato_docs/tests10.py",
@@ -360,7 +361,7 @@ def build_plan(scope: dict[str, Any], inventory: dict[str, Any],
         "generatedResources": ["Lakehouse SQL endpoint", "Eventhouse KQL database"],
         "folders": [],
         "productionPlacement": "specified-folder-direct",
-        "correctedAgentProfile": "data-agent/candidates/standard-contract-restoration",
+        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261009",
         "evaluationArtifacts": "Explicit opt-in only; remove after evaluation without deleting adopted dependencies.",
         "immutableBaselineTreeSha256": baseline["treeSha256"],
         "candidateSourceSha256": candidate_fingerprint(),

@@ -79,6 +79,12 @@ def build() -> dict:
                          f"\t\tformatString: {fmt}\n\t\tdisplayFolder: Metrics検証\n\n")
     insertion = fact.index("\n\t///")
     fact = fact[:insertion] + "\n\n" + measure_text + fact[insertion:]
+    # The amount is a participant-facing filter; expose only this column.
+    # This does not certify the Data Agent's independently cached native schema.
+    amount = "\tcolumn 寄附金額\n\t\tdataType: int64\n\t\tisHidden\n"
+    if fact.count(amount) != 1:
+        raise ValueError("Expected exactly one inherited amount visibility declaration")
+    fact = fact.replace(amount, "\tcolumn 寄附金額\n\t\tdataType: int64\n")
     write(fact_path, fact.encode("utf-8"))
     save(PREVIEW / "powerbi" / "native-metrics-contract.json", {
         "source": "Furusato_Analytics.SemanticModel",
@@ -149,7 +155,7 @@ def build() -> dict:
         "environmentParameterRequired": ["dev", "test", "prod"],
         "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
         "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
-        "correctedAgentProfile": "data-agent/candidates/standard-contract-restoration",
+        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261009",
         "attachmentsOwner": "documents-workstream",
     })
     from preview30_notebooks import build_notebooks

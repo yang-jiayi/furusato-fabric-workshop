@@ -1,0 +1,28 @@
+## Declared relationship query patterns (templates, not executed evidence)
+The following query patterns retain the Workshop relationship contracts. Executing these instance queries depends on current native graph and consumer readiness; the templates themselves are not proof of execution.
+Name matching: PrefectureName holds the Japanese name with its suffix (都/道/府/県), and MunicipalityName holds the Japanese municipality name. Match a user's prefecture as the Japanese suffixed name (add 都/道/府/県 when omitted) or by PrefectureId; never translate a Japanese name to English for PrefectureName. If a name lookup returns no rows, retry once with the suffix-normalized Japanese name, PrefectureNameEn or a prefix match before reporting that it does not exist.
+Membership COUNT: for the number of municipalities in a prefecture, aggregate over the declared edge and return PrefectureId, PrefectureName and MunicipalityCount, for example:
+MATCH (m:Municipality)-[:MunicipalityInPrefecture]->(p:Prefecture) WHERE p.PrefectureId = <id> RETURN p.PrefectureId AS PrefectureId, p.PrefectureName AS PrefectureName, count(m) AS MunicipalityCount GROUP BY PrefectureId, PrefectureName
+The declared edge is Municipality -MunicipalityInPrefecture-> Prefecture; counting members from the prefecture is the reverse traversal Prefecture <-MunicipalityInPrefecture- Municipality. Do not list every member unless asked.
+Forward prefecture lookup: for given MunicipalityId values (STRING with leading zeros; never compare with a number) return the prefecture through the forward traversal Municipality -MunicipalityInPrefecture-> Prefecture, for example:
+MATCH (m:Municipality)-[:MunicipalityInPrefecture]->(p:Prefecture) WHERE m.MunicipalityId = '<MunicipalityId>' RETURN m.MunicipalityId AS MunicipalityId, p.PrefectureId AS PrefectureId, p.PrefectureName AS PrefectureName
+Exact donation instance path: for one DonationId return DonorId, DonationId, MunicipalityId, recipient PrefectureId, GiftId, CategoryId and every SupplierId through Donor -DonorMadeDonation-> Donation -DonationToMunicipality-> Municipality -MunicipalityInPrefecture-> Prefecture, Donation -DonationSelectedGift-> Gift -GiftInCategory-> GiftCategory and Gift <-SupplierProvidesGift- Supplier. Attribute values and names still come from Lakehouse SQL.
+
+This is the single standard generation2 Workshop Ontology. Its selected static entities and declared relationships describe the business schema. Ontology item status, selected entities and SQL relationship dictionaries do not prove graph materialization, instance query execution, time-series binding or consumer readiness. Use only successful current tool results as instance evidence. If the Ontology connector or graph execution fails, report the actual failure and the unverified relationship result; do not claim that SQL declarations are executed graph evidence. For mixed data-and-path questions, obtain complete values and names from Lakehouse while preserving the requested relationship declarations. Do not replace an exhaustive SQL-backed set with a bounded graph result.
+
+Declared paths:
+Donor -DonorMadeDonation-> Donation -DonationSelectedGift-> Gift <-SupplierProvidesGift- Supplier.
+Donor -DonorLivesInPrefecture-> Prefecture.
+Donation -DonationToMunicipality-> Municipality -MunicipalityInPrefecture-> Prefecture.
+Supplier -SupplierInPrefecture-> Prefecture.
+Municipality -MunicipalityCatalogsGift-> Gift -GiftInCategory-> GiftCategory.
+Municipality -MunHasCategoryMetric-> MunicipalityCategoryMetric -MunMetricForCategory-> GiftCategory.
+Prefecture -PrefHasCategoryMetric-> PrefectureCategoryMetric -PrefMetricForCategory-> GiftCategory.
+Prefecture -ResidencePrefHasFlow-> PrefectureDonationFlow -FlowToRecipientPref-> Prefecture.
+
+Preserve the declared arrow when traversing in reverse. Return EVERY requested edge name, its declared arrow and traversal direction. Business keys are DonorId, DonationId, GiftId, SupplierId, MunicipalityId, PrefectureId, CategoryId and the existing metric/flow record key.
+For a donor-to-supplier question return a relationship table with these columns: relationship name, declared start, declared end, actual traversal. SupplierProvidesGift declares Supplier->Gift; the requested Gift->Supplier step is REVERSE. A conceptual Gift->Supplier arrow alone omits the declaration and is not a complete answer.
+Project business keys and names explicitly. Omit internal oid, $id, runtime node handles and system-generated IDs from the returned business explanation. They are not required to establish these relationships.
+
+"2025年seed" means the whole static snapshot, not a calendar predicate. Use selected business keys and names; a source-owned stored key must be read, not invented.
+SupplierProvidesGift is catalog eligibility only. It does not establish manufacturer, shipment, donation allocation, revenue or a direct Donor-Supplier edge. A donation remains one fact when multiple suppliers list its gift.

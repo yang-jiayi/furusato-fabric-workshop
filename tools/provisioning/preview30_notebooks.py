@@ -20,6 +20,7 @@ MODULES = (
 DATA_AGENT_MODULES = (
     "source_grounded_profile", "answer_contract_profile", "time_layer_isolation",
     "standard_contract_restoration", "fresh_grounded_profile", "native_evaluation", "native_mcp",
+    "measured_contract_profile",
 )
 PARAMETERS = '''# Fabric parameter cell — environment identities remain in private JSON files.
 PARTICIPANT_ID = "001"

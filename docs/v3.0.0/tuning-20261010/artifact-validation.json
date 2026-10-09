@@ -1,0 +1,52 @@
+{
+  "schema": "furusato-measured-report-artifact-validation/v1",
+  "date": "2026-10-10",
+  "sourceFilesSha256": {
+    "README.md": "0eb7bcfbfef9e658f997eb943604d750f1a0974aa1a0a0795ff4601c482d2e61",
+    "calibration-and-proofreading.md": "3e95ec1ae251e2babd6ccc9a55393a418ec10703a5a56f66fc43a2e45faaf384",
+    "result-20261010.json": "9302fa1e01e88166bba5777cf3180948cbff58b792ffab1e35425ddc07f1ae09"
+  },
+  "sourceDateEpoch": 1791578226,
+  "sourceManifestSha256": "6870f4ce2963bca0127dbfb96cb5737f78cdecd851726a377eef6d199f9e3d3c",
+  "contentBlockCount": 92,
+  "markdownToWordContentParity": true,
+  "markdownToHtmlContentParity": true,
+  "conditionDenominatorsValidated": true,
+  "publicTextLeakageChecksPassed": true,
+  "generalClassificationNormalized": true,
+  "dynamicWordFields": 0,
+  "fakeOfficePageCountPresent": false,
+  "microsoftWordRenderChecked": false,
+  "htmlBrowserChecked": true,
+  "outputs": {
+    "furusato-data-agent-tuning-20261010.docx": "07585b937a5c6daea23038143a9e369e1ca5a761dddaffbc98740e407a97604f",
+    "furusato-data-agent-tuning-20261010.html": "2b2dff83ceb750dce65f2c8daf62dcf31304d2b8cb949ac0663971f9970199b7"
+  },
+  "browserEngine": "Chromium",
+  "browserChecks": [
+    {
+      "viewport": "1280x900",
+      "bodyHorizontalOverflow": false
+    },
+    {
+      "viewport": "390x844",
+      "bodyHorizontalOverflow": false
+    }
+  ],
+  "browserPageErrors": 0,
+  "browserConsoleErrors": 0,
+  "linksAndContentsTargetsVerified": true,
+  "libreOfficeRenderChecked": true,
+  "libreOfficeVersion": "LODev 26.8 alpha",
+  "renderedPdfPages": 12,
+  "renderedPdfBlankPages": 0,
+  "renderedPdfSharedSourceContentParity": true,
+  "renderedPdfTextOutsidePage": 0,
+  "summaryTableVisualReviewPassed": true,
+  "rendererIsMicrosoftWord": false,
+  "pdfSha256": "a0c0ead11693e4a54da33d89a6fcae1189fd718ec7e578f2862a71de5f423575",
+  "independentRebuildByteIdentical": true,
+  "reportGeneratorSha256": "f4a900d2c9ed47805084177689494250155156a7a5317f27abcf621e180e4746",
+  "styleCarrierSha256": "0ff9d26f151f27bed4dd82820f399a72ba67658b5395b4488e90e4fe7c2a4288",
+  "docxExternalRelationshipsPublicSafe": true
+}

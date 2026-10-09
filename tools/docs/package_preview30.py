@@ -19,6 +19,7 @@ from furusato_docs import preview30_release as release  # noqa: E402
 from furusato_docs import preview30_evaluation100 as study100  # noqa: E402
 from furusato_docs.preview30_acceptance import require_public_acceptance  # noqa: E402
 from furusato_docs.validators import Report  # noqa: E402
+from furusato_docs import participant_word  # noqa: E402
 from validate_preview30 import inspect_word, inspect_html, check_capture_fidelity  # noqa: E402
 
 PACKAGE_NAME = release.PREVIEW.package_name
@@ -32,6 +33,12 @@ REQUIRED_FULL_CHECKS = {
     "html-ja.noBlankPages", "html-ja.noClippedText", "html-en.noBlankPages", "html-en.noClippedText",
     "interaction.noScriptErrors", "interaction.noExternalRequests", "interaction.languagePersists",
     "interaction.ja.viewport390", "interaction.en.viewport390",
+}
+REQUIRED_PARTICIPANT_CHECKS = (REQUIRED_FULL_CHECKS - {
+    "word.renderAvailable", "word.noBlankPages", "word.noClippedText",
+}) | {
+    "word.headingNavigationTargets", "word.headingNavigationBookmarks", "word.noOfficeFields",
+    "word.participantCjkFonts",
 }
 START_HERE = """Furusato Workshop 3.0 Preview — 実装・検証結果を収録したPreview
 
@@ -86,22 +93,38 @@ def sha(blob):
     return hashlib.sha256(blob).hexdigest()
 
 
-def require_full_validation(validation):
+def require_full_validation(validation, *, word_navigation="fields", participant_edition=False):
+    participant_word.require_mode(word_navigation, participant_edition=participant_edition)
     if validation.get("passedLocalChecks") is not True:
         raise ValueError("Local validation did not pass")
+    if validation.get("wordNavigation", "fields") != word_navigation:
+        raise ValueError("Validation Word navigation mode differs from the requested export")
     passed = {row["check"] for row in validation.get("findings", []) if row.get("level") == "PASS"}
-    if not REQUIRED_FULL_CHECKS <= passed:
+    required = REQUIRED_PARTICIPANT_CHECKS if word_navigation == "headings" else REQUIRED_FULL_CHECKS
+    if not required <= passed:
+        if word_navigation == "headings":
+            raise ValueError("Participant Word navigation, bilingual print or interaction evidence is missing")
         raise ValueError("Full Word rendering, bilingual print or interaction evidence is missing")
+    if word_navigation == "headings" and (
+        validation.get("participantEdition") is not True
+        or validation.get("microsoftWordLayoutVerified") is not False
+        or validation.get("stats", {}).get("word", {}).get("pages") is not None
+    ):
+        raise ValueError("Field-free receipt must identify participant scope and no Microsoft Word layout certification")
     if any(row.get("level") == "FAIL" for row in validation.get("findings", [])):
         raise ValueError("Validation contains failures")
     return validation
 
 
-def load_validated_inputs(pair, validation_path, *, release_profile=release.PREVIEW):
+def load_validated_inputs(pair, validation_path, *, release_profile=release.PREVIEW,
+                          word_navigation="fields", participant_edition=False):
     profile = release.get_profile(release_profile)
     if {p.name for p in pair.iterdir()} != {profile.word_name, profile.html_name}:
         raise ValueError("Guide input must be the exact two-file pair")
-    validation = require_full_validation(json.loads(validation_path.read_text(encoding="utf-8")))
+    validation = require_full_validation(
+        json.loads(validation_path.read_text(encoding="utf-8")),
+        word_navigation=word_navigation, participant_edition=participant_edition,
+    )
     identity = validation.get("documentIdentity")
     if profile.is_release or identity is not None:
         if not isinstance(identity, dict) or identity.get("releaseProfile") != profile.name or identity.get("version") != profile.version:
@@ -291,8 +314,11 @@ def package(
     evaluation100_path: Path | None = None,
     artifact_manifest_path: Path | None = None,
     participant_edition: bool = False,
+    word_navigation: str = "fields",
 ):
     profile = release.get_profile(release_profile)
+    participant_word.require_mode(word_navigation, participant_edition=participant_edition,
+                                  require_acceptance=require_acceptance)
     release.check_options(
         profile, release_approval, evidence_path=evidence_path, evaluation_path=evaluation_path,
         evaluation100_path=evaluation100_path,
@@ -318,10 +344,15 @@ def package(
     )
     if metadata.get("evaluation100", {}).get("evidenceKind") == "synthetic-private-test":
         raise ValueError("Synthetic private study fixtures cannot be packaged or published")
-    validation, files = load_validated_inputs(pair, validation_path, release_profile=profile)
+    validation, files = load_validated_inputs(
+        pair, validation_path, release_profile=profile,
+        **({"word_navigation": word_navigation, "participant_edition": participant_edition}
+           if word_navigation != "fields" else {}),
+    )
     release.require_validation_identity(validation, metadata, profile)
     report = Report(target=profile.kind + " package input recheck")
-    inspect_word(pair / profile.word_name, document, metadata, report, release_profile=profile)
+    inspect_word(pair / profile.word_name, document, metadata, report, release_profile=profile,
+                 **({"word_navigation": word_navigation} if word_navigation != "fields" else {}))
     inspect_html(pair, document, metadata, report, release_profile=profile)
     check_capture_fidelity(pair, document, evidence, report, release_profile=profile)
     if not report.passed:
@@ -361,6 +392,27 @@ def package(
         files["reports/evaluation100.json"] = study_blob
     if participant_edition:
         files["START_HERE.txt"] = PARTICIPANT_START_HERE.encode("utf-8")
+        if word_navigation == "headings":
+            files["START_HERE.txt"] += (
+                "\nWord の目次は章へのリンクです。ページ番号は表示しません。\n"
+                "The Word contents link to chapters and do not display page numbers.\n"
+                "DOCUMENT_VALIDATION.json に構造・ブラウザー検証の範囲を記載しています。\n"
+                "DOCUMENT_VALIDATION.json describes the structural and browser checks.\n"
+            ).encode("utf-8")
+            files["DOCUMENT_VALIDATION.json"] = (json.dumps({
+                "schemaVersion": "furusato-participant-document-validation/v1",
+                "participantEdition": True, "wordNavigation": word_navigation,
+                "microsoftWordFieldRefreshPerformed": False, "microsoftWordLayoutVerified": False,
+                "wordPages": None, "wordStructuralChecksPassed": True,
+                "wordFonts": {"body": participant_word.TEXT_FONT, "code": participant_word.CODE_FONT,
+                              "fontInstallationRequiredForMatchingRender": True},
+                "bilingualBrowserAndPrintChecksPassed": True,
+                "localDocumentValidationChecks": len(validation["findings"]),
+                "localDocumentValidationFailures": 0,
+                "documentIdentity": validation["documentIdentity"], "files": validation["files"],
+                "note": "Structural Word and local browser checks; Microsoft Word pagination is unverified. "
+                        "These checks are not AI accuracy or Fabric feature acceptance.",
+            }, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
     else:
         files["START_HERE.txt"] = start_here(metadata, release_profile=profile).encode("utf-8")
     if "currentArtifactSet" in metadata and not participant_edition:
@@ -427,6 +479,8 @@ def package(
         "kind": profile.kind, "entries": len(files),
         "localInputRechecks": len(report.findings), "liveVerificationCertified": False,
         "rawEvidenceIncluded": False, "privateAIScoresIncluded": False,
+        "wordNavigation": word_navigation,
+        "microsoftWordLayoutVerified": validation.get("microsoftWordLayoutVerified", word_navigation == "fields"),
     }
     if profile.is_release:
         result["documentIdentity"] = release.document_identity(metadata, profile)
@@ -447,6 +501,7 @@ if __name__ == "__main__":
     parser.add_argument("--public-reports", type=Path, help="Reviewed source reports within the selected document profile's reports directory")
     parser.add_argument("--require-acceptance", action="store_true")
     parser.add_argument("--acceptance-approval", type=Path)
+    participant_word.add_arguments(parser)
     release.add_arguments(parser)
     args = parser.parse_args()
     print(json.dumps(package(
@@ -457,4 +512,5 @@ if __name__ == "__main__":
         evaluation100_path=args.evaluation100,
         artifact_manifest_path=args.artifact_manifest,
         participant_edition=args.participant_edition,
+        word_navigation=args.word_navigation,
     ), ensure_ascii=False, indent=2))

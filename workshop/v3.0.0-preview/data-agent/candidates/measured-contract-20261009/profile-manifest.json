@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "profile": "measured-contract-20261009",
+  "instructionLimitUtf16Units": 10000,
+  "sha256": {
+    "global-instructions.txt": "0f2c3fa5dad44aa895cd0b3d722a53aa16ae573c61b37d01b2557e5067f7fc98",
+    "kusto-examples.json": "c3ae79d002ddfdd21ffcd5f69d127fee0ed89e1b6aa5738b50947e52cd5ba362",
+    "kusto-instructions.txt": "b8066effb85542db9fafe3c50f5e74df34406dd71dc0ed0a493d3e4c407b1223",
+    "lakehouse-instructions.txt": "3aafbccef3ff765a3bd12fe287707124394bab910040e817ae3edc7d3e242b46",
+    "ontology-instructions.txt": "a66b90a934a58601116dcde6faa2e3d904db51ce0583111e48b7dc709069d59c",
+    "selection-contract.json": "db5c79b6bb1189c3939eab72c9717bb1593be81bfe01a9dda5f26561b0fd6b92",
+    "semantic-model-instructions.txt": "043e033c8589d2ed28aebea321d4c548ae97cc03e983e683332d6a1a5073beb9",
+    "source-descriptions.json": "8142fd7d31016eaea66512860d824c1bae69bbfab3d202f7bdb0c4f5bf91ba16"
+  }
+}

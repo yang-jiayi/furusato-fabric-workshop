@@ -27,6 +27,7 @@ from furusato_docs import preview30_release as release  # noqa: E402
 from furusato_docs.render_audit import export_pdf, TOP_MARGIN_PT, BOTTOM_MARGIN_PT, PageReport  # noqa: E402
 from furusato_docs.typography import ascii_parentheses  # noqa: E402
 from furusato_docs import validators as old  # noqa: E402
+from furusato_docs import participant_word  # noqa: E402
 
 
 class HtmlInspection(HTMLParser):
@@ -121,8 +122,9 @@ def model_texts(document):
                 yield block["caption"]
 
 
-def inspect_word(word, document, metadata, report, *, release_profile=release.PREVIEW):
+def inspect_word(word, document, metadata, report, *, release_profile=release.PREVIEW, word_navigation="fields"):
     profile = release.require_metadata_profile(metadata, release_profile)
+    participant_word.require_mode(word_navigation, participant_edition=bool(metadata.get("participantEdition")))
     parts = old.check_package(word, report)
     old.check_authorship(parts, report, scope="word")
     old.check_no_foreign_label_guids(parts, report, scope="word")
@@ -147,6 +149,10 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
     report_check(report, "word.24chapters5appendices", len(headings) == 29, f"{len(headings)} top-level headings")
     report_check(report, "word.allHeadings", len(all_headings) == metadata["counts"]["headings"], str(len(all_headings)))
     report_check(report, "word.persistentTOC", toc_rows >= 29, f"{toc_rows} cached TOC rows")
+    if word_navigation == "headings":
+        for name, (condition, detail) in participant_word.inspect_navigation(parts).items():
+            report_check(report, name, condition, detail)
+        report_check(report, "word.participantCjkFonts", *participant_word.inspect_fonts(parts))
     all_text = normalized("".join(paragraphs))
     prose_text = normalized("".join(paragraphs).replace("`", ""))
     report_check(report, "word.noUnresolvedTOCPlaceholder", "Wordで開くと目次が生成されます" not in prose_text)
@@ -340,14 +346,17 @@ def review_pdf(path, review, report, label):
     return len(pages)
 
 
-def local_interactions(target, review, report, print_pdf=False):
+def local_interactions(target, review, report, print_pdf=False, *, browser_executable=None):
     """Only local file:// content, no signed-in browser and no Fabric operations."""
     from playwright.sync_api import sync_playwright
     browser_work = review / "browser-work"
     browser_work.mkdir(exist_ok=True)
     os.environ["TEMP"] = os.environ["TMP"] = str(browser_work)
     with sync_playwright() as playwright:
-        browser = playwright.chromium.launch(channel="msedge", headless=True)
+        browser = playwright.chromium.launch(
+            **({"executable_path": str(browser_executable)} if browser_executable else {"channel": "msedge"}),
+            headless=True,
+        )
         context = browser.new_context(viewport={"width": 1440, "height": 1000})
         context.route("http://**", lambda route: route.abort())
         context.route("https://**", lambda route: route.abort())
@@ -431,8 +440,18 @@ def main(argv=None):
     parser.add_argument("--render", action="store_true")
     parser.add_argument("--interactions", action="store_true")
     parser.add_argument("--print-html", action="store_true")
+    parser.add_argument("--browser-executable", type=Path, help="Explicit local Chromium/Edge binary; default is the msedge channel")
+    participant_word.add_arguments(parser)
     release.add_arguments(parser)
     args = parser.parse_args(argv)
+    try:
+        participant_word.require_mode(args.word_navigation, participant_edition=args.participant_edition)
+    except ValueError as error:
+        parser.error(str(error))
+    if args.word_navigation == "headings" and args.render:
+        parser.error("--word-navigation headings uses structural Word validation; --render is the Microsoft Word gate")
+    if args.browser_executable and not args.interactions:
+        parser.error("--browser-executable requires --interactions")
     profile = release.get_profile(args.release_profile)
     document, _, _, _, evidence, metadata = build(
         ROOT, args.evidence, args.evaluation_report, public_evidence_path=args.public_evidence,
@@ -448,7 +467,8 @@ def main(argv=None):
         parser.error("The pair directory must contain exactly the matching Word and HTML")
     review.mkdir(parents=True, exist_ok=True)
     report = old.Report(target="Furusato " + profile.display_version + " actual pair")
-    inspect_word(pair / profile.word_name, document, metadata, report, release_profile=profile)
+    inspect_word(pair / profile.word_name, document, metadata, report, release_profile=profile,
+                 **({"word_navigation": args.word_navigation} if args.word_navigation != "fields" else {}))
     inspect_html(pair, document, metadata, report, release_profile=profile)
     check_capture_fidelity(pair, document, evidence, report, release_profile=profile)
     if args.render:
@@ -459,7 +479,8 @@ def main(argv=None):
             review_pdf(pdf, review, report, "word")
     if args.interactions:
         try:
-            local_interactions(pair / profile.html_name, review, report, args.print_html)
+            local_interactions(pair / profile.html_name, review, report, args.print_html,
+                               **({"browser_executable": args.browser_executable} if args.browser_executable else {}))
         except Exception as error:
             report.fail("interaction.runner", f"{error.__class__.__name__}: {error}")
     result = {
@@ -471,6 +492,9 @@ def main(argv=None):
         "knownIssueLabs": metadata["knownIssueLabs"],
         "releaseFreezeStatus": metadata.get("releaseFreezeStatus", "not-frozen"),
         "documentIdentity": release.document_identity(metadata, profile),
+        "wordNavigation": args.word_navigation,
+        "participantEdition": bool(args.participant_edition),
+        "microsoftWordLayoutVerified": bool(args.render and report.passed),
     }
     if report.passed and evidence["complete"]:
         result["status"] = "evidence-backed" if args.render and args.interactions and args.print_html else "more-local-validation-required"
@@ -481,6 +505,11 @@ def main(argv=None):
         )
     if report.passed and profile.is_snapshot and args.render and args.interactions and args.print_html:
         result["status"] = "locally-validated-known-limitations-snapshot"
+    if report.passed and args.word_navigation == "headings":
+        result["status"] = (
+            "participant-structure-and-browser-validated"
+            if args.interactions and args.print_html else "more-local-validation-required"
+        )
     (review / "validation.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
         "passed": sum(f.level == "PASS" for f in report.findings),

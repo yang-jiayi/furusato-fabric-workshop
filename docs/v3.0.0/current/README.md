@@ -1,137 +1,91 @@
-# Furusato Workshop 3.0.0 — 現行成果物の整合性
+# Furusato Workshop 3.0.0 — 現行教材 / Current workshop
 
-このディレクトリは現行mainの整合版用です。元の`v3.0.0`タグ・配布物と日付付き過去評価は
-変更せず保持します。教材版、データ仕様、FabricのgenerationやAPI versionを混同しません。
+2026-10-10整合版。教材の手順、可搬profile、Notebookの同梱資産、Word・日英HTML・ZIPを同じソースでそろえます。
 
-[参加者用 Word（95ページ）](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[参加者用 Word](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [参加者用 日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
-[Notebook・CSV・モデル等を含むZIP](Furusato_Workshop_v3.0.0_current-20261007.zip) ·
+[Notebook・CSV・モデルを含むZIP](Furusato_Workshop_v3.0.0_current-20261010.zip) ·
 [Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
 [検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt) ·
-[回答精度の改善（2026-10-07）](../tuning-20261007/README.md) ·
-[第3報〜第6報: 逸脱と対策](../followup-20261007/README.md) ·
-[2026-10-04の記録](history/20261004/README.md)
+[実測した改善・残件](../tuning-20261010/README.md) ·
+[精度校正と資料校正の手順](../tuning-20261010/calibration-and-proofreading.md)
 
-**成果物整合性と旧フォルダの整理は確認済みです。** 2026-10-07の正式配置は22 Items（第3報で任意の
-Power BIレポートを追加）・Agent1件・Temp0件です。
-正式Agentの標準10問・84条件は、配置直後の**36/84・34/84**から、回答契約の復元後に
-**74/84・73/84**（T10のnative遮断により上限77）となりました。事前登録holdout12問は
-11 PASS／1 FAILです。AI回答品質の0 FAILではなく、文書203検査の成功はAI回答のPASSに加算していません。
-第3報の残件候補R7・R8は、その時点では事前に記録した採用規則を満たしませんでしたが、第4報でご指示により
-**R8を採用**しました（標準10問・84条件 **76/84・74/84**）。言葉づかいを直した候補R9・R10は採用基準に届かず、
-正式AgentはR8です。第5報で、Word・HTMLと配布用ZIPを参加者に配布する版（手順だけを収録）に作り直しました。
-第6報で、B16・B19の対策を加えた候補R11を同じ手順で評価しました（標準 **84/84・78/84**）が、回帰19問の内容が
-事前に決めた基準に届かず、正式AgentはR8のままです。Semantic modelの説明をふだんの言葉に直して本番に反映し、
-手順書の1章にv3の構成図を加えました。
+標準構成は**Ontology 1件・Data Agent 1件**です。必要な4ソースはLakehouse、KQL Database、
+この同じGen2 Ontology、直接のSemantic Modelです。consumerのAPI version unsupportedや
+native Metrics／Time Seriesの未完了を、別のOntologyを作って置き換えません。
 
-## 版の正本
+同じ219条件の実回答比較で、回答内容の一致は50.68%から73.97%へ改善しました。
+SQL修正の19条件、既存メジャーのフィルター説明の4条件は別の限定検証です。
+最新profileで全51質問を再評価していません。実測範囲、取得条件の差、native失敗と
+未確認事項は[実測資料](../tuning-20261010/README.md)に残します。
 
-| 成果物・識別子 | 正本と扱い |
+## 版とソースの対応
+
+| 対象 | 正本と役割 |
 |---|---|
-| 教材・Notebook01–05 | [`WORKSHOP_VERSION`](../../../WORKSHOP_VERSION) = **3.0.0**。見出し・metadata・Notebook01の配布版表示を一致させます |
-| 配置用ディレクトリ | [`workshop/v3.0.0-preview`](../../../workshop/v3.0.0-preview/README-runtime.md)。技術的パスは既存互換のため維持 |
-| 版の対応表 | [`edition.json`](../../../workshop/v3.0.0-preview/edition.json) |
-| CSV | [`data`](../../../workshop/v3.0.0-preview/data)。`2.7.0-realistic.1`の値・行数・hashを保持。版表示のために再生成しません |
-| 再利用する処理コード | `2.7.0`基線。Notebook01/05の処理ロジックと内部publication keyは維持 |
-| 修正版Agent | [`standard-contract-restoration`](../../../workshop/v3.0.0-preview/data-agent/candidates/standard-contract-restoration/README.md)（4段階compilerの最終段。前段は[`time-layer-isolation`](../../../workshop/v3.0.0-preview/data-agent/candidates/time-layer-isolation/README.md)）。6 SQL views・全体/ソース指示・SQL17/KQL9例を同じ入力セットに含めます |
-| Word / HTML | 同じ共有原稿から生成し、同じartifact-set SHAを本文とmetadataに記録。HTMLは対応するWordの実hashも保持 |
+| 教材・Notebook01–05 | [`WORKSHOP_VERSION`](../../../WORKSHOP_VERSION) = 3.0.0 |
+| 配置パス | [`workshop/v3.0.0-preview`](../../../workshop/v3.0.0-preview/README-runtime.md)、互換パス |
+| 版の対応表 | [`edition.json`](../../../workshop/v3.0.0-preview/edition.json)、標準Ontology数1 |
+| CSV | 2.7.0-realistic.1、11ファイルの値・行数・hashを保持 |
+| 処理コード基線 | 2.7.0、Notebook01/05の処理を維持。完了済み処理を再実行しない |
+| 現行profile | [`measured-contract-20261009`](../../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md) |
+| モデル | 金額列を表示。既存10メジャーの式は維持。Agent native schemaへの露出は別検証 |
+| Word・HTML | 共有原稿、同じartifact-set SHA、HTMLに対応するWordの実SHA |
 
-Notebook01の`NOTEBOOK_VERSION`は監査・表示用で、現行配布物では3.0.0です。
-過去に実行されたロード監査の2.7.0を、実行し直さず3.0.0へ書き換えることはしません。
-これは過去の来歴を保存するためです。データ仕様、内部control key、generation ID、
-Power BI互換性レベルを教材版に合わせて一括置換すると、参照や再実行防止を壊します。
+profile compilerは、実際のnative選択要素、独立SQL metadata、公開modelのTMDLとOntology
+metadataからDraftだけを生成します。欠けたschema IDを作らず、1区画10,000 UTF-16単位を
+超える指示を拒否します。呼び出し側はサービスの回答例検証、staging、公開読戻しと実回答評価を行います。
 
-## 整合性の検査と再生成
+## 再生成と校正
 
-```powershell
-python tools\provisioning\build_preview30.py
-python -m unittest discover -s tools\provisioning -p "test_preview30*.py"
-python tools\provisioning\v3_artifacts.py `
-  --out workshop\v3.0.0-preview\provisioning\artifact-set.json
+まずソースを固定し、可搬資産とNotebookの同梱packageを生成します。
+
+```bash
+python -B tools/provisioning/build_preview30.py
+python -B -m unittest discover -s tools/provisioning -p 'test_preview30*.py'
+python -B tools/provisioning/v3_artifacts.py --out workshop/v3.0.0-preview/provisioning/artifact-set.json
 ```
 
-artifact-setは、5 Notebook、sealed packageの中身、全CSV、モデル・Ontology・Agent profileと
-構築コードの実SHAを記録します。Notebook02–04の埋め込みpackageにも最新の修正compiler、
-6 SQL views、SQL/KQL例を含め、外側のファイルだけが新しい状態を拒否します。
-Notebook01/05は、明示したNotebook01の監査・表示用versionを除き、処理コードの一致を検査します。
-
-Word/HTMLのbuild・validate・packageには、同じ
-`--artifact-manifest workshop\v3.0.0-preview\provisioning\artifact-set.json`を渡します。
-manifest生成後に構築コード、Notebook、CSV、profileが変われば拒否されます。
-現在の成果物検査はAI回答や全機能の合格判定とは別です。
-
-2026-10-07の整合版は、次の分割実行で生成しました。`$Stage`はリポジトリ外の新しい
-ディレクトリ、`$Approval`はリポジトリ外のprivateな文書配布承認（3.0.0の公開projectionと
-76/8 runに結び付くもの。AI品質の受入ではありません）です。描画とHTML操作の検査には
-Word、Edge、`python-docx`・`pymupdf`・`playwright`が必要です。
+Word・HTMLの生成先はcheckout外の新しい私有ディレクトリとします。既存版・過去の評価を上書きしません。
+`$Approval`には、使用するpublic projectionと保持する元76/8 runの実hashに結び付く文書配布承認を
+指定します。これは新しい回答品質の合格証明ではありません。今回の文書配布・main統合はユーザーの指示によります。
 
 ```powershell
-$Manifest = "workshop\v3.0.0-preview\provisioning\artifact-set.json"
-$Release = @("--release-profile", "v3.0.0", "--participant-edition", "--release-approval", $Approval, "--artifact-manifest", $Manifest)
-python -B tools\docs\build_preview30.py --out "$Stage\pair" --review "$Stage\review" @Release
-python -B tools\docs\validate_preview30.py --pair "$Stage\pair" --review "$Stage\checks" `
-  --render --interactions --print-html @Release
-python -B tools\docs\package_preview30.py --pair "$Stage\pair" `
-  --validation "$Stage\checks\validation.json" --out "$Stage\package" @Release
+$Manifest = "workshop/v3.0.0-preview/provisioning/artifact-set.json"
+$Options = @("--release-profile", "v3.0.0", "--participant-edition", "--word-navigation", "headings",
+             "--release-approval", $Approval, "--artifact-manifest", $Manifest)
+python -B tools/docs/build_preview30.py --out "$Stage/pair" --review "$Stage/build" @Options
+python -B tools/docs/validate_preview30.py --pair "$Stage/pair" --review "$Stage/checks" `
+  --interactions --print-html @Options
+python -B tools/docs/package_preview30.py --pair "$Stage/pair" `
+  --validation "$Stage/checks/validation.json" --out "$Stage/package" @Options
 ```
 
-`--participant-edition`は参加者に配布する版を作ります。各章は目的・準備・操作手順・完了の確認・参照表・
-参考資料だけで構成し、評価の記録や過去の実行履歴、旧版の参考、リリースの注記、ハッシュは本文に入れません
-（成果物との結び付けは文書のプロパティとHTML内のメタデータに残します）。本文の文章は
-[`participant30_text.py`](../../../tools/docs/furusato_docs/participant30_text.py)、画面の説明は
-[`participant30_figures.py`](../../../tools/docs/furusato_docs/participant30_figures.py)にあり、
-表は同じソースから生成します。パッケージにも評価レポートは含めません。
-参加者用に新しく作った画像（1章の構成図）は[`docs/assets/v3.0.0-participant`](../../assets/v3.0.0-participant/manifest.json)
-にあり、manifest の SHA-256 で照合してから Word と HTML に入れます（artifact-set にも含めます）。
+Linuxではvalidateに `--browser-executable /usr/bin/chromium` など実際のbrowser pathを指定できます。
+Wordは29章・付録への内部リンク目次を持ち、Officeの動的fieldと古いページ番号を含みません。
+この生成方法には Noto Sans CJK JP と Noto Sans Mono CJK JP を用意します。本文・表とコードに
+それぞれ明示して、日本語の字体の欠落を防ぎます。
+Microsoft Wordによるページ割り検証は行っていません。ZIPの `DOCUMENT_VALIDATION.json` は
+構造・日英ブラウザー検査とWord未確認の範囲を明記します。
+既定の `--word-navigation fields` と厳密な `--require-acceptance` の検査は別に維持しています。
+LibreOfficeによるPDF確認は追加の描画観測で、Microsoft Wordの検証とは区別します。
 
-## Tempを使わない本デプロイ
-
-指定フォルダに必要なItemsを直接作成し、同じ承認済みplan・入力fingerprintを使って
-Lakehouse/Notebook → KQL/Pipeline → 品質処理/Gold → Model → Ontology/Agentの
-依存順に一括実行します。これは複数APIをまとめた一連の手順であり、1回のHTTP呼び出しや
-ワークスペース全体の単一トランザクションではありません。
-
-正式に必要な静的consumer Ontologyとmanaged Graphは、一時評価物ではありません。
-generation2の主Ontologyとは用途を明示して、正式Agentと同じ指定フォルダへ置きます。
-互換性helperの配置先は既定で承認済みrootです。`--temp-folder-id`は明示的な評価時だけの
-旧互換オプションで、本デプロイでは使用しません。
-
-修正版の新規構成は[`fresh_grounded_profile.py`](../../../tools/data-agent/fresh_grounded_profile.py)
-で、実サービスから取得した4ソースと、独立に検証した6 viewsのschemaを使って生成します。
-最終段の`standard-contract-restoration`が、標準10問の回答契約（年なしの8月＝2026年8月の観測、
-3ソースの分担、受入/在住、人気の両指標、Ontologyの所属COUNT、合算拒否、数値の忠実性）を復元します。
-このcompilerは書き込みを行いません。呼び出し側が実ソース、native例検証、staging/publicationの
-読み戻しと回答評価を完了させます。未検証のschema IDを作ったり、旧環境のItem IDを流用したりしません。
-
-評価用の比較AgentやTempを作った場合は、採用した構成を正式Agentへ反映し、
-依存・参照・実回答を確認した後に削除します。必要なOntologyごとTempを消して
-正式Agentの参照を切ることはしません。既存CSVの再投入や完了済みNotebookの再実行も行いません。
+各章は目的、操作、完了確認、参照表、参考資料で構成します。精度校正・資料校正は19章、
+単一Ontologyの配置は24章にあります。参加者用パッケージに私有の実回答・trace・認証情報を含めません。
+元のタグ・日付付き過去成果物は保持します。
+[前回の整合版（固定コミット）](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/fa103f0ff99d6259b9a208c924320908ae4a1b66/docs/v3.0.0/current)
+は新しい結果と分けて参照します。
 
 ## English
 
-The course and current distributed Notebooks are **3.0.0**. The unchanged CSV
-contract and compatible processing baseline intentionally retain their2.7
-identifiers. A source-artifact manifest binds the actual files, embedded packages,
-profiles, models and paired Word/HTML; changing only an outer label is insufficient.
+The 2026-10-10 current materials use one Ontology and one Data Agent. The portable
+measured profile, sealed Notebook inputs and paired participant guides share the
+same source contracts. The matched measured improvement is +23.29 percentage
+points; later targeted checks remain separate from the earlier full campaign.
+The latest combined profile has not undergone a full 51-question rerun.
 
-Production uses the approved target folder directly, not Temp. Required consumer
-Ontology/Graph resources remain explicit production dependencies. Temporary
-comparison Agents and evaluation folders are removed after the adopted Agent's
-references and behavior are verified. Historical records and release assets are
-not rewritten, and file-integrity checks are not AI-answer acceptance.
-
-The 2026-10-07 deployment restored the standard answer contracts in the formal
-Agent: the protected ten/84 moved from 36/84 and 34/84 to 74/84 and 73/84 (ceiling
-77; T10 is blocked natively and never bypassed), and a pre-registered author-written
-holdout returned 11 PASS /1 FAIL. See the dated addendum for every configuration.
-The same-day follow-up completed the remaining deviations where an API path exists
-(service-verified views; the optional Power BI report, now 22 items), documented
-UI-only hand-offs and added the public regression gate and runbook tools. In the
-fourth report the user approved adopting R8 (76/84 and 74/84); plain-wording
-candidates R9 and R10 missed the pre-recorded bar, so the formal Agent is R8.
-In the fifth report the Word/HTML guide and the package were rebuilt as the
-participant edition (procedure only; build option --participant-edition).
-In the sixth report candidate R11 (instructions for B16/B19) scored 84/84 and 78/84
-but missed the pre-recorded regression rule, so the formal Agent stays R8; the
-semantic-model descriptions were reworded in plain language and deployed, and the
-guide gained a v3 architecture diagram in chapter 1.
+The explicit participant-only heading-navigation export contains real internal
+chapter links and no dynamic Office fields or cached page numbers. Structural,
+bilingual print/browser checks and optional LibreOffice rendering are distinguished
+from Microsoft Word pagination. Default full Word/acceptance gates remain intact.
+See the verification JSON for actual artifact hashes and completed checks.

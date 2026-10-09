@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from functools import lru_cache
 from pathlib import Path
 
@@ -242,11 +242,16 @@ class _Shape:
 
 def _shapes(svg: str) -> list[_Shape]:
     result = []
-    for match in re.finditer(r"<(rect|circle|polygon)\b([^>]*)/?>", svg):
+    for match in re.finditer(r"<(rect|circle|polygon|line)\b([^>]*)/?>", svg):
         tag, attrs = match.group(1), match.group(2)
         if 'fill="none"' in attrs:
             continue
-        if tag == "circle":
+        if tag == "line":
+            if _attr(attrs, "y1") != _attr(attrs, "y2") or "marker-" in attrs:
+                continue
+            x = min(_attr(attrs, "x1"), _attr(attrs, "x2"))
+            y, width, height = _attr(attrs, "y1"), abs(_attr(attrs, "x2") - _attr(attrs, "x1")), 0
+        elif tag == "circle":
             radius = _attr(attrs, "r")
             x, y = _attr(attrs, "cx") - radius, _attr(attrs, "cy") - radius
             width = height = radius * 2
@@ -264,12 +269,14 @@ def _shapes(svg: str) -> list[_Shape]:
 
 
 def _owner(line: Line, shapes: list[_Shape]) -> _Shape | None:
+    # Resolve ownership from the text's anchor, as the browser audit does. The
+    # original font's ascent may already protrude from a narrow header strip;
+    # rejecting that strip would mistakenly let its translation fill the card.
     candidates = [
         shape for shape in shapes
-        if shape.start < line.start
+        if shape.tag != "line" and shape.start < line.start
         and shape.x <= line.x <= shape.x + shape.width
-        and shape.y <= line.y - line.size * 1.08 + 2
-        and shape.y + shape.height >= line.y + line.size * .25 - 2
+        and shape.y <= line.y - line.size * .35 <= shape.y + shape.height
     ]
     return min(candidates, key=lambda s: s.width * s.height, default=None)
 
@@ -321,6 +328,12 @@ def _layout(
             elif other.y < head.y - 1:
                 top = max(top, other.y + other.size * .25 + 3)
         for child in shapes:
+            if (child.tag == "line" and child.width >= shape.width * .5
+                    and shape.x <= child.x and child.x + child.width <= shape.x + shape.width
+                    and group.lines[-1].y + 1 < child.y < shape.y + shape.height):
+                # A fixed row separator remains visible in the English variant;
+                # wrapping must not put its stroke through the paragraph.
+                bottom = min(bottom, child.y - 3)
             if (child is not shape and child.width > 40 and child.height > 40
                     and child.x < right and child.x + child.width > left
                     and child.y > group.lines[-1].y + 1):
@@ -339,7 +352,7 @@ def _layout(
             budget = min(budget, 2 * (half_width - abs(head.x - centre_x) - 4))
         pieces = wrap_to(english, size, budget, bold=_bold(head))
         if ((shape.backplate or (head.size >= 20 and len(group.lines) == 1)) and len(pieces) > 1
-                and _width(english, head.size * .90, _bold(head)) <= budget):
+                and _width(english, head.size * (.78 if shape.backplate else .90), _bold(head)) <= budget):
             continue  # Avoid growing a mask or orphaning one word in a heading.
         if any(_width(piece, size, _bold(head)) > budget for piece in pieces):
             continue  # Never split or hyphenate a technical identifier.
@@ -363,40 +376,67 @@ def _layout(
     raise ValueError(f"English diagram label has no readable layout inside its shape: {english!r}")
 
 
-def _expand_bullet_rows(
+def _reflow_card_rows(
     groups: list[Group], produced: dict[int, str], shapes: list[_Shape],
-    owners: dict[int, _Shape | None],
+    owners: dict[int, _Shape | None], redundant: set[int],
 ) -> list[tuple[int, int, str]]:
-    """Keep circular bullets aligned when a translated list gains a line."""
-    changes = []
-    columns: dict[tuple[int, float], list[tuple[Group, str, _Shape]]] = {}
-    for position, english in produced.items():
-        group = groups[position]
+    """Use a card's empty vertical space when its installed font needs more lines.
+
+    A wider supported font may wrap a subtitle or a paragraph before the next
+    item, even though the card has ample space below that item. Move only the
+    labels and their circular bullets, retaining card and connector geometry.
+    A proposed flow that does not fit the card is left to the normal bounded
+    type-size fitter; this pass never grants extra canvas space.
+    """
+    cards: dict[int, list[tuple[Group, list[str], float, float]]] = {}
+    for position, group in enumerate(groups):
         head = group.lines[0]
         owner = owners[head.start]
-        if owner is None or owner.backplate:
+        if (owner is None or owner.tag != "rect" or owner.backplate
+                or owner.x == 0 or head.start in redundant):
             continue
-        bullet = next((
-            s for s in shapes if s.tag == "circle" and s.width <= 10
-            and abs(head.x - (s.x + s.width / 2) - 12) < 1
-            and abs(head.y - (s.y + s.height / 2) - 4) < 1
-        ), None)
-        if bullet:
-            columns.setdefault((owner.start, head.x), []).append((group, english, bullet))
-    for column in columns.values():
-        offset = 0.0
-        for group, english, bullet in sorted(column, key=lambda item: item[0].lines[0].y):
+        if position in produced:
+            budget = owner.x + owner.width - min(12, max(4, head.x - owner.x)) - head.x
+            if 'text-anchor="middle"' in head.attrs:
+                continue  # Centred headings and diagram nodes retain their anchors.
+            pieces = wrap_to(produced[position], head.size, budget, bold=_bold(head))
+            if any(_width(piece, head.size, _bold(head)) > budget for piece in pieces):
+                continue
+        else:
+            pieces = [line.text for line in group.lines]
+        width = max((_width(piece, head.size, _bold(head)) for piece in pieces), default=0)
+        cards.setdefault(owner.start, []).append((group, pieces, head.x, head.x + width))
+
+    changes: list[tuple[int, int, str]] = []
+    for card in cards.values():
+        proposed: list[tuple[Group, float, float, float, float]] = []
+        for group, pieces, left, right in sorted(card, key=lambda item: item[0].lines[0].y):
             head = group.lines[0]
-            owner = owners[head.start]
-            assert owner is not None
-            count = len(wrap_to(english, head.size, owner.x + owner.width - head.x - 12, bold=_bold(head)))
-            if offset:
-                for line in group.lines:
-                    line.y += offset
-                attrs = _set_attr(bullet.attrs, "cy", f"{bullet.y + bullet.height / 2 + offset:.2f}")
-                changes.append((bullet.start, bullet.end, f"<circle{attrs}>"))
-                bullet.y += offset
-            offset += max(0, count - len(group.lines)) * head.size * 1.5
+            step = max(head.size * 1.5, 15 if head.size >= 10 else head.size * 1.5)
+            baseline = head.y
+            for _, _, prior_bottom, prior_left, prior_right in proposed:
+                if left < prior_right and right > prior_left:
+                    baseline = max(baseline, prior_bottom + 3 + head.size * 1.08)
+            bottom = baseline + (len(pieces) - 1) * step + head.size * .25
+            proposed.append((group, baseline, bottom, left, right))
+        owner = owners[card[0][0].lines[0].start]
+        assert owner is not None
+        if max(row[2] for row in proposed) > owner.y + owner.height - 4:
+            continue
+        for group, baseline, _, _, _ in proposed:
+            head = group.lines[0]
+            offset = baseline - head.y
+            if offset <= 0:
+                continue
+            for line in group.lines:
+                line.y += offset
+            for bullet in shapes:
+                if (bullet.tag == "circle" and bullet.width <= 10
+                        and abs(head.x - (bullet.x + bullet.width / 2) - 14) < 3
+                        and abs(head.y - offset - (bullet.y + bullet.height / 2) - 5) < 2):
+                    attrs = _set_attr(bullet.attrs, "cy", f"{bullet.y + bullet.height / 2 + offset:.2f}")
+                    changes.append((bullet.start, bullet.end, f"<circle{attrs}>"))
+                    bullet.y += offset
     return changes
 
 
@@ -491,11 +531,30 @@ def to_english(svg: str, mapping: dict[str, str], strict: bool = True) -> tuple[
 
     shapes = _shapes(svg)
     lines = [line for group in groups for line in group.lines]
-    neighbours = [line for line in lines if line.start not in redundant]
     owners = {line.start: _owner(line, shapes) for line in lines}
-    replacements.extend(_expand_bullet_rows(groups, produced, shapes, owners))
+    # Existing English connector masks also need the measured font's layout.
+    # Their old advances can otherwise falsely intrude into a neighbouring card.
+    for position, group in enumerate(groups):
+        owner = owners[group.lines[0].start]
+        if (position not in produced and len(group.lines) == 1
+                and owner is not None and owner.backplate
+                and group.lines[0].start not in redundant):
+            produced[position] = group.text
+    original_baselines = {line.start: line.y for line in lines}
+    replacements.extend(_reflow_card_rows(groups, produced, shapes, owners, redundant))
     laid_out: dict[int, list[tuple[str, float, float]]] = {start: [] for start in redundant}
-    for position, english in produced.items():
+    translated = {line.start for position in produced for line in groups[position].lines}
+    laid_out.update({
+        line.start: [(line.text, line.size, line.y)]
+        for line in lines
+        if line.start not in translated and line.y != original_baselines[line.start]
+    })
+    ordered = sorted(produced, key=lambda position: not bool(
+        owners[groups[position].lines[0].start]
+        and owners[groups[position].lines[0].start].backplate
+    ))
+    for position in ordered:
+        english = produced[position]
         group = groups[position]
         head = group.lines[0]
         owner = owners[head.start]
@@ -504,6 +563,12 @@ def to_english(svg: str, mapping: dict[str, str], strict: bool = True) -> tuple[
             # lossless translation; workshop artwork always has an owner.
             laid_out[head.start] = [(english, head.size, head.y)]
         else:
+            neighbours = [
+                replace(line, inner=text, size=size, y=y)
+                for line in lines
+                for text, size, y in laid_out.get(line.start, [(line.text, line.size, line.y)])
+                if text
+            ]
             laid_out[head.start] = _layout(group, english, owner, neighbours, shapes)
         for line in group.lines[1:]:
             laid_out[line.start] = []
@@ -525,15 +590,18 @@ def to_english(svg: str, mapping: dict[str, str], strict: bool = True) -> tuple[
         if not shape.backplate:
             continue
         members = [line for line in lines if owners[line.start] is shape]
-        if not any(len(laid_out.get(line.start, [])) > 1 for line in members):
-            continue
         rows = [
             row for line in members
             for row in laid_out.get(line.start, [(line.text, line.size, line.y)])
             if row[0]
         ]
+        if not rows:
+            continue
         low = min(y - size * 1.08 for _, size, y in rows)
         high = max(y + size * .25 for _, size, y in rows)
+        if (not any(len(laid_out.get(line.start, [])) > 1 for line in members)
+                and low >= shape.y and high <= shape.y + shape.height):
+            continue
         offset = shape.y + shape.height / 2 - (low + high) / 2
         for x, y in arrow_tips:
             if shape.x - 10 < x < shape.x + shape.width + 10:

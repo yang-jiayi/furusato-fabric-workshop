@@ -27,6 +27,6 @@
   "cloudStatus": "not-deployed-by-build",
   "productionPlacement": "specified-folder-direct",
   "createTempByDefault": false,
-  "correctedAgentProfile": "data-agent/candidates/standard-contract-restoration",
+  "correctedAgentProfile": "data-agent/candidates/measured-contract-20261009",
   "attachmentsOwner": "documents-workstream"
 }

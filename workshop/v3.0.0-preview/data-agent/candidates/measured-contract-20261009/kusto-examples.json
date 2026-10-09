@@ -1,0 +1,40 @@
+{
+  "examples": [
+    {
+      "question": "2026年8月5日の生観測をUTCの日付のままUTC1時間ごとに、全ファイル合算の件数・金額・観測開始終了で出して。日本時間の日には変換しないで。",
+      "query": "let WindowStartUtc=datetime(2026-08-05T00:00:00Z);\nlet WindowEndUtc=WindowStartUtc+1d;\nDonationObservationSummaryForAgent\n| where EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| extend FilterTimezone='UTC', DisplayTimezone='UTC', WindowStartUtc=WindowStartUtc, WindowEndUtc=WindowEndUtc\n| order by UtcHour asc"
+    },
+    {
+      "question": "配布増分の2026年8月の生観測をUTC日付別に全ファイル合算し、抜けている日も確認したい。",
+      "query": "let Daily = DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcDay=bin(EventMinute,1d);\nrange UtcDay from datetime(2026-08-01) to datetime(2026-08-31) step 1d\n| join kind=leftouter Daily on UtcDay\n| project UtcDay, HasObservation=isnotnull(ObservationCount), ObservationCount=coalesce(ObservationCount,0), ObservedAmountYen=coalesce(ObservedAmountYen,0), FirstObservedAtUtc, LastObservedAtUtc\n| order by UtcDay asc"
+    },
+    {
+      "question": "日本時間2026年8月20日の生観測について、重複込み件数・金額と対応する実観測UTC開始終了を見たい。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-19T15:00:00Z) and EventMinute < datetime(2026-08-20T15:00:00Z)\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt)\n| extend RequestedJstDate='2026-08-20', Timezone='UTC'"
+    },
+    {
+      "question": "2026年8月のCSVごとに記録上の最終配信日時とイベント時刻、件数、金額を比べたい。実際の取込完了時刻とは区別して。",
+      "query": "DonationObservationSummaryForAgent | where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z) | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), SyntheticCsvPublishedAtUtc=max(LastPublishedAtUtc) by SourceFile, WorkshopRunId, ParticipantAlias | extend PublicationSemantics='Synthetic CSV PublishedAtUtc metadata; not actual Eventhouse publication, ingestion or pipeline completion', Timezone='UTC' | order by SourceFile asc"
+    },
+    {
+      "question": "2026年8月の観測データで、集約ビューの行数と元の観測件数と金額を比較したい。1行の粒度も説明して。",
+      "query": "DonationObservationSummaryForAgent\n| where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z)\n| summarize BucketRows=count(), ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt)\n| extend RowGrain='MunicipalityID, EventMinute, WorkshopRunId, ParticipantAlias, SourceFile', Timezone='UTC'"
+    },
+    {
+      "question": "日本時間の2026年8月5日の生観測を対象に、時間帯と観測開始終了だけはUTC表示にして、1時間ごとの件数と金額を全ファイル合算して。",
+      "query": "let WindowStartUtc=datetime_local_to_utc(datetime(2026-08-05T00:00:00),'Asia/Tokyo');\nlet WindowEndUtc=datetime_local_to_utc(datetime(2026-08-06T00:00:00),'Asia/Tokyo');\nDonationObservationSummaryForAgent\n| where EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc\n| summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt) by UtcHour=bin(EventMinute,1h)\n| extend FilterTimezone='Asia/Tokyo', DisplayTimezone='UTC', WindowStartUtc=WindowStartUtc, WindowEndUtc=WindowEndUtc\n| order by UtcHour asc"
+    },
+    {
+      "question": "年の指定がない「8月」の生観測全体について、重複込みの件数・金額と実際の観測開始・終了を知りたい。",
+      "query": "let WindowStartUtc=datetime(2026-08-01T00:00:00Z); let WindowEndUtc=datetime(2026-09-01T00:00:00Z); DonationObservationSummaryForAgent | where EventMinute >= WindowStartUtc and EventMinute < WindowEndUtc | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), Files=dcount(SourceFile) | extend WindowStartUtc=WindowStartUtc, WindowEndUtc=WindowEndUtc, OperationalYear='2026', DuplicateCaveat='raw observations; EventID is not available', Timezone='UTC'"
+    },
+    {
+      "question": "8月の生観測で、件数と金額それぞれの上位3自治体を両方の値つきで見たい。",
+      "query": "let Base = DonationObservationSummaryForAgent | where EventMinute >= datetime(2026-08-01T00:00:00Z) and EventMinute < datetime(2026-09-01T00:00:00Z) | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen) by MunicipalityID; let ByCount = Base | order by ObservationCount desc, MunicipalityID asc | take 3 | extend LeaderMetric='ObservationCount'; let ByAmount = Base | order by ObservedAmountYen desc, MunicipalityID asc | take 3 | extend LeaderMetric='ObservedAmountYen'; union ByCount, ByAmount | extend DuplicateCaveat='raw observations may include duplicates', Timezone='UTC' | order by LeaderMetric asc, ObservationCount desc"
+    },
+    {
+      "question": "生観測の照会が0件だった。このビューに実際にある観測期間と総数を確認したい。",
+      "query": "DonationObservationSummaryForAgent | summarize ObservationCount=sum(ObservationCount), ObservedAmountYen=sum(ObservedAmountYen), FirstObservedAtUtc=min(FirstObservedAt), LastObservedAtUtc=max(LastObservedAt), Files=dcount(SourceFile) | extend Scope='whole view extent', Timezone='UTC'"
+    }
+  ]
+}

@@ -470,13 +470,14 @@ WebP エンコードと英語図版のフォント計測のための `Pillow` �
 
 ---
 
-## English
+## English — retained v2.7 workflow
 
-The latest HTML is
+For the current participant Word/HTML and checks, use [v3.0.0 current](../../docs/v3.0.0/current/README.md).
+The retained historical HTML is
 [furusato-workshop-v2-7-0-complete_unified-20260923.html](../../docs/furusato-workshop-v2-7-0-complete_unified-20260923.html),
 a complete Japanese/English mirror of the
 [same-edition participant Word](../../docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx)
-in one self-contained file. Only this pair is the current document download set.
+in one self-contained file. This pair is the retained v2.7 document download set.
 The validated pair is installed under these names.
 
 The matching Word uses unified profile revision13. Both languages synchronize

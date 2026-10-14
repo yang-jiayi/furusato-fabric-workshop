@@ -13,8 +13,8 @@ does not authorize later-candidate builds, publication or main promotion. See
 
 The current participant pair and package are under
 [`docs/v3.0.0/current`](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current). Use
-[`measured-contract-20261009`](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
-and the bilingual [calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
+[`measured-contract-20261015`](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
+and the bilingual [calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md)
 for the measured changes. The standard route retains one Ontology. Dated earlier
 profiles and release records below remain historical; their acceptance flags and
 counts are not changed by merging current documentation.
@@ -36,6 +36,63 @@ The default `--word-navigation fields` still requires the existing Microsoft
 Word rendering/refresh and full package checks. The field-free participant option
 cannot be used with `--require-acceptance`. A separate LibreOffice PDF rendering
 is an additional layout observation, never a Microsoft Word COM receipt.
+
+## Ontology V2 evaluation report
+
+`build_ontology_v2_report.py` builds a separately dated Word/HTML work report and
+calibration procedure from the reviewed counts-only
+`furusato-ontology-v2-evaluation-summary/v2` contract. It preserves the complete
+51-question/296-condition baseline and final populations, all capture outcomes,
+content and strict-native judgments, and symmetric pairing of the 290 original
+and regression conditions. The disjoint unused sets remain outside that pairing.
+
+Supplemental rates measure condition fulfillment across facts, required answer
+elements and specified source routes, not pure factual accuracy. Keep factual
+errors, omitted IDs/headings/explanations, unmet routes, interrupted captures and
+incomplete execution evidence distinct. No separate facts-only rate is inferred.
+
+The builder validates accounting and shared content, not answer correctness.
+Ledger digests refer to private evidence; they do not make that evidence public or
+independently reviewed. Actual source-query counts remain observations separate
+from unchanged-strict-grader question passes, which may include a justified
+clarification or refusal requiring no query. The historical report builders and
+dated results remain unchanged.
+
+Validate the reviewed aggregate first, then build into a fresh private directory:
+
+```bash
+python -B tools/docs/build_ontology_v2_report.py --summary "$ReviewedSummary" --validate-only
+python -B tools/docs/build_ontology_v2_report.py --summary "$ReviewedSummary" --out "$FreshReportStage"
+```
+
+Synthetic fixtures require an explicit test flag and conspicuous fixture labels;
+they are never deployment evidence. Generation records browser and Office render
+checks as false in `artifact-validation.json`; preserve that generation receipt.
+Record actual report browser and LibreOffice checks separately in
+`report-render-validation.json`, binding the exact Word/HTML hashes. Do not create
+that receipt before the checks run or mark Microsoft Word verified when unrun.
+Use the current
+[calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md)
+for final review, source-commit ordering, paired hashes and package reconciliation.
+
+The separate `build_ontology_v2_calibration.py` renders that Markdown procedure to
+`calibration-and-proofreading.docx` and `.html` from one shared block model. It
+does not require or fabricate evaluation results. Links point to the separately
+reviewed actual-results report and aggregate. Use a new private output directory:
+
+```bash
+python -B tools/docs/build_ontology_v2_calibration.py \
+  --source docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md \
+  --date 2026-10-15 --source-date-epoch "$ReviewedArtifactEpoch" \
+  --out "$FreshCalibrationStage"
+```
+
+Its `calibration-artifact-validation.json` binds the source Markdown, shared
+content and both outputs, with browser/Office flags initially false. Record actual
+browser and LibreOffice checks separately in `calibration-render-validation.json`.
+Keep Microsoft Word verification false when it was not run. Include both pairs,
+the procedure Markdown, all generation/render validation records and their hashes in the dated
+report directory and current artifact manifest.
 
 ## Native Data Agent tuning addendum
 

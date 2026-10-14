@@ -1,8 +1,11 @@
-"""Compile the measured 2026-10-09 contract from actual workshop metadata.
+"""Compile a versioned measured contract from actual workshop metadata.
 
 This pure compiler does not authenticate, query, stage or publish. Native SQL/KQL
 selection nodes must already exist in the supplied service definition. Missing
 objects require service discovery; their IDs and types are never manufactured.
+Both historical four-datasource definitions and native Gen2 definitions with
+three datasources plus a separate ontology context are supported. Native context
+payloads are retained exactly; legacy Ontology instruction fields are not added.
 The caller owns source verification, publication/readback and a new evaluation.
 """
 from __future__ import annotations
@@ -20,9 +23,14 @@ from source_grounded_profile import decoded_parts, inline_part
 from standard_contract_restoration import _answer_values_in
 
 REPO = Path(__file__).resolve().parents[2]
-PROFILE = REPO / "workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009"
+CURRENT_PROFILE = "measured-contract-20261015"
+SUPPORTED_PROFILES = (CURRENT_PROFILE, "measured-contract-20261009")
+PROFILE_ROOT = REPO / "workshop/v3.0.0-preview/data-agent/candidates"
+PROFILE = PROFILE_ROOT / CURRENT_PROFILE
 LIMIT = 10000
 KINDS = {"lakehouse_tables", "kusto", "semantic_model", "ontology"}
+DIRECT_KINDS = KINDS - {"ontology"}
+ONTOLOGY_SCHEMA = "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/ontology/1.0.0/schema.json"
 FILES = {"lakehouse_tables": "lakehouse-instructions.txt", "kusto": "kusto-instructions.txt",
          "semantic_model": "semantic-model-instructions.txt", "ontology": "ontology-instructions.txt"}
 MEASURES = {
@@ -45,6 +53,46 @@ def digest(value):
                                     separators=(",", ":")).encode()).hexdigest()
 
 
+def stage_sources(definition, input_stage):
+    """Read four logical bindings from either observed definition serialization.
+
+    Native ``ontology.json`` does not define ``type``, source instructions or a
+    source description. Its existing selections and authored entity descriptions
+    must be preserved, not converted into a legacy datasource. Unknown/mixed
+    serializations require a new service readback and explicit reconciliation.
+    This parser does not establish service availability or answer correctness.
+    """
+    if input_stage not in {"draft", "published"}:
+        raise ValueError("Choose the actual input stage explicitly.")
+    docs = decoded_parts(definition)
+    prefix = "Files/Config/" + input_stage + "/"
+    entries = [(path, value) for path, value in docs.items()
+               if path.startswith(prefix) and path.endswith("/datasource.json")]
+    contexts = [(path, value) for path, value in docs.items()
+                if path.startswith(prefix) and path.endswith("/ontology.json")]
+    if not all(isinstance(value, dict) for _, value in entries + contexts):
+        raise ValueError("Actual source definition parts must contain objects.")
+    if any(not isinstance(value.get("type"), str) for _, value in entries):
+        raise ValueError("Actual datasource types must be strings.")
+    sources = {value.get("type"): (path, value) for path, value in entries}
+    if len(entries) == 4 and set(sources) == KINDS and not contexts:
+        return docs, sources, "legacy-datasources"
+    if len(entries) != 3 or set(sources) != DIRECT_KINDS or len(contexts) != 1:
+        raise ValueError("Require four legacy datasources or three direct datasources and one native Ontology context.")
+    path, context = contexts[0]
+    fields = {"$schema", "workspaceId", "artifactId", "displayName", "elements",
+              "entitiesWithUserAuthoredDescriptions"}
+    name = context.get("displayName")
+    if (set(context) != fields or context.get("$schema") != ONTOLOGY_SCHEMA
+            or not isinstance(name, str) or not name or "/" in name or "\\" in name
+            or path != prefix + "ontologies/" + name + "/ontology.json"
+            or not isinstance(context.get("elements"), list) or not context["elements"]
+            or not isinstance(context.get("entitiesWithUserAuthoredDescriptions"), list)):
+        raise ValueError("Unknown native Ontology context schema, fields, path or selections; reconcile actual service shape first.")
+    sources["ontology"] = contexts[0]
+    return docs, sources, "native-ontology-context"
+
+
 def walk(nodes, path=()):
     if not isinstance(nodes, list):
         raise ValueError("Native element children must be arrays.")
@@ -58,7 +106,8 @@ def walk(nodes, path=()):
 
 def profile_inputs(profile=PROFILE):
     manifest = json.loads((profile / "profile-manifest.json").read_bytes())
-    if manifest.get("schemaVersion") != 1 or manifest.get("instructionLimitUtf16Units") != LIMIT:
+    if (manifest.get("schemaVersion") != 1 or manifest.get("instructionLimitUtf16Units") != LIMIT
+            or manifest.get("profile") not in SUPPORTED_PROFILES):
         raise ValueError("Unknown measured-contract manifest.")
     expected = {"global-instructions.txt", *FILES.values(), "source-descriptions.json",
                 "selection-contract.json", "kusto-examples.json"}
@@ -206,17 +255,14 @@ def align_selection(source, contract, sql_columns=None):
 
 def compile_measured_draft(original, *, input_stage, sql_columns, native_model, ontology_item, profile=PROFILE):
     """Return Draft plus unchanged Published parts; no external side effects."""
-    if input_stage not in {"draft", "published"}:
-        raise ValueError("Choose the actual input stage explicitly.")
-    docs = decoded_parts(original)
+    docs, sources, serialization = stage_sources(original, input_stage)
+    native_context = serialization == "native-ontology-context"
     prefix = "Files/Config/" + input_stage + "/"
     stage_path = prefix + "stage_config.json"
-    entries = [(p, v) for p, v in docs.items() if p.startswith(prefix) and p.endswith("/datasource.json")]
-    sources = {v.get("type"): (p, v) for p, v in entries}
-    if stage_path not in docs or "Files/Config/data_agent.json" not in docs or len(entries) != 4 or set(sources) != KINDS:
-        raise ValueError("A complete actual stage with exactly four direct sources is required.")
+    if stage_path not in docs or "Files/Config/data_agent.json" not in docs:
+        raise ValueError("A complete actual stage and shared agent configuration are required.")
     workspaces, artifacts = set(), set()
-    for _, source in entries:
+    for _, source in sources.values():
         for key in ("workspaceId", "artifactId"):
             value = source.get(key)
             if not isinstance(value, str) or str(uuid.UUID(value)) != value.lower():
@@ -229,7 +275,7 @@ def compile_measured_draft(original, *, input_stage, sql_columns, native_model, 
     verify_ontology_item(ontology_item, ontology)
     if docs[stage_path].get("experimental", {}).get("codeInterpreterEnabled") is not True:
         raise ValueError("Enable Code Interpreter in the actual stage before compiling this contract.")
-    allowed_paths = {stage_path, *(p for p, _ in entries), *(p.removesuffix("datasource.json") + "fewshots.json"
+    allowed_paths = {stage_path, *(p for p, _ in sources.values()), *(p.removesuffix("datasource.json") + "fewshots.json"
                     for kind, (p, _) in sources.items() if kind in {"lakehouse_tables", "kusto"})}
     if any(p.startswith(prefix) and p not in allowed_paths for p in docs):
         raise ValueError("Extra stage topics/examples require explicit reconciliation before using this profile.")
@@ -258,6 +304,10 @@ def compile_measured_draft(original, *, input_stage, sql_columns, native_model, 
     for kind, (path, source) in sources.items():
         draft_path = path.replace(prefix, "Files/Config/draft/", 1)
         target = wanted[draft_path]
+        if native_context and kind == "ontology":
+            if target != source:
+                raise ValueError("Native Ontology context changed unexpectedly.")
+            continue
         target["dataSourceInstructions"] = instructions[kind]
         target["userDescription"] = descriptions[kind]
         if kind in selections:
@@ -277,21 +327,35 @@ def compile_measured_draft(original, *, input_stage, sql_columns, native_model, 
         {"id": str(uuid.uuid5(uuid.NAMESPACE_URL, "furusato-measured-contract:" + row["question"])), **row}
         for row in examples]}
     # Keep every non-Draft part byte-identical, including actual Published evidence.
-    parts = [copy.deepcopy(part) for part in original.get("definition", original)["parts"]
+    original_parts = original.get("definition", original)["parts"]
+    parts = [copy.deepcopy(part) for part in original_parts
              if not part["path"].startswith("Files/Config/draft/")]
-    parts.extend(inline_part(path, value) for path, value in sorted(wanted.items())
-                 if path.startswith("Files/Config/draft/"))
+    ontology_path = sources["ontology"][0]
+    draft_ontology_path = ontology_path.replace(prefix, "Files/Config/draft/", 1)
+    for path, value in sorted(wanted.items()):
+        if not path.startswith("Files/Config/draft/"):
+            continue
+        if native_context and path == draft_ontology_path:
+            # Copy the actual payload bytes and any service part metadata, even
+            # when Published is the explicit input and only its path changes.
+            part = copy.deepcopy(next(p for p in original_parts if p["path"] == ontology_path))
+            part["path"] = path
+            parts.append(part)
+        else:
+            parts.append(inline_part(path, value))
     result = {"parts": parts}
     before = {p: v for p, v in docs.items() if not p.startswith("Files/Config/draft/")}
     after = {p: v for p, v in decoded_parts(result).items() if not p.startswith("Files/Config/draft/")}
     if before != after:
         raise ValueError("A non-Draft definition part changed.")
+    applied_instructions = {key: text for key, text in instructions.items()
+                            if not native_context or key != "ontology"}
     receipt = {
-        "profile": "measured-contract-20261009", "inputStage": input_stage,
+        "profile": manifest["profile"], "inputStage": input_stage,
         "inputDefinitionSha256": digest(original), "outputDefinitionSha256": digest(result),
         "profileManifestSha256": digest(manifest), "inputModelDefinitionSha256": digest(native_model),
         "inputSqlColumnsSha256": digest(sql_columns), "inputOntologyMetadataSha256": digest(ontology_item),
-        "instructionUtf16Units": {key: len(text.encode("utf-16-le")) // 2 for key, text in instructions.items()},
+        "instructionUtf16Units": {key: len(text.encode("utf-16-le")) // 2 for key, text in applied_instructions.items()},
         "instructionLimitUtf16Units": LIMIT, "sourceOwnedCountMeasuresVerified": True,
         "sourceOwnedWorkshopMeasuresVerified": 10,
         "modelAmountVisible": True, "sourceIdentitiesPreserved": True, "ontologyCount": 1,
@@ -300,7 +364,20 @@ def compile_measured_draft(original, *, input_stage, sql_columns, native_model, 
         "publishedPartsPreservedByteIdentical": True, "activeSqlExamples": 0, "activeKqlExamples": 9,
         "businessDataAndMeasuresChanged": False, "cloudCalls": 0, "stagedOrPublished": False,
         "freshDeploymentOrAnswerAccuracyVerified": False,
+        "sourceSerialization": serialization, "logicalBindingCount": 4,
+        "physicalDatasourceCount": 3 if native_context else 4,
     }
+    if native_context:
+        receipt.update({
+            "nativeOntologyPart": draft_ontology_path,
+            "nativeOntologyPartPreservedByteIdentical": True,
+            "nativeOntologySchema": ONTOLOGY_SCHEMA,
+            "unchangedPortableInstructions": ["global", *sorted(DIRECT_KINDS)],
+            "unsupportedLegacyOntologyInstructionSha256": digest(instructions["ontology"]),
+            "unsupportedLegacyOntologyDescriptionSha256": digest(descriptions["ontology"]),
+            "legacyOntologyInstructionsInsertedIntoGlobal": False,
+            "legacyOntologyFieldsSynthesized": False,
+        })
     return result, receipt
 
 
@@ -317,6 +394,8 @@ def private_path(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--profile", choices=SUPPORTED_PROFILES, default=CURRENT_PROFILE,
+                        help="Versioned portable instructions; the historical profile remains explicitly available.")
     parser.add_argument("--definition", type=Path, required=True)
     parser.add_argument("--input-stage", choices=("draft", "published"), required=True)
     parser.add_argument("--sql-columns", type=Path, required=True)
@@ -330,7 +409,8 @@ def main():
         raise ValueError("Definition and receipt require different paths.")
     read = lambda path: json.loads(path.read_text(encoding="utf-8-sig"))
     definition, receipt = compile_measured_draft(read(args.definition), input_stage=args.input_stage,
-        sql_columns=read(args.sql_columns), native_model=read(args.model_definition), ontology_item=read(args.ontology_item))
+        sql_columns=read(args.sql_columns), native_model=read(args.model_definition), ontology_item=read(args.ontology_item),
+        profile=PROFILE_ROOT / args.profile)
     for path, value in ((out, definition), (receipt_path, receipt)):
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         with path.open("x", encoding="utf-8") as handle:

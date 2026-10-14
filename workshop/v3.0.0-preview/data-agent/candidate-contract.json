@@ -10,6 +10,9 @@
     "ontology",
     "semantic_model"
   ],
+  "definitionInputSerialization": "legacy-datasource-bootstrap",
+  "serviceMayMigrateOntologyToSeparateContext": true,
+  "nativeOntologyContextAvailabilityVerified": false,
   "codeInterpreterConfigured": true,
   "codeInterpreterObserved": false,
   "directSemanticModelSourceRequired": true,

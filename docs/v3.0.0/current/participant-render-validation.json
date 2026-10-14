@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "furusato-participant-render-review/v1",
+  "dateJst": "2026-10-15",
+  "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
+  "artifactSetSha256": "7abd339724375ed536308f434d9fff5b52afa320fcfd4ccf28c41228071ca5fb",
+  "wordNavigation": "headings",
+  "reviewMethod": "Every actual LibreOffice Word PDF page and Chromium Japanese/English print page was opened and inspected by Codex reviewers; diagnostics and source/image hashes were also checked.",
+  "pages": {
+    "word-libreoffice": 92,
+    "html-ja": 100,
+    "html-en": 102
+  },
+  "totalPagesActuallyReviewed": 294,
+  "manualReviewReceipts": 39,
+  "allPageReviewSha256": "71abd3994f39d563ec63d986055cf911b65054c841d02cfc056b9967c6eee415",
+  "inventorySha256": "9e4e2283484a19b10e3e8c3de8686deb1bccff83f44d479f4f17e789441456e0",
+  "sourceFiles": {
+    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "6cf80378c32572773fda46b1154e3c64c2e2fac84042c5a798fa06f5a7ec924c",
+    "furusato-workshop-v3-0-0-complete.html": "3af11a800bad336ec97097ad6c908f89a34058d8885e2e1578593f1be5dd5799"
+  },
+  "pdfSha256": {
+    "word-libreoffice": "9042f3e8a0d1acd17510e04a3ae9d5ed23f1690fb94ad8cbfc676882a2eaef39",
+    "html-ja": "67135d00b2890491101cf872df1e51238203c1125bb1c2908ee6f9802fbe1e38",
+    "html-en": "1c3e9209c3b096e8bd7ac18cdd6e751a30a038aa46e6ee4ee5c63321e68e5309"
+  },
+  "noBlankTextPages": true,
+  "noOutOfPageTextSpans": true,
+  "noReplacementCharacterPages": true,
+  "noDocumentBodyOrCaptionClippingReported": true,
+  "noMissingJapaneseGlyphsObserved": true,
+  "wordTextPreservation": {
+    "nonemptyParagraphAndTableCellTexts": 1878,
+    "rawDiagnosticMissingCount": 2,
+    "actualMissingContentFound": false,
+    "resolution": "Both complete source paragraphs span page boundaries interrupted by repeated header/footer text; every raw diagnostic miss was checked in actual PDF text and full page images.",
+    "diagnosticSha256": "e7d970d435592ae2e41cf798113ff6743e67d0aaa010b5dce348c767ca711ba7",
+    "manualResolutionSha256": "7c88c8ad91cc69e88cb55b6a4a01c3d540f24a8974c9d313f927854a9a003265"
+  },
+  "layoutObservations": [
+    "Some retained UI screenshots intentionally show scroll viewports or partial peripheral controls; dense graph labels overlap. Captions and required procedural evidence remain readable. Individual screenshot text is not universally complete.",
+    "Some table captions and headers occur at a page end with complete body rows under repeated headers on the following page. Some closing reference pages are sparse but have intact content.",
+    "The field-free headings-navigation edition deliberately omits PAGE fields and cached page numbers; the bare Page footer label is cosmetic. Twenty-nine chapter/appendix links provide navigation."
+  ],
+  "allScreenshotTextCompleteClaimed": false,
+  "microsoftWordLayoutVerified": false,
+  "independentHumanSignoff": false,
+  "earlierParticipantV1FailedChecks": {
+    "count": 2,
+    "scope": "Two print-validator blank-page checks flagged terminal-reference-only overflow pages (Japanese page 64, English page 70); these pages were not literally empty.",
+    "originalRecordsPreserved": true,
+    "correction": "Extended the six existing chapter-specific compact print selectors from chapters 7/15 to include 19/22, keeping terminal references with preceding content while preserving font sizes. No pages or source text were removed. Fresh v2 validation has 152 PASS and 0 FAIL."
+  },
+  "note": "Visual and structural document checks do not establish AI answer accuracy or acceptance of all Fabric features."
+}

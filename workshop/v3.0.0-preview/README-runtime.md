@@ -8,7 +8,7 @@ Production targets the approved folder directly; **Temp is not a default
 deployment dependency**. The standard route uses exactly **one generation2
 Ontology and one Data Agent**. A native consumer API-version failure stays a
 recorded failure; no compatibility Ontology is added to the standard deployment.
-See the [current measured profile](data-agent/candidates/measured-contract-20261009/README.md)
+See the [current measured profile](data-agent/candidates/measured-contract-20261015/README.md)
 and [calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md).
 
 This compatibility-stable source path is also shipped by the
@@ -331,28 +331,44 @@ or its current candidate has passed the benchmark.
 
 ## Activator and increments
 
-This edition reuses the unchanged tested native lifecycle and upload utilities. `shouldRun` definition metadata is not used as a substitute for formal native `start_rule`/`stop_rule`.
+This edition reuses the unchanged tested native lifecycle and upload utilities. `shouldRun` definition metadata is not used as a substitute for formal native `start_rule`/`stop_rule`. The v3 renderer explicitly sets a 120,000 ms late-arrival tolerance while keeping the rule stopped and historical application disabled. The immutable v2.7 files remain unchanged. Rendering these settings does not initialize action credentials or prove event delivery.
 
 Before the first watched upload, inspect the new rule in the native Activator UI.
 While stopped, open **Edit action**, verify the intended Pipeline and dynamic
 `Type`/`Subject`/`Source` mappings, then **Apply** and **Save** once. Keep historical
 application disabled. Read back the definition: `shouldApplyRuleOnUpdate` must be
 `false`, and an explicit `delayToleranceMs` of at least `120000` must be present
-before delivery. The v3 delivery adapter now refuses an upload if these live
-settings are missing, insufficient, or the rule is stopped; stopping a rule
-remains available independently of this readiness check.
+before delivery. After formal Start, `check-activator-readiness` reads the actual
+native backend state, rule health and action credential state. It requires
+`backendRunningState=Running`, `isRuleInSync=true`, the configured delay, no health
+notifications, and credential state `Initialized`. The upload adapter repeats
+these fresh reads before every file. A missing, changed or unhealthy response
+blocks upload; Stop remains available. The adapter uses the observed first-party
+web client contracts, which are not documented public REST APIs. A contract
+change requires review; there is no fallback to the `Running` badge alone.
 
-In the observed correction, native action persistence added a 120-second
-tolerance, and subsequent fresh file events completed the native
-event/activation/Pipeline/Copy/KQL chain. This does **not** isolate delay tolerance
-as the sole cause or prove that setting it through an API alone initializes every
-action. A `Running` badge and these settings remain readiness evidence, not
-delivery acceptance. Never replay an earlier unverified file to manufacture a
-successful first-run result; a diagnostic run and any separately approved
-recovery must retain their own receipts and be reported separately.
+In the October 15 validation, the first automatic attempt did not run the
+Pipeline. A separate, recorded recovery subsequently completed all three native
+event/activation/Pipeline/Copy/KQL chains after healthy backend observations.
+The first failure remains in its original ledger. Native Save, the explicit
+tolerance and backend warmup were not isolated as causes. These observations do
+not establish that an API-only setting initializes every action, or that a fixed
+warmup duration guarantees success. Readiness is not delivery acceptance.
+Never replay an earlier unverified file to manufacture a successful first-run
+result; separately authorized recovery must keep its own receipts.
+
+[Microsoft's latency guidance](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-latency)
+states that latency can reach ten minutes, and a late-arrival wait imposes a
+minimum latency equal to its duration (two minutes here). Allow a bounded
+read-only observation window after upload before declaring delivery failed;
+ten minutes is guidance, not a delivery guarantee. There is no workshop rule
+requiring 120 seconds of repeated healthy observations before upload. If the
+backend is still starting or unhealthy, wait and inspect it without creating or
+replaying files.
 
 ```powershell
 python tools/provisioning/preview30_runtime.py start-activator @Write
+python tools/provisioning/preview30_runtime.py check-activator-readiness @Write
 python tools/provisioning/preview30_runtime.py deliver-increment @Write --increment 1
 ```
 
@@ -404,7 +420,7 @@ Historical isolated research assets above remain optional and outside this route
 ### Current measured Agent profile
 
 `publish-agent` publishes the base candidate. Afterwards compile and apply
-[measured-contract-20261009](data-agent/candidates/measured-contract-20261009/README.md)
+[measured-contract-20261015](data-agent/candidates/measured-contract-20261015/README.md)
 using [`measured_contract_profile.py`](../../tools/data-agent/measured_contract_profile.py).
 Notebook02–04 seal this compiler and the same profile inputs; compiling never writes
 to Fabric. Follow the profile README's exact input schema and local command.
@@ -517,18 +533,21 @@ export to PDF instead, check the page visually, and reconcile its totals with DA
 
 The deployed rule's action already references this deployment's Pipeline: its
 `fabricJobConnectionDocumentId` is the `fabricItemAction` entity inside the same
-Activator definition, whose `itemId` is the deployed Pipeline. What the API cannot do
-is the native persistence the adapter requires before delivery (an explicit
-`delayToleranceMs`); do it in the native Activator UI:
+Activator definition, whose `itemId` is the deployed Pipeline. The v3 renderer
+supplies explicit `delayToleranceMs=120000`, but does not persist native action
+credentials. Use the observed native UI action setup before delivery:
 
 1. Keep the rule stopped. Open the rule → **Edit action**, confirm this deployment's
    Pipeline and the dynamic `Type`/`Subject`/`Source` mappings, **Apply**, **Save**.
 2. Read the definition back: the action still targets the deployed Pipeline,
    `shouldApplyRuleOnUpdate` is `false` and `delayToleranceMs` ≥ `120000`.
-3. Run `start-activator`, then for increments 1–3 in order: `deliver-increment`,
-   export the native FileCreated events from the Activator UI, export the Copy
-   activity record with the read-only API helper below, `verify-delivery`. Finish
-   with `stop-activator`.
+3. Run `start-activator`, then the read-only `check-activator-readiness`. Confirm
+   backend Running, rule synchronization, empty health notifications and action
+   credential state Initialized. If unavailable, inspect and wait without upload.
+4. For increments 1–3 in order: `deliver-increment`, observe the native delivery
+   with the latency allowance above, export native FileCreated events from the
+   Activator UI and the Copy activity with the read-only API helper below, then
+   `verify-delivery`. Finish with `stop-activator`.
 
 ```powershell
 python tools/provisioning/export_copy_activity.py --workspace-id <workspace> `
@@ -538,8 +557,9 @@ python tools/provisioning/export_copy_activity.py --workspace-id <workspace> `
 The helper writes the service's own activity-runs record (`pipelineRunId`,
 `activityType`, `status`, `rowsRead`, `rowsCopied`) and stops unless the run has
 exactly one Copy activity. The FileCreated events (`___subject`, `___type`,
-`___source`, `api`, `contentLength`, `___id`) have no public API and must come from
-the Activator UI.
+`___source`, `api`, `contentLength`, `___id`) must be actual service records;
+the workshop's supported export procedure uses the Activator UI. Readiness
+responses and upload intent are not substitutes for those event records.
 
 If the increments were already ingested manually, `deliver-increment` stops (the
 CSV exists, PutBlob `If-None-Match: *` returns 412) and re-delivery would double the

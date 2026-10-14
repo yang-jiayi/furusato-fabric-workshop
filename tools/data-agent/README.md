@@ -1,17 +1,53 @@
 # Current measured Data Agent profile
 
-現行Workshopでは [measured-contract-20261009](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
-を使います。4ソースとOntology 1件を維持し、実在するnative要素・独立SQL metadata・公開modelの
+現行Workshopでは [measured-contract-20261015](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
+を使います。4 個の論理的な接続先と Ontology 1 件を維持し、実在する native 要素・独立 SQL metadata・公開 model の
 10メジャー定義を照合してDraftを生成する可搬compilerです。作成だけではサービスへ公開しません。
 実回答で確認した改善と残件は [2026-10-10実測資料](../../docs/v3.0.0/tuning-20261010/README.md)、
 導入・比較評価・Word/HTML校正は [校正手順](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
-を参照してください。最新構成で全51質問を再評価していません。
+を参照してください。これらは当該日付の記録です。新しい配置・評価は
+[2026-10-15 作業レポート](../../docs/v3.0.0/tuning-20261015/README.md) を参照してください。
 
 Use the current measured profile linked above for the current course. It compiles
-locally from observed metadata, keeps one Ontology and all four source identities,
+locally from observed metadata, keeps one Ontology and all four logical source identities,
 and checks the actual ten model measures. Publication/readback and fresh answer
 validation are separate operator steps. Earlier reference-only and regression
 records below describe their own dated scopes; they are not the latest overall score.
+
+### Native Ontology context check
+
+新しい Agent 定義は 3 個の通常 `datasource.json` と、別の
+`ontologies/<name>/ontology.json` を返します。Compiler は両形式を識別し、新しい
+Ontology パートをバイトのまま保持します。未対応のソース指示・説明フィールドを作らず、
+適用できなかった従来の指示・説明はハッシュを receipt に記録します。
+
+`agent_service_check.py` の通常ソース検査は、公開済みの場合は公開 API の
+`/dataAgents/<id>/datasources`、Draft の場合は `/dataAgents/<id>/staging/datasources`
+を使用します。`/published` は付けません。通常ソースが 3 件あることから Ontology の有無・利用可能性を
+推測しません。必要なら、実環境で観測した capacity origin と capacity ID を指定して、
+同じ Agent の native Ontology 一覧と各 context を追加で読み取ります。
+
+```powershell
+python -B .\tools\data-agent\agent_service_check.py `
+  --private-root '<absolute private directory outside Git>' `
+  --workspace-id '<workspace GUID>' --agent-id '<Agent GUID>' --stage published `
+  --native-origin '<observed HTTPS capacity origin>' --capacity-id '<capacity GUID>'
+```
+
+The native check uses the current first-party UI contract and an ordinary delegated
+Power BI bearer. Supply the actual observed capacity origin; the tool does not
+infer a regional host, request credentials from an arbitrary server, or use an
+Ontology workload token. `--native-origin` and `--capacity-id` are optional together.
+Without them, `ontologyContext.checked` is false and readiness is unknown.
+Both public datasource and native Ontology Published routes use the Agent root
+without `/staging` or `/published`; Draft routes include `/staging`. Published
+fewshots and elements follow `/dataAgents/<id>/datasources/<source-id>/...`.
+
+Actual HTTP failures and empty context responses remain in private evidence.
+`SchemaUnavailable` with HTTP 502 is a failed context check even when the Ontology
+is registered. Nonempty available context is separate from executed source queries
+and answer accuracy; `answerAccuracyVerified` remains false. The check makes no
+registration, refresh, publish, or question submission requests.
 
 # Data Agent reference contracts
 

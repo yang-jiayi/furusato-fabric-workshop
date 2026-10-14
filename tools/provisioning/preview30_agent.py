@@ -1,4 +1,9 @@
-"""Portable four-source Data Agent candidate; no accuracy claim or implicit publish."""
+"""Portable four-logical-source bootstrap; no accuracy claim or implicit publish.
+
+Keep the service-accepted create input. Current Fabric may migrate its Ontology
+reference to a separate ontology/1.0.0 context on readback; do not reset that actual
+context to this initial bootstrap or infer consumer readiness from either shape.
+"""
 from __future__ import annotations
 import copy
 import json
@@ -56,6 +61,9 @@ def build_profile() -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
         "edition": "v3.0.0-preview", "status": "candidate", "validationStatus": "offline-only",
         "accuracyAccepted": False, "publishedByBuild": False,
         "sourceTypes": ["lakehouse_tables", "kusto", "ontology", "semantic_model"],
+        "definitionInputSerialization": "legacy-datasource-bootstrap",
+        "serviceMayMigrateOntologyToSeparateContext": True,
+        "nativeOntologyContextAvailabilityVerified": False,
         "codeInterpreterConfigured": True, "codeInterpreterObserved": False,
         "directSemanticModelSourceRequired": True,
         "ontologyGenerationRequired": 2,

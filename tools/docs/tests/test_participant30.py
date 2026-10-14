@@ -130,7 +130,7 @@ class ParticipantEditionTests(unittest.TestCase):
                          "Import the exported file into another new, empty ontology", "ONT_Furusato_Relationships_<PID>"):
             self.assertNotIn(obsolete, procedures)
         agent = " ".join(step["text"][1] for step in text.CHAPTERS[17]["steps"])
-        self.assertIn("measured-contract-20261009", agent)
+        self.assertIn("measured-contract-20261015", agent)
         self.assertIn("bronze.donation_events_raw", agent)
         calibration = " ".join(step["text"][1] for step in text.CHAPTERS[19]["steps"])
         self.assertIn("12 AM=00, 12 PM=12", calibration)

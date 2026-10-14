@@ -1,0 +1,2027 @@
+{
+  "schemaVersion": 1,
+  "sources": {
+    "lakehouse_tables": [
+      {
+        "path": [
+          "Schemas"
+        ],
+        "type": "schema_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo"
+        ],
+        "type": "lakehouse_tables.schema",
+        "description": "Curated Furusato static snapshot tables."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables"
+        ],
+        "type": "table_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Japanese prefecture (都道府県) used in two separate geography paths: recipient geography through Municipality and donor-residence geography through Donor. It is a reference dimension, not a Donation fact grain."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Stable numeric identifier for one Japanese Prefecture entity. Use it to disambiguate names and as the relationship key; do not aggregate it. If the user explicitly asks for a 都道府県 or Prefecture result, keep this grain and never substitute a Municipality."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Official Japanese display label of the prefecture (都道府県名). Preserve the exact stored Japanese text in output."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefectureNameEn"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Canonical English label of the prefecture. Use it for English lookup and display; PrefectureId remains the identity."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefReceivedStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated count of static Donations received by municipalities in this Prefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefReceivedTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated JPY amount received by municipalities in this Prefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefReceivedAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Received-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefReceivedTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefResidentStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated count of static Donations made by Donors who live in this Prefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefResidentTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated JPY amount donated by Donors who live in this Prefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_prefecture",
+          "PrefResidentAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Resident-amount rank of this Prefecture across all Prefectures. Deterministic row-number rank (row_number) over PrefResidentTotalYen desc, PrefectureId asc: equal amounts never share a rank because PrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Synthetic workshop donor (寄付者／寄附者) who may make zero or more Donations. Residence is defined only by DonorLivesInPrefecture and must never be interpreted as recipient geography. SQL joins: PrefectureId supports DonorLivesInPrefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Stable numeric identifier for one synthetic Donor entity. Names aren't guaranteed unique, so use this ID to disambiguate people."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Synthetic Japanese personal-style name of the donor (寄付者名／支援者名). It is not guaranteed to be unique and does not represent a real person."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorDisplayName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Display-only composite of DonorName and DonorId. Use DonorId for identity and this property for human-readable output."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorAge"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Whole-year age of the synthetic donor (年齢) in the static donor record. It is not derived from the Donation timestamp and must not be summed."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorOccupation"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Japanese controlled occupation or job label (職業／職種／仕事) for the synthetic donor. It describes the donor's job category, not employer, recipient, or Supplier type."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorOccupationEn"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Canonical English occupation label for DonorOccupation. Use it for English filtering and grouping; preserve DonorOccupation when returning the stored Japanese label."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated number of static Donations made by this Donor."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorStaticTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated cumulative static Donation amount made by this Donor in JPY."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorStaticMaxYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Maximum single static Donation amount made by this Donor in JPY; it is not the cumulative amount."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorOverallAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Cumulative static donation-amount rank of this Donor nationwide. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc: equal amounts never share a rank because DonorId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "DonorResidenceAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Cumulative static donation-amount rank of this Donor inside the residence Prefecture. Deterministic row-number rank (row_number) over DonorStaticTotalYen desc, DonorId asc within each PrefectureId: equal amounts never share a rank because DonorId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_donor",
+          "PrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Foreign key used by DonorLivesInPrefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Controlled classification of return-gift options (返礼品カテゴリ). Category counts and amounts must be aggregated from Donation through DonationSelectedGift and GiftInCategory; the category itself is not a transaction fact."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategoryId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Stable numeric identifier for one GiftCategory entity. Use it with the stored category labels and never sum or average it."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategoryName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Canonical Japanese return-gift category label (返礼品カテゴリ／返礼品分類). Category metrics must be calculated from Donation, not from this label."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategoryNameEn"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Canonical English return-gift category label paired one-to-one with CategoryName. Use it for English filtering, grouping, and display; CategoryId remains the identity."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategorySearchTerms"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Lowercase pipe-delimited Japanese and English aliases with leading and trailing boundary pipes, used only to resolve colloquial return-gift category wording such as 海鮮系, 魚介, seafood, or equivalent bounded terms. If CategoryName does not match, query this alias index before claiming no category data. Never display, group, count, or treat this property as the category identity."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategoryStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated static Donation count for this GiftCategory across the full snapshot."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategoryStaticTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated static Donation amount for this GiftCategory across the full snapshot."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift_category",
+          "CategoryAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Static donation-amount rank of this GiftCategory across all GiftCategories. Deterministic row-number rank (row_number) over CategoryStaticTotalYen desc, CategoryId asc: equal amounts never share a rank because CategoryId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Synthetic return-gift option selected by a Donation (返礼品／お礼品／商品). It is a catalog dimension, not the donated money and not a transaction fact. If a Municipality is named, resolve that Municipality and traverse MunicipalityCatalogsGift before applying a GiftName CONTAINS candidate filter. Resolve exactly one stable GiftId before Supplier or Donation traversal. SQL joins: CategoryId supports GiftInCategory; MunicipalityId supports MunicipalityCatalogsGift."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Stable numeric identifier for one Gift catalog entity. Use it to connect Donations, catalog Municipalities, categories, and registered Suppliers."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Core Japanese product or service name of the return-gift option (返礼品名／お礼品名／商品名). It usually opens with a place-of-origin word such as a prefecture name, which is display text and not authoritative geography. For a Municipality-qualified colloquial label, traverse MunicipalityCatalogsGift first, filter this property with CONTAINS on the core noun, and verify the remaining numeric and descriptive tokens. Core names can repeat, so resolve one stable GiftId before further traversal."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftDisplayName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Canonical human-readable municipality-qualified catalog label copied from the source Gift name before the core GiftName is derived. Use it for exact full-label resolution and GiftId as the stable identity."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftSearchTerms"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Normalized search-only text for resolving shortened or colloquial Gift wording. It contains the Gift name, catalog Municipality, Prefecture, and GiftId with whitespace and punctuation removed. Filter it with every distinctive noun and numeric token supplied by the user; never display, group, count, or treat it as Gift identity."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftNotes"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Japanese free-text note, notes, remarks, or description for the return-gift option (備考／注意事項／説明). Notes are descriptive only and do not define Supplier, recipient geography, category, or monetary amount."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Authoritative pre-aggregated count of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift count; do not join Suppliers or recount Donation detail."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftStaticTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Authoritative pre-aggregated JPY amount of static Donations that selected this Gift. After resolving one GiftId, use this property directly for an all-time Gift total; do not join Suppliers or use SUM(DISTINCT DonationAmountYen)."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "GiftAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Static donation-amount rank of this Gift across all Gifts. Deterministic row-number rank (row_number) over GiftStaticTotalYen desc, GiftId asc: equal amounts never share a rank because GiftId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "CategoryId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Foreign key used by GiftInCategory."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_gift",
+          "MunicipalityId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Foreign key used by MunicipalityCatalogsGift."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Pre-aggregated current-static-snapshot metric for one Municipality and one GiftCategory pair with at least one Donation. It excludes time-series observations and Suppliers; values must not be summed again outside this grain. SQL joins: MunicipalityId supports MunHasCategoryMetric; CategoryId supports MunMetricForCategory."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric",
+          "MunCategoryMetricId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Synthetic stable identifier for one Municipality x GiftCategory snapshot metric row. The measure values are separate properties on this entity."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric",
+          "MunCategoryStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated static Donation count for one Municipality x GiftCategory pair."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric",
+          "MunCategoryTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated static Donation amount for one Municipality x GiftCategory pair."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric",
+          "MunCategoryAmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Amount rank of this GiftCategory inside one Municipality. Deterministic row-number rank (row_number) over MunCategoryTotalYen desc, CategoryId asc within each MunicipalityId: equal amounts never share a rank because CategoryId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric",
+          "MunicipalityId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Foreign key used by MunHasCategoryMetric."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_mun_category_metric",
+          "CategoryId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Foreign key used by MunMetricForCategory."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Pre-aggregated current-static-snapshot flow from Donor residence Prefecture to Donation recipient Prefecture. Origin and destination are not interchangeable. It excludes time-series observations and Suppliers. SQL joins: ResidencePrefectureId supports ResidencePrefHasFlow; RecipientPrefectureId supports FlowToRecipientPref."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "PrefDonationFlowId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Synthetic stable identifier for one donor-residence Prefecture x recipient Prefecture snapshot flow row. Directional measures are separate properties."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "PrefFlowStaticCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated count of static Donations from one residence Prefecture to one recipient Prefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "PrefFlowTotalYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Pre-aggregated JPY amount from one residence Prefecture to one recipient Prefecture."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "PrefFlowOriginRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Amount rank of this recipient Prefecture among the destinations of one donor-residence Prefecture: the window is partitioned by the origin, so rank 1 is the destination that received the most from that origin. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, RecipientPrefectureId asc within each ResidencePrefectureId: equal amounts never share a rank because RecipientPrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "PrefFlowDestinationRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Amount rank of this donor-residence Prefecture among the origins of one recipient Prefecture: the window is partitioned by the destination, so rank 1 is the origin that sent the most to that destination. Deterministic row-number rank (row_number) over PrefFlowTotalYen desc, ResidencePrefectureId asc within each RecipientPrefectureId: equal amounts never share a rank because ResidencePrefectureId breaks the tie ascending."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "ResidencePrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Foreign key used by ResidencePrefHasFlow."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Tables",
+          "ot_pref_donation_flow",
+          "RecipientPrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Foreign key used by FlowToRecipientPref."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views"
+        ],
+        "type": "view_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail"
+        ],
+        "type": "lakehouse_tables.view",
+        "description": "One static donation per DonationId with all donor/residence, recipient/prefecture and gift/category names. No supplier fan-out. Use for exact IDs, payment/category and explicit JST-date filters."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonationId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonationAmountYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonationPaymentMethod"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Exact stored values: クレジットカード; コンビニ決済; 銀行振込; 電子決済. All have actual static rows. Resolve the exact stored value before claiming an empty payment population."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonatedAtUtc"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "datetime2",
+        "description": "UTC donation event timestamp. A snapshot year label alone does not request a predicate on this column."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonatedAtJstText"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonationDateJst"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "JST calendar date. Filter only for an explicitly requested calendar interval, NEVER just because the user says 2025 seed; that snapshot includes a JST year-boundary spill."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonationYearMonthJst"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "JST calendar month. Used for explicit calendar grouping/filtering, not to restrict the whole 2025 seed snapshot."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonorId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "DonorName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "ResidentPrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Donor residence geography, for '在住者からの寄附'. Independent of recipient geography."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "ResidentPrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "MunicipalityId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "MunicipalityName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "RecipientPrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Recipient municipality geography, for '自治体が受け取った寄附'. Independent of donor residence."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "RecipientPrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "GiftId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "GiftName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "CategoryId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donation_detail",
+          "CategoryName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier"
+        ],
+        "type": "lakehouse_tables.view",
+        "description": "One distinct DonorId/SupplierId pair through Donation and Gift. Names/type/prefectures resolved. CatalogSupplierCount is computed from the complete distinct set, not a preview list. Eligibility only."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "DonorId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "DonorName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Required anchor donor identity. Return DonorId/DonorName and both residence prefecture fields alongside every donor-to-supplier question, including ID-only requests and small supplier sets; display the anchor once before its suppliers."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "ResidentPrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Donor residence prefecture ID. Include with donor name and residence prefecture name before the complete supplier table."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "ResidentPrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "SupplierId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "One distinct catalog supplier for this donor, across all Donation/Gift paths. Retrieve all rows for DonorId, not suppliers from a donation sample."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "SupplierName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "SupplierType"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "SupplierPrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Supplier prefecture ID, separate from donor residence. Include with supplier name/type and SupplierPrefectureName."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "SupplierPrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_donor_catalog_supplier",
+          "CatalogSupplierCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Exact complete distinct supplier count across ALL of this donor's donations and gifts, computed before preview/paging. Displayed unique SupplierIds must match this count."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot"
+        ],
+        "type": "lakehouse_tables.view",
+        "description": "One registered municipality, including those with zero donations. Complete static-snapshot DonationCount/AmountYen and resolved names/prefecture. No date filter columns. Repeated RegisteredMunicipalitiesInPrefecture is not additive."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "MunicipalityId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "MunicipalityName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "PrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Recipient prefecture business ID. Retain this ID AND PrefectureName in every municipality ranking table, even if the user only asks for municipality codes."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "PrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "DonationCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Count over ALL static-snapshot donations, not a JST-calendar-year subset. Count ties use MunicipalityId."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "AmountYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Total yen over ALL static-snapshot donations. The label 2025 seed does not filter dates."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "AmountRank"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_municipality_snapshot",
+          "RegisteredMunicipalitiesInPrefecture"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Full registered municipality population for this prefecture, independent of TOP/sample and DonationCount. Required for count-plus-sample questions. Read once or MAX; never SUM."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric"
+        ],
+        "type": "lakehouse_tables.view",
+        "description": "One existing stored recipient-prefecture/category metric. The actual PrefCategoryMetricId, names, count and yen are joined to the two source-declared relationship names and directions. Never infer or reverse those declared directions from foreign keys."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "PrefCategoryMetricId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "PrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "PrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "CategoryId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "CategoryName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "DonationCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "AmountYen"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "PrefectureMetricRelationship"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "PrefectureMetricDeclaredFrom"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "PrefectureMetricDeclaredTo"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "MetricCategoryRelationship"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "MetricCategoryDeclaredFrom"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_prefecture_category_metric",
+          "MetricCategoryDeclaredTo"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_relationship_dictionary"
+        ],
+        "type": "lakehouse_tables.view",
+        "description": "Exact declared relationship names and source/target entity types mirrored from the verified static Ontology definition. These are declared arrows, not SQL foreign-key dependency directions. Refresh only after rechecking the source Ontology."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_relationship_dictionary",
+          "RelationshipName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_relationship_dictionary",
+          "DeclaredFromEntity"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_relationship_dictionary",
+          "DeclaredToEntity"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog"
+        ],
+        "type": "lakehouse_tables.view",
+        "description": "One unique supplier/gift catalog pair, with type and prefecture. CatalogGiftCount is the whole supplier catalog count, independent of TOP. No donation money, revenue or actual fulfillment."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "SupplierId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "SupplierName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "SupplierType"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar",
+        "description": "Source-owned supplier business type. Include together with supplier ID/name and prefecture ID/name in catalog answers."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "PrefectureId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Supplier prefecture ID. Retain it with PrefectureName even for a catalog-count/sample question."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "PrefectureName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "GiftId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Catalog gift join key. To answer a specific DonationId's suppliers, first read agent_donation_detail.GiftId and filter/join THIS column. The absence of DonationId here does not mean the catalog link is unavailable."
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "GiftName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "CategoryId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "CategoryName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "dbo",
+          "Views",
+          "agent_supplier_catalog",
+          "CatalogGiftCount"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint",
+        "description": "Total number of gifts in this supplier's whole catalog, computed before any TOP or filter. It is NOT the number of registrations of one particular gift: each supplier/gift pair appears exactly once."
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze"
+        ],
+        "type": "lakehouse_tables.schema"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables"
+        ],
+        "type": "table_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Duplicate-inclusive raw input rows for the actual Notebook05 _AnalyticsGenerationId, with CSV file/run/alias and processing BatchId. Physically distinct from Eventhouse observations."
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw",
+          "EventID"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw",
+          "WorkshopRunId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw",
+          "ParticipantAlias"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw",
+          "SourceFile"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw",
+          "BatchId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "bronze",
+          "Tables",
+          "donation_events_raw",
+          "_AnalyticsGenerationId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops"
+        ],
+        "type": "lakehouse_tables.schema"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables"
+        ],
+        "type": "table_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "analytics_publish_control"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Unique Notebook05 publication control. Ready State plus actual GenerationId and processing RunId gate quality counts. Processing RunId is distinct from CSV WorkshopRunId."
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "analytics_publish_control",
+          "ControlKey"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "analytics_publish_control",
+          "RunId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "analytics_publish_control",
+          "State"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "analytics_publish_control",
+          "GenerationId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "One source-evaluated quality rule per processing run/generation. ActualValue and Status are observed rule results, not necessarily rejected-row counts; overlapping rules are not additive."
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results",
+          "RunId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results",
+          "RuleName"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results",
+          "Severity"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results",
+          "ActualValue"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "bigint"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results",
+          "Status"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "ops",
+          "Tables",
+          "dq_rule_results",
+          "_AnalyticsGenerationId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine"
+        ],
+        "type": "lakehouse_tables.schema"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables"
+        ],
+        "type": "table_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Rejected rows for the actual Notebook05 generation. Count rows for quarantine; RejectReason may contain overlapping flags. This is the source of actual quarantine count, never an Eventhouse/Gold difference."
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "EventID"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "WorkshopRunId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "ParticipantAlias"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "SourceFile"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "BatchId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "RejectReason"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "quarantine",
+          "Tables",
+          "donation_events_rejected",
+          "_AnalyticsGenerationId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver"
+        ],
+        "type": "lakehouse_tables.schema"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables"
+        ],
+        "type": "table_grouping"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event"
+        ],
+        "type": "lakehouse_tables.table",
+        "description": "Accepted quality-processed increment rows for the actual Notebook05 generation. Count this table for accepted events, preserving requested CSV file/run/alias scope."
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event",
+          "EventID"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event",
+          "WorkshopRunId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event",
+          "ParticipantAlias"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event",
+          "SourceFile"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event",
+          "BatchId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      },
+      {
+        "path": [
+          "Schemas",
+          "silver",
+          "Tables",
+          "donation_event",
+          "_AnalyticsGenerationId"
+        ],
+        "type": "lakehouse_tables.column",
+        "dataType": "varchar"
+      }
+    ],
+    "kusto": [
+      {
+        "path": [
+          "Materialized Views"
+        ],
+        "type": "kusto",
+        "description": "Selected Eventhouse KQL materialized views."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent"
+        ],
+        "type": "kusto.table",
+        "description": "Curated operational aggregates that exclude Donation, Donor, Gift, Supplier, payment, fulfillment, approval, deduplication, and lifecycle identifiers or state."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "MunicipalityID"
+        ],
+        "type": "kusto.column",
+        "dataType": "string",
+        "description": "Recipient Municipality identifier for the grouped operational observations."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "EventMinute"
+        ],
+        "type": "kusto.column",
+        "dataType": "datetime",
+        "description": "One-minute time bucket for the grouped operational observations."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "WorkshopRunId"
+        ],
+        "type": "kusto.column",
+        "dataType": "string",
+        "description": "Unique workshop publication run identifier."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "ParticipantAlias"
+        ],
+        "type": "kusto.column",
+        "dataType": "string",
+        "description": "Short participant alias for the workshop run."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "SourceFile"
+        ],
+        "type": "kusto.column",
+        "dataType": "string",
+        "description": "Workshop publisher or source-file label."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "ObservationCount"
+        ],
+        "type": "kusto.column",
+        "dataType": "long",
+        "description": "Number of operational observations represented by this aggregate row; sum this column for observation totals."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "ObservedAmountYen"
+        ],
+        "type": "kusto.column",
+        "dataType": "long",
+        "description": "Total incoming observed amount in Japanese yen represented by this aggregate row; sum this column for amount totals."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "FirstObservedAt"
+        ],
+        "type": "kusto.column",
+        "dataType": "datetime",
+        "description": "Earliest operational event timestamp represented by this aggregate row."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "LastObservedAt"
+        ],
+        "type": "kusto.column",
+        "dataType": "datetime",
+        "description": "Latest operational event timestamp represented by this aggregate row."
+      },
+      {
+        "path": [
+          "Materialized Views",
+          "DonationObservationSummaryForAgent",
+          "LastPublishedAtUtc"
+        ],
+        "type": "kusto.column",
+        "dataType": "datetime",
+        "description": "Latest UTC timestamp when the workshop publisher sent an observation represented by this aggregate row."
+      }
+    ]
+  }
+}

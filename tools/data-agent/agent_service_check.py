@@ -1,8 +1,10 @@
-"""Read-only Data Agent service checks through the public management API.
+"""Read-only Data Agent checks through public and optional native context APIs.
 
 Lists each data source's example queries with the service ``validationStatus``
 and walks the service's element tree to report SQL views (state, selection,
-columns). Nothing is written to the Agent. Raw responses go to a private root
+columns). The separate native Ontology collection requires an explicitly supplied, observed
+capacity origin; three generic datasources never establish Ontology absence or
+readiness. Nothing is written to the Agent. Raw responses go to a private root
 outside Git; stdout carries counts, names and redacted reasons only.
 
     python -B tools/data-agent/agent_service_check.py --private-root <dir> \
@@ -20,16 +22,19 @@ import argparse
 import json
 import re
 import sys
+import time
 from collections import Counter
 from pathlib import Path
 from typing import Any, Callable
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
+from uuid import UUID
 
 from native_evaluation import EvaluationError, PrivateStore, now_utc
 
 API = "https://api.fabric.microsoft.com"
 SCOPE = "https://api.fabric.microsoft.com/.default"
-HOST = re.compile(r"\b[\w.-]+\.fabric\.microsoft\.com\b")
+NATIVE_SCOPE = "https://analysis.windows.net/powerbi/api/.default"
+HOST = re.compile(r"\b[\w.-]+\.(?:fabric\.microsoft\.com|pbidedicated\.windows\.net|analysis\.windows\.net)\b")
 GUID = re.compile(r"\b[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b")
 
 
@@ -97,10 +102,110 @@ def expected_columns(rows: list[dict[str, str]]) -> dict[str, set[str]]:
     return result
 
 
+
+def native_base(origin: str, capacity: str, workspace: str) -> str:
+    """Use an operator-observed first-party capacity origin; never discover or guess it."""
+    capacity, workspace = str(UUID(capacity)), str(UUID(workspace))
+    parsed = urlsplit(origin)
+    if (parsed.scheme != "https" or parsed.netloc != capacity.replace("-", "") + ".pbidedicated.windows.net"
+            or parsed.path not in {"", "/"} or parsed.query or parsed.fragment):
+        raise EvaluationError("Supply the observed HTTPS origin for the exact capacity; no arbitrary host or path.")
+    return (origin.rstrip("/") + f"/webapi/capacities/{capacity}/workloads/ML/DataAgent/Automatic/v1"
+            f"/workspaces/{workspace}")
+
+
+def ontology_context_check(
+    get: Callable[[str], dict[str, Any]], workspace: str, agent: str, stage: str,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Capture current UI GET contracts, retaining failed endpoints and empty contexts."""
+    if stage not in {"published", "staging"}:
+        raise EvaluationError("Choose staging or published explicitly.")
+    base = f"/dataagents/{agent}" + ("/staging" if stage == "staging" else "") + "/ontologies"
+    raw = {"collection": get(base), "registrations": []}
+    summary = {"checked": True, "collectionHttpStatus": raw["collection"].get("httpStatus"),
+               "registeredCount": None, "ready": False, "registrations": [],
+               "answerAccuracyVerified": False}
+    collection = raw["collection"]
+    body = collection.get("body")
+    if (collection.get("httpStatus") != 200 or not isinstance(body, dict)
+            or not isinstance(body.get("value"), list) or body.get("continuationToken") or body.get("continuationUri")):
+        summary["reason"] = "Collection failed or its shape/pagination requires review."
+        return summary, raw
+    rows = body["value"]
+    summary["registeredCount"] = len(rows)
+    seen = set()
+    for row in rows:
+        ref = row.get("ontologyReference", {}) if isinstance(row, dict) else {}
+        identity_valid = (isinstance(row, dict) and isinstance(ref, dict) and ref.get("referenceType") == "ById"
+            and ref.get("workspaceId") == workspace and ref.get("itemId") == row.get("id"))
+        try:
+            identity = str(UUID(row["id"])) if identity_valid else None
+        except (KeyError, ValueError, TypeError, AttributeError):
+            identity = None
+        if identity is None or identity in seen:
+            summary["registrations"].append({"ready": False, "reason": "Foreign, duplicate or malformed registration; not followed."})
+            continue
+        seen.add(identity)
+        probes = {}
+        for key, suffix in (("registration", ""), ("configuration", "/configuration"),
+                ("elements", "/elements"), ("derivedSources", "/ontologydatasources"),
+                ("contextMarkdown", "/contextmarkdown")):
+            probes[key] = get(base + "/" + identity + suffix)
+        raw["registrations"].append({"registration": row, "probes": probes})
+        def successful(key):
+            record = probes[key]
+            return record.get("body") if record.get("httpStatus") == 200 else None
+        registration, config = successful("registration"), successful("configuration")
+        elements, derived = successful("elements"), successful("derivedSources")
+        markdown = successful("contextMarkdown")
+        documents = config.get("documents", []) if isinstance(config, dict) else []
+        element_rows = elements.get("value", []) if isinstance(elements, dict) else []
+        derived_rows = derived.get("value", []) if isinstance(derived, dict) else []
+        def available_derived(item):
+            if not isinstance(item, dict) or item.get("type") not in {"Lakehouse", "Eventhouse", "SemanticModel"}:
+                return False
+            ref = item.get("itemReference") or {"referenceType": "ById", "itemId": item.get("id"),
+                                                "workspaceId": item.get("workspaceId")}
+            if not isinstance(ref, dict):
+                return False
+            try:
+                identity = str(UUID(ref.get("itemId")))
+            except (ValueError, TypeError, AttributeError):
+                return False
+            return (ref.get("referenceType") == "ById" and identity == ref.get("itemId", "").lower()
+                    and ref.get("workspaceId") == workspace and item.get("state") == "Available")
+        checks = {
+            "availableState": row.get("state") == "Available",
+            "sameAvailableRegistration": isinstance(registration, dict)
+                # Actual individual GET omits state; collection must still be Available.
+                and ("state" not in registration or registration["state"] == "Available")
+                and all(registration.get(k) == row.get(k) for k in ("id", "displayName", "ontologyReference")),
+            "nonemptyConfiguration": isinstance(documents, list) and any(isinstance(d, dict)
+                and isinstance(d.get("content"), str) and d["content"].strip() for d in documents),
+            "nonemptyElements": isinstance(element_rows, list) and bool(element_rows)
+                and all(isinstance(item, dict) and isinstance(item.get("id"), str) and item["id"].strip()
+                        for item in element_rows)
+                and not elements.get("continuationToken") and not elements.get("continuationUri"),
+            "nonemptyAvailableDerivedSources": isinstance(derived_rows, list) and bool(derived_rows)
+                and all(available_derived(item) for item in derived_rows)
+                and not derived.get("continuationToken") and not derived.get("continuationUri"),
+            "nonemptyContextMarkdown": isinstance(markdown, str) and bool(markdown.strip()),
+        }
+        summary["registrations"].append({"displayName": row.get("displayName"), "state": row.get("state"),
+            "httpStatuses": {k: v.get("httpStatus") for k, v in probes.items()},
+            "checks": checks, "ready": all(checks.values())})
+    summary["ready"] = bool(rows) and all(entry["ready"] for entry in summary["registrations"])
+    return summary, raw
+
+
 def check(
     get: Callable[[str], dict[str, Any]], workspace: str, agent: str, stage: str,
     expected: dict[str, set[str]] | None,
+    native_get: Callable[[str], dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
+    if stage not in {"published", "staging"}:
+        raise EvaluationError("Choose staging or published explicitly.")
+    # The public SDK uses the root resource for Published; only Draft has /staging.
     base = f"/v1/workspaces/{workspace}/dataAgents/{agent}" + ("/staging" if stage == "staging" else "")
     raw: dict[str, Any] = {"stage": stage, "datasources": paged(get, f"{base}/datasources")}
     summary: dict[str, Any] = {"stage": stage, "checkedAtUtc": now_utc(), "datasources": []}
@@ -119,6 +224,13 @@ def check(
         if any(n.get("type") == "View" for n in tree):
             entry.update(summarize_views(tree, expected))
         summary["datasources"].append(entry)
+    summary["publicDatasourceCount"] = len(raw["datasources"])
+    summary["ontologyContext"] = {"checked": False, "registeredCount": None, "ready": None,
+        "reason": "Separate native Ontology context was not checked; generic datasource count is insufficient."}
+    summary["answerAccuracyVerified"] = False
+    if native_get is not None:
+        summary["ontologyContext"], raw["ontologyContext"] = ontology_context_check(
+            native_get, workspace, agent, stage)
     return summary, raw
 
 
@@ -129,7 +241,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--agent-id", required=True)
     parser.add_argument("--stage", choices=["published", "staging"], default="published")
     parser.add_argument("--view-columns", type=Path, help="Private INFORMATION_SCHEMA.COLUMNS JSON list.")
+    parser.add_argument("--native-origin", help="Observed first-party capacity HTTPS origin; paired with --capacity-id.")
+    parser.add_argument("--capacity-id", help="Actual capacity GUID for the observed native origin.")
     args = parser.parse_args(argv)
+    if bool(args.native_origin) != bool(args.capacity_id):
+        parser.error("--native-origin and --capacity-id must be supplied together.")
+    # Validate every identity/origin before authentication.
+    args.workspace_id, args.agent_id = str(UUID(args.workspace_id)), str(UUID(args.agent_id))
+    observed_base = native_base(args.native_origin, args.capacity_id, args.workspace_id) if args.native_origin else None
     store = PrivateStore(args.private_root)
     expected = None
     if args.view_columns:
@@ -137,21 +256,46 @@ def main(argv: list[str] | None = None) -> int:
     import requests
     from azure.identity import AzureCliCredential
 
-    token = AzureCliCredential().get_token(SCOPE).token
+    stamp = str(time.time_ns())
+    native_index = 0
+    credential = AzureCliCredential()
+    token = credential.get_token(SCOPE).token
     session = requests.Session()
     session.headers["Authorization"] = f"Bearer {token}"
 
     def get(path: str) -> dict[str, Any]:
-        response = session.get(API + path, timeout=60)
+        response = session.get(API + path, timeout=60, allow_redirects=False)
         if response.status_code != 200:
             raise EvaluationError(f"GET failed with HTTP {response.status_code}.")
         return response.json()
 
+    def get_native(path: str) -> dict[str, Any]:
+        nonlocal native_index
+        native_index += 1
+        receipt = {"method": "GET", "path": path, "checkedAtUtc": now_utc()}
+        try:
+            native_token = credential.get_token(NATIVE_SCOPE).token
+            with session.get(observed_base + path, headers={"Authorization": "Bearer " + native_token,
+                    "x-ms-workload-resource-moniker": args.agent_id, "x-ms-mlflow-artifact-name": "mlexperiment"},
+                    timeout=(20, 120), allow_redirects=False) as response:
+                # Native 502/SchemaUnavailable responses are observations, not successful readiness.
+                safe_text = response.text.replace(native_token, "[REDACTED_BEARER]").replace(token, "[REDACTED_BEARER]")
+                try:
+                    body = json.loads(safe_text)
+                except ValueError:
+                    body = safe_text
+                receipt.update(httpStatus=response.status_code, body=body)
+        except Exception as error:
+            receipt.update(httpStatus=None, exceptionType=type(error).__name__)
+        finally:
+            store.write(f"agent-service-check/{args.stage}-{stamp}-native-{native_index:03d}.json", receipt)
+        return receipt
+
     try:
-        summary, raw = check(get, args.workspace_id, args.agent_id, args.stage, expected)
+        summary, raw = check(get, args.workspace_id, args.agent_id, args.stage, expected,
+                             get_native if observed_base else None)
     finally:
         session.close()
-    stamp = summary["checkedAtUtc"].replace(":", "").replace("-", "")[:15]
     store.write(f"agent-service-check/{args.stage}-{stamp}-raw.json", raw)
     store.write(f"agent-service-check/{args.stage}-{stamp}-summary.json", summary)
     print(json.dumps(summary, ensure_ascii=False, indent=2))

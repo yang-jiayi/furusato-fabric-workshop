@@ -72,7 +72,7 @@ def lifecycle(args: Any, *, start: bool) -> dict[str, Any]:
 def deliver_increment(args: Any) -> dict[str, Any]:
     from activation_runtime import PrivateStore, put_complete_increment
     d = Deployment(args)
-    _, rule_id = _targets(d, require_delivery_ready=True)
+    activator, rule_id = _targets(d, require_delivery_ready=True)
     number = getattr(args, "increment", None)
     if number not in {1, 2, 3}:
         raise SafetyError("Select exactly one increment (1, 2, or 3).")
@@ -95,10 +95,12 @@ def deliver_increment(args: Any) -> dict[str, Any]:
     details = d.client.request("GET", d.prefix + f"/lakehouses/{lh['id']}").json()
     raw = (BASE / "data/increment" / filename).read_bytes()
     sha = hashlib.sha256(raw).hexdigest()
+    from preview30_activation_readiness import capture_readiness
+    readiness = capture_readiness(d, activator, rule_id)
     private = d.evidence / "increments" / filename
     save(private / "jobs-before.json", before)
     deliveries[filename] = {"state": "pending", "timestampUtc": now(), "ruleId": rule_id,
-                            "sha256": sha, "bytes": len(raw)}
+                            "sha256": sha, "bytes": len(raw), "backendReadiness": readiness}
     d.checkpoint()
     result = put_complete_increment(
         one_lake_files_path=details["properties"]["oneLakeFilesPath"],
@@ -186,3 +188,11 @@ def verify_delivery(args: Any) -> dict[str, Any]:
     d.state["incrementDeliveries"][filename].update({"state": result["state"], "verification": result})
     d.checkpoint()
     return result
+
+
+def check_readiness(args: Any) -> dict[str, Any]:
+    """Read-only backend capture; does not create a watched file."""
+    from preview30_activation_readiness import capture_readiness
+    d = Deployment(args)
+    activator, rule_id = _targets(d, require_delivery_ready=True)
+    return capture_readiness(d, activator, rule_id)

@@ -6,11 +6,11 @@
 
 [参加者用手順書（Word）](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [参加者用手順書（日英HTML）](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
-[参加者用パッケージ（Notebook・CSVを含む）](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261010.zip) ·
+[参加者用パッケージ（Notebook・CSVを含む）](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261015.zip) ·
 [構成・検証結果](docs/v3.0.0/current/README.md) ·
 [Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
-[修正版Agent profile](workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md)
+[採用済みAgent profile](workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
 
 | 版の種類 | 値 | 意味 |
 |---|---|---|
@@ -19,26 +19,23 @@
 | 再利用する処理基線 | `2.7.0` | [`VERSION`](VERSION)は既存ツール用の基線識別子 |
 | CSVデータ仕様 | `2.7.0-realistic.1` | 値・行数・hashを維持する不変の合成データ契約 |
 
-現行の標準構成は、指定フォルダ内の **Ontology 1件・Data Agent 1件**です。
-Gen2 Ontologyのconsumerが対応しない場合は、実エラーと未完了の演習を記録します。
-別の互換Ontologyを追加して標準構成を増やす手順は採りません。
+**2026-10-15 再配置・実回答評価:** 指定した旧フォルダーを空にし、新フォルダーに18アイテムを配置しました。
+構成は **Ontology 1件・Data Agent 1件**です。AgentはLakehouse・KQL Database・Semantic Modelの3つの通常ソースと、同じOntologyへの独立したcontext登録を使います。
 
-**2026-10-10 教材整合版:** 実回答で確認したSQL・時刻・DAXフィルターの対策を、
-可搬profile、参加者用Word・日英HTML、Notebookの同梱資産、校正手順へそろえました。
-同じ219条件の比較は **111/219 (50.68%) → 162/219 (73.97%)、+23.29ポイント**です。
-後続のSQL修正は限定19条件、実メジャー定義の説明修正は限定4条件でPASSを確認しました。
-最新の後続修正を含む全51質問の再評価は行っていません。全質問への正答保証やnative機能の合格を意味しません。
+同じ条件で対応付けた281条件の補助条件充足率は189/281（67.26%）から217/281（77.22%）へ9.96ポイント上がりました。既定の確認質問分岐の9条件だけを両側から除外しています。厳密な受理1件→2件はすべて確認質問で、ソース照会を伴う完成回答の厳密な受理は両方0件です。
+補助条件充足率は回答要素・見出し・ソース経路も含み、全文章の事実正確性や因果的な改善保証とは異なります。
+固定条件外の誤った補足説明、Ontology consumerのSchemaUnavailable、native実行証拠の不足を残件として記録しています。
+3ファイルの自動取り込みとReportの公式埋め込み描画は検証済みです。Time Seriesの設定とnative実行確認、Ontology Metricsは区別します。
 
-[検証した改善・残件・評価方法](docs/v3.0.0/tuning-20261010/README.md) ·
-[チューニングと資料の校正手順](docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md) ·
-[現行成果物と再生成](docs/v3.0.0/current/README.md)
+[作業・実測レポート](docs/v3.0.0/tuning-20261015/README.md) ·
+[校正手順（Markdown）](docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md) ·
+[校正手順（Word）](docs/v3.0.0/tuning-20261015/calibration-and-proofreading.docx) ·
+[校正手順（日英HTML）](docs/v3.0.0/tuning-20261015/calibration-and-proofreading.html)
 
-The standard route keeps **one Ontology and one Data Agent** in the specified folder.
-The current portable profile and paired participant guides incorporate measured SQL,
-time-conversion and source-owned DAX improvements. The matched 219-condition comparison
-increased from **50.68% to 73.97% (+23.29 percentage points)**. Later targeted checks
-remain separate; the latest profile has not undergone a complete 51-question rerun.
-Native Ontology consumer, model-schema exposure and UI-only features retain their limits.
+The redeployment contains 18 items, including **one Ontology and one Data Agent**. The Agent has three ordinary sources plus separate context for that same Ontology.
+Supplemental condition fulfillment on 281 matched conditions rose from 189/281 (67.26%) to 217/281 (77.22%), a 9.96 percentage-point difference. Only nine predeclared clarification-branch conditions were excluded symmetrically. Strict acceptance changed from one to two clarification responses; neither phase had a strictly accepted completed source-query answer.
+Supplemental condition fulfillment includes answer completeness and source routes. It does not guarantee every sentence or establish a causal tuning effect.
+Ontology-consumer and native-evidence limits remain explicit alongside verified automatic ingestion and official Report rendering.
 
 <details>
 <summary>過去の検証記録・v2.7比較資料 / Historical evaluations and retained v2.7 reference</summary>

@@ -1,161 +1,66 @@
 {
-  "schemaVersion": "furusato-v3-current-verification/v1",
-  "date": "2026-10-10",
+  "schemaVersion": "furusato-v3-current-verification/v2",
+  "date": "2026-10-15",
   "timeZone": "Asia/Tokyo",
-  "projectedAtUtc": "2026-10-09T21:33:21.416842+00:00",
   "workshopVersion": "3.0.0",
-  "sourceCommit": "a93899fc4209976aee77f79dcf1c1288415ff7ac",
-  "artifactSetSha256": "efaa2e4daf3537c5c501d6538d023dd0414317ba396513155e92091d847c3cc0",
-  "sourceTreeSha256": "b809360e7f47316213f53e64a360a527cfdf896bc09b4211114dcbd0ea7e20fa",
+  "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
+  "artifactSetSha256": "7abd339724375ed536308f434d9fff5b52afa320fcfd4ccf28c41228071ca5fb",
+  "sourceTreeSha256": "725e596279572458e71d58166b7da35e3ace8ce27bca3e782e513c4e57ef786a",
+  "sourceArtifacts": 371,
   "gitBlobParityVerified": true,
-  "sourceArtifacts": 345,
-  "notebooksAligned": 5,
-  "csvFilesUnchanged": 11,
-  "wordPages": null,
-  "wordNavigation": "headings",
-  "microsoftWordFieldRefreshPerformed": false,
-  "microsoftWordLayoutVerified": false,
-  "documentChecks": {
-    "PASS": 152,
-    "FAIL": 0
+  "correctedAgentProfile": "measured-contract-20261015",
+  "portablePublishedParity": {
+    "allDecodedPublishedPartsEqualPortableProfile": true,
+    "nativeOntologyRawPartAndMetadataPreserved": true,
+    "allSourceSelectionsAndKqlExamplesExact": true,
+    "freshPostNotebookSyncReviewSha256": "80cc8595c3b5fb1d6b3343e14e507f276de23adc013a0d5e74faae8796dd208b"
   },
-  "documentStats": {
-    "externalLinks": [
-      "https://learn.microsoft.com/en-us/fabric/data-engineering/how-to-use-notebook",
-      "https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview",
-      "https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs",
-      "https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent",
-      "https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-add-metadata",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-bind-data",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-entity-types",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-relationship-types",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-generate-from-semantic-models",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-reuse-properties",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-inheritance",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-metrics",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-namespaces",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-rules",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history",
-      "https://learn.microsoft.com/en-us/fabric/iq/ontology/overview",
-      "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction",
-      "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"
-    ],
-    "html-ja": {
-      "pages": 100,
-      "blankPages": [],
-      "captionOnlyPages": [],
-      "clippedText": [],
-      "kinsokuLeading": []
-    },
-    "html-en": {
-      "pages": 102,
-      "blankPages": [],
-      "captionOnlyPages": [],
-      "clippedText": [],
-      "kinsokuLeading": []
-    }
-  },
-  "libreOfficeRendering": {
-    "scope": "Actual final-Word LibreOffice PDF conversion, text, page geometry, fonts and page raster equivalence; does not verify Microsoft Word pagination or rendering",
-    "pages": 99,
-    "wordSha256": "1646983871e70946884a5303705ca7c6a7e9f846e0171746d21d4f51be6708c4",
-    "pdfSha256": "4384602de90f55d120fb598f90805032bb090f2d4aa7719db351d96bc1657216",
-    "auditSha256": "2066bf947aa798fe84cd3b2e9a0905cb9fb83878cf518159b9aedb8b3ec82bb2",
-    "nonemptyParagraphAndTableCellTexts": 1877,
-    "missingTextCount": 0,
-    "blankPages": [],
-    "outsidePageText": [],
-    "replacementCharacterPages": [],
-    "visualInspection": {
-      "status": "PASS",
-      "scope": "Final PDF directly re-inspected on changed selected pages 37 and 56 plus highest-raster-difference pages 16 and 87. Prior review of the other eight selected pages reused after exact pixel equivalence at 72 DPI and byte-identical final Word layout/media parts were proven.",
-      "pages": [
-        1,
-        2,
-        16,
-        37,
-        55,
-        56,
-        57,
-        60,
-        61,
-        62,
-        87,
-        96
-      ],
-      "directFinalPdfPages": [
-        16,
-        37,
-        56,
-        87
-      ],
-      "pixelIdenticalPriorReviewedPages": [
-        1,
-        2,
-        55,
-        57,
-        60,
-        61,
-        62,
-        96
-      ],
-      "priorAuditSha256": "1da5e5725d8e691d09c9fbf5226d0eb9b711d233507235c79300df03cbcad0c1",
-      "checks": [
-        "Japanese glyphs and Noto CJK body text readable",
-        "29-entry contents fits one page and all PDF destinations are valid",
-        "Source-owned KEEPFILTERS definitions readable on final page 37",
-        "Measured source-selection guidance readable on pages 55–57",
-        "Correct calibration-and-proofreading.md path wraps within final page 61",
-        "Evaluation table continuation repeats headers and complete rows on pages 61–62",
-        "Entity table and original evaluation/record tables readable on final pages 16 and 87",
-        "Appendix D multi-row Japanese table readable on final page 96"
-      ],
-      "issues": []
-    },
-    "tableRows": 485,
-    "tableRowsWithUniqueTextAnchors": 285,
-    "tableRowsWithAnchorsOnMultiplePages": [],
-    "microsoftWordLayoutVerified": false,
-    "finalPublicationProof": {
-      "actualLibreOfficeReconversionPerformed": true,
-      "changedDocxParts": [
-        "docProps/core.xml"
-      ],
-      "allWordLayoutAndMediaPartsByteIdentical": true,
-      "pagesWithExactPriorTextAndCharacterGeometry": 99,
-      "priorAuditSha256": "e1cdc756fe2abc0d3d9a51d651c66fd71a0d7d002a0d1f21aafe4ebde8bc57ee",
-      "finalVisualPages": [
-        37,
-        56,
-        61
-      ],
-      "finalVisualInspectionPending": false,
-      "finalVisualInspection": "PASS: final pages 37/56/61 have readable Japanese, code/table text, screenshots and calibration path"
-    }
-  },
-  "correctedAgentProfile": "measured-contract-20261009",
-  "portableDraftCompiledAgainstActualNativeMetadata": true,
-  "portableDraftIsDestinationPublicationOrAcceptance": false,
   "standardConfiguration": {
-    "ontologies": 1,
-    "dataAgents": 1,
-    "tempFolders": 0
-  },
-  "historicalCloudObservation": {
-    "dateUtc": "2026-10-09",
-    "deploymentSourceCommit": "fa103f0ff99d6259b9a208c924320908ae4a1b66",
     "activeItems": 18,
     "ontologies": 1,
     "dataAgents": 1,
-    "latestPublishedPhase": "R11",
-    "publishedCanonicalDefinitionSha256": "7a6e94d9aa56b90f2bcd1b5f1560373d52842dd2c8c1c921e13d93a1e7d835f9",
-    "newCloudWritesOrAgentQuestionsDuringMaterialSync": false,
-    "materialSyncIsNewDeploymentVerification": false
+    "ordinarySources": [
+      "Lakehouse",
+      "KQLDatabase",
+      "SemanticModel"
+    ],
+    "ontologyContextRegistration": "same-single-ontology-separate-context"
+  },
+  "cloudObservation": {
+    "dateJst": "2026-10-15",
+    "oldFolderItems": 0,
+    "currentFolderItems": 18,
+    "recoverableItemsPurged": 9,
+    "publicRecycleBinItems": 0,
+    "nativeRecycleBinItems": 0,
+    "newDeploymentPerformed": true,
+    "automaticFilesVerified": 3,
+    "activatorStoppedAfterVerification": true,
+    "ontologyContextStatus": "SchemaUnavailable",
+    "staticDirectGqlChecksPassed": 25,
+    "physicalTimeSeriesBindingSavedAndReadBack": true,
+    "nativeTimeSeriesRuntimeVerdict": "inconclusive",
+    "nativeOntologyMetrics": 0,
+    "graphAfterTimeSeriesIncludesUnsupportedKqlAndDrift": true,
+    "officialEmbedReportRendered": true,
+    "reportDataVisualExports": 5,
+    "nativePortalUiTestPerformed": false,
+    "notebookDefinitionOnlyFinalSync": {
+      "readBackNotebooks": 5,
+      "definitionsAlreadyEqual": [
+        1,
+        5
+      ],
+      "definitionsUpdatedUnderSameItems": [
+        2,
+        3,
+        4
+      ],
+      "codeAndNativeMetadataVerified": true,
+      "notebookJobsSubmitted": 0,
+      "publicGeneratedCodeEqualsCloudReadback": true,
+      "publicBuildParitySha256": "0fb3152ee5c65ed6a74f3e69c46ac0c4e509adb3757962bdb4556e835b82263d"
+    }
   },
   "data": {
     "staticRows": 80000,
@@ -166,191 +71,634 @@
     "acceptedYen": 252058000,
     "quarantinedRows": 100,
     "goldRows": 94900,
-    "goldYen": 1596157000,
-    "populationsChangedByMaterialSync": false
-  },
-  "graph": {
-    "entities": 109592,
-    "directedRelationships": 297303,
-    "directGqlChecksPassed": 25,
-    "directGraphSuccessProvesDataAgentConsumerCompatibility": false
+    "goldYen": 1596157000
   },
   "answerEvaluation": {
+    "source": "../tuning-20261015/result-20261015.json",
+    "summarySha256": "935191c15a9a8505c2f7bf880f64f17d483210c5654331b058a86ccdb148e64c",
     "method": {
-      "judgmentType": "Codex supplemental content review against fixed conditions and source evidence",
+      "contentReview": "Codex supplemental review with separate independent Codex review",
       "independentHumanSignoff": false,
-      "strictNativeAcceptanceAssigned": false,
       "strictGradersChanged": false,
       "originalVerdictsPreserved": true,
-      "favorableRetrySelection": false,
-      "businessPopulationsUnchanged": true,
-      "transportSettingsMixedAtBaseline": true,
-      "causalEffectIsolatedFromCaptureAvailability": false,
-      "latestPublishedRevision": "R11",
-      "latestFull51Retested": false
+      "causalImprovementGuaranteed": false,
+      "platformWideBugFixClaimed": false,
+      "knownPostCountIsSeparateFromConsumedSlotUpperBound": true
     },
-    "matchedOriginal": {
-      "conditions": 219,
-      "baseline": {
-        "PASS": 111,
-        "FAIL": 108,
-        "passPercent": 50.68
-      },
-      "R8": {
-        "PASS": 162,
-        "FAIL": 57,
-        "passPercent": 73.97
-      },
-      "deltaPercentagePoints": 23.29,
-      "exclusionsFromBothPhases": {
-        "baselineClarificationNotApplicable": 9,
-        "changedApprovedSourceAvailabilityPremise": 24
-      },
-      "original252JudgmentsModified": false
-    },
-    "regression": {
-      "questions": 19,
-      "conditions": 38,
-      "unclearIncludedInDenominator": true,
-      "baseline": {
-        "registeredConditions": 38,
-        "PASS": 17,
-        "FAIL": 18,
-        "UNCLEAR": 3,
-        "NA": 0,
-        "applicableConditions": 38,
-        "passPercent": 44.74
-      },
-      "R8": {
-        "registeredConditions": 38,
-        "PASS": 30,
-        "FAIL": 7,
-        "UNCLEAR": 1,
-        "NA": 0,
-        "applicableConditions": 38,
-        "passPercent": 78.95
-      }
-    },
-    "latestTargetedChecks": [
+    "formalRegisteredSlots": 112,
+    "phases": [
       {
-        "phase": "R9",
-        "questions": 4,
-        "conditions": {
-          "registeredConditions": 19,
-          "PASS": 19,
-          "FAIL": 0,
-          "UNCLEAR": 0,
-          "NA": 0,
-          "applicableConditions": 19,
-          "passPercent": 100.0
-        },
-        "captureStatuses": {
-          "completed": 3,
-          "evidence_incomplete": 1
-        },
-        "questionPOSTs": 4,
-        "knownTerminalResponses": 4,
-        "full51Retested": false
-      },
-      {
-        "phase": "R10",
-        "questions": 3,
-        "conditions": {
-          "registeredConditions": 6,
-          "PASS": 4,
-          "FAIL": 2,
-          "UNCLEAR": 0,
-          "NA": 0,
-          "applicableConditions": 6,
-          "passPercent": 66.67
-        },
-        "captureStatuses": {
+        "captureLedgerSha256": "4b6161e5f55140fe63c8146e074a90bb96c6622fb649f6ea91b45c08a87a49c1",
+        "captures": {
+          "cancelled": 0,
           "completed": 2,
-          "evidence_incomplete": 1
+          "failed": 0,
+          "incomplete": 0,
+          "knownTerminalResponses": 2,
+          "nativeRecordStatuses": {
+            "completed": 2
+          },
+          "notSubmitted": 0,
+          "questionPOSTs": 2,
+          "registeredQuestions": 2,
+          "responsesWithIncompleteEvidence": 1,
+          "responsesWithInternalErrors": 0,
+          "responsesWithSuccessfulSourceExecution": 1,
+          "retainedFailures": 0,
+          "strictNativeAcceptedResponses": 1,
+          "uncertainQuestionPOSTUpperBound": 0,
+          "unfinalizedCaptures": 0,
+          "unknownResponseStatus": 0
         },
-        "questionPOSTs": 3,
-        "knownTerminalResponses": 3,
-        "full51Retested": false
+        "collection": {
+          "captureTimeoutSeconds": 900,
+          "definitionTimeoutSeconds": 600,
+          "httpTimeoutSeconds": 300,
+          "newConversationPerQuestion": true,
+          "retryPolicy": "never-resubmit-consumed-slot"
+        },
+        "contentReviewLedgerSha256": "7b6bcebf804124cba67df63ae9af2e541731f3fc8a0c70f3dddacebe4eb5258c",
+        "groups": [
+          {
+            "conditions": 5,
+            "content": {
+              "FAIL": 1,
+              "NA": 0,
+              "PASS": 4,
+              "UNCLEAR": 0
+            },
+            "name": "qualification",
+            "questions": 2,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 3,
+              "NA": 0,
+              "PASS": 2,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "c79171c9118f977d4526aa5d321f9849b398cfa192add16efdd220159485af24"
+          }
+        ],
+        "independentContentReviewSha256": "17631f3e9e0a336d5a90e423adaf4d799df487415250fbcd731e40957ff41144",
+        "name": "qualification",
+        "phaseClosureSha256": "4b6161e5f55140fe63c8146e074a90bb96c6622fb649f6ea91b45c08a87a49c1",
+        "publicationDefinitionSha256": "a65f2e541a31ade0772dc84754595f0f82a3088b62029ac41a0de8b89039b6c8",
+        "sourceBusinessSha256": "33ee055cda88ae02c0145ab2a45877170563088e017afcf697051e9835047c53",
+        "sourceDefinitionSha256": "db74ef382d6de53a06fbbe696132adc267e8a7784952dd448fad35ae919125ec",
+        "strictNativeReviewLedgerSha256": "7b6bcebf804124cba67df63ae9af2e541731f3fc8a0c70f3dddacebe4eb5258c"
       },
       {
-        "phase": "R11",
-        "questions": 2,
-        "conditions": {
-          "registeredConditions": 4,
-          "PASS": 4,
-          "FAIL": 0,
-          "UNCLEAR": 0,
-          "NA": 0,
-          "applicableConditions": 4,
-          "passPercent": 100.0
+        "captureLedgerSha256": "f6650e2231a72ab06351231c0290b0436f845c590bb6215a6975020dddf114d7",
+        "captures": {
+          "cancelled": 0,
+          "completed": 50,
+          "failed": 0,
+          "incomplete": 0,
+          "knownTerminalResponses": 50,
+          "nativeRecordStatuses": {
+            "completed": 42,
+            "evidence_incomplete": 5,
+            "native_failure_captured": 3
+          },
+          "notSubmitted": 0,
+          "questionPOSTs": 50,
+          "registeredQuestions": 51,
+          "responsesWithIncompleteEvidence": 46,
+          "responsesWithInternalErrors": 6,
+          "responsesWithSuccessfulSourceExecution": 28,
+          "retainedFailures": 9,
+          "strictNativeAcceptedResponses": 1,
+          "uncertainQuestionPOSTUpperBound": 1,
+          "unfinalizedCaptures": 1,
+          "unknownResponseStatus": 0
         },
-        "captureStatuses": {
-          "completed": 2,
-          "evidence_incomplete": 0
+        "collection": {
+          "captureTimeoutSeconds": 900,
+          "definitionTimeoutSeconds": 600,
+          "httpTimeoutSeconds": 300,
+          "newConversationPerQuestion": true,
+          "retryPolicy": "never-resubmit-consumed-slot"
         },
-        "questionPOSTs": 2,
-        "knownTerminalResponses": 2,
-        "full51Retested": false
+        "contentReviewLedgerSha256": "413a36338d9ae114fa0e06f0d514b002779a85f0919e7f2e1f796c8dcc8b13e7",
+        "groups": [
+          {
+            "conditions": 252,
+            "content": {
+              "FAIL": 86,
+              "NA": 3,
+              "PASS": 163,
+              "UNCLEAR": 0
+            },
+            "naEligibilityEvidenceSha256": "b3a9f20ab33f007f7cb8f7bf10f3b738354f0ba35a5a55865196e8db6dc19ad5",
+            "name": "original",
+            "questions": 30,
+            "repetitions": 3,
+            "strictNativeConditions": {
+              "FAIL": 246,
+              "NA": 3,
+              "PASS": 3,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "368e972d374ff485e0ba01532e067e3b48153bae82319e8386a9481f3dd33a2e"
+          },
+          {
+            "conditions": 38,
+            "content": {
+              "FAIL": 4,
+              "NA": 0,
+              "PASS": 32,
+              "UNCLEAR": 2
+            },
+            "name": "regression",
+            "questions": 19,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 38,
+              "NA": 0,
+              "PASS": 0,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "69742c9f409cbacb7b35e0b4f5dc61a09e14ebc3f38a4ca600cc6ff1640232e5"
+          },
+          {
+            "conditions": 6,
+            "content": {
+              "FAIL": 1,
+              "NA": 0,
+              "PASS": 5,
+              "UNCLEAR": 0
+            },
+            "name": "heldout",
+            "questions": 2,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 6,
+              "NA": 0,
+              "PASS": 0,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "03deaa6c8a9025407b812c32a4d25a04d4cac514488ae33b3279a632eb9e7f96"
+          }
+        ],
+        "independentContentReviewSha256": "44b49dedf2ccb966ba47d5b05ae53ee3469e98b692383ea0b37981d52138b402",
+        "name": "baseline",
+        "phaseClosureSha256": "f6650e2231a72ab06351231c0290b0436f845c590bb6215a6975020dddf114d7",
+        "publicationDefinitionSha256": "a65f2e541a31ade0772dc84754595f0f82a3088b62029ac41a0de8b89039b6c8",
+        "sourceBusinessSha256": "33ee055cda88ae02c0145ab2a45877170563088e017afcf697051e9835047c53",
+        "sourceDefinitionSha256": "a6969830a0a73450ddc065c97751b99d3cde3267a9cec5c3712ceea286c30d57",
+        "strictNativeReviewLedgerSha256": "413a36338d9ae114fa0e06f0d514b002779a85f0919e7f2e1f796c8dcc8b13e7"
+      },
+      {
+        "captureLedgerSha256": "ff90802787e117bc23657df6e30ec1f7531ece22334149af5968899449ffcc2f",
+        "captures": {
+          "cancelled": 0,
+          "completed": 4,
+          "failed": 0,
+          "incomplete": 0,
+          "knownTerminalResponses": 4,
+          "nativeRecordStatuses": {
+            "completed": 4
+          },
+          "notSubmitted": 0,
+          "questionPOSTs": 4,
+          "registeredQuestions": 4,
+          "responsesWithIncompleteEvidence": 3,
+          "responsesWithInternalErrors": 0,
+          "responsesWithSuccessfulSourceExecution": 2,
+          "retainedFailures": 0,
+          "strictNativeAcceptedResponses": 0,
+          "uncertainQuestionPOSTUpperBound": 0,
+          "unfinalizedCaptures": 0,
+          "unknownResponseStatus": 0
+        },
+        "collection": {
+          "captureTimeoutSeconds": 900,
+          "definitionTimeoutSeconds": 600,
+          "httpTimeoutSeconds": 300,
+          "newConversationPerQuestion": true,
+          "retryPolicy": "never-resubmit-consumed-slot"
+        },
+        "contentReviewLedgerSha256": "3d9da9543927f2f435e8abf7beca969b8db999681e630f694c727a6614dd60bb",
+        "groups": [
+          {
+            "conditions": 33,
+            "content": {
+              "FAIL": 7,
+              "NA": 0,
+              "PASS": 26,
+              "UNCLEAR": 0
+            },
+            "name": "targeted",
+            "questions": 4,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 28,
+              "NA": 0,
+              "PASS": 5,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "c2e7030ca9bb545c3b6459dae161963de611bee46f6aa520f2502c7c4296f161"
+          }
+        ],
+        "independentContentReviewSha256": "0d6eb9b4d955dcb21399d9764477cad2ca389beb265b9152a54f41d021f4434f",
+        "name": "targeted-01",
+        "phaseClosureSha256": "ff90802787e117bc23657df6e30ec1f7531ece22334149af5968899449ffcc2f",
+        "publicationDefinitionSha256": "fd8c8659e88c2505a237debf8309ccfcebbd4f95441856f20ca3842d448c15b6",
+        "sourceBusinessSha256": "33ee055cda88ae02c0145ab2a45877170563088e017afcf697051e9835047c53",
+        "sourceDefinitionSha256": "d2e06787ec1e6b8a4e6839ef9e856812c6ebddbfe36b59db489935e74e3a6084",
+        "strictNativeReviewLedgerSha256": "3d9da9543927f2f435e8abf7beca969b8db999681e630f694c727a6614dd60bb"
+      },
+      {
+        "captureLedgerSha256": "76b0af1f80afc314ba5986d0392d134044e5ea4c1c96d6becbd6a45826cc8c08",
+        "captures": {
+          "cancelled": 0,
+          "completed": 4,
+          "failed": 0,
+          "incomplete": 0,
+          "knownTerminalResponses": 4,
+          "nativeRecordStatuses": {
+            "completed": 3,
+            "evidence_incomplete": 1
+          },
+          "notSubmitted": 0,
+          "questionPOSTs": 4,
+          "registeredQuestions": 4,
+          "responsesWithIncompleteEvidence": 4,
+          "responsesWithInternalErrors": 1,
+          "responsesWithSuccessfulSourceExecution": 3,
+          "retainedFailures": 1,
+          "strictNativeAcceptedResponses": 0,
+          "uncertainQuestionPOSTUpperBound": 0,
+          "unfinalizedCaptures": 0,
+          "unknownResponseStatus": 0
+        },
+        "collection": {
+          "captureTimeoutSeconds": 900,
+          "definitionTimeoutSeconds": 600,
+          "httpTimeoutSeconds": 300,
+          "newConversationPerQuestion": true,
+          "retryPolicy": "never-resubmit-consumed-slot"
+        },
+        "contentReviewLedgerSha256": "76631016ae355c33bf5b16124ba560e43ada96d6ee03344b92a6334571bb252c",
+        "groups": [
+          {
+            "conditions": 33,
+            "content": {
+              "FAIL": 3,
+              "NA": 0,
+              "PASS": 30,
+              "UNCLEAR": 0
+            },
+            "name": "targeted",
+            "questions": 4,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 33,
+              "NA": 0,
+              "PASS": 0,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "385f1da9a1d59b4d95fde431f68ec38f640931e455f1c999fc96fc8a14a38d7b"
+          }
+        ],
+        "independentContentReviewSha256": "3cbd9a8e45e3a8af384cf1c1b569af071cbfd1ff3810c03e8105cde6ded2313b",
+        "name": "targeted-02",
+        "phaseClosureSha256": "76b0af1f80afc314ba5986d0392d134044e5ea4c1c96d6becbd6a45826cc8c08",
+        "publicationDefinitionSha256": "a2205702f4c0d29334459bfd7e593fefc0961fd5e9418345f093f3ab07dc3112",
+        "sourceBusinessSha256": "33ee055cda88ae02c0145ab2a45877170563088e017afcf697051e9835047c53",
+        "sourceDefinitionSha256": "74a30bcf456d9bf2ffd4f9f41b93e0e82c02e7dbedbb770732dd99f3842fa026",
+        "strictNativeReviewLedgerSha256": "76631016ae355c33bf5b16124ba560e43ada96d6ee03344b92a6334571bb252c"
+      },
+      {
+        "captureLedgerSha256": "78f87cf6d6cc9f671767750c69094c4ff41b4777b6cca9ff447bb35147928d5f",
+        "captures": {
+          "cancelled": 0,
+          "completed": 51,
+          "failed": 0,
+          "incomplete": 0,
+          "knownTerminalResponses": 51,
+          "nativeRecordStatuses": {
+            "completed": 43,
+            "evidence_incomplete": 5,
+            "native_failure_captured": 3
+          },
+          "notSubmitted": 0,
+          "questionPOSTs": 51,
+          "registeredQuestions": 51,
+          "responsesWithIncompleteEvidence": 49,
+          "responsesWithInternalErrors": 5,
+          "responsesWithSuccessfulSourceExecution": 27,
+          "retainedFailures": 8,
+          "strictNativeAcceptedResponses": 2,
+          "uncertainQuestionPOSTUpperBound": 0,
+          "unfinalizedCaptures": 0,
+          "unknownResponseStatus": 0
+        },
+        "collection": {
+          "captureTimeoutSeconds": 900,
+          "definitionTimeoutSeconds": 600,
+          "httpTimeoutSeconds": 300,
+          "newConversationPerQuestion": true,
+          "retryPolicy": "never-resubmit-consumed-slot"
+        },
+        "contentReviewLedgerSha256": "290f2514db60306014c1779794f257430adf8cb634f06db33373a83e6fa5617a",
+        "groups": [
+          {
+            "conditions": 252,
+            "content": {
+              "FAIL": 63,
+              "NA": 6,
+              "PASS": 183,
+              "UNCLEAR": 0
+            },
+            "naEligibilityEvidenceSha256": "10d37e6281fc3c5f022624ea74b3e7c17fa401397acb60600437935e7e8ab255",
+            "name": "original",
+            "questions": 30,
+            "repetitions": 3,
+            "strictNativeConditions": {
+              "FAIL": 240,
+              "NA": 6,
+              "PASS": 6,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "368e972d374ff485e0ba01532e067e3b48153bae82319e8386a9481f3dd33a2e"
+          },
+          {
+            "conditions": 38,
+            "content": {
+              "FAIL": 1,
+              "NA": 0,
+              "PASS": 37,
+              "UNCLEAR": 0
+            },
+            "name": "regression",
+            "questions": 19,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 38,
+              "NA": 0,
+              "PASS": 0,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "69742c9f409cbacb7b35e0b4f5dc61a09e14ebc3f38a4ca600cc6ff1640232e5"
+          },
+          {
+            "conditions": 6,
+            "content": {
+              "FAIL": 1,
+              "NA": 0,
+              "PASS": 5,
+              "UNCLEAR": 0
+            },
+            "name": "heldout",
+            "questions": 2,
+            "repetitions": 1,
+            "strictNativeConditions": {
+              "FAIL": 6,
+              "NA": 0,
+              "PASS": 0,
+              "UNCLEAR": 0
+            },
+            "suiteSha256": "eb31d188818cd05274fb51ed797c04bdb0abc65d4642c6d14cf4a344279e8aa0"
+          }
+        ],
+        "independentContentReviewSha256": "88f7272f24bd891a28eb4fc52f076571ede24caa41add7221e9b9157cad023a1",
+        "name": "final",
+        "phaseClosureSha256": "78f87cf6d6cc9f671767750c69094c4ff41b4777b6cca9ff447bb35147928d5f",
+        "publicationDefinitionSha256": "a2205702f4c0d29334459bfd7e593fefc0961fd5e9418345f093f3ab07dc3112",
+        "sourceBusinessSha256": "33ee055cda88ae02c0145ab2a45877170563088e017afcf697051e9835047c53",
+        "sourceDefinitionSha256": "a8c949f36fd98880ab5be1d494bd9449bf5bd805466d464371450aff58ce0d66",
+        "strictNativeReviewLedgerSha256": "290f2514db60306014c1779794f257430adf8cb634f06db33373a83e6fa5617a"
       }
     ],
-    "captureSummary": {
-      "baseline": {
-        "registeredSlots": 51,
-        "questionPOSTs": 50,
-        "knownTerminalResponses": 49,
-        "unknownSubmittedOutcomes": 1,
-        "unsubmittedFailureSlots": 1
-      },
-      "R8": {
-        "registeredSlots": 51,
-        "questionPOSTs": 51,
-        "knownTerminalResponses": 51,
-        "unknownSubmittedOutcomes": 0,
-        "unsubmittedFailureSlots": 0,
-        "retainedSlotsWithNativeFailuresOrIncompleteEvidence": 19,
-        "completedResponseProvesInternalQuerySuccess": false
-      }
+    "pairedComparison": {
+      "baselineContentReviewLedgerSha256": "413a36338d9ae114fa0e06f0d514b002779a85f0919e7f2e1f796c8dcc8b13e7",
+      "equalFields": [
+        "questionSha256",
+        "conditionSha256",
+        "sourceBusinessSha256",
+        "eligiblePremise"
+      ],
+      "exclusions": [
+        {
+          "baseline": {
+            "FAIL": 0,
+            "NA": 3,
+            "PASS": 6,
+            "UNCLEAR": 0
+          },
+          "conditions": 9,
+          "evidenceSha256": "2ac9f5bc87deb7777b5bb980d16ae1d95ed6206fc3edf8f247550fb8bb58ee8b",
+          "final": {
+            "FAIL": 0,
+            "NA": 6,
+            "PASS": 3,
+            "UNCLEAR": 0
+          },
+          "reason": {
+            "en": "Numerical conditions made inapplicable by the predeclared clarification branch were excluded symmetrically by the same condition keys.",
+            "ja": "既定の確認質問分岐で適用外になった数値条件を、同じ条件キーで両側から除外しました。"
+          },
+          "reasonCode": "predeclared-clarification-inapplicable"
+        }
+      ],
+      "finalContentReviewLedgerSha256": "290f2514db60306014c1779794f257430adf8cb634f06db33373a83e6fa5617a",
+      "matchedConditions": 281,
+      "matchedLedgerSha256": "2ac9f5bc87deb7777b5bb980d16ae1d95ed6206fc3edf8f247550fb8bb58ee8b",
+      "matchingKey": [
+        "suite",
+        "repeat",
+        "case_id",
+        "condition_id"
+      ],
+      "registeredConditionsPerPhase": 290,
+      "scope": [
+        "original",
+        "regression"
+      ],
+      "transitions": [
+        {
+          "baseline": "PASS",
+          "conditions": 187,
+          "final": "PASS"
+        },
+        {
+          "baseline": "PASS",
+          "conditions": 2,
+          "final": "FAIL"
+        },
+        {
+          "baseline": "PASS",
+          "conditions": 0,
+          "final": "UNCLEAR"
+        },
+        {
+          "baseline": "FAIL",
+          "conditions": 28,
+          "final": "PASS"
+        },
+        {
+          "baseline": "FAIL",
+          "conditions": 62,
+          "final": "FAIL"
+        },
+        {
+          "baseline": "FAIL",
+          "conditions": 0,
+          "final": "UNCLEAR"
+        },
+        {
+          "baseline": "UNCLEAR",
+          "conditions": 2,
+          "final": "PASS"
+        },
+        {
+          "baseline": "UNCLEAR",
+          "conditions": 0,
+          "final": "FAIL"
+        },
+        {
+          "baseline": "UNCLEAR",
+          "conditions": 0,
+          "final": "UNCLEAR"
+        }
+      ]
     },
-    "source": "../tuning-20261010/result-20261010.json",
-    "latestFull51Retested": false,
-    "nativeFailuresRetained": true,
-    "strictGradersChanged": false
+    "separateCodeInterpreterProbe": {
+      "questionPosts": 1,
+      "includedInFormalOrPairedDenominators": false,
+      "strictCapabilityVerdict": "inconclusive",
+      "actualSqlRows": 10,
+      "actualSqlColumnsIncludingRank": 5,
+      "csvRequestedColumns": 4,
+      "csvRowsAndOrderMatchActualSql": true,
+      "exactSixDigitIdsAndLeadingZeroPreserved": true,
+      "chartActuallyViewedAndMatched": true,
+      "independentCalendarReferenceComparisonPerformed": false,
+      "nativeCompletedCodeInterpreterCalls": 0,
+      "nativeCodeExecutionFullyVerified": false,
+      "finalQuotedSqlFaithfulToActualExecution": false,
+      "rootReviewSha256": "a7f8b3a1ef34a6db87fb18fd019ea1cf36dfd7b52a76c93b479f6f955fea70ed"
+    },
+    "qualitativeLimitations": {
+      "fileIntervalQuestionPhase": "final",
+      "fileIntervalFalseOverlapResponses": 2,
+      "fileIntervalResponses": 3,
+      "fileIntervalActualGapSeconds": 192,
+      "fixedUniversalEventIdPremiseFailureRetained": true,
+      "monthlyComparisonNativeCodeInterpreterErrorRetained": true
+    },
+    "knownFormalQuestionPosts": 111,
+    "baselineInterruptedRegressionSubmissionOutcome": "unknown-retained-not-resubmitted"
   },
-  "remainingLimitations": [
-    "Data Agent Gen2 Ontology consumer retains an unsupported-API-version route; direct Graph/GQL success is separate.",
-    "The tested Agent native DAX route omitted the amount column and returned no executed amount-filtered result after the visibility/selection change; resolution is unconfirmed because R11 did not retrieve the schema.",
-    "Native Ontology Time Series/Metrics and Manage graph UI projection remain unverified or unconfigured.",
-    "Report browser rendering and Activator automatic delivery were not tested.",
-    "Service content blocks and missing data-limit explanations remain recorded failures."
-  ],
+  "participantDocuments": {
+    "localDocumentValidationChecks": 152,
+    "localDocumentValidationFailures": 0,
+    "validationSha256": "792852d58dc482801c90cba91753ec19e5517b9ebc0051dbd82607cda3dccc4f",
+    "publicDocumentValidationSha256": "68eb0a8abec4127ee9e315d45e0bd7f48bfc1cccbaf18924f8506f5f1bead65c",
+    "contentSha256": "5acd021f1105fcb7e0007e15ed5af1eb713bc985ce89692ee3582e2a7b89c498",
+    "allActualPagesReviewed": 294,
+    "allPageReviewSha256": "71abd3994f39d563ec63d986055cf911b65054c841d02cfc056b9967c6eee415",
+    "publicRenderReviewSha256": "5272f1fbfc8887044076d60d175ab4d5e77c18bbb20a590483e06dd9686577b5",
+    "htmlPrintPages": {
+      "ja": 100,
+      "en": 102
+    },
+    "earlierV1FailurePreserved": true
+  },
+  "libreOfficeRendering": {
+    "version": "25.2.3.2",
+    "pages": 92,
+    "pdfSha256": "9042f3e8a0d1acd17510e04a3ae9d5ed23f1690fb94ad8cbfc676882a2eaef39",
+    "wordTextPreservation": {
+      "nonemptyParagraphAndTableCellTexts": 1878,
+      "rawDiagnosticMissingCount": 2,
+      "actualMissingContentFound": false,
+      "resolution": "Both complete source paragraphs span page boundaries interrupted by repeated header/footer text; every raw diagnostic miss was checked in actual PDF text and full page images.",
+      "diagnosticSha256": "e7d970d435592ae2e41cf798113ff6743e67d0aaa010b5dce348c767ca711ba7",
+      "manualResolutionSha256": "7c88c8ad91cc69e88cb55b6a4a01c3d540f24a8974c9d313f927854a9a003265"
+    },
+    "fieldFreeBarePageFooterCosmeticObservation": true,
+    "microsoftWordRenderingEquivalentClaimed": false
+  },
+  "wordNavigation": "headings",
+  "microsoftWordFieldRefreshPerformed": false,
+  "microsoftWordLayoutVerified": false,
   "unitChecks": {
-    "runtime": {
-      "tests": 103,
-      "passed": true
-    },
-    "dataAgent": {
-      "tests": 335,
-      "passed": true
-    },
-    "documents": {
-      "tests": 407,
-      "passed": true,
-      "discovered": 407,
-      "unrun": 0
-    }
+    "tests": 908,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "suite": "provisioning",
+        "tests": 122,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "seconds": 3.348,
+        "logSha256": "33cfb9cdfc7017d1685eab7d46ed2d09aa9c8a383a44e48ab00b25924259bfd9"
+      },
+      {
+        "suite": "data-agent",
+        "tests": 354,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "seconds": 13.518,
+        "logSha256": "95a512dba6638f58cb762cdd25fcb086af2ae0e0f3239f321f37cab230024ebe"
+      },
+      {
+        "suite": "documents",
+        "tests": 432,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "seconds": 41.526,
+        "logSha256": "c04aec760f6fa61a8383222c1d912621368ad5fe3450d7b8a13ea1c4279bb1e4"
+      }
+    ],
+    "earlierMissingDatedAssetFailurePreservedAndResolvedBeforeFinalPass": true,
+    "sourceCommit": "dbd498a32bcb221852b921c1a639fe5e17b16606",
+    "scope": "Full source/report suite before the later print-stylesheet-only correction."
   },
   "package": {
-    "name": "Furusato_Workshop_v3.0.0_current-20261010.zip",
-    "sha256": "bc51659835c390841ffa23b5ef3abfd99b6575a0ddebf2e46cbe33d0a8a8ac4c",
-    "bytes": 16725763,
-    "entries": 357,
-    "allEntryHashesVerified": true
+    "file": "Furusato_Workshop_v3.0.0_current-20261015.zip",
+    "bytes": 17135542,
+    "sha256": "2b9a8b982f872ed62b4406656601023414f895fe5ea3f9fa64fe57ba7753a227",
+    "entries": 383,
+    "everyEntryCrcAndHashVerified": true,
+    "all371SourcesMatchGitBlobs": true,
+    "independentPackageAuditSha256": "4d9fd63a1120adc3b16982ed8d18e86c5d6a2e761b5f2bcc00b11016a7d024cf"
   },
   "files": {
-    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "1646983871e70946884a5303705ca7c6a7e9f846e0171746d21d4f51be6708c4",
-    "furusato-workshop-v3-0-0-complete.html": "a0ea65d7dc6b1fd1097883b74b3d1c398b3467096c53fdf00e2db2db9241f2dc"
+    "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "6cf80378c32572773fda46b1154e3c64c2e2fac84042c5a798fa06f5a7ec924c",
+    "guide/furusato-workshop-v3-0-0-complete.html": "3af11a800bad336ec97097ad6c908f89a34058d8885e2e1578593f1be5dd5799",
+    "artifact-set.json": "7abd339724375ed536308f434d9fff5b52afa320fcfd4ccf28c41228071ca5fb",
+    "DOCUMENT_VALIDATION.json": "68eb0a8abec4127ee9e315d45e0bd7f48bfc1cccbaf18924f8506f5f1bead65c",
+    "participant-render-validation.json": "5272f1fbfc8887044076d60d175ab4d5e77c18bbb20a590483e06dd9686577b5"
   },
+  "historicalCurrentSnapshot": "https://github.com/yang-jiayi/furusato-fabric-workshop/tree/f255989351b418fe99f9ee8ef3d562233adfd9f7/docs/v3.0.0/current",
   "privateAnswersTracesResourceIdsOrCredentialsPublished": false,
   "documentChecksAreAIAnswerAcceptance": false,
-  "mainMergeIsAllFeatureAcceptance": false
+  "mainMergeIsAllFeatureAcceptance": false,
+  "participantHistoricalIdentity": {
+    "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
+    "historicalPass": 76,
+    "historicalFail": 8,
+    "publicEvidenceProjectionSha256": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
+    "scope": "Retained original document release identity, not the current 2026-10-15 answer evaluation. Current results remain in the separate dated summary and answerEvaluation object."
+  },
+  "gitBlobParityReceiptSha256": "245123e363fe77ff833a484b9bdf16d0b4814abaa6fd3519e293dbd55ca6016f",
+  "subsequentRendererChecks": {
+    "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
+    "tests": 25,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "logSha256": "09b0fbd78be8128b27951bf1903673b0a24adeec68959609ba9b0d058ee7e6fe",
+    "full908RerunClaimed": false,
+    "freshParticipantValidationChecks": 152,
+    "freshParticipantValidationFailures": 0
+  }
 }

@@ -1,7 +1,7 @@
 # Furusato Workshop 3.0.0
 
 現行mainの手順・Word・日英HTML・ZIPは [current](current/README.md) を使用してください。
-実測対策と校正手順は [2026-10-10資料](tuning-20261010/README.md) にあります。
+再配置・実回答評価と校正手順は [2026-10-15資料](tuning-20261015/README.md) にあります。
 以下は元の3.0.0リリースを再現するための保持記録です。
 Use [current](current/README.md) for the current main workshop. The original 3.0.0
 release record below is retained separately.

@@ -39,6 +39,29 @@ def build_agent_compatibility() -> dict:
             "implicitFallback": False, "agentConfigurationChanged": False}
 
 
+def build_report_presentation() -> None:
+    """Apply v3 display formatting after copying the immutable v2.7 report."""
+    root = PREVIEW / "powerbi/Furusato_Analytics.Report/definition/pages/8c8fb549f9e148b18cb1/visuals"
+    for visual_id in ("50713d2fda4c79f48be1", "6494ed6df2dc6827b12d", "8335b9428cb994ea095c"):
+        path = root / visual_id / "visual.json"
+        visual = load(path)
+        properties = visual["visual"]["objects"]["labels"][0]["properties"]
+        if properties["labelDisplayUnits"] != {"expr": {"Literal": {"Value": "'1000000'"}}}:
+            raise ValueError("Unexpected inherited bar display units: " + visual_id)
+        # Display units are numeric expressions; a string literal is ignored.
+        properties["labelDisplayUnits"] = {"expr": {"Literal": {"Value": "1000000D"}}}
+        save(path, visual)
+    path = root / "4c3575e13ef9b6e97356" / "visual.json"
+    visual = load(path)
+    properties = visual["visual"]["objects"]["value"][0]["properties"]
+    if "labelDisplayUnits" in properties or "labelPrecision" in properties:
+        raise ValueError("Unexpected inherited card display overrides")
+    # Show complete yen/count values instead of Auto's rounded K/bn labels.
+    properties["labelDisplayUnits"] = {"expr": {"Literal": {"Value": "1D"}}}
+    properties["labelPrecision"] = {"expr": {"Literal": {"Value": "0D"}}}
+    save(path, visual)
+
+
 V3_FACT_DESCRIPTIONS = (
     ("/// 静的seed寄附と重複排除済み増分イベントを統合した1寄附1行のファクト。金額・件数・時系列分析の基点です。",
      "/// 静的データ（配布した寄付データ全体）と、品質処理で重複を除いた受入済みの増分を合わせた、1寄付1行のファクトです。金額・件数・時系列分析の基点です。"),
@@ -56,6 +79,7 @@ def build() -> dict:
         for path in sorted((BASE / folder).rglob("*")):
             if path.is_file():
                 write(PREVIEW / path.relative_to(BASE), path.read_bytes())
+    build_report_presentation()
     fact_path = PREVIEW / "powerbi/Furusato_Analytics.SemanticModel/definition/tables/寄附.tmdl"
     fact = fact_path.read_text(encoding="utf-8")
     native_metrics = [
@@ -155,7 +179,7 @@ def build() -> dict:
         "environmentParameterRequired": ["dev", "test", "prod"],
         "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
         "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
-        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261009",
+        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261015",
         "attachmentsOwner": "documents-workstream",
     })
     from preview30_notebooks import build_notebooks

@@ -1,0 +1,29 @@
+{
+  "schema": "furusato-ontology-v2-calibration-artifacts/v1",
+  "date": "2026-10-15",
+  "sourceDateEpoch": 1792022400,
+  "rendererSha256": "f7134fd87d49cc5d55d8c1662ddd96fbce7073a75b6ea063ceaa08f109677c00",
+  "publicSourcePath": "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md",
+  "sourceMarkdownSha256": "7b610c58455008df42495de0f9cf9b0668cee648c8e95f364fdeed7186afa5cd",
+  "sharedContentSha256": "fdc228674b2adb6d94917749ae1230f90faabb48a811aee6fbb1a413ed1fb683",
+  "contentBlocks": 64,
+  "markdownWordHtmlParity": true,
+  "sourceLinks": {
+    "README.md": "https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/docs/v3.0.0/tuning-20261015/README.md",
+    "furusato-ontology-v2-evaluation-20261015.docx": "https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/docs/v3.0.0/tuning-20261015/furusato-ontology-v2-evaluation-20261015.docx",
+    "furusato-ontology-v2-evaluation-20261015.html": "https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/docs/v3.0.0/tuning-20261015/furusato-ontology-v2-evaluation-20261015.html",
+    "result-20261015.json": "https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/docs/v3.0.0/tuning-20261015/result-20261015.json"
+  },
+  "generalClassificationNormalized": true,
+  "dynamicWordFields": 0,
+  "fakeOfficePageCountPresent": false,
+  "publicTextLeakageChecksPassed": true,
+  "procedureIsEvaluationEvidence": false,
+  "microsoftWordRenderChecked": false,
+  "libreOfficeRenderChecked": false,
+  "htmlBrowserChecked": false,
+  "outputs": {
+    "calibration-and-proofreading.docx": "e896681fa77a0993c3f96ca326b5a642c9bad401fd91c18e1095db7757f99b1e",
+    "calibration-and-proofreading.html": "da9b65feda1d62e72f12dcdecec559e13b84639354d542322f76f37a8e19c66d"
+  }
+}

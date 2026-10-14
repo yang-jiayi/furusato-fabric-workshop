@@ -92,8 +92,8 @@ class MeasuredContractTests(unittest.TestCase):
                 self.assertEqual(before[pub]["elements"], after[draft]["elements"])
         self.assertNotIn("Files/Config/draft/lakehouse_tables/fewshots.json", after)
         self.assertEqual(len(after["Files/Config/draft/kusto/fewshots.json"]["fewShots"]), 9)
-        self.assertEqual(receipt["instructionUtf16Units"], {"global": 9981, "lakehouse_tables": 9989,
-                         "kusto": 8665, "ontology": 4963, "semantic_model": 6989})
+        self.assertEqual(receipt["instructionUtf16Units"], {"global": 10000, "lakehouse_tables": 9905,
+                         "kusto": 8665, "ontology": 4963, "semantic_model": 7212})
         self.assertEqual(receipt["cloudCalls"], 0)
         self.assertFalse(receipt["freshDeploymentOrAnswerAccuracyVerified"])
         self.assertEqual(receipt["sourceOwnedWorkshopMeasuresVerified"], 10)

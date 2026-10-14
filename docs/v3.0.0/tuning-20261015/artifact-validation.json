@@ -1,0 +1,26 @@
+{
+  "schema": "furusato-ontology-v2-report-artifacts/v1",
+  "date": "2026-10-15",
+  "inputKind": "observed-reviewed-aggregate",
+  "syntheticFixtureIsNotActualEvidence": false,
+  "sourceSummarySha256": "935191c15a9a8505c2f7bf880f64f17d483210c5654331b058a86ccdb148e64c",
+  "sharedContentSha256": "d86b145096f972cfca1980197c2c8feecdde80f5d1142e039b04f8f5c6e5fe18",
+  "sourceDateEpoch": 1792015621,
+  "contentBlocks": 106,
+  "conditionDenominatorsValidated": true,
+  "pairedTransitionsReconciled": true,
+  "wordHtmlSharedContentParity": true,
+  "publicTextLeakageChecksPassed": true,
+  "generalClassificationNormalized": true,
+  "dynamicWordFields": 0,
+  "fakeOfficePageCountPresent": false,
+  "microsoftWordRenderChecked": false,
+  "libreOfficeRenderChecked": false,
+  "htmlBrowserChecked": false,
+  "artifactValidationIsAnswerQualityAcceptance": false,
+  "privateLedgerContentsIndependentlyVerifiedByRenderer": false,
+  "outputs": {
+    "furusato-ontology-v2-evaluation-20261015.docx": "94282f0609aa3df1dbb7724fe164bc71a873fb43068ea6fd0e412cb142e5787e",
+    "furusato-ontology-v2-evaluation-20261015.html": "b4f4c041791a931feb0bc6cbdc6012a57f1fabdc2d2f4a369a1c4c3f3f8f485f"
+  }
+}

@@ -40,6 +40,7 @@ RUNTIME_INPUT_FILES = (
     "tools/provisioning/preview30_runtime.py", "tools/provisioning/preview30_deploy.py",
     "tools/provisioning/preview30_verify.py", "tools/provisioning/preview30_ontology.py",
     "tools/provisioning/preview30_activation.py", "tools/provisioning/preview30_agent.py",
+    "tools/provisioning/preview30_activation_readiness.py",
     "tools/provisioning/workshop_runtime.py", "tools/provisioning/activation_runtime.py",
     "tools/provisioning/reference_kql.py", "tools/data-agent/native_evaluation.py",
     "tools/data-agent/native_mcp.py",
@@ -49,7 +50,7 @@ RUNTIME_INPUT_FILES = (
     "tools/data-agent/measured_contract_profile.py",
 )
 CORRECTED_PROFILE_DIRECTORIES = ("source-grounded", "complete-contract", "time-layer-isolation",
-                                 "standard-contract-restoration", "measured-contract-20261009")
+                                 "standard-contract-restoration", "measured-contract-20261009", "measured-contract-20261015")
 BASELINE_PROTECTED_PATHS = (
     "workshop/v2.7.0",
     "tools/docs/furusato_docs/tests10.py",
@@ -361,7 +362,7 @@ def build_plan(scope: dict[str, Any], inventory: dict[str, Any],
         "generatedResources": ["Lakehouse SQL endpoint", "Eventhouse KQL database"],
         "folders": [],
         "productionPlacement": "specified-folder-direct",
-        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261009",
+        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261015",
         "evaluationArtifacts": "Explicit opt-in only; remove after evaluation without deleting adopted dependencies.",
         "immutableBaselineTreeSha256": baseline["treeSha256"],
         "candidateSourceSha256": candidate_fingerprint(),
@@ -551,7 +552,7 @@ def main() -> int:
         "preflight", "deploy-sources", "verify-sources", "deploy-notebooks",
         "deploy-realtime", "deploy-core", "deploy-relationships", "preview-metadata", "apply-metadata",
         "handoff-ontology", "verify-gold", "deploy-semantic-model", "refresh-model", "verify-model",
-        "deploy-agent", "publish-agent", "start-activator", "stop-activator", "deliver-increment", "verify-delivery",
+        "deploy-agent", "publish-agent", "start-activator", "stop-activator", "check-activator-readiness", "deliver-increment", "verify-delivery",
     ])
     parser.add_argument("--environment", required=True, choices=["dev", "test", "prod"])
     parser.add_argument("--scope", required=True, type=Path)
@@ -573,12 +574,13 @@ def main() -> int:
             raise SafetyError("--include-relationships belongs to preflight; approve its new exact plan first.")
         if args.command == "preflight":
             result = preflight(args)
-        elif args.command in {"start-activator", "stop-activator", "deliver-increment", "verify-delivery"}:
-            from preview30_activation import lifecycle, deliver_increment, verify_delivery
+        elif args.command in {"start-activator", "stop-activator", "check-activator-readiness", "deliver-increment", "verify-delivery"}:
+            from preview30_activation import lifecycle, check_readiness, deliver_increment, verify_delivery
             if args.command in {"start-activator", "stop-activator"}:
                 result = lifecycle(args, start=args.command == "start-activator")
             else:
-                result = {"deliver-increment": deliver_increment, "verify-delivery": verify_delivery}[args.command](args)
+                result = {"check-activator-readiness": check_readiness, "deliver-increment": deliver_increment,
+                          "verify-delivery": verify_delivery}[args.command](args)
         elif args.command.startswith("verify-"):
             from preview30_verify import verify_sources, verify_gold, verify_model
             result = {"verify-sources": verify_sources, "verify-gold": verify_gold,

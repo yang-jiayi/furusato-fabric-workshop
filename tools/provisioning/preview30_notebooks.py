@@ -14,6 +14,7 @@ from preview30_runtime import (
 MODULES = (
     "preview30_runtime.py", "preview30_deploy.py", "preview30_verify.py",
     "preview30_ontology.py", "preview30_agent.py", "preview30_activation.py",
+    "preview30_activation_readiness.py",
     "preview30_compatibility.py", "v3_artifacts.py",
     "workshop_runtime.py", "reference_kql.py", "activation_runtime.py",
 )

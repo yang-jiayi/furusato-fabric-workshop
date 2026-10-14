@@ -12,6 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
 import time
 from typing import Any
 from urllib.parse import urlparse, quote
@@ -656,6 +657,27 @@ def kusto_call(d: Deployment, csl: str, *, mutation: bool = False) -> dict[str, 
     return body
 
 
+def normalize_stopped_reflex(definition: dict[str, Any]) -> dict[str, Any]:
+    """Add the measured tolerance to this v3 rendering, preserving v2 originals.
+
+    This does not initialize credentials, Save, Start, or prove delivery.
+    """
+    result = copy.deepcopy(definition)
+    parts = [p for p in result["parts"] if p["path"] == "ReflexEntities.json"]
+    if len(parts) != 1:
+        raise SafetyError("Expected one rendered Reflex entities part.")
+    entities = json.loads(base64.b64decode(parts[0]["payload"]))
+    rules = [e for e in entities if e.get("payload", {}).get("definition", {}).get("type") == "Rule"]
+    if len(rules) != 1:
+        raise SafetyError("Expected one rendered Reflex rule.")
+    settings = rules[0]["payload"]["definition"].get("settings", {})
+    if settings.get("shouldRun") is not False or settings.get("shouldApplyRuleOnUpdate") is not False:
+        raise SafetyError("Rendered Reflex must remain stopped with historical application disabled.")
+    settings["delayToleranceMs"] = 120000
+    parts[0]["payload"] = base64.b64encode(json.dumps(entities, ensure_ascii=False).encode("utf-8")).decode("ascii")
+    return result
+
+
 def deploy_realtime(args: Any) -> dict[str, Any]:
     from workshop_runtime import extract_kql_management_commands, verify_reflex_fail_closed
     d = Deployment(args)
@@ -689,7 +711,7 @@ def deploy_realtime(args: Any) -> dict[str, Any]:
     bundle = BASE / "provisioning/bundle"
     pipeline = d.create("pipeline", definition=encode_files(read_parts(bundle / "data-pipeline"), bindings(d)))
     d.state["items"]["pipeline"] = {**d.state["items"]["pipeline"], **pipeline}
-    reflex_definition = encode_files(read_parts(bundle / "reflex"), bindings(d))
+    reflex_definition = normalize_stopped_reflex(encode_files(read_parts(bundle / "reflex"), bindings(d)))
     verify_reflex_fail_closed(reflex_definition)
     # The source is intentionally future FileCreated events; it has not emitted
     # watched increments yet. Rule creation is stopped, not assumed to be armed.
@@ -818,6 +840,34 @@ def handoff_ontology(args: Any) -> dict[str, Any]:
     return result
 
 
+def agent_definition_contract(d: Deployment, definition: dict[str, Any], stage: str) -> dict[str, Any]:
+    """Verify actual logical bindings after service serialization; not consumer readiness."""
+    module_root = str(REPO / "tools/data-agent")
+    if module_root not in sys.path:
+        sys.path.append(module_root)
+    from measured_contract_profile import stage_sources
+    try:
+        documents, sources, serialization = stage_sources(definition, stage)
+    except ValueError as error:
+        raise SafetyError("Unrecognized actual Data Agent source serialization: " + str(error)) from None
+    items = {"lakehouse_tables": "lakehouse", "kusto": "kqlDatabase",
+             "ontology": "ontology", "semantic_model": "semanticModel"}
+    for kind, key in items.items():
+        source, item = sources[kind][1], d.state["items"][key]
+        if (source.get("workspaceId") != d.scope["workspaceId"]
+                or source.get("artifactId") != item["id"]
+                or source.get("displayName") != item["displayName"]):
+            raise SafetyError("Actual Data Agent logical source differs from the owned item: " + kind)
+    config = documents.get("Files/Config/" + stage + "/stage_config.json", {})
+    if config.get("experimental", {}).get("codeInterpreterEnabled") is not True:
+        raise SafetyError("Code Interpreter was not configured in the actual " + stage + ".")
+    return {"sourceSerialization": serialization, "logicalSourceCount": 4,
+            "physicalDatasourceCount": 3 if serialization == "native-ontology-context" else 4,
+            "ontologyCount": 1, "sourceIdentitiesVerified": True,
+            "nativeOntologyContextReady": None, "nativeOntologyContextChecked": False,
+            "directSemanticModelConfigured": True, "codeInterpreterConfigured": True}
+
+
 def deploy_agent(args: Any) -> dict[str, Any]:
     d = Deployment(args)
     for key in ("lakehouse", "kqlDatabase", "ontology", "semanticModel"):
@@ -830,19 +880,9 @@ def deploy_agent(args: Any) -> dict[str, Any]:
     definition = encode_files(files, bindings(d))
     item = d.create("dataAgent", definition=definition, skill="fabriciq-ontology-cli")
     actual = d.definition(item["id"], skill="fabriciq-ontology-cli")
-    documents = {p["path"]: json.loads(base64.b64decode(p["payload"]))
-                 for p in actual["parts"] if p["path"].endswith(".json")}
-    sources = [v for k, v in documents.items() if k.endswith("/datasource.json")]
-    if {s.get("type") for s in sources} != {"lakehouse_tables", "kusto", "ontology", "semantic_model"}:
-        raise SafetyError("Data Agent does not contain all four direct sources.")
-    model_source = next(s for s in sources if s["type"] == "semantic_model")
-    if model_source["artifactId"] != d.state["items"]["semanticModel"]["id"]:
-        raise SafetyError("Direct semantic model source points at a different item.")
-    stage = documents["Files/Config/draft/stage_config.json"]
-    if stage.get("experimental", {}).get("codeInterpreterEnabled") is not True:
-        raise SafetyError("Code Interpreter was not configured in the actual draft.")
+    contract = agent_definition_contract(d, actual, "draft")
     result = {"timestampUtc": now(), "id": item["id"], "draftConfigured": True,
-              "directSemanticModelConfigured": True, "codeInterpreterConfigured": True,
+              **contract,
               "published": False, "aiAnswerQualityVerified": False,
               "codeInterpreterObserved": False}
     d.state["dataAgentVerification"] = result
@@ -931,20 +971,11 @@ def publish_agent_candidate(args: Any) -> dict[str, Any]:
                          expected=(200,), label="publish-preview-agent")
     actual = d.definition(agent["id"], skill="fabriciq-ontology-cli")
     save(d.evidence / "definitions/dataAgent-published-readback.json", actual)
-    documents = {p["path"]: json.loads(base64.b64decode(p["payload"])) for p in actual["parts"]
-                 if p["path"].endswith(".json")}
-    sources = [v for p, v in documents.items() if p.startswith("Files/Config/published/")
-               and p.endswith("/datasource.json")]
-    if {v.get("type") for v in sources} != {"lakehouse_tables", "kusto", "ontology", "semantic_model"}:
-        raise SafetyError("Published source inventory is incomplete.")
-    if next(v for v in sources if v["type"] == "semantic_model")["artifactId"] != d.state["items"]["semanticModel"]["id"]:
-        raise SafetyError("Published direct SemanticModel source differs.")
-    if documents["Files/Config/published/stage_config.json"].get("experimental", {}).get("codeInterpreterEnabled") is not True:
-        raise SafetyError("Published Code Interpreter configuration missing.")
+    contract = agent_definition_contract(d, actual, "published")
     result = {"timestampUtc": now(), "id": agent["id"], "published": True,
               "existingPublicationReused": was_published,
-              "publishedDefinitionReadback": True, "directSemanticModelConfigured": True,
-              "codeInterpreterConfigured": True, "codeInterpreterObserved": False,
+              "publishedDefinitionReadback": True, **contract,
+              "codeInterpreterObserved": False,
               "aiAnswerQualityVerified": False}
     d.state["dataAgentVerification"].update(result)
     d.checkpoint()

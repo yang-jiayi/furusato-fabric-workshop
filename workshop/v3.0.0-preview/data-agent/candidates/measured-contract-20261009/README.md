@@ -7,7 +7,9 @@
 このディレクトリーは最新系列の R11 指示を保持します。実環境 ID、認証、質問別の正解、
 回答ログは含みません。有限の実回答テストで確認した改善と未解決事項は
 [測定結果](../../../../../docs/v3.0.0/tuning-20261010/README.md) に記載します。
-最新 R11 の全 51 問は再評価していないため、R8 の全体得点を R11 の全体精度と表示しません。
+2026-10-10 の記録では最終 R11 の全 51 問を再評価していません。R8 の得点を R11 の
+全体精度に置き換えません。新しい配置と評価の結果は
+[2026-10-15 作業レポート](../../../../../docs/v3.0.0/tuning-20261015/README.md) を参照してください。
 
 `Notebook 04` の初期構成を作った後に明示的に適用します。Compiler の成功はローカル
 Draft の作成であり、Fabric への適用・Publish・新しい環境の回答品質を意味しません。
@@ -17,6 +19,9 @@ Draft の作成であり、Fabric への適用・Publish・新しい環境の回
 
 標準 **Gen2 Ontology 1 個**、Lakehouse SQL、KQL Database、Semantic Model の 4 ソースを
 使います。追加の互換 Ontology は作りません。Code Interpreter を有効にします。
+ここで 4 ソースは論理的な接続先の数です。新しいサービスの定義では、SQL/KQL/Model の
+3 個の `datasource.json` と、別の `ontologies/<name>/ontology.json` に分かれます。
+後者のスキーマは `ontology/1.0.0` であり、Ontology 世代を示す値ではありません。
 SQL の 6 ビューは既存の公開定義から作成・照合します。
 
 - [`source-grounded/views`](../source-grounded/views/): `agent_donation_detail`、
@@ -35,13 +40,17 @@ Notebook 05 の処理と SQL endpoint の同期が完了してから、次の実
 | Semantic Model | 既存のテーブル・10 メジャーを保持。`寄附[寄附金額]` は非表示を解除して選択し、10 個の既存メジャーの実定義を照合 |
 | Gen2 Ontology | 同じ標準アイテムの実選択を保持。追加アイテムを作って consumer エラーを隠さない |
 
-SQL は合計 17 オブジェクト・141 列です。SQL の品質 3 表では `EventID` を選択できますが、
+SQL は合計 17 オブジェクト・143 列です。SQL の品質 3 表では `EventID` を選択できますが、
 これは KQL MV の一意キー追加を意味しません。静的・生観測・受入済み Gold・品質処理は別の
 母集団として扱います。Ready control の generation/run を集計前後に照合します。
 
 ### 指示と例
 
-Global、SQL、KQL、Semantic Model、Ontology の各指示は 10,000 UTF16 単位以内です。
+保存した Global、SQL、KQL、Semantic Model、従来形式の Ontology 指示は各 10,000 UTF16 単位以内です。
+新しい `ontology.json` にはソース指示・ソース説明フィールドがありません。Compiler は実際の
+Ontology パートをバイトのまま保持し、Global と 3 個の通常ソースにだけ対応する指示を適用します。
+未対応の従来 Ontology 指示を新しいフィールドや Global に挿入しません。適用しなかった指示・
+説明のハッシュと形式の違いは receipt に記録します。
 実 SQL の識別子を `[...]` で囲み、条件付き集計と順位で同じ母集団を使います。
 AM/PM を実 UTC の 24 時間へ正規化し、JST の日付跨ぎを保持します。
 件数メジャーの `KEEPFILTERS` は実モデルの DAX 定義から照合し、外側フィルターとの共通部分と
@@ -87,7 +96,8 @@ python -B .\tools\data-agent\measured_contract_profile.py `
 
 Linux では絶対パスを `/var/tmp/...` などへ置き換えます。出力先は新しい別ファイルにします。
 Compiler は実ソース ID、native metadata、実メジャーを保持し、観測した SQL/KQL の選択と
-指示・説明・KQL 例を契約に合わせます。Published とその他の非 Draft パートはバイトのまま
+対応する指示・説明・KQL 例を契約に合わせます。新しい形式の Ontology パート、
+Published とその他の非 Draft パートはバイトのまま
 保持します。Ontology/Model の選択・Code Interpreter・モデルメジャー・元データを変えません。
 不足スキーマ、独立した SQL 型情報との不一致、Gen1/追加 Ontology、変更されたメジャー、
 非表示の金額列、未選択メジャー、追加 topics は停止して実状態の確認を求めます。
@@ -95,13 +105,22 @@ Compiler は実ソース ID、native metadata、実メジャーを保持し、�
 ### 適用・Publish・校正
 
 5. 管理者/講師が同じ Agent の Draft に生成定義を適用し、Draft readback と receipt を照合します。
-   UI の場合は 5 指示本文、4 ソース説明、完全な列選択、SQL 例 0、KQL 例 9 を同じ契約に合わせます。
+   新しい形式では Global と 3 通常ソースの指示、3 ソース説明、完全な列選択、SQL 例 0、KQL 例 9
+   を照合し、Ontology の実選択・ユーザー記述を保持します。従来形式だけは 5 指示・4 説明を照合します。
 6. 例の実照会とサービスの validation を確認して、同じ Agent を Publish します。
-   Published readback を取得し、5 指示・4 ソース ID・1 Ontology・実選択・9 例を照合します。
+   Published readback を取得し、実形式に対応する指示・4 接続先 ID・1 Ontology・実選択・9 例を
+   照合します。初期作成の bootstrap 定義を既存 Agent へ再適用して、移行済みの Ontology
+   パートを従来形式に戻さないでください。
 7. [校正・資料の整合性手順](../../../../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
    に従い、元の質問・条件を凍結した新規 campaign を 1 回だけ実行します。全問と未使用の
    held-out を残し、成功した質問だけの選別、期待値の指示への追加、同じ質問の再送を避けます。
    誤差、native エラー、`UNCLEAR`、証跡不足、スコープが変わった条件をそのまま報告します。
+
+通常ソース一覧が 3 件でも Ontology が削除されたことにはなりません。別の native Ontology
+一覧、登録状態、configuration、elements、derived sources、context markdown を確認します。
+登録済みでも `SchemaUnavailable`、HTTP 502、空の context は利用可能の証拠にできません。
+[サービス検査ツール](../../../../../tools/data-agent/README.md#native-ontology-context-check) は
+通常ソースと別の context を区別して報告します。
 
 Ontology consumer の API version エラー、native Time Series/Metric、金額列の Agent schema 欠落、
 Report のブラウザー表示や Activator の自動配送は、指示だけで成功したと扱えません。
@@ -119,16 +138,25 @@ This portable contract retains the instruction texts and selected schema of the
 measured 2026-10-09 R11 publication. It contains no live identities, credentials,
 answer logs or answer keys. R8–R11 in this dated series are separate from the older
 2026-10-07 series. See the linked measurement report for the bounded improvements,
-retained failures and the absence of a full 51-question retest on final R11.
+retained failures and the absence of a full 51-question retest on final R11 at that date.
+The separate 2026-10-15 report records the newer deployment and its actual evaluation.
 
 Use one standard Gen2 Ontology and the existing SQL, KQL and Semantic Model sources.
+These are four logical bindings. Current service serialization has three physical
+`datasource.json` parts and a separate `ontologies/<name>/ontology.json` using the
+`ontology/1.0.0` schema; that schema version is not the Ontology generation. The
+compiler accepts both observed formats and retains native Ontology payload bytes.
+It applies global and three direct-source instructions in the new format, records
+the unsupported legacy Ontology instruction/description hashes, and never invents
+fields or appends those instructions to global text. The create bootstrap remains
+the service-tested input; never reapply it over an already migrated Agent.
 The measured public API calls its type `Ontology`; retain the actual native item
 metadata with `FeatureLevel=2` and the observed managed child roles rather than
 relabeling a public response as `Gen2Ontology`. A public type label alone does not
 verify generation or consumer readiness.
 Create and verify the six existing public SQL view definitions, finish Notebook 05,
 refresh real service-discovered metadata and run the read-only SQL inventory. SQL
-selects 17 objects / 141 fields; KQL selects the ten-field observation MV without
+selects 17 objects / 143 fields; KQL selects the ten-field observation MV without
 EventID. EventID in the three SQL quality populations does not add a KQL unique key.
 Static, raw observations, accepted Gold and quality-processing populations remain
 separate. Preserve actual Ready generation/run and requested file/run/alias scope.
@@ -147,3 +175,9 @@ and the nine generic KQL examples; failed historical SQL example files remain hi
 Do not reset the Agent by rerunning its factory Notebook. A successful local compile
 or HTTP/response completion is not proof of deployment, native execution or answer
 accuracy. Retain native failures and incomplete evidence in a fresh frozen evaluation.
+
+A generic datasource count of three does not prove a missing Ontology. Check the
+separate native Ontology registry and nonempty available configuration, elements,
+derived sources and context markdown. Registration alone, SchemaUnavailable, an
+HTTP 502 or empty HTTP 200 response does not qualify the consumer. Preserve those
+failures without adding a legacy definition.json marker or an extra Ontology.

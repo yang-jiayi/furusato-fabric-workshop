@@ -1,0 +1,42 @@
+{
+  "schema": "furusato-calibration-render-validation/v1",
+  "date": "2026-10-15",
+  "sourceMarkdownSha256": "7b610c58455008df42495de0f9cf9b0668cee648c8e95f364fdeed7186afa5cd",
+  "rendererSha256": "f7134fd87d49cc5d55d8c1662ddd96fbce7073a75b6ea063ceaa08f109677c00",
+  "inputHashes": {
+    "calibration-and-proofreading.docx": "e896681fa77a0993c3f96ca326b5a642c9bad401fd91c18e1095db7757f99b1e",
+    "calibration-and-proofreading.html": "da9b65feda1d62e72f12dcdecec559e13b84639354d542322f76f37a8e19c66d"
+  },
+  "artifactValidationSha256": "87bf978c25f12a7990684756ab4ac773407c153fb6f70accb08db363366fe1c1",
+  "browser": "Chromium actual local rendering",
+  "htmlBrowserChecked": true,
+  "htmlDesktopAndMobileNoBodyOverflow": true,
+  "htmlTocTargetsMissing": 0,
+  "htmlBrowserErrors": [],
+  "htmlPrintPages": 8,
+  "htmlPrintEmptyPages": [],
+  "libreOfficeRenderChecked": true,
+  "libreOfficePdfPages": 8,
+  "libreOfficeEmptyPages": [],
+  "wordPdfPagesVisuallyReviewed": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "wordContentAndTablesReadable": true,
+  "visibleTextClippingObserved": false,
+  "missingJapaneseGlyphsObserved": false,
+  "microsoftWordRenderChecked": false,
+  "independentHumanSignoff": false,
+  "externalNetworkRequestsAllowed": false,
+  "publicationTargetAvailabilityChecked": false,
+  "privateRenderReceiptSha256": "7105f1ec8adb5524993eeaddd2fc0b591234abc83254d0feac3ed89cc56b7f94",
+  "privateVisualReviewSha256": "71270be54e5f71390ff88738efbe81da129924fb40f4c46af038e288ab5071aa",
+  "wordLibreOfficePdfSha256": "ce2bb91c973aa49fc7a7b1b8f53758ddc49597867a6c33300061cf583e11a4aa",
+  "procedureIsEvaluationEvidence": false
+}

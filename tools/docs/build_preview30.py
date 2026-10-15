@@ -92,7 +92,7 @@ def write_word(
                 builder.callout(block["tone"], block["text"].get(lang), title=title.get(lang) if title else None, **block.get("word_layout", {}))
             elif kind == "code":
                 label = block.get("language")
-                builder.code_block(block["text"], language=label.get(lang) if label else "",
+                builder.code_block(block["text"], language=ascii_parentheses(label.get(lang)) if label else "",
                                    **({"verbatim": True} if block.get("canonicalLiteral") else {}))
             elif kind == "prompt":
                 builder.code_block(block["text"].get(lang), language="Plan / Act prompt",

@@ -256,7 +256,10 @@ def check_participant_parentheses(parts, document, report):
     """Preserve exact source quotations without exempting other editable stories."""
     scoped = dict(parts)
     tree = ET.fromstring(parts["word/document.xml"])
-    text = " ".join(node.text or "" for node in tree.iter() if node.tag in old.TEXT_TAGS)
+    # Run boundaries are formatting boundaries, not spaces inside identifiers.
+    # Source-literal matching already tolerates whitespace from line wrapping.
+    # Include every text node, including drawing text outside ordinary w:p.
+    text = "".join(node.text or "" for node in tree.iter() if node.tag in old.TEXT_TAGS)
     remaining = strip_canonical_literals(text, document, "ja")
     # A synthetic audit tree carries every unquoted body string and every
     # accessibility label. Other parts are checked without any exception.

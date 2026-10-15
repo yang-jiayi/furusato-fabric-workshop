@@ -164,8 +164,11 @@ class ParticipantSelfServiceTests(unittest.TestCase):
     def test_source_code_survives_actual_word_xml_and_html_copy_targets(self):
         # Use the release renderer with real source-bound code blocks. This is a
         # local structural fixture, not a release approval or page-layout claim.
+        appendix = Section("appendix-c", 1, "C", Text("評価", "Evaluation"), appendix="C")
+        evaluation.append_rubric_sections(appendix, ROOT)
+        rendered_codes = self.codes + code_blocks(appendix)
         model = Document([Section("code-check", 1, "17", Text("コピー確認", "Copy check"),
-                                  blocks=copy.deepcopy(self.codes), chapter=17)], [], [], [])
+                                  blocks=copy.deepcopy(rendered_codes), chapter=17)], [], [], [])
         with tempfile.TemporaryDirectory(prefix="participant-code-preservation-") as directory:
             work = Path(directory)
             target = work / "guide.docx"
@@ -179,19 +182,21 @@ class ParticipantSelfServiceTests(unittest.TestCase):
             paragraphs = ["".join(p.xpath(".//w:t/text()", namespaces=ns))
                           for p in doc.xpath("//w:p", namespaces=ns)]
             word_text = "\n".join(paragraphs)
-            for block in self.codes:
+            for block in rendered_codes:
                 with self.subTest(word=block["text"][:50]):
                     self.assertIn(block["text"], word_text)
+            self.assertIn("質問(日本語)", paragraphs)
+            self.assertNotIn("質問（日本語）", paragraphs)
 
         context = RenderContext(ui={"copy.aria": {"ja": "コピー", "en": "Copy"},
                                     "copy.label": {"ja": "コピー", "en": "Copy"}},
                                 assets=None, version="test", fingerprint="test", runtime_fingerprint="",
                                 facts=None, context=SimpleNamespace(), stats={})
         counter = {"code": 0}
-        markup = "<main>" + "".join(render_block(b, context, counter) for b in self.codes) + "</main>"
+        markup = "<main>" + "".join(render_block(b, context, counter) for b in rendered_codes) + "</main>"
         page = html.fromstring(markup)
         nodes = page.xpath("//pre/code")
-        self.assertEqual(self.code_texts, [node.text_content() for node in nodes])
+        self.assertEqual([b["text"] for b in rendered_codes], [node.text_content() for node in nodes])
         self.assertEqual([node.get("id") for node in nodes],
                          page.xpath("//button/@data-copy-target"))
 
@@ -251,6 +256,25 @@ class ParticipantSelfServiceTests(unittest.TestCase):
         header["word/header1.xml"] = parts("別の（ヘッダー）")["word/document.xml"]
         report = validator.old.Report(target="other story punctuation test")
         validator.check_participant_parentheses(header, model, report)
+        self.assertFalse(report.passed)
+
+    def test_canonical_punctuation_check_does_not_insert_spaces_between_formatting_runs(self):
+        quoted = "increment-run-003（donation_events_003.csv）"
+        model = Document([Section("literal", 1, "C", Text("原典", "Source"), blocks=[
+            Block("paragraph", {"text": Text(quoted, quoted), "canonicalLiteral": True})])], [], [], [])
+        namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+        tree = etree.Element("{" + namespace + "}document", nsmap={"w": namespace})
+        paragraph = etree.SubElement(tree, "{" + namespace + "}p")
+        for value in ("increment-run-", "003", "（", "donation_events_003", ".csv", "）"):
+            run = etree.SubElement(paragraph, "{" + namespace + "}r")
+            etree.SubElement(run, "{" + namespace + "}t").text = value
+        parts = {"word/document.xml": etree.tostring(tree)}
+        report = validator.old.Report(target="split formatting runs")
+        validator.check_participant_parentheses(parts, model, report)
+        self.assertTrue(report.passed, report.failures)
+        etree.SubElement(tree, "{" + namespace + "}t").text = "未引用（別の説明）"
+        report = validator.old.Report(target="unquoted text outside paragraph")
+        validator.check_participant_parentheses({"word/document.xml": etree.tostring(tree)}, model, report)
         self.assertFalse(report.passed)
 
 

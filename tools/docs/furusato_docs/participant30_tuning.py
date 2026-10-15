@@ -20,8 +20,8 @@ VIEW_RELS = (
     Path("workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_donor_catalog_supplier.sql"),
     Path("workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_municipality_snapshot.sql"),
     Path("workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_supplier_catalog.sql"),
-    Path("workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_prefecture_category_metric.sql"),
     Path("workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_relationship_dictionary.sql"),
+    Path("workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_prefecture_category_metric.sql"),
 )
 INSTRUCTION_FILES = (
     ("global-instructions.txt", "Agent instructions", "全体の回答方針", "Agent-wide answer policy"),
@@ -124,8 +124,8 @@ def append_tuning_sections(chapter: Section, root: Path):
         ], "この章で使う同梱ファイル", "Included files used in this chapter", (2.0, 4.6)),
     ])
     view_blocks = [
-        _paragraph("Lakehouse の SQL analytics endpoint を開き、New SQL query を選びます。下の6つの CREATE VIEW を、各ブロックごとに1回ずつ実行します。これらは読み取り用のビューで、CSV や基礎テーブルの値は変更しません。既にあるビューは再作成せず、定義を下記と照合します。異なる場合は現在の定義を保存してから、同じ名前のビューの定義だけを変更します。別の参加者のビューやテーブルを削除しません。",
-                   "Open the Lakehouse SQL analytics endpoint and select New SQL query. Run each of the six CREATE VIEW blocks once, separately. These are read-only views and do not change CSV or base-table values. For existing views, compare their definitions with the blocks instead of creating them again. Save any differing definition before changing only that same view's definition. Do not delete other participants' views or tables."),
+        _paragraph("Lakehouse の SQL analytics endpoint を開き、New SQL query を選びます。下の6つの CREATE VIEW を上から順に、各ブロックごとに1回ずつ実行します。5番目の agent_relationship_dictionary を先に作成し、それを参照する6番目の agent_prefecture_category_metric はその後に作成します。これらは読み取り用のビューで、CSV や基礎テーブルの値は変更しません。既にあるビューは再作成せず、定義を下記と照合します。異なる場合は現在の定義を保存してから、同じ名前のビューの定義だけを変更します。別の参加者のビューやテーブルを削除しません。",
+                   "Open the Lakehouse SQL analytics endpoint and select New SQL query. Run the six CREATE VIEW blocks from top to bottom, once each and separately. Create the fifth view, agent_relationship_dictionary, before the sixth view, agent_prefecture_category_metric, which references it. These are read-only views and do not change CSV or base-table values. For existing views, compare their definitions with the blocks instead of creating them again. Save any differing definition before changing only that same view's definition. Do not delete other participants' views or tables."),
         _paragraph("テーブルが見えなければ、5章の Notebook 01 と11章の Notebook 05 の完了、SQL endpoint の同期状態、接続先 Lakehouse を確認します。CREATE VIEW 権限がなければ、その Lakehouse の管理者に権限または下記の実行を依頼します。ビュー名だけがある状態では完了ではありません。",
                    "If tables are absent, check completion of Notebook 01 in Chapter 5 and Notebook 05 in Chapter 11, SQL endpoint synchronization and the selected Lakehouse. If CREATE VIEW permission is missing, request permission or execution of the blocks from that Lakehouse's administrator. A view name alone does not establish completion."),
     ]

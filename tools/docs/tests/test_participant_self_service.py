@@ -108,6 +108,51 @@ class ParticipantSelfServiceTests(unittest.TestCase):
         self.assertEqual(6, len(tuning.VIEW_RELS))
         self.assertEqual(expected, [b["text"] for b in code_blocks(section)])
 
+    def test_view_creation_order_satisfies_actual_sql_dependencies_and_notebook_base_tables(self):
+        # Read the rendered order and the real SQL references, rather than
+        # asserting a fixed pair of filenames. Fresh endpoints cannot create
+        # a view before another view used by its SELECT already exists.
+        section = next(s for s in self.tuning.walk() if s.number == "17.6")
+        statements = [b["text"] for b in code_blocks(section)
+                      if re.match(r"\s*CREATE\s+VIEW\b", b["text"], re.IGNORECASE)]
+        identifier = r"(?:\[[^\]]+\]|[A-Za-z_][A-Za-z_0-9]*)"
+        qualified = rf"{identifier}\s*\.\s*{identifier}"
+
+        def normalize(name):
+            return re.sub(r"[\[\]\s]", "", name).lower()
+
+        names = [normalize(re.match(rf"\s*CREATE\s+VIEW\s+({qualified})\b", sql,
+                                    re.IGNORECASE).group(1)) for sql in statements]
+        self.assertEqual(6, len(names))
+        self.assertEqual(6, len(set(names)))
+        created = set()
+        external = set()
+        inter_view_dependencies = set()
+        for name, sql in zip(names, statements):
+            references = {normalize(value) for value in re.findall(
+                rf"\b(?:FROM|JOIN)\s+({qualified})", sql, re.IGNORECASE)}
+            internal = references.intersection(names)
+            with self.subTest(view=name):
+                self.assertFalse(internal - created,
+                                 f"{name} is printed before its dependencies: {sorted(internal - created)}")
+            inter_view_dependencies.update((name, dependency) for dependency in internal)
+            external.update(references - set(names))
+            created.add(name)
+        self.assertTrue(inter_view_dependencies, "The real SQL dependency edge must be exercised")
+
+        notebook = json.loads((ROOT / "workshop/v3.0.0-preview/notebooks/"
+                               "Notebook_01_Furusato_Prepare_Ontology_Data.ipynb").read_text(encoding="utf-8"))
+        contract_cell = next("".join(cell["source"]) for cell in notebook["cells"]
+                             if "OUTPUT_ROW_COUNTS =" in "".join(cell.get("source", [])))
+        counts = next(ast.literal_eval(node.value) for node in ast.parse(contract_cell).body
+                      if isinstance(node, ast.Assign) and any(
+                          isinstance(target, ast.Name) and target.id == "OUTPUT_ROW_COUNTS"
+                          for target in node.targets))
+        ready_base_tables = {"dbo." + name for name, count in counts.items() if count > 0}
+        self.assertTrue(external)
+        self.assertFalse(external - ready_base_tables,
+                         f"View prerequisites are absent from Notebook 01 output: {sorted(external - ready_base_tables)}")
+
     def test_kql_columns_and_source_descriptions_match_canonical_sources(self):
         kql_section = next(s for s in self.tuning.walk() if s.number == "17.11")
         columns = [n for n in self.selections["kusto"] if n["type"] == "kusto.column"]

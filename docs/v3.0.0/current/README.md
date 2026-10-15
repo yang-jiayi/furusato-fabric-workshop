@@ -1,97 +1,72 @@
-# Furusato Workshop 3.0.0 — 現行教材 / Current workshop
+# Furusato Workshop 3.0.0 — 現行の参加者用教材 / Current participant materials
 
-2026-10-15整合版。再配置した構成と採用済み指示を、Notebook・可搬profile・参加者Word・日英HTMLへ反映しました。
+参加者には、**Word または日英HTMLのいずれかと、同じ版のZIPを1組で渡してください。** 手順はWord・HTMLに収録し、実行するNotebook、CSV、SQL、モデル、ツール、評価用紙はZIPに同梱しています。初回の配置から、採用済みData Agent設定の適用・公開・確認、回答評価までを参加者が進める構成です。
 
 [参加者用Word](guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
 [参加者用日英HTML](guide/furusato-workshop-v3-0-0-complete.html) ·
-[Notebook・CSV・モデルを含むZIP](Furusato_Workshop_v3.0.0_current-20261015.zip) ·
-[Artifact-set](artifact-set.json) · [検証結果](deployment-verification.md) ·
-[検証JSON](verification.json) · [SHA-256](SHA256SUMS.txt) ·
-[作業・実測レポート](../tuning-20261015/README.md) ·
-[精度校正・資料校正](../tuning-20261015/calibration-and-proofreading.md)
+[同じ版のZIP](Furusato_Workshop_v3.0.0_current-20261015.zip) ·
+[配布SHA-256](SHA256SUMS.txt) ·
+[今回の検証と過去の実測の区別](deployment-verification.md)
 
-標準構成は**Ontology 1件・Data Agent 1件**です。通常ソースはLakehouse・KQL Database・Semantic Modelの3件で、同じOntologyを独立したcontextとして登録します。
-Ontology consumerのSchemaUnavailableを別のOntologyの追加で置き換えません。
+## 渡すものと始め方
 
-同じ条件で対応付けた281条件の補助条件充足率は189/281（67.26%）から217/281（77.22%）へ9.96ポイント上がりました。既定の確認質問分岐の9条件だけを両側から除外しています。厳密な受理1件→2件はすべて確認質問で、ソース照会を伴う完成回答の厳密な受理は両方0件です。
-回答内容の補助条件、厳密なnative判定、確認できたソース実行を分けて示します。固定条件を満たしても追加説明が誤る例があり、全文章の正確性を保証しません。
-3ファイルの自動取り込みと公式埋め込みによるReport表示は検証済みです。Time Seriesは保存済みバインドと実行証拠を分け、native Metrics0件とOntology consumerの制約を保持しています。
+1. ZIPを展開する前に、配布元の[SHA256SUMS.txt](SHA256SUMS.txt)とZIPのSHA-256を照合します。
+2. ZIPをすべて展開します。`guide/`が手順書、`attachments/`が添付資料、`source/`がNotebook・データ・実行ツールです。コマンドは`source/`から実行します。
+3. 第4章で利用可能なワークスペース、容量、機能、権限、空の作業フォルダー、参加者IDを確認します。講習では割り当てられた範囲、自習では自分に操作が許可された範囲を使います。
+4. 次の章対応に従って進みます。具体的なコマンド、入力値の確認、完了条件、停止した場合の扱いは手順書に含まれます。別のREADMEを探して不足する操作を補う必要はありません。
 
-## 版とソースの対応
+| 順番 | 手順書の箇所 | 実施すること |
+|---|---|---|
+| 1 | 第4章 → 24.4〜24.6 | Python 3.11以降・Azure CLIの準備、本人認証、フォルダー対応、配置計画の確認と承認、基盤作成 |
+| 2 | 第5〜8章 | 作成済みのLakehouse・Notebook01・主Ontology・Eventhouseを確認。同じアイテムを重複作成しない |
+| 3 | 24.7・第9〜10章 | Activatorの実状態確認、3ファイルの各1回の取り込み、イベント・実行・Copy・KQLの確認 |
+| 4 | 第11章 → 24.8 | Notebook05のプレビューと適用、Goldの確認、Semantic model・Data Agentの作成 |
+| 5 | 第12〜13章 → 17.5〜17.16 | モデルと意味の確認、SQLビューと選択、採用済み指示・例の適用、公開・読み戻し |
+| 6 | 第17章の実回答確認 → 第19章・付録C | SQL・Code Interpreterの確認、固定問題の評価、改善案の比較と採用判断 |
 
-| 対象 | 正本と役割 |
-|---|---|
-| 教材・Notebook01–05 | [`WORKSHOP_VERSION`](../../../WORKSHOP_VERSION) = 3.0.0 |
-| 配置パス | [`workshop/v3.0.0-preview`](../../../workshop/v3.0.0-preview/README-runtime.md)、互換パス |
-| 版の対応表 | [`edition.json`](../../../workshop/v3.0.0-preview/edition.json)、標準Ontology数1 |
-| CSV | 2.7.0-realistic.1、11ファイルの値・行数・hashを保持 |
-| 処理コード基線 | 2.7.0、Notebook01/05の処理を維持。完了済み処理を再実行しない |
-| 現行profile | [`measured-contract-20261015`](../../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md) |
-| モデル | 金額列を表示。既存10メジャーの式は維持。Agent native schemaへの露出は別検証 |
-| Word・HTML | 共有原稿、同じartifact-set SHA、HTMLに対応するWordの実SHA |
+主OntologyとData Agentは**各1件**です。Gen2では通常ソース3件と同じ主Ontologyの独立したcontextを扱います。接続エラーを別のOntology追加で回避しません。組織の容量・テナント設定・アクセス権は管理者が用意する前提です。必須のソースやAgentが利用できない場合は、依存する作業を完了扱いにしません。
 
-profile compilerは、実際のnative選択要素、独立SQL metadata、公開modelのTMDLとOntology
-metadataからDraftだけを生成します。欠けたschema IDを作らず、1区画10,000 UTF-16単位を
-超える指示を拒否します。呼び出し側はサービスの回答例検証、staging、公開読戻しと実回答評価を行います。
+## チューニングを再現する内容
 
-参加者版は構造・日英ブラウザー検査152件が成功（FAIL 0）し、LibreOfficeで描画したWord92ページ、Chromiumで印刷した日本語100ページ・英語102ページの全294ページを実画像で確認しました。Word本文・表の可視テキスト1,878断片のうち単純連結診断で2断片が未一致となりましたが、いずれもページ境界に挟まるヘッダー・フッターによるもので、実画像と実PDFテキストで全文の保持を確認しました。
+第17章には、6つのSQLビュー、選択する17オブジェクト・143列、全体と3ソースの指示全文、9件のKQL例、既存10メジャー、入力先と操作順を収録しています。`participant_profile.py`の`prepare → apply → publish → verify`で、実際のschemaとメジャーを確認して同じAgentに設定し、公開版を読み戻します。手順書の原文と同梱ファイルは同じ正本から生成します。
 
-一部の元UI画像には周辺操作部の切れや密なGraphラベルの重なりが残りますが、手順本文・キャプション・必要な証拠は読めます。余白の多い参照ページや表見出しから次ページへの継続も記録しました。fieldを含まない目次方式のためページ番号はなく、フッターの「Page」だけが残る点は体裁上の制約です。29章・付録への内部リンクを利用できます。
+このツールは固定した`measured-contract-20261015`の構成再現に使います。参加者が次の改善を試す場合の手動編集・公開・比較は第19章に区別して記載しています。独自に変更した指示へ固定プロファイルを再適用して上書きする手順ではありません。
 
-ZIPの383エントリーをCRC・SHA-256で全件確認し、371ソース成果物を固定ソースcommitのGit blobと照合しました。Notebook01–05・CSV・モデル・採用profile・校正手順・実測レポートを同梱します。 [文書検査](DOCUMENT_VALIDATION.json)・[全ページ確認](participant-render-validation.json)。
+まず**基本演習10回・84条件**で操作と採点を学び、その後、必要に応じて**完全な公開評価49回・290条件／段階**へ進む構成を勧めます。完全評価は公開29問のうちT01〜T10を各3回、B01〜B19を各1回実施します。前後比較用紙は98枠・580条件行・290組で、質問だけを新しい会話へ送ります。採点基準・期待値はAgentの指示や例へ入れません。
 
-## 再生成と校正
+初めて採用済み設定を適用した後の測定は「再現確認」です。次の修正の評価では、その時点の公開版をbaselineとして保存します。同じ設定を2回測った差を、指示変更による改善とは呼びません。質問・条件・データを固定し、失敗、不明、退行、実行根拠、採用しなかった案も残します。
 
-まずソースを固定し、可搬資産とNotebookの同梱packageを生成します。
+## 今回確認した範囲
 
-```bash
-python -B tools/provisioning/build_preview30.py
-python -B -m unittest discover -s tools/provisioning -p 'test_preview30*.py'
-python -B tools/provisioning/v3_artifacts.py --out workshop/v3.0.0-preview/provisioning/artifact-set.json
-```
+手順書の生成元は`723465ba15bd56206061b540b833ab4c5b7a29f2`です。今回の追加は、参加者が再現できる配置・設定・評価の手順、同梱ツール、ZIP単体からの実行対応と文書生成の整合です。
 
-Word・HTMLの生成先はcheckout外の新しい私有ディレクトリとします。既存版・過去の評価を上書きしません。
-`$Approval`には、使用するpublic projectionと保持する元76/8 runの実hashに結び付く文書配布承認を
-指定します。文書identityの `provenance-native-ui-20261001` と76 PASS／8 FAILは保持した過去runの記録で、現在の回答評価ではありません。現在の281条件の比較は別の日付付き2026-10-15レポートを参照します。これは新しい回答品質の合格証明ではありません。今回の文書配布・main統合はユーザーの指示によります。
+新しいプロファイル用ツールは、既存環境に対する**読み取り専用prepareと公開版verifyが成功**しています。実際の17オブジェクト・143列、通常ソース3件、9件のValidなKQL例を確認しました。新しいツールによる書き込み経路は模擬応答で検証しています。今回の教材改訂を理由にクラウドの再配置、全演習の通し直し、Data Agentの新しい回答精度評価は実施していません。
 
-```powershell
-$Manifest = "workshop/v3.0.0-preview/provisioning/artifact-set.json"
-$Options = @("--release-profile", "v3.0.0", "--participant-edition", "--word-navigation", "headings",
-             "--release-approval", $Approval, "--artifact-manifest", $Manifest)
-python -B tools/docs/build_preview30.py --out "$Stage/pair" --review "$Stage/build" @Options
-python -B tools/docs/validate_preview30.py --pair "$Stage/pair" --review "$Stage/checks" `
-  --interactions --print-html @Options
-python -B tools/docs/package_preview30.py --pair "$Stage/pair" `
-  --validation "$Stage/checks/validation.json" --out "$Stage/package" @Options
-```
+再生成したNotebookの同梱パッケージには、ZIPからの実行に必要なruntimeの検査処理を反映していますが、クラウド上のNotebookへ再同期していません。以前に行ったNotebook01〜05とクラウド定義の一致確認は、旧ソース`c724bc3cb906ef5278bb301a1af6887b65affd0a`に対応する記録です。
 
-Linuxではvalidateに `--browser-executable /usr/bin/chromium` など実際のbrowser pathを指定できます。
-browserがfile URLを開けない場合は `--browser-transport loopback` を追加します。
-選んだHTMLだけを一時的なローカルHTTPで配信し、それ以外の通信は遮断して検査します。
-Wordは29章・付録への内部リンク目次を持ち、Officeの動的fieldと古いページ番号を含みません。
-この生成方法には Noto Sans CJK JP と Noto Sans Mono CJK JP を用意します。本文・表とコードに
-それぞれ明示して、日本語の字体の欠落を防ぎます。
-Microsoft Wordによるページ割り検証は行っていません。ZIPの `DOCUMENT_VALIDATION.json` は
-構造・日英ブラウザー検査とWord未確認の範囲を明記します。
-既定の `--word-navigation fields` と厳密な `--require-acceptance` の検査は別に維持しています。
-LibreOfficeによるPDF確認は追加の描画観測で、Microsoft Wordの検証とは区別します。
+関連する自動検査960件と、実ファイルを使った文書・日英ブラウザー検査257件が成功しました。LibreOfficeのWord 147ページ、日本語HTML 167ページ、英語HTML 169ページ、計483ページを画像で確認しました（今回68ページを新たに確認し、残る415ページは前候補で実際に確認した画像とページ番号・PNGのSHA-256が完全一致することを検証しました。さらに、この一致した画像のうち14ページは本文保持の診断で再度開いて確認しました）。ZIPの全429エントリーをCRC・SHA-256で照合し、417ソースを固定commitのGit blobと照合しました。実際に展開したZIPからGitなしのoffline preflightと依存ツールの読み込みが成功し、保護対象の改変も拒否されました。Microsoft Word自体の描画・ページ割りは未検証です。 記録は[文書検査](DOCUMENT_VALIDATION.json)、[ページ確認](participant-render-validation.json)、[検証JSON](verification.json)、[配布SHA-256](SHA256SUMS.txt)にあります。
 
-各章は目的、操作、完了確認、参照表、参考資料で構成します。精度校正・資料校正は19章、
-単一Ontologyの配置は24章にあります。参加者用パッケージに私有の実回答・trace・認証情報を含めません。
-元のタグ・日付付き過去成果物は保持します。
-[前回の整合版（固定コミット）](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/f255989351b418fe99f9ee8ef3d562233adfd9f7/docs/v3.0.0/current)
-は新しい結果と分けて参照します。
+## 2026-10-15の実回答評価について
+
+[日付付きレポート](../tuning-20261015/README.md)の過去の測定では、対応付けた281条件の補助条件充足率が189/281（67.26%）から217/281（77.22%）へ上がりました。これは今回の教材改訂後に再測定した値でも、参加者が必ず達成する正答率でもありません。厳密な受理1件→2件は確認質問の分岐で、ソース照会を伴う完成回答の厳密な受理は両方0件でした。
+
+過去の51枠・296条件には非公開2問・6条件が含まれるため、配布する公開49枠・290条件とは範囲が異なります。Ontology contextの`SchemaUnavailable`／502、native Metrics 0件、Time SeriesとCode Interpreterの一部実行根拠不足を保持しています。過去の3ファイルの自動取り込みとReport表示の確認も、日付付きの実測であり、今回の新しい通し検証ではありません。
+
+[採用済みプロファイル](../../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md) ·
+[評価・校正の記録](../tuning-20261015/calibration-and-proofreading.md) ·
+[版とソースの対応](artifact-set.json) ·
+[旧資料の固定ソース](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/c724bc3cb906ef5278bb301a1af6887b65affd0a)
 
 ## English
 
-The 2026-10-15 current materials describe 18 deployed items, one Ontology and one Data Agent, with three ordinary sources plus separate context for the same Ontology. The adopted portable profile is `measured-contract-20261015`.
-Supplemental condition fulfillment on 281 matched conditions rose from 189/281 (67.26%) to 217/281 (77.22%), a 9.96 percentage-point difference. Only nine predeclared clarification-branch conditions were excluded symmetrically. Strict acceptance changed from one to two clarification responses; neither phase had a strictly accepted completed source-query answer.
-Supplemental condition fulfillment, strict native acceptance and verified source execution remain separate. Additional prose can be wrong outside the fixed conditions.
-Automatic ingestion of three files and official Report rendering were verified; Ontology consumption, native Time Series evidence and Metrics retain explicit limits.
+Give participants **either the Word guide or bilingual HTML, together with the matching ZIP**. Instructions are in the guide; Notebooks, CSVs, SQL, models, tools and evaluation forms are in the ZIP. Verify its external SHA-256 before extracting it. Run commands from `source/`.
 
-The participant edition passed 152 structure and bilingual browser checks with zero failures. Every one of the 294 actual page images was inspected: 92 LibreOffice Word pages, 100 Japanese Chromium print pages and 102 English print pages. Of 1,878 visible Word paragraph/table-cell text fragments, two did not match the raw concatenated PDF text because repeated headers/footers interrupted paragraphs across page boundaries; actual images and PDF text confirmed that both complete paragraphs were retained.
+Follow Chapter 4 → 24.4–24.6 deployment → Chapters 5–8 inspection → 24.7 and Chapters 9–11 ingestion/quality → 24.8 model/Agent deployment → Chapters 12–13 → Chapter 17 configuration → Chapter 19 and Appendix C evaluation. Workspace/capacity/access prerequisites remain organizational responsibilities. The guide includes creation of the Pipeline, Activator and semantic model, without undistributed instructor scripts. Keep one main Ontology and one Data Agent.
 
-Some retained UI screenshots show cropped peripheral controls or overlapping dense graph labels; the instructions, captions and required evidence remain readable. Sparse reference pages and table continuations are documented. The field-free navigation edition intentionally has no page numbers and retains a cosmetic bare “Page” footer label; 29 chapter/appendix links provide navigation.
+Chapter 17 includes six SQL view definitions, 17 selected objects and 143 columns, four complete instruction bodies, nine KQL examples and ten existing measures. The helper prepares, applies, publishes and verifies the fixed adopted profile. Chapter 19 separately explains subsequent manual tuning, publication and comparison. Start with ten practice attempts / 84 conditions, then use 49 attempts / 290 conditions per phase for the full public evaluation. Two phases have 98 slots, 580 condition rows and 290 paired conditions. Send question text only, in a fresh conversation for every attempt.
 
-All 383 ZIP entries were checked by CRC and SHA-256, and all 371 source artifacts matched Git blobs at the pinned source commit. The package includes Notebooks01–05, CSV data, models, the adopted profile, calibration procedure and measured report. See [document checks](DOCUMENT_VALIDATION.json) and [all-page review](participant-render-validation.json).
-The package retains the historical document identity `provenance-native-ui-20261001` (76 PASS / 8 FAIL); current answer evaluation is the separate dated 2026-10-15 report with 281 matched conditions. Microsoft Word pagination and rendering remain unverified. The fixed previous release is retained independently.
+The source for this participant revision is `723465ba15bd56206061b540b833ab4c5b7a29f2`. The new helper's read-only prepare and Published verification passed against the existing environment; its write path was tested with mocked responses. The updated Notebook payloads have **not** been synchronized to Fabric, and this revision has **not** been deployed and evaluated end to end in a new workspace. Earlier Notebook/cloud synchronization belongs to source `c724bc3cb906ef5278bb301a1af6887b65affd0a`.
+
+All 960 affected unit checks and 257 actual-document/bilingual-browser checks passed. Reviewers inspected all 483 actual pages: 147 LibreOffice Word pages, 167 Japanese HTML pages and 169 English HTML pages. Of these, 68 were newly inspected and 415 reused actual prior review only after matching PDF label, page number and the entire PNG SHA-256. Another 14 of those identical pages were additionally reopened for text-preservation diagnostics, so 82 current images were actually opened. All 429 ZIP entries passed CRC/SHA-256 checks and all 417 source entries matched the pinned Git blobs. The actual extracted ZIP passed offline preflight without Git and dependency checks; tampered protected source was rejected. Microsoft Word rendering and pagination remain unverified. See [document checks](DOCUMENT_VALIDATION.json), [all-page review](participant-render-validation.json) and [verification](verification.json).
+
+The dated October 15 result, 189/281 → 217/281 supplemental condition fulfillment, is historical and is neither a new measurement nor a guaranteed participant accuracy target. Its private questions are excluded from the public course kit. Preserve the documented Ontology, Metrics, time-series and execution-evidence limitations and evaluate actual answers in each participant environment.

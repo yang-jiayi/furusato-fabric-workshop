@@ -13,7 +13,7 @@ import hashlib
 import io
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import subprocess
 import sys
@@ -184,8 +184,124 @@ def planned_resources(pid: str, *, include_relationships: bool = False) -> list[
             for key, kind, name, purpose in items]
 
 
+def _git_metadata_present() -> bool:
+    """A broken worktree or an explicit Git environment must never use ZIP mode."""
+    return (any(os.path.lexists(parent / ".git") for parent in (REPO, *REPO.parents))
+            or any(name in os.environ for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")))
+
+
+def _unique_json(path: Path) -> Any:
+    def pairs(values):
+        result = {}
+        for key, value in values:
+            if key in result:
+                raise SafetyError("Duplicate key in released package manifest: " + key)
+            result[key] = value
+        return result
+    try:
+        return json.loads(path.read_text(encoding="utf-8-sig"), object_pairs_hook=pairs)
+    except (OSError, ValueError) as error:
+        raise SafetyError("Released package metadata is missing or invalid: " + path.name) from error
+
+
+def _package_path(relative: str, *, regular_file: bool = True) -> Path:
+    """Resolve portable manifest paths without following a source-tree symlink."""
+    if (not isinstance(relative, str) or not relative or "\\" in relative or ":" in relative
+            or any(ord(char) < 32 for char in relative)
+            or PurePosixPath(relative).is_absolute() or PurePosixPath(relative).as_posix() != relative
+            or any(part in {".", "..", ""} for part in relative.split("/"))):
+        raise SafetyError("Unsafe released package path.")
+    path = REPO
+    for part in relative.split("/"):
+        path = path / part
+        if path.is_symlink():
+            raise SafetyError("Released package paths may not contain symlinks: " + relative)
+    if not path.exists() or (regular_file and not path.is_file()):
+        raise SafetyError("Released package file is missing or not regular: " + relative)
+    return path
+
+
+def _hash_mapping(value: Any, name: str) -> dict[str, str]:
+    if (not isinstance(value, dict) or not value or any(
+            not isinstance(key, str) or not isinstance(sha, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", sha) for key, sha in value.items())):
+        raise SafetyError("Invalid released package hash inventory: " + name)
+    return value
+
+
+def _released_package_baseline() -> dict[str, Any]:
+    """Verify a release's complete source inventory and fixed protected baseline.
+
+    The released ZIP checksum is the external trust anchor: participants verify
+    it before extraction. This local manifest verifies completeness/integrity;
+    it is not an independent signature or a replacement for that outer check.
+    It is used ONLY when no Git metadata exists, never after a Git failure.
+    """
+    manifest = _unique_json(_package_path("artifact-set.json"))
+    if (not isinstance(manifest, dict)
+            or manifest.get("schemaVersion") != "furusato-v3-artifact-set/v1"
+            or manifest.get("workshopVersion") != WORKSHOP_VERSION
+            or manifest.get("runtimeProfile") != EDITION
+            or not re.fullmatch(r"[0-9a-f]{40}", str(manifest.get("sourceCommit", "")))):
+        raise SafetyError("Released package schema, source commit or workshop edition differs.")
+    files = _hash_mapping(manifest.get("files"), "source files")
+    if manifest.get("sourceTreeSha256") != digest(files):
+        raise SafetyError("Released source inventory digest differs.")
+    required = {*RUNTIME_INPUT_FILES, "workshop/v3.0.0-preview/provisioning/baseline-hashes.json"}
+    if not required <= files.keys():
+        raise SafetyError("Released source inventory omits required runtime/baseline files.")
+    for relative, expected in files.items():
+        path = _package_path(relative)
+        if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+            raise SafetyError("Released package source changed: " + relative)
+    edition = _unique_json(_package_path("workshop/v3.0.0-preview/edition.json"))
+    if (not isinstance(edition, dict) or manifest.get("edition") != edition or edition.get("workshopVersion") != WORKSHOP_VERSION
+            or edition.get("runtimeProfile") != EDITION
+            or edition.get("baselineRuntimeVersion") != _package_path("VERSION").read_text(encoding="utf-8").strip()
+            or _package_path("WORKSHOP_VERSION").read_text(encoding="utf-8").strip() != WORKSHOP_VERSION):
+        raise SafetyError("Released edition/version bindings differ.")
+    protection = manifest.get("baselineProtection", {})
+    if (not isinstance(protection, dict)
+            or protection.get("schemaVersion") != "furusato-protected-baseline/v1"
+            or protection.get("baselineCommit") != BASELINE_COMMIT
+            or protection.get("protectedPaths") != list(BASELINE_PROTECTED_PATHS)):
+        raise SafetyError("Released protected baseline roots or source commit differ.")
+    protected = _hash_mapping(protection.get("files"), "protected files")
+    if protection.get("treeSha256") != digest(protected):
+        raise SafetyError("Released protected inventory digest differs.")
+    scoped = {name: sha for name, sha in files.items() if any(
+        name == root or name.startswith(root + "/") for root in BASELINE_PROTECTED_PATHS)}
+    if protected != scoped:
+        raise SafetyError("Released protected inventory differs from the source inventory.")
+    actual = {}
+    for relative in BASELINE_PROTECTED_PATHS:
+        root = _package_path(relative, regular_file=False)
+        paths = [root] if root.is_file() else sorted(root.rglob("*"))
+        for path in paths:
+            name = path.relative_to(REPO).as_posix()
+            if path.is_symlink() or not (path.is_file() or path.is_dir()):
+                raise SafetyError("Protected package contains a symlink or nonregular entry: " + name)
+            if path.is_file():
+                actual[name] = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual != protected:
+        raise SafetyError("Protected released files are missing, added or modified.")
+    baseline = _unique_json(_package_path("workshop/v3.0.0-preview/provisioning/baseline-hashes.json"))
+    if not isinstance(baseline, dict):
+        raise SafetyError("Released baseline hash inventory is invalid.")
+    base_files = _hash_mapping(baseline.get("files"), "baseline files")
+    actual_base = {name.removeprefix("workshop/v2.7.0/"): sha for name, sha in actual.items()
+                   if name.startswith("workshop/v2.7.0/")}
+    if (len(base_files) != 109 or base_files != actual_base
+            or baseline.get("treeSha256") != digest(base_files)
+            or manifest.get("immutableBaselineTreeSha256") != digest(base_files)):
+        raise SafetyError("The released 109-file baseline tree binding differs.")
+    return baseline
+
+
 def immutable_baseline() -> dict[str, Any]:
-    """Hash the complete baseline, and independently reconcile source CSVs."""
+    """Hash baseline/data; require Git protection or a verified released ZIP."""
+    use_git = _git_metadata_present()
+    released = None if use_git else _released_package_baseline()
     files = {p.relative_to(BASE).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
              for p in sorted(BASE.rglob("*")) if p.is_file()}
     seed = BASE / "data" / "seed" / "donation_orders.csv"
@@ -210,17 +326,21 @@ def immutable_baseline() -> dict[str, Any]:
         ids.extend(row[key] for row in inc)
     if list(increments.values()) != [5000, 5000, 5000] or len(set(ids)) != 14900:
         raise SafetyError("Immutable increment contract differs from 3x5000 / 14900.")
-    dirty = subprocess.run(
-        ["git", "-C", str(REPO), "--no-pager", "diff", "--name-only",
-         BASELINE_COMMIT, "--", *BASELINE_PROTECTED_PATHS],
-        capture_output=True, text=True, check=True,
-    ).stdout.strip().splitlines()
-    if dirty:
-        raise SafetyError("Protected baseline changed: " + ", ".join(dirty[:10]))
-    return {"treeSha256": digest(files), "files": files,
-            "staticDonationRows": len(rows), "staticDonationYen": total,
-            "increments": increments, "rawIncrementRows": len(ids),
-            "acceptedUniqueRows": len(set(ids)), "duplicateRows": len(ids) - len(set(ids))}
+    if use_git:
+        dirty = subprocess.run(
+            ["git", "-C", str(REPO), "--no-pager", "diff", "--name-only",
+             BASELINE_COMMIT, "--", *BASELINE_PROTECTED_PATHS],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip().splitlines()
+        if dirty:
+            raise SafetyError("Protected baseline changed: " + ", ".join(dirty[:10]))
+    result = {"treeSha256": digest(files), "files": files,
+              "staticDonationRows": len(rows), "staticDonationYen": total,
+              "increments": increments, "rawIncrementRows": len(ids),
+              "acceptedUniqueRows": len(set(ids)), "duplicateRows": len(ids) - len(set(ids))}
+    if released is not None and result != released:
+        raise SafetyError("Independent CSV reconciliation differs from the released baseline receipt.")
+    return result
 
 
 class EvidenceClient:

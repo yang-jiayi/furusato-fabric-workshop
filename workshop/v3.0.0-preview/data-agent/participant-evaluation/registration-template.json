@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "furusato-participant-evaluation-registration/v1",
+  "campaignLabel": "FILL-BEFORE-FIRST-QUESTION",
+  "protocol": "extended-public-49",
+  "registeredAtUtc": "",
+  "frozenQuestionAndRubricSha256": "130f796cc3db5f2e4af56c4026970fa5c58450322f520348a3d52b052d30d508",
+  "questionLanguage": "ja",
+  "interface": "Fabric published Data Agent chat",
+  "timeoutSeconds": 600,
+  "oneSubmissionPerSlot": true,
+  "newConversationPerSlot": true,
+  "slotsPerPhase": 49,
+  "conditionsPerPhase": 290,
+  "phaseLabels": [
+    "baseline",
+    "final"
+  ],
+  "privateDeploymentRecordFile": "",
+  "dataManifestSha256": "",
+  "liveDataChecksFile": "",
+  "baselinePublishedDefinitionSha256": "",
+  "finalPublishedDefinitionSha256": "",
+  "baselineProfileLabel": "",
+  "finalProfileLabel": "",
+  "instructionChangeHypothesis": "",
+  "permittedChangedFields": [],
+  "sourceSelectionRecordFile": "",
+  "selectedTablesAndColumnsRecordFile": "",
+  "schemaAndMeasureRecordFile": "",
+  "modelAndCapacityObservationFile": "",
+  "reviewer": "",
+  "adoptionRule": {
+    "minimumNewFailToPass": 1,
+    "maximumNewPassToFail": 0,
+    "strictSourceExecutionMustNotDeteriorate": true,
+    "unsupportedOrInventedFactsMustNotIncrease": true,
+    "unresolvedPlatformLimitationsRemainDisclosed": true,
+    "unknownToPassIsNewEvidenceNotKnownErrorCorrection": true
+  },
+  "notEquivalentToHistorical51QuestionCampaign": true,
+  "separateUnseenEvaluation": {
+    "enabled": false,
+    "privateFrozenSpecificationFile": "",
+    "registeredSlots": 0,
+    "registeredConditions": 0,
+    "reportSeparately": true
+  }
+}

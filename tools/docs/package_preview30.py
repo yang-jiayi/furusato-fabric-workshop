@@ -83,6 +83,15 @@ SHA256SUMS.txt  ファイルが壊れていないことを確かめるための�
 
 はじめに guide/ の手順書を開き、第4章の準備から進めてください。
 Open the guide in guide/ and start with the preparation in chapter 4.
+第17章は調整済み設定、公開、読み戻しを説明し、第19章と付録Cは評価・改善を説明します。
+第17章のコマンドは、このZIPを展開した source/ を作業ディレクトリとして実行します。
+Chapter 17 covers the adopted settings, publication and readback; Chapter 19 and
+Appendix C cover evaluation and improvement. Run Chapter 17 commands from source/.
+記録用紙は source/workshop/v3.0.0-preview/data-agent/participant-evaluation/ にあります。
+Evaluation worksheets are in source/workshop/v3.0.0-preview/data-agent/participant-evaluation/.
+設定の一致、ソース接続、回答品質は別々に確認します。点数の再現を保証するものではありません。
+Check configuration parity, source connectivity and answer quality separately.
+The guide does not guarantee reproduction of a particular score.
 
 PowerShell でのハッシュの確認例 / Example hash check in PowerShell:
 Get-FileHash .\\guide\\Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx -Algorithm SHA256

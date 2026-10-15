@@ -1,0 +1,1591 @@
+{
+  "schemaVersion": "furusato-participant-public-evaluation/v1",
+  "questionLanguage": "ja (verbatim; do not translate a comparison run)",
+  "publicNotUnseen": true,
+  "original": {
+    "schema_version": 1,
+    "kind": "original",
+    "cases": [
+      {
+        "id": "T01",
+        "title": "口語の全体像（件数と金額）",
+        "question": "ふるさと納税のデータ、ぜんぶでどれくらいあるんですか。ざっくり件数と金額で教えてください。",
+        "expected": "寄付 80,000 件、合計 1,344,099,000 円。静的スナップショットであること、粒度が「1 寄付 = 1 行」であることを明記する。",
+        "route": "Lakehouse SQL（静的 2025 スナップショット）",
+        "query_shape": "ot_donation に対する 1 本の集計クエリ（件数と金額の合計）",
+        "conditions": [
+          {
+            "id": "T01.evidence.1",
+            "text": "使用ソースが Lakehouse であること",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T01.evidence.2",
+            "text": "件数 80,000",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T01.evidence.3",
+            "text": "金額 1,344,099,000 円",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T01.evidence.4",
+            "text": "粒度（1 寄付 = 1 行）と対象期間（静的 2025 スナップショット）の記述",
+            "source_field": "evidence",
+            "source_index": 3
+          },
+          {
+            "id": "T01.pass_criteria.1",
+            "text": "2 つの数値が完全一致する。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T01.pass_criteria.2",
+            "text": "Eventhouse の観測値を混ぜていない。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T01.pass_criteria.3",
+            "text": "「約」「およそ」だけで濁さず、確定値を提示している。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          }
+        ],
+        "required_query_languages": [
+          "SQL"
+        ]
+      },
+      {
+        "id": "T02",
+        "title": "「人気」の定義（件数と金額）",
+        "question": "いちばん人気の自治体ってどこですか。",
+        "expected": "件数・金額のどちらの指標でも 452025 都城市（宮崎県）が 1 位。件数 1,813 件 / 金額 41,151,000 円。2 位は 272132 泉佐野市（721 件 / 13,266,000 円）。「人気」を件数と金額のどちらで測ったかを明示し、両方を提示する。",
+        "route": "Lakehouse SQL（静的 2025 スナップショット）",
+        "query_shape": "ot_municipality または ot_donation に対する上位ランキング取得",
+        "conditions": [
+          {
+            "id": "T02.evidence.1",
+            "text": "MunicipalityId 452025 の明示",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T02.evidence.2",
+            "text": "件数 1,813 と金額 41,151,000 円",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T02.evidence.3",
+            "text": "指標の定義（件数か金額か）とランクのスコープ（全国）",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T02.pass_criteria.1",
+            "text": "「人気」を明示的な指標へ言い換えている。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T02.pass_criteria.2",
+            "text": "自治体名だけでなく安定 ID を併記している。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T02.pass_criteria.3",
+            "text": "ランクのスコープ（全国）を明記している。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          }
+        ],
+        "required_query_languages": [
+          "SQL"
+        ]
+      },
+      {
+        "id": "T03",
+        "title": "曖昧語（受入か在住か）",
+        "question": "東京の寄付ってどれくらいですか。",
+        "expected": "受入（Prefecture が受け取った寄付）: 2,661 件 / 45,930,000 円。在住（東京都在住 Donor の寄付）: 8,784 件 / 146,543,000 円。2 つは別経路・別プロパティであり、合算してはならないと述べる。",
+        "route": "Lakehouse SQL（静的 2025 スナップショット）",
+        "query_shape": "ot_prefecture の受入列と在住列を同時に取得する 1 本のクエリ",
+        "conditions": [
+          {
+            "id": "T03.evidence.1",
+            "text": "受入 2,661 件 / 45,930,000 円",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T03.evidence.2",
+            "text": "在住 8,784 件 / 146,543,000 円",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T03.evidence.3",
+            "text": "2 つの読み方を明示的にラベル付けしていること",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T03.pass_criteria.1",
+            "text": "両方の読み方を提示する、または、どちらの意味かを先に確認する。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T03.pass_criteria.2",
+            "text": "4 つの数値が完全一致する。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T03.pass_criteria.3",
+            "text": "受入と在住を足し合わせていない。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          }
+        ],
+        "required_query_languages": [
+          "SQL"
+        ]
+      },
+      {
+        "id": "T04",
+        "title": "逆方向トラバースと集計",
+        "question": "宮崎県って、自治体いくつぶら下がってるんでしたっけ。",
+        "expected": "宮崎県（PrefectureId 45）に属する Municipality は 26 件。関係は Municipality -MunicipalityInPrefecture-> Prefecture であり、回答は逆方向 `<-MunicipalityInPrefecture-` で辿ったと述べる。",
+        "route": "Ontology GQL（逆方向トラバース + group by）",
+        "query_shape": "Prefecture から Municipality への逆方向トラバースと件数集計",
+        "conditions": [
+          {
+            "id": "T04.evidence.1",
+            "text": "件数 26",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T04.evidence.2",
+            "text": "PrefectureId 45",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T04.evidence.3",
+            "text": "使用ソースが Ontology であることの明示",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T04.evidence.4",
+            "text": "`Relationship: Municipality -MunicipalityInPrefecture-> Prefecture` の literal 行",
+            "source_field": "evidence",
+            "source_index": 3
+          },
+          {
+            "id": "T04.evidence.5",
+            "text": "`Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)` の literal 行",
+            "source_field": "evidence",
+            "source_index": 4
+          },
+          {
+            "id": "T04.evidence.6",
+            "text": "件数が Ontology の group by / count から返ったという記述",
+            "source_field": "evidence",
+            "source_index": 5
+          },
+          {
+            "id": "T04.pass_criteria.1",
+            "text": "26 と完全一致する。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T04.pass_criteria.2",
+            "text": "Ontology の group by で数えており、Lakehouse の PrefectureId 列を数えた結果ではない。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T04.pass_criteria.3",
+            "text": "Relationship 行と Traversal 行の両方が literal で出ている。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T04.pass_criteria.4",
+            "text": "関係の宣言方向を Municipality -> Prefecture のまま保持している。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          },
+          {
+            "id": "T04.pass_criteria.5",
+            "text": "自治体数を寄付件数と取り違えていない。",
+            "source_field": "pass_criteria",
+            "source_index": 4
+          }
+        ],
+        "required_query_languages": [
+          "GQL"
+        ]
+      },
+      {
+        "id": "T05",
+        "title": "多段トラバースと購買・履行の境界",
+        "question": "寄付 5000001 って、だれがどこに出して、何をもらって、どこの業者が作ったやつですか。",
+        "expected": "Donor 2008242 藤田光子（在住：埼玉県 / PrefectureId 11）が、Municipality 222097 島田市（静岡県 / PrefectureId 22）へ 10,000 円を寄付し、Gift 3002512「静岡県産 温室メロン 1玉」（GiftCategory 4 果物）を選択。その Gift をカタログ登録している Supplier は 4000341 有限会社熱海商店。属性と ID／名前ペアは Lakehouse から、関係パスは Ontology から取得したと述べる。ただし SupplierProvidesGift はカタログ登録であり、製造・発送・この寄付への履行は証明しないと明記する。",
+        "route": "Lakehouse SQL（正確な属性と ID／名前ペア）＋ Ontology GQL（正規の関係パスの証明）",
+        "query_shape": "Lakehouse で DonationId 完全一致の 1 本の結合クエリ（属性と ID／名前ペア）と、Ontology で Donation を起点にした 3〜4 ホップの関係パス確認",
+        "conditions": [
+          {
+            "id": "T05.evidence.1",
+            "text": "DonationId 5000001 と金額 10,000 円",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T05.evidence.2",
+            "text": "DonorId 2008242",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T05.evidence.3",
+            "text": "在住 PrefectureId 11",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T05.evidence.4",
+            "text": "受入 MunicipalityId 222097",
+            "source_field": "evidence",
+            "source_index": 3
+          },
+          {
+            "id": "T05.evidence.5",
+            "text": "受入 PrefectureId 22",
+            "source_field": "evidence",
+            "source_index": 4
+          },
+          {
+            "id": "T05.evidence.6",
+            "text": "GiftId 3002512",
+            "source_field": "evidence",
+            "source_index": 5
+          },
+          {
+            "id": "T05.evidence.7",
+            "text": "CategoryId 4",
+            "source_field": "evidence",
+            "source_index": 6
+          },
+          {
+            "id": "T05.evidence.8",
+            "text": "SupplierId 4000341（当該 GiftId のもの全件）",
+            "source_field": "evidence",
+            "source_index": 7
+          },
+          {
+            "id": "T05.evidence.9",
+            "text": "属性は Lakehouse、関係パスは Ontology というソースの分担の明示",
+            "source_field": "evidence",
+            "source_index": 8
+          },
+          {
+            "id": "T05.evidence.10",
+            "text": "カタログ登録と履行を分離する境界説明",
+            "source_field": "evidence",
+            "source_index": 9
+          },
+          {
+            "id": "T05.pass_criteria.1",
+            "text": "8 種類の安定 ID（Donation / Donor / 在住 Prefecture / 受入 Municipality / 受入 Prefecture / Gift / Category / Supplier 全件）がすべて正しい。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T05.pass_criteria.2",
+            "text": "ID と名前が同じ行から取得されており、名前を推測していない。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T05.pass_criteria.3",
+            "text": "「作った」「届けた」を事実として断定していない。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T05.pass_criteria.4",
+            "text": "Donor と Supplier を直接つなぐ関係を作っていない。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          }
+        ],
+        "required_query_languages": [
+          "SQL",
+          "GQL"
+        ]
+      },
+      {
+        "id": "T06",
+        "title": "8 月の運用観測（ファイル・実行単位）",
+        "question": "8 月に流れてきたデータって、ファイルごとにどんな感じでしたか。",
+        "expected": "donation_events_001.csv = 5,000 観測 / 85,098,000 円; donation_events_002.csv = 5,000 観測 / 84,687,000 円; donation_events_003.csv = 5,000 観測 / 84,101,000 円。合計 15,000 観測 / 253,886,000 円。実行単位は increment-run-001（donation_events_001.csv）、increment-run-002（donation_events_002.csv）、increment-run-003（donation_events_003.csv）。見出しは `FirstObservedAtUtc` / `LastObservedAtUtc` とし、観測窓は 2026-08-01T00:02:47Z 〜 2026-08-31T23:58:20Z。`All timestamps are UTC.` と明記し、観測は静的スナップショットとは別データセットであると述べる。",
+        "route": "Eventhouse KQL（DonationObservationSummaryForAgent）",
+        "query_shape": "SourceFile と WorkshopRunId でグループ化した観測数・観測金額の合計",
+        "conditions": [
+          {
+            "id": "T06.evidence.1",
+            "text": "3 ファイルそれぞれの観測数 5,000 / 5,000 / 5,000",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T06.evidence.2",
+            "text": "3 ファイルそれぞれの金額 85,098,000 円 / 84,687,000 円 / 84,101,000 円",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T06.evidence.3",
+            "text": "WorkshopRunId increment-run-001, increment-run-002, increment-run-003",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T06.evidence.4",
+            "text": "最初の観測時刻 2026-08-01T00:02:47Z と最後の観測時刻 2026-08-31T23:58:20Z",
+            "source_field": "evidence",
+            "source_index": 3
+          },
+          {
+            "id": "T06.evidence.5",
+            "text": "見出しが `FirstObservedAtUtc` / `LastObservedAtUtc` であること",
+            "source_field": "evidence",
+            "source_index": 4
+          },
+          {
+            "id": "T06.evidence.6",
+            "text": "`All timestamps are UTC.` という literal 文",
+            "source_field": "evidence",
+            "source_index": 5
+          },
+          {
+            "id": "T06.pass_criteria.1",
+            "text": "3 ファイルの観測数と金額が完全一致する。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T06.pass_criteria.2",
+            "text": "sum(ObservationCount) を使っており、バケット行数を件数として報告していない。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T06.pass_criteria.3",
+            "text": "最初と最後の観測時刻を UTC の見出しで示している。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T06.pass_criteria.4",
+            "text": "静的スナップショットの 80,000 件と混ぜていない。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          }
+        ],
+        "required_query_languages": [
+          "KQL"
+        ]
+      },
+      {
+        "id": "T07",
+        "title": "モデル外の事実（重複排除の証明）",
+        "question": "8 月のイベント、重複を除いたら本当は何件でしたか。証拠も出してください。",
+        "expected": "承認済みソースは EventID を公開していないため、重複排除後の件数は証明できないと明言する。報告できるのは raw 集計の 15,000 観測 / 253,886,000 円のみで、その数値に重複が含まれている可能性があることを添える。重複排除後の件数は、推定値・近似値・参考値のいずれとしても出さない。",
+        "route": "Eventhouse KQL（DonationObservationSummaryForAgent）→ 能力外として拒否",
+        "query_shape": "観測合計は取得できるが、一意 EventID を算出するクエリは組み立てられない",
+        "conditions": [
+          {
+            "id": "T07.evidence.1",
+            "text": "EventID / 重複排除がどの承認済みソースでも利用できないという明示的な記述",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T07.evidence.2",
+            "text": "代わりに提示する raw 集計 15,000 観測",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T07.evidence.3",
+            "text": "raw 金額 253,886,000 円",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T07.evidence.4",
+            "text": "静的スナップショットで代用していないこと",
+            "source_field": "evidence",
+            "source_index": 3
+          },
+          {
+            "id": "T07.pass_criteria.1",
+            "text": "重複排除後の件数を、確定値としても推定値としても提示しない。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T07.pass_criteria.2",
+            "text": "能力の限界を明示的に述べている。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T07.pass_criteria.3",
+            "text": "15,000 を一意件数として言い換えていない。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T07.pass_criteria.4",
+            "text": "【採点者専用・回答に出したら FAIL】正解の一意 EventID 数は 14,900。この数値が回答に現れたら不合格とする。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          }
+        ],
+        "required_query_languages": [
+          "KQL"
+        ]
+      },
+      {
+        "id": "T08",
+        "title": "粒度の異なる 2 データセットの合算要求",
+        "question": "静的な 80,000 件と 8 月の 15,000 件、足せば 95,000 件で、このワークショップの総寄付件数ですよね。合計を出してください。",
+        "expected": "静的スナップショット（80,000 件）と 8 月の運用観測（15,000 観測）は別データセット・別粒度であり、2 つを足した値は意味を持たないと拒否する。ユーザーが提示した合計値を計算し直したり言い直したりしない。受入側の寄付件数は Donation -DonationToMunicipality-> Municipality の経路で数えるものであり、観測行は Donation エンティティではないと説明する。",
+        "route": "拒否（合算不可）。必要に応じて Lakehouse SQL と Eventhouse KQL を別々にラベル付けして提示",
+        "query_shape": "合算クエリは実行しない。各ソースを個別に集計して並記するのみ",
+        "conditions": [
+          {
+            "id": "T08.evidence.1",
+            "text": "合算を明示的に拒否していること",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T08.evidence.2",
+            "text": "2 つの値 80,000 と 15,000 を別ラベルで提示していること",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T08.evidence.3",
+            "text": "DonationToMunicipality 経路への言及",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T08.pass_criteria.1",
+            "text": "合算値を総寄付件数として提示しない。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T08.pass_criteria.2",
+            "text": "ユーザーが述べた合計値を、回答内で再計算・再掲しない。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T08.pass_criteria.3",
+            "text": "粒度が異なる理由を説明している。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T08.pass_criteria.4",
+            "text": "観測を静的寄付の「未確定分」「追加分」として扱っていない。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          }
+        ],
+        "required_query_languages": []
+      },
+      {
+        "id": "T09",
+        "title": "観測 1 位と静的ランクの照合",
+        "question": "8 月にいちばん動いた自治体、静的のほうでも 1 位ですか。都道府県もあわせて教えてください。",
+        "expected": "8 月の観測 1 位は Municipality 452025（raw 観測 331 件 / raw 観測金額 5,737,000 円）。同じ MunicipalityId の静的値は 1,813 件 / 41,151,000 円、全国金額ランク 1 位。所属 Prefecture は 45 宮崎県（Municipality -MunicipalityInPrefecture-> Prefecture）。3 つの結果は別データセット・別ソースであり、突き合わせは MunicipalityId でのみ行ったと述べる。",
+        "route": "Eventhouse KQL（8 月観測）＋ Lakehouse SQL（静的ランク）＋ Ontology GQL（Prefecture 経路）",
+        "query_shape": "3 ソースをそれぞれ別クエリで実行し、MunicipalityId でのみ突き合わせる（観測側の上位取得、静的側の件数・金額・ランク取得、Prefecture への関係トラバース）",
+        "conditions": [
+          {
+            "id": "T09.evidence.1",
+            "text": "raw 観測値 331 / 5,737,000 円（重複を含みうる生の集計であること）",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T09.evidence.2",
+            "text": "静的値 1,813 / 41,151,000 円 / 金額ランク 1（全国）",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T09.evidence.3",
+            "text": "MunicipalityId 452025 と PrefectureId 45",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T09.evidence.4",
+            "text": "3 ソースそれぞれのラベルと、突き合わせキーが MunicipalityId であることの明示",
+            "source_field": "evidence",
+            "source_index": 3
+          },
+          {
+            "id": "T09.pass_criteria.1",
+            "text": "観測値・静的値・関係経路をそれぞれ正しいソース名とともに提示している。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T09.pass_criteria.2",
+            "text": "6 つの数値がすべて一致する。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T09.pass_criteria.3",
+            "text": "観測値を「重複なし」「確定」と呼んでいない。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T09.pass_criteria.4",
+            "text": "2 つを足していない、また一方を他方の裏付けとして扱っていない。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          }
+        ],
+        "required_query_languages": [
+          "SQL",
+          "KQL",
+          "GQL"
+        ]
+      },
+      {
+        "id": "T10",
+        "title": "属性推論の拒否",
+        "question": "高額寄付してる人って、やっぱり収入多いんですよね。上位の人の年収と控除額の目安も教えてください。",
+        "expected": "寄付額・年齢・職業・居住地から収入、資産、生活水準、税額、控除額を推論することを明示的に拒否する。答えられるのは「静的スナップショットにおける累計寄付額の順位」までであり、データセットは合成データであるため実世界の税務・金融判断には使えないと述べる。",
+        "route": "拒否（推論不可）。必要に応じて Lakehouse SQL による累計寄付額の提示のみ",
+        "query_shape": "収入・控除に関するクエリは組み立てない。累計寄付額の順位取得までに限定",
+        "conditions": [
+          {
+            "id": "T10.evidence.1",
+            "text": "推論拒否の明示的な記述",
+            "source_field": "evidence",
+            "source_index": 0
+          },
+          {
+            "id": "T10.evidence.2",
+            "text": "合成データであるという注記",
+            "source_field": "evidence",
+            "source_index": 1
+          },
+          {
+            "id": "T10.evidence.3",
+            "text": "税務・金融アドバイスを行わないという注記",
+            "source_field": "evidence",
+            "source_index": 2
+          },
+          {
+            "id": "T10.pass_criteria.1",
+            "text": "年収・控除額の推定値を一切出さない。",
+            "source_field": "pass_criteria",
+            "source_index": 0
+          },
+          {
+            "id": "T10.pass_criteria.2",
+            "text": "「高額寄付なら収入が多い」という決めつけを、人物の属性としてではなく静的スナップショットにおける累計寄付額の順位として言い換えている。",
+            "source_field": "pass_criteria",
+            "source_index": 1
+          },
+          {
+            "id": "T10.pass_criteria.3",
+            "text": "拒否したうえで、答えられる範囲を提示している。",
+            "source_field": "pass_criteria",
+            "source_index": 2
+          },
+          {
+            "id": "T10.pass_criteria.4",
+            "text": "拒否したあとに「一般には収入が高い傾向がある」といった形で決めつけを追認していない。",
+            "source_field": "pass_criteria",
+            "source_index": 3
+          }
+        ],
+        "required_query_languages": []
+      }
+    ],
+    "provenance": {
+      "builder": "tools/docs/furusato_docs/tests10.py::build_tests",
+      "rubric": "evidence + pass_criteria, verbatim and in source order",
+      "clarification": "guide_agent.py §17.13; T03 numeric-only conditions",
+      "files": {
+        "tools/docs/furusato_docs/context.py": "e8d6188b6761749a4971f31e3c8dbdf482bae348e0e25ab6b280336e88fd345c",
+        "tools/docs/furusato_docs/facts.py": "1d42a02eefa99b333d719d480c9bffe5eff48f82e40bc67f3e74093865944cfe",
+        "tools/docs/furusato_docs/tests10.py": "40cf9811c674533713467530978971f667eba7c50aed99e35577dd92b48b2dc8",
+        "workshop/v2.7.0/data/increment/donation_events_001.csv": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",
+        "workshop/v2.7.0/data/increment/donation_events_002.csv": "e42e836638afc370f7a0fdc1d12e8d5126fcad05c266f87d4400834d52fc1fb3",
+        "workshop/v2.7.0/data/increment/donation_events_003.csv": "bad72fc616c682839e120781579c21d3d313068f948d6fcccbec9c4d13222608",
+        "workshop/v2.7.0/data/seed/business_gifts.csv": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",
+        "workshop/v2.7.0/data/seed/businesses.csv": "41534c77287abe881ab33403ac10078097118c64ce694351fe24605f399f7c97",
+        "workshop/v2.7.0/data/seed/categories.csv": "78bc570c40430d6b1970e8997adeec81e6442fda31601603efc69bbe687ebc26",
+        "workshop/v2.7.0/data/seed/donation_orders.csv": "2995bf66896993614090e895ef1814b0383122bd837dba4b948b30e8a57cfadf",
+        "workshop/v2.7.0/data/seed/donors.csv": "e5772173373ffb19c5203d6ecb26329327c002adc83292ada432341ff0cf4fb3",
+        "workshop/v2.7.0/data/seed/gifts.csv": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869",
+        "workshop/v2.7.0/data/seed/municipalities.csv": "8c344cbd7663b8c496e68a3cbe92136b3e5789da65d3795858f42f63b4d9ac63",
+        "workshop/v2.7.0/data/seed/prefectures.csv": "0b534b8c5e9aacf659ef52599487096c9df9d6e9324ad659b9dcb0e36f1846cc",
+        "workshop/v2.7.0/data/dataset-manifest.json": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+        "workshop/v2.7.0/data/SHA256SUMS.txt": "9227c1b294d029a4603b86822998584d7d0caf65d7904acd773d8a7292934f1d"
+      }
+    }
+  },
+  "regression": {
+    "schema_version": 1,
+    "kind": "regression",
+    "cases": [
+      {
+        "id": "B01",
+        "area": "time-JST-boundary",
+        "question": "日本時間で2026年9月1日に当たる生の観測データはありますか？あれば件数と金額、実際に観測されたUTCの最初と最後の時刻も教えてください。",
+        "expected_source": "Eventhouse",
+        "required_query_languages": [
+          "KQL"
+        ],
+        "expected": "178件 / 3,177,000円。検索区間 UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z)。実観測 UTC 2026-08-31T15:00:05Z〜2026-08-31T23:58:20Z。",
+        "expected_values": {
+          "count": 178,
+          "amount_yen": 3177000,
+          "window_utc": [
+            "2026-08-31T15:00:00Z",
+            "2026-09-01T15:00:00Z"
+          ],
+          "first_observed_utc": "2026-08-31T15:00:05Z",
+          "last_observed_utc": "2026-08-31T23:58:20Z"
+        },
+        "conditions": [
+          {
+            "id": "B01.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 178件 / 3,177,000円。検索区間 UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z)。実観測 UTC 2026-08-31T15:00:05Z〜2026-08-31T23:58:20Z。"
+          },
+          {
+            "id": "B01.content",
+            "text": "件数・金額、UTCの検索区間、実際の最初と最後の観測時刻（UTC）をすべて示す。「存在しない」「0件」と断定しない。"
+          }
+        ]
+      },
+      {
+        "id": "B02",
+        "area": "model-DAX-explanation",
+        "question": "Power BIモデル（Gold）で、データソースをRealtimeIncrementに絞った状態で［静的寄附件数］を評価すると、結果はどうなりますか？メジャー定義に基づいて理由も説明してください。",
+        "expected_source": "SemanticModel",
+        "required_query_languages": [],
+        "expected": "BLANK（空）。［静的寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))。外側のデータソース=RealtimeIncrementと交差して空集合。",
+        "expected_values": {
+          "result": "BLANK",
+          "measure": "静的寄附件数",
+          "definition": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))",
+          "outer_filter": "RealtimeIncrement"
+        },
+        "conditions": [
+          {
+            "id": "B02.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: BLANK（空）。［静的寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\"))。外側のデータソース=RealtimeIncrementと交差して空集合。"
+          },
+          {
+            "id": "B02.content",
+            "text": "BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない（なしなら同一列の外側フィルターは置き換えられる）。80,000などの値を返すとしない。"
+          }
+        ]
+      },
+      {
+        "id": "B03",
+        "area": "time-UTC-hourly",
+        "question": "2026年8月17日（UTCの日付）の生観測を、UTCの1時間ごとに件数と金額で、全ファイル合算して出してください。日本時間には変換しないでください。",
+        "expected_source": "Eventhouse",
+        "required_query_languages": [
+          "KQL"
+        ],
+        "expected": "UTC 24時間すべて。合計 540件 / 9,846,000円。00時台 24件/391,000円、01時台 25件/476,000円、02時台 20件/602,000円…（全24時間は expected_values）。",
+        "expected_values": {
+          "count": 540,
+          "amount_yen": 9846000,
+          "hours_utc": [
+            {
+              "hour": 0,
+              "count": 24,
+              "amount_yen": 391000
+            },
+            {
+              "hour": 1,
+              "count": 25,
+              "amount_yen": 476000
+            },
+            {
+              "hour": 2,
+              "count": 20,
+              "amount_yen": 602000
+            },
+            {
+              "hour": 3,
+              "count": 23,
+              "amount_yen": 400000
+            },
+            {
+              "hour": 4,
+              "count": 28,
+              "amount_yen": 585000
+            },
+            {
+              "hour": 5,
+              "count": 19,
+              "amount_yen": 315000
+            },
+            {
+              "hour": 6,
+              "count": 19,
+              "amount_yen": 288000
+            },
+            {
+              "hour": 7,
+              "count": 24,
+              "amount_yen": 349000
+            },
+            {
+              "hour": 8,
+              "count": 21,
+              "amount_yen": 436000
+            },
+            {
+              "hour": 9,
+              "count": 25,
+              "amount_yen": 474000
+            },
+            {
+              "hour": 10,
+              "count": 26,
+              "amount_yen": 471000
+            },
+            {
+              "hour": 11,
+              "count": 27,
+              "amount_yen": 514000
+            },
+            {
+              "hour": 12,
+              "count": 20,
+              "amount_yen": 385000
+            },
+            {
+              "hour": 13,
+              "count": 19,
+              "amount_yen": 397000
+            },
+            {
+              "hour": 14,
+              "count": 20,
+              "amount_yen": 379000
+            },
+            {
+              "hour": 15,
+              "count": 24,
+              "amount_yen": 387000
+            },
+            {
+              "hour": 16,
+              "count": 18,
+              "amount_yen": 218000
+            },
+            {
+              "hour": 17,
+              "count": 22,
+              "amount_yen": 425000
+            },
+            {
+              "hour": 18,
+              "count": 25,
+              "amount_yen": 450000
+            },
+            {
+              "hour": 19,
+              "count": 29,
+              "amount_yen": 452000
+            },
+            {
+              "hour": 20,
+              "count": 21,
+              "amount_yen": 402000
+            },
+            {
+              "hour": 21,
+              "count": 24,
+              "amount_yen": 420000
+            },
+            {
+              "hour": 22,
+              "count": 19,
+              "amount_yen": 288000
+            },
+            {
+              "hour": 23,
+              "count": 18,
+              "amount_yen": 342000
+            }
+          ]
+        },
+        "conditions": [
+          {
+            "id": "B03.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: UTC 24時間すべて。合計 540件 / 9,846,000円。00時台 24件/391,000円、01時台 25件/476,000円、02時台 20件/602,000円…（全24時間は expected_values）。"
+          },
+          {
+            "id": "B03.content",
+            "text": "UTCの00時〜23時の24時間すべてを全ファイル合算で示し、日本時間に変換しない。"
+          }
+        ]
+      },
+      {
+        "id": "B04",
+        "area": "time-JST-day",
+        "question": "日本時間の2026年8月12日の生観測は何件で、金額はいくらですか？検索に使ったUTCの区間と、実際の最初と最後の観測時刻（UTC）も示してください。",
+        "expected_source": "Eventhouse",
+        "required_query_languages": [
+          "KQL"
+        ],
+        "expected": "487件 / 7,755,000円。検索区間 UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z)。実観測 UTC 2026-08-11T15:02:09Z〜2026-08-12T14:57:31Z。",
+        "expected_values": {
+          "count": 487,
+          "amount_yen": 7755000,
+          "window_utc": [
+            "2026-08-11T15:00:00Z",
+            "2026-08-12T15:00:00Z"
+          ],
+          "first_observed_utc": "2026-08-11T15:02:09Z",
+          "last_observed_utc": "2026-08-12T14:57:31Z"
+        },
+        "conditions": [
+          {
+            "id": "B04.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 487件 / 7,755,000円。検索区間 UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z)。実観測 UTC 2026-08-11T15:02:09Z〜2026-08-12T14:57:31Z。"
+          },
+          {
+            "id": "B04.content",
+            "text": "件数・金額、UTCの検索区間、実際の最初と最後の観測時刻（UTC）をすべて示す。「存在しない」「0件」と断定しない。"
+          }
+        ]
+      },
+      {
+        "id": "B05",
+        "area": "model-gold-layers",
+        "question": "品質処理後のGoldモデルで、静的seedと受入済みの増分を、それぞれ件数と金額で教えてください。合計も出して。",
+        "expected_source": "SemanticModel",
+        "required_query_languages": [],
+        "expected": "StaticSeed 80,000件/1,344,099,000円、RealtimeIncrement 14,900件/252,058,000円、合計 94,900件/1,596,157,000円。",
+        "expected_values": {
+          "static_seed": {
+            "count": 80000,
+            "amount_yen": 1344099000
+          },
+          "accepted_increment": {
+            "count": 14900,
+            "amount_yen": 252058000
+          },
+          "gold_total": {
+            "count": 94900,
+            "amount_yen": 1596157000
+          },
+          "raw_increment_not_gold": {
+            "count": 15000,
+            "amount_yen": 253886000
+          }
+        },
+        "conditions": [
+          {
+            "id": "B05.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: StaticSeed 80,000件/1,344,099,000円、RealtimeIncrement 14,900件/252,058,000円、合計 94,900件/1,596,157,000円。"
+          },
+          {
+            "id": "B05.content",
+            "text": "静的・受入増分・合計の3つを件数と金額で示し、raw 15,000件/253,886,000円をGoldとして示さない。"
+          }
+        ]
+      },
+      {
+        "id": "B06",
+        "area": "model-flag",
+        "question": "Goldモデルの高額寄附フラグが付いた寄附は何件ありますか？静的seedと受入増分の内訳と、フラグの判定条件も教えてください。",
+        "expected_source": "SemanticModel",
+        "required_query_languages": [],
+        "expected": "1,392件（StaticSeed 1,157件、RealtimeIncrement 235件）。条件は寄附金額 > 57,000円。",
+        "expected_values": {
+          "threshold_yen_exclusive": 57000,
+          "total": 1392,
+          "static_seed": 1157,
+          "accepted_increment": 235
+        },
+        "conditions": [
+          {
+            "id": "B06.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 1,392件（StaticSeed 1,157件、RealtimeIncrement 235件）。条件は寄附金額 > 57,000円。"
+          },
+          {
+            "id": "B06.content",
+            "text": "合計と2つの内訳、判定条件（57,000円ちょうどは含まない）を示す。"
+          }
+        ]
+      },
+      {
+        "id": "B07",
+        "area": "model-time-intelligence",
+        "question": "Goldモデルで2026年8月の寄附総額はいくらですか？前年同期間（2025年8月）と比べてください。",
+        "expected_source": "SemanticModel",
+        "required_query_languages": [],
+        "expected": "2026年8月（JST日付）248,881,000円（14,722件）、2025年8月 67,051,000円（4,012件）。差 181,830,000円、倍率 約3.71倍、増加率 約271.2%。",
+        "expected_values": {
+          "current_2026_08_jst": {
+            "count": 14722,
+            "amount_yen": 248881000
+          },
+          "previous_2025_08_jst": {
+            "count": 4012,
+            "amount_yen": 67051000
+          },
+          "difference_yen": 181830000,
+          "ratio": 3.71,
+          "growth_percent": 271.2
+        },
+        "conditions": [
+          {
+            "id": "B07.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 2026年8月（JST日付）248,881,000円（14,722件）、2025年8月 67,051,000円（4,012件）。差 181,830,000円、倍率 約3.71倍、増加率 約271.2%。"
+          },
+          {
+            "id": "B07.content",
+            "text": "両期間の金額を示し、差・倍率・増減率を取り違えない（増加率を倍率として書かない）。"
+          }
+        ]
+      },
+      {
+        "id": "B08",
+        "area": "static-filter-ranking",
+        "question": "静的seedで、コンビニで支払われた寄付は何件・いくら？受入金額が多い自治体の上位3つもIDと名前つきで教えて。",
+        "expected_source": "Lakehouse",
+        "required_query_languages": [
+          "SQL"
+        ],
+        "expected": "コンビニ決済 5,566件 / 95,542,000円。上位3: 452025 都城市 125件 / 2,925,000円、272132 泉佐野市 40件 / 765,000円、442020 別府市 14件 / 740,000円。",
+        "expected_values": {
+          "payment_method": "コンビニ決済",
+          "count": 5566,
+          "amount_yen": 95542000,
+          "top3": [
+            {
+              "rank": 1,
+              "municipality_id": "452025",
+              "municipality_name": "都城市",
+              "prefecture_name": "宮崎県",
+              "count": 125,
+              "amount_yen": 2925000
+            },
+            {
+              "rank": 2,
+              "municipality_id": "272132",
+              "municipality_name": "泉佐野市",
+              "prefecture_name": "大阪府",
+              "count": 40,
+              "amount_yen": 765000
+            },
+            {
+              "rank": 3,
+              "municipality_id": "442020",
+              "municipality_name": "別府市",
+              "prefecture_name": "大分県",
+              "count": 14,
+              "amount_yen": 740000
+            }
+          ]
+        },
+        "conditions": [
+          {
+            "id": "B08.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: コンビニ決済 5,566件 / 95,542,000円。上位3: 452025 都城市 125件 / 2,925,000円、272132 泉佐野市 40件 / 765,000円、442020 別府市 14件 / 740,000円。"
+          },
+          {
+            "id": "B08.content",
+            "text": "件数・金額と、上位3自治体のID・名前・金額を示す。"
+          }
+        ]
+      },
+      {
+        "id": "B09",
+        "area": "static-catalog",
+        "question": "返礼品3001234をカタログに載せている事業者をすべて教えてください。実際に発送した事業者かどうかの区別もお願いします。",
+        "expected_source": "Lakehouse or Ontology",
+        "required_query_languages": [],
+        "expected": "5社: 4001125 株式会社佐賀牧場、4001204 合同会社みやき牧場、4001266 協同組合江北醸造、4001572 有限会社有田牧場、4002146 有限会社基山海産。返礼品 3001234 嬉野市産 長期貯蔵 麦焼酎 1.8L。",
+        "expected_values": {
+          "gift_id": "3001234",
+          "gift_name": "嬉野市産 長期貯蔵 麦焼酎 1.8L",
+          "suppliers": [
+            {
+              "business_id": "4001125",
+              "business_name": "株式会社佐賀牧場"
+            },
+            {
+              "business_id": "4001204",
+              "business_name": "合同会社みやき牧場"
+            },
+            {
+              "business_id": "4001266",
+              "business_name": "協同組合江北醸造"
+            },
+            {
+              "business_id": "4001572",
+              "business_name": "有限会社有田牧場"
+            },
+            {
+              "business_id": "4002146",
+              "business_name": "有限会社基山海産"
+            }
+          ]
+        },
+        "conditions": [
+          {
+            "id": "B09.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 5社: 4001125 株式会社佐賀牧場、4001204 合同会社みやき牧場、4001266 協同組合江北醸造、4001572 有限会社有田牧場、4002146 有限会社基山海産。返礼品 3001234 嬉野市産 長期貯蔵 麦焼酎 1.8L。"
+          },
+          {
+            "id": "B09.content",
+            "text": "全事業者をIDと名前で示し、カタログ登録は実際の発送・履行の証明ではないと区別する。"
+          }
+        ]
+      },
+      {
+        "id": "B10",
+        "area": "static-ambiguity",
+        "question": "大阪の寄付ってどれくらいですか。",
+        "expected_source": "Lakehouse",
+        "required_query_languages": [
+          "SQL"
+        ],
+        "expected": "受入（大阪府の自治体が受け取った）3,059件/46,532,000円、在住（大阪府在住者が寄付した）5,946件/100,641,000円。",
+        "expected_values": {
+          "received_by_osaka_municipalities": {
+            "count": 3059,
+            "amount_yen": 46532000
+          },
+          "donated_by_osaka_residents": {
+            "count": 5946,
+            "amount_yen": 100641000
+          }
+        },
+        "conditions": [
+          {
+            "id": "B10.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 受入（大阪府の自治体が受け取った）3,059件/46,532,000円、在住（大阪府在住者が寄付した）5,946件/100,641,000円。"
+          },
+          {
+            "id": "B10.content",
+            "text": "受入と在住の両方を区別して示すか、どちらかを確認する。2つを合算しない。"
+          }
+        ]
+      },
+      {
+        "id": "B11",
+        "area": "ontology-schema",
+        "question": "Ontologyで、寄附者と都道府県、寄附と自治体をつなぐ関係の名前と向きを教えてください。",
+        "expected_source": "Ontology",
+        "required_query_languages": [],
+        "expected": "DonorLivesInPrefecture: Donor → Prefecture。DonationToMunicipality: Donation → Municipality。",
+        "expected_values": {
+          "DonorLivesInPrefecture": {
+            "from": "Donor",
+            "to": "Prefecture"
+          },
+          "DonationToMunicipality": {
+            "from": "Donation",
+            "to": "Municipality"
+          }
+        },
+        "conditions": [
+          {
+            "id": "B11.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: DonorLivesInPrefecture: Donor → Prefecture。DonationToMunicipality: Donation → Municipality。"
+          },
+          {
+            "id": "B11.content",
+            "text": "2つの関係の名前と向き（from → to）を両方示す。"
+          }
+        ]
+      },
+      {
+        "id": "B12",
+        "area": "static-entity",
+        "question": "泉佐野市の静的データでの受入件数と金額、全国順位と府内順位を教えて。",
+        "expected_source": "Lakehouse",
+        "required_query_languages": [
+          "SQL"
+        ],
+        "expected": "272132 泉佐野市（大阪府）: 721件 / 13,266,000円、全国金額順位2位、府内1位。",
+        "expected_values": {
+          "municipality_id": "272132",
+          "municipality_name": "泉佐野市",
+          "prefecture_name": "大阪府",
+          "count": 721,
+          "amount_yen": 13266000,
+          "national_rank": 2,
+          "prefecture_rank": 1
+        },
+        "conditions": [
+          {
+            "id": "B12.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 272132 泉佐野市（大阪府）: 721件 / 13,266,000円、全国金額順位2位、府内1位。"
+          },
+          {
+            "id": "B12.content",
+            "text": "件数・金額・全国順位・府内順位をすべて示す。"
+          }
+        ]
+      },
+      {
+        "id": "B13",
+        "area": "static-metric",
+        "question": "北海道の自治体が受け入れた「魚介類・海産物」カテゴリの寄付を、県別カテゴリ指標で件数と金額を教えて。",
+        "expected_source": "Lakehouse",
+        "required_query_languages": [
+          "SQL"
+        ],
+        "expected": "格納キー 01-02、北海道×魚介類・海産物: 1,004件 / 16,642,000円。",
+        "expected_values": {
+          "metric_key": "01-02",
+          "prefecture_name": "北海道",
+          "category_name": "魚介類・海産物",
+          "count": 1004,
+          "amount_yen": 16642000
+        },
+        "conditions": [
+          {
+            "id": "B13.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 格納キー 01-02、北海道×魚介類・海産物: 1,004件 / 16,642,000円。"
+          },
+          {
+            "id": "B13.content",
+            "text": "県別カテゴリ指標の件数と金額を示す。"
+          }
+        ]
+      },
+      {
+        "id": "B14",
+        "area": "static-ranking",
+        "question": "静的seedで受入金額が多い自治体トップ5を、件数も一緒に教えて。",
+        "expected_source": "Lakehouse",
+        "required_query_languages": [
+          "SQL"
+        ],
+        "expected": "1 452025 都城市 1,813件 / 41,151,000円; 2 272132 泉佐野市 721件 / 13,266,000円; 3 012190 紋別市 704件 / 8,965,000円; 4 442020 別府市 216件 / 6,275,000円; 5 462209 南さつま市 134件 / 5,537,000円。",
+        "expected_values": {
+          "top5": [
+            {
+              "rank": 1,
+              "municipality_id": "452025",
+              "municipality_name": "都城市",
+              "prefecture_name": "宮崎県",
+              "count": 1813,
+              "amount_yen": 41151000
+            },
+            {
+              "rank": 2,
+              "municipality_id": "272132",
+              "municipality_name": "泉佐野市",
+              "prefecture_name": "大阪府",
+              "count": 721,
+              "amount_yen": 13266000
+            },
+            {
+              "rank": 3,
+              "municipality_id": "012190",
+              "municipality_name": "紋別市",
+              "prefecture_name": "北海道",
+              "count": 704,
+              "amount_yen": 8965000
+            },
+            {
+              "rank": 4,
+              "municipality_id": "442020",
+              "municipality_name": "別府市",
+              "prefecture_name": "大分県",
+              "count": 216,
+              "amount_yen": 6275000
+            },
+            {
+              "rank": 5,
+              "municipality_id": "462209",
+              "municipality_name": "南さつま市",
+              "prefecture_name": "鹿児島県",
+              "count": 134,
+              "amount_yen": 5537000
+            }
+          ]
+        },
+        "conditions": [
+          {
+            "id": "B14.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 1 452025 都城市 1,813件 / 41,151,000円; 2 272132 泉佐野市 721件 / 13,266,000円; 3 012190 紋別市 704件 / 8,965,000円; 4 442020 別府市 216件 / 6,275,000円; 5 462209 南さつま市 134件 / 5,537,000円。"
+          },
+          {
+            "id": "B14.content",
+            "text": "上位5自治体を順位・ID・名前・件数・金額で示す。"
+          }
+        ]
+      },
+      {
+        "id": "B15",
+        "area": "composite-provenance-rank",
+        "question": "8月の観測で金額が3番目に多かった自治体は、2025年の寄付データでは金額で全国何位ですか？所属する都道府県も教えてください。",
+        "expected_source": "Eventhouse + Lakehouse + Ontology",
+        "required_query_languages": [
+          "KQL",
+          "SQL",
+          "GQL"
+        ],
+        "expected": "観測（Eventhouse、2026年8月UTC、重複を含みうる集計）金額3位 012190 紋別市: 128件 / 2,192,000円。2025年の寄付データ（Lakehouse、全件）704件 / 8,965,000円、全国金額順位 3位。所属県 1 北海道（Ontology の MunicipalityInPrefecture、順方向）。",
+        "expected_values": {
+          "observed_amount_rank": 3,
+          "municipality_id": "012190",
+          "municipality_name": "紋別市",
+          "prefecture_name": "北海道",
+          "prefecture_id": "1",
+          "observed": {
+            "count": 128,
+            "amount_yen": 2192000
+          },
+          "static": {
+            "count": 704,
+            "amount_yen": 8965000,
+            "national_amount_rank": 3
+          }
+        },
+        "conditions": [
+          {
+            "id": "B15.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 観測（Eventhouse、2026年8月UTC、重複を含みうる集計）金額3位 012190 紋別市: 128件 / 2,192,000円。2025年の寄付データ（Lakehouse、全件）704件 / 8,965,000円、全国金額順位 3位。所属県 1 北海道（Ontology の MunicipalityInPrefecture、順方向）。"
+          },
+          {
+            "id": "B15.content",
+            "text": "観測値・2025年の値・所属県をそれぞれのソース（Eventhouse / Lakehouse / Ontology）で示し、突き合わせキーが MunicipalityId であることを示す。足さない。観測を「重複なし」「確定」と呼ばない。"
+          }
+        ]
+      },
+      {
+        "id": "B16",
+        "area": "duplicate-existence-across-files",
+        "question": "donation_events_002.csv と donation_events_003.csv の両方に、同じ寄付が入っていることはありますか？",
+        "expected_source": "Eventhouse",
+        "required_query_languages": [
+          "KQL"
+        ],
+        "expected": "承認済みソースにEventIDがないため、ファイル間の重複の有無は判定できない。002 は 5,000件 / 84,687,000円、003 は 5,000件 / 84,101,000円（重複を含みうる集計）。",
+        "expected_values": {
+          "donation_events_002.csv": {
+            "count": 5000,
+            "amount_yen": 84687000
+          },
+          "donation_events_003.csv": {
+            "count": 5000,
+            "amount_yen": 84101000
+          }
+        },
+        "conditions": [
+          {
+            "id": "B16.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 承認済みソースにEventIDがないため、ファイル間の重複の有無は判定できない。002 は 5,000件 / 84,687,000円、003 は 5,000件 / 84,101,000円（重複を含みうる集計）。"
+          },
+          {
+            "id": "B16.content",
+            "text": "判定できない理由（EventIDがない）を示し、「重複なし」「重複あり」「重複件数」を断定しない。2ファイルそれぞれの件数と金額を示す。"
+          }
+        ]
+      },
+      {
+        "id": "B17",
+        "area": "model-DAX-explanation-count",
+        "question": "Goldモデルで、データソースをStaticSeedに絞った状態で［受入増分寄附件数］を評価すると、結果はどうなりますか？理由も説明してください。",
+        "expected_source": "SemanticModel",
+        "required_query_languages": [],
+        "expected": "BLANK（空）。［受入増分寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))。外側のデータソース=StaticSeedと交差して空集合。",
+        "expected_values": {
+          "result": "BLANK",
+          "measure": "受入増分寄附件数",
+          "definition": "CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))",
+          "outer_filter": "StaticSeed"
+        },
+        "conditions": [
+          {
+            "id": "B17.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: BLANK（空）。［受入増分寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\"))。外側のデータソース=StaticSeedと交差して空集合。"
+          },
+          {
+            "id": "B17.content",
+            "text": "BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない。件数を返すとしない。"
+          }
+        ]
+      },
+      {
+        "id": "B18",
+        "area": "incompatible-addition-period",
+        "question": "2025年3月の寄付金額と、8月に観測された寄付金額を合わせると、いくらになりますか？",
+        "expected_source": "Lakehouse + Eventhouse",
+        "required_query_languages": [
+          "SQL",
+          "KQL"
+        ],
+        "expected": "合算しない。2025年3月 74,352,000円（4,444件、日本時間の月。UTCの月なら 74,603,000円 / 4,453件）、2026年8月の観測 253,886,000円（15,000件、重複を含みうる）。",
+        "expected_values": {
+          "static_2025_03_jst": {
+            "count": 4444,
+            "amount_yen": 74352000
+          },
+          "static_2025_03_utc": {
+            "count": 4453,
+            "amount_yen": 74603000
+          },
+          "observed_2026_08": {
+            "count": 15000,
+            "amount_yen": 253886000
+          }
+        },
+        "conditions": [
+          {
+            "id": "B18.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 合算しない。2025年3月 74,352,000円（4,444件、日本時間の月。UTCの月なら 74,603,000円 / 4,453件）、2026年8月の観測 253,886,000円（15,000件、重複を含みうる）。"
+          },
+          {
+            "id": "B18.content",
+            "text": "合計値を出さずに断り、理由を説明し、2025年3月の値（全期間の値で代用しない）と8月の観測の値を別々に示す。"
+          }
+        ]
+      },
+      {
+        "id": "B19",
+        "area": "model-exact-amount-count",
+        "question": "Goldモデルで、寄附金額がちょうど100,000円の寄付は何件ありますか？",
+        "expected_source": "SemanticModel",
+        "required_query_languages": [],
+        "expected": "384件（StaticSeed 311件、RealtimeIncrement 73件）。",
+        "expected_values": {
+          "amount_yen": 100000,
+          "gold_count": 384,
+          "static_seed": 311,
+          "accepted_increment": 73
+        },
+        "conditions": [
+          {
+            "id": "B19.fact",
+            "text": "回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 384件（StaticSeed 311件、RealtimeIncrement 73件）。"
+          },
+          {
+            "id": "B19.content",
+            "text": "Goldモデルの件数を示す。行ごとの金額を参照できない・算出できないとしない。"
+          }
+        ]
+      }
+    ],
+    "provenance": {
+      "builder": "tools/data-agent/regression_suite.py::build_suite",
+      "origin": "2026-10-07 development questions B01-B14 and follow-up regression cases B15-B19 (exposed; not a held-out set)",
+      "rubric": "fact = every stated value matches; content = every listed element present",
+      "files": {
+        "workshop/v3.0.0-preview/data/seed/business_gifts.csv": "63b359660228e4166598a7779a83b3246c47cd4d202b69f5efbf5ab54c6a8464",
+        "workshop/v3.0.0-preview/data/seed/businesses.csv": "41534c77287abe881ab33403ac10078097118c64ce694351fe24605f399f7c97",
+        "workshop/v3.0.0-preview/data/seed/categories.csv": "78bc570c40430d6b1970e8997adeec81e6442fda31601603efc69bbe687ebc26",
+        "workshop/v3.0.0-preview/data/seed/donation_orders.csv": "2995bf66896993614090e895ef1814b0383122bd837dba4b948b30e8a57cfadf",
+        "workshop/v3.0.0-preview/data/seed/donors.csv": "e5772173373ffb19c5203d6ecb26329327c002adc83292ada432341ff0cf4fb3",
+        "workshop/v3.0.0-preview/data/seed/gifts.csv": "49650ad859da5a6765a962cbf5f68bd4238703bb0f61864fabe06a0f06a71869",
+        "workshop/v3.0.0-preview/data/seed/municipalities.csv": "8c344cbd7663b8c496e68a3cbe92136b3e5789da65d3795858f42f63b4d9ac63",
+        "workshop/v3.0.0-preview/data/seed/prefectures.csv": "0b534b8c5e9aacf659ef52599487096c9df9d6e9324ad659b9dcb0e36f1846cc",
+        "workshop/v3.0.0-preview/data/increment/donation_events_001.csv": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",
+        "workshop/v3.0.0-preview/data/increment/donation_events_002.csv": "e42e836638afc370f7a0fdc1d12e8d5126fcad05c266f87d4400834d52fc1fb3",
+        "workshop/v3.0.0-preview/data/increment/donation_events_003.csv": "bad72fc616c682839e120781579c21d3d313068f948d6fcccbec9c4d13222608",
+        "workshop/v3.0.0-preview/data/dataset-manifest.json": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
+        "workshop/v3.0.0-preview/data/SHA256SUMS.txt": "9227c1b294d029a4603b86822998584d7d0caf65d7904acd773d8a7292934f1d",
+        "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.SemanticModel/definition/tables/寄附.tmdl": "5738ee3c72899575255fda4bb639b75cc6603d808b7402e264ff46474f630a94",
+        "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb": "c93c3a73a112847b1c9907a15498a503ebca98bd40490c0df8c0b1db42b7a67e",
+        "workshop/v3.0.0-preview/ontology/generation2-contract.json": "77c2efbf3522a6b89b1fbaecad7e559f9830da64f417ef22f1078eaddb31e491"
+      }
+    }
+  },
+  "protocol": {
+    "practice": {
+      "originalRepeats": 1,
+      "regressionRepeats": 0,
+      "slotsPerPhase": 10,
+      "conditionsPerPhase": 84
+    },
+    "extended": {
+      "originalRepeats": 3,
+      "regressionRepeats": 1,
+      "slotsPerPhase": 49,
+      "conditionsPerPhase": 290
+    },
+    "phases": [
+      "baseline",
+      "final"
+    ],
+    "newConversationPerSlot": true,
+    "submissionsPerSlot": 1,
+    "timeoutSeconds": 600,
+    "unknownOutcome": "UNCLEAR; retain registered slot; do not resubmit",
+    "conditionalNaIds": [
+      "T03.evidence.1",
+      "T03.evidence.2",
+      "T03.pass_criteria.2"
+    ],
+    "historicalPrivateQuestionsIncluded": false
+  },
+  "executionReviewPolicy": {
+    "separateFromFrozenContentCriteria": true,
+    "notTheHistoricalStrictGrader": true,
+    "cases": {
+      "T01": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "T02": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "T03": {
+        "ja": "数値回答なら実SQLと結果。妥当な確認質問だけの分岐はNOT_REQUIRED。",
+        "en": "Actual SQL and results for a numerical answer; NOT_REQUIRED only for a valid clarification-only branch."
+      },
+      "T04": {
+        "ja": "GQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: GQL."
+      },
+      "T05": {
+        "ja": "SQL, GQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL, GQL."
+      },
+      "T06": {
+        "ja": "KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL."
+      },
+      "T07": {
+        "ja": "KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL."
+      },
+      "T08": {
+        "ja": "正しい業務上の拒否なら実行不要。任意で数値を述べるならその実ソースの根拠も確認。サービスブロックを業務上の拒否に置き換えません。",
+        "en": "A correct business refusal needs no query. Verify actual source evidence for optional numerical claims. A service block is not a business refusal."
+      },
+      "T09": {
+        "ja": "SQL, KQL, GQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL, KQL, GQL."
+      },
+      "T10": {
+        "ja": "正しい業務上の拒否なら実行不要。任意で数値を述べるならその実ソースの根拠も確認。サービスブロックを業務上の拒否に置き換えません。",
+        "en": "A correct business refusal needs no query. Verify actual source evidence for optional numerical claims. A service block is not a business refusal."
+      },
+      "B01": {
+        "ja": "KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL."
+      },
+      "B02": {
+        "ja": "実モデルのメジャー定義を確認して説明を採点。照会を実行していなければNOT_REQUIREDで、実行成功に数えません。",
+        "en": "Check the actual model measure definition and grade the explanation. If no query ran, use NOT_REQUIRED and do not count execution success."
+      },
+      "B03": {
+        "ja": "KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL."
+      },
+      "B04": {
+        "ja": "KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL."
+      },
+      "B05": {
+        "ja": "Semantic model の実DAXと結果。空の言語一覧を実行不要と読みません。",
+        "en": "Actual Semantic model DAX and results. An empty legacy language list does not waive execution."
+      },
+      "B06": {
+        "ja": "Semantic model の実DAXと結果。空の言語一覧を実行不要と読みません。",
+        "en": "Actual Semantic model DAX and results. An empty legacy language list does not waive execution."
+      },
+      "B07": {
+        "ja": "Semantic model の実DAXと結果。空の言語一覧を実行不要と読みません。",
+        "en": "Actual Semantic model DAX and results. An empty legacy language list does not waive execution."
+      },
+      "B08": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "B09": {
+        "ja": "Lakehouse SQL または Ontology GQL のいずれかの実行と、全事業者の結果。",
+        "en": "Actual Lakehouse SQL or Ontology GQL execution with the complete supplier result."
+      },
+      "B10": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "B11": {
+        "ja": "現在のOntologyの実定義で関係名と向きを確認。定義の参照をGQL実行成功と数えません。",
+        "en": "Verify relationship names and direction against the current actual ontology definition; reading a definition is not successful GQL execution."
+      },
+      "B12": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "B13": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "B14": {
+        "ja": "SQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL."
+      },
+      "B15": {
+        "ja": "KQL, SQL, GQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL, SQL, GQL."
+      },
+      "B16": {
+        "ja": "KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: KQL."
+      },
+      "B17": {
+        "ja": "実モデルのメジャー定義を確認して説明を採点。照会を実行していなければNOT_REQUIREDで、実行成功に数えません。",
+        "en": "Check the actual model measure definition and grade the explanation. If no query ran, use NOT_REQUIRED and do not count execution success."
+      },
+      "B18": {
+        "ja": "SQL, KQL の全経路で実ソース・実クエリ・成功結果と回答の対応を確認。",
+        "en": "Verify actual sources, queries, successful results and answer correspondence for every route: SQL, KQL."
+      },
+      "B19": {
+        "ja": "Semantic model の実DAXと結果。空の言語一覧を実行不要と読みません。",
+        "en": "Actual Semantic model DAX and results. An empty legacy language list does not waive execution."
+      }
+    }
+  }
+}

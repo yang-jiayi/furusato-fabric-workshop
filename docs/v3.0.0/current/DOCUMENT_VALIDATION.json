@@ -12,14 +12,14 @@
     "fontInstallationRequiredForMatchingRender": true
   },
   "bilingualBrowserAndPrintChecksPassed": true,
-  "localDocumentValidationChecks": 152,
+  "localDocumentValidationChecks": 257,
   "localDocumentValidationFailures": 0,
   "documentIdentity": {
     "releaseProfile": "v3.0.0",
     "version": "3.0.0",
     "sourceAssetProfile": "v3.0.0-preview",
     "sourceAssetFolder": "workshop/v3.0.0-preview",
-    "contentSha256": "5acd021f1105fcb7e0007e15ed5af1eb713bc985ce89692ee3582e2a7b89c498",
+    "contentSha256": "5f8668e307acb72f2f95f87a148416ff6aac48df03ba735421bd2fde55a0b514",
     "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
     "publicEvidenceProjectionSha256": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
     "documentRelease": {
@@ -52,8 +52,8 @@
     }
   },
   "files": {
-    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "6cf80378c32572773fda46b1154e3c64c2e2fac84042c5a798fa06f5a7ec924c",
-    "furusato-workshop-v3-0-0-complete.html": "3af11a800bad336ec97097ad6c908f89a34058d8885e2e1578593f1be5dd5799"
+    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "8761ebb30044877b5caf9225443b166608aea36a11995315dc52d3c67aa3a0d4",
+    "furusato-workshop-v3-0-0-complete.html": "d662f91e5eb953617027f7b1d811fa33b34d5b11acf182efbf1400c40909489e"
   },
   "note": "Structural Word and local browser checks; Microsoft Word pagination is unverified. These checks are not AI accuracy or Fabric feature acceptance."
 }

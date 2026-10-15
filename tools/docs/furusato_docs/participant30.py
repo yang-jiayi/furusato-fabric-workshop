@@ -19,6 +19,7 @@ from furusato_html.model import Block, Section, Text
 
 from . import participant30_figures as figure_source
 from . import participant30_text as text_source
+from . import participant30_tuning, participant30_evaluation, participant30_deployment
 
 LEARN_BASE = "https://learn.microsoft.com/en-us/fabric/iq/ontology/"
 PARTICIPANT_ASSETS = Path(__file__).resolve().parents[3] / "docs" / "assets" / "v3.0.0-participant"
@@ -100,7 +101,7 @@ PLAIN_EN = (
     ("raw value", "value including duplicates"),
 )
 JARGON = re.compile(r"(?i)\bseed\b|snapshot|スナップショット|\braw\b")
-LITERAL_NAMES = re.compile(r"(?:Files|data)(?:/furusato)?/seed|StaticSeed|/seed/|\\seed\\")
+LITERAL_NAMES = re.compile(r"(?:Files|data)(?:/furusato)?/seed|StaticSeed|/seed/|\\seed\\|\bagent_municipality_snapshot\b|\bcompile-receipt\.json\b")
 
 
 def pair(value) -> Text:
@@ -489,6 +490,9 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
             suffix += 1
         if spec.get("links"):
             add_section(section, str(suffix), SECTION_TITLES["links"], [link_list(spec["links"])])
+    participant30_tuning.append_tuning_sections(chapters[17], root)
+    participant30_evaluation.append_chapter_sections(chapters[19], root)
+    participant30_deployment.append_deployment_sections(chapters[24], root)
     for letter, section in appendices.items():
         ja, en = text_source.APPENDIX_TITLES[letter]
         section.title = Text(f"付録 {letter}　{ja}", f"Appendix {letter} — {en}")
@@ -514,18 +518,30 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
                                     "C": ("使い方", "How to use this appendix"), "D": ("一覧", "List"),
                                     "E": ("確認と対処", "Checks and fixes")}[letter]), blocks)
         if letter == "C" and "criteria" in spec.get("tables", ()):
-            evaluation_sections(section, legacy_original[17], 2)
+            participant30_evaluation.append_rubric_sections(section, root, start=2)
     leftovers = []
     for section in roots:
         for item in section.walk():
             for block in item.blocks:
+                # Source-owned instructions/rubrics must retain their exact terms.
+                # Render validators separately check literal content and prose.
+                if block.get("canonicalLiteral"):
+                    continue
                 for value in _texts(block):
                     stripped = LITERAL_NAMES.sub("", value.ja + " " + value.en)
                     if JARGON.search(stripped):
                         leftovers.append((item.number, JARGON.search(stripped).group(0), value.ja[:60]))
     if leftovers:
         raise ValueError("Uncommon terms remain in the participant edition: " + repr(leftovers[:8]))
-    return {"figures": figures.used}
+    suite = participant30_evaluation.public_suite(root)
+    return {"figures": figures.used, "evaluation": {
+        "practice": suite["protocol"]["practice"],
+        "extendedPublic": suite["protocol"]["extended"],
+        "questionLanguage": suite["questionLanguage"],
+        "publicNotUnseen": suite["publicNotUnseen"],
+        "historicalPrivateQuestionsIncluded": False,
+        "countsFieldScope": "counts.conditions retains the original ten-question rubric",
+    }}
 
 
 def _texts(block: Block):

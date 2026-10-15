@@ -421,12 +421,20 @@ Historical isolated research assets above remain optional and outside this route
 
 `publish-agent` publishes the base candidate. Afterwards compile and apply
 [measured-contract-20261015](data-agent/candidates/measured-contract-20261015/README.md)
-using [`measured_contract_profile.py`](../../tools/data-agent/measured_contract_profile.py).
-Notebook02–04 seal this compiler and the same profile inputs; compiling never writes
-to Fabric. Follow the profile README's exact input schema and local command.
+using the participant guide, Chapter 17, and
+[`participant_profile.py`](../../tools/data-agent/participant_profile.py). Its
+[command reference](../../tools/data-agent/participant-profile-README.md) documents
+`prepare`, explicit `apply --apply`, `publish --apply`, and read-only `verify`.
+The default SQL inventory uses the existing read-only SQL MCP adapter over HTTPS;
+ODBC is optional. Preparation exports actual current metadata, compiles locally
+and saves a backup plan outside the source package. It never writes to Fabric.
+Notebook02–04 still seal the underlying
+[`measured_contract_profile.py`](../../tools/data-agent/measured_contract_profile.py)
+and the same profile inputs. The participant Word/HTML contains the full SQL,
+selection, instruction, example, publication and evaluation procedures.
 
 1. Verify the six SQL views independently, including their column types and quality
-   generation. Read all four native Agent source metadata/selection trees and the
+   generation. Read the three ordinary source trees and the separate main Ontology context, plus the
    deployed Semantic Model TMDL into private storage outside Git.
 2. Compile from those actual objects. Require exactly one source per type, the same
    resource identities and Code Interpreter configuration, native IDs for every
@@ -438,7 +446,7 @@ to Fabric. Follow the profile README's exact input schema and local command.
    examples rejected by the service connection validator are omitted. Read-only SQL
    execution and native example-registration validation are distinct checks.
 4. Save the unchanged Published parts, stage only the compiled Draft through the
-   authorized operator workflow, read it back and publish once. Read Published back
+   explicit participant `apply` command, read it back and publish once. Read Published back
    and compare the actual normalized definition. Preserve all failures privately.
 5. Freeze questions, conditions, configuration/data fingerprints and attempt policy
    before sending a new evaluation. Keep paired unchanged-condition comparisons,
@@ -446,10 +454,16 @@ to Fabric. Follow the profile README's exact input schema and local command.
    question delivery. A completed native response or correct final prose cannot
    override a failed tool/query or missing native execution evidence.
 
-The measured later adjustments have targeted evidence; the complete 51-question
-campaign has not been repeated on the latest combined profile. Keep historical
-FAIL/UNCLEAR/N/A verdicts and the native Ontology/schema/UI limitations. See the
-[bounded measured results](../../docs/v3.0.0/tuning-20261010/README.md).
+The 2026-10-15 evaluation repeated the complete 51-question campaign on the
+combined profile: 49 public slots / 290 conditions plus two separate private
+questions / six conditions per phase. The matched public comparison covers 281
+applicable conditions (189 to 217 PASS); it is supplemental condition fulfillment,
+not a general answer-accuracy guarantee. Retain FAIL/UNCLEAR/N/A verdicts and the
+native Ontology/schema/UI limitations. See the
+[dated measured results](../../docs/v3.0.0/tuning-20261015/README.md).
+The participant guide now explains configuration reproduction and a separate
+49-slot public evaluation; publishing these instructions does not rerun the cloud
+campaign or turn the previously private questions into future unseen tests.
 
 ### API-only operation notes (observed 2026-10-07)
 

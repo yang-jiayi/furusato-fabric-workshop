@@ -84,10 +84,12 @@ def render(
             pieces = []
             for lang in ("ja", "en"):
                 ident = f"prompt-{index}-{lang}"
+                prompt = (html.escape(block["text"].get(lang), quote=True) if block.get("canonicalLiteral")
+                          else esc(block["text"].get(lang)))
                 pieces.append(
                     f'<div class="codeblock" data-l="{lang}" lang="{lang}">'
                     f'<button type="button" data-copy-target="{ident}">{"コピー" if lang == "ja" else "Copy"}</button>'
-                    f'<pre><code id="{ident}">{esc(block["text"].get(lang))}</code></pre></div>'
+                    f'<pre><code id="{ident}">{prompt}</code></pre></div>'
                 )
             return "".join(pieces)
         return render_block(block, ctx, counter)

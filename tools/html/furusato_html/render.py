@@ -76,14 +76,15 @@ def esc(text: str) -> str:
     return html.escape(ascii_parentheses(str(text)), quote=True)
 
 
-def rich(text: str) -> str:
+def rich(text: str, *, verbatim: bool = False) -> str:
     """Render backtick code spans and bare URLs as HTML."""
     out: list[str] = []
+    escape = (lambda value: html.escape(str(value), quote=True)) if verbatim else esc
     for index, segment in enumerate(str(text).split("`")):
         if index % 2 == 1:
-            out.append(f"<code>{esc(segment)}</code>")
+            out.append(f"<code>{escape(segment)}</code>")
             continue
-        escaped = esc(segment)
+        escaped = escape(segment)
         escaped = _URL.sub(
             lambda match: f'<a href="{match.group(1)}" rel="noreferrer noopener">{match.group(1)}</a>',
             escaped,
@@ -141,11 +142,11 @@ def _digest_markup(value: str) -> str | None:
     return f'<code class="digest">{esc(stripped)}</code>'
 
 
-def bilingual(text: Text, *, tag: str = "span", extra: str = "") -> str:
+def bilingual(text: Text, *, tag: str = "span", extra: str = "", verbatim: bool = False) -> str:
     """Emit one Japanese and one English inline span for the same string."""
     space = f" {extra}" if extra else ""
-    ja = _digest_markup(text.ja) or _synonym_markup(text.ja) or rich(text.ja)
-    en = _digest_markup(text.en) or _synonym_markup(text.en) or rich(text.en)
+    ja = rich(text.ja, verbatim=True) if verbatim else _digest_markup(text.ja) or _synonym_markup(text.ja) or rich(text.ja)
+    en = rich(text.en, verbatim=True) if verbatim else _digest_markup(text.en) or _synonym_markup(text.en) or rich(text.en)
     return (
         f'<{tag} data-l="ja" lang="ja"{space}>{ja}</{tag}>'
         f'<{tag} data-l="en" lang="en"{space}>{en}</{tag}>'
@@ -179,24 +180,25 @@ class RenderContext:
 # ------------------------------------------------------------------- blocks
 def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> str:
     kind = block.kind
+    text_markup = lambda value: bilingual(value, verbatim=bool(block.get("canonicalLiteral")))
     if kind == "paragraph":
         classes = ' class="lead"' if block.get("lead") else ""
-        return f'<p{classes} data-search-block>{bilingual(block["text"])}</p>'
+        return f'<p{classes} data-search-block>{text_markup(block["text"])}</p>'
 
     if kind == "list":
         tag = "ol" if block["numbered"] else "ul"
         start = f' start="{int(block["start"])}"' if block["numbered"] and block.get("start") else ""
-        items = "".join(f"<li>{bilingual(item)}</li>" for item in block["items"])
+        items = "".join(f"<li>{text_markup(item)}</li>" for item in block["items"])
         return f"<{tag}{start} data-search-block>{items}</{tag}>"
 
     if kind == "callout":
         tone, default_key = CALLOUT_TONES[block["tone"]]
         title = block.get("title")
-        title_html = bilingual(title) if title else ctx.label(default_key)
+        title_html = text_markup(title) if title else ctx.label(default_key)
         return (
             f'<aside class="callout callout--{tone}" data-search-block>'
             f'<p class="callout__title">{ICONS[tone]}{title_html}</p>'
-            f"<p>{bilingual(block['text'])}</p>"
+            f"<p>{text_markup(block['text'])}</p>"
             "</aside>"
         )
 
@@ -217,6 +219,8 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
         # lines, and only the rendered height decides whether a page fits.
         rendered = sum(max(1, -(-len(line) // PRINT_CODE_COLUMNS)) for line in lines)
         long_attr = ' data-long="true"' if rendered > PRINTABLE_CODE_LINES else ""
+        code_text = (html.escape(block["text"], quote=True) if block.get("canonicalLiteral")
+                     else esc(block["text"]))
         return (
             f'<div class="codeblock"{long_attr}>'
             '<div class="codeblock__bar">'
@@ -225,7 +229,7 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
             f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"]["ja"])}">'
             f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(ctx.ui["copy.label"]["ja"])}</span>'
             "</button></div>"
-            f'<pre><code id="{block_id}">{esc(block["text"])}</code></pre>'
+            f'<pre><code id="{block_id}">{code_text}</code></pre>'
             f"{integrity}"
             "</div>"
         )
@@ -243,19 +247,20 @@ def render_table(block: Block, ctx: RenderContext) -> str:
     number = block["number"]
     caption = block["caption"]
     label = ctx.ui_text("table.label")
+    cell_markup = lambda value: bilingual(value, verbatim=bool(block.get("canonicalLiteral")))
     caption_html = (
         f'<span class="caption__num">{plain_bilingual(label)} {number}</span> '
-        f"{bilingual(caption)}"
+        f"{cell_markup(caption)}"
     )
-    head = "".join(f'<th scope="col">{bilingual(cell)}</th>' for cell in block["headers"])
+    head = "".join(f'<th scope="col">{cell_markup(cell)}</th>' for cell in block["headers"])
     body_rows: list[str] = []
     for row in block["rows"]:
         cells: list[str] = []
         for column, cell in enumerate(row):
             if column == 0:
-                cells.append(f'<th scope="row">{bilingual(cell)}</th>')
+                cells.append(f'<th scope="row">{cell_markup(cell)}</th>')
             else:
-                cells.append(f"<td>{bilingual(cell)}</td>")
+                cells.append(f"<td>{cell_markup(cell)}</td>")
         body_rows.append("<tr>" + "".join(cells) + "</tr>")
     hint = ctx.label("table.scroll")
     return (

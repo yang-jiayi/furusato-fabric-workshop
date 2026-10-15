@@ -200,6 +200,9 @@ class DocumentBuilder:
         self.table_number = 0
         self.figures: list[str] = []
         self.tables: list[str] = []
+        # Only explicitly quoted configuration/code keeps its original Unicode
+        # punctuation when the surrounding document receives display typography.
+        self._literal_text: list[tuple[object, str]] = []
         self._chapter_started = False
         self._configure_defaults()
 
@@ -552,7 +555,8 @@ class DocumentBuilder:
         per_row = max(int(text_pt / (8.5 * MONO_ADVANCE_RATIO)), 1)
         return sum(max(1, math.ceil(len(line) / per_row)) for line in lines)
 
-    def code_block(self, text: str, *, language: str = "", keep_together: bool | None = None):
+    def code_block(self, text: str, *, language: str = "", keep_together: bool | None = None,
+                   verbatim: bool = False):
         lines = text.rstrip("\n").split("\n")
         # The label used to sit under the listing, so a listing that broke across a
         # page opened with unlabelled code and the reader met the label only at the
@@ -585,6 +589,11 @@ class DocumentBuilder:
             header_run.font.size = Pt(8.5)
             header_paragraph.paragraph_format.space_after = Pt(0)
             header_paragraph.paragraph_format.space_before = Pt(0)
+            # cantSplit protects each row, not the boundary between this label
+            # and the first code row. Without this link LibreOffice can leave
+            # only the label at a page foot and omit the following short body.
+            # Keep only this boundary together; later code chunks may paginate.
+            header_paragraph.paragraph_format.keep_with_next = True
             _shade(header._tc.get_or_add_tcPr(), SHADE_HEADER)
             header_run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
             _borders(header._tc.get_or_add_tcPr(), "D0D7DE", 4)
@@ -609,7 +618,9 @@ class DocumentBuilder:
             for line in chunk:
                 paragraph = cell.paragraphs[0] if first else cell.add_paragraph()
                 first = False
-                run = paragraph.add_run(line if line else " ")
+                run = paragraph.add_run(line if line or verbatim else " ")
+                if verbatim:
+                    self.preserve_literal_text(run._element)
                 run.font.name = MONO_FONT
                 run.font.size = Pt(8.5)
                 rpr = run._element.get_or_add_rPr()
@@ -958,8 +969,14 @@ class DocumentBuilder:
             settings.append(existing)
         existing.set(qn("w:val"), "true")
 
+    def preserve_literal_text(self, element) -> None:
+        """Keep only this explicitly attributed element's editable text literal."""
+        self._literal_text.extend((node, node.text or "") for node in element.iter(qn("w:t")))
+
     def save(self, path: Path) -> Path:
         normalize_word_parentheses(self.document)
+        for node, text in getattr(self, "_literal_text", ()):
+            node.text = text
         save_atomically(lambda staged: self.document.save(str(staged)), path)
         return path
 

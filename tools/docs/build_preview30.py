@@ -81,6 +81,7 @@ def write_word(
             participant_word.add_bookmark(heading, index)
         for block in section.blocks:
             kind = block.kind
+            before_literal = set(builder.document.element.body) if block.get("canonicalLiteral") else None
             if kind == "paragraph":
                 builder.body(block["text"].get(lang))
             elif kind == "list":
@@ -91,9 +92,11 @@ def write_word(
                 builder.callout(block["tone"], block["text"].get(lang), title=title.get(lang) if title else None, **block.get("word_layout", {}))
             elif kind == "code":
                 label = block.get("language")
-                builder.code_block(block["text"], language=label.get(lang) if label else "")
+                builder.code_block(block["text"], language=ascii_parentheses(label.get(lang)) if label else "",
+                                   **({"verbatim": True} if block.get("canonicalLiteral") else {}))
             elif kind == "prompt":
-                builder.code_block(block["text"].get(lang), language="Plan / Act prompt")
+                builder.code_block(block["text"].get(lang), language="Plan / Act prompt",
+                                   **({"verbatim": True} if block.get("canonicalLiteral") else {}))
             elif kind == "table":
                 columns = len(block["headers"])
                 widths = block.get("widths") or ([1.25, 5.35] if columns == 2 else [1] * columns)
@@ -116,6 +119,10 @@ def write_word(
                 builder.figure(image, caption=block["caption"].get(lang), alt_text=block["alt"].get(lang), **{"max_height_cm": 15.5, **block.get("word_layout", {})})
             else:
                 raise ValueError("Unknown shared-content block: " + kind)
+            if before_literal is not None:
+                for element in builder.document.element.body:
+                    if element not in before_literal:
+                        builder.preserve_literal_text(element)
     if word_navigation == "fields":
         builder.update_fields_on_open()
     builder.save(target)

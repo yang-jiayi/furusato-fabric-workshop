@@ -67,11 +67,11 @@ class ParticipantEditionTests(unittest.TestCase):
 
     def test_no_working_records_or_history(self):
         found = {}
-        for value in texts(self.document):
-            for language in ("ja", "en"):
-                hits = validator.working_content(value.get(language))
-                if hits:
-                    found[value.get(language)[:60]] = hits
+        for language in ("ja", "en"):
+            prose = " ".join(value.get(language) for value in texts(self.document))
+            hits = validator.participant_working_content(prose, self.document, language)
+            if hits:
+                found[language] = hits
         self.assertEqual({}, found)
         joined = " ".join(value.ja + " " + value.en for value in texts(self.document))
         for phrase in ("76 PASS", "48 PASS", "artifact-set", "sourceCommit", "Temp", "R8", "holdout"):
@@ -106,7 +106,8 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertEqual(84, self.metadata["counts"]["conditions"])
         overview = next(b for b in appendix_c.children[0].blocks if b.kind == "table")
         expected = {row[2].ja for row in overview["rows"]}
-        shown = {b["text"].ja for s in questions for b in s.blocks if b.kind == "callout"}
+        shown = {b["text"].ja if hasattr(b["text"], "ja") else b["text"]
+                 for s in questions for b in s.blocks if b.kind in {"callout", "code"}}
         self.assertEqual(expected, expected & shown)
         for section in questions:
             self.assertIn("table", [b.kind for b in section.blocks], section.number)

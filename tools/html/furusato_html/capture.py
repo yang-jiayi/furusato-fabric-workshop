@@ -171,7 +171,8 @@ class CaptureBuilder:
 
 #: Members of the canonical Word builder that carry no content and therefore
 #: need no capture counterpart.
-_WORD_ONLY_MEMBERS = frozenset({"carrier", "document", "field", "figures", "tables", "figure_number", "table_number"})
+_WORD_ONLY_MEMBERS = frozenset({"carrier", "document", "field", "figures", "tables", "figure_number", "table_number",
+                                "preserve_literal_text"})  # OOXML typography metadata; adds no content.
 
 
 def assert_builder_coverage(document_builder: type) -> None:

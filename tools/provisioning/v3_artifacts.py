@@ -114,6 +114,19 @@ def snapshot():
         "tools/docs/furusato_docs/context.py", "tools/docs/furusato_docs/preview30_release.py",
         "tools/docs/furusato_docs/participant30.py", "tools/docs/furusato_docs/participant30_text.py",
         "tools/docs/furusato_docs/participant30_figures.py",
+        "tools/docs/furusato_docs/participant30_tuning.py",
+        "tools/docs/furusato_docs/participant30_deployment.py",
+        "tools/docs/furusato_docs/docx_kit.py",
+        "tools/html/furusato_html/render.py", "tools/html/furusato_html/capture.py",
+        "tools/docs/furusato_docs/participant30_evaluation.py",
+        "tools/data-agent/participant_profile.py",
+        "tools/data-agent/participant-profile-README.md",
+        "tools/provisioning/reference_agent.py", "tools/provisioning/reference_sql.py",
+        "tools/provisioning/requirements-preview30.txt",
+        "tools/provisioning/requirements-activation.txt",
+        "tools/data-agent/regression_suite.py",
+        "tools/data-agent/regression/extended-suite.json",
+        "workshop/v3.0.0-preview/data-agent/participant-evaluation/README.md",
         "tools/docs/furusato_docs/participant_word.py",
         "tools/html/furusato_html/preview30.py",
         "tools/html/furusato_html/diagrams.py",
@@ -152,6 +165,23 @@ def snapshot():
     if participant_assets.is_dir():
         paths.update(p for p in participant_assets.rglob("*") if p.is_file())
     paths.update(p for p in rt.BASE.rglob("*") if p.is_file())
+    protected_files = {}
+    for relative in rt.BASELINE_PROTECTED_PATHS:
+        protected = rt.REPO / relative
+        members = [protected] if protected.is_file() else sorted(protected.rglob("*"))
+        for member in members:
+            if member.is_symlink():
+                raise ValueError("Protected baseline may not contain symlinks: " + str(member))
+            if member.is_file():
+                paths.add(member)
+                protected_files[member.relative_to(rt.REPO).as_posix()] = sha(member.read_bytes())
+    baseline_protection = {
+        "schemaVersion": "furusato-protected-baseline/v1",
+        "baselineCommit": rt.BASELINE_COMMIT,
+        "protectedPaths": list(rt.BASELINE_PROTECTED_PATHS),
+        "files": dict(sorted(protected_files.items())),
+        "treeSha256": rt.digest(protected_files),
+    }
     files = {p.relative_to(rt.REPO).as_posix(): sha(p.read_bytes()) for p in sorted(paths)}
     source_commit = subprocess.check_output(["git", "-C", str(rt.REPO), "rev-parse", "HEAD"], text=True).strip()
     return {"schemaVersion": "furusato-v3-artifact-set/v1", "workshopVersion": rt.WORKSHOP_VERSION,
@@ -159,6 +189,7 @@ def snapshot():
             "sourceTreeSha256": rt.digest(files), "candidateSourceSha256": rt.candidate_fingerprint(),
             "files": files, "notebooks": notebooks, "csvFiles": len(csv_files),
             "immutableBaselineTreeSha256": baseline["treeSha256"],
+            "baselineProtection": baseline_protection,
             "dataChecks": {key: baseline[key] for key in (
                 "staticDonationRows", "staticDonationYen", "rawIncrementRows", "acceptedUniqueRows", "duplicateRows")},
             "productionPlacement": "specified-folder-direct", "tempRequired": False,

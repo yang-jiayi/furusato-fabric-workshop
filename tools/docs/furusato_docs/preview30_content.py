@@ -2051,10 +2051,11 @@ def build(
     if participant_edition:
         from . import participant30
         participant_manifest, artifact_binding = verify_artifact_manifest(root, artifact_manifest_path)
-        participant_figures = participant30.compose(
+        participant_composition = participant30.compose(
             roots, root=root, context=context, facts=facts, tests=tests, evidence=evidence,
             manifest=participant_manifest, legacy_original=original,
-        )["figures"]
+        )
+        participant_figures = participant_composition["figures"]
     full_edition = not participant_edition
     if full_edition:
         current_lessons(roots[:24], context)
@@ -2184,5 +2185,6 @@ def build(
         metadata.update({
             "participantEdition": True, "retainedLegacyChapters": 0, "retainedLegacyAppendices": 0,
             "participantFigures": participant_figures,
+            "participantEvaluation": participant_composition["evaluation"],
         })
     return document, context, facts, carrier, evidence, metadata

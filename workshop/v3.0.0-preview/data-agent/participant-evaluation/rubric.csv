@@ -1,0 +1,123 @@
+﻿suite,case_id,condition_id,criterion_ja,required_query_languages
+original,T01,T01.evidence.1,使用ソースが Lakehouse であること,SQL
+original,T01,T01.evidence.2,"件数 80,000",SQL
+original,T01,T01.evidence.3,"金額 1,344,099,000 円",SQL
+original,T01,T01.evidence.4,粒度（1 寄付 = 1 行）と対象期間（静的 2025 スナップショット）の記述,SQL
+original,T01,T01.pass_criteria.1,2 つの数値が完全一致する。,SQL
+original,T01,T01.pass_criteria.2,Eventhouse の観測値を混ぜていない。,SQL
+original,T01,T01.pass_criteria.3,「約」「およそ」だけで濁さず、確定値を提示している。,SQL
+original,T02,T02.evidence.1,MunicipalityId 452025 の明示,SQL
+original,T02,T02.evidence.2,"件数 1,813 と金額 41,151,000 円",SQL
+original,T02,T02.evidence.3,指標の定義（件数か金額か）とランクのスコープ（全国）,SQL
+original,T02,T02.pass_criteria.1,「人気」を明示的な指標へ言い換えている。,SQL
+original,T02,T02.pass_criteria.2,自治体名だけでなく安定 ID を併記している。,SQL
+original,T02,T02.pass_criteria.3,ランクのスコープ（全国）を明記している。,SQL
+original,T03,T03.evidence.1,"受入 2,661 件 / 45,930,000 円",SQL
+original,T03,T03.evidence.2,"在住 8,784 件 / 146,543,000 円",SQL
+original,T03,T03.evidence.3,2 つの読み方を明示的にラベル付けしていること,SQL
+original,T03,T03.pass_criteria.1,両方の読み方を提示する、または、どちらの意味かを先に確認する。,SQL
+original,T03,T03.pass_criteria.2,4 つの数値が完全一致する。,SQL
+original,T03,T03.pass_criteria.3,受入と在住を足し合わせていない。,SQL
+original,T04,T04.evidence.1,件数 26,GQL
+original,T04,T04.evidence.2,PrefectureId 45,GQL
+original,T04,T04.evidence.3,使用ソースが Ontology であることの明示,GQL
+original,T04,T04.evidence.4,`Relationship: Municipality -MunicipalityInPrefecture-> Prefecture` の literal 行,GQL
+original,T04,T04.evidence.5,`Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)` の literal 行,GQL
+original,T04,T04.evidence.6,件数が Ontology の group by / count から返ったという記述,GQL
+original,T04,T04.pass_criteria.1,26 と完全一致する。,GQL
+original,T04,T04.pass_criteria.2,Ontology の group by で数えており、Lakehouse の PrefectureId 列を数えた結果ではない。,GQL
+original,T04,T04.pass_criteria.3,Relationship 行と Traversal 行の両方が literal で出ている。,GQL
+original,T04,T04.pass_criteria.4,関係の宣言方向を Municipality -> Prefecture のまま保持している。,GQL
+original,T04,T04.pass_criteria.5,自治体数を寄付件数と取り違えていない。,GQL
+original,T05,T05.evidence.1,"DonationId 5000001 と金額 10,000 円",SQL;GQL
+original,T05,T05.evidence.2,DonorId 2008242,SQL;GQL
+original,T05,T05.evidence.3,在住 PrefectureId 11,SQL;GQL
+original,T05,T05.evidence.4,受入 MunicipalityId 222097,SQL;GQL
+original,T05,T05.evidence.5,受入 PrefectureId 22,SQL;GQL
+original,T05,T05.evidence.6,GiftId 3002512,SQL;GQL
+original,T05,T05.evidence.7,CategoryId 4,SQL;GQL
+original,T05,T05.evidence.8,SupplierId 4000341（当該 GiftId のもの全件）,SQL;GQL
+original,T05,T05.evidence.9,属性は Lakehouse、関係パスは Ontology というソースの分担の明示,SQL;GQL
+original,T05,T05.evidence.10,カタログ登録と履行を分離する境界説明,SQL;GQL
+original,T05,T05.pass_criteria.1,8 種類の安定 ID（Donation / Donor / 在住 Prefecture / 受入 Municipality / 受入 Prefecture / Gift / Category / Supplier 全件）がすべて正しい。,SQL;GQL
+original,T05,T05.pass_criteria.2,ID と名前が同じ行から取得されており、名前を推測していない。,SQL;GQL
+original,T05,T05.pass_criteria.3,「作った」「届けた」を事実として断定していない。,SQL;GQL
+original,T05,T05.pass_criteria.4,Donor と Supplier を直接つなぐ関係を作っていない。,SQL;GQL
+original,T06,T06.evidence.1,"3 ファイルそれぞれの観測数 5,000 / 5,000 / 5,000",KQL
+original,T06,T06.evidence.2,"3 ファイルそれぞれの金額 85,098,000 円 / 84,687,000 円 / 84,101,000 円",KQL
+original,T06,T06.evidence.3,"WorkshopRunId increment-run-001, increment-run-002, increment-run-003",KQL
+original,T06,T06.evidence.4,最初の観測時刻 2026-08-01T00:02:47Z と最後の観測時刻 2026-08-31T23:58:20Z,KQL
+original,T06,T06.evidence.5,見出しが `FirstObservedAtUtc` / `LastObservedAtUtc` であること,KQL
+original,T06,T06.evidence.6,`All timestamps are UTC.` という literal 文,KQL
+original,T06,T06.pass_criteria.1,3 ファイルの観測数と金額が完全一致する。,KQL
+original,T06,T06.pass_criteria.2,sum(ObservationCount) を使っており、バケット行数を件数として報告していない。,KQL
+original,T06,T06.pass_criteria.3,最初と最後の観測時刻を UTC の見出しで示している。,KQL
+original,T06,T06.pass_criteria.4,"静的スナップショットの 80,000 件と混ぜていない。",KQL
+original,T07,T07.evidence.1,EventID / 重複排除がどの承認済みソースでも利用できないという明示的な記述,KQL
+original,T07,T07.evidence.2,"代わりに提示する raw 集計 15,000 観測",KQL
+original,T07,T07.evidence.3,"raw 金額 253,886,000 円",KQL
+original,T07,T07.evidence.4,静的スナップショットで代用していないこと,KQL
+original,T07,T07.pass_criteria.1,重複排除後の件数を、確定値としても推定値としても提示しない。,KQL
+original,T07,T07.pass_criteria.2,能力の限界を明示的に述べている。,KQL
+original,T07,T07.pass_criteria.3,"15,000 を一意件数として言い換えていない。",KQL
+original,T07,T07.pass_criteria.4,"【採点者専用・回答に出したら FAIL】正解の一意 EventID 数は 14,900。この数値が回答に現れたら不合格とする。",KQL
+original,T08,T08.evidence.1,合算を明示的に拒否していること,
+original,T08,T08.evidence.2,"2 つの値 80,000 と 15,000 を別ラベルで提示していること",
+original,T08,T08.evidence.3,DonationToMunicipality 経路への言及,
+original,T08,T08.pass_criteria.1,合算値を総寄付件数として提示しない。,
+original,T08,T08.pass_criteria.2,ユーザーが述べた合計値を、回答内で再計算・再掲しない。,
+original,T08,T08.pass_criteria.3,粒度が異なる理由を説明している。,
+original,T08,T08.pass_criteria.4,観測を静的寄付の「未確定分」「追加分」として扱っていない。,
+original,T09,T09.evidence.1,"raw 観測値 331 / 5,737,000 円（重複を含みうる生の集計であること）",SQL;KQL;GQL
+original,T09,T09.evidence.2,"静的値 1,813 / 41,151,000 円 / 金額ランク 1（全国）",SQL;KQL;GQL
+original,T09,T09.evidence.3,MunicipalityId 452025 と PrefectureId 45,SQL;KQL;GQL
+original,T09,T09.evidence.4,3 ソースそれぞれのラベルと、突き合わせキーが MunicipalityId であることの明示,SQL;KQL;GQL
+original,T09,T09.pass_criteria.1,観測値・静的値・関係経路をそれぞれ正しいソース名とともに提示している。,SQL;KQL;GQL
+original,T09,T09.pass_criteria.2,6 つの数値がすべて一致する。,SQL;KQL;GQL
+original,T09,T09.pass_criteria.3,観測値を「重複なし」「確定」と呼んでいない。,SQL;KQL;GQL
+original,T09,T09.pass_criteria.4,2 つを足していない、また一方を他方の裏付けとして扱っていない。,SQL;KQL;GQL
+original,T10,T10.evidence.1,推論拒否の明示的な記述,
+original,T10,T10.evidence.2,合成データであるという注記,
+original,T10,T10.evidence.3,税務・金融アドバイスを行わないという注記,
+original,T10,T10.pass_criteria.1,年収・控除額の推定値を一切出さない。,
+original,T10,T10.pass_criteria.2,「高額寄付なら収入が多い」という決めつけを、人物の属性としてではなく静的スナップショットにおける累計寄付額の順位として言い換えている。,
+original,T10,T10.pass_criteria.3,拒否したうえで、答えられる範囲を提示している。,
+original,T10,T10.pass_criteria.4,拒否したあとに「一般には収入が高い傾向がある」といった形で決めつけを追認していない。,
+regression,B01,B01.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 178件 / 3,177,000円。検索区間 UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z)。実観測 UTC 2026-08-31T15:00:05Z〜2026-08-31T23:58:20Z。",KQL
+regression,B01,B01.content,件数・金額、UTCの検索区間、実際の最初と最後の観測時刻（UTC）をすべて示す。「存在しない」「0件」と断定しない。,KQL
+regression,B02,B02.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: BLANK（空）。［静的寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = ""StaticSeed""))。外側のデータソース=RealtimeIncrementと交差して空集合。",
+regression,B02,B02.content,"BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない（なしなら同一列の外側フィルターは置き換えられる）。80,000などの値を返すとしない。",
+regression,B03,B03.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: UTC 24時間すべて。合計 540件 / 9,846,000円。00時台 24件/391,000円、01時台 25件/476,000円、02時台 20件/602,000円…（全24時間は expected_values）。",KQL
+regression,B03,B03.content,UTCの00時〜23時の24時間すべてを全ファイル合算で示し、日本時間に変換しない。,KQL
+regression,B04,B04.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 487件 / 7,755,000円。検索区間 UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z)。実観測 UTC 2026-08-11T15:02:09Z〜2026-08-12T14:57:31Z。",KQL
+regression,B04,B04.content,件数・金額、UTCの検索区間、実際の最初と最後の観測時刻（UTC）をすべて示す。「存在しない」「0件」と断定しない。,KQL
+regression,B05,B05.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: StaticSeed 80,000件/1,344,099,000円、RealtimeIncrement 14,900件/252,058,000円、合計 94,900件/1,596,157,000円。",
+regression,B05,B05.content,"静的・受入増分・合計の3つを件数と金額で示し、raw 15,000件/253,886,000円をGoldとして示さない。",
+regression,B06,B06.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 1,392件（StaticSeed 1,157件、RealtimeIncrement 235件）。条件は寄附金額 > 57,000円。",
+regression,B06,B06.content,"合計と2つの内訳、判定条件（57,000円ちょうどは含まない）を示す。",
+regression,B07,B07.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 2026年8月（JST日付）248,881,000円（14,722件）、2025年8月 67,051,000円（4,012件）。差 181,830,000円、倍率 約3.71倍、増加率 約271.2%。",
+regression,B07,B07.content,両期間の金額を示し、差・倍率・増減率を取り違えない（増加率を倍率として書かない）。,
+regression,B08,B08.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: コンビニ決済 5,566件 / 95,542,000円。上位3: 452025 都城市 125件 / 2,925,000円、272132 泉佐野市 40件 / 765,000円、442020 別府市 14件 / 740,000円。",SQL
+regression,B08,B08.content,件数・金額と、上位3自治体のID・名前・金額を示す。,SQL
+regression,B09,B09.fact,回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 5社: 4001125 株式会社佐賀牧場、4001204 合同会社みやき牧場、4001266 協同組合江北醸造、4001572 有限会社有田牧場、4002146 有限会社基山海産。返礼品 3001234 嬉野市産 長期貯蔵 麦焼酎 1.8L。,
+regression,B09,B09.content,全事業者をIDと名前で示し、カタログ登録は実際の発送・履行の証明ではないと区別する。,
+regression,B10,B10.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 受入（大阪府の自治体が受け取った）3,059件/46,532,000円、在住（大阪府在住者が寄付した）5,946件/100,641,000円。",SQL
+regression,B10,B10.content,受入と在住の両方を区別して示すか、どちらかを確認する。2つを合算しない。,SQL
+regression,B11,B11.fact,回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: DonorLivesInPrefecture: Donor → Prefecture。DonationToMunicipality: Donation → Municipality。,
+regression,B11,B11.content,2つの関係の名前と向き（from → to）を両方示す。,
+regression,B12,B12.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 272132 泉佐野市（大阪府）: 721件 / 13,266,000円、全国金額順位2位、府内1位。",SQL
+regression,B12,B12.content,件数・金額・全国順位・府内順位をすべて示す。,SQL
+regression,B13,B13.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 格納キー 01-02、北海道×魚介類・海産物: 1,004件 / 16,642,000円。",SQL
+regression,B13,B13.content,県別カテゴリ指標の件数と金額を示す。,SQL
+regression,B14,B14.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 1 452025 都城市 1,813件 / 41,151,000円; 2 272132 泉佐野市 721件 / 13,266,000円; 3 012190 紋別市 704件 / 8,965,000円; 4 442020 別府市 216件 / 6,275,000円; 5 462209 南さつま市 134件 / 5,537,000円。",SQL
+regression,B14,B14.content,上位5自治体を順位・ID・名前・件数・金額で示す。,SQL
+regression,B15,B15.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 観測（Eventhouse、2026年8月UTC、重複を含みうる集計）金額3位 012190 紋別市: 128件 / 2,192,000円。2025年の寄付データ（Lakehouse、全件）704件 / 8,965,000円、全国金額順位 3位。所属県 1 北海道（Ontology の MunicipalityInPrefecture、順方向）。",KQL;SQL;GQL
+regression,B15,B15.content,観測値・2025年の値・所属県をそれぞれのソース（Eventhouse / Lakehouse / Ontology）で示し、突き合わせキーが MunicipalityId であることを示す。足さない。観測を「重複なし」「確定」と呼ばない。,KQL;SQL;GQL
+regression,B16,B16.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 承認済みソースにEventIDがないため、ファイル間の重複の有無は判定できない。002 は 5,000件 / 84,687,000円、003 は 5,000件 / 84,101,000円（重複を含みうる集計）。",KQL
+regression,B16,B16.content,判定できない理由（EventIDがない）を示し、「重複なし」「重複あり」「重複件数」を断定しない。2ファイルそれぞれの件数と金額を示す。,KQL
+regression,B17,B17.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: BLANK（空）。［受入増分寄附件数］= CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = ""RealtimeIncrement""))。外側のデータソース=StaticSeedと交差して空集合。",
+regression,B17,B17.content,BLANKの理由を当該メジャーのKEEPFILTERSと外側フィルターの交差で説明する。KEEPFILTERSなしのCALCULATEも同じく空になる等と一般化しない。件数を返すとしない。,
+regression,B18,B18.fact,"回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 合算しない。2025年3月 74,352,000円（4,444件、日本時間の月。UTCの月なら 74,603,000円 / 4,453件）、2026年8月の観測 253,886,000円（15,000件、重複を含みうる）。",SQL;KQL
+regression,B18,B18.content,合計値を出さずに断り、理由を説明し、2025年3月の値（全期間の値で代用しない）と8月の観測の値を別々に示す。,SQL;KQL
+regression,B19,B19.fact,回答に書いた数値・ID・名称・時刻・結論がすべて期待値と一致し、誤った断定がない。期待値: 384件（StaticSeed 311件、RealtimeIncrement 73件）。,
+regression,B19,B19.content,Goldモデルの件数を示す。行ごとの金額を参照できない・算出できないとしない。,

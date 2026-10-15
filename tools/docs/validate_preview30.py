@@ -133,7 +133,10 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
     old.check_no_foreign_label_guids(parts, report, scope="word")
     old.check_no_build_provenance(parts, report, scope="word")
     old.check_reproducible_package(word, parts, report, scope="word")
-    old.check_parentheses(parts, report)
+    if metadata.get("participantEdition"):
+        check_participant_parentheses(parts, document, report)
+    else:
+        old.check_parentheses(parts, report)
     tree = ET.fromstring(parts["word/document.xml"])
     paragraphs = []
     headings = []
@@ -163,6 +166,10 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
     # Executable code is checked separately below without removing backticks.
     missing = [text.ja[:100] for text in model_texts(document) if normalized(text.ja.replace("`", "")) not in prose_text]
     report_check(report, "word.sharedContentComplete", not missing, str(missing[:10]))
+    literal_text = exact_literal_normalized("".join(paragraphs))
+    literal_missing = [value[:100] for value in canonical_literals(document, "ja")
+                       if exact_literal_normalized(value) not in literal_text]
+    report_check(report, "word.canonicalLiteralsPreserved", not literal_missing, str(literal_missing[:10]))
     for section in document.walk():
         for block in section.blocks:
             if block.kind == "code":
@@ -185,7 +192,7 @@ def inspect_word(word, document, metadata, report, *, release_profile=release.PR
         report_check(report, "word.currentArtifactSetHash",
                      metadata["currentArtifactSet"]["manifestSha256"] in (core if metadata.get("participantEdition") else all_text))
     if metadata.get("participantEdition"):
-        found = working_content(" ".join(paragraphs))
+        found = participant_working_content(" ".join(paragraphs), document, "ja")
         report_check(report, "word.participantProcedureOnly", not found, str(found[:10]))
     return parts
 
@@ -197,11 +204,74 @@ WORKING_CONTENT = re.compile(
     r"|Artifact-set SHA|source commit|未合格|not accepted|snapshot|スナップショット|\bseed\b|\braw\b",
     re.IGNORECASE,
 )
-LITERAL_NAMES = re.compile(r"(?:Files|data)(?:/furusato)?/seed|StaticSeed|/seed/|\\seed\\")
+LITERAL_NAMES = re.compile(r"(?:Files|data)(?:/furusato)?/seed|StaticSeed|/seed/|\\seed\\|\bagent_municipality_snapshot\b|\bcompile-receipt\.json\b")
 
 
 def working_content(value):
     return sorted({match.group(0) for match in WORKING_CONTENT.finditer(LITERAL_NAMES.sub("", value))})
+
+
+def canonical_literals(document, language):
+    """Only explicitly attributed source quotations may contain technical terms.
+
+    Full shared text/code preservation is checked independently. Do not exempt a
+    section or a word globally: remove exact quoted content from the rendered
+    text before checking the remaining participant-facing prose for work logs.
+    """
+    for section in document.walk():
+        for block in section.blocks:
+            if not block.get("canonicalLiteral"):
+                continue
+            for key in ("text", "caption", "title"):
+                value = block.get(key)
+                if value:
+                    yield value.get(language) if hasattr(value, "get") else value
+            for key in ("items", "headers"):
+                for value in block.get(key, ()):
+                    yield value.get(language)
+            for row in block.get("rows", ()):
+                for value in row:
+                    yield value.get(language)
+
+
+def strip_canonical_literals(value, document, language, *, normalize_parentheses=False):
+    transform = ascii_parentheses if normalize_parentheses else lambda text: text
+    remaining = transform(value).replace("`", "").replace("\u2060", "").replace("\u200b", "")
+    literals = sorted(set(canonical_literals(document, language)), key=len, reverse=True)
+    for literal in literals:
+        literal = transform(literal).replace("`", "").replace("\u2060", "").replace("\u200b", "")
+        words = re.split(r"\s+", literal.strip())
+        if not words or not words[0]:
+            continue
+        pattern = r"\s*".join(re.escape(word) for word in words)
+        remaining = re.sub(pattern, " ", remaining)
+    return remaining
+
+
+def participant_working_content(value, document, language):
+    return working_content(strip_canonical_literals(value, document, language, normalize_parentheses=True))
+
+
+def check_participant_parentheses(parts, document, report):
+    """Preserve exact source quotations without exempting other editable stories."""
+    scoped = dict(parts)
+    tree = ET.fromstring(parts["word/document.xml"])
+    text = " ".join(node.text or "" for node in tree.iter() if node.tag in old.TEXT_TAGS)
+    remaining = strip_canonical_literals(text, document, "ja")
+    # A synthetic audit tree carries every unquoted body string and every
+    # accessibility label. Other parts are checked without any exception.
+    audit = ET.Element("audit")
+    ET.SubElement(audit, old.W + "t").text = remaining
+    for node in tree.iter():
+        for attribute in old.TEXT_ATTRIBUTES.get(node.tag, ()):
+            ET.SubElement(audit, old.W + "t").text = node.get(attribute, "")
+    scoped["word/document.xml"] = ET.tostring(audit, encoding="utf-8")
+    old.check_parentheses(scoped, report)
+
+
+def exact_literal_normalized(value):
+    # Only line wrapping/word-joiners are display differences; punctuation is not.
+    return re.sub(r"\s+", "", value.replace("\u2060", "").replace("\u200b", "").replace("`", ""))
 
 
 def inspect_html(pair, document, metadata, report, *, release_profile=release.PREVIEW):
@@ -245,6 +315,10 @@ def inspect_html(pair, document, metadata, report, *, release_profile=release.PR
             if normalized(value) not in actual:
                 missing.append(value[:100])
         report_check(report, f"html.{language}.sharedContentComplete", not missing, str(missing[:10]))
+        literal_text = exact_literal_normalized("".join(inspection.text[language]))
+        literal_missing = [value[:100] for value in canonical_literals(document, language)
+                           if exact_literal_normalized(value) not in literal_text]
+        report_check(report, f"html.{language}.canonicalLiteralsPreserved", not literal_missing, str(literal_missing[:10]))
         code_text = normalized("".join(inspection.text[language]))
         missing_code = [
             b["text"][:70] for s in document.walk() for b in s.blocks
@@ -252,7 +326,7 @@ def inspect_html(pair, document, metadata, report, *, release_profile=release.PR
         ]
         report_check(report, f"html.{language}.codeComplete", not missing_code, str(missing_code[:10]))
         if metadata.get("participantEdition"):
-            found = working_content("".join(inspection.text[language]))
+            found = participant_working_content("".join(inspection.text[language]), document, language)
             report_check(report, f"html.{language}.participantProcedureOnly", not found, str(found[:10]))
     report.stats["externalLinks"] = sorted({link for link in inspection.links if link.startswith("https://")})
     return provenance

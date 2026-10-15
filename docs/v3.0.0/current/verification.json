@@ -1,19 +1,20 @@
 {
-  "schemaVersion": "furusato-v3-current-verification/v2",
+  "schemaVersion": "furusato-v3-current-verification/v3",
   "date": "2026-10-15",
   "timeZone": "Asia/Tokyo",
   "workshopVersion": "3.0.0",
-  "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
-  "artifactSetSha256": "7abd339724375ed536308f434d9fff5b52afa320fcfd4ccf28c41228071ca5fb",
-  "sourceTreeSha256": "725e596279572458e71d58166b7da35e3ace8ce27bca3e782e513c4e57ef786a",
-  "sourceArtifacts": 371,
+  "sourceCommit": "723465ba15bd56206061b540b833ab4c5b7a29f2",
+  "artifactSetSha256": "50337d03e90ce47e41e770dbe9680ed92b1fe4773312b17940c6df342e6f83fb",
+  "sourceTreeSha256": "3b55fe39e786240809e6a53af78424983fca1a7f885f8f9b8488eac113c86631",
+  "sourceArtifacts": 417,
   "gitBlobParityVerified": true,
   "correctedAgentProfile": "measured-contract-20261015",
   "portablePublishedParity": {
     "allDecodedPublishedPartsEqualPortableProfile": true,
     "nativeOntologyRawPartAndMetadataPreserved": true,
     "allSourceSelectionsAndKqlExamplesExact": true,
-    "freshPostNotebookSyncReviewSha256": "80cc8595c3b5fb1d6b3343e14e507f276de23adc013a0d5e74faae8796dd208b"
+    "freshPostNotebookSyncReviewSha256": "80cc8595c3b5fb1d6b3343e14e507f276de23adc013a0d5e74faae8796dd208b",
+    "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a"
   },
   "standardConfiguration": {
     "activeItems": 18,
@@ -60,7 +61,9 @@
       "notebookJobsSubmitted": 0,
       "publicGeneratedCodeEqualsCloudReadback": true,
       "publicBuildParitySha256": "0fb3152ee5c65ed6a74f3e69c46ac0c4e509adb3757962bdb4556e835b82263d"
-    }
+    },
+    "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
+    "scope": "Historical deployment and Notebook synchronization before this participant self-service documentation revision. New portable Notebook02–04 payloads have not been synchronized to these cloud items."
   },
   "data": {
     "staticRows": 80000,
@@ -592,31 +595,39 @@
     "baselineInterruptedRegressionSubmissionOutcome": "unknown-retained-not-resubmitted"
   },
   "participantDocuments": {
-    "localDocumentValidationChecks": 152,
+    "localDocumentValidationChecks": 257,
     "localDocumentValidationFailures": 0,
-    "validationSha256": "792852d58dc482801c90cba91753ec19e5517b9ebc0051dbd82607cda3dccc4f",
-    "publicDocumentValidationSha256": "68eb0a8abec4127ee9e315d45e0bd7f48bfc1cccbaf18924f8506f5f1bead65c",
-    "contentSha256": "5acd021f1105fcb7e0007e15ed5af1eb713bc985ce89692ee3582e2a7b89c498",
-    "allActualPagesReviewed": 294,
-    "allPageReviewSha256": "71abd3994f39d563ec63d986055cf911b65054c841d02cfc056b9967c6eee415",
-    "publicRenderReviewSha256": "5272f1fbfc8887044076d60d175ab4d5e77c18bbb20a590483e06dd9686577b5",
+    "validationSha256": "37e04462a342d31cedb4ec7d9bf6e2689e145353515a1e216270e7e35ac11d4d",
+    "publicDocumentValidationSha256": "2e700871925f8e0e5e697f8ab8a970f521f26cbc45de602fe35fc8b8e6a4d0b6",
+    "contentSha256": "5f8668e307acb72f2f95f87a148416ff6aac48df03ba735421bd2fde55a0b514",
+    "allActualPagesReviewed": 483,
+    "freshImagesViewed": 68,
+    "carriedIdenticalImages": 415,
+    "imageCarryReceiptSha256": "2dad435f1c67c894f32f0a812fa53cf665af3f89cb07c56105d2235d9ef4e18b",
+    "supplementalDiagnosticImagesFreshlyViewed": 14,
+    "actualCurrentImagesOpenedIncludingSupplemental": 82,
+    "supplementalDiagnosticImagesOverlapCarriedBasis": true,
+    "allPageReviewSha256": "b4b6c0e10af2d3ca380ea15fff1211439b647ef9c6899d551734a9e5dcb349b8",
+    "publicRenderReviewSha256": "9b09bd1f07f7820dd96ed5a91d2021af2206db85970e5fa7df92b03a89366e60",
     "htmlPrintPages": {
-      "ja": 100,
-      "en": 102
-    },
-    "earlierV1FailurePreserved": true
+      "ja": 167,
+      "en": 169
+    }
   },
   "libreOfficeRendering": {
     "version": "25.2.3.2",
-    "pages": 92,
-    "pdfSha256": "9042f3e8a0d1acd17510e04a3ae9d5ed23f1690fb94ad8cbfc676882a2eaef39",
+    "pages": 147,
+    "pdfSha256": "5e0eb9e03ec7aa0a36acd273bd2359f97f62558645e50f71b5aa71c02fd25183",
     "wordTextPreservation": {
-      "nonemptyParagraphAndTableCellTexts": 1878,
-      "rawDiagnosticMissingCount": 2,
+      "nonemptyParagraphAndTableCellTexts": 4101,
+      "diagnosticMissingTextCount": 6,
+      "manuallyResolvedDiagnosticItems": 6,
+      "unresolvedRenderedLosses": 0,
+      "B01QuestionRecoveredAndVisiblyRendered": true,
+      "allDiagnosticImagesFreshlyOpenedInFinalV4": true,
       "actualMissingContentFound": false,
-      "resolution": "Both complete source paragraphs span page boundaries interrupted by repeated header/footer text; every raw diagnostic miss was checked in actual PDF text and full page images.",
-      "diagnosticSha256": "e7d970d435592ae2e41cf798113ff6743e67d0aaa010b5dce348c767ca711ba7",
-      "manualResolutionSha256": "7c88c8ad91cc69e88cb55b6a4a01c3d540f24a8974c9d313f927854a9a003265"
+      "resolutionReceiptSha256": "38ac3123285cc35e6893af69e33b39697de830fb24540b07c8893232a729ce31",
+      "diagnosticSha256": "fcbf7c33889cb31983126b374a4b6a477e25909e59f9205154251608ce4f07d3"
     },
     "fieldFreeBarePageFooterCosmeticObservation": true,
     "microsoftWordRenderingEquivalentClaimed": false
@@ -625,60 +636,56 @@
   "microsoftWordFieldRefreshPerformed": false,
   "microsoftWordLayoutVerified": false,
   "unitChecks": {
-    "tests": 908,
+    "sourceCommit": "723465ba15bd56206061b540b833ab4c5b7a29f2",
+    "tests": 960,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
     "suites": [
       {
-        "suite": "provisioning",
-        "tests": 122,
+        "suite": "documents",
+        "tests": 450,
         "failures": 0,
         "errors": 0,
         "skipped": 0,
-        "seconds": 3.348,
-        "logSha256": "33cfb9cdfc7017d1685eab7d46ed2d09aa9c8a383a44e48ab00b25924259bfd9"
+        "logSha256": "ade2ddcbcedd0fb19f01247e5ca73a28f63e6b516e9ba743d0a0156e3cd6cae5"
+      },
+      {
+        "suite": "provisioning",
+        "tests": 134,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "logSha256": "afacc734d3897f34288f56abefa2cd7c8a7648be11de1628d7a74b9ac5f5b3d0"
       },
       {
         "suite": "data-agent",
-        "tests": 354,
+        "tests": 376,
         "failures": 0,
         "errors": 0,
         "skipped": 0,
-        "seconds": 13.518,
-        "logSha256": "95a512dba6638f58cb762cdd25fcb086af2ae0e0f3239f321f37cab230024ebe"
-      },
-      {
-        "suite": "documents",
-        "tests": 432,
-        "failures": 0,
-        "errors": 0,
-        "skipped": 0,
-        "seconds": 41.526,
-        "logSha256": "c04aec760f6fa61a8383222c1d912621368ad5fe3450d7b8a13ea1c4279bb1e4"
+        "logSha256": "64a4243ed5ae7f147c813edd58937a44d8530617947c6870f39b6d510b12b123"
       }
     ],
-    "earlierMissingDatedAssetFailurePreservedAndResolvedBeforeFinalPass": true,
-    "sourceCommit": "dbd498a32bcb221852b921c1a639fe5e17b16606",
-    "scope": "Full source/report suite before the later print-stylesheet-only correction."
+    "scope": "Documents rerun after the final participant procedure and rendering fixes. Provisioning and Data Agent suites passed on unchanged code."
   },
   "package": {
     "file": "Furusato_Workshop_v3.0.0_current-20261015.zip",
-    "bytes": 17135542,
-    "sha256": "2b9a8b982f872ed62b4406656601023414f895fe5ea3f9fa64fe57ba7753a227",
-    "entries": 383,
+    "bytes": 17531904,
+    "sha256": "ac1ee53f9591c439ee81699e3435656e1959bb2336560a145c1bafa3750460bd",
+    "entries": 429,
     "everyEntryCrcAndHashVerified": true,
-    "all371SourcesMatchGitBlobs": true,
-    "independentPackageAuditSha256": "4d9fd63a1120adc3b16982ed8d18e86c5d6a2e761b5f2bcc00b11016a7d024cf"
+    "sourceEntriesMatchGitBlobs": 417,
+    "independentPackageAuditSha256": "842148b45d0e93e26245fc692705e68a171c1e00b72c8c6cdbfa2cb163e57ee6"
   },
   "files": {
-    "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "6cf80378c32572773fda46b1154e3c64c2e2fac84042c5a798fa06f5a7ec924c",
-    "guide/furusato-workshop-v3-0-0-complete.html": "3af11a800bad336ec97097ad6c908f89a34058d8885e2e1578593f1be5dd5799",
-    "artifact-set.json": "7abd339724375ed536308f434d9fff5b52afa320fcfd4ccf28c41228071ca5fb",
-    "DOCUMENT_VALIDATION.json": "68eb0a8abec4127ee9e315d45e0bd7f48bfc1cccbaf18924f8506f5f1bead65c",
-    "participant-render-validation.json": "5272f1fbfc8887044076d60d175ab4d5e77c18bbb20a590483e06dd9686577b5"
+    "guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "8761ebb30044877b5caf9225443b166608aea36a11995315dc52d3c67aa3a0d4",
+    "guide/furusato-workshop-v3-0-0-complete.html": "d662f91e5eb953617027f7b1d811fa33b34d5b11acf182efbf1400c40909489e",
+    "artifact-set.json": "50337d03e90ce47e41e770dbe9680ed92b1fe4773312b17940c6df342e6f83fb",
+    "DOCUMENT_VALIDATION.json": "2e700871925f8e0e5e697f8ab8a970f521f26cbc45de602fe35fc8b8e6a4d0b6",
+    "participant-render-validation.json": "9b09bd1f07f7820dd96ed5a91d2021af2206db85970e5fa7df92b03a89366e60"
   },
-  "historicalCurrentSnapshot": "https://github.com/yang-jiayi/furusato-fabric-workshop/tree/f255989351b418fe99f9ee8ef3d562233adfd9f7/docs/v3.0.0/current",
+  "historicalCurrentSnapshot": "https://github.com/yang-jiayi/furusato-fabric-workshop/tree/930aa520f8b14a7e756999223bc9abac3c9f2539/docs/v3.0.0/current",
   "privateAnswersTracesResourceIdsOrCredentialsPublished": false,
   "documentChecksAreAIAnswerAcceptance": false,
   "mainMergeIsAllFeatureAcceptance": false,
@@ -689,16 +696,90 @@
     "publicEvidenceProjectionSha256": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
     "scope": "Retained original document release identity, not the current 2026-10-15 answer evaluation. Current results remain in the separate dated summary and answerEvaluation object."
   },
-  "gitBlobParityReceiptSha256": "245123e363fe77ff833a484b9bdf16d0b4814abaa6fd3519e293dbd55ca6016f",
-  "subsequentRendererChecks": {
-    "sourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
-    "tests": 25,
-    "failures": 0,
-    "errors": 0,
-    "skipped": 0,
-    "logSha256": "09b0fbd78be8128b27951bf1903673b0a24adeec68959609ba9b0d058ee7e6fe",
-    "full908RerunClaimed": false,
-    "freshParticipantValidationChecks": 152,
-    "freshParticipantValidationFailures": 0
+  "gitBlobParityReceiptSha256": "8c5e7c988177b1bdd31333b696117a5e2c739ca22c1d82be8d114ff9441f46e5",
+  "documentationRevision": {
+    "kind": "participant-self-service-guide",
+    "sourceCommit": "723465ba15bd56206061b540b833ab4c5b7a29f2",
+    "guideRoute": "4 and 24 deployment; 17 tuning; 19 and appendix C evaluation",
+    "distribution": "Word or bilingual HTML plus matching ZIP",
+    "publicEvaluation": {
+      "uniqueQuestions": 29,
+      "practiceQuestions": 10,
+      "practiceConditions": 84,
+      "slotsPerPhase": 49,
+      "conditionsPerPhase": 290,
+      "repeatedOriginalQuestionCount": 10,
+      "repetitionsPerOriginalQuestion": 3,
+      "regressionQuestionCount": 19,
+      "historicalPaired281MustNotBeForced": true
+    },
+    "freshCloudReadOnlyProfilePrepareAndPublishedVerify": {
+      "passed": true,
+      "receiptSha256": "8981c04e83f7da71f6bbd663d678f130a56c0734414389397e5335a51ab3e64f",
+      "selectedSqlObjects": 17,
+      "selectedSqlColumns": 143,
+      "kqlExamplesServiceValid": 9,
+      "serviceValidAloneIsQueryExecutionProof": false,
+      "ontologyContextPreserved": true
+    },
+    "cloudConfigurationWrites": 0,
+    "freshBootstrapEndToEndDeploymentPerformed": false,
+    "profileApplyOrPublishPerformed": false,
+    "answerEvaluationRepeated": false,
+    "sameScoreGuaranteed": false,
+    "zipWithoutGit": {
+      "preflightAndTamperReceiptSha256": "124e8a4377498ab8073f4974eccc40d9fafeb39629f4f6c6f23ec6492bc43361",
+      "dependencyClosureReceiptSha256": "b60dbeb27c66ac2a2b90e25a073000397562eb54997e751019222a0ab6af7227",
+      "realCloudCalls": 0
+    },
+    "newNotebookPayloadCloudSynchronized": false,
+    "historicalCloudSourceCommit": "c724bc3cb906ef5278bb301a1af6887b65affd0a",
+    "literalPreservation": {
+      "wordCanonicalValues": 1163,
+      "htmlCanonicalValuesAcrossBothLanguages": 2326,
+      "codeBlocks": 117,
+      "unresolved": 0,
+      "sourceAndViewDependencyBindingPassed": true,
+      "receiptSha256": {
+        "word": "506118e6d57ebb6359ce45c84ef980a15ff966af4376dad7a1076f3caee54bb1",
+        "html": "e508455e226163a5dee8919f41a0404f55bf1243f97a8884620124cc79d136ad",
+        "source": "cff9b9f06d6cfaf969882b804f57bc7965b710f454e6a54eb2970372c9b228ab"
+      },
+      "visualLayoutCertifiedByThisCheck": false
+    },
+    "initialValidationFailure": {
+      "stage": "final-v1",
+      "passed": false,
+      "reportSha256": "54f61096a1d6238c5db2391be1c5df9498416b92c0f59964a1226746ba6aae01",
+      "failedChecks": [
+        "typography.asciiParentheses",
+        "word.participantProcedureOnly",
+        "html.ja.participantProcedureOnly",
+        "html.en.participantProcedureOnly"
+      ],
+      "originalReportRetained": true,
+      "resolution": "Canonical code labels, formatted run boundaries and PowerShell flag matching produced four validation findings. Narrow renderer, validator and command-text corrections with regression tests resolved them; the final-v2 checks were freshly run. Independent exact-literal checks found no missing source payload in final-v1."
+    },
+    "intermediateRenderingFailure": {
+      "stage": "final-v2",
+      "acceptedForDistribution": false,
+      "resolutionReportSha256": "3a775d7ed7c2421ecbd8c77bbcf9d1af24fcd5f5f961d842560d5cf06ccfc6a8",
+      "actualMissingQuestionCount": 1,
+      "repairRenderReceiptSha256": "c4c96679aa5fe265b315018b046832a5fe4eb6cadbba732084c8ca5bf0ee0967",
+      "rawDiagnosticMissingCount": 7,
+      "sixOtherMissesWereHeaderInterleaving": true,
+      "originalReportRetained": true,
+      "resolution": "An actual LibreOffice page-boundary omission of question B01 required a code-table pagination correction. The final edition was rebuilt and separately rendered and reviewed; structural checks alone did not establish content preservation."
+    },
+    "intermediateProcedureFailure": {
+      "stage": "final-v3",
+      "acceptedForDistribution": false,
+      "reviewReceiptSha256": "45af4fc2bb460f754313045a9f632aae015ef8836a34fa73572101e8319da478",
+      "problem": "The category view was listed before its dictionary dependency, which blocks CREATE VIEW on a fresh endpoint.",
+      "correction": "Show the relationship dictionary first and verify dependencies derived from all six actual SQL view definitions.",
+      "sqlPayloadsChanged": false,
+      "freshSqlDdlExecutionPerformed": false,
+      "originalReportRetained": true
+    }
   }
 }

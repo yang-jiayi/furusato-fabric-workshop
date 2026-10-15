@@ -12,6 +12,10 @@
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
 [採用済みAgent profile](workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
 
+参加者には **Wordまたは日英HTMLと、同じ版のZIP** を配布してください。手順書の4章と24章で自分の環境に配置し、17章で採用済み設定を再現し、19章と付録Cで回答を評価します。設定の全文・選択列・SQL/KQL/DAX・公開確認・改善前後の比較手順を収録し、ZIPにはデータと評価記録のひな形を同梱しています。まず10問で動作を確認し、次に公開29問の反復評価へ進めます。同じ設定の再現は、同じ得点の保証ではありません。
+
+Distribute either guide together with its matching ZIP. Chapters 4/24 cover deployment, chapter 17 reproduces the adopted configuration, and chapter 19 plus appendix C guide evaluation and before/after comparison. Start with ten practice questions, then use the public 29-question repeated evaluation. Matching configuration does not guarantee the historical score.
+
 | 版の種類 | 値 | 意味 |
 |---|---|---|
 | 教材・配布Notebook | **3.0.0** | [`WORKSHOP_VERSION`](WORKSHOP_VERSION)が正本 |
@@ -20,6 +24,8 @@
 | CSVデータ仕様 | `2.7.0-realistic.1` | 値・行数・hashを維持する不変の合成データ契約 |
 
 **2026-10-15 再配置・実回答評価:** 指定した旧フォルダーを空にし、新フォルダーに18アイテムを配置しました。
+以下の配置・回答評価は2026-10-15のソース `c724bc3cb906ef5278bb301a1af6887b65affd0a` に対応する観測です。今回の手順書改訂では配置や回答評価を再実行していません。検証範囲は[現行版の記録](docs/v3.0.0/current/deployment-verification.md)を参照してください。
+
 構成は **Ontology 1件・Data Agent 1件**です。AgentはLakehouse・KQL Database・Semantic Modelの3つの通常ソースと、同じOntologyへの独立したcontext登録を使います。
 
 同じ条件で対応付けた281条件の補助条件充足率は189/281（67.26%）から217/281（77.22%）へ9.96ポイント上がりました。既定の確認質問分岐の9条件だけを両側から除外しています。厳密な受理1件→2件はすべて確認質問で、ソース照会を伴う完成回答の厳密な受理は両方0件です。

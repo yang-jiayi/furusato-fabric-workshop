@@ -30,6 +30,7 @@ from furusato_docs import participant30_tuning as tuning
 from furusato_docs import participant30_evaluation as evaluation
 from furusato_docs import preview30_release as release
 from furusato_docs.oox import StyleCarrier
+from furusato_docs.docx_kit import DocumentBuilder, CODE_BLOCK_CHUNK_LINES
 from furusato_html.model import Block, Document, Section, Text
 from furusato_html.render import RenderContext, render_block
 from standard_contract_restoration import _answer_values_in
@@ -199,6 +200,29 @@ class ParticipantSelfServiceTests(unittest.TestCase):
         self.assertEqual([b["text"] for b in rendered_codes], [node.text_content() for node in nodes])
         self.assertEqual([node.get("id") for node in nodes],
                          page.xpath("//button/@data-copy-target"))
+
+    def test_code_label_stays_with_body_without_binding_later_chunks(self):
+        # The actual release PDF dropped a short question when its separate
+        # label row fit at the page foot. Row cantSplit alone did not prevent it.
+        # A full-document LibreOffice before/after reproduction accompanies the
+        # release review; this check guards its narrow pagination contract.
+        from docx import Document as WordDocument
+        from docx.oxml.ns import qn
+        document = DocumentBuilder.__new__(DocumentBuilder)
+        document.document = WordDocument()
+        document._literal_text = []
+        for keep_together, lines in ((True, ["A complete question"]),
+                                     (False, [f"line {i}" for i in range(CODE_BLOCK_CHUNK_LINES + 1)])):
+            with self.subTest(keep_together=keep_together):
+                table = document.code_block("\n".join(lines), language="Question",
+                                            keep_together=keep_together, verbatim=True)
+                self.assertTrue(table.cell(0, 0).paragraphs[0].paragraph_format.keep_with_next)
+                self.assertIsNotNone(table.rows[0]._tr.get_or_add_trPr().find(qn("w:tblHeader")))
+                self.assertEqual(2 if keep_together else 3, len(table.rows))
+                for row in table.rows[1:]:
+                    self.assertIsNotNone(row._tr.get_or_add_trPr().find(qn("w:cantSplit")))
+                    for paragraph in row.cells[0].paragraphs:
+                        self.assertIsNot(paragraph.paragraph_format.keep_with_next, True)
 
     def test_canonical_table_punctuation_is_preserved_without_relaxing_ordinary_typography(self):
         blocks = [Block("table", {"number": 1, "caption": Text("比較", "Comparison"),

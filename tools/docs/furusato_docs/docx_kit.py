@@ -589,6 +589,11 @@ class DocumentBuilder:
             header_run.font.size = Pt(8.5)
             header_paragraph.paragraph_format.space_after = Pt(0)
             header_paragraph.paragraph_format.space_before = Pt(0)
+            # cantSplit protects each row, not the boundary between this label
+            # and the first code row. Without this link LibreOffice can leave
+            # only the label at a page foot and omit the following short body.
+            # Keep only this boundary together; later code chunks may paginate.
+            header_paragraph.paragraph_format.keep_with_next = True
             _shade(header._tc.get_or_add_tcPr(), SHADE_HEADER)
             header_run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
             _borders(header._tc.get_or_add_tcPr(), "D0D7DE", 4)

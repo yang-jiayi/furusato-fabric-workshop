@@ -48,8 +48,10 @@ Office ドキュメント（`.docx`、`.xlsx`）には、Microsoft Purview の *
 | Label ID | `f42aa342-8706-4288-bd11-ebb85995028c` |
 | Tenant/Site ID | `72f988bf-86f1-41af-91ab-2d7cd011db47` |
 
-3.0.0のバイト列は `docs/v3.0.0/guide/SHA256SUMS.txt` とGitHub Releaseの
-チェックサムで検証してください。`RELEASE_SHA256SUMS.txt` は保持するv2.7のペアを指します。
+現行3.0.0のWord・HTML・ZIPは [docs/SHA256SUMS.txt](docs/SHA256SUMS.txt) で検証してください。
+同じバイト列の版別配置と検証記録は [docs/v3.0.0/current/SHA256SUMS.txt](docs/v3.0.0/current/SHA256SUMS.txt)
+に対応します。`docs/v3.0.0/guide/SHA256SUMS.txt` と元のGitHub Releaseのチェックサムは、
+初回3.0.0リリースの記録です。`RELEASE_SHA256SUMS.txt` は保持するv2.7のペアを指します。
 
 #### Git ネイティブ形式のファイル
 
@@ -123,8 +125,11 @@ Office documents (`.docx`, `.xlsx`) carry the embedded Microsoft Purview
 | Label ID | `f42aa342-8706-4288-bd11-ebb85995028c` |
 | Tenant/Site ID | `72f988bf-86f1-41af-91ab-2d7cd011db47` |
 
-Verify3.0.0 bytes with `docs/v3.0.0/guide/SHA256SUMS.txt` and the GitHub Release
-checksum file. `RELEASE_SHA256SUMS.txt` continues to identify the retainedv2.7 pair.
+Verify the current 3.0.0 Word, HTML and ZIP with [docs/SHA256SUMS.txt](docs/SHA256SUMS.txt).
+The versioned copies contain the same bytes; their verification records are covered by
+[docs/v3.0.0/current/SHA256SUMS.txt](docs/v3.0.0/current/SHA256SUMS.txt).
+`docs/v3.0.0/guide/SHA256SUMS.txt` and the original GitHub Release checksums record the
+initial 3.0.0 release. `RELEASE_SHA256SUMS.txt` continues to identify the retained v2.7 pair.
 
 #### Git-native formats
 

@@ -117,8 +117,16 @@ class ParticipantDistributionTests(unittest.TestCase):
                        "actual inputs, executed Python", "do not promise full marks or universal success"):
             self.assertIn(marker, english)
 
-    def test_docs_inventory_contains_only_current_participant_materials(self):
-        expected = PAIR | {"single-agent-workshop.md", "data-validation-checklist.md"}
+    def test_docs_inventory_contains_current_and_retained_participant_materials(self):
+        expected = PAIR | {
+            "single-agent-workshop.md",
+            "data-validation-checklist.md",
+            "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx",
+            "furusato-workshop-v3-0-0-complete.html",
+            "Furusato_Workshop_v3.0.0_current-20261015.zip",
+            "README.md",
+            "SHA256SUMS.txt",
+        }
         actual = {path.name for path in (ROOT / "docs").iterdir() if path.is_file()}
         self.assertEqual(actual, expected)
         self.assertTrue((ROOT / "docs" / "assets").is_dir())

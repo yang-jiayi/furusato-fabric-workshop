@@ -4,17 +4,21 @@
 
 **現行教材の入口です。Notebook・CSV・モデル・Agent設定・Word/HTMLを、版の対応とSHA-256で照合します。**
 
-[参加者用手順書（Word）](docs/v3.0.0/current/guide/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
-[参加者用手順書（日英HTML）](docs/v3.0.0/current/guide/furusato-workshop-v3-0-0-complete.html) ·
-[参加者用パッケージ（Notebook・CSVを含む）](docs/v3.0.0/current/Furusato_Workshop_v3.0.0_current-20261015.zip) ·
+[参加者用手順書（Word）](docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx) ·
+[参加者用手順書（日英HTML）](docs/furusato-workshop-v3-0-0-complete.html) ·
+[参加者用パッケージ（Notebook・CSVを含む）](docs/Furusato_Workshop_v3.0.0_current-20261015.zip) ·
+[配布ファイル一覧](docs/README.md) ·
+[配布SHA-256](docs/SHA256SUMS.txt) ·
 [構成・検証結果](docs/v3.0.0/current/README.md) ·
 [Notebook 04](workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb) ·
 [デプロイ手順](workshop/v3.0.0-preview/README-runtime.md) ·
 [採用済みAgent profile](workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
 
+**最新版のWord・日英HTML・ZIPの実ファイルは [`docs/`](docs/README.md) 直下に公開しています。** 配布ファイルは検証済みの `docs/v3.0.0/current/` とバイト単位で一致します。
+
 参加者には **Wordまたは日英HTMLと、同じ版のZIP** を配布してください。手順書の4章と24章で自分の環境に配置し、17章で採用済み設定を再現し、19章と付録Cで回答を評価します。設定の全文・選択列・SQL/KQL/DAX・公開確認・改善前後の比較手順を収録し、ZIPにはデータと評価記録のひな形を同梱しています。まず10問で動作を確認し、次に公開29問の反復評価へ進めます。同じ設定の再現は、同じ得点の保証ではありません。
 
-Distribute either guide together with its matching ZIP. Chapters 4/24 cover deployment, chapter 17 reproduces the adopted configuration, and chapter 19 plus appendix C guide evaluation and before/after comparison. Start with ten practice questions, then use the public 29-question repeated evaluation. Matching configuration does not guarantee the historical score.
+The current Word, bilingual HTML and ZIP are available directly in [`docs/`](docs/README.md), byte-identical to the verified `docs/v3.0.0/current/` files. Distribute either guide together with its matching ZIP. Chapters 4/24 cover deployment, chapter 17 reproduces the adopted configuration, and chapter 19 plus appendix C guide evaluation and before/after comparison. Start with ten practice questions, then use the public 29-question repeated evaluation. Matching configuration does not guarantee the historical score.
 
 | 版の種類 | 値 | 意味 |
 |---|---|---|

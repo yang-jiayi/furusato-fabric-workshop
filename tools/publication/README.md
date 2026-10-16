@@ -1,5 +1,12 @@
 # Public document pair / 公開文書ペア
 
+現行v3.0.0のWord・HTML・ZIPは [docsの配布一覧](../../docs/README.md) にあります。
+以下は保持しているv2.7.0版の外部2文書export手順です。現行v3.0.0の配布構成には適用しません。
+
+Find the current v3.0.0 Word, HTML and ZIP in the [docs download index](../../docs/README.md).
+The procedure below applies to the retained v2.7.0 external two-document export,
+not the current v3.0.0 distribution layout.
+
 This tool prepares files; it does **not** publish to GitHub or change repositories,
 visibility, history, hosting, runtime, code or data. A clean document export does not
 make old repository history safe to publish. This distribution uses fresh public-only
@@ -12,7 +19,7 @@ Follow [SECURITY.md](../../SECURITY.md); never merge or push private archive his
 HEAD の旧ファイルを除くだけでは過去の情報は秘匿化されません。文書 export 自体は hosting や
 公開範囲の変更を承認しません。[SECURITY.md](../../SECURITY.md) に従い、旧履歴を merge／push しないでください。
 
-## Latest-only inventory / 最新版だけの文書一覧
+## Retained v2.7.0 edition / 保持しているv2.7.0版の文書一覧
 
 For version `2.7.0` and edition `unified-20260923`, the release document pair is:
 

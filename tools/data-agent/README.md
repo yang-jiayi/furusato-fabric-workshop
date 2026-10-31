@@ -200,6 +200,18 @@ from their real outputs; selection alone never awards a PASS. Preserve frozen
 historical counts and attach newly identified DAX evidence as a separate
 correction, not an overwritten run.
 
+Native Responses trace reviews recognize SQL, KQL, GQL and DAX under the same
+strict gates. DAX requires actual executed query text linked to its own native
+call, complete structured returned rows, source attribution and explicit scope
+review. Initialization, generated DAX, orchestration wrappers and file/count
+summaries do not supply missing execution or result evidence.
+
+Use this language support only in newly frozen campaigns with the matching
+harness hashes. Existing campaign plans, raw evidence, criteria, denominators
+and strict scores remain frozen; do not rescore them with an updated harness.
+The original ten-question and public regression suites retain their required
+routes and conditions.
+
 The sanitized Preview projection can retain per-case aggregate decisions,
 successful query languages and completed-native-response proof without raw
 answers or identifiers. Query-required cases still need their original routes.

@@ -305,6 +305,101 @@ class GradingTests(unittest.TestCase):
         self.assertBlocked()
 
 
+class DaxTraceTests(unittest.TestCase):
+    """Synthetic Responses AskPBI envelope, not live-service qualification."""
+
+    def setUp(self):
+        self.case = example_case("DaxFixture", languages=["DAX"])
+        self.record = example_record(self.case)
+        call, output = self.record["response"]["output"][:2]
+        call.update(name="askPBI.tool.execute", arguments=json.dumps({
+            "datasource_name": "Synthetic_Model", "datasource_type": "SemanticModel",
+            "datasource_artifact_id": "22222222-2222-4222-8222-222222222222",
+            "datasource_workspace_id": "11111111-1111-4111-8111-111111111111",
+            "natural_language_query": "Return the synthetic marker.",
+            "code": 'EVALUATE ROW("marker", "example")',
+        }))
+        output["output"] = json.dumps({"rows": [{"marker": "example"}]})
+        self.review = approved_review(self.case, self.record)
+        query = self.review["trace"]["calls"][0]["queries"][0]
+        query.update(language="DAX", source="Synthetic semantic model; fixture scope reviewed",
+                     query_pointer="/output/0/arguments/@json/code")
+
+    def grade(self):
+        self.review["record_sha256"] = ne.digest(self.record)
+        return ne.grade_case(self.case, self.record, self.review)
+
+    def assertBlocked(self):
+        result = self.grade()
+        self.assertFalse(result["question_pass"])
+        self.assertEqual(result["fail"], len(self.case["conditions"]))
+        self.assertTrue(result["gate_errors"])
+        return result
+
+    def test_fully_evidenced_native_askpbi_dax_passes(self):
+        self.assertTrue(self.grade()["question_pass"])
+
+    def test_new_suite_can_require_dax_but_unknown_language_still_fails(self):
+        suite = {"schema_version": 1, "kind": "regression", "cases": [self.case]}
+        ne.validate_suite(suite)
+        self.case["required_query_languages"] = ["MDX"]
+        with self.assertRaises(ne.EvaluationError):
+            ne.validate_suite(suite)
+
+    def test_missing_executed_dax_is_not_filled_by_natural_language(self):
+        arguments = json.loads(self.record["response"]["output"][0]["arguments"])
+        del arguments["code"]
+        self.record["response"]["output"][0]["arguments"] = json.dumps(arguments)
+        self.assertBlocked()
+
+    def test_file_summary_does_not_supply_returned_rows(self):
+        self.record["response"]["output"][1]["output"] = json.dumps({
+            "file_reference": "synthetic-result.csv", "row_count": 1,
+        })
+        self.assertBlocked()
+
+    def test_text_only_native_result_does_not_supply_structured_rows(self):
+        self.record["response"]["output"][1]["output"] = "Synthetic result file reference; no returned rows."
+        self.review["trace"]["calls"][0]["queries"][0]["result_pointer"] = "/output/1/output"
+        self.assertBlocked()
+
+    def test_wrong_source_scope_cannot_pass_without_scope_review(self):
+        arguments = json.loads(self.record["response"]["output"][0]["arguments"])
+        arguments["datasource_workspace_id"] = "33333333-3333-4333-8333-333333333333"
+        self.record["response"]["output"][0]["arguments"] = json.dumps(arguments)
+        self.review["trace"]["all_queries_scope_reviewed"] = False
+        self.assertIn("query_scope_not_reviewed", self.assertBlocked()["gate_errors"])
+
+    def test_truncation_is_not_waived_for_dax(self):
+        self.record["response"]["output"][1]["output"] = json.dumps({
+            "rows": [{"marker": "example"}], "has_more": True,
+        })
+        self.assertBlocked()
+
+    def test_generated_dax_is_not_execution(self):
+        self.review["trace"]["calls"][0]["queries"][0]["executed_not_merely_generated"] = False
+        self.assertBlocked()
+
+    def test_trace_wrapper_does_not_satisfy_required_dax_route(self):
+        self.record["response"]["output"][0]["name"] = "trace.analyze_semantic_model"
+        entry = self.review["trace"]["calls"][0]
+        entry.update(classification="metadata", queries=[], note="Synthetic orchestration wrapper only.")
+        self.assertIn("required_executed_query_route_missing", self.assertBlocked()["gate_errors"])
+
+    def test_unreviewed_fuzzy_data_call_remains_blocking(self):
+        self.record["response"]["output"] += [
+            {"type": "function_call", "call_id": "fuzzy-fixture", "name": "entity_fuzzy_search",
+             "status": "completed", "arguments": json.dumps({"value": "synthetic"})},
+            {"type": "function_call_output", "call_id": "fuzzy-fixture",
+             "output": json.dumps({"matches": []})},
+        ]
+        self.assertIn("trace_review_does_not_cover_every_call", self.assertBlocked()["gate_errors"])
+
+    def test_dax_does_not_replace_a_required_sql_route(self):
+        self.case["required_query_languages"] = ["SQL"]
+        self.assertIn("required_executed_query_route_missing", self.assertBlocked()["gate_errors"])
+
+
 class DiagnosticSourceCallTests(unittest.TestCase):
     def call(self, title="analyze.database.execute", source="LakehouseTables"):
         return {

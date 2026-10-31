@@ -193,7 +193,7 @@ def snapshot():
             "dataChecks": {key: baseline[key] for key in (
                 "staticDonationRows", "staticDonationYen", "rawIncrementRows", "acceptedUniqueRows", "duplicateRows")},
             "productionPlacement": "specified-folder-direct", "tempRequired": False,
-            "declaredCodeDelta": "Notebook01 audit/display NOTEBOOK_VERSION only; Notebook01/05 data-processing code is otherwise unchanged.",
+            "declaredCodeDelta": "Notebook01 audit/display NOTEBOOK_VERSION only; Notebook01/05 data-processing code is otherwise unchanged. Native evaluation additionally recognizes DAX under unchanged execution/evidence gates for newly frozen campaigns.",
             "historicalRunMetadataMustNotBeRewritten": True, "cloudDeploymentProvenByThisManifest": False,
             "documentationBinding": "Paired Word/HTML must embed this manifest SHA; an outer package inventory hashes the documents separately."}
 

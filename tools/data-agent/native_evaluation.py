@@ -31,6 +31,7 @@ ORIGINAL_ROUTES = {
 }
 T03_NA = frozenset({"T03.evidence.1", "T03.evidence.2", "T03.pass_criteria.2"})
 TERMINAL = frozenset({"completed", "failed", "incomplete", "cancelled"})
+QUERY_LANGUAGES = frozenset({"SQL", "KQL", "GQL", "DAX"})
 LABEL = re.compile(r"[A-Za-z][A-Za-z0-9_-]{0,63}\Z")
 SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 
@@ -232,7 +233,7 @@ def validate_suite(suite: dict[str, Any]) -> None:
         seen.add(case_id)
         if not case.get("conditions"):
             raise EvaluationError("Every question needs its frozen conditions.")
-        if not set(case.get("required_query_languages", [])).issubset({"SQL", "KQL", "GQL"}):
+        if not set(case.get("required_query_languages", [])).issubset(QUERY_LANGUAGES):
             raise EvaluationError("Unknown required query language.")
         for condition in case["conditions"]:
             key = condition.get("id")
@@ -469,7 +470,7 @@ def trace_gate(
                     raise EvaluationError("A structured returned result is required.")
                 if contains_truncation(rows):
                     raise EvaluationError("Returned results are truncated.")
-                if not query.get("source") or language not in {"SQL", "KQL", "GQL"}:
+                if not query.get("source") or language not in QUERY_LANGUAGES:
                     raise EvaluationError("Query language/source attribution missing.")
                 if query.get("executed_not_merely_generated") is not True:
                     raise EvaluationError("Execution has not been verified.")

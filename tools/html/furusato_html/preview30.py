@@ -57,9 +57,19 @@ def register_reviewed_captures(assets, captures):
 
 def render(
     document, context, facts, carrier, evidence, metadata, word_sha, root, *,
-    release_profile=release.PREVIEW,
+    release_profile=release.PREVIEW, delivery_mode="paired",
 ):
-    profile = release.require_metadata_profile(metadata, release_profile)
+    if delivery_mode not in {"paired", "html-lab"}:
+        raise ValueError("Unknown document delivery mode")
+    if delivery_mode == "html-lab":
+        profile = release.get_profile(release_profile)
+        if (profile != release.V300 or metadata.get("participantEdition") is not True
+                or metadata.get("version") != "3.0.0" or word_sha is not None
+                or not metadata.get("currentArtifactSet")
+                or metadata.get("deliveryMode") != "html-lab"):
+            raise ValueError("HTML+Lab delivery requires the current participant model and artifact binding")
+    else:
+        profile = release.require_metadata_profile(metadata, release_profile)
     participant = bool(metadata.get("participantEdition"))
     diagram_keys = sorted({b["source_key"] for b in document.figures if b["source_kind"] == "diagram"})
     assets = build_library(context, carrier, diagram_keys, [])
@@ -124,12 +134,16 @@ def render(
     notice = TAGLINE if participant else release.presentation(metadata, profile)
     state = Text(notice["ja"], notice["en"])
     public_metadata = {
-        **metadata, "wordFilename": profile.word_name, "wordSha256": word_sha,
+        **metadata,
         "htmlFilename": profile.html_name,
         "captureDigests": {ident: entry["sha256"] for ident, entry in evidence["captures"].items()},
         "captureResourceAliases": capture_aliases,
         "languages": ["ja", "en"],
     }
+    if delivery_mode == "paired":
+        public_metadata.update(wordFilename=profile.word_name, wordSha256=word_sha)
+    else:
+        public_metadata.update(deliveryMode="html-lab", labPath="../Lab/README.md")
     encoded_metadata = json.dumps(public_metadata, ensure_ascii=False).replace("<", "\\u003c")
     css = (root / "tools" / "html" / "assets" / "preview30.css").read_text(encoding="utf-8")
     if profile.is_release:
@@ -138,6 +152,8 @@ def render(
     if participant:
         description = f"Bilingual participant guide for {profile.title}: 24 chapters and 5 appendices."
         hero_line = Text("24章・5付録／Word版と同じ内容の日英版", "24 chapters · 5 appendices · the same content as the Word guide, in Japanese and English")
+        if delivery_mode == "html-lab":
+            hero_line = Text("24章・5付録／Labと同じ内容の日英版", "24 chapters · 5 appendices · the same content as Lab, in Japanese and English")
         digest_line = ""
         legacy_button = ""
         footer_note = Text(
@@ -151,6 +167,13 @@ def render(
         legacy_button = f'<button type="button" id="legacy-toggle">{plain_bilingual(Text("旧版参考をすべて開閉", "Toggle all baseline references"))}</button>'
         footer_note = Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed.")
         footer_hash = f'<p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p>'
+    guide_link = (
+        '<p><a href="https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/Lab" id="lab-guide">'
+        + plain_bilingual(Text("GitHubのLab手順書", "Lab instructions on GitHub")) + '</a></p>'
+        if delivery_mode == "html-lab" else
+        f'<p><a download href="{profile.word_name}" id="word-download">'
+        + plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide")) + '</a></p>'
+    )
     return f"""<!doctype html>
 <html lang="ja" data-lang="ja">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -168,7 +191,7 @@ def render(
  <h1>Furusato Workshop<br>{profile.display_version}</h1>
  <p>{plain_bilingual(hero_line)}</p>
  <p class="status" role="status">{plain_bilingual(state)}</p>
- <p><a download href="{profile.word_name}" id="word-download">{plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide"))}</a></p>
+ {guide_link}
  {digest_line}
 </div>
 <aside class="controls"><label for="search">{plain_bilingual(Text("この言語の全文を検索", "Search the full text in this language"))}</label>

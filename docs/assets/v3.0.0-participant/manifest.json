@@ -7,6 +7,54 @@
       "file": "architecture.png",
       "sha256": "adcede5b0d4dd1d0f9069b3c252e7ca3066e0d3e87bb1ec45f1777710dd57daa",
       "source": "architecture.svg"
+    },
+    {
+      "id": "pc-05-notebook01-ready",
+      "file": "notebook01-ready-output.png",
+      "sha256": "545f7a0d6e06a4b548af02c6b6b33364d13ba6fcec23ea25449259e7d48b2c65",
+      "source": "native-notebook-final-cell-output",
+      "actualUI": true,
+      "evidenceScope": "Notebook 01 final-cell Ready output; independent data and SQL checks are separate."
+    },
+    {
+      "id": "pc-11-notebook05-preview",
+      "file": "notebook05-preview-output.png",
+      "sha256": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e",
+      "source": "native-notebook-preview-output",
+      "actualUI": true,
+      "evidenceScope": "Notebook 05 preview plan output only; apply, Gold data and SQL synchronization require separate verification."
+    },
+    {
+      "id": "pc-16-unsupported-datasource",
+      "file": "ontology-graph-ineligible.png",
+      "sha256": "c6f630237e66e3577093214c141d037351e8b4ca918c2a30d695e5f59b985867",
+      "source": "native-ontology-graph-eligibility-ui",
+      "actualUI": true,
+      "evidenceScope": "Native Graph eligibility gate and Unsupported Datasource reason; no graph materialization or static-data failure is established."
+    },
+    {
+      "id": "pc-12-semantic-model-view",
+      "file": "semantic-model-tables-measures.png",
+      "sha256": "447923436f2f945c84d705e1f9e2060902a9b3a85db26abc6e44a07deac787a1",
+      "source": "native-semantic-model-viewing-mode-ui",
+      "actualUI": true,
+      "evidenceScope": "Native model structure and visible field/measure names in Viewing mode; DAX results and Ontology Metrics require separate verification."
+    },
+    {
+      "id": "pc-12-report-canvas",
+      "file": "report-dashboard-canvas.png",
+      "sha256": "f3a3858c52398f851a2762419c2c30187a427944701892588d6b1cef1f58f930",
+      "source": "native-powerbi-report-displayarea",
+      "actualUI": true,
+      "evidenceScope": "Native optional Report rendering and visible All-filter KPI cards over Gold; individual chart values and Agent execution require separate checks."
+    },
+    {
+      "id": "pc-17-published-kql-examples",
+      "file": "agent-published-kql-examples.png",
+      "sha256": "aaf6b71f8084a428478b576c0046b436cdd7f4c1e8285acea4ab341ec97bf539",
+      "source": "native-published-data-agent-kql-examples-ui",
+      "actualUI": true,
+      "evidenceScope": "Native Published Agent setup and nine registered KQL examples; Valid status, query execution and answer quality require separate checks."
     }
   ]
 }

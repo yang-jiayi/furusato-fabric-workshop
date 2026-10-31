@@ -6,6 +6,42 @@ internal notes are not used.
 """
 
 FIGURES = {
+    'pc-17-published-kql-examples': {
+        'caption': ('Published の Data Agent で、Setup から KQL Database の Example queries を選んだ画面です。Showing 9 items と最初の UTC 用の質問・KQL が表示されています。これは公開版の登録内容の確認です。9件すべての Valid、クエリの直接実行、Agent の回答とその精度は、それぞれ別に確認します。長い KQL の全文は下記の原文を使います。',
+                    'Published Data Agent with Setup → KQL Database → Example queries selected. The screen shows Showing 9 items and the first UTC question/KQL pair. This verifies registered content in the published version. Check all nine Valid statuses, direct query execution, and Agent answers and accuracy separately. Use the complete KQL source below for long queries.'),
+        'alt': ('Published の Data Agent の Setup。KQL Database の Example queries に9件の登録数と最初の UTC クエリが表示され、左側に Ontology の文脈と直接接続の Lakehouse・KQL ソースが見える。',
+                'Setup in a Published Data Agent, showing nine registered KQL examples and the first UTC query; the left pane shows ontology context and direct Lakehouse/KQL sources.'),
+    },
+    'pc-12-report-canvas': {
+        'caption': ('任意の Power BI レポート。年・寄附先都道府県が All の表示で、Gold 全体の寄附総額1,596,157,000円・94,900件、平均16,819円（表示丸め）、高額寄付1,392件が表示されています。母集団は静的80,000件と受入増分14,900件です。Eventhouse の重複を含む観測15,000行や、静的データだけの値とは区別し、同じ条件の直接 DAX と照合します。',
+                    'Optional Power BI report with Year and recipient prefecture both set to All. The cards show all Gold: JPY 1,596,157,000, 94,900 donations, average JPY 16,819 after display rounding, and 1,392 high-value donations. This population combines 80,000 static donations with 14,900 accepted increments. Keep it distinct from the 15,000 duplicate-inclusive Eventhouse observations and static-only values, and compare with direct DAX under matching filters.'),
+        'alt': ('All フィルターの Power BI レポート。4つの KPI、月別寄附総額、寄附先自治体・返礼品カテゴリ・寄附者居住都道府県の Top10 グラフを表示する。',
+                'Power BI report with All filters, four KPI cards, monthly donation amount and Top10 charts for recipient municipalities, gift categories and donor residence prefectures.'),
+    },
+    'pc-12-semantic-model-view': {
+        'caption': ('Semantic model のモデルビュー（Viewing）。寄附・寄附者・日付・自治体・返礼品の5テーブルと関係の配置、右側の寄附にある10メジャー、非表示ではない寄附金額列を確認します。この画面は構成の確認です。メジャーの定義・実際の DAX 結果・Ontology の Metrics は、それぞれ別に確認します。',
+                    'Semantic model view in Viewing mode. Inspect the five tables—寄附, 寄附者, 日付, 自治体 and 返礼品—their relationship layout, the ten measures under 寄附, and the visible 寄附金額 column. This screen verifies configuration. Check measure definitions, actual DAX results and ontology Metrics separately.'),
+        'alt': ('Viewing モードの Semantic model。5つのテーブルと関係図、寄附の10メジャーと非表示ではない寄附金額列が表示される。',
+                'Semantic model in Viewing mode showing five table cards and relationships, ten measures under 寄附, and the visible 寄附金額 column.'),
+    },
+    'pc-16-unsupported-datasource': {
+        'caption': ('Configure Graph の判定画面。この例では10 Entity が Ineligible、Gift の理由が Unsupported Datasource（ot_gift）で、Continue は無効です。右側は Preview であり、Graph not materialized と表示されています。理由を確認し、未対応の間は新規の実体化を止めます。この画面のように未実体化なら、GQL の確認も未実施として記録します。静的テーブルの検証とは分けて扱います。',
+                    'Configure Graph eligibility screen. All ten entities are Ineligible in this example; Gift reports Unsupported Datasource for ot_gift, and Continue is disabled. The right panel is a Preview, while the status says Graph not materialized. Inspect the reason and stop new materialization while unsupported. In an unmaterialized state like this one, record GQL checks as unrun. Verify static tables separately.'),
+        'alt': ('Configure Graph に10 Entity の Ineligible 一覧、Gift の Unsupported Datasource と ot_gift の詳細、Graph not materialized、無効の Continue が表示される。',
+                'Configure Graph shows ten Ineligible entities, the Gift Unsupported Datasource popup naming ot_gift, Graph not materialized, and disabled Continue.'),
+    },
+    'pc-11-notebook05-preview': {
+        'caption': ('Notebook 05 のプレビュー実行。PREVIEW_ONLY・ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルと PLAN_SHA256 を確認します。これは適用前の計画です。適用には、自分のプレビュー実行で表示されたハッシュを使います。',
+                    'Notebook 05 preview run. Check PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables, 29 planned output tables and PLAN_SHA256. This is the plan before apply. Use the hash from your own preview execution for apply.'),
+        'alt': ('Notebook 05 のプレビュー出力。成功のチェックと実行時刻、PREVIEW_ONLY、PLAN_SHA256、5スキーマ、入力13・出力29テーブル、ANALYTICS_MODE=preview が表示されている。',
+                'Notebook 05 preview output with an execution tick/time, PREVIEW_ONLY, PLAN_SHA256, five schemas, 13 source and 29 output tables, and ANALYTICS_MODE=preview.'),
+    },
+    'pc-05-notebook01-ready': {
+        'caption': ('Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 load audit の計20テーブルの検査完了が表示されます。利用前に Ready の根拠を再確認し、SQL endpoint での同期も次の手順で確認します。',
+                    'Notebook 01 final cell. The output reports READY v3.0.0 and completed checks for 20 tables: 8 staging, 11 ontology, and 1 load audit. Recheck Ready evidence before use, then verify SQL endpoint synchronization in the next steps.'),
+        'alt': ('Notebook 01 の最終コードセルと成功のチェック、READY v3.0.0・20テーブルの検査完了・利用前の再確認を示す実行出力。',
+                'Notebook 01 final code cell with a successful execution tick and output showing READY v3.0.0, checks for 20 tables, and the consumer recheck warning.'),
+    },
     'pc-01-architecture': {
         "caption": ('完成したときのデータの流れ。静的データ、8月の観測データ、品質処理とモデル、意味と AI での利用の4つに分かれます',
                     'Data flow of the finished setup, in four lanes: static data, August observation data, quality processing and model, and meaning and AI'),

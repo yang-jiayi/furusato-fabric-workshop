@@ -1,172 +1,111 @@
-"""Keep the participant entry points free of internal investigation history."""
-
-from __future__ import annotations
-
+"""The active participant distribution is exhaustive current HTML plus Lab."""
+from hashlib import sha256
 import json
 from pathlib import Path
 import re
 import unittest
+import tempfile
 from urllib.parse import unquote, urlsplit
+import zipfile
 
-ROOT = Path(__file__).resolve().parents[3]
-EDITION = "unified-20260923"
-RETIRED_REPORTS = {
-    "core-baseline-upgrade-evaluation.md",
-    "core-evidence-followup.md",
-    "core-native-improvement-results.md",
-    "data-agent-improvement-report.md",
-}
-PAIR = {
-    f"Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_{EDITION}.docx",
-    f"furusato-workshop-v2-7-0-complete_{EDITION}.html",
-}
+ROOT=Path(__file__).resolve().parents[3]
+HTML='furusato-workshop-v3-0-0-complete.html'
+PACKAGE='Furusato_Workshop_v3.0.0_current.zip'
 
 
 class ParticipantDistributionTests(unittest.TestCase):
-    def deployment_prompts(self):
-        text = (ROOT / "README.md").read_text("utf-8")
-        prompts = []
-        for heading in ("### デプロイ依頼プロンプト", "### Copy-paste deployment prompt"):
-            section = text.split(heading, 1)[1].split("\n### ", 1)[0]
-            blocks = re.findall(r"```text\n(.*?)\n```", section, flags=re.S)
-            self.assertEqual(len(blocks), 1, heading)
-            prompts.append(blocks[0])
-        return prompts
-
-    def usage_references(self):
-        text = (ROOT / "README.md").read_text("utf-8")
-        return [
-            text.split(heading, 1)[1].split("\n### ", 1)[0]
-            for heading in (
-                "### 参考実績：時間・AI利用量（2026-09-17）",
-                "### Reference run: time and AI usage (2026-09-17)",
-            )
-        ]
-
-    def test_usage_reference_tables_preserve_bilingual_usd_jpy_values(self):
-        expected = [
-            ("1,739.67", "$17.40", "2,716"),
-            ("2,102.27", "$21.02", "3,283"),
-            ("2,672.97", "$26.73", "4,174"),
-            ("1,005.27", "$10.05", "1,570"),
-            ("2,758.43", "$27.58", "4,307"),
-            ("1,125.73", "$11.26", "1,758"),
-            ("1,346.77", "$13.47", "2,103"),
-            ("410.81", "$4.11", "641"),
-            ("1,409.80", "$14.10", "2,201"),
-            ("2,317.21", "$23.17", "3,618"),
-            ("16,888.95", "$168.89", "26,372"),
-        ]
-        for section in self.usage_references():
-            rows = [line for line in section.splitlines() if line.startswith("|") and "$" in line]
-            self.assertEqual(len(rows), len(expected))
-            for row, values in zip(rows, expected):
-                columns = [column.strip().replace("**", "") for column in row.strip("|").split("|")]
-                with self.subTest(row=columns[0]):
-                    self.assertEqual(len(columns), 5)
-                    self.assertEqual(columns[2:4], list(values[:2]))
-                    self.assertEqual(columns[4].replace("JPY ", "").removesuffix("円"), values[2])
-
-    def test_usage_reference_is_dated_scoped_and_not_an_invoice_guarantee(self):
-        japanese, english = self.usage_references()
-        for section in (japanese, english):
-            for marker in ("2026-09-17", "00:41:07", "03:44:24", "JST", "140", "gpt-6-astra",
-                           "1 AI credit = $0.01 USD", "156.147", "08:21:39", "1789600899",
-                           "https://query1.finance.yahoo.com/v8/finance/chart/JPY=X"):
-                self.assertIn(marker, section)
-            self.assertNotRegex(section, r"\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b")
-            self.assertNotIn(".copilot", section)
-        for marker in ("参考値", "保証するものではありません", "追加請求額ではありません",
-                       "丸め前の USD", "当日終値", "為替手数料", "同期完了後", "CU 費用"):
-            self.assertIn(marker, japanese)
-        for marker in ("reference values", "not a standard duration", "additional invoice charges",
-                       "unrounded USD", "daily closing rate", "FX fees", "post-synchronization", "CU charges"):
-            self.assertIn(marker, english)
-
-    def test_deployment_prompts_preserve_current_apply_and_ingestion_contracts(self):
-        contract = json.loads(
-            (ROOT / "workshop" / "v2.7.0" / "participant-workspace-contract.json").read_text("utf-8")
-        )
-        for prompt in self.deployment_prompts():
-            for marker in (
-                "https://github.com/yang-jiayi/furusato-fabric-workshop", "main",
-                "PARTICIPANT_ID:", "EXPECTED_WORKSPACE_NAME", "subfolderId",
-                "ENABLE_UNIFIED_DATA_AGENT=True", "ENABLE_AI_REFERENCE_ARCHITECTURE=False",
-                "USE_PARTICIPANT_NOTEBOOK_NAMES=True", "ALLOW_AUTOMATED_APPLY=True",
-                "APPLY_CHANGES=False", "APPLY_CHANGES=True",
-                "PLAN_SHA256", "CONFIRMED_PLAN_SHA256",
-                "EXCLUSIVE_CREATE_WINDOW_CONFIRMED=True", "EXCLUSIVE_APPLY_WINDOW_CONFIRMED=True",
-                "FileCreated", "Subject", "Ready",
-                "donation_events_001.csv", "donation_events_002.csv", "donation_events_003.csv",
-                "profileRevision", "SHA-256", "reseal_runtime.py --check",
-            ):
-                with self.subTest(marker=marker):
-                    self.assertIn(marker, prompt)
-            for flag in contract["workshopProvisioningAutomation"]["requiredApplyFlags"]:
-                self.assertIn(flag, prompt)
-            self.assertNotRegex(prompt, r"\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b")
-            self.assertNotIn(".copilot", prompt)
-
-    def test_deployment_prompts_require_approval_and_prompt_blocker_reporting(self):
-        japanese, english = self.deployment_prompts()
-        for marker in ("承認を得る", "5分以内", "最後に成功した操作", "無言で手動 Pipeline",
-                       "削除・復元・上書き", "実際の入力・実行済み Python", "満点や常時成功を保証しない"):
-            self.assertIn(marker, japanese)
-        for marker in ("obtain approval", "within five minutes", "last successful operation",
-                       "Do not silently substitute a manual Pipeline", "Do not delete, restore, overwrite",
-                       "actual inputs, executed Python", "do not promise full marks or universal success"):
-            self.assertIn(marker, english)
-
-    def test_docs_inventory_contains_current_and_retained_participant_materials(self):
-        expected = PAIR | {
-            "single-agent-workshop.md",
-            "data-validation-checklist.md",
-            "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx",
-            "furusato-workshop-v3-0-0-complete.html",
-            "Furusato_Workshop_v3.0.0_current-20261015.zip",
-            "README.md",
-            "SHA256SUMS.txt",
-        }
-        actual = {path.name for path in (ROOT / "docs").iterdir() if path.is_file()}
-        self.assertEqual(actual, expected)
-        self.assertTrue((ROOT / "docs" / "assets").is_dir())
-
-    def test_entry_points_do_not_reintroduce_internal_reports_or_scores(self):
-        for relative in ("README.md", "docs/single-agent-workshop.md"):
-            text = ROOT.joinpath(*relative.split("/")).read_text("utf-8")
+    def test_active_entrypoints_offer_only_current_guides(self):
+        for relative in ('README.md','docs/README.md','docs/v3.0.0/current/README.md'):
             with self.subTest(path=relative):
-                for name in RETIRED_REPORTS:
-                    self.assertNotIn(name, text)
-                self.assertNotRegex(text, r"\bCore-[A-E]\b|SR_JA|Windows Hello")
-                self.assertNotRegex(text, r"\b(?:148|154|146|152)/168\b")
-                self.assertNotRegex(text, r"conv_fab\w+|resp_fab\w+")
-                self.assertIn("ENABLE_UNIFIED_DATA_AGENT=True", text)
-                self.assertIn("ENABLE_AI_REFERENCE_ARCHITECTURE=False", text)
+                text=(ROOT/relative).read_text()
+                self.assertIn('Lab',text)
+                self.assertIn(HTML,text)
+                self.assertIn(PACKAGE,text)
+                self.assertNotRegex(text,r'\]\([^)]*\.docx(?:[)#]|$)')
+                self.assertNotRegex(text,r'189/281|217/281|2026-09-17|参考実績|Historical evaluations')
 
-    def test_local_markdown_links_resolve_after_report_removal(self):
-        paths = [ROOT / "README.md", ROOT / "SECURITY.md"]
-        paths.extend((ROOT / "docs").glob("*.md"))
-        paths.extend((ROOT / "tools").rglob("README.md"))
+    def test_current_html_and_checksums_match_distribution_bytes(self):
+        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(ROOT/'docs/v3.0.0/current/guide'/HTML).read_bytes())
+        for relative in ('docs/SHA256SUMS.txt','docs/v3.0.0/current/SHA256SUMS.txt'):
+            path=ROOT/relative
+            entries={}
+            for line in path.read_text().splitlines():
+                digest,name=line.split('  ',1)
+                self.assertNotIn(name,entries)
+                entries[name]=digest
+                self.assertNotIn('.docx',name.lower())
+                self.assertEqual(digest,sha256((path.parent/name).read_bytes()).hexdigest(),name)
+            self.assertTrue(any(name.endswith(HTML) for name in entries))
+            self.assertTrue(any(name.endswith(PACKAGE) for name in entries))
+
+    def test_current_package_is_complete_and_contains_no_retired_guide_or_reports(self):
+        with zipfile.ZipFile(ROOT/'docs'/PACKAGE) as archive:
+            self.assertIsNone(archive.testzip())
+            names=archive.namelist()
+            self.assertEqual(len(names),len(set(names)))
+            self.assertFalse(any(name.lower().endswith('.docx') for name in names))
+            self.assertFalse(any(name.startswith(('reports/','source/docs/v3.0.0/tuning-')) for name in names))
+            for name in ('Lab/README.md','guide/'+HTML,'source/artifact-set.json','START_HERE.txt','DOCUMENT_VALIDATION.json','LAB_VALIDATION.json'):
+                self.assertIn(name,names)
+            for path in (ROOT/'Lab').rglob('*'):
+                if path.is_file():
+                    self.assertEqual(path.read_bytes(),archive.read('Lab/'+path.relative_to(ROOT/'Lab').as_posix()))
+            self.assertEqual((ROOT/'docs'/HTML).read_bytes(),archive.read('guide/'+HTML))
+            self.assertEqual(archive.read('docs/'+HTML),archive.read('guide/'+HTML))
+            receipt=json.loads(archive.read('DOCUMENT_VALIDATION.json'))
+            self.assertTrue(receipt['static']['passed'])
+            self.assertTrue(receipt['browser']['passed'])
+            self.assertGreaterEqual(receipt['static']['modelBlocks'],704)
+            self.assertEqual(receipt['static']['htmlSha256'],sha256(archive.read('guide/'+HTML)).hexdigest())
+            manifest=json.loads(archive.read('PACKAGE_MANIFEST.json'))
+            self.assertEqual(manifest['deliveryMode'],'html-lab')
+            for name,expected in manifest['files'].items():
+                self.assertEqual(expected,sha256(archive.read(name)).hexdigest(),name)
+            with tempfile.TemporaryDirectory() as temp:
+                archive.extractall(temp)
+                extracted=Path(temp)
+                checked=0
+                for page in (extracted/'Lab').rglob('*.md'):
+                    for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',page.read_text()):
+                        parsed=urlsplit(target)
+                        if parsed.scheme or not parsed.path:continue
+                        destination=(page.parent/unquote(parsed.path)).resolve()
+                        self.assertTrue(destination.is_relative_to(extracted))
+                        self.assertTrue(destination.exists(),str(page)+' -> '+target)
+                        checked+=1
+                self.assertGreaterEqual(checked,655)
+
+    def test_packaged_source_inventory_preserves_the_real_protected_baseline(self):
+        with zipfile.ZipFile(ROOT/'docs'/PACKAGE) as archive:
+            manifest=json.loads(archive.read('source/artifact-set.json'))
+            from lxml import html
+            tree=html.fromstring(archive.read('guide/'+HTML))
+            provenance=json.loads(tree.get_element_by_id('preview30-provenance').text)
+            self.assertEqual(provenance['currentArtifactSet']['manifestSha256'],sha256(archive.read('source/artifact-set.json')).hexdigest())
+            self.assertEqual(provenance['currentArtifactSet']['sourceTreeSha256'],manifest['sourceTreeSha256'])
+            for name,expected in manifest['files'].items():
+                self.assertEqual(expected,sha256(archive.read('source/'+name)).hexdigest(),name)
+            for name,expected in manifest['baselineProtection']['files'].items():
+                self.assertEqual(expected,sha256(archive.read('source/'+name)).hexdigest(),name)
+            self.assertEqual(manifest['dataChecks']['staticDonationRows'],80000)
+            self.assertEqual(manifest['dataChecks']['staticDonationYen'],1344099000)
+            self.assertEqual(manifest['documentationBinding']['deliveryMode'],'html-lab')
+
+    def test_current_local_markdown_links_resolve(self):
+        paths=[ROOT/'README.md',ROOT/'docs/README.md',ROOT/'docs/v3.0.0/current/README.md']
+        paths.extend((ROOT/'Lab').rglob('*.md'))
         for path in paths:
-            text = path.read_text("utf-8")
-            for target in re.findall(r"\[[^\]\n]*\]\(([^)\s]+)\)", text):
-                parsed = urlsplit(target)
-                if parsed.scheme or not parsed.path:
-                    continue
-                destination = (path.parent / unquote(parsed.path)).resolve()
-                with self.subTest(path=str(path.relative_to(ROOT)), target=target):
-                    self.assertTrue(destination.exists(), f"Broken local link: {target}")
+            for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text()):
+                parsed=urlsplit(target)
+                if parsed.scheme or not parsed.path:continue
+                with self.subTest(path=path.relative_to(ROOT),target=target):
+                    self.assertTrue((path.parent/unquote(parsed.path)).resolve().exists())
 
-    def test_removing_history_preserves_runtime_and_classification_assets(self):
-        for relative in (
-            "SECURITY.md", "LICENSE",
-            "workshop/v2.7.0/data/DATASET.md",
-            "workshop/v2.7.0/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
-            "tools/docs/assets/style-carrier.zip",
-        ):
-            with self.subTest(path=relative):
-                self.assertTrue(ROOT.joinpath(*relative.split("/")).is_file())
+    def test_runtime_and_historical_classification_assets_remain_available(self):
+        for relative in ('SECURITY.md','LICENSE','workshop/v2.7.0/data/DATASET.md',
+                         'workshop/v2.7.0/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb',
+                         'tools/docs/assets/style-carrier.zip'):
+            self.assertTrue((ROOT/relative).is_file(),relative)
 
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__=='__main__':unittest.main()

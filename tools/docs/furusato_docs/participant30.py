@@ -490,7 +490,7 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
             suffix += 1
         if spec.get("links"):
             add_section(section, str(suffix), SECTION_TITLES["links"], [link_list(spec["links"])])
-    participant30_tuning.append_tuning_sections(chapters[17], root)
+    participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
     participant30_evaluation.append_chapter_sections(chapters[19], root)
     participant30_deployment.append_deployment_sections(chapters[24], root)
     for letter, section in appendices.items():

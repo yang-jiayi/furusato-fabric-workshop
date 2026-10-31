@@ -1,8 +1,7 @@
-# 12.2 操作手順（1）
+# 12.2 操作手順（2）
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-1. Semantic model の「寄附」テーブルで、寄附総額 = SUM('寄附'[寄附金額])、寄附件数 = COUNTROWS('寄附')、平均寄附額 = DIVIDE([寄附総額], [寄附件数]) の定義と表示形式を確認します。
 2. 次の DAX を Semantic model に対して実行し、StaticSeed の範囲で 80,000件・1,344,099,000円になることを確認します。データソースの条件を付けない Gold 全体の値（94,900件）とは比べません。
 
 **DAX**
@@ -51,7 +50,6 @@ ROW(
 
 ## 12.2 Steps
 
-1. In the 寄附 table of the semantic model, check the definitions and formats: 寄附総額 = SUM('寄附'[寄附金額]), 寄附件数 = COUNTROWS('寄附') and 平均寄附額 = DIVIDE([寄附総額], [寄附件数]).
 2. Run the following DAX against the semantic model and confirm 80,000 donations and JPY 1,344,099,000 for StaticSeed. Do not compare the result with the Gold total without the data source filter (94,900).
 
 **DAX**

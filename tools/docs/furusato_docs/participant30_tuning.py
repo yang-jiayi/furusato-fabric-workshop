@@ -95,7 +95,7 @@ def _assets(root):
     return profile, manifest, selections, examples, descriptions, measures
 
 
-def append_tuning_sections(chapter: Section, root: Path):
+def append_tuning_sections(chapter: Section, root: Path, *, figures):
     """Append sections 17.5–17.16 after the existing four chapter-17 sections."""
     if chapter.chapter != 17:
         raise ValueError("Participant tuning belongs to Chapter 17")
@@ -152,7 +152,27 @@ def append_tuning_sections(chapter: Section, root: Path):
                                        [[c["path"][-1], c["dataType"]] for c in columns],
                                        qualified + "：選択する" + str(len(columns)) + "列",
                                        qualified + ": select " + str(len(columns)) + " columns", (4.8, 1.8)))
-    selection_blocks += [_paragraph("選択契約には各テーブル・列の説明も含まれます。同じ説明を設定できる画面では、selection-contract.json の同じ path の description を使います。編集欄がない項目に独自の JSON フィールドを作りません。指示のコピーだけでは、この説明と実際の選択の一致まで確認したことにはなりません。17.15の構成確認で、UI 確認済みと定義照合済みを区別して記録します。",
+    selection_blocks += [
+        _paragraph("143列は業務列だけの選択契約で、システムの世代管理列は含みません。サービスが親テーブルの選択を展開した結果、最初のソース探索に無かった _WorkshopGenerationId が選択される場合があります。17テーブルを選んだだけで143列と判断せず、現在の列の選択状態を読み直します。",
+                   "The 143-column contract contains business columns only, excluding system generation metadata. When the service expands selected parent tables, it may select _WorkshopGenerationId leaves absent from the initial source discovery. Selecting 17 parent objects alone does not establish 143 selected columns; read the current leaf selections back."),
+        _table([("親テーブル（選択を残す）", "Parent table (keep selected)"), ("表示された場合に外すシステム列", "System column to uncheck if displayed")],
+               [["dbo." + name, "_WorkshopGenerationId"] for name in (
+                   "ot_donor", "ot_gift", "ot_gift_category", "ot_mun_category_metric",
+                   "ot_pref_donation_flow", "ot_prefecture")],
+               "143業務列の対象外となる6つの世代管理列", "Six generation-metadata leaves outside the 143 business columns", (3.5, 3.1)),
+        _steps([
+            ("SQL ソースを開き直し、必要ならスキーマを更新して、上の6テーブルの列を展開します。実際のソース探索・読戻しで得られたノードと列を確認します。表示されない列の ID を推測したり、新しい項目を作ったりしません。",
+             "Reopen the SQL source, refresh its schema if needed, and expand columns under the six tables above. Inspect nodes and columns returned by actual discovery/readback. Never guess an ID or create a synthetic item for an undisplayed column."),
+            ("_WorkshopGenerationId が選択されている場合は、その6つの列のチェックだけを外します。17親オブジェクトと、この節に列挙した143業務列の選択を残します。親を一括選択し直してシステム列を再選択しないようにします。",
+             "If _WorkshopGenerationId is selected, uncheck only those six leaves. Keep the 17 parent objects and all 143 business columns listed in this section selected. Do not select all parent contents again and reselect the metadata leaves."),
+            ("保存後に実際のソースと選択状態を読み戻し、17オブジェクト・143業務列と、表示された6つのシステム列が未選択であることを確認します。149列のまま公開へ進まず、143の条件や選択契約を書き換えて検査を通しません。",
+             "After saving, read the actual source and selections back. Confirm 17 objects and 143 business columns, with the six displayed metadata leaves unselected. Do not proceed to publication with 149 columns or change the 143-column contract to make validation pass."),
+            ("選択を修正した場合は、17.16で新しい記録先を使って読み取り専用 prepare を実行し直します。変更前の記録と使用済みの apply-intent / publish-intent を保持し、同じ書き込みを再送しません。新しい読戻しと143列の確認が成功してから、その構成に対応する後続の操作へ進みます。",
+             "After a selection correction, run read-only prepare again in a new record directory as described in 17.16. Retain prior evidence and spent apply-intent/publish-intent records; do not replay the same write. Continue with operations for the newly prepared configuration only after fresh readback and the 143-column check succeed."),
+        ]),
+        _paragraph("この確認はソースの構成を一致させるためのものです。設定の一致や公開の成功を、回答精度や実際のソース問い合わせの成功と扱いません。17.2と19章で実回答を別に評価します。",
+                   "This check aligns source configuration. Configuration equality or publication success does not establish answer accuracy or actual source-query success. Evaluate real answers separately in 17.2 and Chapter 19."),
+        _paragraph("選択契約には各テーブル・列の説明も含まれます。同じ説明を設定できる画面では、selection-contract.json の同じ path の description を使います。編集欄がない項目に独自の JSON フィールドを作りません。指示のコピーだけでは、この説明と実際の選択の一致まで確認したことにはなりません。17.15の構成確認で、UI 確認済みと定義照合済みを区別して記録します。",
                                     "The selection contract also contains table and column descriptions. Where an editing field is available, use the description at the same path in selection-contract.json. Do not invent JSON fields for properties without an editor. Copying instructions alone does not verify these descriptions or actual selections; distinguish UI checks from definition checks in the configuration record in 17.15.")]
     _append(chapter, 7, ("17オブジェクト・143列を選択する", "Select 17 objects and 143 columns"), selection_blocks)
 
@@ -195,6 +215,11 @@ def append_tuning_sections(chapter: Section, root: Path):
     # Insert the example section between the KQL and semantic-model sections.
     example_blocks = [_paragraph("まず8章の KQL Queryset で、自分の KQL Database を接続先に選び、下の9件の KQL を1件ずつ読み取り専用で実行します。各クエリの実行日時、成功またはエラー、返された結果を記録します。これは自分による実行の確認で、Data Agent が実行した証拠ではありません。すべて成功してから17.16で設定を適用・公開します。KQL ソースの Example queries / Examples でも9件のサービス検証を確認します。手作業で設定する場合は既存の例を記録してから、下の質問と KQL の組を9件設定します。質問欄には質問だけ、クエリ欄には対応する KQL だけを貼ります。評価問題や期待値を例に追加しません。各例を保存して検証結果を確認します。Valid にならない例は Agent に使われないため、9件の登録数だけで完了にしません。",
                                  "First connect the Chapter 8 KQL queryset to your KQL database and run each of the nine KQL queries below as a separate read-only query. Record its execution time, success or error and returned results. This proves your direct execution, not Data Agent execution. Apply and publish through 17.16 only after all nine succeed. Also check all nine service validations under the KQL source Example queries / Examples. For manual configuration, record existing examples before configuring the nine question-and-KQL pairs below. Paste only the question into the question field and only its paired KQL into the query field. Do not add evaluation questions or expected answers as examples. Save each and check validation. Non-Valid examples are not used by the agent, so a count of nine alone does not establish completion.")]
+    example_blocks += [
+        _paragraph("17.16で公開した後は、画面右上で Published を選び、Setup → 自分の KQL Database → Example queries を開きます。Showing 9 items と、下記の9組の質問・KQL が保存されていることを確認します。登録数だけを Valid の証拠にせず、各例のサービス検証、先に行った直接実行の記録、19章の Agent の実回答を別々に照合します。画面内で横に隠れた KQL は横スクロールで確認し、コピーには下記の原文または同梱の kusto-examples.json を使います。",
+                   "After publishing through 17.16, select Published at the top right and open Setup → your KQL Database → Example queries. Check Showing 9 items and the saved nine question/KQL pairs below. Do not treat the registered count as proof of Valid status: compare each service validation, your earlier direct-execution record and the actual Agent answers in Chapter 19 separately. Horizontally scroll any clipped KQL; copy from the complete source below or the included kusto-examples.json."),
+        figures.block("pc-17-published-kql-examples"),
+    ]
     for index, example in enumerate(examples, 1):
         example_blocks += [_paragraph(f"KQL 例 {index}：質問欄", f"KQL example {index}: question field"),
                            _code(example["question"], "question", canonical=True),

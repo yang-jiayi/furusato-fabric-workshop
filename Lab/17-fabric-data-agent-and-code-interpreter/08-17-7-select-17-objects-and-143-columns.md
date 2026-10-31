@@ -232,6 +232,26 @@ Data Agent の Add data / Sources で、自分の Lakehouse の SQL endpoint を
 | BatchId | varchar |
 | _AnalyticsGenerationId | varchar |
 
+143列は業務列だけの選択契約で、システムの世代管理列は含みません。サービスが親テーブルの選択を展開した結果、最初のソース探索に無かった _WorkshopGenerationId が選択される場合があります。17テーブルを選んだだけで143列と判断せず、現在の列の選択状態を読み直します。
+
+**143業務列の対象外となる6つの世代管理列**
+
+| 親テーブル（選択を残す） | 表示された場合に外すシステム列 |
+| --- | --- |
+| dbo.ot_donor | _WorkshopGenerationId |
+| dbo.ot_gift | _WorkshopGenerationId |
+| dbo.ot_gift_category | _WorkshopGenerationId |
+| dbo.ot_mun_category_metric | _WorkshopGenerationId |
+| dbo.ot_pref_donation_flow | _WorkshopGenerationId |
+| dbo.ot_prefecture | _WorkshopGenerationId |
+
+1. SQL ソースを開き直し、必要ならスキーマを更新して、上の6テーブルの列を展開します。実際のソース探索・読戻しで得られたノードと列を確認します。表示されない列の ID を推測したり、新しい項目を作ったりしません。
+2. _WorkshopGenerationId が選択されている場合は、その6つの列のチェックだけを外します。17親オブジェクトと、この節に列挙した143業務列の選択を残します。親を一括選択し直してシステム列を再選択しないようにします。
+3. 保存後に実際のソースと選択状態を読み戻し、17オブジェクト・143業務列と、表示された6つのシステム列が未選択であることを確認します。149列のまま公開へ進まず、143の条件や選択契約を書き換えて検査を通しません。
+4. 選択を修正した場合は、17.16で新しい記録先を使って読み取り専用 prepare を実行し直します。変更前の記録と使用済みの apply-intent / publish-intent を保持し、同じ書き込みを再送しません。新しい読戻しと143列の確認が成功してから、その構成に対応する後続の操作へ進みます。
+
+この確認はソースの構成を一致させるためのものです。設定の一致や公開の成功を、回答精度や実際のソース問い合わせの成功と扱いません。17.2と19章で実回答を別に評価します。
+
 選択契約には各テーブル・列の説明も含まれます。同じ説明を設定できる画面では、selection-contract.json の同じ path の description を使います。編集欄がない項目に独自の JSON フィールドを作りません。指示のコピーだけでは、この説明と実際の選択の一致まで確認したことにはなりません。17.15の構成確認で、UI 確認済みと定義照合済みを区別して記録します。
 
 <details>
@@ -468,6 +488,26 @@ In the Data Agent Add data / Sources area, select your Lakehouse SQL endpoint. S
 | SourceFile | varchar |
 | BatchId | varchar |
 | _AnalyticsGenerationId | varchar |
+
+The 143-column contract contains business columns only, excluding system generation metadata. When the service expands selected parent tables, it may select _WorkshopGenerationId leaves absent from the initial source discovery. Selecting 17 parent objects alone does not establish 143 selected columns; read the current leaf selections back.
+
+**Six generation-metadata leaves outside the 143 business columns**
+
+| Parent table (keep selected) | System column to uncheck if displayed |
+| --- | --- |
+| dbo.ot_donor | _WorkshopGenerationId |
+| dbo.ot_gift | _WorkshopGenerationId |
+| dbo.ot_gift_category | _WorkshopGenerationId |
+| dbo.ot_mun_category_metric | _WorkshopGenerationId |
+| dbo.ot_pref_donation_flow | _WorkshopGenerationId |
+| dbo.ot_prefecture | _WorkshopGenerationId |
+
+1. Reopen the SQL source, refresh its schema if needed, and expand columns under the six tables above. Inspect nodes and columns returned by actual discovery/readback. Never guess an ID or create a synthetic item for an undisplayed column.
+2. If _WorkshopGenerationId is selected, uncheck only those six leaves. Keep the 17 parent objects and all 143 business columns listed in this section selected. Do not select all parent contents again and reselect the metadata leaves.
+3. After saving, read the actual source and selections back. Confirm 17 objects and 143 business columns, with the six displayed metadata leaves unselected. Do not proceed to publication with 149 columns or change the 143-column contract to make validation pass.
+4. After a selection correction, run read-only prepare again in a new record directory as described in 17.16. Retain prior evidence and spent apply-intent/publish-intent records; do not replay the same write. Continue with operations for the newly prepared configuration only after fresh readback and the 143-column check succeed.
+
+This check aligns source configuration. Configuration equality or publication success does not establish answer accuracy or actual source-query success. Evaluate real answers separately in 17.2 and Chapter 19.
 
 The selection contract also contains table and column descriptions. Where an editing field is available, use the description at the same path in selection-contract.json. Do not invent JSON fields for properties without an editor. Copying instructions alone does not verify these descriptions or actual selections; distinguish UI checks from definition checks in the configuration record in 17.15.
 

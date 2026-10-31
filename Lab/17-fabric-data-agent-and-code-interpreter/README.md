@@ -16,7 +16,7 @@
 - [17.9 全体の回答方針の指示全文](10-17-9-agent-wide-answer-policy-complete-instructions.md)
 - [17.10 静的データと品質処理の SQLの指示全文](11-17-10-sql-for-static-data-and-quality-processing-complete-instructions.md)
 - [17.11 8月の観測データの KQLの指示全文](12-17-11-kql-for-august-observations-complete-instructions.md)
-- [17.12 9件の KQL クエリ例を設定・検証する](13-17-12-set-and-validate-nine-kql-examples.md)
+- [17.12 9件の KQL クエリ例を設定・検証する](13-17-12-pc-17-published-kql-examples.md)
 - [17.13 Gold と既存メジャーの DAXの指示全文](14-17-13-dax-for-gold-and-existing-measures-complete-instructions.md)
 - [17.14 ソース説明と Ontology の状態を確認する](15-17-14-check-source-descriptions-and-ontology-state.md)
 - [17.15 保存・公開・読み戻し・復元](16-17-15-save-publish-read-back-and-restore.md)

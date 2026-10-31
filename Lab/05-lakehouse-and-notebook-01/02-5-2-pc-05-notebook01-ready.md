@@ -1,4 +1,4 @@
-# 5.2 操作手順
+# 5.2 操作手順（1）
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -8,10 +8,10 @@
 4. Notebook 01 を作業フォルダーにインポートし、LH_Furusato_&lt;PID&gt; を接続（attach）します。
 5. 先頭のパラメーターセルで PARTICIPANT_ID を自分の &lt;PID&gt; に変更します。ほかの値は変更しません（INPUT_DIR は "Files/furusato/seed" のままにします）。
 6. すべてのセルを先頭から順に実行します（Run all）。最後に「READY: Furusato ontology data v3.0.0」で始まる行と、20テーブルの確認が出力されれば完了です。
-7. 11の ot_* テーブルの件数を付録Aと照合します（ot_donation 80,000、ot_municipality 1,741、ot_supplier_gift 14,514 など）。寄付が0件の Donor 18件と、受け入れが0件の Municipality 10件が残っているのが正しい状態です。
-8. SQL analytics endpoint に反映されてから同じテーブルを SQL で読み、ot_donation が 80,000件、DonationAmountYen の合計が 1,344,099,000円であることを確認します。MunicipalityId の先頭のゼロが残っていることも確かめます。
 
-> Notebook 01 は、検証済みのテーブルを安全に置き換える仕組みを持っています。完了した Notebook 01 を理由なく何度も実行しないでください。
+![Notebook 01 の最終コードセルと成功のチェック、READY v3.0.0・20テーブルの検査完了・利用前の再確認を示す実行出力。](../assets/pc-05-notebook01-ready.png)
+
+Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 load audit の計20テーブルの検査完了が表示されます。利用前に Ready の根拠を再確認し、SQL endpoint での同期も次の手順で確認します。
 
 <details>
 <summary>English</summary>
@@ -24,9 +24,9 @@
 4. Import Notebook 01 into your work folder and attach LH_Furusato_&lt;PID&gt;.
 5. In the first parameter cell, change PARTICIPANT_ID to your &lt;PID&gt;. Leave all other values unchanged (INPUT_DIR stays "Files/furusato/seed").
 6. Run all cells from the top (Run all). It is complete when the output ends with a line starting "READY: Furusato ontology data v3.0.0" and a confirmation for all 20 tables.
-7. Check the counts of the 11 ot_* tables against Appendix A (ot_donation 80,000, ot_municipality 1,741, ot_supplier_gift 14,514 and so on). It is correct that 18 donors with no donations and 10 municipalities that received none are kept.
-8. Once the SQL analytics endpoint has synchronized, read the same tables with SQL and confirm that ot_donation has 80,000 rows and that DonationAmountYen totals JPY 1,344,099,000. Also confirm that MunicipalityId keeps its leading zeros.
 
-> Notebook 01 has a safe mechanism for replacing validated tables. Do not rerun a completed Notebook 01 without a reason.
+![Notebook 01 final code cell with a successful execution tick and output showing READY v3.0.0, checks for 20 tables, and the consumer recheck warning.](../assets/pc-05-notebook01-ready.png)
+
+Notebook 01 final cell. The output reports READY v3.0.0 and completed checks for 20 tables: 8 staging, 11 ontology, and 1 load audit. Recheck Ready evidence before use, then verify SQL endpoint synchronization in the next steps.
 
 </details>

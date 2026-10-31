@@ -1,29 +1,29 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "64128d7b832931fe8c93d5e7f2db85b3e9f3859347884edf9fecb803cabbf995",
+  "contentSha256": "ef88d1ead3230393d18bfa3fdaaa766cb4ace032bf048b7e0e3a6ea0a27af8bf",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
     "sections": 185,
-    "modelBlocks": 718,
-    "bilingualValuesChecked": 6676,
+    "modelBlocks": 732,
+    "bilingualValuesChecked": 6746,
     "literalCodeAndPromptsChecked": 141,
-    "figures": 26,
+    "figures": 32,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "03d12a91a75ff42bb2dd6bf3d959b39c4d043833f351719971e853df76b36db7"
+    "htmlSha256": "df08c6642a6b9b94f741f3a26d3fbcf0d1fb53c98981a221bff0b6cf35b660a2"
   },
   "sourceRevision": {
-    "baseCommit": "7d26cbe152f0ef1a7e15b021bf77e0ee2423fe39",
-    "workingTreeMatchesCommit": false,
+    "baseCommit": "17552ed7bcf4998759296918020d684972bf44bf",
+    "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "05e1d6164776e4c0d50b4f3f137b160742a36a9fd866932ac57a092b580cb2e0"
+    "sourceTreeSha256": "d69ac33e05aa9b21bf19eb35a08ea7098ac6f9c5683e0ab1c244cbdeae2625d5"
   },
   "currentArtifactSet": {
-    "manifestSha256": "cf5a38d4541161f44763ca96be774951ced5d7613d5c672995f330e7c2a3618f",
-    "sourceCommit": "7d26cbe152f0ef1a7e15b021bf77e0ee2423fe39",
-    "sourceTreeSha256": "05e1d6164776e4c0d50b4f3f137b160742a36a9fd866932ac57a092b580cb2e0",
+    "manifestSha256": "2424ef4a9c05c8e0e6019308080b3f84417292a9789fe6fda5948ab7c957095e",
+    "sourceCommit": "17552ed7bcf4998759296918020d684972bf44bf",
+    "sourceTreeSha256": "d69ac33e05aa9b21bf19eb35a08ea7098ac6f9c5683e0ab1c244cbdeae2625d5",
     "workshopVersion": "3.0.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "154.0.8037.57",
-    "htmlSha256": "03d12a91a75ff42bb2dd6bf3d959b39c4d043833f351719971e853df76b36db7",
+    "htmlSha256": "df08c6642a6b9b94f741f3a26d3fbcf0d1fb53c98981a221bff0b6cf35b660a2",
     "checks": [
       "all29chaptersAndAppendices",
       "ja.languagePersists",
@@ -53,8 +53,8 @@
       "noExternalRequests"
     ],
     "printedPages": {
-      "ja": 170,
-      "en": 172
+      "ja": 174,
+      "en": 176
     },
     "allPrintedPagesVisuallyReviewed": false
   },

@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.0.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "7d26cbe152f0ef1a7e15b021bf77e0ee2423fe39",
+  "sourceCommit": "17552ed7bcf4998759296918020d684972bf44bf",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "05e1d6164776e4c0d50b4f3f137b160742a36a9fd866932ac57a092b580cb2e0",
+  "sourceTreeSha256": "d69ac33e05aa9b21bf19eb35a08ea7098ac6f9c5683e0ab1c244cbdeae2625d5",
   "candidateSourceSha256": "4caf8cc3ca58e42c32ea234936af7edb6b4ab4682c618f177fd6b0fca33c4a92",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -144,9 +144,15 @@
     "docs/assets/v3.0.0-evidence/captures/fa763e210b3f93dc1a92233d77c223b0ce4cc99df9226d127e433397aa0da3fb.png": "fa763e210b3f93dc1a92233d77c223b0ce4cc99df9226d127e433397aa0da3fb",
     "docs/assets/v3.0.0-evidence/captures/fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068.png": "fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068",
     "docs/assets/v3.0.0-evidence/manifest.json": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
+    "docs/assets/v3.0.0-participant/agent-published-kql-examples.png": "aaf6b71f8084a428478b576c0046b436cdd7f4c1e8285acea4ab341ec97bf539",
     "docs/assets/v3.0.0-participant/architecture.png": "adcede5b0d4dd1d0f9069b3c252e7ca3066e0d3e87bb1ec45f1777710dd57daa",
     "docs/assets/v3.0.0-participant/architecture.svg": "df35f479c219779222ae24a77c73f34d95b19cce61b4b2c92b24cca5f0f93b88",
-    "docs/assets/v3.0.0-participant/manifest.json": "df6a228424f867ae3977948044e80846e7713f63ca070309cd1f73a454a2d2a1",
+    "docs/assets/v3.0.0-participant/manifest.json": "8bcaa435459eaf0e08c68a37194b2e083b4226a0dcc64f58cdaa22b03e86a79a",
+    "docs/assets/v3.0.0-participant/notebook01-ready-output.png": "545f7a0d6e06a4b548af02c6b6b33364d13ba6fcec23ea25449259e7d48b2c65",
+    "docs/assets/v3.0.0-participant/notebook05-preview-output.png": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e",
+    "docs/assets/v3.0.0-participant/ontology-graph-ineligible.png": "c6f630237e66e3577093214c141d037351e8b4ca918c2a30d695e5f59b985867",
+    "docs/assets/v3.0.0-participant/report-dashboard-canvas.png": "f3a3858c52398f851a2762419c2c30187a427944701892588d6b1cef1f58f930",
+    "docs/assets/v3.0.0-participant/semantic-model-tables-measures.png": "447923436f2f945c84d705e1f9e2060902a9b3a85db26abc6e44a07deac787a1",
     "tools/data-agent/README.md": "63395c94f1168f8df0fb61d0bac683ae61999f80d04babba164e729876819307",
     "tools/data-agent/agent_service_check.py": "c1b90d6916885f8a72cb8ae62ec4cb28622e7c64d35664c9764d514179d67635",
     "tools/data-agent/answer_contract_profile.py": "6f08ea0a1edf02d2d5f30af229ae8b68edeefc3eefb28617c7b1c68cff56b7fb",
@@ -251,12 +257,12 @@
     "tools/docs/furusato_docs/notebook_payload.py": "4e86e5620c62d6cf98a8eb8e7d9077cc558ffff57807a95f21ca835bbc1e283f",
     "tools/docs/furusato_docs/oox.py": "7cb5eb525c55da01c53fd44a6241b567134b2e4e35d1866be8baca6bd62c13ef",
     "tools/docs/furusato_docs/parameters.py": "fe95dea7493841ddcd8381c0d388e5e7274458e9127e49934539b1d14f57562b",
-    "tools/docs/furusato_docs/participant30.py": "439f524ada7141274d027d62b04536fff12e45014cc536ee92e4c89d3f2d24db",
+    "tools/docs/furusato_docs/participant30.py": "c22a7c0d6276d112793b87cc62407e61bf489fd1535df71121bd04a86c53f24e",
     "tools/docs/furusato_docs/participant30_deployment.py": "4e4075d5689c95644f88afd51dee3bda09c453f783638f72fcebf75eb9727484",
     "tools/docs/furusato_docs/participant30_evaluation.py": "ccd082a19d3ccc6c8e2fa2b96985812ed57471df82db4f93033372922e5c13df",
-    "tools/docs/furusato_docs/participant30_figures.py": "b9990e3a1152972c6dbd24c413742befba2bf3db8308d590f7d39fcfad69482f",
-    "tools/docs/furusato_docs/participant30_text.py": "6ad041e82f09df73689e4f2426e00c1e966488b68d4741989a453379ed2e6d37",
-    "tools/docs/furusato_docs/participant30_tuning.py": "82a4565719a35f35ff9a15d07392a4427c06ffd48185c4c6f1894dcc84ca7a29",
+    "tools/docs/furusato_docs/participant30_figures.py": "6f064e59d9aac8eb199b5ec3d20d6647e2bf9bc63e9e8fe5237a275302e61f6d",
+    "tools/docs/furusato_docs/participant30_text.py": "2335841fcb293b682d803583f0f763db72880d87a6acdc1404a1516ea2c5ac9a",
+    "tools/docs/furusato_docs/participant30_tuning.py": "bc8bc2a9d9b2ad7e57a8110362a26ecb8478ef0d88a944d3e6f0893afa5f05cf",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
     "tools/docs/furusato_docs/participant_word.py": "a530d0b14223209049fd7c5913ea3ad6f99fa9e4d03343514113c8aec5afadfc",
     "tools/docs/furusato_docs/preview30_acceptance.py": "664350aac41c530f75978562676f87998f0c5b25a0113eebacc3712edd01a88c",
@@ -953,9 +959,9 @@
     "lab": "Lab/README.md"
   },
   "documentationSourceRevision": {
-    "baseCommit": "7d26cbe152f0ef1a7e15b021bf77e0ee2423fe39",
-    "workingTreeMatchesCommit": false,
+    "baseCommit": "17552ed7bcf4998759296918020d684972bf44bf",
+    "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "05e1d6164776e4c0d50b4f3f137b160742a36a9fd866932ac57a092b580cb2e0"
+    "sourceTreeSha256": "d69ac33e05aa9b21bf19eb35a08ea7098ac6f9c5683e0ab1c244cbdeae2625d5"
   }
 }

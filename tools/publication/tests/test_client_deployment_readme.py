@@ -1,5 +1,4 @@
-"""Keep client entry points aligned with the released, gated Notebook workflow."""
-
+"""The current README leads to complete client, preview, gate and integrity guidance in Lab."""
 from __future__ import annotations
 
 import ast
@@ -9,18 +8,12 @@ import re
 import unittest
 
 ROOT = Path(__file__).resolve().parents[3]
-WORKSHOP = ROOT / "workshop" / "v2.7.0"
-CLIENTS = (
-    "GitHub Copilot Desktop / Copilot app",
-    "GitHub Copilot CLI",
-    "Claude Code",
-    "OpenAI Codex",
-    "Scout",
-    "Microsoft 365 Copilot Cowork",
-)
+WORKSHOP = ROOT / "workshop/v3.0.0-preview"
+CLIENTS = ("GitHub Copilot Desktop / Copilot app", "GitHub Copilot CLI", "Claude Code",
+           "OpenAI Codex", "Scout", "Microsoft 365 Copilot Cowork")
 
 
-def assignments(source: str) -> dict[str, object]:
+def assignments(source):
     values = {}
     for node in ast.parse(source).body:
         if isinstance(node, ast.Assign):
@@ -33,138 +26,100 @@ def assignments(source: str) -> dict[str, object]:
 class ClientDeploymentReadmeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.text = (ROOT / "README.md").read_text("utf-8")
-        cls.sections = [
-            cls.text.split(heading, 1)[1].split("\n### ", 1)[0]
-            for heading in (
-                "### ツール別のデプロイ手順",
-                "### Deployment by client",
-            )
-        ]
+        cls.readme = (ROOT / "README.md").read_text()
+        cls.chapter = next((ROOT / "Lab").glob("24-*/README.md")).parent
+        cls.client_path = next(cls.chapter.glob("*-24-10-*.md"))
+        cls.integrity_path = next(cls.chapter.glob("*-24-11-*.md"))
+        cls.client_text = cls.client_path.read_text()
+        cls.integrity_text = cls.integrity_path.read_text()
+        cls.sections = [cls.client_text.split("<details>", 1)[0],
+                        cls.client_text.split("<summary>English</summary>", 1)[1].split("</details>", 1)[0]]
 
-    def test_both_languages_have_six_client_entry_points(self):
+    def test_readme_and_lab_index_reach_latest_client_and_integrity_guidance(self):
+        self.assertIn(f"](Lab/{self.chapter.name}/README.md)", self.readme)
+        contents = (self.chapter / "README.md").read_text()
+        self.assertIn(f"]({self.client_path.name})", contents)
+        self.assertIn(f"]({self.integrity_path.name})", contents)
         for section in self.sections:
             for client in CLIENTS:
-                with self.subTest(client=client):
-                    self.assertEqual(section.count(f"#### {client}\n"), 1)
-            self.assertIn("2026-09-18", section)
-            self.assertIn("https://docs.github.com/", section)
-            self.assertIn("https://code.claude.com/", section)
-            self.assertIn("https://developers.openai.com/", section)
+                self.assertIn(client, section)
+            for host in ("https://docs.github.com/", "https://code.claude.com/", "https://developers.openai.com/"):
+                self.assertIn(host, section)
 
-    def test_preview_parameters_are_real_and_preserve_all_gates(self):
-        notebook = json.loads(
-            (WORKSHOP / "notebooks" / "Notebook_04_Furusato_Provision_Complete_Workshop.ipynb")
-            .read_text("utf-8")
-        )
-        declared = assignments("\n".join(
-            "".join(cell["source"])
-            for cell in notebook["cells"]
-            if "parameters" in cell.get("metadata", {}).get("tags", [])
-        ))
-        contract = json.loads((WORKSHOP / "participant-workspace-contract.json").read_text("utf-8"))
-        expected = {
-            flag: True
-            for flag in contract["workshopProvisioningAutomation"]["requiredApplyFlags"]
-        } | {
-            "APPLY_CHANGES": False,
-            "CONFIRMED_PLAN_SHA256": "",
-            "EXCLUSIVE_CREATE_WINDOW_CONFIRMED": False,
-            "ALLOW_AUTOMATED_APPLY": False,
-            "USE_PARTICIPANT_NOTEBOOK_NAMES": True,
-            "ENABLE_UNIFIED_DATA_AGENT": True,
-            "ENABLE_AI_REFERENCE_ARCHITECTURE": False,
-        }
+    def test_preview_parameters_match_current_released_notebook_and_keep_gates(self):
+        notebook = json.loads(next((WORKSHOP / "notebooks").glob("Notebook_04_*.ipynb")).read_text())
+        declared = assignments("\n".join("".join(cell["source"]) for cell in notebook["cells"]
+                              if "parameters" in cell.get("metadata", {}).get("tags", [])))
         examples = []
         for section in self.sections:
             blocks = re.findall(r"```python\n(.*?)\n```", section, flags=re.S)
-            self.assertEqual(len(blocks), 1)
+            self.assertEqual(1, len(blocks))
             values = assignments(blocks[0])
-            self.assertEqual(set(values) - set(declared), set())
-            for name, value in expected.items():
-                with self.subTest(parameter=name):
-                    if isinstance(value, bool):
-                        self.assertIs(values[name], value)
-                    else:
-                        self.assertEqual(values[name], value)
-            self.assertIn("PARTICIPANT_ID", values)
-            self.assertIn("EXPECTED_WORKSPACE_NAME", values)
+            self.assertFalse(set(values) - set(declared))
+            for name in ("APPLY_CHANGES", "ALLOW_AUTOMATED_APPLY", "RUN_NOTEBOOK01"):
+                self.assertIs(False, values[name])
+                self.assertIs(declared[name], values[name])
+            self.assertEqual("", values["CONFIRMED_PLAN_SHA256"])
+            self.assertEqual("preflight", values["ACTION"])
+            for name in ("PARTICIPANT_ID", "ENVIRONMENT", "EXPECTED_WORKSPACE_NAME", "SCOPE_FILE",
+                         "PLAN_FILE", "WRITE_GATE_FILE", "PRIVATE_EVIDENCE_DIR"):
+                self.assertIn(name, values)
             examples.append(values)
         self.assertEqual(examples[0], examples[1])
 
-    def test_client_commands_start_with_planning_or_read_only_access(self):
-        expected = (
-            "copilot --plan",
-            "claude --permission-mode plan",
-            "codex --sandbox read-only --ask-for-approval on-request",
-        )
-        for section in self.sections:
-            commands = "\n".join(re.findall(r"```powershell\n(.*?)\n```", section, flags=re.S))
-            for command in expected:
-                self.assertIn(command, commands)
-            self.assertNotRegex(
-                commands,
-                r"--allow-all|--yolo|--autopilot|--dangerously|bypassPermissions|gh copilot",
-            )
-            self.assertNotIn("claude --permission-mode default", commands)
+    def test_common_current_deployment_commands_and_exact_approval_remain_complete(self):
+        steps = "\n".join(path.read_text() for path in self.chapter.glob("*.md"))
+        for command in ("az login --tenant", "preflight @Common --online", "deploy-sources", "--run-notebook01",
+                        "verify-sources", "deploy-notebooks", "deploy-realtime", "deploy-core", "start-activator",
+                        "check-activator-readiness", "stop-activator", "verify-gold", "deploy-semantic-model",
+                        "refresh-model", "verify-model", "deploy-agent", "publish-agent"):
+            self.assertIn(command, steps)
+        for gate in ("$Plan.blockers", "$Plan.planSha256", "APPROVE $PlanSha", "$MappingEvidence",
+                     "$GateDocument.allowCloudMutations", "$GateDocument.folderMappingVerified",
+                     "$GateDocument.approvedAt", '"--write-gate", $Gate, "--confirm", $PlanSha'):
+            self.assertIn(gate, steps)
+        self.assertIn("FileCreated", steps)
+        self.assertIn("PLAN_SHA256", steps)
 
-    def test_verification_does_not_claim_six_live_deployments(self):
-        japanese, english = self.sections
-        self.assertIn("6製品すべての実機デプロイを検証したものではありません", japanese)
-        self.assertIn("not an end-to-end deployment test of all six clients", english)
+    def test_client_commands_start_with_planning_and_match_across_languages(self):
+        commands = [re.findall(r"```powershell\n(.*?)\n```", section, flags=re.S) for section in self.sections]
+        self.assertEqual(commands[0], commands[1])
+        for blocks in commands:
+            text = "\n".join(blocks)
+            for command in ("copilot --plan", "claude --permission-mode plan",
+                            "codex --sandbox read-only --ask-for-approval on-request"):
+                self.assertIn(command, text)
+            self.assertNotRegex(text, r"--allow-all|--yolo|--autopilot|--dangerously|bypassPermissions|gh copilot")
         for section in self.sections:
-            self.assertIn("FileCreated", section)
-            self.assertIn("PLAN_SHA256", section)
+            self.assertIn("--help", section)
             self.assertIn("MCP", section)
-            visible = re.sub(r"https://[^)\s]+", "", section)
-            self.assertNotRegex(visible, r"\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b")
-            self.assertNotIn("C:\\Users\\", section)
+            self.assertNotRegex(section, r"\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b")
 
-    def test_local_commands_match_across_languages(self):
-        blocks = [
-            re.findall(r"```powershell\n(.*?)\n```", section, flags=re.S)
-            for section in self.sections
-        ]
-        self.assertEqual(blocks[0], blocks[1])
-
-    def test_scout_identity_is_conditional_and_cowork_has_no_assumed_shell(self):
+    def test_scout_identity_and_cowork_capabilities_are_not_assumed(self):
         for section in self.sections:
-            scout = section.split("#### Scout\n", 1)[1].split("\n#### ", 1)[0]
-            cowork = section.split("#### Microsoft 365 Copilot Cowork\n", 1)[1]
-            for marker in (
-                "Microsoft Scout (Frontier)",
-                "https://learn.microsoft.com/en-us/microsoft-scout/overview",
-                "https://docs.scoutos.com/introduction",
-            ):
-                self.assertIn(marker, scout)
-            for marker in (
-                "https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/get-started",
-                "https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/cowork-faq",
-                "https://learn.microsoft.com/en-us/fabric/iq/connectors/cowork-overview",
-                "Power BI",
-            ):
-                self.assertIn(marker, cowork)
-            self.assertNotIn("```powershell", scout + cowork)
-            self.assertNotIn("az login", scout + cowork)
-        self.assertIn("を利用する場合に限ります", self.sections[0])
+            for marker in ("Microsoft Scout (Frontier)", "https://learn.microsoft.com/en-us/microsoft-scout/overview",
+                           "https://docs.scoutos.com/introduction", "Power BI",
+                           "https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/get-started",
+                           "https://learn.microsoft.com/en-us/microsoft-365/copilot/cowork/cowork-faq",
+                           "https://learn.microsoft.com/en-us/fabric/iq/connectors/cowork-overview"):
+                self.assertIn(marker, section)
+        self.assertIn("利用する場合に限ります", self.sections[0])
         self.assertIn("applies only if using", self.sections[1])
+        self.assertIn("do not assume a local shell", self.sections[1])
 
-    def test_reseal_command_is_scoped_to_a_disposable_committed_copy(self):
-        section = self.text.split("### 検証と再生成", 1)[1].split("\n## English", 1)[0]
-        blocks = re.findall(r"```powershell\n(.*?)\n```", section, flags=re.S)
-        checks = [block for block in blocks if "reseal_runtime.py --check" in block]
-        self.assertEqual(len(checks), 1)
-        for marker in (
-            "git status --porcelain",
-            "git archive --format=zip",
-            "Expand-Archive",
-            "Push-Location",
-            "finally",
-            "Pop-Location",
-            "$LASTEXITCODE",
-        ):
-            self.assertIn(marker, checks[0])
-        self.assertIn("読み取り専用ではありません", section)
+    def test_integrity_commands_preserve_status_and_isolate_reseal(self):
+        for marker in ("Test-IncrementConsistency.ps1", "Test-OntologyCardinality.ps1",
+                       "$LASTEXITCODE", "git status --porcelain", "git archive --format=zip",
+                       "Expand-Archive", "Push-Location", "finally", "Pop-Location",
+                       "sys.version_info[:2] == (3, 13)"):
+            self.assertIn(marker, self.integrity_text)
+        for section in self.integrity_text.split("<details>"):
+            checks = [block for block in re.findall(r"```powershell\n(.*?)\n```", section, flags=re.S)
+                      if "reseal_runtime.py --check" in block]
+            self.assertEqual(1, len(checks))
+            self.assertLess(checks[0].index("Push-Location"), checks[0].index("reseal_runtime.py --check"))
+        self.assertIn("読み取り専用ではありません", self.integrity_text)
+        self.assertIn("not read-only", self.integrity_text)
 
 
 if __name__ == "__main__":

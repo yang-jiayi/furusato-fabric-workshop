@@ -1,59 +1,62 @@
 {
-  "schemaVersion": "furusato-participant-document-validation/v1",
-  "participantEdition": true,
-  "wordNavigation": "headings",
-  "microsoftWordFieldRefreshPerformed": false,
-  "microsoftWordLayoutVerified": false,
-  "wordPages": null,
-  "wordStructuralChecksPassed": true,
-  "wordFonts": {
-    "body": "Noto Sans CJK JP",
-    "code": "Noto Sans Mono CJK JP",
-    "fontInstallationRequiredForMatchingRender": true
+  "schemaVersion": "furusato-current-html-lab-validation/v1",
+  "deliveryMode": "html-lab",
+  "contentSha256": "64128d7b832931fe8c93d5e7f2db85b3e9f3859347884edf9fecb803cabbf995",
+  "static": {
+    "passed": true,
+    "chaptersAndAppendices": 29,
+    "sections": 185,
+    "modelBlocks": 718,
+    "bilingualValuesChecked": 6676,
+    "literalCodeAndPromptsChecked": 141,
+    "figures": 26,
+    "standaloneResources": true,
+    "retiredGuideReferences": 0,
+    "htmlSha256": "03d12a91a75ff42bb2dd6bf3d959b39c4d043833f351719971e853df76b36db7"
   },
-  "bilingualBrowserAndPrintChecksPassed": true,
-  "localDocumentValidationChecks": 257,
-  "localDocumentValidationFailures": 0,
-  "documentIdentity": {
-    "releaseProfile": "v3.0.0",
-    "version": "3.0.0",
-    "sourceAssetProfile": "v3.0.0-preview",
-    "sourceAssetFolder": "workshop/v3.0.0-preview",
-    "contentSha256": "5f8668e307acb72f2f95f87a148416ff6aac48df03ba735421bd2fde55a0b514",
-    "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
-    "publicEvidenceProjectionSha256": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
-    "documentRelease": {
-      "schemaVersion": "furusato-document-release/v1",
-      "profile": "v3.0.0",
-      "version": "3.0.0",
-      "kind": "user-authorized-known-limitations-release",
-      "userAuthorized": true,
-      "knownLimitationsAcknowledged": true,
-      "sourceAssetProfile": "v3.0.0-preview",
-      "sourceAssetFolder": "workshop/v3.0.0-preview",
-      "publicGuideDirectory": "docs/v3.0.0/guide",
-      "publicReportsDirectory": "docs/v3.0.0/reports",
-      "publicEvidenceProjection": "docs/assets/v3.0.0-evidence/manifest.json",
-      "evidenceProjectionSha256": "60338bc1461e1a14e6ae72e93ef1ed5871923bdd122e28db23acd96a84bcff03",
-      "selectedOriginalSuiteRunId": "provenance-native-ui-20261001",
-      "originalCounts": {
-        "blocked": 0,
-        "executionUnverified": 0,
-        "fail": 8,
-        "notApplicable": 0,
-        "pass": 76
-      },
-      "originalSuiteAccepted": false,
-      "aiAnswerQualityAccepted": false,
-      "mainPromoted": false,
-      "allFeaturesPassedClaimed": false,
-      "generalAvailabilityClaimed": false,
-      "finalUserAcceptanceCertified": false
-    }
+  "sourceRevision": {
+    "baseCommit": "7d26cbe152f0ef1a7e15b021bf77e0ee2423fe39",
+    "workingTreeMatchesCommit": false,
+    "gitMetadataAvailable": true,
+    "sourceTreeSha256": "05e1d6164776e4c0d50b4f3f137b160742a36a9fd866932ac57a092b580cb2e0"
   },
-  "files": {
-    "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx": "8761ebb30044877b5caf9225443b166608aea36a11995315dc52d3c67aa3a0d4",
-    "furusato-workshop-v3-0-0-complete.html": "d662f91e5eb953617027f7b1d811fa33b34d5b11acf182efbf1400c40909489e"
+  "currentArtifactSet": {
+    "manifestSha256": "cf5a38d4541161f44763ca96be774951ced5d7613d5c672995f330e7c2a3618f",
+    "sourceCommit": "7d26cbe152f0ef1a7e15b021bf77e0ee2423fe39",
+    "sourceTreeSha256": "05e1d6164776e4c0d50b4f3f137b160742a36a9fd866932ac57a092b580cb2e0",
+    "workshopVersion": "3.0.0",
+    "csvFiles": 11,
+    "notebookCount": 5,
+    "tempRequired": false
   },
-  "note": "Structural Word and local browser checks; Microsoft Word pagination is unverified. These checks are not AI accuracy or Fabric feature acceptance."
+  "browser": {
+    "passed": true,
+    "performed": true,
+    "browserVersion": "154.0.8037.57",
+    "htmlSha256": "03d12a91a75ff42bb2dd6bf3d959b39c4d043833f351719971e853df76b36db7",
+    "checks": [
+      "all29chaptersAndAppendices",
+      "ja.languagePersists",
+      "ja.searchAndReset",
+      "ja.mobile390",
+      "ja.printPdf",
+      "en.languagePersists",
+      "en.searchAndReset",
+      "en.mobile390",
+      "en.printPdf",
+      "progressPersistsAndResets",
+      "tocNavigation",
+      "copyFeedback",
+      "figureZoom",
+      "printButton",
+      "noScriptErrors",
+      "noExternalRequests"
+    ],
+    "printedPages": {
+      "ja": 170,
+      "en": 172
+    },
+    "allPrintedPagesVisuallyReviewed": false
+  },
+  "liveFabricValidationClaimed": false
 }

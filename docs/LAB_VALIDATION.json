@@ -1,14 +1,4065 @@
 {
-  "status": "passed",
+  "schemaVersion": "furusato-lab-source-coverage/v1",
   "chapters": 24,
   "appendices": 5,
   "sections": 185,
-  "sourceBlocksChecked": 743,
-  "bilingualTextValuesChecked": 6534,
-  "canonicalCodeAndPromptBlocksChecked": 133,
-  "imageFilesVerified": 36,
-  "localLinksChecked": 699,
-  "markdownFiles": 219,
-  "currentParticipantWordReferences": 0,
-  "newDeploymentCaptureClaimed": false
+  "modelBlocks": 631,
+  "blocksByKind": {
+    "paragraph": 203,
+    "list": 135,
+    "figure": 34,
+    "callout": 44,
+    "table": 121,
+    "code": 86,
+    "prompt": 8
+  },
+  "pages": 188,
+  "capturePages": 34,
+  "uniqueAssets": 34,
+  "allSourceBlocksPresentOnceInOrder": true,
+  "wordDeliveryChanges": [
+    {
+      "block": "ch-1-1:0",
+      "language": "ja",
+      "before": "この Word または HTML と、同じ版の参加者用 ZIP を1組で使います。ZIP の guide に手順書、attachments に添付資料、source に Notebook・データ・実行ツールがあります。初回は4章から24.4〜24.6へ進んで自分で基盤を配置し、5〜8章で作成済みの内容を確認します。24.7と9〜11章で取り込みと品質処理、24.8でモデルと Agent の配置を終えます。17章で調整済み構成を適用し、19章と付録Cで評価します。利用できないプレビュー機能は別に記録します。",
+      "after": "この Lab または HTML と、同じ版の参加者用 ZIP を1組で使います。ZIP の guide に手順書、attachments に添付資料、source に Notebook・データ・実行ツールがあります。初回は4章から24.4〜24.6へ進んで自分で基盤を配置し、5〜8章で作成済みの内容を確認します。24.7と9〜11章で取り込みと品質処理、24.8でモデルと Agent の配置を終えます。17章で調整済み構成を適用し、19章と付録Cで評価します。利用できないプレビュー機能は別に記録します。",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-1-1:0",
+      "language": "en",
+      "before": "Use this Word or HTML guide together with the participant ZIP of the same version. In the ZIP, guide contains instructions, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Apply the tuned configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.",
+      "after": "Use this Lab or HTML guide together with the participant ZIP of the same version. In the ZIP, guide contains instructions, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Apply the tuned configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-19-2:3",
+      "language": "ja",
+      "before": "手順書の校正は、同じ日英原稿から Word と HTML を生成し、項目名・選択する列・コマンド・DAX・注意点を一致させます。HTML の日英切替、検索、チェックリスト、Word の目次リンクと図表、印刷の折り返しを確認し、配置資料とパッケージのハッシュも照合します。",
+      "after": "手順書の校正は、同じ日英原稿から Lab と HTML を生成し、項目名・選択する列・コマンド・DAX・注意点を一致させます。HTML の日英切替、検索、チェックリスト、Lab の目次リンクと図表、印刷の折り返しを確認し、配置資料とパッケージのハッシュも照合します。",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-19-2:3",
+      "language": "en",
+      "before": "For guide proofreading, generate Word and HTML from the same bilingual source and reconcile item names, selected columns, commands, DAX and limitations. Check the HTML language switch, search and checklist, Word contents links and figures/tables, print wrapping, and the deployment-material and package hashes.",
+      "after": "For guide proofreading, generate Lab and HTML from the same bilingual source and reconcile item names, selected columns, commands, DAX and limitations. Check the HTML language switch, search and checklist, Lab contents links and figures/tables, print wrapping, and the deployment-material and package hashes.",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-24-1:3",
+      "language": "ja",
+      "before": "同じ版のWordまたはHTMLと参加者用ZIPを使います。ZIPのsourceからコマンドを実行します。",
+      "after": "同じ版のLabまたはHTMLと参加者用ZIPを使います。ZIPのsourceからコマンドを実行します。",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-24-1:3",
+      "language": "en",
+      "before": "Use Word or HTML and the participant ZIP of the same version. Run commands from the ZIP’s source directory.",
+      "after": "Use Lab or HTML and the participant ZIP of the same version. Run commands from the ZIP’s source directory.",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    }
+  ],
+  "sourceTextChanges": [
+    {
+      "block": "ch-1-1:0",
+      "language": "ja",
+      "before": "この Word または HTML と、同じ版の参加者用 ZIP を1組で使います。ZIP の guide に手順書、attachments に添付資料、source に Notebook・データ・実行ツールがあります。初回は4章から24.4〜24.6へ進んで自分で基盤を配置し、5〜8章で作成済みの内容を確認します。24.7と9〜11章で取り込みと品質処理、24.8でモデルと Agent の配置を終えます。17章で調整済み構成を適用し、19章と付録Cで評価します。利用できないプレビュー機能は別に記録します。",
+      "after": "この Lab または HTML と、同じ版の参加者用 ZIP を1組で使います。ZIP の guide に手順書、attachments に添付資料、source に Notebook・データ・実行ツールがあります。初回は4章から24.4〜24.6へ進んで自分で基盤を配置し、5〜8章で作成済みの内容を確認します。24.7と9〜11章で取り込みと品質処理、24.8でモデルと Agent の配置を終えます。17章で調整済み構成を適用し、19章と付録Cで評価します。利用できないプレビュー機能は別に記録します。",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-1-1:0",
+      "language": "en",
+      "before": "Use this Word or HTML guide together with the participant ZIP of the same version. In the ZIP, guide contains instructions, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Apply the tuned configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.",
+      "after": "Use this Lab or HTML guide together with the participant ZIP of the same version. In the ZIP, guide contains instructions, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Apply the tuned configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-19-2:3",
+      "language": "ja",
+      "before": "手順書の校正は、同じ日英原稿から Word と HTML を生成し、項目名・選択する列・コマンド・DAX・注意点を一致させます。HTML の日英切替、検索、チェックリスト、Word の目次リンクと図表、印刷の折り返しを確認し、配置資料とパッケージのハッシュも照合します。",
+      "after": "手順書の校正は、同じ日英原稿から Lab と HTML を生成し、項目名・選択する列・コマンド・DAX・注意点を一致させます。HTML の日英切替、検索、チェックリスト、Lab の目次リンクと図表、印刷の折り返しを確認し、配置資料とパッケージのハッシュも照合します。",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-19-2:3",
+      "language": "en",
+      "before": "For guide proofreading, generate Word and HTML from the same bilingual source and reconcile item names, selected columns, commands, DAX and limitations. Check the HTML language switch, search and checklist, Word contents links and figures/tables, print wrapping, and the deployment-material and package hashes.",
+      "after": "For guide proofreading, generate Lab and HTML from the same bilingual source and reconcile item names, selected columns, commands, DAX and limitations. Check the HTML language switch, search and checklist, Lab contents links and figures/tables, print wrapping, and the deployment-material and package hashes.",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-24-1:3",
+      "language": "ja",
+      "before": "同じ版のWordまたはHTMLと参加者用ZIPを使います。ZIPのsourceからコマンドを実行します。",
+      "after": "同じ版のLabまたはHTMLと参加者用ZIPを使います。ZIPのsourceからコマンドを実行します。",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-24-1:3",
+      "language": "en",
+      "before": "Use Word or HTML and the participant ZIP of the same version. Run commands from the ZIP’s source directory.",
+      "after": "Use Lab or HTML and the participant ZIP of the same version. Run commands from the ZIP’s source directory.",
+      "reason": "Replace retired Word delivery with Lab while preserving the procedure."
+    },
+    {
+      "block": "ch-24-4:8",
+      "language": "ja",
+      "before": "F12 → Network で /subfolders を絞り込み、ワークスペースのフォルダー一覧を再読み込みします。Request URL が /metadata/folders/<自分のWorkspace GUID>/subfolders の要求を選びます。Response の subfolders 配列で id が URL の subfolderId と一致する行を見つけ、その行の objectId を folderId の GUID として使います。行の folderId や、同じ表示名の別の行ではありません。応答と要求URLの対応を自分の記録として保存します。",
+      "after": "F12 → Network を開いてワークスペースのフォルダー一覧を再読み込みし、実際のフォルダー一覧を返す要求を見つけます。環境によっては /powerbi/metadata/groupmetadata/?folderObjectId=<自分のWorkspace GUID> などの要求に含まれます。固定のパスだけを前提にせず、要求URLとResponseの内容を確認します。Response の subfolders 配列で id が URL の subfolderId と一致する行を見つけ、その行の objectId を folderId の GUID として使います。行の folderId や、同じ表示名の別の行ではありません。応答と要求URLの対応を自分の記録として保存します。",
+      "reason": "Use the actual native folder-list response."
+    },
+    {
+      "block": "ch-24-4:8",
+      "language": "en",
+      "before": "In F12 → Network, filter /subfolders and reload the workspace folder list. Choose the request whose path is /metadata/folders/<your workspace GUID>/subfolders. In Response, find the row in subfolders whose id matches the URL's subfolderId; use that row's objectId as the folder GUID. Do not use the row's folderId or a different same-named row. Save the response together with its request-URL association in your private records.",
+      "after": "Open F12 → Network, reload the workspace folder list and find the actual request that returns the folders. Depending on the environment this may be /powerbi/metadata/groupmetadata/?folderObjectId=<your workspace GUID>. Inspect the request URL and Response rather than assuming one fixed endpoint. In Response, find the row in subfolders whose id matches the URL's subfolderId; use that row's objectId as the folder GUID. Do not use the row's folderId or a different same-named row. Save the response together with its request-URL association in your private records.",
+      "reason": "Use the actual native folder-list response."
+    }
+  ],
+  "pagesCoverage": [
+    {
+      "path": "01-scenario-learning-goals-and-target-architecture/01-1-1-what-you-will-do.md",
+      "section": "ch-1-1",
+      "sourceBlockIds": [
+        "ch-1-1:0",
+        "ch-1-1:1",
+        "ch-1-1:2",
+        "ch-1-1:3",
+        "ch-1-1:4",
+        "ch-1-1:5"
+      ],
+      "sourceBlockSha256": {
+        "ch-1-1:0": "199f501704df10751e22a5354e85e789b29d01957be0adb92425e2ccc91d061e",
+        "ch-1-1:1": "01ec9e7e7a883395f93efb5d140330c656f26b3c325f5941958dc883c5482f35",
+        "ch-1-1:2": "3f72a5e2f47a1ebda5fdf45485e0f37ba6d42fa6db55a7c885757284d4f56388",
+        "ch-1-1:3": "a95398659d9acead9848482882ce4e2d3f91fb887ce4a208c893e36da0a9c8df",
+        "ch-1-1:4": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-1-1:5": "71a5d8cf7f9d886b83e21dcc1d23f847d4479b1a99f5ba313f3c601f4ea7e0e8"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "01-scenario-learning-goals-and-target-architecture/02-1-2-pc-01-architecture.md",
+      "section": "ch-1-2",
+      "sourceBlockIds": [
+        "ch-1-2:0",
+        "ch-1-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-1-2:0": "9ac8b29d8d97ac8ad398e3f3f8fc19fb98792eeab9ac9896913389ca616b5275",
+        "ch-1-2:1": "d08d8552c2607ff679649cd0fd00af93032999db246df3c3f94267a87f8caceb"
+      },
+      "capture": "pc-01-architecture",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "01-scenario-learning-goals-and-target-architecture/03-1-2-steps.md",
+      "section": "ch-1-2",
+      "sourceBlockIds": [
+        "ch-1-2:2",
+        "ch-1-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-1-2:2": "a94c09bdbbc89fa2426048d0b8e3956a515e42d5cd4b49d5c58593045811777a",
+        "ch-1-2:3": "7461e600400c3f29ca2bfa35df813514f3a60bb202ff7dc36ce249e1eb670a24"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "01-scenario-learning-goals-and-target-architecture/04-1-3-check-your-work.md",
+      "section": "ch-1-3",
+      "sourceBlockIds": [
+        "ch-1-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-1-3:0": "346839d189ec99090a43df169cd270378e28f8f40d2df7899817c673ee53da3d"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "01-scenario-learning-goals-and-target-architecture/05-1-4-references.md",
+      "section": "ch-1-4",
+      "sourceBlockIds": [
+        "ch-1-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-1-4:0": "15ecab3e47938dd5a1087ac7493a5a6205731efd23d42ade9cfcba0a65833b1e"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "02-ontology-design-for-dba-and-bi-engineers/01-2-1-what-you-will-do.md",
+      "section": "ch-2-1",
+      "sourceBlockIds": [
+        "ch-2-1:0",
+        "ch-2-1:1",
+        "ch-2-1:2",
+        "ch-2-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-2-1:0": "96266ee0bb2b459736c16901a40a648a1065a6ce9254a610f61b007eecdb6cb3",
+        "ch-2-1:1": "971662bd2504372819a3a0003dcca96348937e91e0f7604ba868aa21ebccc1f3",
+        "ch-2-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-2-1:3": "7e58ab9a56a67622902ed9a3aacb5f6f5f20015705e38c3bb320769edc52bb7d"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "02-ontology-design-for-dba-and-bi-engineers/02-2-2-steps.md",
+      "section": "ch-2-2",
+      "sourceBlockIds": [
+        "ch-2-2:0",
+        "ch-2-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-2-2:0": "ff161a7589c0931a2206bf6ff86852eab99df91a8c917b6ae0a8fc8dc8eeefbd",
+        "ch-2-2:1": "73e42801c84714484f02074e932b6d66f3832625e0836fad9f93647162eded46"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "02-ontology-design-for-dba-and-bi-engineers/03-2-3-check-your-work.md",
+      "section": "ch-2-3",
+      "sourceBlockIds": [
+        "ch-2-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-2-3:0": "392d1743e974f65f735f27d38627214cf27cfb6895a1b6705371c3f358948185"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "02-ontology-design-for-dba-and-bi-engineers/04-2-4-references.md",
+      "section": "ch-2-4",
+      "sourceBlockIds": [
+        "ch-2-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-2-4:0": "cafb9005f71fd2edde91d8f784cef75063271980a1fdba1f0f5106136fd367b4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "03-rationale-for-the-furusato-business-model/01-3-1-what-you-will-do.md",
+      "section": "ch-3-1",
+      "sourceBlockIds": [
+        "ch-3-1:0",
+        "ch-3-1:1",
+        "ch-3-1:2",
+        "ch-3-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-3-1:0": "75d7e414dd62a52a98bc759f3a034bfc47f2793ca2ce94affb2626a9870e1a74",
+        "ch-3-1:1": "3c0fc6c03d9b3f09e2f676a47f7d4e6c9af5aad8f33ab3654e222e9c128a8f60",
+        "ch-3-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-3-1:3": "fa52cdf1bd732f443438b23ca37aad1bacf60f7507109f9ef8683ce6f6d82adf"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "03-rationale-for-the-furusato-business-model/02-3-2-steps.md",
+      "section": "ch-3-2",
+      "sourceBlockIds": [
+        "ch-3-2:0",
+        "ch-3-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-3-2:0": "4face2f79acdd6f93d75faa2b730075ecdb62c634cc05f7794b3f5118580c75c",
+        "ch-3-2:1": "b6c610734cf6aaa1c90c8efd0a3682ad9f753de8f4192a05b9e42bc8c4f26c69"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "03-rationale-for-the-furusato-business-model/03-3-3-check-your-work.md",
+      "section": "ch-3-3",
+      "sourceBlockIds": [
+        "ch-3-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-3-3:0": "96655741b6829250faf38e782ad01a3554221a9cb51343eeff1ed935483e0de9"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "03-rationale-for-the-furusato-business-model/04-3-4-references.md",
+      "section": "ch-3-4",
+      "sourceBlockIds": [
+        "ch-3-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-3-4:0": "cafb9005f71fd2edde91d8f784cef75063271980a1fdba1f0f5106136fd367b4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "04-prerequisites-deployment-scope-and-safe-execution/01-4-1-what-you-will-do.md",
+      "section": "ch-4-1",
+      "sourceBlockIds": [
+        "ch-4-1:0",
+        "ch-4-1:1",
+        "ch-4-1:2",
+        "ch-4-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-4-1:0": "bee628e713d91667c083b72590ba1047d7257851de54c482394725e37af3e654",
+        "ch-4-1:1": "5abc2e8988e8492f384a7a15c969ef6845dcbcfcab9bf0e7832918b7caa9c38e",
+        "ch-4-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-4-1:3": "cf008e50a8781fe9554fc8959b6d65ac54293a35efc8c91a195c78b5dfb647d3"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "04-prerequisites-deployment-scope-and-safe-execution/02-4-2-pc-04-workspace-type-current.md",
+      "section": "ch-4-2",
+      "sourceBlockIds": [
+        "ch-4-2:0",
+        "ch-4-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-4-2:0": "38de412f01697159f1b43ca8dc5537406364a5fc4423c1a637ab8b249394c5e5",
+        "ch-4-2:1": "79d7dc6ef95320b53622d1d9a9028f954aecd89afc2e0796b7b81a74d5e2fe7c"
+      },
+      "capture": "pc-04-workspace-type-current",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "04-prerequisites-deployment-scope-and-safe-execution/03-4-2-steps.md",
+      "section": "ch-4-2",
+      "sourceBlockIds": [
+        "ch-4-2:2",
+        "ch-4-2:3",
+        "ch-4-2:4"
+      ],
+      "sourceBlockSha256": {
+        "ch-4-2:2": "28bd4cdf3829f1d7bdca000e221979aeb218db742cec08847720ddb5c8bffeb6",
+        "ch-4-2:3": "03a8fce465065fa28de61363b74cc2a96db110b04181736fcb92e36a98b9aaf4",
+        "ch-4-2:4": "9324b300bac79091ee35f1ee777c94ccdc414ea4be1afa801ad803089b57ca12"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "04-prerequisites-deployment-scope-and-safe-execution/04-4-3-check-your-work.md",
+      "section": "ch-4-3",
+      "sourceBlockIds": [
+        "ch-4-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-4-3:0": "04b9dfafb598b75b5e35730427b628543848a644f48eefe293746614c71bd4c1"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "04-prerequisites-deployment-scope-and-safe-execution/05-4-4-references.md",
+      "section": "ch-4-4",
+      "sourceBlockIds": [
+        "ch-4-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-4-4:0": "cafb9005f71fd2edde91d8f784cef75063271980a1fdba1f0f5106136fd367b4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "05-lakehouse-and-notebook-01/01-5-1-what-you-will-do.md",
+      "section": "ch-5-1",
+      "sourceBlockIds": [
+        "ch-5-1:0",
+        "ch-5-1:1",
+        "ch-5-1:2",
+        "ch-5-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-5-1:0": "eb2ad87eabb78fa64540dedcce15b1c8b5423a04cb15d11e7f945543daa583cb",
+        "ch-5-1:1": "97aa29c9dec2824100b91b6d353e5ade263a7c7ab814f03b19486fb1a1aaac17",
+        "ch-5-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-5-1:3": "43696e5792d2e45181078c04cb8953087ce55c4fc1ce86ee170ebf6a8b0e6571"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "05-lakehouse-and-notebook-01/02-5-2-pc-05-notebook01-ready.md",
+      "section": "ch-5-2",
+      "sourceBlockIds": [
+        "ch-5-2:0",
+        "ch-5-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-5-2:0": "b9362289dc8a748e49472e96aee39b2b5cb3ba8f6544dfd53f20adf98ecdae1a",
+        "ch-5-2:1": "aa1bab6459b740bd8a574cac048324e7f41da558ff022ea4d265ab14aef8c479"
+      },
+      "capture": "pc-05-notebook01-ready",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "05-lakehouse-and-notebook-01/03-5-2-steps.md",
+      "section": "ch-5-2",
+      "sourceBlockIds": [
+        "ch-5-2:2",
+        "ch-5-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-5-2:2": "9186575e92e2fbc8e55780084c55f956e5da7f8a1c9d909ec84ba04203c7759c",
+        "ch-5-2:3": "5e827647440226aad0ef24920c6ac08821ef61798c50f606830a58a23683cae5"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "05-lakehouse-and-notebook-01/04-5-3-check-your-work.md",
+      "section": "ch-5-3",
+      "sourceBlockIds": [
+        "ch-5-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-5-3:0": "b722226a4a9184b19c1b028e5a1e5a55f7143ede461adf595d37916cb6a62950"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "05-lakehouse-and-notebook-01/05-5-4-references.md",
+      "section": "ch-5-4",
+      "sourceBlockIds": [
+        "ch-5-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-5-4:0": "50bedf7f9b760c9025fe7b816e4a5834177f19defa3abd8eeb1bb6cfec5eea1a"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/01-6-1-what-you-will-do.md",
+      "section": "ch-6-1",
+      "sourceBlockIds": [
+        "ch-6-1:0",
+        "ch-6-1:1",
+        "ch-6-1:2",
+        "ch-6-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-1:0": "962ce2691b689c3ba6bfaca3be98d222f6784ea58c780d5bad3a7f0c3c605a47",
+        "ch-6-1:1": "0361e462bf9b51515f9360d94c66cfa7dc1832a790f6643a5d84e5b83caa3187",
+        "ch-6-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-6-1:3": "3a467e29e2bb6b717659617fde3301813b95a70c463d1488371bcbacae263280"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/02-6-2-p30-06-entities.md",
+      "section": "ch-6-2",
+      "sourceBlockIds": [
+        "ch-6-2:0",
+        "ch-6-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-2:0": "f45a140bb6d2ffdec3434f10d2f0ee3d8690f347ed4b35b3619a3b9fbdba53b7",
+        "ch-6-2:1": "19b09762673038f9f1783690b7f961980e23d23701f9cf5e6161f84b82ef4bec"
+      },
+      "capture": "p30-06-entities",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/03-6-2-p30-06-instances.md",
+      "section": "ch-6-2",
+      "sourceBlockIds": [
+        "ch-6-2:2",
+        "ch-6-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-2:2": "a86999252c90bd976f9422d68a43f48b4eeafd810f622c21f693cd64019ea26b",
+        "ch-6-2:3": "31937c7f257937ce6017501f223b1c77a762f59d8e652a8aeb02c023ec12550d"
+      },
+      "capture": "p30-06-instances",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/04-6-2-steps.md",
+      "section": "ch-6-2",
+      "sourceBlockIds": [
+        "ch-6-2:4",
+        "ch-6-2:5",
+        "ch-6-2:6"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-2:4": "ccd28c47f517ad2c63729c253aa79e8dbc6a597c38ce6131f5fad195a943ea0c",
+        "ch-6-2:5": "49274d4c91f80bc0147c81e747cde26a81a8ece0a11f9f2ce01f7be50b42dd30",
+        "ch-6-2:6": "1569c3b583fa945914642cfc3be3b830013695790a95211244968b7a5f625d76"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/05-6-3-check-your-work.md",
+      "section": "ch-6-3",
+      "sourceBlockIds": [
+        "ch-6-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-3:0": "dba3d100276a1df4856092d4601254113242c7e1ffd2235f995eb8904b149d2c"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/06-6-4-reference-tables.md",
+      "section": "ch-6-4",
+      "sourceBlockIds": [
+        "ch-6-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-4:0": "dce4093bf86539f94eaa37df55e2364a1d1959b59a3e1a45028c301dc6668e7b"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "06-creating-the-ontology-entity-types-and-properties/07-6-5-references.md",
+      "section": "ch-6-5",
+      "sourceBlockIds": [
+        "ch-6-5:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-6-5:0": "e0fc3e1245122db867d67b23dcadc5df93e5efec12b3ca473cf18c888b673b00"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "07-relationships-and-static-model-validation/01-7-1-what-you-will-do.md",
+      "section": "ch-7-1",
+      "sourceBlockIds": [
+        "ch-7-1:0",
+        "ch-7-1:1",
+        "ch-7-1:2",
+        "ch-7-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-7-1:0": "6299b80d768471559423c5550ba5495751ac93f80925cc742da0e690de64923f",
+        "ch-7-1:1": "b90b60eba46a2d4cfd7c2c049619e8cd18b3e2de1dcd9310d69f482d52c7536d",
+        "ch-7-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-7-1:3": "50efb2848ce562127d664a273d4e3919b410c34e5cbefef8ab4a186144942a37"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "07-relationships-and-static-model-validation/02-7-2-p30-07-relationships.md",
+      "section": "ch-7-2",
+      "sourceBlockIds": [
+        "ch-7-2:0",
+        "ch-7-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-7-2:0": "4dddc12b6aefef92697e1aeed3d7b50e005a9fe0653fc77734775a9b98b5a3b4",
+        "ch-7-2:1": "b9f0473f063b9809bd096515b6a1d155573b19e64383e9a2820081c34e466397"
+      },
+      "capture": "p30-07-relationships",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "07-relationships-and-static-model-validation/03-7-2-steps.md",
+      "section": "ch-7-2",
+      "sourceBlockIds": [
+        "ch-7-2:2",
+        "ch-7-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-7-2:2": "2b37dabc512068a1cdbb6608f1cc8968acb78a9de0f2a965c742697c07a34059",
+        "ch-7-2:3": "38a24bce319d5cc0f53b485850eee425e6dd6e1f99e7f9ce4f5b3335923a682d"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "07-relationships-and-static-model-validation/04-7-3-check-your-work.md",
+      "section": "ch-7-3",
+      "sourceBlockIds": [
+        "ch-7-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-7-3:0": "149b307b1837d707625264632e5edd8a768e3b85f0e2f9cf7891f244140c0e3b"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "07-relationships-and-static-model-validation/05-7-4-reference-tables.md",
+      "section": "ch-7-4",
+      "sourceBlockIds": [
+        "ch-7-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-7-4:0": "facc44bf779fd24ddd07c7c5f9a2238a1605c5a6d3d696efc46d65d6b0f59377"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "07-relationships-and-static-model-validation/06-7-5-references.md",
+      "section": "ch-7-5",
+      "sourceBlockIds": [
+        "ch-7-5:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-7-5:0": "89b36e300e28dcd2636a891ff3fb1419be692a7a964adf249eb4e9adbdf2608b"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "08-eventhouse-and-the-kql-schema/01-8-1-what-you-will-do.md",
+      "section": "ch-8-1",
+      "sourceBlockIds": [
+        "ch-8-1:0",
+        "ch-8-1:1",
+        "ch-8-1:2",
+        "ch-8-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-8-1:0": "77871fa11db5510e5e9b40e74b3bbc130082630f349d901e5dc0316d6a2d947c",
+        "ch-8-1:1": "7165356cdc6375174c627609ff5a3a737264230b7aa36a72f2b56356c92ee224",
+        "ch-8-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-8-1:3": "b7a076fa1d6bc1e11a548b628c723131da4dedd2a39d0b86b775c9bfa6257c68"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "08-eventhouse-and-the-kql-schema/02-8-2-p30-08-kql-overview.md",
+      "section": "ch-8-2",
+      "sourceBlockIds": [
+        "ch-8-2:0",
+        "ch-8-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-8-2:0": "2de8295f09e7ea2c2071e323fa15ec58d0c8a9909dee00ba4b7d9aa8c6aa9035",
+        "ch-8-2:1": "cefbe985b1f2fd27e9cb02dcf3066be1b07adaff626915863fb8969e8bb3f425"
+      },
+      "capture": "p30-08-kql-overview",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "08-eventhouse-and-the-kql-schema/03-8-2-steps.md",
+      "section": "ch-8-2",
+      "sourceBlockIds": [
+        "ch-8-2:2",
+        "ch-8-2:3",
+        "ch-8-2:4",
+        "ch-8-2:5",
+        "ch-8-2:6",
+        "ch-8-2:7",
+        "ch-8-2:8"
+      ],
+      "sourceBlockSha256": {
+        "ch-8-2:2": "597a1fa60ad01451010625238a19cdd4e296e3d7f017ed2a60c8b29025ed47ab",
+        "ch-8-2:3": "1fe5b775cd0b1d01d386fc978f14d1b2b2ded01757b3b63d4e09922d72e56c11",
+        "ch-8-2:4": "a09ea632babf58a07c67bdd3c7323e18c188df72661d3ca692d5f18d5cd58797",
+        "ch-8-2:5": "b18f04b2d66b3117bfa553b373bf6366551d44bf49b2e35b15ef7134478c6e09",
+        "ch-8-2:6": "cdb10d5027f654671a8742c8323bb0bff9e7cc20f488101f304d8ab360a97422",
+        "ch-8-2:7": "4b4441bbc78cba4657582b0c2257eaae730be7655b88f4488d59bb63d4006c0f",
+        "ch-8-2:8": "3ee7bdfefb77c954d99c8ea7b3943f1edb08df7607637783d047c80420c9a821"
+      },
+      "capture": null,
+      "codeBlocks": 3,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "08-eventhouse-and-the-kql-schema/04-8-3-check-your-work.md",
+      "section": "ch-8-3",
+      "sourceBlockIds": [
+        "ch-8-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-8-3:0": "18fbf61eaf6dd1dc02f4c1f7fe2ad0eb4f0be07bf83827fd74c42b52e6320af3"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "08-eventhouse-and-the-kql-schema/05-8-4-references.md",
+      "section": "ch-8-4",
+      "sourceBlockIds": [
+        "ch-8-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-8-4:0": "c37e1b8b64dee1c6da0d25224646ece5d6e8bd45c6d9d0f280fa1bd396c0f57e"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/01-9-1-what-you-will-do.md",
+      "section": "ch-9-1",
+      "sourceBlockIds": [
+        "ch-9-1:0",
+        "ch-9-1:1",
+        "ch-9-1:2",
+        "ch-9-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-1:0": "617189afcdcac64c309e89dc1f487ac54955131c1c05718e0adc5c8a00f56024",
+        "ch-9-1:1": "41da85583a9f300a9c4a836d155286f3807d547cecc4cca51b785341cd18f751",
+        "ch-9-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-9-1:3": "f55917b35bcc0180ccd774b1dce35c907b3edd60465e12cefed434f9aad9d0ae"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/02-9-2-p30-09-source-events.md",
+      "section": "ch-9-2",
+      "sourceBlockIds": [
+        "ch-9-2:0",
+        "ch-9-2:1",
+        "ch-9-2:2",
+        "ch-9-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-2:0": "5960236702a1874ec16c16b208ef3d63fae583d11fe9769bb0582adf607f569e",
+        "ch-9-2:1": "5d6fd174141a551fd3a909347d2b62237f6b0e0824aacfd5e87db9c819426f55",
+        "ch-9-2:2": "4c4f13982a5173cbb731d8c7b89ba55716a1aa498bbbceb9b8ceed13372226d9",
+        "ch-9-2:3": "8bf2f886694d043641541d23dd9ace40bc640f00396cfe938b205e06ce2019db"
+      },
+      "capture": "p30-09-source-events",
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/03-9-2-p30-09-native-delivery.md",
+      "section": "ch-9-2",
+      "sourceBlockIds": [
+        "ch-9-2:4",
+        "ch-9-2:5"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-2:4": "cc76f84226e0b90bdbd2f49f87829b6561b56dbbfb3757fb29faf9500164e67e",
+        "ch-9-2:5": "a5d4215891de64e5e71bcadd67e76524a56d56a1850919d57cf8ecd87f2323f3"
+      },
+      "capture": "p30-09-native-delivery",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/04-9-2-p30-09-copy-002.md",
+      "section": "ch-9-2",
+      "sourceBlockIds": [
+        "ch-9-2:6",
+        "ch-9-2:7"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-2:6": "5ce18f0ff596636a1106220c5cf19bd278fbb324f8ae1d8e322453fa8388a0ac",
+        "ch-9-2:7": "50f513ae006eaa82de43b8fcca0304c2a7d3efe7c051eab05e171edf99b12827"
+      },
+      "capture": "p30-09-copy-002",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/05-9-2-p30-09-manual-recovery.md",
+      "section": "ch-9-2",
+      "sourceBlockIds": [
+        "ch-9-2:8",
+        "ch-9-2:9",
+        "ch-9-2:10",
+        "ch-9-2:11",
+        "ch-9-2:12",
+        "ch-9-2:13"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-2:8": "0d6c004555c5f8566682b2fe4535597cabc881da0bc95e3038b1cd272d293dad",
+        "ch-9-2:9": "64f454e488c6b310c4afc81216dd099757bb0453dca4627330d70bc74edfd1d8",
+        "ch-9-2:10": "f128c30b9485b321a819e5eeb10dc5b4533df8ec536678ba25d434e3f6d024d4",
+        "ch-9-2:11": "16e1835b5332d6baa6626e8f402cde5dfd50c8690e39fe8ac52f9fd228ae15a3",
+        "ch-9-2:12": "7e04897bb7454ae14a52ce7a033f0da7809c0357cd091d41b8ca4129b432efda",
+        "ch-9-2:13": "619bc082f42d35e6d048f58ce73411ef1128f72866f283dca06391e0e0abca55"
+      },
+      "capture": "p30-09-manual-recovery",
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/06-9-3-check-your-work.md",
+      "section": "ch-9-3",
+      "sourceBlockIds": [
+        "ch-9-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-3:0": "95ad257da43089dbb3cc5b81742d38415ad8f39388ab741973c6ba0fbe83b2ed"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "09-pipeline-and-onelake-event-integration/07-9-4-references.md",
+      "section": "ch-9-4",
+      "sourceBlockIds": [
+        "ch-9-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-9-4:0": "cc3a025e0be2af617a90c43c80042f14bb5b0d2df8e6ed46abc89d9b2fdcd760"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "10-increment-ingestion-and-time-series-bindings/01-10-1-what-you-will-do.md",
+      "section": "ch-10-1",
+      "sourceBlockIds": [
+        "ch-10-1:0",
+        "ch-10-1:1",
+        "ch-10-1:2",
+        "ch-10-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-10-1:0": "9baf5b120ee1f1e051b9811a04c17950221296f8d3bd4f2646f4a5ea3f9a95ec",
+        "ch-10-1:1": "02957e388dc67df4503b4d1ce36496c17db9b7953bad2497256d035bf498b200",
+        "ch-10-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-10-1:3": "6d1684447c5b6a75eefda0b71f94945e3d08722dda4411ffb27f01fe032edd82"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "10-increment-ingestion-and-time-series-bindings/02-10-2-p30-09-pipeline-003-succeeded.md",
+      "section": "ch-10-2",
+      "sourceBlockIds": [
+        "ch-10-2:0",
+        "ch-10-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-10-2:0": "b74352030a459174e185ebe4c72c76a53a1646bc25cdb66bb2dbf85cdcd68f68",
+        "ch-10-2:1": "cbe36d508532d3c00b4cd5b97c872b2d5e17512067429005d5c831362cdcda8a"
+      },
+      "capture": "p30-09-pipeline-003-succeeded",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "10-increment-ingestion-and-time-series-bindings/03-10-2-p30-10-timeseries.md",
+      "section": "ch-10-2",
+      "sourceBlockIds": [
+        "ch-10-2:2",
+        "ch-10-2:3",
+        "ch-10-2:4",
+        "ch-10-2:5",
+        "ch-10-2:6",
+        "ch-10-2:7",
+        "ch-10-2:8",
+        "ch-10-2:9",
+        "ch-10-2:10",
+        "ch-10-2:11"
+      ],
+      "sourceBlockSha256": {
+        "ch-10-2:2": "cdc968eb99208346d423037f6610199e2f5c0a463cb897d25cb2054692d33a70",
+        "ch-10-2:3": "17b53ff1a22a23540f1c0b9e9ab6531f577601797ed77d8d2bcb2d8cb4e141e6",
+        "ch-10-2:4": "543c3d9df9bf4bad5845efbc1be80968ec4853a5bda79ea761c092f7051859d6",
+        "ch-10-2:5": "538a6a77ec9b4835ea8c9316062f0d28b31799b69c8df2f1e69703bdcd81e510",
+        "ch-10-2:6": "f808634fcc80a196759524c6f4c4413c268eb8bf32d64641685034faec75e426",
+        "ch-10-2:7": "0b882c51c74996ac4e6642b3ee1935822b5cddea2310ece02006ce3615edb3a8",
+        "ch-10-2:8": "10341b9bbe5266bf6e1f2db4451ec47c589a248b3ef985ba64fc721c8e256e9e",
+        "ch-10-2:9": "c64d5050fef6dcd0f5ad3e23952d11253152e727ad7c8f8c9ddd50e0d3d43e69",
+        "ch-10-2:10": "b460bd581b41f27e9b992ffd480df12443914d1b267da595d3322afb23b7fd46",
+        "ch-10-2:11": "ae170bf0a50a908c69ad17ff08f3bac65231e4dff508a4e9566ad2bba8f005e6"
+      },
+      "capture": "p30-10-timeseries",
+      "codeBlocks": 4,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "10-increment-ingestion-and-time-series-bindings/04-10-2-steps.md",
+      "section": "ch-10-2",
+      "sourceBlockIds": [
+        "ch-10-2:12",
+        "ch-10-2:13",
+        "ch-10-2:14",
+        "ch-10-2:15",
+        "ch-10-2:16"
+      ],
+      "sourceBlockSha256": {
+        "ch-10-2:12": "c0fc53a21b90911d8de6b8af4d33dbcbb4c6615376f0d8d0436407cbcf3a550d",
+        "ch-10-2:13": "d89e4a56ba19fd436f1c92a9564c6b82a699617842340622054716f182fb716b",
+        "ch-10-2:14": "75dfc973cd441e7dc1c588dff33283fbee1ab1fdc5a69bc01e3299e46990aa24",
+        "ch-10-2:15": "7a3baf655ca2033a9b4d53e97e2fde7eee67c6d2f9d202aeec777f68c2f5316f",
+        "ch-10-2:16": "83bf7391778c2946c87976dfcce3e48afe605515d9e216e78c4c4548dd1c6c13"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 1,
+      "tables": 0
+    },
+    {
+      "path": "10-increment-ingestion-and-time-series-bindings/05-10-3-check-your-work.md",
+      "section": "ch-10-3",
+      "sourceBlockIds": [
+        "ch-10-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-10-3:0": "a70d8a3dd5eb89cce7e7c4500a7d41f4cf70a0b2dfcea94b811b76c982c7a20d"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "10-increment-ingestion-and-time-series-bindings/06-10-4-references.md",
+      "section": "ch-10-4",
+      "sourceBlockIds": [
+        "ch-10-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-10-4:0": "770a1d3b694f7a63e572c127708cc39e3677e6d9e8258efdcbf7ccf20badc5f5"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/01-11-1-what-you-will-do.md",
+      "section": "ch-11-1",
+      "sourceBlockIds": [
+        "ch-11-1:0",
+        "ch-11-1:1",
+        "ch-11-1:2",
+        "ch-11-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-1:0": "16cecad666f9922d487ad8b76fcfd7e1784561ca3c1be568f3d1254fed25f2e6",
+        "ch-11-1:1": "ccd6e644871bf61abb6c9497c892cffef2cc89aca06da00fbc02a09059db0544",
+        "ch-11-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-11-1:3": "0cba0b0249cbca30a0905bd955f7b9577ba87a0ae26c4334aaa725e80a8eedd1"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/02-11-2-pc-11-notebook05-preview.md",
+      "section": "ch-11-2",
+      "sourceBlockIds": [
+        "ch-11-2:0",
+        "ch-11-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-2:0": "0f5eff1bb292063f1623864814fe4a549d021eb1a67d212dac82b0085c381253",
+        "ch-11-2:1": "6164aeee19e358e007fdcd1550aaa759f182f1480d7f4626f7f7004632264892"
+      },
+      "capture": "pc-11-notebook05-preview",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/03-11-2-p30-11-executed-output.md",
+      "section": "ch-11-2",
+      "sourceBlockIds": [
+        "ch-11-2:2",
+        "ch-11-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-2:2": "ff826db7f801eeed024abd578f13959e13e992f007acc9cb71b4afe3079906db",
+        "ch-11-2:3": "f65b6378604b49312544c087b480b9e3b2e034858f45fbf14e9e1d9acb12e80f"
+      },
+      "capture": "p30-11-executed-output",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/04-11-2-p30-11-notebook05-monitor-success.md",
+      "section": "ch-11-2",
+      "sourceBlockIds": [
+        "ch-11-2:4"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-2:4": "4946f310227d67db1e4cca3a49ba5bc6d8709f19e26286d29320f0a5a8e545e8"
+      },
+      "capture": "p30-11-notebook05-monitor-success",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/05-11-2-p30-11-gold.md",
+      "section": "ch-11-2",
+      "sourceBlockIds": [
+        "ch-11-2:5",
+        "ch-11-2:6"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-2:5": "1490111314621c77dc3b3cbcdb843bc74a2e1e32f39e2bbbaa7b0ec451f08052",
+        "ch-11-2:6": "79a5797cb5eff9c1e43e57964a607908012c69de31ee8482733c7d3f68aa5ae9"
+      },
+      "capture": "p30-11-gold",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/06-11-2-p30-11-schema-preview.md",
+      "section": "ch-11-2",
+      "sourceBlockIds": [
+        "ch-11-2:7",
+        "ch-11-2:8"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-2:7": "89ba0741ff55d1dee74d45eba733ca2dddf7cabe688de411be291e2274b9ed04",
+        "ch-11-2:8": "9c585e01a5a5197fbc47571701026dc2e9982326d88945742f42fca519d78634"
+      },
+      "capture": "p30-11-schema-preview",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/07-11-2-steps.md",
+      "section": "ch-11-2",
+      "sourceBlockIds": [
+        "ch-11-2:9",
+        "ch-11-2:10",
+        "ch-11-2:11"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-2:9": "f91d89a90a61d2cdcf8e63733f608b5155025d53f00c5c59f6a0188aa67bec15",
+        "ch-11-2:10": "0f9eb04537cac6d8fdbe553110ee7ec868b7c88a39dc3facf53daffa70d1ada6",
+        "ch-11-2:11": "ae4c5f6d2a91871270e95c45f47ba6eae003713ebf621270c8118b33ba9ca145"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/08-11-3-check-your-work.md",
+      "section": "ch-11-3",
+      "sourceBlockIds": [
+        "ch-11-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-3:0": "0bed711f0a1d49cbeadecf7be3f563377de86d788f4abf2f46ac39a9a4e102aa"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "11-quality-processing-and-gold-with-notebook-05/09-11-4-references.md",
+      "section": "ch-11-4",
+      "sourceBlockIds": [
+        "ch-11-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-11-4:0": "344d12f5c86f517d5eee1f060c7fb4614d823a48da4710308139b42803f34d16"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/01-12-1-what-you-will-do.md",
+      "section": "ch-12-1",
+      "sourceBlockIds": [
+        "ch-12-1:0",
+        "ch-12-1:1",
+        "ch-12-1:2",
+        "ch-12-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-1:0": "962c22697f5589db0a41c0373af532d8beefcef7a96ca58becd5e76642a2b65e",
+        "ch-12-1:1": "41ce05e1704ee2d88cf34a8abc3152163170395a4aec611a39d038ec74cfcb96",
+        "ch-12-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-12-1:3": "e70f543a8fe4539a62c4681a3502b499fc5c766ffc1ef9a01a79e21e6fafb569"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/02-12-2-pc-12-semantic-model-view.md",
+      "section": "ch-12-2",
+      "sourceBlockIds": [
+        "ch-12-2:0",
+        "ch-12-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-2:0": "c095fa6f32f25c5b1eea6c9d70d025e09377c82d74d6d7a97b07cc7a205a1650",
+        "ch-12-2:1": "3f6ae20395b58a8b1e77eacfa71562242c185a76439cc16be4a869f48de1b188"
+      },
+      "capture": "pc-12-semantic-model-view",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/03-12-2-p30-12-metric-list.md",
+      "section": "ch-12-2",
+      "sourceBlockIds": [
+        "ch-12-2:2",
+        "ch-12-2:3",
+        "ch-12-2:4",
+        "ch-12-2:5",
+        "ch-12-2:6",
+        "ch-12-2:7",
+        "ch-12-2:8",
+        "ch-12-2:9"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-2:2": "6626fd3ac458b730860d0f0ae47ca358beb7a72a95eb089a60b778faa6d6d010",
+        "ch-12-2:3": "e30de1e33418a6d260a292a493cf675850bcba81fe6091c764a7b52b0b3ff6c1",
+        "ch-12-2:4": "f9281a0ec42f00ccd1a408524782812515267bbe34e64b94a2e830feac381d8d",
+        "ch-12-2:5": "66f43f0b0a7e380cb69ad3f3024ebafc4bc7968169f999de1c445692c9ad4afd",
+        "ch-12-2:6": "b5c3a35210032d69142e6d35148066c76795bd03dba26486440a7ac481b11a82",
+        "ch-12-2:7": "32f2e952fd2a6e3ad7ccffa0fb62ca08747986cab4552e22c124aae0951ebfa2",
+        "ch-12-2:8": "09f4b5517059a9a53b5fa506ac9926521a74276ea39288dc14f0c6a151cb29da",
+        "ch-12-2:9": "d23c617a824337cea1b4fc19a0654c7be7dbdf7a38e759316b915f9e06f0a3d8"
+      },
+      "capture": "p30-12-metric-list",
+      "codeBlocks": 3,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/04-12-2-p30-12-metrics.md",
+      "section": "ch-12-2",
+      "sourceBlockIds": [
+        "ch-12-2:10"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-2:10": "fff1ef8116ef2f8446e103c25cb3d49f58e74d685dedcf03ef33740ca23ed265"
+      },
+      "capture": "p30-12-metrics",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/05-12-2-pc-12-report-canvas.md",
+      "section": "ch-12-2",
+      "sourceBlockIds": [
+        "ch-12-2:11",
+        "ch-12-2:12",
+        "ch-12-2:13",
+        "ch-12-2:14",
+        "ch-12-2:15"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-2:11": "f7114856c0cbf5b205e6356d1858ef2e2229087f367685775e3d4144e232cf13",
+        "ch-12-2:12": "51e18a1552c42161ca3debb4f332f87ed04c3e139b315d14308b16fcead63e86",
+        "ch-12-2:13": "e179eaaa0895cbbb867457649a8860ff58052b7e33c1b2488f9972ea410e4fca",
+        "ch-12-2:14": "c2f6dfb0e53b5c7441ad963004d27f5910291c67a57aa6d042691530dbf21986",
+        "ch-12-2:15": "b7b6919a6d95b058e2cb98e520da3b0c89e962068ad9ad76c0f076d1175d34d3"
+      },
+      "capture": "pc-12-report-canvas",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/06-12-3-check-your-work.md",
+      "section": "ch-12-3",
+      "sourceBlockIds": [
+        "ch-12-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-3:0": "0a2084ec7a494cc1b11170f190cd43e663d4e1ea3bc93b54b528788616263a71"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/07-12-4-reference-tables.md",
+      "section": "ch-12-4",
+      "sourceBlockIds": [
+        "ch-12-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-4:0": "134a5a2c4dc11eaeb687d7cb12ebd2f4e3b336563964d975cb7554ce0ec16c9c"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "12-semantic-model-and-ontology-metrics/08-12-5-references.md",
+      "section": "ch-12-5",
+      "sourceBlockIds": [
+        "ch-12-5:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-12-5:0": "aa4079bb07cfacadf1f307ae90bcf020196781569eb87038ecfa8658d9c2a414"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "13-metadata-business-rules-and-notebook-02/01-13-1-what-you-will-do.md",
+      "section": "ch-13-1",
+      "sourceBlockIds": [
+        "ch-13-1:0",
+        "ch-13-1:1",
+        "ch-13-1:2",
+        "ch-13-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-13-1:0": "9e452e046daca13bb2d72ffe1cfc0a8b6b13ecd0f54837c270be5ac295be6127",
+        "ch-13-1:1": "7689a870cab1eb2c58eb3e1b1028c2333e3cb913f29c9c5f427c2f8342f569ca",
+        "ch-13-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-13-1:3": "bb7008c4e9b0301776923e0f4691f0d211bd14d030b2d0b6f96bfd7c4a70a510"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "13-metadata-business-rules-and-notebook-02/02-13-2-p30-13-rule-list.md",
+      "section": "ch-13-2",
+      "sourceBlockIds": [
+        "ch-13-2:0",
+        "ch-13-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-13-2:0": "aeb035b8882dc2d47308222e7f6cef6cdf786a04d031c01368d1150b84a0944f",
+        "ch-13-2:1": "d5e97641148573a6ec6d747d499449e488b4513d289a4094340546ab9f29a2ea"
+      },
+      "capture": "p30-13-rule-list",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "13-metadata-business-rules-and-notebook-02/03-13-2-p30-13-rules.md",
+      "section": "ch-13-2",
+      "sourceBlockIds": [
+        "ch-13-2:2",
+        "ch-13-2:3",
+        "ch-13-2:4",
+        "ch-13-2:5"
+      ],
+      "sourceBlockSha256": {
+        "ch-13-2:2": "1939c6d56e31651cadf1c6cd2fb75bca8e457b41a6e281275188ea8b4c738e6c",
+        "ch-13-2:3": "d08c5d08d0f70b613e544d325e617a8288ee911039de29ab2aac5191d7ddbe41",
+        "ch-13-2:4": "3ff321bbce8e11cd73ea7f75eae81d0cd0c1f830771fedd7448b8eda71f1526f",
+        "ch-13-2:5": "bdd0c7e34d828f21676297f9850ff9386ddf1811a87250bd4ec32237be81e29e"
+      },
+      "capture": "p30-13-rules",
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "13-metadata-business-rules-and-notebook-02/04-13-2-steps.md",
+      "section": "ch-13-2",
+      "sourceBlockIds": [
+        "ch-13-2:6",
+        "ch-13-2:7",
+        "ch-13-2:8",
+        "ch-13-2:9",
+        "ch-13-2:10"
+      ],
+      "sourceBlockSha256": {
+        "ch-13-2:6": "26eeb4bbb449b1a71da2676c879c21e2927fb3f25d9b685d19b2168269e45084",
+        "ch-13-2:7": "d633d9ac8072318d6e244fdb9749eae60079a9e3786afe5470cad8b60d384899",
+        "ch-13-2:8": "dcedc1f5285db6a1974531c7e2da22a7f8cf1156cb9ccd431ad632ed83957ec8",
+        "ch-13-2:9": "02f44f1616ad88d1c61cd4c45bdfdca89f305b416de57df1eafe2c0f4d763381",
+        "ch-13-2:10": "bba538f0ca7cb52db172889ef93b6bdf60c3c349c40bbcc3f2fefaa53910bb05"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 1,
+      "tables": 0
+    },
+    {
+      "path": "13-metadata-business-rules-and-notebook-02/05-13-3-check-your-work.md",
+      "section": "ch-13-3",
+      "sourceBlockIds": [
+        "ch-13-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-13-3:0": "14be075ccb512a1eec7b27bb5bfd0f1999bbbe1456a4b816baaeadc41b9c3aed"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "13-metadata-business-rules-and-notebook-02/06-13-4-references.md",
+      "section": "ch-13-4",
+      "sourceBlockIds": [
+        "ch-13-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-13-4:0": "670fd0ce5cb0d89596148c01104a8a44f27c02877f9c7da302d4f5e05b2d222a"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "14-namespaces-inheritance-and-shared-properties/01-14-1-what-you-will-do.md",
+      "section": "ch-14-1",
+      "sourceBlockIds": [
+        "ch-14-1:0",
+        "ch-14-1:1",
+        "ch-14-1:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-14-1:0": "4ce49856f09dd1b2c83b1b1d2cce3078d1ca4750be15ecca6b57aa17dce99cb9",
+        "ch-14-1:1": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-14-1:2": "09925cf3e80aaa1be6ada937e604c06a1a82333baa226794934065f8352efa59"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "14-namespaces-inheritance-and-shared-properties/02-14-2-p30-14-shared.md",
+      "section": "ch-14-2",
+      "sourceBlockIds": [
+        "ch-14-2:0",
+        "ch-14-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-14-2:0": "b607e8543a3c8399c2ef45bf325efc3d1579a5e8b0070aafa5fa8610be9d2b4a",
+        "ch-14-2:1": "ebf14e00fe0493d0ec50e435f367d53b188570b0e88eda86dce371f855488dc8"
+      },
+      "capture": "p30-14-shared",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "14-namespaces-inheritance-and-shared-properties/03-14-2-p30-14-inheritance.md",
+      "section": "ch-14-2",
+      "sourceBlockIds": [
+        "ch-14-2:2",
+        "ch-14-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-14-2:2": "3881f38b9b737452ad10359993d11d8cfd0b9102bc9187175993b725344c6583",
+        "ch-14-2:3": "768e9f263df33b05a8a34b3258a9e428b2bd42eef3a487fa458ffd3bb0d3fcf4"
+      },
+      "capture": "p30-14-inheritance",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "14-namespaces-inheritance-and-shared-properties/04-14-2-steps.md",
+      "section": "ch-14-2",
+      "sourceBlockIds": [
+        "ch-14-2:4",
+        "ch-14-2:5"
+      ],
+      "sourceBlockSha256": {
+        "ch-14-2:4": "954a78993ff4204b3e366c2fac3c3146d4da02b82d7727723f53b611b92f894b",
+        "ch-14-2:5": "5d13c6b98e67823f3c38e7da356b85687a1f08f15575fb81732c64eef60d0f3a"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "14-namespaces-inheritance-and-shared-properties/05-14-3-check-your-work.md",
+      "section": "ch-14-3",
+      "sourceBlockIds": [
+        "ch-14-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-14-3:0": "27095040f4d57e28f7a8219539b14dccae7c7b1a9bd11d6fb5a273db7f419e84"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "14-namespaces-inheritance-and-shared-properties/06-14-4-references.md",
+      "section": "ch-14-4",
+      "sourceBlockIds": [
+        "ch-14-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-14-4:0": "c290c0e17a85810090eb47380819a6ab40f047f7dde3c025e534dd72650d468d"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/01-15-1-what-you-will-do.md",
+      "section": "ch-15-1",
+      "sourceBlockIds": [
+        "ch-15-1:0",
+        "ch-15-1:1",
+        "ch-15-1:2",
+        "ch-15-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-1:0": "934c7c4f5d7cdd6d1005fa6ac999027c907f5f6456e37e2753638772a298763b",
+        "ch-15-1:1": "efc6df198eec1a8415d844e4345a14961eec7cc3fe64677c2f735709e7de6334",
+        "ch-15-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-15-1:3": "48180bbd9ec92dadbd94f288dab667ef57ff06b6a3544ede261d5c9b113a69fc"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/02-15-2-p30-15-noattachment-preview.md",
+      "section": "ch-15-2",
+      "sourceBlockIds": [
+        "ch-15-2:0",
+        "ch-15-2:1",
+        "ch-15-2:2",
+        "ch-15-2:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-2:0": "fca826b92beae54796a9a7ad77d31ebf32b0e39c47988474dacc78825670c7d4",
+        "ch-15-2:1": "9f9861ef73624b16a052315258de539d5eeb04b1fb46e97b594c772664c17b48",
+        "ch-15-2:2": "1c69ddf65ddfea1d5885b4b53d31ea47073832abe74271da75a3ffc083cc88b0",
+        "ch-15-2:3": "f7c581f1b8028ab644613780d1b2a46d7de864d1dbc8a655cf89e8efd6a19d82"
+      },
+      "capture": "p30-15-noattachment-preview",
+      "codeBlocks": 0,
+      "prompts": 1,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/03-15-2-p30-15-attachments.md",
+      "section": "ch-15-2",
+      "sourceBlockIds": [
+        "ch-15-2:4",
+        "ch-15-2:5"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-2:4": "2b5a18f7c1c86935e6ab73794bc0f04ca9f029eb9884c3f08ac54618aa99b1bf",
+        "ch-15-2:5": "f20e934485023a576921235361fa6efe2449f78d288ee2055b7960b9b809d82c"
+      },
+      "capture": "p30-15-attachments",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/04-15-2-p30-15-attachment-grounding.md",
+      "section": "ch-15-2",
+      "sourceBlockIds": [
+        "ch-15-2:6",
+        "ch-15-2:7"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-2:6": "f40d78776bc66ae0ddd228d8d0226e194ef47598a1f0f60d59490a4a26a26bdb",
+        "ch-15-2:7": "5b68bd721b23b4fe83d710bf1acdafc17f76f641c56c49f566cd848db6a94643"
+      },
+      "capture": "p30-15-attachment-grounding",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/05-15-2-p30-15-attachment-response-bottom.md",
+      "section": "ch-15-2",
+      "sourceBlockIds": [
+        "ch-15-2:8"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-2:8": "d768c3be0768489e6410ea3355573eff2054a239878000bc3cab6ba1c4dc25b2"
+      },
+      "capture": "p30-15-attachment-response-bottom",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/06-15-2-p30-15-preview.md",
+      "section": "ch-15-2",
+      "sourceBlockIds": [
+        "ch-15-2:9",
+        "ch-15-2:10"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-2:9": "6a5432669e7d04c26ce8196d14b2087711213396f1b0ee50514a125f2eed2424",
+        "ch-15-2:10": "8a4e5eec192f7a523250951d7dc47ac722da6ce30f1cd3a6b2b6df9fe6b8f473"
+      },
+      "capture": "p30-15-preview",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/07-15-2-steps.md",
+      "section": "ch-15-2",
+      "sourceBlockIds": [
+        "ch-15-2:11",
+        "ch-15-2:12"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-2:11": "00c560f4bc665c04e854760490721a0cb4e2641177ed11d7b83fc888c91bf203",
+        "ch-15-2:12": "1c985cac4c2a65d7a42478909d318d44a5c2be91a863ce767150cb10808bd90b"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/08-15-3-check-your-work.md",
+      "section": "ch-15-3",
+      "sourceBlockIds": [
+        "ch-15-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-3:0": "9f29dcf4fa1829593d98cc7a5af1847dd6fb7a219cfce8d6f24e74b16b950675"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/09-15-4-references.md",
+      "section": "ch-15-4",
+      "sourceBlockIds": [
+        "ch-15-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-15-4:0": "1e90b537efaa59fb0ce422ab43a6044bb58dad91890ad7e385596416feddc298"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/01-16-1-what-you-will-do.md",
+      "section": "ch-16-1",
+      "sourceBlockIds": [
+        "ch-16-1:0",
+        "ch-16-1:1",
+        "ch-16-1:2",
+        "ch-16-1:3",
+        "ch-16-1:4"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-1:0": "618b4eb35fd2c8f808e9767ca5d618f66898100634fb38ae18fb8acbd990fe54",
+        "ch-16-1:1": "31856f281bcaf5014319f392a86f346c3485f904de49fd8ec424fcc56b116df5",
+        "ch-16-1:2": "236c93133daf845c1ec3b42643152172ab5c4e36696d5d94923d9a4333110545",
+        "ch-16-1:3": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-16-1:4": "a65a891a6508285bf01072f3116879fce3b017bda7c0db591ec7ef0e19e819d3"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/02-16-2-p30-16-eligibility.md",
+      "section": "ch-16-2",
+      "sourceBlockIds": [
+        "ch-16-2:0",
+        "ch-16-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-2:0": "5fd09eaf682f40bbf7c954f469acaa0476e8da311578deaa3a113a039ca3eeae",
+        "ch-16-2:1": "2a2a3d4edfe56a8c52fa66ffe59b9cf4c5410208db1b5205c0f0018a7a841617"
+      },
+      "capture": "p30-16-eligibility",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/03-16-2-pc-16-unsupported-datasource.md",
+      "section": "ch-16-2",
+      "sourceBlockIds": [
+        "ch-16-2:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-2:2": "4f64712833e3d8ef353c576222e6d9a0e5c38de33a8fb6c711ba4376195100db"
+      },
+      "capture": "pc-16-unsupported-datasource",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/04-16-2-p30-16-gql.md",
+      "section": "ch-16-2",
+      "sourceBlockIds": [
+        "ch-16-2:3",
+        "ch-16-2:4"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-2:3": "a4da83925589e2c1e2d619d6c5feda70e9351f81c69957b7aafa64cd312f1dfa",
+        "ch-16-2:4": "726e83b956767d5f22b491771d66a84e105960b2a6e2a8ac9981bd6b06314f67"
+      },
+      "capture": "p30-16-gql",
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/05-16-2-steps.md",
+      "section": "ch-16-2",
+      "sourceBlockIds": [
+        "ch-16-2:5",
+        "ch-16-2:6",
+        "ch-16-2:7",
+        "ch-16-2:8",
+        "ch-16-2:9",
+        "ch-16-2:10",
+        "ch-16-2:11"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-2:5": "9e737c2d882a17f5eb2aadba4574d9c3e43169c3fd1534dc0cd1b068db6d2d5d",
+        "ch-16-2:6": "45b148e96e1abfb4d6d1af6643e12b65a66e358881826df6ed8dd1bcd6ee8128",
+        "ch-16-2:7": "5bc0d3aea98e7563068d3ffd74b360fa6397d8cbfc9801c2126cb7d8dcb04c82",
+        "ch-16-2:8": "ac5f9c5910573af075bb223612af18b7994c217f208702e7b59f4791085d7cf3",
+        "ch-16-2:9": "c2d161ed3fd19a389b912110b6652deef34756212e9004d81a36f612b1f8fd35",
+        "ch-16-2:10": "292a97efa6281da258f1dcecd5ac753c90ee9be552018885500fa90af4dd2057",
+        "ch-16-2:11": "160c09c3065cdd9b00dca509ce62ae654f4594dc2b549462c7550b10611f42cc"
+      },
+      "capture": null,
+      "codeBlocks": 2,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/06-16-3-check-your-work.md",
+      "section": "ch-16-3",
+      "sourceBlockIds": [
+        "ch-16-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-3:0": "5cd33f0f217a80a170775144020b477ee23ffeb6b37c594128aa136e9e8fbe07"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "16-selective-graph-materialization-and-gql/07-16-4-references.md",
+      "section": "ch-16-4",
+      "sourceBlockIds": [
+        "ch-16-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-16-4:0": "60558c443a471891ba0cbc6d742625bfa67cf861fa8c8b0466e13ffa83543341"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/01-17-1-what-you-will-do.md",
+      "section": "ch-17-1",
+      "sourceBlockIds": [
+        "ch-17-1:0",
+        "ch-17-1:1",
+        "ch-17-1:2",
+        "ch-17-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-1:0": "30ac128092ce625a1fbc2edd43a374c1d62c9657864bb1e29ac5b3d375afe93b",
+        "ch-17-1:1": "3021287185200eb49e73c92bf5fdda13994e016c2cc4848e9a60c6d97c55e558",
+        "ch-17-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-17-1:3": "f522434e4fd1cdebefaeb9fccc4059f474497bcb8166aca6c83d5e6e50966d27"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/02-17-2-steps.md",
+      "section": "ch-17-2",
+      "sourceBlockIds": [
+        "ch-17-2:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-2:0": "4d0f7550da8e95b0ca67303183898659ba26ab99a7551469d365e7aa5606e4ac"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/03-17-3-check-your-work.md",
+      "section": "ch-17-3",
+      "sourceBlockIds": [
+        "ch-17-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-3:0": "fbcd2ce9b80ee5ea41cbc2efc669ffc5e3417c8d37b6daf53c348801835b6ab6"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/04-17-4-references.md",
+      "section": "ch-17-4",
+      "sourceBlockIds": [
+        "ch-17-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-4:0": "5af6869d8533816602a91110744df9e3c52191fd804d202ebf559a99ebcbbf18"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/05-17-5-scope-and-prerequisites.md",
+      "section": "ch-17-5",
+      "sourceBlockIds": [
+        "ch-17-5:0",
+        "ch-17-5:1",
+        "ch-17-5:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-5:0": "c0d9439dd829f3ed6ab54e4d46c879f1f0f6fd6d43512a362676ee87179455f5",
+        "ch-17-5:1": "3f63b90cf79de6c45940496346fe721a07bf50237ac65883b972dd487d704fc6",
+        "ch-17-5:2": "1a2fc1b4756bea762d221a8fe5d4fe7bddb7d659e1a1f1be650e3f494a2ace3e"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/06-17-6-profile-assets-and-preflight.md",
+      "section": "ch-17-6",
+      "sourceBlockIds": [
+        "ch-17-6:0",
+        "ch-17-6:1",
+        "ch-17-6:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-6:0": "d55b1dfa4ae793f23ede706f71c70a6a6a1551010490233fbffb730dc9b05a36",
+        "ch-17-6:1": "4f9adacff819ba917f6252661f63e913d623defe0cb05aca24be2d3d23eeaa57",
+        "ch-17-6:2": "75444684d45112a7a4baff8e2861f457edfb5dce8cac418b760e28741ec74a92"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/07-17-7-read-the-current-agent-and-selection-contract.md",
+      "section": "ch-17-7",
+      "sourceBlockIds": [
+        "ch-17-7:0",
+        "ch-17-7:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-7:0": "12e63a38f9f8322cc676a9c305da33451b879ce3d877bfea61b80dbf2de0a8b9",
+        "ch-17-7:1": "d69ea858026259c80d6f016099b777519ab320ae05f7f421691aded56e0d3c8a"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/08-17-8-review-the-global-instructions.md",
+      "section": "ch-17-8",
+      "sourceBlockIds": [
+        "ch-17-8:0",
+        "ch-17-8:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-8:0": "58d8e356525c632e117b70cc097b693511bcd5ee115d85cb61fe30172178835b",
+        "ch-17-8:1": "67057326798b57e54a72b6690883fc28daa5f7b39ba62651be9469846bced2d1"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/09-17-9-review-source-instructions-descriptions-and-ontology-context.md",
+      "section": "ch-17-9",
+      "sourceBlockIds": [
+        "ch-17-9:0",
+        "ch-17-9:1",
+        "ch-17-9:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-9:0": "022748ba079c256276e05329d2fe54c9835b3d3e303e7fcd2208715cd5d3a6e6",
+        "ch-17-9:1": "2cadeb7075dfe625c709e62695ba56d40580d2396685c42c007b75c30d8e0bbf",
+        "ch-17-9:2": "61cd4ac12bf129f1d867a2ee266d6a41b70d4e6b4fcd978505d12d8ea0bcc44a"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/10-17-10-verify-current-semantic-selections.md",
+      "section": "ch-17-10",
+      "sourceBlockIds": [
+        "ch-17-10:0",
+        "ch-17-10:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-10:0": "e2aca3fb6832fdac82245affa895fa1be60b3790e6d0742d4fddbdf68e011f95",
+        "ch-17-10:1": "1deb08473a824c4e12db25e08941cdf2f278c201b589774f5cad2241ed607c14"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/11-17-11-prepare-the-candidate-safely.md",
+      "section": "ch-17-11",
+      "sourceBlockIds": [
+        "ch-17-11:0",
+        "ch-17-11:1",
+        "ch-17-11:2",
+        "ch-17-11:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-11:0": "f34bd33e98f270d321c1c88609a1a0b28c78052d6a8f73725d859a7f27b76ea6",
+        "ch-17-11:1": "a65cfdc2095ab9bde373889f45d4ceb220bd31bc855bd83649a51acd8db8f24a",
+        "ch-17-11:2": "38462155579de23b088f97ea14f25464fa72b5f6f1e0afd8eca68fc85967cb96",
+        "ch-17-11:3": "2a64aaf500ef584651064bebd3e772849ad1f3dabf5d1f4a1008bec2e00ed529"
+      },
+      "capture": null,
+      "codeBlocks": 2,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/12-17-12-review-instruction-selection-and-definition-diffs.md",
+      "section": "ch-17-12",
+      "sourceBlockIds": [
+        "ch-17-12:0",
+        "ch-17-12:1",
+        "ch-17-12:2",
+        "ch-17-12:3",
+        "ch-17-12:4",
+        "ch-17-12:5",
+        "ch-17-12:6",
+        "ch-17-12:7",
+        "ch-17-12:8",
+        "ch-17-12:9",
+        "ch-17-12:10",
+        "ch-17-12:11",
+        "ch-17-12:12"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-12:0": "bff7ec87267497d6b7c87e7e3915d38887431ace975a231b5389d3cb39bb509d",
+        "ch-17-12:1": "6ecde11c46ca539dc6cb72b6eb0356507cca92c1a58d931ffdd4f563a4de2476",
+        "ch-17-12:2": "6961da3b921f073eb7bce60217782de2833d015049a6ad1e7f138bef3f6bb2cc",
+        "ch-17-12:3": "a969e95a1ff717a487c7874f49c8c9302b095f1d803fecf4fe183f5599d9f305",
+        "ch-17-12:4": "e326044474c656106f300a2ce6e5300606834f0b116cc1011991d89366d3b14b",
+        "ch-17-12:5": "9e3132a23a3c800f99c1578d9d25a8646b236d39e14c699e365c9125d515b5c8",
+        "ch-17-12:6": "10a40a27e471fbac35b43bc354d6994b4796e30e90c98669e7336a37d9956845",
+        "ch-17-12:7": "8e7d0e1f13b21be1d150936e93e3bd10437997ada45e9c8d63b58c9e579b75d2",
+        "ch-17-12:8": "ce786c4862001326f0b192e85d26f6cfdea9c2dad9aa8111fc88e51e07ac6cad",
+        "ch-17-12:9": "a74386c19ec8444f22573ee41f5ad4cefaefce9cab566afb7a677a8d12d74882",
+        "ch-17-12:10": "71ec84e5af39e8a7a1c1c787f701eedd2d53dbcb6e414c68201e584990251a8a",
+        "ch-17-12:11": "d717537587eda22f74390d69a9543527cceef84f66c1564a18e24792f1e96df2",
+        "ch-17-12:12": "e9888cfd7d547bfd6e31c6d72659b77e6a5616c36ca4c3258b5d2e23ccfceaab"
+      },
+      "capture": null,
+      "codeBlocks": 5,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/13-17-13-apply-once-to-draft.md",
+      "section": "ch-17-13",
+      "sourceBlockIds": [
+        "ch-17-13:0",
+        "ch-17-13:1",
+        "ch-17-13:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-13:0": "d552c73b45b42252fca38fdb6b78c4f52ab5284f7c83b524c75df658af7217ea",
+        "ch-17-13:1": "d004898765365125fff2a8baedea550f7f5328e7ec8d7faab46a7ebaa8068a29",
+        "ch-17-13:2": "a978fc33b0debfccb0806a5327d1036175ec51f493e7f7af95b0c0cd6bcb3c57"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/14-17-14-publish-once.md",
+      "section": "ch-17-14",
+      "sourceBlockIds": [
+        "ch-17-14:0",
+        "ch-17-14:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-14:0": "057b1ece107c28ad53367653a58c5b3617c9abbb6669d512dedfd8e1e280d987",
+        "ch-17-14:1": "14df9beee5c6fd9b77d99703eabcdb5186f716615d2e5ce33ea148c7a10b2d37"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/15-17-15-verify-draft-and-publication-read-only.md",
+      "section": "ch-17-15",
+      "sourceBlockIds": [
+        "ch-17-15:0",
+        "ch-17-15:1",
+        "ch-17-15:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-15:0": "363d57be756da95615c84ae3fac965a94890513e5d831df21ae14e6b397247ff",
+        "ch-17-15:1": "61b858f67ad085059a7dcd6b70b903d6d1aef053aa4e304eeb623e4145f7f7ce",
+        "ch-17-15:2": "e208cb91f76e43921e1ca951dcd78330ed9334a904b368a50856f032afaab073"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "17-fabric-data-agent-and-code-interpreter/16-17-16-recovery-limitations-and-evaluation.md",
+      "section": "ch-17-16",
+      "sourceBlockIds": [
+        "ch-17-16:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-17-16:0": "06b1058a4b568824f2a463e30fab0990508e2f51361887789f7cfe3adf43faf9"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "18-cross-source-business-scenario-exercises/01-18-1-what-you-will-do.md",
+      "section": "ch-18-1",
+      "sourceBlockIds": [
+        "ch-18-1:0",
+        "ch-18-1:1",
+        "ch-18-1:2",
+        "ch-18-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-18-1:0": "fc5ccdaaa5d970f6ef5ec2903a3af8e836f58e956d34d6f38ac4a971714d0f23",
+        "ch-18-1:1": "7a62de06bde42b7babe7f9c1e093285a3399a1c53f495dc8b90d109c98e44f6a",
+        "ch-18-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-18-1:3": "66eb8afee74c8e93f69fac3be28146b20d330ef41cefb0a99d192b1fdf0acec2"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "18-cross-source-business-scenario-exercises/02-18-2-steps.md",
+      "section": "ch-18-2",
+      "sourceBlockIds": [
+        "ch-18-2:0",
+        "ch-18-2:1",
+        "ch-18-2:2",
+        "ch-18-2:3",
+        "ch-18-2:4",
+        "ch-18-2:5",
+        "ch-18-2:6",
+        "ch-18-2:7",
+        "ch-18-2:8",
+        "ch-18-2:9"
+      ],
+      "sourceBlockSha256": {
+        "ch-18-2:0": "4f66c27cbd080f0ab745ecbf61726d922c1d66a4f21c8d2839fdf8e19710a095",
+        "ch-18-2:1": "6832951ace593e9a8a55b51ca9f42a89758600366a0a80e67781acea0b06a4da",
+        "ch-18-2:2": "9ad4e2e5f6787520ecb38d4f3c5385e5f974cc827d9032fa357fe66ce651e286",
+        "ch-18-2:3": "5ee2bad829ff0912d3ec0544a9c5ca6d6d997c65a29703e6e655657e38a43c75",
+        "ch-18-2:4": "04d64ff385e904c6bf823c07d8d05cf715fdc55a8a447c90d46a1b34cd2abde6",
+        "ch-18-2:5": "7dc20cf50fa244cec25e390e899e4fe48e8b2c72069c27180b55dec941a8ca7e",
+        "ch-18-2:6": "7022e0f24104eb3154cca0dde7467795ad827249e7c32b2e03b6451451962250",
+        "ch-18-2:7": "015af4140a648c641351632f602f518ae31fadb921a4794596d52fde18bd662b",
+        "ch-18-2:8": "df77dcbd87699d3c60c04edb193a3c3e65bcebb7de15424aa78437527014eb24",
+        "ch-18-2:9": "a9d68c229bf3c5229dacb2c0f9994585d495774409e61422fb8cc6197a5849d4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 4,
+      "tables": 0
+    },
+    {
+      "path": "18-cross-source-business-scenario-exercises/03-18-3-check-your-work.md",
+      "section": "ch-18-3",
+      "sourceBlockIds": [
+        "ch-18-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-18-3:0": "60f0aeaecc4036ccb8e071f3a4d4eaadebaccf4685476578f6cd4e2b467a1639"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "18-cross-source-business-scenario-exercises/04-18-4-references.md",
+      "section": "ch-18-4",
+      "sourceBlockIds": [
+        "ch-18-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-18-4:0": "93d8dc47668038d37034d15d8beaae310c3ac41c2a2fdee9f112910e5be05d5b"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/01-19-1-what-you-will-do.md",
+      "section": "ch-19-1",
+      "sourceBlockIds": [
+        "ch-19-1:0",
+        "ch-19-1:1",
+        "ch-19-1:2",
+        "ch-19-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-1:0": "47ee738c1b02ae637ef5e2da2c3e7a42aae7b29d1e3ca913dffc2ca381d1f75d",
+        "ch-19-1:1": "6ba30fd73eb0dcdfea7aea00d1653e507640cb86d1f31cbe9272b59d8e9cfb5b",
+        "ch-19-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-19-1:3": "335931af8c629526a766a0cfd7f9cdf8b2ad3f3067302e42ed82c20061535aad"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/02-19-2-steps.md",
+      "section": "ch-19-2",
+      "sourceBlockIds": [
+        "ch-19-2:0",
+        "ch-19-2:1",
+        "ch-19-2:2",
+        "ch-19-2:3",
+        "ch-19-2:4"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-2:0": "6697f5710aec02a5aae8a607281e6c38cebaf546af0ab8fa87c67b744a71fa2d",
+        "ch-19-2:1": "9476f1a9df58e0dd73453afda40f5e3664b14c66810e77afb70182d893cec096",
+        "ch-19-2:2": "058e463bacc85a6ee6db02186b651dd5e2732f293f4667217e1be13b397b797c",
+        "ch-19-2:3": "80bb2790c027fbc17401ff0412feaad2bd80feb4d6adf31702c20b69a212883f",
+        "ch-19-2:4": "2146702e3263a0f3d1f047f8ec6fb52fedabb072f4160b17d395959238f07bd4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/03-19-3-check-your-work.md",
+      "section": "ch-19-3",
+      "sourceBlockIds": [
+        "ch-19-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-3:0": "4ccc6a97873983eb55eed32d13547e8ed17a0784e3de92b0dcf4b3d7802447be"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/04-19-4-references.md",
+      "section": "ch-19-4",
+      "sourceBlockIds": [
+        "ch-19-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-4:0": "380e2f8ed67770fead30a6b564c76f73499e1ddea6f9bf07b2b4b84b2e2b22bb"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/05-19-5-choose-the-evaluation-files-and-scope.md",
+      "section": "ch-19-5",
+      "sourceBlockIds": [
+        "ch-19-5:0",
+        "ch-19-5:1",
+        "ch-19-5:2",
+        "ch-19-5:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-5:0": "f0855404e7425374d48d9e72f2e116f0d67f9d61182ea582d6c4edd2a899dc4f",
+        "ch-19-5:1": "dbdce03865a75b444b6e991b99a641a29714928cf97669a9598ded14fd24d72e",
+        "ch-19-5:2": "4f1651a7a856fa8503cee41b9998fb7e40e62f5d6b90c73aab174accb8c99ad7",
+        "ch-19-5:3": "cb812e72b4e80fdc5c3de479711ccac661728ff0e1043dfc56bd909041f3f0c1"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/06-19-6-freeze-the-registration-before-starting.md",
+      "section": "ch-19-6",
+      "sourceBlockIds": [
+        "ch-19-6:0",
+        "ch-19-6:1",
+        "ch-19-6:2",
+        "ch-19-6:3",
+        "ch-19-6:4",
+        "ch-19-6:5"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-6:0": "d1bce1d19af539019ca7a2b83e6aceae0176595da7aa2f4720860bb49f564f11",
+        "ch-19-6:1": "75ac353a36fd73104247eebf05c8ba9ce641b1c5b36b961091077940bdec936b",
+        "ch-19-6:2": "75204d5d0522c23333440fdb4e4b61faaf6df55a6c6be45089a481f1ad0f146f",
+        "ch-19-6:3": "2fd188af08d257f7c3691c7d5743d62a0388ce8bfb9036e0543cf232ffa10fd9",
+        "ch-19-6:4": "157587e080389b6e92621903944f3132ccbc242866748868971374c92b53ad10",
+        "ch-19-6:5": "62ba23f895dedb29989bc9f71394d8915288356c4f016a1d8af689d8bba57625"
+      },
+      "capture": null,
+      "codeBlocks": 2,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/07-19-7-run-all-49-slots-and-judge-each-condition.md",
+      "section": "ch-19-7",
+      "sourceBlockIds": [
+        "ch-19-7:0",
+        "ch-19-7:1",
+        "ch-19-7:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-7:0": "2d42303b9903769e91afea36cd59e00d9eec07dac5275cf3909a095b039e49a2",
+        "ch-19-7:1": "e3ab9e752c7dadb12fd8b78dbad895b67b4d107dd10131a52437c4a418480e9a",
+        "ch-19-7:2": "9f1ba930fde0310bf00f1b131a07842ad4cdac6dec609f67ff25437105677c7e"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "19-evaluate-and-improve-ai-answer-quality/08-19-8-compare-one-revision-and-decide-whether-to-adopt-it.md",
+      "section": "ch-19-8",
+      "sourceBlockIds": [
+        "ch-19-8:0",
+        "ch-19-8:1",
+        "ch-19-8:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-19-8:0": "0606283433d34fa90599f2becd5e666c6c2ff90feba513f85f9796467dd3d0e3",
+        "ch-19-8:1": "d5cc5074b7b694f81016a3253e2c4c355a6a623d4ecf12f03b6202f19e58ae32",
+        "ch-19-8:2": "325670b15769d5be41f4f42a694d627ca49903a016c6893eee72b91be9786d0e"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "20-external-consumption-through-mcp-and-visualization/01-20-1-what-you-will-do.md",
+      "section": "ch-20-1",
+      "sourceBlockIds": [
+        "ch-20-1:0",
+        "ch-20-1:1",
+        "ch-20-1:2",
+        "ch-20-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-20-1:0": "57135ee886c45a6efa6ca1e0c01a2f3e0a53c078015069bc917ca4948ebc1c66",
+        "ch-20-1:1": "26c03e109b0b338ea0a3045437c36b3eb3091397cbece6d6804e790d46187543",
+        "ch-20-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-20-1:3": "785558814102a8786fd805cbfbcce4f12084aa5fafe4806492b7bfc7364be762"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "20-external-consumption-through-mcp-and-visualization/02-20-2-steps.md",
+      "section": "ch-20-2",
+      "sourceBlockIds": [
+        "ch-20-2:0",
+        "ch-20-2:1",
+        "ch-20-2:2",
+        "ch-20-2:3",
+        "ch-20-2:4",
+        "ch-20-2:5",
+        "ch-20-2:6",
+        "ch-20-2:7"
+      ],
+      "sourceBlockSha256": {
+        "ch-20-2:0": "f0a1ee43baf9ba85b72cafddee4e1cb845a4b86e3006d904ef6be620c391e4a7",
+        "ch-20-2:1": "a013dd17d63087f5bd4d8a0803cc335bfefabd84d16bbe41340555098439bc75",
+        "ch-20-2:2": "6bbf306c6d794d363069c3072ba8c0646d9d200c5739bdd1ec5d9d6f0cf93c7f",
+        "ch-20-2:3": "f161f626abffc148c68fa10931c4453675f6111ea4e5f190719143238493eab0",
+        "ch-20-2:4": "09c16ef613e8696a60be413f92476944b9784239a64a21b8d012a87cfe4baa9f",
+        "ch-20-2:5": "c52cec80c2666bf1d830e9d4efbd7b70161fdfb72ca38d685352ee615f60f34b",
+        "ch-20-2:6": "7eadd1c81d442a78719326fe57111694f3fae6fb1dc29db000cdeae371005e0e",
+        "ch-20-2:7": "a4284f6e19a6f749e7bc62c17066536321a163586b70bfff74bd9cb4b13b9104"
+      },
+      "capture": null,
+      "codeBlocks": 2,
+      "prompts": 1,
+      "tables": 0
+    },
+    {
+      "path": "20-external-consumption-through-mcp-and-visualization/03-20-3-check-your-work.md",
+      "section": "ch-20-3",
+      "sourceBlockIds": [
+        "ch-20-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-20-3:0": "fe70eabf1094bec01a424c86a103df811ab9135ceee264f4f26df4a400e68fad"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "20-external-consumption-through-mcp-and-visualization/04-20-4-references.md",
+      "section": "ch-20-4",
+      "sourceBlockIds": [
+        "ch-20-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-20-4:0": "3adcc2f1895c7675340e985d63b2b16702eb66c177524adbfb4deba982a1bca4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "21-change-management-with-version-history/01-21-1-what-you-will-do.md",
+      "section": "ch-21-1",
+      "sourceBlockIds": [
+        "ch-21-1:0",
+        "ch-21-1:1",
+        "ch-21-1:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-21-1:0": "ba72dbec769a899485e207a61dbfe79f8440bd1e229d0e9bc689037134afe64c",
+        "ch-21-1:1": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-21-1:2": "55b3852e868ec626a97b670fe52125faea284ef8e1b63cf74582b06e53322e63"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "21-change-management-with-version-history/02-21-2-steps.md",
+      "section": "ch-21-2",
+      "sourceBlockIds": [
+        "ch-21-2:0",
+        "ch-21-2:1",
+        "ch-21-2:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-21-2:0": "6a2a30a3edf372a73878f836c76c0252b3443fb5f9feac43c44dd15da8c452e0",
+        "ch-21-2:1": "8f32923af853b3dbc35ad70a77c7dae61f8567661f8172c5f3b255b49b046e1a",
+        "ch-21-2:2": "8e081d89b36a47d9559b7477ec80af91dbb4c340a4439d2b627e5b24886daa84"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "21-change-management-with-version-history/03-21-3-check-your-work.md",
+      "section": "ch-21-3",
+      "sourceBlockIds": [
+        "ch-21-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-21-3:0": "14ea3fcae935223d4305347685da5317f64c99d693ec58877dfbf502a5abdd62"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "21-change-management-with-version-history/04-21-4-references.md",
+      "section": "ch-21-4",
+      "sourceBlockIds": [
+        "ch-21-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-21-4:0": "aa0e13537ca26d6e62917b5f99be9815ab452492cadbcd23b0b0d700cc4d5b05"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "22-rdf-owl-import-and-export/01-22-1-what-you-will-do.md",
+      "section": "ch-22-1",
+      "sourceBlockIds": [
+        "ch-22-1:0",
+        "ch-22-1:1",
+        "ch-22-1:2"
+      ],
+      "sourceBlockSha256": {
+        "ch-22-1:0": "6001edf19ec6e7e057763f681de5f0be79965197d3a9a8548ed93f2897c52fa5",
+        "ch-22-1:1": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-22-1:2": "cf8eb9ff2a5b9831e04af294ab6326333d88640d48dc7b4c0aa4f8215abfc8f4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "22-rdf-owl-import-and-export/02-22-2-steps.md",
+      "section": "ch-22-2",
+      "sourceBlockIds": [
+        "ch-22-2:0",
+        "ch-22-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-22-2:0": "7f4e25f1a9ed7636bd8649425ae23b725b1bf9da09abb26ae3f7154e3b2ef108",
+        "ch-22-2:1": "0870612a65563b53b8719f5bc95077225b46aed81e67420d866e2abfd3ca5177"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "22-rdf-owl-import-and-export/03-22-3-check-your-work.md",
+      "section": "ch-22-3",
+      "sourceBlockIds": [
+        "ch-22-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-22-3:0": "42ee919e571e1f77990854210ce74d168b7d996e1d2e29e4b800f148f1555d42"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "22-rdf-owl-import-and-export/04-22-4-references.md",
+      "section": "ch-22-4",
+      "sourceBlockIds": [
+        "ch-22-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-22-4:0": "040fb9f84aa85f34d2bcdecb283a89ab704e0fdd5dd9a830c3dc094ee4d41173"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "23-publish-sharing-and-governance/01-23-1-what-you-will-do.md",
+      "section": "ch-23-1",
+      "sourceBlockIds": [
+        "ch-23-1:0",
+        "ch-23-1:1",
+        "ch-23-1:2",
+        "ch-23-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-23-1:0": "b0eba3939de8061f8e4e931f8a23c58d3625156be15d9d9363b1871d26d06191",
+        "ch-23-1:1": "98fe8972e5573f5fd4e7b97b156bf632beaa453a20b5389b88607e064f363a0e",
+        "ch-23-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-23-1:3": "855690b349425ed54eacaa5ada72c4efcd28f3b13770574b1a3ec55f002fe483"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "23-publish-sharing-and-governance/02-23-2-steps.md",
+      "section": "ch-23-2",
+      "sourceBlockIds": [
+        "ch-23-2:0",
+        "ch-23-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-23-2:0": "0e32e0ff7b8ea00fceedafbd3d2f4d785a96927bbd2b347f24d5337fafe39d9d",
+        "ch-23-2:1": "9b6dc32f35ae48102447b789d566f795b8e8c7db1c47f333c393a8680c6891f0"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "23-publish-sharing-and-governance/03-23-3-check-your-work.md",
+      "section": "ch-23-3",
+      "sourceBlockIds": [
+        "ch-23-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-23-3:0": "902ee87ff76b56a47dc0f004e36f2c3c343750d6249e42d3b3fc4f3bf1caa6d4"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "23-publish-sharing-and-governance/04-23-4-references.md",
+      "section": "ch-23-4",
+      "sourceBlockIds": [
+        "ch-23-4:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-23-4:0": "749ee0ac102e7ac72107bc584ad221856e7dd1e7994450894c5d701e2182072b"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/01-24-1-what-you-will-do.md",
+      "section": "ch-24-1",
+      "sourceBlockIds": [
+        "ch-24-1:0",
+        "ch-24-1:1",
+        "ch-24-1:2",
+        "ch-24-1:3"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-1:0": "03cb4764a63cc0c08c5df20506f68823cd508e2a150a7a66abac974f41598b97",
+        "ch-24-1:1": "ac13c3039892b874b0c177e5a17718f59c91011ee4bd8872920e9ef1482e30ad",
+        "ch-24-1:2": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-24-1:3": "43135321fd4c9c6ccbd9d67da94a67b29bc4bdef030a9c5084a327c843ca7d71"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/02-24-2-steps.md",
+      "section": "ch-24-2",
+      "sourceBlockIds": [
+        "ch-24-2:0",
+        "ch-24-2:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-2:0": "cec2e5dff3f0f5baea90da119ff291407f1eab75e0ed3521b3e9b83f47b19e41",
+        "ch-24-2:1": "27cbcd56abc5c23524c584ec76c0e5e06475ce95978820a65e283b661f5213f1"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/03-24-3-check-your-work.md",
+      "section": "ch-24-3",
+      "sourceBlockIds": [
+        "ch-24-3:0"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-3:0": "ffe965207df7920e20d0443c7b0a3347407a5935299fb182c6225281c4d64556"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/04-24-4-start-the-first-deployment-environment-and-folder.md",
+      "section": "ch-24-4",
+      "sourceBlockIds": [
+        "ch-24-4:0",
+        "ch-24-4:1",
+        "ch-24-4:2",
+        "ch-24-4:3",
+        "ch-24-4:4",
+        "ch-24-4:5",
+        "ch-24-4:6",
+        "ch-24-4:7",
+        "ch-24-4:8",
+        "ch-24-4:9",
+        "ch-24-4:10"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-4:0": "ad30c247741d443fe6e8aa7075e07e15967fdca0a0a73820cbcfc9396ccbb439",
+        "ch-24-4:1": "f0324d9e822a648d57e547dd2fedc593bc4ca58e3fd82225ee3f7b29fde3dfef",
+        "ch-24-4:2": "3bd0d0a7d6896e3739e371ac3fdad046e1454d2400f8df4a2e4638f36db77267",
+        "ch-24-4:3": "6019a999727f0843b2e7ba8c3411f9c471567239b7a25904aed011d82a863b40",
+        "ch-24-4:4": "1ce13b635d07acfbc29f123fede3e08fd2e13c604e7c20778189272e659af730",
+        "ch-24-4:5": "6570cda65aa0b77d50b3d3db4fa13edffc22714f25d81a38e73fe963b6da25f7",
+        "ch-24-4:6": "afb2acbd31f30212993f4b8092958c9ce1c28b788139ea8a3b7604ab5fd430c7",
+        "ch-24-4:7": "7ff0732ed67460bc6a8ac667c54e24a91cf4a9ff5af6412f1c2748abe8b2005b",
+        "ch-24-4:8": "825c6dcfe74db9ab2fecdb53144f74e6c9de22299bfeb5365a7e237194770179",
+        "ch-24-4:9": "b374d27abff957ba4c2d17c8d60c664a705457fcca166b9e25deacf31bd0d414",
+        "ch-24-4:10": "08fb7be32f6f1e973eeaee62533318bfdfc23fae461a6f4bb0cf2390bf14189b"
+      },
+      "capture": null,
+      "codeBlocks": 4,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/05-24-5-review-and-authorize-your-exact-deployment-plan.md",
+      "section": "ch-24-5",
+      "sourceBlockIds": [
+        "ch-24-5:0",
+        "ch-24-5:1",
+        "ch-24-5:2",
+        "ch-24-5:3",
+        "ch-24-5:4",
+        "ch-24-5:5",
+        "ch-24-5:6"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-5:0": "40ea735cb27441cf4e4104335c03ea470f51dea841035f7f87617c0c934e05ae",
+        "ch-24-5:1": "cf72cf0c4f34340050e16794f9280473f6c39f3ec177c69506aad790da871b9e",
+        "ch-24-5:2": "07b135e8126513a2cdb4cd5a1ca366b7fc95ce7b40c544082af0ce250e33f698",
+        "ch-24-5:3": "319a6cc40157c0faa15726cfcc198303671e33e41db465eecf33997b89a7bed2",
+        "ch-24-5:4": "3f4d4f0be2cd67c71d3623be2c7c071e1725bca38aed15ef94c487322a1669ab",
+        "ch-24-5:5": "42297eb0105bda8ffa676838c5112d0e3742ab95ba11b75c812237b76dedf8ea",
+        "ch-24-5:6": "01bc67922141402dd59064442f2277e6acda3410a0efcb8784df1dee817ad744"
+      },
+      "capture": null,
+      "codeBlocks": 3,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/06-24-6-deploy-core-resources-and-notebooks.md",
+      "section": "ch-24-6",
+      "sourceBlockIds": [
+        "ch-24-6:0",
+        "ch-24-6:1",
+        "ch-24-6:2",
+        "ch-24-6:3",
+        "ch-24-6:4",
+        "ch-24-6:5",
+        "ch-24-6:6",
+        "ch-24-6:7",
+        "ch-24-6:8",
+        "ch-24-6:9",
+        "ch-24-6:10",
+        "ch-24-6:11",
+        "ch-24-6:12"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-6:0": "8f80862d2af41e9f3e9642ecd3f5866dbacae5389f5cda842c0b83668d507b07",
+        "ch-24-6:1": "35ecfa0776ac8b9b00ded1ac61f0f4841249faaa6eb164ef34ef68fb8deb5f91",
+        "ch-24-6:2": "1d3a31c16b95f7c158d3d387f15e2ced5f97cf4243eb8febf23d177ebccfa92a",
+        "ch-24-6:3": "db3da4b1d25d65b50d056bc68ee28de3e5cb72ce29aeda6caaa75054e913c665",
+        "ch-24-6:4": "bf0f898543e0db3fc503d448db0704182da29fe48d5e62f035c8987abb36f5c4",
+        "ch-24-6:5": "e3825fb5d08acba96886f468aac549c2396eb9be56b2926e736c40066b01f20d",
+        "ch-24-6:6": "0df26d65f69870b504430468b802c8a6b293a1d1ea0eec4e2ab2d069fc265e47",
+        "ch-24-6:7": "bb7b753f3fa320d65dff0848fdefb501cefb41c5e274daad2302d74d75139f54",
+        "ch-24-6:8": "ff96a4fb68e07ecbbe49bf9eb15dcf344d31da52096515e91b886be05a530a95",
+        "ch-24-6:9": "b6ca0067be6bf9838bfb08ba01adaeda10261612938017b82ddc1e1662221ff9",
+        "ch-24-6:10": "4ff25cab3f6da0cc84fda4e8ff5cb41af80acc2ed747b614bf1f046cf45364ed",
+        "ch-24-6:11": "3875c914d307e421942fa744af85d25c6b771becbf4634b45fb704024deece26",
+        "ch-24-6:12": "9941b2bd7bb178a4ed4fd5ac7968fda4be5ab570a781211bf30a9355eecbd5d8"
+      },
+      "capture": null,
+      "codeBlocks": 6,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/07-24-7-prepare-activator-and-ingest-three-files.md",
+      "section": "ch-24-7",
+      "sourceBlockIds": [
+        "ch-24-7:0",
+        "ch-24-7:1",
+        "ch-24-7:2",
+        "ch-24-7:3",
+        "ch-24-7:4",
+        "ch-24-7:5",
+        "ch-24-7:6",
+        "ch-24-7:7"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-7:0": "4eabccf9c94fd2bf3f092490bcb89e47cc5d85493511e3aab09aa854ebb02a3b",
+        "ch-24-7:1": "1bb130eeff42f3447a752fa13806fd3fc709e62a7cf7643ab484bd2e65880e25",
+        "ch-24-7:2": "a003f87b2e196f0ea692ceae7f9b88478931ac456b446386d4e55d02314f35f8",
+        "ch-24-7:3": "ff67c706d487848785863a2c251c89d1ea69be9fb7c84bbaeef0435f9234dd21",
+        "ch-24-7:4": "1379f32bb4e84c8c7046b5d27ccb453d98c0f96ab8725f468573eb9d317a14f9",
+        "ch-24-7:5": "9fec08cd1a8328408c17a0e563641c8d43edd2e96d6bfea1cba81398cb54ed53",
+        "ch-24-7:6": "7806881e7d8227770e6ba531efaa3a83431246e32ce07904bde039687b6f4da4",
+        "ch-24-7:7": "50dd87db21899794956ca5e34889080dade178d426dff037e6aff87891b145d0"
+      },
+      "capture": null,
+      "codeBlocks": 3,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/08-24-8-complete-gold-the-semantic-model-and-data-agent.md",
+      "section": "ch-24-8",
+      "sourceBlockIds": [
+        "ch-24-8:0",
+        "ch-24-8:1",
+        "ch-24-8:2",
+        "ch-24-8:3",
+        "ch-24-8:4",
+        "ch-24-8:5",
+        "ch-24-8:6",
+        "ch-24-8:7",
+        "ch-24-8:8",
+        "ch-24-8:9",
+        "ch-24-8:10",
+        "ch-24-8:11"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-8:0": "867fa84fe1799cecbd7c3e7f59e14b234331b3557e5e63b422f1fb7f05bd5048",
+        "ch-24-8:1": "4a68e51994a28d18025c925c5655f1299bf13a3e6d0dce660d20d26d20e5a6aa",
+        "ch-24-8:2": "8f6d743d0b08a3a3954a78885c421c43351bc48a31c3e30b38881014da964265",
+        "ch-24-8:3": "2cc679f30ecd252f4a21d29b3deba2da0aa4a2b93ec8d646b00076ebe059ffd5",
+        "ch-24-8:4": "59c6aa377384b30d72b5a4f021f82a9c86e7ff01c257d89092caaa9704042f98",
+        "ch-24-8:5": "80a3bf57325b61cf107bb8cfaa2543bd85d11213b7888563b7248b2839c8dd8e",
+        "ch-24-8:6": "02b6e42085ab7689e0f22032d67ff68440e8487f78110a7abe075310431610f6",
+        "ch-24-8:7": "6f12392661358f8e99b0eda10ac7a3bcf227823c6cd93d25011bcafcba45c70e",
+        "ch-24-8:8": "d313dd5cd972b25997caf1beb84635842b2a8da8d41b2ea22e36d9b5f640942a",
+        "ch-24-8:9": "2ff9ca7d29a1d8da5bb5046f34e724b5251f546e2be8f279213dd9f5561b8c14",
+        "ch-24-8:10": "d4a64b59ec1276f18887e9e3f6d1d7d99c2199d82d3ea8ca28e30aecf04a7779",
+        "ch-24-8:11": "d2c6d179c5eb63c20acad7a6d2ba51e890e8c1d05e3c5e24f203fd0510c27418"
+      },
+      "capture": null,
+      "codeBlocks": 6,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/09-24-9-stops-recovery-and-completion-checks.md",
+      "section": "ch-24-9",
+      "sourceBlockIds": [
+        "ch-24-9:0",
+        "ch-24-9:1"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-9:0": "6ee11bfda7157b5a3209c38f59f58f83f9291cf7fee42a9de6c6d6595ce1a566",
+        "ch-24-9:1": "193ca7dfe006134e6464182bbbc5b65989c7890886461cdd4c29bd396ac9f068"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/10-24-10-choose-a-client-and-use-the-same-deployment-procedure.md",
+      "section": "ch-24-10",
+      "sourceBlockIds": [
+        "ch-24-10:0",
+        "ch-24-10:1",
+        "ch-24-10:2",
+        "ch-24-10:3",
+        "ch-24-10:4",
+        "ch-24-10:5",
+        "ch-24-10:6",
+        "ch-24-10:7",
+        "ch-24-10:8"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-10:0": "2ab17ced0e9f0afafafa069057a2e2404518d91bdecab197955f99087325de16",
+        "ch-24-10:1": "89fa16d61c9ea74bc70c4d504086ea18e8c68cb7f636a482dc337ae5fca2f39a",
+        "ch-24-10:2": "a373ab7da1c46b8653e375fde0e3bdb76cc9c59da3b87e1866d48abb8484a953",
+        "ch-24-10:3": "43c8fca19c7f9c5fe5c40fdd21a54eb07f286da8fdb20fd3df6371dd1ad46801",
+        "ch-24-10:4": "d3a9f64f4987d87c7c127f82123664bda700ff83652af2b20065f676b092eb74",
+        "ch-24-10:5": "0dd89c15e3d4ef6e59807f73b227545ae6593549be73bef80b58923a71e61e58",
+        "ch-24-10:6": "fc74905ff07f4143f095bc69a6fd99fa2f157afca67b2b14eeadcf133ed13f87",
+        "ch-24-10:7": "6450ee34fc583418e8e83abf63171b56ca7156e961a1b58c49d2c0bed6b8fdb4",
+        "ch-24-10:8": "2f0c2db402a13cf3ca04b3fd6461659cabf0713ab02f474ca81035c8fa847820"
+      },
+      "capture": null,
+      "codeBlocks": 2,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "24-automated-deployment-operations-and-cleanup/11-24-11-verify-distributed-data-and-runtime-assets.md",
+      "section": "ch-24-11",
+      "sourceBlockIds": [
+        "ch-24-11:0",
+        "ch-24-11:1",
+        "ch-24-11:2",
+        "ch-24-11:3",
+        "ch-24-11:4"
+      ],
+      "sourceBlockSha256": {
+        "ch-24-11:0": "e9648d76c5c0cb444b33dd487881e3db904057cf5c9cb1acbcde20666ec1eb9c",
+        "ch-24-11:1": "ccdda30c818870aff2bad006387d62840e0b395a810172740da1411b44d5c54a",
+        "ch-24-11:2": "1513fa59fda257afe23d26a7925be355ec25479749399720e0abb502da4f8781",
+        "ch-24-11:3": "85446141ac381bbadbb555da6d9af4c502cd31a62848aa899f970c5113e55939",
+        "ch-24-11:4": "11aec7131595a5b6ffc698593dd774a952f1f88e294a98478ac548925934cfee"
+      },
+      "capture": null,
+      "codeBlocks": 2,
+      "prompts": 0,
+      "tables": 0
+    },
+    {
+      "path": "appendix-a-data-model-and-expected-value-reference/01-a-1-expected-values.md",
+      "section": "appendix-a-1",
+      "sourceBlockIds": [
+        "appendix-a-1:0",
+        "appendix-a-1:1",
+        "appendix-a-1:2",
+        "appendix-a-1:3",
+        "appendix-a-1:4",
+        "appendix-a-1:5",
+        "appendix-a-1:6",
+        "appendix-a-1:7",
+        "appendix-a-1:8",
+        "appendix-a-1:9"
+      ],
+      "sourceBlockSha256": {
+        "appendix-a-1:0": "f60d197d5207fb0c5dad0eca98307a75d8ff536d84883b34089a176743f617d6",
+        "appendix-a-1:1": "663cded05427834b758650751640d4393fae66a784b5eec4675677d2c5982c39",
+        "appendix-a-1:2": "384e26a55e859a47079881150c485139b131a087d275c778a65f8bb9f95b93a8",
+        "appendix-a-1:3": "c21cbc3efba1f970a8e185cf187ea3478fee6b68f61382a85988490b12b8286e",
+        "appendix-a-1:4": "9abb89cd2064b1d6d77e2b7dc2db2dc6ca6886bc5b8e9ffcefb0dc6fa34a4515",
+        "appendix-a-1:5": "2abfbeea8246fefc6d91764788a8a4580e12e9a3de0262ae61d74a81d46e0a31",
+        "appendix-a-1:6": "63bd80671246c2303d25d4391ddb9316e43f5b997d75ea4666ba11f78fa52d0a",
+        "appendix-a-1:7": "75607baa69b268d0fed7d0772204091bf2b9e691b4f58b2cbfc8382aeac4187f",
+        "appendix-a-1:8": "4cba947a8dd532ab34ba27eed0b27b1cac552eeb284a20baa196d419beca27e4",
+        "appendix-a-1:9": "8925654bee5dec34199d7b68d55047f2365fb166698c94d6de9c16e3500ca1bd"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 5
+    },
+    {
+      "path": "appendix-b-notebook-configuration-and-deployment-parameter-index/01-b-1-parameters.md",
+      "section": "appendix-b-1",
+      "sourceBlockIds": [
+        "appendix-b-1:0",
+        "appendix-b-1:1",
+        "appendix-b-1:2",
+        "appendix-b-1:3",
+        "appendix-b-1:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-b-1:0": "ee3b068c4d91b06086644ac36d4095b6abc16fb8901980cc0edf2a6e43f073c6",
+        "appendix-b-1:1": "9198f68bddce9495702b1f77b62b2c2772554e083d485a34bd134750826caf90",
+        "appendix-b-1:2": "e747c9b86793bce1d130fef920736900a50bac80cac09b424536e4a44ed2adb0",
+        "appendix-b-1:3": "5cf18f256d92c4e5ecdb18e53b1c9b3ed0fc265f18bdf8f6aefd9e649eaca2b3",
+        "appendix-b-1:4": "7da1411b5c56b6e2fba80a4a63a655ead60c837e7fd0f03649b2efe11ca52fac"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/01-c-1-how-to-use-this-appendix.md",
+      "section": "appendix-c-1",
+      "sourceBlockIds": [
+        "appendix-c-1:0",
+        "appendix-c-1:1",
+        "appendix-c-1:2",
+        "appendix-c-1:3",
+        "appendix-c-1:4",
+        "appendix-c-1:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-1:0": "690728708ac34e46a8c22f66641ccdbe0dc35c68563e4a8e80b09abd33d0ac45",
+        "appendix-c-1:1": "4ea046bebf0bde9e17f4c00c438563c165a442b4c0496fd737a595ff6a80a734",
+        "appendix-c-1:2": "4bbc2e24398fc43a5210e04ce0573eff941c5b0810ed30f5ec4f006c7cba709e",
+        "appendix-c-1:3": "19cae37db4775eb3c2c8896abb8e47195f41b1508b293bdf1df4f3877fb2eaca",
+        "appendix-c-1:4": "84f89c5d92231255665a5ea2aac5c5e2cba054a4eb4117a07ff0cac68d138e66",
+        "appendix-c-1:5": "a873b595a85819265891efd3fd2d6996243624dbb68aaeb2f43b4b9c9a2a1a9a"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/02-c-2-t01.md",
+      "section": "appendix-c-2-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-2-canonical-evaluation:0",
+        "appendix-c-2-canonical-evaluation:1",
+        "appendix-c-2-canonical-evaluation:2",
+        "appendix-c-2-canonical-evaluation:3",
+        "appendix-c-2-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-2-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-2-canonical-evaluation:1": "13740fabd99feb8cab0a248a569cd09c0152ec8ac730dbee9200a577d1f45ca1",
+        "appendix-c-2-canonical-evaluation:2": "26b86b9077119da6cc46e697c62c3e2ee33d51ddfc5d7ccb21366b162e3844d6",
+        "appendix-c-2-canonical-evaluation:3": "ee218848c67a61129b9ff9ee337f3cf4669a3ae62b69b051650897f72bdc664c",
+        "appendix-c-2-canonical-evaluation:4": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/03-c-3-t02.md",
+      "section": "appendix-c-3-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-3-canonical-evaluation:0",
+        "appendix-c-3-canonical-evaluation:1",
+        "appendix-c-3-canonical-evaluation:2",
+        "appendix-c-3-canonical-evaluation:3",
+        "appendix-c-3-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-3-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-3-canonical-evaluation:1": "162266efc810506073db4e45b37b769d50564206095e22d96811301f4fb98bdb",
+        "appendix-c-3-canonical-evaluation:2": "6913a1f40b24f3eae065c0c7e2f3e29b700217b89213076e0690e49c4d88e9de",
+        "appendix-c-3-canonical-evaluation:3": "efe7fdbbd95e20a6fcb0438cd3dcf38df4b85ee16fcde31582da34a57d9deceb",
+        "appendix-c-3-canonical-evaluation:4": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/04-c-4-t03.md",
+      "section": "appendix-c-4-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-4-canonical-evaluation:0",
+        "appendix-c-4-canonical-evaluation:1",
+        "appendix-c-4-canonical-evaluation:2",
+        "appendix-c-4-canonical-evaluation:3",
+        "appendix-c-4-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-4-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-4-canonical-evaluation:1": "135ee708ea1c401784460b68117bf85432c3288abfe9ecce25290da74143685e",
+        "appendix-c-4-canonical-evaluation:2": "98f60568fde9e0d0390805c7ebc0c5ca0d10c5904d276268240b725d183c9c26",
+        "appendix-c-4-canonical-evaluation:3": "a2b21cde00d389e39065334de6d942172455f2aab2487bd9a96b0a1c300ad306",
+        "appendix-c-4-canonical-evaluation:4": "89488cbbc4d5e77bfc5cebc540d6e9994e62883336d0d73d3f9f462fb8434a40"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/05-c-5-t04.md",
+      "section": "appendix-c-5-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-5-canonical-evaluation:0",
+        "appendix-c-5-canonical-evaluation:1",
+        "appendix-c-5-canonical-evaluation:2",
+        "appendix-c-5-canonical-evaluation:3",
+        "appendix-c-5-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-5-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-5-canonical-evaluation:1": "52e7172ab4292434940a47aa098e8e565b477cc9ee3b765abd51072d074ef441",
+        "appendix-c-5-canonical-evaluation:2": "18e28aceda90bf6671175aaec20bf78a21c0e597e94b5f7997136db6d03fb878",
+        "appendix-c-5-canonical-evaluation:3": "2edd6257a130b657c33d91fd965c49e56f99dbb3d7f54fa1f948be2a651de555",
+        "appendix-c-5-canonical-evaluation:4": "b7c59967a50cc84a29627c5f81f15876239022420ea5f8add10dec47c9b633fb"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/06-c-6-t05.md",
+      "section": "appendix-c-6-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-6-canonical-evaluation:0",
+        "appendix-c-6-canonical-evaluation:1",
+        "appendix-c-6-canonical-evaluation:2",
+        "appendix-c-6-canonical-evaluation:3",
+        "appendix-c-6-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-6-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-6-canonical-evaluation:1": "33dfe8008e4a4b9316ebb46f6cfb7746d17f3fd0f617ba77b9af26c45f402d87",
+        "appendix-c-6-canonical-evaluation:2": "84e4970a326790236e8552a824f5a1faaae59121224fa70947279438f35bfe34",
+        "appendix-c-6-canonical-evaluation:3": "3b47e8004a1a67a6216a827e86778eaaac34e9bc2032c8072bb3fddd9f3049b1",
+        "appendix-c-6-canonical-evaluation:4": "67c695edba54e217b07c09e9337e2c63158527a02e688894dc0089c8acf36d79"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/07-c-7-t06.md",
+      "section": "appendix-c-7-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-7-canonical-evaluation:0",
+        "appendix-c-7-canonical-evaluation:1",
+        "appendix-c-7-canonical-evaluation:2",
+        "appendix-c-7-canonical-evaluation:3",
+        "appendix-c-7-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-7-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-7-canonical-evaluation:1": "db1b3dc82fa81074d89f708c1a38a4bde1046cf500c1514efedbac1bfd1c43c2",
+        "appendix-c-7-canonical-evaluation:2": "4d17d7838df1317d2bd535ddbef8cab09cb81f0f8c77e8a5142ca607f5d7baf3",
+        "appendix-c-7-canonical-evaluation:3": "41b258b445841cc8c21e8bdbfb8a619c862ca2437b470a9d9f1027bd2cbe17c3",
+        "appendix-c-7-canonical-evaluation:4": "8ec531dfb655ac93cf7dbd52649a6baa4c03f265c300596be9b0ca45658ab7ae"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/08-c-8-t07.md",
+      "section": "appendix-c-8-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-8-canonical-evaluation:0",
+        "appendix-c-8-canonical-evaluation:1",
+        "appendix-c-8-canonical-evaluation:2",
+        "appendix-c-8-canonical-evaluation:3",
+        "appendix-c-8-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-8-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-8-canonical-evaluation:1": "edf1f7ac6825f13a5f56c5dcf6cc8e8ace6f3a7a7f9e94c4c1eeb2998c32ad82",
+        "appendix-c-8-canonical-evaluation:2": "2f3cabaef496c6f81d5ac477fac949b31893462720c65ee9552361e7f69a7408",
+        "appendix-c-8-canonical-evaluation:3": "ce7f55ce6753de5f47f520ccc990c563448fc3581a4a1266be06e0258e97ce44",
+        "appendix-c-8-canonical-evaluation:4": "8ec531dfb655ac93cf7dbd52649a6baa4c03f265c300596be9b0ca45658ab7ae"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/09-c-9-t08.md",
+      "section": "appendix-c-9-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-9-canonical-evaluation:0",
+        "appendix-c-9-canonical-evaluation:1",
+        "appendix-c-9-canonical-evaluation:2",
+        "appendix-c-9-canonical-evaluation:3",
+        "appendix-c-9-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-9-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-9-canonical-evaluation:1": "c845410dbea3c6eac16fad6f701e425924567b6ae7781e94439d95882cced1fa",
+        "appendix-c-9-canonical-evaluation:2": "09f2a138bb3f6383e80887933de50a6801adbdef7b502f045d5562202a9dc495",
+        "appendix-c-9-canonical-evaluation:3": "76691f024f1f591dd1b1101d614e224fe0803867fdfcddaeb90781ac1e65c235",
+        "appendix-c-9-canonical-evaluation:4": "e0a1d70eaea5a7ff5e49a7b9e2f693078c85fab1459ad6c113a94cf6e4ce6733"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/10-c-10-t09.md",
+      "section": "appendix-c-10-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-10-canonical-evaluation:0",
+        "appendix-c-10-canonical-evaluation:1",
+        "appendix-c-10-canonical-evaluation:2",
+        "appendix-c-10-canonical-evaluation:3",
+        "appendix-c-10-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-10-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-10-canonical-evaluation:1": "e29b8d531dba4fb440704aa78843ca56b0d24590ee2f36ac3042ad2fba414ab0",
+        "appendix-c-10-canonical-evaluation:2": "f7bdf16a7c798a2daef37a800139d355d656ff90047c604edcda07d2e1a7c5f9",
+        "appendix-c-10-canonical-evaluation:3": "930f2dcaba93261269fd31288505afd4530e48633de236079b146d66f9b35e88",
+        "appendix-c-10-canonical-evaluation:4": "24d3c5a0fb35a8b750dbe6fbf85641e282b623984a5892625e224c766c31998e"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/11-c-11-t10.md",
+      "section": "appendix-c-11-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-11-canonical-evaluation:0",
+        "appendix-c-11-canonical-evaluation:1",
+        "appendix-c-11-canonical-evaluation:2",
+        "appendix-c-11-canonical-evaluation:3",
+        "appendix-c-11-canonical-evaluation:4"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-11-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-11-canonical-evaluation:1": "bad997e23dd008bb1be967c3047221161e5b0f723572acdb5e0347247f35e35a",
+        "appendix-c-11-canonical-evaluation:2": "59fe768bf98733523c7687ebfae06ef5efab4f14b90e8f1b793456cfdd159f25",
+        "appendix-c-11-canonical-evaluation:3": "67ddd3433afe39bd9834d563fc7f7e3b94f38ab64613cf0237f7e3da728d759b",
+        "appendix-c-11-canonical-evaluation:4": "e0a1d70eaea5a7ff5e49a7b9e2f693078c85fab1459ad6c113a94cf6e4ce6733"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 2
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/12-c-12-b01.md",
+      "section": "appendix-c-12-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-12-canonical-evaluation:0",
+        "appendix-c-12-canonical-evaluation:1",
+        "appendix-c-12-canonical-evaluation:2",
+        "appendix-c-12-canonical-evaluation:3",
+        "appendix-c-12-canonical-evaluation:4",
+        "appendix-c-12-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-12-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-12-canonical-evaluation:1": "9810883e13da47f9b0b19c92f6da215d8ac70c3e9d9b2b2585141de89b72880b",
+        "appendix-c-12-canonical-evaluation:2": "01a820c54a6d5aec6d78c4f11d12f35c555966e418f554186c5375b83f65f15b",
+        "appendix-c-12-canonical-evaluation:3": "c08e04878f34fd5cdb0d9d7857bc21a52fca7361ac791abb8c40295b0e3c4076",
+        "appendix-c-12-canonical-evaluation:4": "e1646e89f970445800ef86bcc7e3981a96a4336f4be34765e5fc862861856021",
+        "appendix-c-12-canonical-evaluation:5": "8ec531dfb655ac93cf7dbd52649a6baa4c03f265c300596be9b0ca45658ab7ae"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/13-c-13-b02.md",
+      "section": "appendix-c-13-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-13-canonical-evaluation:0",
+        "appendix-c-13-canonical-evaluation:1",
+        "appendix-c-13-canonical-evaluation:2",
+        "appendix-c-13-canonical-evaluation:3",
+        "appendix-c-13-canonical-evaluation:4",
+        "appendix-c-13-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-13-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-13-canonical-evaluation:1": "d93edb68e309663f45287b1fd81df127b1c55e30b99040ebb40ac880eff72899",
+        "appendix-c-13-canonical-evaluation:2": "1a3c873331ddfcf88e24451c3265956c56490576961206c6129c821c34bb15fc",
+        "appendix-c-13-canonical-evaluation:3": "1eb691705e1461a36f643b96a7c8c41236e1a5cf0d9e7eda95272acaeadf4b66",
+        "appendix-c-13-canonical-evaluation:4": "2b60cfd8df1500189ef5677d5270354d52f285e3fc2fdce3f2f85566621a05fb",
+        "appendix-c-13-canonical-evaluation:5": "7bb4bc8749d0ede84515c5d04a054cc1e65b260386343c1f95cde18056e78c12"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/14-c-14-b03.md",
+      "section": "appendix-c-14-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-14-canonical-evaluation:0",
+        "appendix-c-14-canonical-evaluation:1",
+        "appendix-c-14-canonical-evaluation:2",
+        "appendix-c-14-canonical-evaluation:3",
+        "appendix-c-14-canonical-evaluation:4",
+        "appendix-c-14-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-14-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-14-canonical-evaluation:1": "86054cd9ace957c17f0c88281f1d8beda47e5c085b72d8a708fef24bb44f5fb1",
+        "appendix-c-14-canonical-evaluation:2": "a4bf4b71f1991cfc37c72341f9d710e250c48d77b05143d919410ed6748e2dd2",
+        "appendix-c-14-canonical-evaluation:3": "53ddea5446089862b8a2110d767b0adf0fa4756ed3e006f2dbeeb57271ee791f",
+        "appendix-c-14-canonical-evaluation:4": "0738329a49c76f670b5c204aa740f9e14bea1e4cbeba1482627d1fb7b8969cb3",
+        "appendix-c-14-canonical-evaluation:5": "8ec531dfb655ac93cf7dbd52649a6baa4c03f265c300596be9b0ca45658ab7ae"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/15-c-15-b04.md",
+      "section": "appendix-c-15-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-15-canonical-evaluation:0",
+        "appendix-c-15-canonical-evaluation:1",
+        "appendix-c-15-canonical-evaluation:2",
+        "appendix-c-15-canonical-evaluation:3",
+        "appendix-c-15-canonical-evaluation:4",
+        "appendix-c-15-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-15-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-15-canonical-evaluation:1": "c304393d3588e2ca13520b00b491edd71094ee910b76fd64563381a442cb2f98",
+        "appendix-c-15-canonical-evaluation:2": "eadb13ac2eb1719d620001de3c39ba8a70982d9d3658f5bb080f7812023a147b",
+        "appendix-c-15-canonical-evaluation:3": "d0410fe47c573aa1986f825f20be18c06e98c9a571b4f6f264d378021370a8a6",
+        "appendix-c-15-canonical-evaluation:4": "22ed80784c38d2c0b1284ae33a625c357e373e28734f358f5f7aa87a8dbea463",
+        "appendix-c-15-canonical-evaluation:5": "8ec531dfb655ac93cf7dbd52649a6baa4c03f265c300596be9b0ca45658ab7ae"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/16-c-16-b05.md",
+      "section": "appendix-c-16-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-16-canonical-evaluation:0",
+        "appendix-c-16-canonical-evaluation:1",
+        "appendix-c-16-canonical-evaluation:2",
+        "appendix-c-16-canonical-evaluation:3",
+        "appendix-c-16-canonical-evaluation:4",
+        "appendix-c-16-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-16-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-16-canonical-evaluation:1": "72f504b6e7f21fecef87b96c982910611a39b61a9fdca39c92297edfef0a76dd",
+        "appendix-c-16-canonical-evaluation:2": "c96eb475f5a53ff1c9b753146a9e8e15a9aa3413a77a8de10472aff04590ff6a",
+        "appendix-c-16-canonical-evaluation:3": "6bf26f21742429aba8f21f52f54282740fce30d6f651f96ac8829dedf8a6d877",
+        "appendix-c-16-canonical-evaluation:4": "e17a0a4b47034e302dd32b0f0decbe4beb7d34ce42cf16e7c455df389f7ee56c",
+        "appendix-c-16-canonical-evaluation:5": "12b502af63c9bbfc12c1266c95640df543b7f745f0758f78e5b62ebe567f1ce7"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/17-c-17-b06.md",
+      "section": "appendix-c-17-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-17-canonical-evaluation:0",
+        "appendix-c-17-canonical-evaluation:1",
+        "appendix-c-17-canonical-evaluation:2",
+        "appendix-c-17-canonical-evaluation:3",
+        "appendix-c-17-canonical-evaluation:4",
+        "appendix-c-17-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-17-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-17-canonical-evaluation:1": "38cba86bc24ce222cd82d11390f3edd8b901ed4a32e69cadf04bb325940d3ac4",
+        "appendix-c-17-canonical-evaluation:2": "efb570bcba9f081a576a03f8502afb6356316039f8b1b5bcf78e115b96959064",
+        "appendix-c-17-canonical-evaluation:3": "5887a4a04a02e35103a72677a47ac7d6abb397c79dbbb40569d848afba30429a",
+        "appendix-c-17-canonical-evaluation:4": "87ababeb0d709f030f9f869a84172128141cd2d92e946f7e850fb7de36aeeebd",
+        "appendix-c-17-canonical-evaluation:5": "12b502af63c9bbfc12c1266c95640df543b7f745f0758f78e5b62ebe567f1ce7"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/18-c-18-b07.md",
+      "section": "appendix-c-18-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-18-canonical-evaluation:0",
+        "appendix-c-18-canonical-evaluation:1",
+        "appendix-c-18-canonical-evaluation:2",
+        "appendix-c-18-canonical-evaluation:3",
+        "appendix-c-18-canonical-evaluation:4",
+        "appendix-c-18-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-18-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-18-canonical-evaluation:1": "d02974990e027e248a43941af92e354fedd8dff36140f3298546144e5286c13f",
+        "appendix-c-18-canonical-evaluation:2": "3357e385d2dbc9a3c71e238d02f2292eb9bcbd2a82d67d450044a8998658e3b3",
+        "appendix-c-18-canonical-evaluation:3": "962164ed8d7b3f83269ff322db27545ba3aae64da1d936a246a116da283a9ddf",
+        "appendix-c-18-canonical-evaluation:4": "d3299655ad20f80f6d5059baea3085143b2691cef0a81ff6f4578dd18a1944d7",
+        "appendix-c-18-canonical-evaluation:5": "12b502af63c9bbfc12c1266c95640df543b7f745f0758f78e5b62ebe567f1ce7"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/19-c-19-b08.md",
+      "section": "appendix-c-19-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-19-canonical-evaluation:0",
+        "appendix-c-19-canonical-evaluation:1",
+        "appendix-c-19-canonical-evaluation:2",
+        "appendix-c-19-canonical-evaluation:3",
+        "appendix-c-19-canonical-evaluation:4",
+        "appendix-c-19-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-19-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-19-canonical-evaluation:1": "52aa81ba264d564379ff1b3cb708f80297a585f9f0523ce5800a8513f0eac51c",
+        "appendix-c-19-canonical-evaluation:2": "06bcef62752b0e2746d1d375057c5f1e04b37b1932316f0ee136325723dd9389",
+        "appendix-c-19-canonical-evaluation:3": "4ce6447e2791bed160a24a71510e0301c5f1d98af3772404d7547729c2e8f55a",
+        "appendix-c-19-canonical-evaluation:4": "04ddd09edc6da4db93780fd4a1844a36c0d6ff2092e1cb722d20c94d2ac92686",
+        "appendix-c-19-canonical-evaluation:5": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/20-c-20-b09.md",
+      "section": "appendix-c-20-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-20-canonical-evaluation:0",
+        "appendix-c-20-canonical-evaluation:1",
+        "appendix-c-20-canonical-evaluation:2",
+        "appendix-c-20-canonical-evaluation:3",
+        "appendix-c-20-canonical-evaluation:4",
+        "appendix-c-20-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-20-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-20-canonical-evaluation:1": "5de437a9d15d8a36666e2dfb6dbf2ed17ca51627c016e8da10f6cb8d4e5e43af",
+        "appendix-c-20-canonical-evaluation:2": "d16a5af573dc83780b1e38f40bae229861d239b9155a7dafa8f833b7a959258e",
+        "appendix-c-20-canonical-evaluation:3": "abda80185094734a404824679c6f0f8b3ae07fa9cbb123584c674a007e462b19",
+        "appendix-c-20-canonical-evaluation:4": "481300a2552309c6862ef1cc385ff4306fb623955885692c81e9cfd93ed8b767",
+        "appendix-c-20-canonical-evaluation:5": "1257eba3248ef7d50b5ff2f4b77abb8c7d5be507d1ea6cd93aa17ecd3cc37f75"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/21-c-21-b10.md",
+      "section": "appendix-c-21-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-21-canonical-evaluation:0",
+        "appendix-c-21-canonical-evaluation:1",
+        "appendix-c-21-canonical-evaluation:2",
+        "appendix-c-21-canonical-evaluation:3",
+        "appendix-c-21-canonical-evaluation:4",
+        "appendix-c-21-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-21-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-21-canonical-evaluation:1": "b902827c5603248ffbdc4d9d18900664273555588569de83d91795063975cb84",
+        "appendix-c-21-canonical-evaluation:2": "f8af25ee8dc0842bb7374c83b9043db9d8a7ac99d316ef2617753ebacaa98353",
+        "appendix-c-21-canonical-evaluation:3": "f48ab110e9fdf3a38e2e16f38659d28740346022d9e9340f346142e2a3d07d56",
+        "appendix-c-21-canonical-evaluation:4": "134534142e154bc80c50c71407c55a556cb88c9a2f9f3875db95cbec6718fd31",
+        "appendix-c-21-canonical-evaluation:5": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/22-c-22-b11.md",
+      "section": "appendix-c-22-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-22-canonical-evaluation:0",
+        "appendix-c-22-canonical-evaluation:1",
+        "appendix-c-22-canonical-evaluation:2",
+        "appendix-c-22-canonical-evaluation:3",
+        "appendix-c-22-canonical-evaluation:4",
+        "appendix-c-22-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-22-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-22-canonical-evaluation:1": "d5f269982b64eb43f6c3644328bb47ab1b4feea48af59a6dae66ffaa71f496e8",
+        "appendix-c-22-canonical-evaluation:2": "97e87341cf89251bad8fe1bbc8bb99649908284e88019f8ad0323d621e7c1df0",
+        "appendix-c-22-canonical-evaluation:3": "f7b633baf1ee998c29af19b18a537e6976a809aec97c49ca12067a2d550f60d6",
+        "appendix-c-22-canonical-evaluation:4": "74cbcae12ad552219c32e9956408d4296ab1dd3d69bed353e1b12f263c894e39",
+        "appendix-c-22-canonical-evaluation:5": "0a3c015f5a0dd8ba1f04bae15d76e3443ae4c2b03da97277ee76cf143349eaf2"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/23-c-23-b12.md",
+      "section": "appendix-c-23-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-23-canonical-evaluation:0",
+        "appendix-c-23-canonical-evaluation:1",
+        "appendix-c-23-canonical-evaluation:2",
+        "appendix-c-23-canonical-evaluation:3",
+        "appendix-c-23-canonical-evaluation:4",
+        "appendix-c-23-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-23-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-23-canonical-evaluation:1": "7142b8a5f32f5e1b00c2f96ce5d7e6e8c459c2b38f5eca3d6d8dc616f4675653",
+        "appendix-c-23-canonical-evaluation:2": "fa7deaf6fb9a728a9bd69e94f198d56bafecd8dd9ba32d305eccf7de803f5145",
+        "appendix-c-23-canonical-evaluation:3": "702b1d66e01f68177f789158e784061241004086f84f1d44f4555e02799642a3",
+        "appendix-c-23-canonical-evaluation:4": "5dc6d9a062a2f46b5864ad3271a6ac1a5cdc3bacd420be258ca014e5be2e736b",
+        "appendix-c-23-canonical-evaluation:5": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/24-c-24-b13.md",
+      "section": "appendix-c-24-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-24-canonical-evaluation:0",
+        "appendix-c-24-canonical-evaluation:1",
+        "appendix-c-24-canonical-evaluation:2",
+        "appendix-c-24-canonical-evaluation:3",
+        "appendix-c-24-canonical-evaluation:4",
+        "appendix-c-24-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-24-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-24-canonical-evaluation:1": "d3b27c0b1198e668e9c71f6ed842538ddf5a9d79e3d9298bcab4216031317945",
+        "appendix-c-24-canonical-evaluation:2": "caad4ac6b3b7f72bfa46f3b83f7d07161fcefcbdc34255a2b2a90e625e3cdaf7",
+        "appendix-c-24-canonical-evaluation:3": "ae44cf13440cc1ebeedd77d03e896b46ee0a9b1d0b7fb5bae97de4c85ad97b77",
+        "appendix-c-24-canonical-evaluation:4": "234234186d27d966f296f4ac0277890a1b0b3177d8c4f15745f144997f721b8c",
+        "appendix-c-24-canonical-evaluation:5": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/25-c-25-b14.md",
+      "section": "appendix-c-25-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-25-canonical-evaluation:0",
+        "appendix-c-25-canonical-evaluation:1",
+        "appendix-c-25-canonical-evaluation:2",
+        "appendix-c-25-canonical-evaluation:3",
+        "appendix-c-25-canonical-evaluation:4",
+        "appendix-c-25-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-25-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-25-canonical-evaluation:1": "6b51168909693f02a90582eff5e10b011d63ce2d223a90660bdef595dae974f1",
+        "appendix-c-25-canonical-evaluation:2": "4edb1f6117bc3f350ed1a33697cf351b31f5ef9656362ff0f21a3c8126e1749d",
+        "appendix-c-25-canonical-evaluation:3": "1cff480286b8c2cf05b81bfdc529ac628873d3720e9ba67a90359b45807ebb85",
+        "appendix-c-25-canonical-evaluation:4": "b6730b1edddbcafb8c55654ff553684469d3a31de4ecec7b7475f7775e355261",
+        "appendix-c-25-canonical-evaluation:5": "0b92d5cf89c2f8d586cfc550acd0b0f7c0dab8ee72e49f3aa16d49425e42d763"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/26-c-26-b15.md",
+      "section": "appendix-c-26-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-26-canonical-evaluation:0",
+        "appendix-c-26-canonical-evaluation:1",
+        "appendix-c-26-canonical-evaluation:2",
+        "appendix-c-26-canonical-evaluation:3",
+        "appendix-c-26-canonical-evaluation:4",
+        "appendix-c-26-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-26-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-26-canonical-evaluation:1": "8fbe8cf831a52b6cd3f968853327d04d7b307b834164285362e3e78688755ad4",
+        "appendix-c-26-canonical-evaluation:2": "9489e1b36e0901ff210da755fa143530d05fc8478fb9503218341954803141b1",
+        "appendix-c-26-canonical-evaluation:3": "66718e80135b620560079c8966dd72848d8f5e32e7ef9f755c328506aaf15ac1",
+        "appendix-c-26-canonical-evaluation:4": "b40ce8334e0406497fcef75305e930dd2b4e258cbb50838a24bf38250f57d2a7",
+        "appendix-c-26-canonical-evaluation:5": "93f86a7d09440cf006790f920da611141ee42367824aa0e62e631d3f0f34995e"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/27-c-27-b16.md",
+      "section": "appendix-c-27-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-27-canonical-evaluation:0",
+        "appendix-c-27-canonical-evaluation:1",
+        "appendix-c-27-canonical-evaluation:2",
+        "appendix-c-27-canonical-evaluation:3",
+        "appendix-c-27-canonical-evaluation:4",
+        "appendix-c-27-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-27-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-27-canonical-evaluation:1": "b4e8554d1e691d44281a6374fb315af507165b743d23f2a7320fe71a4c52e253",
+        "appendix-c-27-canonical-evaluation:2": "35afee79ad024d82af71ef52c62b9401367f6a8c205b7a048c62e762e579e987",
+        "appendix-c-27-canonical-evaluation:3": "157746f95d89d499f346699d8f2917f94e8b9eb400fb47668acca6421866247a",
+        "appendix-c-27-canonical-evaluation:4": "3283ce941cb4b393950d188b004327dae18c49056b796abc11f8c29aa56fd56b",
+        "appendix-c-27-canonical-evaluation:5": "8ec531dfb655ac93cf7dbd52649a6baa4c03f265c300596be9b0ca45658ab7ae"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/28-c-28-b17.md",
+      "section": "appendix-c-28-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-28-canonical-evaluation:0",
+        "appendix-c-28-canonical-evaluation:1",
+        "appendix-c-28-canonical-evaluation:2",
+        "appendix-c-28-canonical-evaluation:3",
+        "appendix-c-28-canonical-evaluation:4",
+        "appendix-c-28-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-28-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-28-canonical-evaluation:1": "a4c7fcb8f1c60ea36b01100e856f5c5368628a5e28059c6b9f2d06d7347c0f93",
+        "appendix-c-28-canonical-evaluation:2": "0e01340d7981310a5160d5ded2c63c8a459f85053da3577a6d490feff06bbc98",
+        "appendix-c-28-canonical-evaluation:3": "bdb8c86d4966dea39b6c703b124fc79ae2b93569bb4cd9c3092c367c10144e51",
+        "appendix-c-28-canonical-evaluation:4": "b5c06ce9c2771279557b5ad468ace441c002e0713b76d66e1851cb8f3b27e508",
+        "appendix-c-28-canonical-evaluation:5": "7bb4bc8749d0ede84515c5d04a054cc1e65b260386343c1f95cde18056e78c12"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/29-c-29-b18.md",
+      "section": "appendix-c-29-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-29-canonical-evaluation:0",
+        "appendix-c-29-canonical-evaluation:1",
+        "appendix-c-29-canonical-evaluation:2",
+        "appendix-c-29-canonical-evaluation:3",
+        "appendix-c-29-canonical-evaluation:4",
+        "appendix-c-29-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-29-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-29-canonical-evaluation:1": "477a9a85d09b62a38a24406badd7cbb10d1e31c8b98dc371b619c9c92c6d72db",
+        "appendix-c-29-canonical-evaluation:2": "2466501fa67938f6f7f5a21aa8f880e04198f93ad637ca1a78ff572fbc6fc6b0",
+        "appendix-c-29-canonical-evaluation:3": "21ea3a1c8294dabe8d237c0fb19cc07c46c781e67d72b28a76135ae6f6810686",
+        "appendix-c-29-canonical-evaluation:4": "12481e2628c8c5577a3c8b77c62ae5425fe0ba4b6989930884e159d2cbb5d2b5",
+        "appendix-c-29-canonical-evaluation:5": "f516910dd5686d806fde4b938b984a85b9da71544494573209398ac89690f89d"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-c-evaluation-questions-scoring-and-recording-forms/30-c-30-b19.md",
+      "section": "appendix-c-30-canonical-evaluation",
+      "sourceBlockIds": [
+        "appendix-c-30-canonical-evaluation:0",
+        "appendix-c-30-canonical-evaluation:1",
+        "appendix-c-30-canonical-evaluation:2",
+        "appendix-c-30-canonical-evaluation:3",
+        "appendix-c-30-canonical-evaluation:4",
+        "appendix-c-30-canonical-evaluation:5"
+      ],
+      "sourceBlockSha256": {
+        "appendix-c-30-canonical-evaluation:0": "7be47eb7b09c2d491d0e164abb71d0efb0e27471a9d9136860b1b2711125c96a",
+        "appendix-c-30-canonical-evaluation:1": "7751bb6bab337187d6c1ad2b2f77f1cf6e05e6fa4448b0a5f0830e82e1f7160d",
+        "appendix-c-30-canonical-evaluation:2": "74556c2bd1e095748ef64d150fac76ce1d653e40b32b35c20062314e032c644e",
+        "appendix-c-30-canonical-evaluation:3": "fb0c248002b9ce5ad65ddf79376bc1c2c5ce427bd1355f108a0e4919944c01bc",
+        "appendix-c-30-canonical-evaluation:4": "be9466bf99979bfc9582134a016cb724da23ae072ba2560094acd678c12e16c6",
+        "appendix-c-30-canonical-evaluation:5": "12b502af63c9bbfc12c1266c95640df543b7f745f0758f78e5b62ebe567f1ce7"
+      },
+      "capture": null,
+      "codeBlocks": 1,
+      "prompts": 0,
+      "tables": 3
+    },
+    {
+      "path": "appendix-d-optional-extensions/01-d-1-list.md",
+      "section": "appendix-d-1",
+      "sourceBlockIds": [
+        "appendix-d-1:0",
+        "appendix-d-1:1"
+      ],
+      "sourceBlockSha256": {
+        "appendix-d-1:0": "678aa97d67674d2f1878a67a54e056d62ad13eb2c5af3320fd58a52d5c508a96",
+        "appendix-d-1:1": "e70396503c6728c56280cfc2a1e91707b525e597fd5db57d86bca19644c1b1fc"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    },
+    {
+      "path": "appendix-e-troubleshooting-and-official-references/01-e-1-checks-and-fixes.md",
+      "section": "appendix-e-1",
+      "sourceBlockIds": [
+        "appendix-e-1:0",
+        "appendix-e-1:1",
+        "appendix-e-1:2"
+      ],
+      "sourceBlockSha256": {
+        "appendix-e-1:0": "33638140da32624ea7cc6e546400779d316550a204a8d308689fa3494b51fcd0",
+        "appendix-e-1:1": "7e8728c093a4a98e387cd83632e174bc0b98394976848e5d5a451915aa02fbcb",
+        "appendix-e-1:2": "57e2dfb9ce6d2069303502702e1316e09bc825ffbd61c29846a313be5108a48c"
+      },
+      "capture": null,
+      "codeBlocks": 0,
+      "prompts": 0,
+      "tables": 1
+    }
+  ],
+  "captures": [
+    {
+      "id": "pc-01-architecture",
+      "page": "01-scenario-learning-goals-and-target-architecture/02-1-2-pc-01-architecture.md",
+      "captionJa": "完成したときのデータの流れ。静的データ、8月の観測データ、品質処理とモデル、意味と AI での利用の4つに分かれます",
+      "captionEn": "Data flow of the finished setup, in four lanes: static data, August observation data, quality processing and model, and meaning and AI"
+    },
+    {
+      "id": "pc-04-workspace-type-current",
+      "page": "04-prerequisites-deployment-scope-and-safe-execution/02-4-2-pc-04-workspace-type-current.md",
+      "captionJa": "2026-11-01 に対象ワークスペースで取得・確認した Settings → Workspace type の実画面。Fabric、F16、West US 2 を示す現在のUIでの事前確認の例です。F16 はこの例の容量であり、最低要件ではありません。Capacity ID は伏せています。配置後の成功証拠ではありません。参加者は表示を確認するだけで、Edit を押さず設定を変更しません。",
+      "captionEn": "Actual Settings → Workspace type screen captured and reviewed in the requested workspace on 2026-11-01. This current-UI preflight example shows Fabric, F16 and West US 2. F16 is the example capacity, not a minimum requirement. Capacity ID is redacted. This is not post-deployment evidence. Participants only inspect the display; do not click Edit or change settings."
+    },
+    {
+      "id": "pc-05-notebook01-ready",
+      "page": "05-lakehouse-and-notebook-01/02-5-2-pc-05-notebook01-ready.md",
+      "captionJa": "Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 load audit の計20テーブルの検査完了が表示されます。利用前に Ready の根拠を再確認し、SQL endpoint での同期も次の手順で確認します。",
+      "captionEn": "Notebook 01 final cell. The output reports READY v3.0.0 and completed checks for 20 tables: 8 staging, 11 ontology, and 1 load audit. Recheck Ready evidence before use, then verify SQL endpoint synchronization in the next steps."
+    },
+    {
+      "id": "p30-06-entities",
+      "page": "06-creating-the-ontology-entity-types-and-properties/02-6-2-p30-06-entities.md",
+      "captionJa": "Municipality の Configure 画面。キーは MunicipalityId で、静的 Property は ot_municipality にバインド済み。時系列 Property は10章でバインドするまで Unbound",
+      "captionEn": "Municipality Configure page: the key is MunicipalityId and the static properties are bound to ot_municipality. The time-series property stays Unbound until Chapter 10."
+    },
+    {
+      "id": "p30-06-instances",
+      "page": "06-creating-the-ontology-entity-types-and-properties/03-6-2-p30-06-instances.md",
+      "captionJa": "Municipality の Instances タブ。実際の行が表示され、012262 のように ID の先頭のゼロも残っている",
+      "captionEn": "Municipality Instances tab: actual rows from ot_municipality are listed, and leading zeros in MunicipalityId (for example 012262) are kept."
+    },
+    {
+      "id": "p30-07-relationships",
+      "page": "07-relationships-and-static-model-validation/02-7-2-p30-07-relationships.md",
+      "captionJa": "Relationship を作成した後の Home。グラフの下に Visible: 10 of 10 entities | 15 of 15 relationships と表示される",
+      "captionEn": "Ontology Home after creating the relationships: the status under the graph reads Visible: 10 of 10 entities | 15 of 15 relationships."
+    },
+    {
+      "id": "p30-08-kql-overview",
+      "page": "08-eventhouse-and-the-kql-schema/02-8-2-p30-08-kql-overview.md",
+      "captionJa": "実際の KQL Database overview。DonationEvents が Explorer にあり、画面上は丸め表示で 15K rows と示されます。ナビゲーション用の図であり、正確な件数、OneLake Delta の materialization、source reconciliation の証明ではありません。",
+      "captionEn": "Actual KQL Database overview with DonationEvents in Explorer and a rounded 15K rows display. This is a navigation illustration, not proof of an exact count, OneLake Delta materialization or source reconciliation."
+    },
+    {
+      "id": "p30-09-source-events",
+      "page": "09-pipeline-and-onelake-event-integration/02-9-2-p30-09-source-events.md",
+      "captionJa": "実際のイベントソース画面の観測値。3件の FileCreated が並び、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated、PutBlob です。イベントの観測であり、Pipeline 完了や Delta への materialization を示しません。",
+      "captionEn": "Observed values from the actual event-source view. Three FileCreated rows are listed; the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. This shows an event, not Pipeline completion or Delta materialization."
+    },
+    {
+      "id": "p30-09-native-delivery",
+      "page": "09-pipeline-and-onelake-event-integration/03-9-2-p30-09-native-delivery.md",
+      "captionJa": "ルールの History タブ。Activation details に、起動のもとになったファイルのパスと FileCreated が表示される（図は 002 と 003 の2件）",
+      "captionEn": "Rule History tab: Activation details list the path of each file that triggered the rule and the FileCreated type (the figure shows files 002 and 003)."
+    },
+    {
+      "id": "p30-09-copy-002",
+      "page": "09-pipeline-and-onelake-event-integration/04-9-2-p30-09-copy-002.md",
+      "captionJa": "Pipeline の実行の Copy data1 の Output。Succeeded で、rowsRead と rowsCopied がともに 5000（1ファイル分）",
+      "captionEn": "Output of Copy data1 in a Pipeline run: the activity Succeeded, and rowsRead and rowsCopied are both 5000 for one file."
+    },
+    {
+      "id": "p30-09-manual-recovery",
+      "page": "09-pipeline-and-onelake-event-integration/05-9-2-p30-09-manual-recovery.md",
+      "captionJa": "講師の指示で手動実行するときの Parameters。IncrementFileName にファイル名を入力し、Type・Subject・Source は空のまま",
+      "captionEn": "Parameters for a manual run on the instructor's instruction: enter the file name in IncrementFileName and leave Type, Subject and Source empty."
+    },
+    {
+      "id": "p30-09-pipeline-003-succeeded",
+      "page": "10-increment-ingestion-and-time-series-bindings/02-10-2-p30-09-pipeline-003-succeeded.md",
+      "captionJa": "実際の PL_Furusato_101 の実行画面。1件の Pipeline 実行と Copy data1 が Succeeded です。この画面だけでは、対象ファイルとの対応、行数・バイト数、自動起動、KQL の合計は証明されません。",
+      "captionEn": "Actual PL_Furusato_101 run view showing one successful Pipeline run and Copy data1. This screen alone does not prove which source file it processed, row or byte counts, automatic triggering or KQL totals."
+    },
+    {
+      "id": "p30-10-timeseries",
+      "page": "10-increment-ingestion-and-time-series-bindings/03-10-2-p30-10-timeseries.md",
+      "captionJa": "時系列 Property の binding definition 画面。型と Timestamp column の設定例を示しますが、読み取り可能な source data、実行可能性、native query や GQL の成功を証明するものではありません。",
+      "captionEn": "Time-series property binding-definition screen showing example type and timestamp-column settings. It does not prove readable source data, runtime availability, a native query or GQL success."
+    },
+    {
+      "id": "pc-11-notebook05-preview",
+      "page": "11-quality-processing-and-gold-with-notebook-05/02-11-2-pc-11-notebook05-preview.md",
+      "captionJa": "Notebook 05 のプレビュー実行。PREVIEW_ONLY・ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルと PLAN_SHA256 を確認します。これは適用前の計画です。適用には、自分のプレビュー実行で表示されたハッシュを使います。",
+      "captionEn": "Notebook 05 preview run. Check PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables, 29 planned output tables and PLAN_SHA256. This is the plan before apply. Use the hash from your own preview execution for apply."
+    },
+    {
+      "id": "p30-11-executed-output",
+      "page": "11-quality-processing-and-gold-with-notebook-05/03-11-2-p30-11-executed-output.md",
+      "captionJa": "Notebook 05 の適用の実行後の出力。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY の行を確認する",
+      "captionEn": "Output after the Notebook 05 apply run: check ANALYTICS_MODE=applied, outputTables=29 and the ANALYTICS_READY line."
+    },
+    {
+      "id": "p30-11-notebook05-monitor-success",
+      "page": "11-quality-processing-and-gold-with-notebook-05/04-11-2-p30-11-notebook05-monitor-success.md",
+      "captionJa": "Notebook 05 の実際の Monitor 実行で Status=Success を確認します。これは Notebook の実行完了だけを示し、Gold の件数・金額・generation 整合性は OneLake の独立検証で確認します。",
+      "captionEn": "Notebook 05 Monitor shows an actual run with Status=Success. This proves only the notebook run completed; verify Gold counts, amounts and generation consistency independently through OneLake."
+    },
+    {
+      "id": "p30-11-gold",
+      "page": "11-quality-processing-and-gold-with-notebook-05/05-11-2-p30-11-gold.md",
+      "captionJa": "図は EvaluatedAtUtc=2026-09-29 の実行結果を示す参考例です（重複100件・増分15,000行などの表示値はこの実行時点のもの）。参加者は自分の Notebook 05 の最新実行ジョブと出力を確認し、7つすべての品質ルールの実際の判定を確認します。図の値を現在の結果として扱いません。",
+      "captionEn": "This figure is an illustrative run dated EvaluatedAtUtc=2026-09-29; displayed values such as 100 duplicates and 15,000 increment rows belong to that run. Participants must check their own latest Notebook 05 job and output to verify the actual verdicts for all seven quality rules. Do not treat the figure’s values as current results."
+    },
+    {
+      "id": "p30-11-schema-preview",
+      "page": "11-quality-processing-and-gold-with-notebook-05/06-11-2-p30-11-schema-preview.md",
+      "captionJa": "gold.donations の列と先頭の行。DataSource で静的データと増分を区別し、IsHighValue は 57,000円を超える寄付で true",
+      "captionEn": "gold.donations columns and first rows: DataSource separates static data from increments, and IsHighValue is true for donations over JPY 57,000."
+    },
+    {
+      "id": "pc-12-semantic-model-view",
+      "page": "12-semantic-model-and-ontology-metrics/02-12-2-pc-12-semantic-model-view.md",
+      "captionJa": "初回 framing 後の Semantic model を Viewing モードで表示し、5テーブルが読み込まれ、一部の列と関係が見える状態です。図全体は表示範囲外です。構成の参考であり、DAX の結果は別の実クエリで確認します。",
+      "captionEn": "Semantic model in Viewing mode after initial framing, with five tables loaded and some columns and relationships visible. The full diagram is outside the viewport. This is a configuration illustration; verify DAX results with an actual query."
+    },
+    {
+      "id": "p30-12-metric-list",
+      "page": "12-semantic-model-and-ontology-metrics/03-12-2-p30-12-metric-list.md",
+      "captionJa": "「寄附」の Configure 画面の Metrics 欄。Semantic model のメジャーが 10 metrics と表示される（図は一部）",
+      "captionEn": "Metrics section of the 寄附 entity: the semantic model's measures are listed as 10 metrics (only part of the list is shown)."
+    },
+    {
+      "id": "p30-12-metrics",
+      "page": "12-semantic-model-and-ontology-metrics/04-12-2-p30-12-metrics.md",
+      "captionJa": "Metric の詳細（受入増分寄附総額）。View expression で表示した元の DAX と、Applies to の「寄附」を確認する",
+      "captionEn": "Metric details (受入増分寄附総額): the original DAX shown with View expression, and Applies to 寄附."
+    },
+    {
+      "id": "pc-12-report-canvas",
+      "page": "12-semantic-model-and-ontology-metrics/05-12-2-pc-12-report-canvas.md",
+      "captionJa": "任意の Power BI レポート。年・寄附先都道府県が All の表示で、Gold 全体の寄附総額1,596,157,000円・94,900件、平均16,819円（表示丸め）、高額寄付1,392件が表示されています。母集団は静的80,000件と受入増分14,900件です。Eventhouse の重複を含む観測15,000行や、静的データだけの値とは区別し、同じ条件の直接 DAX と照合します。",
+      "captionEn": "Optional Power BI report with Year and recipient prefecture both set to All. The cards show all Gold: JPY 1,596,157,000, 94,900 donations, average JPY 16,819 after display rounding, and 1,392 high-value donations. This population combines 80,000 static donations with 14,900 accepted increments. Keep it distinct from the 15,000 duplicate-inclusive Eventhouse observations and static-only values, and compare with direct DAX under matching filters."
+    },
+    {
+      "id": "p30-13-rule-list",
+      "page": "13-metadata-business-rules-and-notebook-02/02-13-2-p30-13-rule-list.md",
+      "captionJa": "Explorer の Overview → Rules で開く Business rules 画面。保存した Rule と、関連する Entity type が一覧表示される（図は4つの Rule がある状態）",
+      "captionEn": "Business rules page (Overview → Rules in Explorer): saved rules are listed with their linked entity types (the figure shows four rules)."
+    },
+    {
+      "id": "p30-13-rules",
+      "page": "13-metadata-business-rules-and-notebook-02/03-13-2-p30-13-rules.md",
+      "captionJa": "Rule の編集画面。Rule name・Rule definition と、Add concept でリンクした Supplier・Gift・Donation（Rule metadata は空）",
+      "captionEn": "Edit rule page: Rule name, Rule definition, and Supplier, Gift and Donation linked with Add concept (Rule metadata is empty)."
+    },
+    {
+      "id": "p30-14-shared",
+      "page": "14-namespaces-inheritance-and-shared-properties/02-14-2-p30-14-shared.md",
+      "captionJa": "親の AdministrativeArea。AreaName の Property source は Global（共有プロパティ）で、キーとバインドはまだ無い",
+      "captionEn": "Parent entity AdministrativeArea: AreaName has property source Global (a shared property); no entity key and no binding yet."
+    },
+    {
+      "id": "p30-14-inheritance",
+      "page": "14-namespaces-inheritance-and-shared-properties/03-14-2-p30-14-inheritance.md",
+      "captionJa": "継承で作った Municipality。AreaName は Inherited、Details の Direct Parent は AdministrativeArea",
+      "captionEn": "Municipality created with inheritance: AreaName shows as Inherited, and Details list AdministrativeArea as the Direct Parent."
+    },
+    {
+      "id": "p30-15-noattachment-preview",
+      "page": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/02-15-2-p30-15-noattachment-preview.md",
+      "captionJa": "添付なし（A）の提案。DataLayer（String）は追加されるが説明は空で、資料に無い層の意味は推測していない",
+      "captionEn": "Proposal without attachments (A): DataLayer (String) is added, its description stays empty, and undefined layers are not guessed."
+    },
+    {
+      "id": "p30-15-attachments",
+      "page": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/03-15-2-p30-15-attachments.md",
+      "captionJa": "新しい会話で4つのファイルを添付した状態。Plan のままプロンプトを入力して送信する",
+      "captionEn": "In a new conversation, attach the four files, keep Plan selected, then enter the prompt and send."
+    },
+    {
+      "id": "p30-15-attachment-grounding",
+      "page": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/04-15-2-p30-15-attachment-grounding.md",
+      "captionJa": "添付あり（B）の回答例。4つの資料からデータの層の違いを読み取り、配送や発送を推測していない",
+      "captionEn": "Answer with attachments (B): it uses all four files to keep the data layers apart and does not assume delivery or shipment."
+    },
+    {
+      "id": "p30-15-attachment-response-bottom",
+      "page": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/05-15-2-p30-15-attachment-response-bottom.md",
+      "captionJa": "回答の末尾。検証の結果（エラー0件・警告1件）を確認し、緑の Preview ontology ボタンで提案を開く",
+      "captionEn": "End of the answer: check the validation results (0 errors, 1 warning), then open the proposal with the green Preview ontology button."
+    },
+    {
+      "id": "p30-15-preview",
+      "page": "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol/06-15-2-p30-15-preview.md",
+      "captionJa": "添付あり（B）の提案。DataLayer に加え、承認や配送を意味しないという説明が、資料をもとに入っている",
+      "captionEn": "Proposal with attachments (B): besides DataLayer, it has a description, based on the files, saying that it implies no approval or delivery."
+    },
+    {
+      "id": "p30-16-eligibility",
+      "page": "16-selective-graph-materialization-and-gql/02-16-2-p30-16-eligibility.md",
+      "captionJa": "Configure Graph の Choose what to project。各 Entity の Status と Source を確認する（図は全体を選んだ状態。演習では必要な範囲だけを選ぶ）",
+      "captionEn": "Choose what to project in Configure Graph: check each entity's Status and Source. The figure shows the whole model selected; in this lab, select only what you need."
+    },
+    {
+      "id": "pc-16-unsupported-datasource",
+      "page": "16-selective-graph-materialization-and-gql/03-16-2-pc-16-unsupported-datasource.md",
+      "captionJa": "Configure Graph の判定画面。この例では10 Entity が Ineligible、Gift の理由が Unsupported Datasource（ot_gift）で、Continue は無効です。右側は Preview であり、Graph not materialized と表示されています。理由を確認し、未対応の間は新規の実体化を止めます。この画面のように未実体化なら、GQL の確認も未実施として記録します。静的テーブルの検証とは分けて扱います。",
+      "captionEn": "Configure Graph eligibility screen. All ten entities are Ineligible in this example; Gift reports Unsupported Datasource for ot_gift, and Continue is disabled. The right panel is a Preview, while the status says Graph not materialized. Inspect the reason and stop new materialization while unsupported. In an unmaterialized state like this one, record GQL checks as unrun. Verify static tables separately."
+    },
+    {
+      "id": "p30-16-gql",
+      "page": "16-selective-graph-materialization-and-gql/04-16-2-p30-16-gql.md",
+      "captionJa": "全体を実体化した Graph で、Prefecture にフィルターを付けて Run query した結果。矢印は自治体 → 都道府県。ノードの数字は ID とは限らないため、Table view で確かめる",
+      "captionEn": "Run query with a filter on Prefecture in a graph of the whole model: arrows go from municipality to prefecture. Numbers on nodes may not be IDs, so check them in Table view."
+    }
+  ],
+  "assets": {
+    "pc-01-architecture": {
+      "file": "assets/pc-01-architecture.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/architecture.png",
+      "sha256": "adcede5b0d4dd1d0f9069b3c252e7ca3066e0d3e87bb1ec45f1777710dd57daa"
+    },
+    "pc-04-workspace-type-current": {
+      "file": "assets/pc-04-workspace-type-current.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/workspace-type-current.png",
+      "sha256": "4bb62bcdc2c38884089fab03769b52818b3e3832f3fedd6a67c4a546a8a70e60"
+    },
+    "pc-05-notebook01-ready": {
+      "file": "assets/pc-05-notebook01-ready.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/notebook01-ready-output.png",
+      "sha256": "545f7a0d6e06a4b548af02c6b6b33364d13ba6fcec23ea25449259e7d48b2c65"
+    },
+    "p30-06-entities": {
+      "file": "assets/p30-06-entities.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/7a84cbc6bdccb87ced6d5ae92a7412d78440f605b1a7960bc8e85d088af2328d.png",
+      "sha256": "7a84cbc6bdccb87ced6d5ae92a7412d78440f605b1a7960bc8e85d088af2328d"
+    },
+    "p30-06-instances": {
+      "file": "assets/p30-06-instances.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de.png",
+      "sha256": "7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de"
+    },
+    "p30-07-relationships": {
+      "file": "assets/p30-07-relationships.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png",
+      "sha256": "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83"
+    },
+    "p30-08-kql-overview": {
+      "file": "assets/p30-08-kql-overview.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/p30-08-kql-overview.png",
+      "sha256": "fe5e2f2c6ac4f3c5c05299f8676923eb98d6e641cf99db96bd4f2eb20f227e7a"
+    },
+    "p30-09-source-events": {
+      "file": "assets/p30-09-source-events.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/p30-09-source-events.png",
+      "sha256": "6fc2608f90bbfb7187cefe852322e2426f5ecc296984e660b2bb4303999949b4"
+    },
+    "p30-09-native-delivery": {
+      "file": "assets/p30-09-native-delivery.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/b7f2bf77c40504f1431756d0c5b50f775c982f41cf31c55740ea618455db8f13.png",
+      "sha256": "b7f2bf77c40504f1431756d0c5b50f775c982f41cf31c55740ea618455db8f13"
+    },
+    "p30-09-copy-002": {
+      "file": "assets/p30-09-copy-002.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/9f52acb6e8a07d2c355bc3730e603be56f8749df55bc4ef16050ceae40378153.png",
+      "sha256": "9f52acb6e8a07d2c355bc3730e603be56f8749df55bc4ef16050ceae40378153"
+    },
+    "p30-09-manual-recovery": {
+      "file": "assets/p30-09-manual-recovery.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/bde681cdcfb15ddfd734386ee82eb7c94212488941203e64e1b7e91e71948cce.png",
+      "sha256": "bde681cdcfb15ddfd734386ee82eb7c94212488941203e64e1b7e91e71948cce"
+    },
+    "p30-09-pipeline-003-succeeded": {
+      "file": "assets/p30-09-pipeline-003-succeeded.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/p30-09-pipeline-003-succeeded.png",
+      "sha256": "a445c9c5ffc875418c1b828ae5946be0756d074e1ff1b7da6abfd0f7eb98972a"
+    },
+    "p30-10-timeseries": {
+      "file": "assets/p30-10-timeseries.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f.png",
+      "sha256": "2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f"
+    },
+    "pc-11-notebook05-preview": {
+      "file": "assets/pc-11-notebook05-preview.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/notebook05-preview-output.png",
+      "sha256": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e"
+    },
+    "p30-11-executed-output": {
+      "file": "assets/p30-11-executed-output.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/e9de3d299d1ca31b05a9ab94cd150736523360cda5c0d17eee04dfc0e61f1820.png",
+      "sha256": "e9de3d299d1ca31b05a9ab94cd150736523360cda5c0d17eee04dfc0e61f1820"
+    },
+    "p30-11-notebook05-monitor-success": {
+      "file": "assets/p30-11-notebook05-monitor-success.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/p30-11-notebook05-monitor-success.png",
+      "sha256": "cfa4644a21c9dc00e691f526e71fa9e8fc21dcaaaa03f55be39754a074e490e5"
+    },
+    "p30-11-gold": {
+      "file": "assets/p30-11-gold.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/7362dcbd83633336b836ae0fa607cb764e88884a234b52f0bd459b4f67d6918f.png",
+      "sha256": "7362dcbd83633336b836ae0fa607cb764e88884a234b52f0bd459b4f67d6918f"
+    },
+    "p30-11-schema-preview": {
+      "file": "assets/p30-11-schema-preview.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/14c905263756f76a5fedad91ce4b7e0e17fcfb069c8ca78e520011954cf2f3f4.png",
+      "sha256": "14c905263756f76a5fedad91ce4b7e0e17fcfb069c8ca78e520011954cf2f3f4"
+    },
+    "pc-12-semantic-model-view": {
+      "file": "assets/pc-12-semantic-model-view.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/semantic-model-tables-measures.png",
+      "sha256": "0376ccc052fc14c2ad0b45a521f6689d4a1cd6499a04dc9659aeaf7c1bbeb66b"
+    },
+    "p30-12-metric-list": {
+      "file": "assets/p30-12-metric-list.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068.png",
+      "sha256": "fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068"
+    },
+    "p30-12-metrics": {
+      "file": "assets/p30-12-metrics.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/d8a86d6a963ab25caa00fc89c68e82239f3f7ebbaa762313b2fae8ebaecf83fe.png",
+      "sha256": "d8a86d6a963ab25caa00fc89c68e82239f3f7ebbaa762313b2fae8ebaecf83fe"
+    },
+    "pc-12-report-canvas": {
+      "file": "assets/pc-12-report-canvas.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/report-dashboard-canvas.png",
+      "sha256": "f3a3858c52398f851a2762419c2c30187a427944701892588d6b1cef1f58f930"
+    },
+    "p30-13-rule-list": {
+      "file": "assets/p30-13-rule-list.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/335a63411b2cac229c86ed9813c2e8cd7af7c530b375482342ed450e13f59858.png",
+      "sha256": "335a63411b2cac229c86ed9813c2e8cd7af7c530b375482342ed450e13f59858"
+    },
+    "p30-13-rules": {
+      "file": "assets/p30-13-rules.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/e1dcfa2ecfe6c2c3102dc7c6686d9b17189bd87d84bb91d1cb09d88a0f787161.png",
+      "sha256": "e1dcfa2ecfe6c2c3102dc7c6686d9b17189bd87d84bb91d1cb09d88a0f787161"
+    },
+    "p30-14-shared": {
+      "file": "assets/p30-14-shared.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35.png",
+      "sha256": "3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35"
+    },
+    "p30-14-inheritance": {
+      "file": "assets/p30-14-inheritance.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164.png",
+      "sha256": "74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164"
+    },
+    "p30-15-noattachment-preview": {
+      "file": "assets/p30-15-noattachment-preview.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/c61a78fcce1e1131639ba7cf82902f842410e7a4c51da8b8848bcf03bb3f7e98.png",
+      "sha256": "c61a78fcce1e1131639ba7cf82902f842410e7a4c51da8b8848bcf03bb3f7e98"
+    },
+    "p30-15-attachments": {
+      "file": "assets/p30-15-attachments.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/001833d18a724738b7f8daf74ee1495fdf52a980f0b313e32a05f9c5bbf0e9c6.png",
+      "sha256": "001833d18a724738b7f8daf74ee1495fdf52a980f0b313e32a05f9c5bbf0e9c6"
+    },
+    "p30-15-attachment-grounding": {
+      "file": "assets/p30-15-attachment-grounding.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/917954d6dab1aea99ab4e5bdab32de4e8282b8fe9273d4792f74cc6f5fcfdffd.png",
+      "sha256": "917954d6dab1aea99ab4e5bdab32de4e8282b8fe9273d4792f74cc6f5fcfdffd"
+    },
+    "p30-15-attachment-response-bottom": {
+      "file": "assets/p30-15-attachment-response-bottom.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/46e8485a0d4d2d3f412ae425fca636ec12589e361e1d2d8a64e323050ffbe767.png",
+      "sha256": "46e8485a0d4d2d3f412ae425fca636ec12589e361e1d2d8a64e323050ffbe767"
+    },
+    "p30-15-preview": {
+      "file": "assets/p30-15-preview.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/8d2258108f8a836907ef8352d4aba066bd319f164cce3a919ffdb344027716e6.png",
+      "sha256": "8d2258108f8a836907ef8352d4aba066bd319f164cce3a919ffdb344027716e6"
+    },
+    "p30-16-eligibility": {
+      "file": "assets/p30-16-eligibility.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/3bc15540e94fe29adca9a564130f23ed3ad96d7e6afffc2705cce3ac0512ff3b.png",
+      "sha256": "3bc15540e94fe29adca9a564130f23ed3ad96d7e6afffc2705cce3ac0512ff3b"
+    },
+    "pc-16-unsupported-datasource": {
+      "file": "assets/pc-16-unsupported-datasource.png",
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/ontology-graph-ineligible.png",
+      "sha256": "c6f630237e66e3577093214c141d037351e8b4ca918c2a30d695e5f59b985867"
+    },
+    "p30-16-gql": {
+      "file": "assets/p30-16-gql.png",
+      "kind": "reviewed-capture",
+      "source": "docs/assets/v3.0.0-evidence/captures/25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c.png",
+      "sha256": "25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c"
+    }
+  },
+  "newDeploymentScreenshotsClaimed": false,
+  "contentSha256": "5dd6a969537bbde7323a956fb56646006753d0af455e6a53532183f76a633816",
+  "currentArtifactSet": {
+    "manifestSha256": "a819dd407cebfb59139a753b66731ba0bb3b34f408319e7c0d2b302262315deb",
+    "sourceCommit": "91dfea01eadd386f861300d95e8c5a24bb1730df",
+    "sourceTreeSha256": "48a4db97c40b9aee70a2c7107f0c996595f24b3856009dc39b6a97f9aa2952a0",
+    "workshopVersion": "3.1.0",
+    "csvFiles": 11,
+    "notebookCount": 5,
+    "tempRequired": false
+  }
 }

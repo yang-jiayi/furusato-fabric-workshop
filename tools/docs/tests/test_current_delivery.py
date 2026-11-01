@@ -21,6 +21,14 @@ from furusato_html.model import Section, Text
 
 
 class CurrentDeliveryTests(unittest.TestCase):
+    def test_retired_word_guard_distinguishes_literal_source_vocabulary(self):
+        self.assertFalse(delivery.retired_guide_reference(
+            'It usually opens with a place-of-origin word such as a prefecture name.'))
+        for value in ('Use Word or HTML', 'Read guide.DOCX', 'Open microsoft word',
+                      'use the word document', 'download the word file'):
+            with self.subTest(value=value):
+                self.assertTrue(delivery.retired_guide_reference(value))
+
     def test_exact_experimental_profile_inputs_are_bound_in_current_package(self):
         files=delivery.current_profile_files(ROOT)
         self.assertEqual(len(files),9)

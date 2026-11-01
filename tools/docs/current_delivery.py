@@ -221,6 +221,12 @@ def text_values(value):
             yield from text_values(child)
 
 
+def retired_guide_reference(text):
+    # Native source descriptions can use the ordinary English noun "word".
+    return bool(re.search(r'\bWord\b', text)
+                or re.search(r'\.docx|\bmicrosoft\s+word\b|\bword\s+(?:guide|document|file)\b', text, re.I))
+
+
 def inspect_html(path, document, metadata):
     raw = path.read_bytes()
     tree = html_parser.fromstring(raw)
@@ -232,7 +238,7 @@ def inspect_html(path, document, metadata):
         raise ValueError('The HTML does not bind the current standalone participant model')
     main = tree.get_element_by_id('main')
     body = tree.find('body')
-    if re.search(r'\bWord\b|\.docx', body.text_content(), re.I) or tree.xpath('//*[@id="word-download"]'):
+    if retired_guide_reference(body.text_content()) or tree.xpath('//*[@id="word-download"]'):
         raise ValueError('Retired guide references remain in the current participant HTML')
     sections = list(document.walk())
     if len(main.xpath('./section')) != 29:

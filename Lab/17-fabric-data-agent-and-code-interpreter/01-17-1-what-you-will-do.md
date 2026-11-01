@@ -2,29 +2,27 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-Fabric Data Agent を1件だけ使い、Lakehouse（SQL）・KQL Database（KQL）・Ontology・Semantic model（DAX）の4つをソースにして、自然言語の質問に答えさせます。同じ Agent の Code Interpreter で、取得した結果から表やグラフ、CSV を作ります。
+この章では、自分が利用を許可された環境の既存Gen2 Data Agentに、実測・照合済みの実験プロファイルを適用し、Draftと公開版を読み戻します。設定の一致は、回答精度や採用を意味しません。
 
-指示（Agent instructions）は回答の方針を伝えるもので、アクセス制御ではありません。回答を見るときは、本文だけでなく、使われたソース、実行されたクエリ、返された結果を確認します。
+4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontologyのcontextはsource instructionとは別で、Ontology-groundingがGQL実行を意味するわけではありません。実際のsource・query language・query・resultを対応させて確認します。
 
 準備するもの・確認すること
 
-- 最初に17.5の教材と実施順を確認します。作業フォルダーの Data Agent（DA_Furusato_&lt;PID&gt;）を1件だけ使い、既存の設定がある場合は保存してから変更します。17.6〜17.7でソースを用意し、17.16のコマンドで採用済みの設定を適用・公開・読み戻しします。17.8〜17.15には入力先、原文、確認方法を収録しています。
-- 10章（時系列）と12章（Semantic model）が完了していることを確認します。
-- 参加者は、自分が利用を許可された Workspace とフォルダーを使い、実際の PID を設定に指定します。構成を公開しただけでは回答精度や完全な source/runtime qualification は保証されません。第19章・付録Cに従い、自分の公開版の回答と実際のソース・クエリ・返却結果を評価します。
+- 既存Agentとその4つの論理ソースを確認し、Workspace・フォルダー・Agentの各IDは自分の許可された環境から取得します。未作成の場合に別AgentやSchemaを作る手順ではありません。
+- 現在のlive definitionとselectionを読み取り、実際のsource definitionでID-only bindingを解決できることを確認します。共有環境のmirror・時系列作業には別の完全性確認が必要です。
 
 <details>
 <summary>English</summary>
 
 ## 17.1 What you will do
 
-Use exactly one Fabric Data Agent with four sources — the Lakehouse (SQL), the KQL database (KQL), the ontology and the semantic model (DAX) — to answer natural-language questions. Use Code Interpreter on the same agent to create tables, charts and CSV files from the results.
+Apply the measured and reconciled experimental profile to an existing Gen2 Data Agent in an environment you are authorized to use, then read back Draft and Published. Configuration equality does not establish accuracy or adoption.
 
-Agent instructions guide how the agent answers; they are not access control. When you review an answer, check not only its text but also the source used, the executed query and the returned results.
+Distinguish the four logical sources: Lakehouse, KQL Database, semantic model and Ontology. Ontology context is separate from source instructions, and ontology grounding does not imply GQL execution. Match the actual source, query language, query and result.
 
 Before you start
 
-- Start with the materials and order in 17.5. Use one Data Agent in your work folder (DA_Furusato_&lt;PID&gt;) and save any existing configuration before editing. Prepare sources in 17.6–17.7, then apply, publish and read back the adopted configuration with the commands in 17.16. Sections 17.8–17.15 contain field mappings, complete original text and verification steps.
-- Confirm that Chapters 10 (time series) and 12 (semantic model) are complete.
-- Use a workspace and folder you are authorized to use, and set your actual PID in the configuration. Publishing a configuration does not guarantee answer quality or complete source/runtime qualification. Evaluate your own publication's answers and actual sources, queries and returned results using Chapter 19 and Appendix C.
+- Confirm the existing agent and its four logical sources. Obtain workspace, folder and agent IDs from your authorized environment. This procedure does not create another agent or schema if one is missing.
+- Read the live definition and selections, and confirm ID-only bindings can be resolved against actual source definitions. Mirroring and time-series work in the shared environment require separate completeness checks.
 
 </details>

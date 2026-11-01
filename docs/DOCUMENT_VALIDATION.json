@@ -12,18 +12,18 @@
     "figures": 33,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "9915f7c5317efa04efa2fc89b5ca6db280b572373a1c93330535eef284946f59"
+    "htmlSha256": "3596958407c73cc5c7431ebfcdd9c5503d3650a68da79fca44eee5d8211fa00c"
   },
   "sourceRevision": {
-    "baseCommit": "8c41e4964cfc702f96059a45b1292f5fac65afb7",
-    "workingTreeMatchesCommit": false,
+    "baseCommit": "511e81697107d95dd298a2856c8575b27d0d8cf1",
+    "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "321a6e8dd7318945efbc634c3a090ed4cd88c6697d9020e2921228611a14f338"
+    "sourceTreeSha256": "1731b663d0abfdb5e9f686e18fde442d5ec8b1947d7dbe37ea0aabd40dfdaae9"
   },
   "currentArtifactSet": {
-    "manifestSha256": "2dd100f4247528a341e0c7acfa9dfd0ec1d7721cf961d6b49c48e59d7d5e5d80",
-    "sourceCommit": "8c41e4964cfc702f96059a45b1292f5fac65afb7",
-    "sourceTreeSha256": "321a6e8dd7318945efbc634c3a090ed4cd88c6697d9020e2921228611a14f338",
+    "manifestSha256": "c895f316177429a4af8790d90968b4fddb76db55f48b49ba18805169bdd28915",
+    "sourceCommit": "511e81697107d95dd298a2856c8575b27d0d8cf1",
+    "sourceTreeSha256": "1731b663d0abfdb5e9f686e18fde442d5ec8b1947d7dbe37ea0aabd40dfdaae9",
     "workshopVersion": "3.0.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "9915f7c5317efa04efa2fc89b5ca6db280b572373a1c93330535eef284946f59",
+    "htmlSha256": "3596958407c73cc5c7431ebfcdd9c5503d3650a68da79fca44eee5d8211fa00c",
     "checks": [
       "all29chaptersAndAppendices",
       "ja.languagePersists",

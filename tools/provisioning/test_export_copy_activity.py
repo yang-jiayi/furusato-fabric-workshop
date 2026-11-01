@@ -19,6 +19,34 @@ def run(activity_type="Copy", job=JOB, output=None):
 
 
 class CopyRecordTests(unittest.TestCase):
+    def test_documented_array_and_service_value_envelope_are_preserved(self):
+        runs = [run(), run("Wait")]
+        for reply in (runs, {"value": runs}):
+            with self.subTest(reply_type=type(reply).__name__):
+                actual = exporter.query_runs(lambda url, body: reply, "workspace", JOB)
+                self.assertIs(actual, runs)
+
+    def test_invalid_and_partial_activity_responses_stop(self):
+        for reply in (
+            None, {}, {"value": None}, {"value": {}}, {"value": ["Copy"]},
+            {"value": [run()], "continuationToken": "next"},
+            {"value": [run()], "continuationUri": "https://example.invalid/next"},
+        ):
+            with self.subTest(reply=reply), self.assertRaises(ValueError):
+                exporter.query_runs(lambda url, body: reply, "workspace", JOB)
+
+    def test_query_uses_the_job_scheduler_id_and_explicit_time_window(self):
+        calls = []
+
+        def post(url, body):
+            calls.append((url, body))
+            return []
+
+        self.assertEqual(exporter.query_runs(post, "workspace", JOB), [])
+        self.assertEqual(len(calls), 1)
+        self.assertTrue(calls[0][0].endswith(f"/pipelineruns/{JOB}/queryactivityruns"))
+        self.assertLess(calls[0][1]["lastUpdatedAfter"], calls[0][1]["lastUpdatedBefore"])
+
     def test_single_copy_activity_is_exported_verbatim(self):
         record = exporter.copy_record([run(), run("Wait")], JOB)
         self.assertEqual((record["activityType"], record["status"]), ("Copy", "Succeeded"))

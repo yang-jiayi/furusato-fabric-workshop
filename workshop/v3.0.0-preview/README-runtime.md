@@ -110,6 +110,17 @@ Stop on any nonzero exit code. These are deliberate separate stages, not an unat
 
 `deploy-sources` stages the increment CSVs outside `Files/increment`. It checks Notebook01 job history and never re-runs a completed job. `verify-sources` uses the documented native SQL Endpoint MCP tool, discovers its actual schema, and requires all 20 final tables to match the Ready publication generation plus static source totals.
 
+**SQL endpoint metadata lag is not missing Lakehouse data.** If Notebook01 is
+Completed but the SQL endpoint's `dbo` catalog is empty, first verify the job
+result and the expected OneLake Delta table files under `Tables/dbo`. Allow normal
+SQL endpoint synchronization. If metadata remains unavailable, use the supported
+[SQL endpoint metadata refresh](https://learn.microsoft.com/en-us/rest/api/fabric/sqlendpoint/items/refresh-sql-endpoint-metadata)
+only on the participant-owned SQL endpoint, with `recreateTables=false` and an
+explicit selective list of expected tables. Never rerun Notebook01, use
+`recreateTables=true`, or drop tables to repair metadata lag. A successful refresh
+is not data acceptance: rerun SQL verification and require all expected tables
+and totals to pass before continuing.
+
 `deploy-notebooks` imports Notebook02–05 but does not execute them. Notebook04 is a parameterized frontend; the CLI remains the primary cross-machine orchestration path. Preserve the same private plan and `deployment-state.json` across stages. Notebook02 previews/applies only the four declared rule statements, requires an exact current-definition SHA for apply, and refuses post-native-Metrics TMDL replacement.
 
 `deploy-core` produces **generation2 static-core readback**, not full native-feature completion. Complete the Eventhouse binding using the verified native contract/UI before claiming the time-series lab passed.
@@ -333,10 +344,12 @@ or its current candidate has passed the benchmark.
 
 This edition reuses the unchanged tested native lifecycle and upload utilities. `shouldRun` definition metadata is not used as a substitute for formal native `start_rule`/`stop_rule`. The v3 renderer explicitly sets a 120,000 ms late-arrival tolerance while keeping the rule stopped and historical application disabled. The immutable v2.7 files remain unchanged. Rendering these settings does not initialize action credentials or prove event delivery.
 
-Before the first watched upload, inspect the new rule in the native Activator UI.
-While stopped, open **Edit action**, verify the intended Pipeline and dynamic
-`Type`/`Subject`/`Source` mappings, then **Apply** and **Save** once. Keep historical
-application disabled. Read back the definition: `shouldApplyRuleOnUpdate` must be
+Before the first watched upload, read back the actual action target, dynamic
+`Type`/`Subject`/`Source` mappings and settings. Native **Edit action** → **Apply** →
+**Save** is required only if action credentials are not `Initialized` or the actual
+targets/settings differ from the intended deployment; keep the rule stopped while
+correcting them. Keep historical application disabled. Read back the definition:
+`shouldApplyRuleOnUpdate` must be
 `false`, and an explicit `delayToleranceMs` of at least `120000` must be present
 before delivery. After formal Start, `check-activator-readiness` reads the actual
 native backend state, rule health and action credential state. It requires
@@ -347,13 +360,12 @@ blocks upload; Stop remains available. The adapter uses the observed first-party
 web client contracts, which are not documented public REST APIs. A contract
 change requires review; there is no fallback to the `Running` badge alone.
 
-In the October 15 validation, the first automatic attempt did not run the
-Pipeline. A separate, recorded recovery subsequently completed all three native
-event/activation/Pipeline/Copy/KQL chains after healthy backend observations.
-The first failure remains in its original ledger. Native Save, the explicit
-tolerance and backend warmup were not isolated as causes. These observations do
-not establish that an API-only setting initializes every action, or that a fixed
-warmup duration guarantees success. Readiness is not delivery acceptance.
+Formal native `start_rule` can establish readiness without an additional UI save
+when the actual backend is Running, the rule is in sync, credentials are
+`Initialized`, targets/mappings match and `delayToleranceMs` is at least `120000`.
+Do not silently bypass missing readiness or assume a fixed warmup guarantees it.
+Readiness is not delivery acceptance: preserve the actual
+FileCreated → activation → Pipeline job → Copy → KQL proof for every increment.
 Never replay an earlier unverified file to manufacture a successful first-run
 result; separately authorized recovery must keep its own receipts.
 
@@ -382,7 +394,7 @@ python tools/provisioning/preview30_runtime.py verify-delivery @Write --incremen
   --native-copy "<private-native-copy-activity.json>"
 ```
 
-The Copy export must identify the actual `pipelineRunId`, `activityType: Copy`, `status: Succeeded`, and native `output.rowsRead`/`output.rowsCopied`. Unsupported shapes are blockers, not values to invent. The native event array must retain the service fields consumed by `activation_runtime.verify_automatic_delivery`, including exact source, subject, event ID, PutBlob API and complete content length.
+The Copy export must identify the actual `pipelineRunId`, `activityType: Copy`, `status: Succeeded`, and native `output.rowsRead`/`output.rowsCopied`. The helper accepts the official bare array and the current service `{value: [...]}` envelope; malformed or incomplete paginated responses are blockers, never complete exports or values to invent. See [Query activity runs](https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-rest-api-capabilities#query-activity-runs). The native event array must retain the service fields consumed by `activation_runtime.verify_automatic_delivery`, including exact source, subject, event ID, PutBlob API and complete content length.
 
 Only after increment 1 reaches `native-copy-kql-verified` may increment 2 be delivered; repeat for increment 3. No manual Pipeline control can prove automatic delivery. Stop formally when instructed:
 
@@ -549,10 +561,11 @@ The deployed rule's action already references this deployment's Pipeline: its
 `fabricJobConnectionDocumentId` is the `fabricItemAction` entity inside the same
 Activator definition, whose `itemId` is the deployed Pipeline. The v3 renderer
 supplies explicit `delayToleranceMs=120000`, but does not persist native action
-credentials. Use the observed native UI action setup before delivery:
+credentials. Inspect actual targets/settings and credential readiness before delivery:
 
-1. Keep the rule stopped. Open the rule → **Edit action**, confirm this deployment's
-   Pipeline and the dynamic `Type`/`Subject`/`Source` mappings, **Apply**, **Save**.
+1. Confirm this deployment's Pipeline and dynamic `Type`/`Subject`/`Source` mappings.
+   Only if actual targets/settings mismatch or credentials are not `Initialized`,
+   keep the rule stopped and use **Edit action** → **Apply** → **Save** to correct them.
 2. Read the definition back: the action still targets the deployed Pipeline,
    `shouldApplyRuleOnUpdate` is `false` and `delayToleranceMs` ≥ `120000`.
 3. Run `start-activator`, then the read-only `check-activator-readiness`. Confirm
@@ -568,7 +581,11 @@ python tools/provisioning/export_copy_activity.py --workspace-id <workspace> `
   --pipeline-job-id <new pipeline job id> --out <private dir>\copy-001.json
 ```
 
-The helper writes the service's own activity-runs record (`pipelineRunId`,
+The helper accepts an official bare activity-runs array or the current service
+`{value: [...]}` envelope, rejecting malformed responses and incomplete pagination;
+never count a partial export as complete. See
+[Query activity runs](https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-rest-api-capabilities#query-activity-runs).
+It writes the service's own activity-runs record (`pipelineRunId`,
 `activityType`, `status`, `rowsRead`, `rowsCopied`) and stops unless the run has
 exactly one Copy activity. The FileCreated events (`___subject`, `___type`,
 `___source`, `api`, `contentLength`, `___id`) must be actual service records;

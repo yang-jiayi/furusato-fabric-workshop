@@ -43,7 +43,9 @@ def copy_record(runs: list[dict[str, Any]], job_id: str) -> dict[str, Any]:
     }
 
 
-def query_runs(post: Callable[[str, dict], dict], workspace: str, job_id: str) -> list[dict[str, Any]]:
+def query_runs(
+    post: Callable[[str, dict], dict | list], workspace: str, job_id: str,
+) -> list[dict[str, Any]]:
     now = datetime.now(timezone.utc)
     body = {
         "filters": [],
@@ -52,7 +54,17 @@ def query_runs(post: Callable[[str, dict], dict], workspace: str, job_id: str) -
         "lastUpdatedBefore": (now + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
     reply = post(f"{API}/workspaces/{workspace}/datapipelines/pipelineruns/{job_id}/queryactivityruns", body)
-    return reply.get("value", reply if isinstance(reply, list) else [])
+    if isinstance(reply, list):
+        runs = reply
+    elif isinstance(reply, dict):
+        if reply.get("continuationToken") or reply.get("continuationUri"):
+            raise ValueError("Activity-runs response is incomplete; export all pages before validating a single Copy.")
+        runs = reply.get("value")
+    else:
+        runs = None
+    if not isinstance(runs, list) or not all(isinstance(run, dict) for run in runs):
+        raise ValueError("Activity-runs response must contain an array of activity records.")
+    return runs
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -70,7 +82,7 @@ def main(argv: list[str] | None = None) -> int:
     session.headers["Authorization"] = "Bearer " + AzureCliCredential().get_token(
         "https://api.fabric.microsoft.com/.default").token
 
-    def post(url: str, body: dict) -> dict:
+    def post(url: str, body: dict) -> dict | list:
         response = session.post(url, json=body, timeout=60)
         if response.status_code != 200:
             raise SystemExit(f"Activity-runs query failed with HTTP {response.status_code}.")

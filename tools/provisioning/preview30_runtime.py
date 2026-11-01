@@ -40,6 +40,7 @@ RUNTIME_INPUT_FILES = (
     "tools/provisioning/preview30_runtime.py", "tools/provisioning/preview30_deploy.py",
     "tools/provisioning/preview30_verify.py", "tools/provisioning/preview30_ontology.py",
     "tools/provisioning/preview30_activation.py", "tools/provisioning/preview30_agent.py",
+    "tools/provisioning/native_ui_observation.py",
     "tools/provisioning/preview30_activation_readiness.py",
     "tools/provisioning/workshop_runtime.py", "tools/provisioning/activation_runtime.py",
     "tools/provisioning/reference_kql.py", "tools/data-agent/native_evaluation.py",
@@ -92,7 +93,8 @@ def save(path: Path, value: Any) -> None:
 
 def private_directory(path: Path) -> Path:
     path = path.resolve()
-    if path == REPO or REPO in path.parents:
+    repo = REPO.resolve()
+    if path == repo or repo in path.parents:
         raise SafetyError("Evidence must be outside the source checkout.")
     path.mkdir(parents=True, exist_ok=True)
     return path
@@ -688,6 +690,8 @@ def main() -> int:
     parser.add_argument("--increment", type=int, choices=[1, 2, 3])
     parser.add_argument("--native-events", type=Path)
     parser.add_argument("--native-copy", type=Path)
+    parser.add_argument("--native-ui-receipt-root", type=Path)
+    parser.add_argument("--native-ui-control-classification", type=Path)
     args = parser.parse_args()
     try:
         if args.include_relationships and args.command != "preflight":

@@ -146,6 +146,47 @@ def build() -> dict:
                 f'NOTEBOOK_VERSION = "{WORKSHOP_VERSION}"\n' if line == 'NOTEBOOK_VERSION = "2.7.0"\n' else line
                 for line in parameters[0]["source"]
             ]
+        if number == "05":
+            final_cell = notebook["cells"][-1]
+            source = final_cell["source"]
+            if "IS_INTERACTIVE = bool(context.get(\"isForInteractive\", False))\n" not in source:
+                marker = 'workspace_name = context["currentWorkspaceName"]\n'
+                if source.count(marker) != 1:
+                    raise ValueError("Notebook05 runtime context changed; cannot add the noninteractive result contract.")
+                source.insert(source.index(marker) + 1,
+                              'IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n')
+            old_gate = '    is_interactive=bool(context.get("isForInteractive", False)),\n'
+            new_gate = "    is_interactive=IS_INTERACTIVE,\n"
+            if old_gate in source:
+                if source.count(old_gate) != 1:
+                    raise ValueError("Notebook05 interactive gate is ambiguous.")
+                source[source.index(old_gate)] = new_gate
+            elif source.count(new_gate) != 1:
+                raise ValueError("Notebook05 interactive gate changed unexpectedly.")
+            if not any("notebookutils.notebook.exit" in line for line in source):
+                if source and not source[-1].endswith("\n"):
+                    source[-1] += "\n\n"
+                source.extend([
+                    "if not IS_INTERACTIVE:\n",
+                    "    notebookutils.notebook.exit(json.dumps(\n",
+                    "        ANALYTICS_RESULT, ensure_ascii=False, sort_keys=True, allow_nan=False,\n",
+                    "    ))\n",
+                ])
+            if sum("notebookutils.notebook.exit" in line for line in source) != 1:
+                raise ValueError("Notebook05 noninteractive exit-value emission is ambiguous.")
+            preview = notebook["cells"][-2]
+            note = (
+                "A successful noninteractive run returns the unchanged `ANALYTICS_RESULT`\n"
+                "JSON through the Notebook Public API job `exitValue`; interactive runs\n"
+                "continue to show the printed summary below.\n"
+            )
+            if note not in "".join(preview["source"]):
+                insertion = "the interactive default and all other apply gates remain unchanged.\n"
+                text = "".join(preview["source"])
+                if text.count(insertion) != 1:
+                    raise ValueError("Notebook05 apply instructions changed; cannot document its result contract.")
+                text = text.replace(insertion, insertion + note)
+                preview["source"] = text.splitlines(keepends=True)
         write(PREVIEW / "notebooks" / path.name,
               (json.dumps(notebook, ensure_ascii=False, indent=1) + "\n").encode("utf-8"))
         if number == "05":

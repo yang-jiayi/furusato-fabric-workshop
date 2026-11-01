@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import copy
+import ast
 from datetime import date, datetime, timedelta, timezone
 import json
 from pathlib import Path
@@ -311,6 +312,40 @@ class LiveProvisioningSafetyTests(unittest.TestCase):
             spark = types.SimpleNamespace(sql=lambda query, value=namespace: types.SimpleNamespace(collect=lambda: [(value,)]))
             with self.assertRaises(module.AnalyticsExtensionError):
                 module._require_schema_enabled_lakehouse(spark)
+
+    def test_notebook05_noninteractive_exit_value_is_gated_and_preserves_result(self):
+        path = ROOT / "workshop" / "v3.0.0-preview" / "notebooks" / "Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb"
+        notebook = json.loads(path.read_text(encoding="utf-8"))
+        cell = notebook["cells"][-1]
+        source = "".join(cell["source"])
+        tree = ast.parse(source)
+        exits = [
+            node for node in ast.walk(tree)
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+            and node.func.attr == "exit"
+        ]
+        self.assertEqual(len(exits), 1)
+        exit_call = exits[0]
+        self.assertIsInstance(exit_call.func.value, ast.Attribute)
+        self.assertEqual(exit_call.func.value.attr, "notebook")
+        self.assertIsInstance(exit_call.func.value.value, ast.Name)
+        self.assertEqual(exit_call.func.value.value.id, "notebookutils")
+        guards = [
+            node for node in ast.walk(tree)
+            if isinstance(node, ast.If) and isinstance(node.test, ast.UnaryOp)
+            and isinstance(node.test.op, ast.Not) and isinstance(node.test.operand, ast.Name)
+            and node.test.operand.id == "IS_INTERACTIVE"
+        ]
+        self.assertEqual(len(guards), 1)
+        guarded_calls = [
+            node for statement in guards[0].body for node in ast.walk(statement)
+            if isinstance(node, ast.Call) and node.func.attr == "exit"
+        ]
+        self.assertEqual(guarded_calls, [exit_call])
+        self.assertIn("ANALYTICS_RESULT, ensure_ascii=False, sort_keys=True, allow_nan=False", source)
+        self.assertIn("is_interactive=IS_INTERACTIVE", source)
+        self.assertIn("notebookutils.notebook.exit", source)
+        # This is a static contract test; it deliberately does not execute the notebook.
 
     def test_data_agent_default_false_is_not_confused_with_enabled(self):
         def definition(value):

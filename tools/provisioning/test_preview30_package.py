@@ -38,7 +38,34 @@ class PackageTests(unittest.TestCase):
                     for line in parameter["source"]
                 ]
             code = lambda n: [c["source"] for c in n["cells"] if c["cell_type"] == "code"]
-            self.assertEqual(code(old), code(new), "Only the explicitly checked Notebook01 audit/display version may differ.")
+            if number == "05":
+                actual = code(new)
+                self.assertEqual(len(actual), len(code(old)))
+                final = actual[-1]
+                self.assertEqual(final.count('IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n'), 1)
+                self.assertEqual(final.count("    is_interactive=IS_INTERACTIVE,\n"), 1)
+                self.assertEqual(final.count("if not IS_INTERACTIVE:\n"), 1)
+                self.assertEqual(sum("notebookutils.notebook.exit" in line for line in final), 1)
+                normalized = [
+                    line for line in final
+                    if line not in {
+                        'IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n',
+                        "if not IS_INTERACTIVE:\n",
+                        "    notebookutils.notebook.exit(json.dumps(\n",
+                        "        ANALYTICS_RESULT, ensure_ascii=False, sort_keys=True, allow_nan=False,\n",
+                        "    ))\n",
+                    }
+                ]
+                normalized = [
+                    '    is_interactive=bool(context.get("isForInteractive", False)),\n'
+                    if line == "    is_interactive=IS_INTERACTIVE,\n" else line
+                    for line in normalized
+                ]
+                normalized[-1] = normalized[-1].rstrip("\n")
+                actual[-1] = normalized
+                self.assertEqual(code(old), actual)
+            else:
+                self.assertEqual(code(old), code(new), "Only the explicitly checked Notebook01 audit/display version may differ.")
 
     def test_all_five_notebooks_output_free_and_compile(self):
         notebooks = list((rt.PREVIEW / "notebooks").glob("*.ipynb"))

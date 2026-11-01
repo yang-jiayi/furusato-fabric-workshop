@@ -116,11 +116,16 @@ def deliver_increment(args: Any) -> dict[str, Any]:
 
 
 def verify_delivery(args: Any) -> dict[str, Any]:
-    """Validate provided native event/Copy exports against fresh activation, job and KQL reads."""
-    from activation_runtime import ActivatorLifecycle, verify_automatic_delivery
+    """Validate native event exports or explicitly tagged UI evidence against fresh reads."""
+    from activation_runtime import (
+        ActivatorLifecycle, PrivateStore, parse_time, verify_automatic_delivery,
+        verify_automatic_delivery_fields,
+    )
     from reference_kql import kusto_result_rows
     if not getattr(args, "native_events", None) or not getattr(args, "native_copy", None):
-        raise SafetyError("Actual native FileCreated events and Copy activity exports are mandatory; screenshots alone are insufficient.")
+        raise SafetyError("Provide native FileCreated evidence and a native Copy activity receipt.")
+    PrivateStore._reject_git_path(args.native_events.resolve())
+    PrivateStore._reject_git_path(args.native_copy.resolve())
     d = Deployment(args)
     number = getattr(args, "increment", None)
     if number not in {1, 2, 3}:
@@ -129,12 +134,24 @@ def verify_delivery(args: Any) -> dict[str, Any]:
     delivery = d.state.get("incrementDeliveries", {}).get(filename)
     if not delivery or delivery.get("state") != "uploaded-unverified":
         raise SafetyError("No unverified complete-file receipt exists for this increment.")
-    native_events = load(args.native_events)
+    native_input = load(args.native_events)
     native_copy = load(args.native_copy)
-    if not isinstance(native_events, list) or not isinstance(native_copy, dict):
-        raise SafetyError("Expected native events array and native Copy activity record.")
+    if not isinstance(native_copy, dict):
+        raise SafetyError("Expected one native Copy activity record.")
+    is_ui_observation = (
+        isinstance(native_input, dict)
+        and native_input.get("kind") == "native-ui-observation-not-csv-export"
+    )
+    if not isinstance(native_input, list) and not is_ui_observation:
+        raise SafetyError("Expected the unchanged native event array or a tagged native UI observation.")
+    if is_ui_observation and (number != 1 or not getattr(args, "native_ui_receipt_root", None)
+                              or not getattr(args, "native_ui_control_classification", None)):
+        raise SafetyError("Tagged UI evidence is limited to 001 and requires its receipt root and control classification.")
+    if is_ui_observation:
+        PrivateStore._reject_git_path(args.native_ui_control_classification.resolve())
     activator, rule_id = _targets(d)
     pipeline = d.state["items"]["pipeline"]
+    lakehouse = d.state["items"]["lakehouse"]
     before = load(d.evidence / "increments" / filename / "jobs-before.json")
     after = d.client.paged(d.prefix + f"/items/{pipeline['id']}/jobs/instances")
     token = lambda: d.client.credential.get_token("https://api.fabric.microsoft.com/.default").token
@@ -146,20 +163,110 @@ def verify_delivery(args: Any) -> dict[str, Any]:
         history = native.history(rule_id, delivery["timestampUtc"], now())
     finally:
         native.close()
-    matching = [e for e in native_events if e.get("___subject") == "/Files/increment/" + filename]
-    if len(matching) != 1:
-        raise SafetyError("Native FileCreated export lacks one exact subject.")
-    source = matching[0].get("___source", "")
-    lh = d.state["items"]["lakehouse"]
-    if not source.endswith(f"/workspaces/{d.scope['workspaceId']}/items/{lh['id']}"):
-        raise SafetyError("Native FileCreated event references a different source Lakehouse.")
-    result = verify_automatic_delivery(
-        workspace_id=d.scope["workspaceId"], pipeline_id=pipeline["id"], rule_id=rule_id,
-        subject="/Files/increment/" + filename, source=source, expected_bytes=delivery["bytes"],
-        uploaded_bytes_verified=delivery["upload"].get("uploadedBytesVerified") is True,
-        events=native_events, history=history, jobs_before=before, jobs_after=after,
-        manual_job_ids=set(d.state.get("manualPipelineJobIds", [])),
-    )
+    subject = "/Files/increment/" + filename
+    private = d.evidence / "increments" / filename
+    if is_ui_observation:
+        from native_ui_observation import validate_control_classification, validate_observation
+        current_definition = d.definition(activator["id"], skill="activator-cli")
+        proof = validate_observation(
+            native_input, screenshot_root=args.native_events.resolve().parent,
+            receipt_root=args.native_ui_receipt_root, workspace_id=d.scope["workspaceId"],
+            tenant_id=d.scope["tenantId"], activator_id=activator["id"],
+            model_id=native_input["correlationCandidate"]["eventReferenceEntityId"],
+            rule_id=rule_id, pipeline_id=pipeline["id"], lakehouse_id=lakehouse["id"],
+            subject=subject, expected_bytes=delivery["bytes"],
+            expected_upload_sha256=delivery["upload"].get("sha256"),
+            current_definition=current_definition,
+        )
+        classification = load(args.native_ui_control_classification)
+        known_manual_ids = set(d.state.get("manualPipelineJobIds", []))
+        classified = validate_control_classification(
+            classification, known_manual_job_ids=known_manual_ids,
+        )
+        copy_receipt_path = (
+            "increments/donation_events_001.csv/bounded-monitor-01/native-copy-001.json"
+        )
+        copy_sha = proof["receiptSha256"][copy_receipt_path]
+        if hashlib.sha256(args.native_copy.read_bytes()).hexdigest() != copy_sha or native_copy != proof["copyReceipt"]:
+            raise SafetyError("Provided Copy receipt differs from the original hash-bound native Copy receipt.")
+        if history.get("isError") or not isinstance(history.get("activations"), list):
+            raise SafetyError("Fresh native activation history is unavailable or malformed.")
+        current_matches = [
+            row for row in history["activations"]
+            if row.get("properties", {}).get("System.Action.FabricItem.Parameters.Subject.String") == subject
+        ]
+        if (len(current_matches) != 1
+                or current_matches[0].get("properties", {}).get("___id") != proof["activationId"]
+                or current_matches[0].get("properties", {}).get("System.RuleVersion") != proof["activationRuleVersion"]
+                or current_matches[0].get("properties", {}).get("System.Action.FabricItem.Parameters.Source.String")
+                != proof["sourceFromBoundActivation"]
+                or current_matches[0].get("properties", {}).get("System.Action.FabricItem.Parameters.Type.String")
+                != proof["eventType"]
+                or current_matches[0].get("properties", {}).get("System.Action.FabricItem.WorkspaceId")
+                != d.scope["workspaceId"]
+                or current_matches[0].get("properties", {}).get("System.Action.FabricItem.ItemId")
+                != pipeline["id"]
+                or current_matches[0].get("properties", {}).get("System.Action.FabricItem.ItemType")
+                != "Pipeline"
+                or current_matches[0].get("properties", {}).get("System.Action.FabricItem.JobType")
+                != "Pipeline"
+                or parse_time(current_matches[0].get("activationTime")) != parse_time(proof["eventTimeUtc"])):
+            raise SafetyError("Fresh activation history differs from the unique hash-bound event-time activation.")
+        result = verify_automatic_delivery_fields(
+            workspace_id=d.scope["workspaceId"], pipeline_id=pipeline["id"], rule_id=rule_id,
+            subject=subject, source=proof["sourceFromBoundActivation"], expected_bytes=delivery["bytes"],
+            uploaded_bytes_verified=delivery["upload"].get("uploadedBytesVerified") is True,
+            event_id=proof["eventId"], event_type=proof["eventType"],
+            event_source=proof["sourceFromBoundActivation"], event_api=proof["eventApi"],
+            event_content_length=proof["contentLength"], event_time=proof["eventTimeUtc"],
+            history=history, jobs_before=before, jobs_after=after,
+            manual_job_ids=set(classified["knownManualControlJobIds"]),
+        )
+        classification_sha = hashlib.sha256(args.native_ui_control_classification.read_bytes()).hexdigest()
+        evidence_kind = "native-ui-observation-correlated-not-direct-id"
+        result.update({
+            "eventEvidenceKind": evidence_kind,
+            "directEventIdInActivation": False,
+            "eventCorrelation": "unique timestamp and event fields, current/event-time EventReference and EventFieldReference wiring, scoped operating-session classification",
+            "ruleDefinitionSha256": hashlib.sha256(
+                json.dumps(current_definition, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+            "controlClassificationSha256": classification_sha,
+            "controlClassification": classified,
+            "observedJobInvokeType": next(
+                (job.get("invokeType") for job in after if job.get("id") == result["pipelineJobId"]), None,
+            ),
+            "screenshotSha256": proof["screenshotSha256"],
+            "sourceReceiptSha256": proof["receiptSha256"],
+            "uploadSha256": proof["uploadSha256"],
+            "nativeUiObservationSha256": hashlib.sha256(args.native_events.read_bytes()).hexdigest(),
+            "jobsBeforeSha256": hashlib.sha256(
+                json.dumps(before, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+            "jobsAfterSha256": hashlib.sha256(
+                json.dumps(after, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+            "freshActivationHistorySha256": hashlib.sha256(
+                json.dumps(history, sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+        })
+        copy_evidence_kind = "hash-bound-native-copy-receipt-validated"
+    else:
+        matching = [event for event in native_input if event.get("___subject") == subject]
+        if len(matching) != 1:
+            raise SafetyError("Native FileCreated export lacks one exact subject.")
+        source = matching[0].get("___source", "")
+        if not source.endswith(f"/workspaces/{d.scope['workspaceId']}/items/{lakehouse['id']}"):
+            raise SafetyError("Native FileCreated event references a different source Lakehouse.")
+        result = verify_automatic_delivery(
+            workspace_id=d.scope["workspaceId"], pipeline_id=pipeline["id"], rule_id=rule_id,
+            subject=subject, source=source, expected_bytes=delivery["bytes"],
+            uploaded_bytes_verified=delivery["upload"].get("uploadedBytesVerified") is True,
+            events=native_input, history=history, jobs_before=before, jobs_after=after,
+            manual_job_ids=set(d.state.get("manualPipelineJobIds", [])),
+        )
+        evidence_kind = "provided-native-export-validated"
+        copy_evidence_kind = evidence_kind
     if (native_copy.get("pipelineRunId") != result["pipelineJobId"]
             or native_copy.get("activityType") != "Copy" or native_copy.get("status") != "Succeeded"
             or int(native_copy.get("output", {}).get("rowsRead", -1)) != 5000
@@ -177,11 +284,35 @@ def verify_delivery(args: Any) -> dict[str, Any]:
     rows = kusto_result_rows(kusto_call(d, csl), required_columns=("RawRows", "RawYen"))
     if len(rows) != 1 or rows[0] != {"RawRows": len(raw), "RawYen": sum(int(r["DonationAmountYen"]) for r in raw)}:
         raise SafetyError("KQL did not reconcile the exact native file/run scope to its immutable CSV.")
+    if is_ui_observation:
+        before_path = private / "observation-01" / "kql-totals.json"
+        after_path = private / "bounded-monitor-01" / "kql-totals.json"
+        before_bytes, after_bytes = before_path.read_bytes(), after_path.read_bytes()
+        before_kql, after_kql = load(before_path), load(after_path)
+        expected_totals = {"RawRows": len(raw), "RawYen": sum(int(r["DonationAmountYen"]) for r in raw)}
+        if (before_kql != [{"RawRows": 0, "RawYen": 0}]
+                or after_kql != [expected_totals] or rows[0] != expected_totals):
+            raise SafetyError("Hash-bound before/after KQL receipts do not reconcile to current KQL and source CSV.")
+        result.update({
+            "kqlEvidenceKind": "fresh-read-matched-to-hash-bound-before-after-receipts",
+            "kqlBefore": before_kql[0],
+            "kqlBeforeSha256": hashlib.sha256(before_bytes).hexdigest(),
+            "kqlAfter": after_kql[0],
+            "kqlAfterSha256": hashlib.sha256(after_bytes).hexdigest(),
+            "kqlFresh": rows[0],
+            "kqlFreshSha256": hashlib.sha256(
+                json.dumps(rows[0], sort_keys=True, ensure_ascii=False).encode("utf-8")
+            ).hexdigest(),
+        })
     result.update({"timestampUtc": now(), "copyAndDataVerified": True,
-                   "copyEvidenceKind": "provided-native-export-validated",
+                   "copyEvidenceKind": copy_evidence_kind,
                    "kql": rows[0], "state": "native-copy-kql-verified"})
-    private = d.evidence / "increments" / filename
-    save(private / "native-events-validated.json", native_events)
+    if not is_ui_observation:
+        save(private / "native-events-validated.json", native_input)
+    else:
+        save(private / "native-ui-observation-validated.json", {
+            "kind": native_input["kind"], "result": result,
+        })
     save(private / "native-copy-validated.json", native_copy)
     save(private / "jobs-after.json", after)
     save(private / "verification.json", result)

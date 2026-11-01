@@ -24,6 +24,8 @@ Labは24章・5付録の全手順を収録しています。キャプチャご�
 
 Ontologyのnative Metricsは講師による事前設定が必要です。未設定の場合は設定済みと扱わず、講師に確認します。[第4章](Lab/04-prerequisites-deployment-scope-and-safe-execution/README.md)の容量画面は実環境の例であり、表示されたF16は最小要件ではありません。増分取り込みの確認では、対象ファイル・イベント・Activator・Pipelineの実行を対応付けます。成功表示や行数だけで自動配信の完了とは判定しません。
 
+初回の増分取り込みより前に、`deploy-realtime` が `DonationEvents` だけの OneLake mirroring を安全に有効化していることを確認します。policy の読み戻しは Delta データの到着や Ontology の native 時系列実行を証明しません。実際の Delta ファイルと取り込み結果を照合し、Lab の完了条件を満たしてから次へ進みます。
+
 データはすべて学習用の合成データです。自治体名と自治体コードだけが実在の参照ラベルで、寄付・寄付者・事業者・返礼品は架空です。静的寄付と増分の観測は母集団と粒度が異なるため、混同して集計しません。
 
 ## 実行資産
@@ -46,3 +48,5 @@ Follow Chapters 4 and 24 for scoped deployment, Chapters 5–13 for data and mod
 Use an authorized workspace and folder with active capacity and the required feature permissions. Verify actual execution and published behavior separately from configuration. Matching a configuration does not guarantee an identical answer score. All data is synthetic training material, and static donations must remain distinct from operational observations.
 
 Native Ontology Metrics require instructor setup; an unconfigured feature is not a verified configuration. The Chapter 4 capacity screenshot is a real environment example, not an F16 minimum requirement. Correlate the exact increment file, event, Activator and Pipeline run before accepting automatic delivery; a success label or row count alone is insufficient.
+
+Before the first increment, verify that `deploy-realtime` safely enables OneLake mirroring for `DonationEvents` only. Policy readback does not prove Delta data arrival or native Ontology time-series execution; reconcile actual Delta files and ingestion results against the Lab completion checks before proceeding.

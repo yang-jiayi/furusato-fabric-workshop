@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-6. ルールの History で activation が記録され、Subject が /Files/increment/donation_events_001.csv、Type が Microsoft.Fabric.OneLake.FileCreated になっていることを確認します。
+7. ルールの History で activation が記録され、Subject が /Files/increment/donation_events_001.csv、Type が Microsoft.Fabric.OneLake.FileCreated になっていることを確認します。
 
 ![Activator のルールの History タブ。Activation count のグラフと、ファイルのパスと FileCreated が並ぶ Activation details の表](../assets/p30-09-native-delivery.png)
 
@@ -13,7 +13,7 @@
 
 ## 9.2 Steps
 
-6. In the rule's History, confirm that an activation is recorded with Subject /Files/increment/donation_events_001.csv and Type Microsoft.Fabric.OneLake.FileCreated.
+7. In the rule's History, confirm that an activation is recorded with Subject /Files/increment/donation_events_001.csv and Type Microsoft.Fabric.OneLake.FileCreated.
 
 ![Activator rule History tab: an activation-count chart and an Activation details table of file paths and FileCreated types.](../assets/p30-09-native-delivery.png)
 

@@ -48,8 +48,10 @@ DonationEvents
 | order by UtcDay asc
 ```
 
-8. Ontology で Municipality を開き、Configure → Manage property bindings → Add binding and properties を選びます。EH_Furusato_&lt;PID&gt; の DonationEvents テーブルを追加します（ビューの DonationObservationSummaryForAgent は選びません）。共通の列として DonationEvents の MunicipalityID と Municipality の MunicipalityId を対応させ、Save します。
-9. Entity type properties で、IncomingDonationAmountYen に DonationEvents.DonationAmountYen を対応させます（定義済みならその Property を選び、まだ無い場合はこの名前で作ります）。型が Timeseries&lt;Integer&gt;、Timestamp column が DonatedAt（UTC）であることを確認します。_2 などが付いた別名の Property を作らないようにし、保存の前後で Property の一覧を比べます。
+8. native 時系列の確認へ進む前に、DonationEvents の実際の OneLake Delta log に add があり、参照先の parquet が読めることを読み取りで確認します。Delta データを KQL と照合し、15,000行・253,886,000円、EventID 一意14,900・重複100、MunicipalityID のキー、DonatedAt の UTC 範囲と日別分布、SourceFile ごとの件数・金額が一致することを確認します。policy の有効化、メタデータだけの log、CompletionPercentage=100% はデータ到着の証明ではありません。5分は書き込み遅延の設定であり、確認完了の保証ではありません。
+9. 明示的な REST 管理コマンドでは Backfill の既定値は false です。高水準の OneLake availability ページの説明から、取り込み済みの全行が自動公開されるとは判断しません。取り込み後に有効化した、Delta add/parquet が無い、照合不一致、または Backfill=true が HTTP 400 になる場合は、エラーと読み取り結果を保持して停止します。再試行、reset、off/on、再取り込みで修復しません。無効化すると OneLake データは soft delete されます。
+10. Ontology で Municipality を開き、Configure → Manage property bindings → Add binding and properties を選びます。EH_Furusato_&lt;PID&gt; の DonationEvents テーブルを追加します（ビューの DonationObservationSummaryForAgent は選びません）。共通の列として DonationEvents の MunicipalityID と Municipality の MunicipalityId を対応させ、Save します。
+11. Entity type properties で、IncomingDonationAmountYen に DonationEvents.DonationAmountYen を対応させます（定義済みならその Property を選び、まだ無い場合はこの名前で作ります）。型が Timeseries&lt;Integer&gt;、Timestamp column が DonatedAt（UTC）であることを確認します。_2 などが付いた別名の Property を作らないようにし、保存の前後で Property の一覧を比べます。
 
 ![Property の対応表。静的 Property は ot_municipality の列、IncomingDonationAmountYen は Timeseries&lt;Integer&gt; で、Timestamp column は DonatedAt](../assets/p30-10-timeseries.png)
 
@@ -106,8 +108,10 @@ DonationEvents
 | order by UtcDay asc
 ```
 
-8. In the ontology, open Municipality and select Configure → Manage property bindings → Add binding and properties. Add the DonationEvents table of EH_Furusato_&lt;PID&gt; (do not choose the view DonationObservationSummaryForAgent). Map MunicipalityID in DonationEvents to MunicipalityId in Municipality as the common column, then Save.
-9. In Entity type properties, map DonationEvents.DonationAmountYen to IncomingDonationAmountYen (select the existing property if it is already defined; otherwise create it with this name). Confirm that the type is Timeseries&lt;Integer&gt; and that the Timestamp column is DonatedAt (UTC). Avoid creating a duplicate property with a suffix such as _2, and compare the property list before and after saving.
+8. Before native time-series qualification, read the actual DonationEvents OneLake Delta log and require add actions with readable referenced parquet files. Reconcile Delta data against KQL: 15,000 rows / JPY 253,886,000, 14,900 unique EventIDs / 100 duplicates, MunicipalityID keys, the DonatedAt UTC range and daily distribution, and counts/amounts per SourceFile. Policy enablement, a metadata-only log or CompletionPercentage=100% does not prove data arrival. Five minutes is the configured write delay, not a guarantee of completed verification.
+9. For explicit REST management commands, Backfill defaults to false. Do not infer automatic publication of all already-ingested rows from the higher-level OneLake availability page. If enablement occurred after ingestion, Delta add/parquet is absent, reconciliation fails, or Backfill=true returns HTTP 400, retain the error and read-only evidence and stop. Do not repair by retry, reset, off/on or replay. Disabling availability soft-deletes OneLake data.
+10. In the ontology, open Municipality and select Configure → Manage property bindings → Add binding and properties. Add the DonationEvents table of EH_Furusato_&lt;PID&gt; (do not choose the view DonationObservationSummaryForAgent). Map MunicipalityID in DonationEvents to MunicipalityId in Municipality as the common column, then Save.
+11. In Entity type properties, map DonationEvents.DonationAmountYen to IncomingDonationAmountYen (select the existing property if it is already defined; otherwise create it with this name). Confirm that the type is Timeseries&lt;Integer&gt; and that the Timestamp column is DonatedAt (UTC). Avoid creating a duplicate property with a suffix such as _2, and compare the property list before and after saving.
 
 ![Binding table: static properties map to ot_municipality columns; IncomingDonationAmountYen uses Timeseries&lt;Integer&gt; and Timestamp column DonatedAt.](../assets/p30-10-timeseries.png)
 

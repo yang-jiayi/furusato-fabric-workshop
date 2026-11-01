@@ -29,6 +29,26 @@
 5. 取り込みマッピング DonationEvents_IncrementCsvMap は、12列を番号（Ordinal）で対応させます。CSV では SourceFile が PublishedAtUtc より前にあるため、番号はテーブルの列の順番と一致しません（SourceFile が10、PublishedAtUtc が11）。
 6. 2つのオブジェクトの役割を区別します。DonationEvents は重複を含む観測をそのまま保存し、EventID を持つのはこのテーブルだけです。DonationObservationSummaryForAgent は「自治体 × 1分 × ファイル」単位の集計で、Data Agent が読むビューです。ビューに、重複を除く処理を独自に追加しません。
 7. 取り込み前の DonationEvents の行数が0であることを確認します。想定外の行がある場合は先へ進まず、SourceFile ごとの件数を確認して講師に伝えます。
+8. 現在の配置では、上の5つの基本コマンドとは別の前提として、初回取り込みと Activator 用のファイルアップロードより前に DonationEvents だけの OneLake mirroring を有効にします。24.6の deploy-realtime の結果を確認し、所有者・承認済みフォルダー・12列の schema・RLS と既存 mirroring policy を読み取ります。RLS が有効、既存 policy が互換でない、または確認できない場合は停止し、セキュリティを無効にしません。データベース全体や集計ビューは有効にしません。
+9. 対象テーブルが空の状態で前提確認が通った場合だけ、次の設定を適用します。deploy-realtime で適用済みなら再実行せず、下の読み取りだけで IsEnabled=true と TargetLatencyInMinutes=5 を確認します。読み取りは許可した項目だけを出力し、ConnectionStrings を含む policy 応答を保存・共有しません。
+
+**KQL**
+
+```kql
+.alter-merge table DonationEvents policy mirroring dataformat=parquet with (IsEnabled=true,TargetLatencyInMinutes=5);
+```
+
+10. 安全な読み取り確認（設定の確認であり、データ到着の証明ではありません）。
+
+**KQL**
+
+```kql
+.show table DonationEvents policy mirroring
+| project EntityName,
+    IsEnabled=tobool(parse_json(Policy).IsEnabled),
+    TargetLatencyInMinutes=toint(parse_json(Policy).TargetLatencyInMinutes),
+    Backfill=tobool(parse_json(Policy).Backfill)
+```
 
 > KQL ファイルの後半には、取り込み後に使う確認用のクエリも入っています。管理コマンドではないので、この章では実行しません。
 
@@ -64,6 +84,26 @@
 5. The ingestion mapping DonationEvents_IncrementCsvMap maps the 12 columns by ordinal. In the CSV files, SourceFile comes before PublishedAtUtc, so the ordinals do not follow the table's column order (SourceFile is 10 and PublishedAtUtc is 11).
 6. Distinguish the roles of the two objects. DonationEvents stores observations as they arrive, including duplicates, and is the only one with EventID. DonationObservationSummaryForAgent is a summary per municipality, one-minute bucket and file that the Data Agent reads. Never add deduplication to the view on your own.
 7. Confirm that DonationEvents has zero rows before ingestion. If unexpected rows exist, do not continue; check the counts per SourceFile and tell the instructor.
+8. For the current deployment, enabling OneLake mirroring only for DonationEvents is a prerequisite separate from the five base commands, before first ingestion and before uploading any Activator input. Inspect the deploy-realtime result in 24.6 and verify ownership, the approved folder, the 12-column schema, RLS and the existing mirroring policy. Stop if RLS is enabled, an existing policy is incompatible, or verification is unavailable; never disable security. Do not enable the whole database or the summary view.
+9. Only after prerequisite checks pass for a fresh empty table, apply the following setting. If deploy-realtime already applied it, do not repeat the write; use only the readback below to confirm IsEnabled=true and TargetLatencyInMinutes=5. Output only the allowlisted fields; never save or share a policy response containing ConnectionStrings.
+
+**KQL**
+
+```kql
+.alter-merge table DonationEvents policy mirroring dataformat=parquet with (IsEnabled=true,TargetLatencyInMinutes=5);
+```
+
+10. Safe policy readback (configuration verification, not evidence of data arrival).
+
+**KQL**
+
+```kql
+.show table DonationEvents policy mirroring
+| project EntityName,
+    IsEnabled=tobool(parse_json(Policy).IsEnabled),
+    TargetLatencyInMinutes=toint(parse_json(Policy).TargetLatencyInMinutes),
+    Backfill=tobool(parse_json(Policy).Backfill)
+```
 
 > The second half of the KQL file contains verification queries for use after ingestion. They are not management commands; do not run them in this chapter.
 

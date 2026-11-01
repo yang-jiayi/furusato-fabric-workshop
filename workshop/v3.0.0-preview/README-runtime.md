@@ -123,6 +123,81 @@ and totals to pass before continuing.
 
 `deploy-notebooks` imports Notebook02–05 but does not execute them. Notebook04 is a parameterized frontend; the CLI remains the primary cross-machine orchestration path. Preserve the same private plan and `deployment-state.json` across stages. Notebook02 previews/applies only the four declared rule statements, requires an exact current-definition SHA for apply, and refuses post-native-Metrics TMDL replacement.
 
+### DonationEvents mirroring prerequisite / 初回取り込み前の前提
+
+A fresh `deploy-realtime` must enable **only `DonationEvents`** mirroring in
+parquet format with `IsEnabled=true` and `TargetLatencyInMinutes=5`, **before
+first ingestion and before any Activator input upload**. This is a separate
+current deployment prerequisite: the distributed KQL file still has exactly
+five base management commands (table, mapping, view, retention and caching).
+Verify participant ownership, the approved folder, the exact 12-column schema,
+RLS and the existing mirroring policy before writing. Stop if RLS is enabled,
+an existing policy is incompatible, or these checks cannot be completed.
+Never disable security, enable database-wide availability or mirror the summary
+view to bypass a failure.
+
+新規の `deploy-realtime` は、初回取り込みと Activator 用ファイルの
+アップロードより前に、**DonationEvents だけ**の parquet mirroring を
+有効にする必要があります。基本 KQL コマンド5つは変更せず、現在の配置の
+別の前提として扱います。所有者・承認済みフォルダー・12列の schema・RLS・
+既存 policy を確認し、RLS 有効、互換でない policy、確認不能の場合は停止します。
+セキュリティを無効にせず、データベース全体や集計ビューを有効にしません。
+
+After the checks pass for a fresh empty table, the exact setting is:
+
+```kusto
+.alter-merge table DonationEvents policy mirroring dataformat=parquet with (IsEnabled=true,TargetLatencyInMinutes=5);
+```
+
+If already applied by `deploy-realtime`, do not repeat the write. Read back only
+allowlisted fields below; never retain or share raw policy responses containing
+`ConnectionStrings` (including management-command output).
+適用済みなら書き込みを繰り返さず、次の許可項目だけを読み取り確認します。
+`ConnectionStrings` を含む生の応答は保存・共有しません。
+
+```kusto
+.show table DonationEvents policy mirroring
+| project EntityName,
+    IsEnabled=tobool(parse_json(Policy).IsEnabled),
+    TargetLatencyInMinutes=toint(parse_json(Policy).TargetLatencyInMinutes),
+    Backfill=tobool(parse_json(Policy).Backfill)
+```
+
+Policy readback is **not Delta data readiness**. Before native Ontology
+time-series qualification, observe actual Delta-log `add` actions and readable
+referenced parquet files, then reconcile their data with KQL: counts and amounts
+per `SourceFile`, `EventID` uniqueness/duplicates, `MunicipalityID` keys and
+`DonatedAt` UTC ranges/daily distribution. The completed three-file dataset must
+have 15,000 rows / 253,886,000 JPY, 14,900 unique EventIDs / 100 duplicates,
+and timestamps from `2026-08-01T00:02:47Z` to `2026-08-31T23:58:20Z`.
+Metadata-only Delta logs, enabled policy and `CompletionPercentage=100%` do not
+prove data exists; five minutes is a configured write delay, not an acceptance
+guarantee.
+
+設定の読み取りは Delta データ到着の証明ではありません。実際の `add` と
+参照先 parquet を読み、ファイル別件数・金額、キー、UTC 時刻・日別分布、
+重複を KQL と照合してから native 時系列を確認します。設定有効、
+メタデータだけの log、`CompletionPercentage=100%` を完了扱いにしません。
+
+The [explicit mirroring management command](https://learn.microsoft.com/en-us/kusto/management/alter-merge-mirroring-policy-command?view=microsoft-fabric)
+defaults `Backfill` to **false**. Do not translate the higher-level
+[OneLake availability page](https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability)
+into a promise that this REST path automatically publishes already-ingested
+historical rows. If enabled after ingestion, if Delta add/parquet is absent or
+reconciliation fails, or if a `Backfill=true` request returns HTTP 400, preserve
+the failure and read-only evidence and stop. Do not prescribe retry, reset,
+off/on or replay. Turning availability off soft-deletes OneLake data.
+Native time-series and Metrics remain separate acceptance gates requiring
+actual native query execution; definition readback or direct KQL/DAX alone
+does not qualify them.
+
+明示的な REST 管理コマンドでは `Backfill` の既定値は **false** です。
+高水準ページの説明だけで過去行の自動公開を約束しません。取り込み後の有効化、
+Delta 不在、照合不一致、`Backfill=true` の HTTP 400 は、証拠を保持して停止します。
+再試行・reset・off/on・再取り込みを修復手順にしません。無効化は OneLake
+データの soft delete を伴います。native 時系列・Metrics は実際の native
+照会が必要で、読み取り定義や直接 KQL/DAX の成功とは別に判定します。
+
 `deploy-core` produces **generation2 static-core readback**, not full native-feature completion. Complete the Eventhouse binding using the verified native contract/UI before claiming the time-series lab passed.
 
 <details>
@@ -570,7 +645,9 @@ credentials. Inspect actual targets/settings and credential readiness before del
    `shouldApplyRuleOnUpdate` is `false` and `delayToleranceMs` ≥ `120000`.
 3. Run `start-activator`, then the read-only `check-activator-readiness`. Confirm
    backend Running, rule synchronization, empty health notifications and action
-   credential state Initialized. If unavailable, inspect and wait without upload.
+   credential state Initialized. Also require the DonationEvents-only mirroring
+   prerequisite above to have passed before first ingestion. If either readiness
+   check is unavailable, inspect and wait without upload.
 4. For increments 1–3 in order: `deliver-increment`, observe the native delivery
    with the latency allowance above, export native FileCreated events from the
    Activator UI and the Copy activity with the read-only API helper below, then
@@ -594,20 +671,19 @@ responses and upload intent are not substitutes for those event records.
 
 If the increments were already ingested manually, `deliver-increment` stops (the
 CSV exists, PutBlob `If-None-Match: *` returns 412) and re-delivery would double the
-KQL rows because the Pipeline does not de-duplicate. A fresh delivery then needs an
-explicitly approved reset first: with the rule stopped, run
-`.clear table DonationEvents data` and
-`.clear materialized-view DonationObservationSummaryForAgent data`, delete the three
-CSVs under `Files/increment`, and confirm 0 rows. After `verify-delivery` of all
-three files, reconcile KQL again (15,000 rows / 253,886,000 JPY) and re-run the
-Data Agent checks for T06/T07. Without that approval, keep the manual ingestion and
-report it as manual, not automatic.
+KQL rows because the Pipeline does not de-duplicate. Stop without reset,
+deletion, replay or mirroring off/on. Keep the original ingestion evidence and
+report it as manual, not automatic. Late policy enablement does not prove those
+rows reached Delta; retain the unqualified state until actual Delta/KQL
+reconciliation and native acceptance gates pass.
 
 ### Hand-off: time-series binding, Notebook02 and native Metrics (UI)
 
 `handoff-ontology` records that automated TMDL writes stop at the generation2
-static core. The Eventhouse time-series binding has no documented definition
-format, so it is configured in the Ontology editor:
+static core. The portable candidate does not supply a verified Eventhouse source
+expression, so capture the supported native binding in the Ontology editor.
+First require actual DonationEvents Delta add/parquet and full KQL reconciliation
+as described above; policy enablement alone is not sufficient:
 
 1. Municipality → **Manage property bindings**: TimeSeries from Eventhouse
    `DonationEvents`, timestamp `DonatedAt` (UTC), key `MunicipalityID` →

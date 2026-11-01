@@ -7,6 +7,8 @@
 | 日英HTML手順書 | [HTMLを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/furusato-workshop-v3-0-0-complete.html) | 24章・5付録の全手順。日英切替、検索、進捗チェック、印刷に対応 |
 | 参加者用ZIP | [ZIPを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/Furusato_Workshop_v3.0.0_current.zip) | HTML・Lab、Notebook、CSV、SQL、モデル、ツール、添付資料、評価用紙 |
 | 配布SHA-256 | [SHA256SUMS.txt](SHA256SUMS.txt) | HTMLとZIPの取得後の照合用 |
+| HTML検証記録 | [DOCUMENT_VALIDATION.json](DOCUMENT_VALIDATION.json) | 同じHTMLバイト列の日英静的・Chromium検査。Fabricの配置・Agent回答品質は認定しません |
+| Lab検証記録 | [LAB_VALIDATION.json](LAB_VALIDATION.json) | 24章・5付録、ソース本文・画像・リンクの対応確認 |
 
 ## 始め方
 
@@ -20,8 +22,12 @@
 
 Labはキャプチャごとの操作ページに、準備、設定の全文、コマンド、参照表、完了条件を収録しています。キャプチャがない操作も手順を省略していません。HTMLはブラウザーで直接開ける単一ファイルです。
 
+初回の増分取り込みより前に、`DonationEvents` だけの OneLake mirroring を安全に確認します。policy の設定確認は実際の Delta データ到着や native Ontology 時系列の実行証明ではありません。手順書の照合条件を満たしてから進めてください。
+
 ## English
 
 Use the current [Lab guide](../Lab/README.md) on GitHub or save the standalone bilingual HTML. Download the matching participant ZIP above and verify it against [SHA256SUMS.txt](SHA256SUMS.txt) before extraction.
+
+The [HTML validation receipt](DOCUMENT_VALIDATION.json) records static and Chromium checks for the exact document bytes, not Fabric deployment or Agent answer quality. The [Lab receipt](LAB_VALIDATION.json) records source-text, image and link coverage. Before the first increment, safely verify OneLake mirroring for `DonationEvents` only; policy readback alone does not prove Delta data arrival or native Ontology time-series execution.
 
 The complete procedure covers 24 chapters and five appendices. Start with Chapters 4/24 for deployment, inspect data and models in Chapters 5–13, configure and publish the same Data Agent in Chapter 17, then evaluate and improve answers in Chapter 19 and Appendix C. Start with ten practice questions before the public 29-question comparison. Record actual queries and results separately from unsupported or unobserved behavior; matching configuration does not guarantee matching accuracy.

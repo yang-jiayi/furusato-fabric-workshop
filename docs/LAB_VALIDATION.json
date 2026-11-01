@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "chapters": 24,
+  "appendices": 5,
+  "sections": 185,
+  "sourceBlocksChecked": 737,
+  "bilingualTextValuesChecked": 6508,
+  "canonicalCodeAndPromptBlocksChecked": 133,
+  "imageFilesVerified": 33,
+  "localLinksChecked": 684,
+  "markdownFiles": 216,
+  "currentParticipantWordReferences": 0,
+  "newDeploymentCaptureClaimed": false
+}

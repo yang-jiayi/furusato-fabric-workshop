@@ -400,19 +400,39 @@ CHAPTERS = {
                       "Distinguish the roles of the two objects. DonationEvents stores observations as they arrive, including duplicates, and is the only one with EventID. DonationObservationSummaryForAgent is a summary per municipality, one-minute bucket and file that the Data Agent reads. Never add deduplication to the view on your own.")},
             {"text": ("取り込み前の DonationEvents の行数が0であることを確認します。想定外の行がある場合は先へ進まず、SourceFile ごとの件数を確認して講師に伝えます。",
                       "Confirm that DonationEvents has zero rows before ingestion. If unexpected rows exist, do not continue; check the counts per SourceFile and tell the instructor.")},
+            {"text": ("現在の配置では、上の5つの基本コマンドとは別の前提として、初回取り込みと Activator 用のファイルアップロードより前に DonationEvents だけの OneLake mirroring を有効にします。24.6の deploy-realtime の結果を確認し、所有者・承認済みフォルダー・12列の schema・RLS と既存 mirroring policy を読み取ります。RLS が有効、既存 policy が互換でない、または確認できない場合は停止し、セキュリティを無効にしません。データベース全体や集計ビューは有効にしません。",
+                      "For the current deployment, enabling OneLake mirroring only for DonationEvents is a prerequisite separate from the five base commands, before first ingestion and before uploading any Activator input. Inspect the deploy-realtime result in 24.6 and verify ownership, the approved folder, the 12-column schema, RLS and the existing mirroring policy. Stop if RLS is enabled, an existing policy is incompatible, or verification is unavailable; never disable security. Do not enable the whole database or the summary view.")},
+            {"text": ("対象テーブルが空の状態で前提確認が通った場合だけ、次の設定を適用します。deploy-realtime で適用済みなら再実行せず、下の読み取りだけで IsEnabled=true と TargetLatencyInMinutes=5 を確認します。読み取りは許可した項目だけを出力し、ConnectionStrings を含む policy 応答を保存・共有しません。",
+                      "Only after prerequisite checks pass for a fresh empty table, apply the following setting. If deploy-realtime already applied it, do not repeat the write; use only the readback below to confirm IsEnabled=true and TargetLatencyInMinutes=5. Output only the allowlisted fields; never save or share a policy response containing ConnectionStrings."),
+             "code": ("KQL",
+                      ".alter-merge table DonationEvents policy mirroring dataformat=parquet with (IsEnabled=true,TargetLatencyInMinutes=5);")},
+            {"text": ("安全な読み取り確認（設定の確認であり、データ到着の証明ではありません）。",
+                      "Safe policy readback (configuration verification, not evidence of data arrival)."),
+             "code": ("KQL",
+                      ".show table DonationEvents policy mirroring\n"
+                      "| project EntityName,\n"
+                      "    IsEnabled=tobool(parse_json(Policy).IsEnabled),\n"
+                      "    TargetLatencyInMinutes=toint(parse_json(Policy).TargetLatencyInMinutes),\n"
+                      "    Backfill=tobool(parse_json(Policy).Backfill)")},
         ],
         "checks": [
             (("5つの管理オブジェクトがそろっている", "All five management objects exist"),
              ("コマンドがエラーになった場合は、権限、型、マッピング名を確認します。データを送り直してごまかしません。", "If a command fails, check permissions, types and the mapping name. Never cover the problem up by resending data.")),
             (("取り込み前の DonationEvents が0行", "DonationEvents has zero rows before ingestion"),
              ("行がある場合は、どのファイル（SourceFile）の行かを確認し、講師の指示を待ちます。", "If rows exist, check which files (SourceFile) they came from and wait for the instructor's direction.")),
+            (("初回取り込み前に DonationEvents だけの mirroring を安全に確認した", "DonationEvents-only mirroring was safely verified before first ingestion"),
+             ("所有範囲・フォルダー・schema・RLS・既存 policy と、IsEnabled=true・TargetLatencyInMinutes=5 を確認できなければ停止し、Activator 用ファイルを置きません。", "If ownership scope, folder, schema, RLS, the existing policy and IsEnabled=true / TargetLatencyInMinutes=5 cannot be verified, stop without uploading any Activator input.")),
         ],
         "tips": [
             ("KQL ファイルの後半には、取り込み後に使う確認用のクエリも入っています。管理コマンドではないので、この章では実行しません。",
              "The second half of the KQL file contains verification queries for use after ingestion. They are not management commands; do not run them in this chapter."),
         ],
         "tables": [],
-        "links": ["https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse"],
+        "links": [
+            "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse",
+            "https://learn.microsoft.com/en-us/kusto/management/alter-merge-mirroring-policy-command?view=microsoft-fabric",
+            "https://learn.microsoft.com/en-us/fabric/real-time-intelligence/event-house-onelake-availability",
+        ],
     },
     9: {
         "intro": [
@@ -428,6 +448,8 @@ CHAPTERS = {
              "Confirm that Files/increment is empty and that DonationEvents has zero rows (Chapter 8)."),
         ],
         "steps": [
+            {"text": ("アップロード前に、8章と24.6で DonationEvents だけの mirroring（parquet、IsEnabled=true、TargetLatencyInMinutes=5）と所有範囲・schema・RLS の確認が通っていることを確認します。未確認ならファイルを置かず停止します。取り込み後の有効化を、過去行の公開が済んだこととして扱いません。",
+                      "Before uploading, confirm that Chapters 8 and 24.6 verified DonationEvents-only mirroring (parquet, IsEnabled=true, TargetLatencyInMinutes=5), ownership scope, schema and RLS. If unverified, stop without uploading. Enabling after ingestion does not establish that historical rows have been published.")},
             {"text": ("Pipeline を開き、Copy data1 の設定を確認します。コピー元は Lakehouse の Files にある increment フォルダー、コピー先は KQL Database の DonationEvents、取り込みマッピングは DonationEvents_IncrementCsvMap です。パラメーターは IncrementFileName、Type、Subject、Source の4つです。ファイル名は次の式で決まります（Subject の最後の部分。Subject が空のときは IncrementFileName）。ここでは Pipeline を手動で実行しません。",
                       "Open the Pipeline and check the settings of Copy data1. The source is the increment folder in the Lakehouse Files, the destination is DonationEvents in the KQL database, and the ingestion mapping is DonationEvents_IncrementCsvMap. There are four parameters: IncrementFileName, Type, Subject and Source. The file name is determined by the following expression (the last segment of Subject, or IncrementFileName when Subject is empty). Do not run the Pipeline manually here."),
              "code": ("Pipeline expression",
@@ -532,6 +554,10 @@ CHAPTERS = {
                       "DonationEvents\n"
                       "| summarize Rows=count(), TotalYen=sum(DonationAmountYen) by UtcDay=bin(DonatedAt, 1d)\n"
                       "| order by UtcDay asc")},
+            {"text": ("native 時系列の確認へ進む前に、DonationEvents の実際の OneLake Delta log に add があり、参照先の parquet が読めることを読み取りで確認します。Delta データを KQL と照合し、15,000行・253,886,000円、EventID 一意14,900・重複100、MunicipalityID のキー、DonatedAt の UTC 範囲と日別分布、SourceFile ごとの件数・金額が一致することを確認します。policy の有効化、メタデータだけの log、CompletionPercentage=100% はデータ到着の証明ではありません。5分は書き込み遅延の設定であり、確認完了の保証ではありません。",
+                      "Before native time-series qualification, read the actual DonationEvents OneLake Delta log and require add actions with readable referenced parquet files. Reconcile Delta data against KQL: 15,000 rows / JPY 253,886,000, 14,900 unique EventIDs / 100 duplicates, MunicipalityID keys, the DonatedAt UTC range and daily distribution, and counts/amounts per SourceFile. Policy enablement, a metadata-only log or CompletionPercentage=100% does not prove data arrival. Five minutes is the configured write delay, not a guarantee of completed verification.")},
+            {"text": ("明示的な REST 管理コマンドでは Backfill の既定値は false です。高水準の OneLake availability ページの説明から、取り込み済みの全行が自動公開されるとは判断しません。取り込み後に有効化した、Delta add/parquet が無い、照合不一致、または Backfill=true が HTTP 400 になる場合は、エラーと読み取り結果を保持して停止します。再試行、reset、off/on、再取り込みで修復しません。無効化すると OneLake データは soft delete されます。",
+                      "For explicit REST management commands, Backfill defaults to false. Do not infer automatic publication of all already-ingested rows from the higher-level OneLake availability page. If enablement occurred after ingestion, Delta add/parquet is absent, reconciliation fails, or Backfill=true returns HTTP 400, retain the error and read-only evidence and stop. Do not repair by retry, reset, off/on or replay. Disabling availability soft-deletes OneLake data.")},
             {"text": ("Ontology で Municipality を開き、Configure → Manage property bindings → Add binding and properties を選びます。EH_Furusato_<PID> の DonationEvents テーブルを追加します（ビューの DonationObservationSummaryForAgent は選びません）。共通の列として DonationEvents の MunicipalityID と Municipality の MunicipalityId を対応させ、Save します。",
                       "In the ontology, open Municipality and select Configure → Manage property bindings → Add binding and properties. Add the DonationEvents table of EH_Furusato_<PID> (do not choose the view DonationObservationSummaryForAgent). Map MunicipalityID in DonationEvents to MunicipalityId in Municipality as the common column, then Save.")},
             {"text": ("Entity type properties で、IncomingDonationAmountYen に DonationEvents.DonationAmountYen を対応させます（定義済みならその Property を選び、まだ無い場合はこの名前で作ります）。型が Timeseries<Integer>、Timestamp column が DonatedAt（UTC）であることを確認します。_2 などが付いた別名の Property を作らないようにし、保存の前後で Property の一覧を比べます。",
@@ -1221,9 +1247,12 @@ CHAPTERS = {
      'steps': [{'text': ('初回は24.4で本人認証とフォルダー対応を確認し、24.5で配置計画を読み、自分の許可された範囲だけを書き込み承認します。',
                          'On the first run, authenticate and verify folder mapping in 24.4, then review the concrete '
                          'plan and authorize writes only in your permitted scope in 24.5.')},
-               {'text': ('24.6でソース、Notebook、Pipeline、Activator、主Ontologyを配置します。5〜8章は作成済みの内容を確認するために使い、同じものを追加しません。',
+               {'text': ('24.6でソース、Notebook、Pipeline、Activator、主Ontologyを配置します。deploy-realtime は初回取り込みと Activator 用ファイルのアップロードより前に、DonationEvents だけの parquet mirroring（IsEnabled=true、TargetLatencyInMinutes=5）を有効にする前提です。8章で所有範囲・フォルダー・schema・RLS・既存 policy と安全な読み取り結果を確認し、未確認または互換でない場合は停止します。5〜8章は作成済みの内容を確認するために使い、同じものを追加しません。',
                          'Deploy sources, Notebooks, Pipeline, Activator and the main ontology in 24.6. Use Chapters '
-                         '5–8 to inspect the created resources without adding duplicates.')},
+                         '5–8 to inspect the created resources without adding duplicates. deploy-realtime must enable '
+                         'DonationEvents-only parquet mirroring (IsEnabled=true, TargetLatencyInMinutes=5) before first '
+                         'ingestion and before uploading any Activator input. In Chapter 8 verify ownership scope, folder, '
+                         'schema, RLS, the existing policy and safe readback; stop if unverified or incompatible.')},
                {'text': ('24.7と9〜10章で増分3ファイルを各1回取り込み、11章でNotebook05のプレビューと適用を実施します。24.8でモデルとAgentを作り、17章で調整済み構成、19章で回答を評価します。',
                          'Ingest each of the three increments once through 24.7 and Chapters 9–10, then preview and '
                          'apply Notebook05 in Chapter 11. Create the model and Agent in 24.8, configure the adopted '
@@ -1360,7 +1389,7 @@ APPENDICES = {
             (("KQL の行数が想定の2倍になる", "KQL row counts are twice the expected value"),
              ("同じファイルを2回取り込んでいます（再アップロード、または自動と手動の両方）。それ以上の取り込みを止めて講師に伝えます。データを消すには講師の承認が必要です。", "The same file was ingested twice (re-uploaded, or both automatic and manual). Stop further ingestion and tell the instructor. Deleting data requires the instructor's approval.")),
             (("時系列の観測が0件になる", "The time series shows zero observations"),
-             ("Timestamp column が DonatedAt か、キーが MunicipalityID → MunicipalityId か、ビューではなく DonationEvents テーブルを選んだかを確認します。その後、Ontology の更新を待ちます。", "Check that the Timestamp column is DonatedAt, that the key is MunicipalityID → MunicipalityId and that you chose the DonationEvents table rather than the view. Then wait for the ontology update.")),
+             ("所有範囲・schema・RLS、DonationEvents の mirroring policy の安全な読み取り、実際の Delta add と parquet、KQL との件数・金額・キー・UTC 時刻・重複の照合を確認します。その後、DonatedAt、MunicipalityID → MunicipalityId、DonationEvents テーブル（ビューではない）の native バインドと実行クエリを確認します。Delta が無い、不一致、Backfill=true の HTTP 400、RLS や policy が互換でない場合は停止し、再試行・reset・off/on・再取り込みやセキュリティ無効化をしません。CompletionPercentage=100% や定義の読み取りだけでは、native 時系列・Metrics の照会成功にはなりません。", "Check ownership scope, schema and RLS, safe DonationEvents mirroring policy readback, actual Delta add/parquet, and reconciliation with KQL for counts, amounts, keys, UTC timestamps and duplicates. Then verify the native binding to DonatedAt, MunicipalityID → MunicipalityId and the DonationEvents table (not the view), plus the executed query. Stop for missing Delta, mismatches, Backfill=true HTTP 400, or incompatible RLS/policy; do not retry, reset, toggle off/on, replay or disable security. CompletionPercentage=100% or definition readback alone is not successful native time-series or Metrics query execution.")),
             (("Notebook 02 が停止する", "Notebook 02 stops"),
              ("24章の自動配置で作成した Ontology か、handoff-ontology の実行前か、Metrics を追加していないかを確認します。適用が「Explicit expected-definition SHA differs」で止まった場合は、プレビューをやり直し、出力の beforeDefinitionSha256 を EXPECTED_DEFINITION_SHA256 に設定します。", "Check that the ontology was created by the automated deployment in Chapter 24, that handoff-ontology has not run yet and that no Metrics were added. If the apply run stops with \"Explicit expected-definition SHA differs\", run the preview again and set EXPECTED_DEFINITION_SHA256 to the beforeDefinitionSha256 value in its output.")),
             (("Metrics が表示されない", "Metrics are not shown"),

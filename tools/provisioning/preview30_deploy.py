@@ -614,7 +614,32 @@ def deploy_relationships(args: Any) -> dict[str, Any]:
     return handoff
 
 
-def kusto_call(d: Deployment, csl: str, *, mutation: bool = False) -> dict[str, Any]:
+def _safe_policy_response(value: Any) -> Any:
+    """Keep management diagnostics without persisting policy credentials."""
+    from workshop_runtime import sanitize_error
+    if isinstance(value, dict):
+        return {key: ("<redacted>" if any(word in key.casefold() for word in
+                                        ("connectionstring", "password", "secret", "token"))
+                      else _safe_policy_response(item)) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_safe_policy_response(item) for item in value]
+    if isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except ValueError:
+            parsed = None
+        if isinstance(parsed, (dict, list)):
+            return json.dumps(_safe_policy_response(parsed), ensure_ascii=False)
+        if re.search(r"(?i)connectionstring|accountkey|sharedaccesskey|password|bearer|sig=", value):
+            value = re.sub(
+                r"""(?i)(connectionstrings?|accountkey|sharedaccesskey|password|bearer|sig)"""
+                r"""\s*[:=]\s*("[^"]*"|'[^']*'|[^\s,}\]]+)""", r"\1=<redacted>", value)
+            return sanitize_error(value)
+    return value
+
+
+def kusto_call(d: Deployment, csl: str, *, mutation: bool = False,
+               sensitive_policy: bool = False) -> dict[str, Any]:
     from reference_kql import _tables
     db = d.state["items"]["kqlDatabase"]
     if db["id"] in d.scope["forbiddenItemIds"]:
@@ -647,7 +672,8 @@ def kusto_call(d: Deployment, csl: str, *, mutation: bool = False) -> dict[str, 
     except ValueError:
         body = {"bodyText": response.text}
     save(d.evidence / "kql" / (sha + "-response.json"),
-         {**record, "statusCode": response.status_code, "body": body})
+         {**record, "statusCode": response.status_code,
+          "body": _safe_policy_response(body) if sensitive_policy else body})
     if response.status_code != 200:
         raise SafetyError("Kusto request failed; exact response saved, no automatic retry.")
     _tables(body)  # Reject partial failures and metadata-only pseudo-results.
@@ -655,6 +681,64 @@ def kusto_call(d: Deployment, csl: str, *, mutation: bool = False) -> dict[str, 
         d.state["commands"][sha] = {"state": "verified", "timestampUtc": now()}
         d.checkpoint()
     return body
+
+
+def prepare_donation_mirroring(d: Deployment) -> dict[str, Any]:
+    from reference_kql import kusto_result_rows
+    expected_schema = [
+        ("EventID", "string"), ("DonationID", "long"), ("DonorID", "long"),
+        ("MunicipalityID", "string"), ("GiftID", "long"), ("DonationAmountYen", "long"),
+        ("DonatedAt", "datetime"), ("PaymentMethod", "string"), ("WorkshopRunId", "string"),
+        ("ParticipantAlias", "string"), ("PublishedAtUtc", "datetime"), ("SourceFile", "string"),
+    ]
+    d.require_owned("kqlDatabase")
+    policy_query = (
+        ".show table DonationEvents policy mirroring | extend P=parse_json(Policy) "
+        "| project IsEnabled=tobool(P.IsEnabled),Format=tostring(P.Format),"
+        "TargetLatencyInMinutes=toint(P.TargetLatencyInMinutes),Backfill=tobool(P.Backfill)"
+    )
+
+    def query(csl: str, columns: tuple[str, ...]) -> list[dict[str, Any]]:
+        return kusto_result_rows(kusto_call(d, csl), required_columns=columns)
+
+    rls = query(".show table DonationEvents policy row_level_security | project Policy", ("Policy",))
+    if len(rls) != 1 or rls[0]["Policy"] not in (None, "", "null"):
+        raise SafetyError("DonationEvents has row-level security; do not change security to enable mirroring.")
+    schema = query(".show table DonationEvents schema as json", ("Schema",))
+    if len(schema) != 1:
+        raise SafetyError("DonationEvents schema is ambiguous.")
+    columns = [(column["Name"], column["CslType"])
+               for column in json.loads(schema[0]["Schema"])["OrderedColumns"]]
+    if columns != expected_schema:
+        raise SafetyError("DonationEvents does not have the exact 12-column workshop schema; no type changes.")
+    before = query(policy_query, ("IsEnabled", "Format", "TargetLatencyInMinutes", "Backfill"))
+    if len(before) != 1:
+        raise SafetyError("DonationEvents mirroring policy is ambiguous.")
+    expected = {"IsEnabled": True, "Format": "parquet", "TargetLatencyInMinutes": 5, "Backfill": False}
+    already_enabled = before[0] == expected
+    if not already_enabled:
+        if before[0] != {"IsEnabled": None, "Format": "", "TargetLatencyInMinutes": None, "Backfill": None}:
+            raise SafetyError("Existing DonationEvents mirroring policy differs; no overwrite or toggle.")
+        totals = query("DonationEvents | summarize RawRows=count()", ("RawRows",))
+        if totals != [{"RawRows": 0}]:
+            raise SafetyError("Enable mirroring before the first ingestion; existing rows require separate review.")
+        if query(policy_query, ("IsEnabled", "Format", "TargetLatencyInMinutes", "Backfill")) != before:
+            raise SafetyError("DonationEvents mirroring policy changed concurrently.")
+        if query(".show table DonationEvents policy row_level_security | project Policy", ("Policy",)) != rls:
+            raise SafetyError("DonationEvents security policy changed concurrently.")
+        if query(".show table DonationEvents schema as json", ("Schema",)) != schema:
+            raise SafetyError("DonationEvents schema changed concurrently.")
+        kusto_call(d, ".alter-merge table DonationEvents policy mirroring dataformat=parquet "
+                   "with (IsEnabled=true,TargetLatencyInMinutes=5);",
+                   mutation=True, sensitive_policy=True)
+    after = query(policy_query, ("IsEnabled", "Format", "TargetLatencyInMinutes", "Backfill"))
+    if after != [expected]:
+        raise SafetyError("DonationEvents mirroring readback differs; do not proceed to ingestion.")
+    result = {"timestampUtc": now(), "table": "DonationEvents", "policy": after,
+              "state": "reused-enabled" if already_enabled else "enabled-before-first-ingestion",
+              "oneLakeDataReady": False, "nativeTimeSeriesAccepted": False}
+    save(d.evidence / "kql/mirroring-before-ingestion.json", result)
+    return result
 
 
 def normalize_stopped_reflex(definition: dict[str, Any]) -> dict[str, Any]:
@@ -693,6 +777,7 @@ def deploy_realtime(args: Any) -> dict[str, Any]:
     save(d.evidence / "kql/inventory-before-management.json", before)
     for command in commands:
         kusto_call(d, command, mutation=True)
+    mirroring = prepare_donation_mirroring(d)
     checks = {}
     for name, query in {
         "schema": ".show table DonationEvents schema as json",
@@ -722,6 +807,7 @@ def deploy_realtime(args: Any) -> dict[str, Any]:
     if len(rules) != 1 or rules[0]["payload"]["definition"]["settings"].get("shouldRun") is not False:
         raise SafetyError("New Activator must remain stopped until its native lifecycle gate.")
     result = {"timestampUtc": now(), "kqlSchemaReadback": True, "pipelineDefinitionReadback": True,
+              "mirroringPreparation": mirroring,
               "activatorId": reflex["id"], "state": "created-stopped-unverified",
               "formalStartPerformed": False, "automaticDeliveryVerified": False,
               "incrementsUploadedToWatchFolder": False}

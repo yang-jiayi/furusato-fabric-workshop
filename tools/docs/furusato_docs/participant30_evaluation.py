@@ -239,8 +239,9 @@ and authentication outside Git.
    実行成功とはしません。クエリや結果が見えなければ実行根拠をUNCLEARにします。
 6. 失敗をソース・期間・粒度・意味・実行に分類し、1つの原因に対する指示変更を
    決めます。変更前後の全文を保存し、Draftの対象指示欄だけを変更してSave、Publish、
-   公開版を開き直して確認します。配布Globalは10,000 UTF-16単位の上限のため、
-   追記でなく対象の文を置き換え、長さを確認します。固定profile用helperは独自候補を
+   公開版を開き直して確認します。Global指示欄の上限は10,000 UTF-16単位です。
+   選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は
+   対象の文を置き換えます。固定profile用helperは独自候補を
    配布設定へ戻すか一致確認に失敗するため、候補の適用・認定に使いません。同じ全49枠を
    final として実施します。データや選択を変えた比較は別の実験として扱います。
 7. suite / repeat / case_id / condition_id をキーに前後を結合します。質問、条件、
@@ -276,9 +277,10 @@ and authentication outside Git.
    text alone is not execution proof. Missing execution details are UNCLEAR.
 6. Classify source, time, grain, meaning or execution failures. Propose one scoped
    instruction change and save both complete texts. Edit only the intended Draft
-   field, Save, Publish, reopen and inspect the publication. The distributed global
-   instructions already use 10,000 UTF-16 units; replace wording rather than append
-   notes, and check length. Do not use the fixed-profile helper to apply or certify
+   field, Save, Publish, reopen and inspect the publication. The global instruction
+   field supports up to 10,000 UTF-16 units. Measure the selected profile's actual
+   length and confirm it is within the limit; replace wording if it exceeds the limit.
+   Do not use the fixed-profile helper to apply or certify
    a custom candidate: it restores the distributed profile or reports mismatch. Run all 49
    final slots. A changed dataset or selection constitutes a different experiment.
 7. Pair suite / repeat / case_id / condition_id. Confirm equal questions, criteria
@@ -321,24 +323,18 @@ and authentication outside Git.
   selected quality-processing tables contain it. Retain the original criterion,
   record the caveat and do not substitute the quality population for observations.
 
-## 過去結果との関係 / Relation to historical results
+## 評価結果の扱い / Interpreting evaluation results
 
-2026-10-15の51枠・296条件には非公開の未使用2問・6条件が含まれました。
-このキットは公開49枠・290条件を再現します。過去の対応比較281条件の
-189→217 PASS（67.26→77.22%）は補助条件充足率で、一般的な正答率や保証値では
-ありません。今回の分岐、失敗、製品状態で分母と結果は変わります。
-公開済みの29問を新しい「未使用問題」と呼びません。未知の問題への一般化を
-調べる場合は、別の人が新しい問題と基準を事前固定し、調整者に見せず実施し、
-その結果はこの49枠と別に報告します。過去の非公開問題は配布しません。
+公開29問はすでに既知の問題であり、未知の問題への一般化を示すものでは
+ありません。対応比較の共通分母は、290条件から実際に適用外となった条件を
+除いて求めます。未知の問題への一般化を調べる場合は、別の人が新しい質問と
+基準を事前固定し、調整者に開示せず実施し、その結果を公開評価と別に報告します。
 
-The historical 51-slot / 296-condition phases included two private unused
-questions with six conditions. This kit reproduces the public 49-slot / 290-condition
-portion. The historical 189→217 PASS on 281 paired applicable conditions
-(67.26→77.22%) is supplemental condition fulfillment, not general accuracy or a
-guarantee. Your branches, failures and service state determine your denominator
-and result. Published questions are not new unseen tests. For generalization,
-have another person freeze new private questions and keys before tuning and report
-them separately. Historical private questions are not distributed.
+The 29 public questions are already known and do not establish generalization to unseen
+questions. Calculate the matched denominator from the 290 conditions minus actual
+inapplicable conditions. To test generalization, have another person preregister new
+questions and criteria, withhold them from the tuner and report the results separately
+from the public evaluation.
 
 ## 保守担当者向けの確認 / Maintainer verification
 
@@ -468,7 +464,7 @@ def append_chapter_sections(parent, root: Path):
         ]),
         (("1つの修正を比較し、採用を判断する", "Compare one revision and decide whether to adopt it"), [
             bullet_list([
-                ("baseline全体の失敗をソース、期間、粒度、意味、実行に分類します。1つの仮説を決め、変更前後の指示全文と理由を保存します。Global指示は配布時点で10,000 UTF-16単位の上限を使っているため、追記ではなく既存の文を必要な範囲で置き換えます。第17章の長さ確認を行い、保存エラーを無視しません。製品のSchemaUnavailableや認証エラーを、答えを暗記させる指示で回避しません。", "Classify baseline failures by source, time, grain, meaning and execution. Save the full before/after instruction text and one hypothesis. The distributed global instructions already use the 10,000 UTF-16-unit limit, so replace the relevant existing wording rather than appending notes. Check length as in Chapter 17 and never ignore a save error. Do not bypass SchemaUnavailable or authentication errors by teaching memorized answers."),
+                ("baseline全体の失敗をソース、期間、粒度、意味、実行に分類します。1つの仮説を決め、変更前後の指示全文と理由を保存します。Global指示欄の上限は10,000 UTF-16単位です。選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は既存の文を必要な範囲で置き換えます。第17章の長さ確認を行い、保存エラーを無視しません。製品のSchemaUnavailableや認証エラーを、答えを暗記させる指示で回避しません。", "Classify baseline failures by source, time, grain, meaning and execution. Save the full before/after instruction text and one hypothesis. The global instruction field supports up to 10,000 UTF-16 units. Measure the selected profile's actual length and confirm it is within the limit; replace existing wording if it exceeds the limit. Check length as in Chapter 17 and never ignore a save error. Do not bypass SchemaUnavailable or authentication errors by teaching memorized answers."),
                 ("自分の候補はData AgentのDraft画面で対象の指示欄だけを変更し、Save、Publish、画面を開き直して公開版を確認します。変更後の全文と設定名・ハッシュを保存し、ソースなど他の欄が変わっていないことを確認します。第17章の固定profile用helperを再実行すると、今回の候補を配布設定へ戻す、または一致確認に失敗するため、独自候補の適用・認定には使いません。", "For your own candidate, edit only the intended instruction field in the Agent Draft UI, Save, Publish, then reopen and inspect the publication. Save its complete text, configuration label and hash, and confirm other fields stayed fixed. Do not use the Chapter 17 fixed-profile helper to apply or certify a custom candidate: it restores the distributed profile or reports a mismatch."),
                 ("データ、ソース選択、例、メジャー、実行方法、質問、条件を同じに保ち、finalの全49枠を実施します。限定的な事前確認をした場合は正式枠とは別に記録し、全体の代用にしません。", "Keep data, selections, examples, measures, execution method, questions and criteria fixed, then run all 49 final slots. Record any targeted checks separately; they do not replace the full phase."),
                 ("paired.csvでsuite/repeat/case_id/condition_idをキーに前後の判定を転記します。質問・条件・業務データが同じか確認します。片側が妥当なT03のNAである条件は、両側同じキーをincluded=noとして除き、元判定と理由を残します。他の失敗や不明は除外しません。", "Pair verdicts in paired.csv by suite/repeat/case_id/condition_id. Confirm equal questions, criteria and business data. For a valid T03 NA on either side, mark the same key excluded on both sides and retain original verdicts/reasons. Do not exclude other failures or unknowns."),
@@ -479,8 +475,8 @@ def append_chapter_sections(parent, root: Path):
                 "報告には構成・データ・評価日時、予定49枠と実施状態、全290条件のPASS/FAIL/UNCLEAR/NA、除外理由、対応比較、退行、実行根拠、未解決の製品制約、採用判断を含めます。一般的な正答率や全文章の正しさと呼ばず、補助条件充足率として示します。",
                 "Report configuration, data, dates, all 49 registered slot outcomes, PASS/FAIL/UNCLEAR/NA across all 290 conditions, exclusions, paired changes, regressions, query execution records, unresolved service limits and the adoption decision. Label the ratio supplemental condition fulfillment, not general accuracy or correctness of every sentence.")),
             paragraph((
-                "過去の51枠・296条件には非公開の未使用2問・6条件が含まれます。この教材は公開49枠・290条件を再現します。過去の結果は保証値ではなく、今回の共通分母は実際の適用条件から求めます。公開29問はすでに既知の問題です。未使用問題を追加するなら別の人が新規の質問と基準を事前固定し、調整者へ開示せず、その結果は別集計にします。",
-                "The historical 51-slot/296-condition campaign included two private unused questions with six criteria. This course reproduces the public 49-slot/290-condition portion. Historical results are not guarantees; calculate your denominator from actual applicability. The 29 public questions are already known. For an unseen test, another person must preregister new private questions and keys, withhold them from the tuner and report results separately.")),
+                "公開29問はすでに既知の問題です。未知の問題への一般化を調べる場合は、別の人が新しい質問と基準を事前固定し、調整者に開示せず実施し、その結果は公開評価と別に集計します。",
+                "The 29 public questions are already known. To test generalization to unseen questions, have another person preregister new questions and criteria, withhold them from the tuner and report those results separately from the public evaluation.")),
         ]),
     ]
     for title, blocks in sections:

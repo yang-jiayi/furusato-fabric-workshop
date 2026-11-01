@@ -28,6 +28,8 @@ import build_preview30 as builder
 import validate_preview30 as validator
 from furusato_docs import participant30_tuning as tuning
 from furusato_docs import participant30_evaluation as evaluation
+from furusato_docs import participant30_text as participant_text
+from furusato_docs.participant30 import FigureFactory
 from furusato_docs import preview30_release as release
 from furusato_docs.oox import StyleCarrier
 from furusato_docs.docx_kit import DocumentBuilder, CODE_BLOCK_CHUNK_LINES
@@ -50,7 +52,8 @@ class ParticipantSelfServiceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.tuning = chapter(17)
-        cls.counts = tuning.append_tuning_sections(cls.tuning, ROOT)
+        cls.figures = FigureFactory(None, {})
+        cls.counts = tuning.append_tuning_sections(cls.tuning, ROOT, figures=cls.figures)
         cls.document = Document([cls.tuning], [], [], [])
         cls.profile = ROOT / tuning.PROFILE_REL
         cls.instructions = {
@@ -89,10 +92,21 @@ class ParticipantSelfServiceTests(unittest.TestCase):
         tables = [b for b in section.blocks if b.kind == "table"]
         objects = [n for n in self.selections["lakehouse_tables"]
                    if n["type"] in {"lakehouse_tables.table", "lakehouse_tables.view"}]
+        object_names = {node["path"][1] + "." + node["path"][-1] for node in objects}
+        selection_tables = [table for table in tables
+                            if any(table["caption"].en.startswith(name + ":")
+                                   for name in object_names)]
         self.assertEqual(17, len(objects))
-        self.assertEqual(17, len(tables))
-        self.assertEqual(143, sum(len(table["rows"]) for table in tables))
-        for node, table in zip(objects, tables):
+        self.assertEqual(17, len(selection_tables))
+        exclusions = [table for table in tables if table not in selection_tables]
+        self.assertEqual(1, len(exclusions))
+        self.assertEqual(
+            "Six generation-metadata leaves outside the 143 business columns",
+            exclusions[0]["caption"].en,
+        )
+        self.assertEqual(6, len(exclusions[0]["rows"]))
+        self.assertEqual(143, sum(len(table["rows"]) for table in selection_tables))
+        for node, table in zip(objects, selection_tables):
             path = node["path"]
             with self.subTest(object=path):
                 self.assertTrue(table["caption"].en.startswith(path[1] + "." + path[-1] + ":"))
@@ -185,7 +199,7 @@ class ParticipantSelfServiceTests(unittest.TestCase):
             with (profile / "global-instructions.txt").open("a", encoding="utf-8") as output:
                 output.write("\nUnreviewed change\n")
             with self.assertRaisesRegex(ValueError, "source hash mismatch"):
-                tuning.append_tuning_sections(chapter(17), root)
+                tuning.append_tuning_sections(chapter(17), root, figures=self.figures)
 
     def test_only_exact_attributed_literals_are_exempt_from_work_log_guard(self):
         canonical = list(validator.canonical_literals(self.document, "en"))
@@ -369,6 +383,29 @@ class ParticipantEvaluationMaterialsTests(unittest.TestCase):
         self.assertTrue(self.suite["publicNotUnseen"])
         self.assertFalse(self.suite["protocol"]["historicalPrivateQuestionsIncluded"])
 
+    def test_current_evaluation_guidance_does_not_narrate_retired_campaigns(self):
+        model = chapter(19)
+        evaluation.append_chapter_sections(model, ROOT)
+        rendered = str(model) + str(participant_text.CHAPTERS[19])
+        for retired in ("51-slot", "51 slots", "51スロット", "296 conditions", "296条件"):
+            self.assertNotIn(retired, rendered)
+        self.assertIn("49", rendered)
+        self.assertIn("290", rendered)
+        self.assertIn("10,000 UTF-16", rendered)
+        self.assertIn("Measure the selected profile's actual length", rendered)
+        self.assertNotIn("already fills", rendered)
+
+    def test_participant_target_guidance_does_not_embed_the_shared_deployment(self):
+        rendered = str(participant_text.CHAPTERS[17])
+        for identifier in (
+            "003b6460-da51-4426-be11-3e4e2f2ef207",
+            "928dd874-020c-4ba7-a380-3cffd0598381",
+            "143717",
+            "DA_Furusato_101",
+            "comparison is in progress",
+        ):
+            self.assertNotIn(identifier, rendered)
+
     def test_questions_and_all_122_unique_rubric_conditions_are_complete_in_both_languages(self):
         self.assertEqual(29, len(self.cases))
         self.assertEqual(29, len(self.appendix.children))
@@ -434,7 +471,7 @@ class ParticipantEvaluationMaterialsTests(unittest.TestCase):
 
     def test_evaluation_answers_stay_separate_from_the_four_configuration_fields(self):
         model = chapter(17)
-        tuning.append_tuning_sections(model, ROOT)
+        tuning.append_tuning_sections(model, ROOT, figures=FigureFactory(None, {}))
         instructions = [b["text"] for b in code_blocks(model) if b["language"].en == "instructions"]
         self.assertEqual(4, len(instructions))
         for case in self.cases:

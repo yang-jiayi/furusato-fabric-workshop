@@ -23,14 +23,17 @@ RELEASE_PRINT_CSS = """
  html[data-lang="en"] #ch-20-10 > p:nth-last-child(-n+2) { margin-block:0; }
 }
 @media print {
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child { margin-bottom:0; }
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) { break-inside:avoid; }
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > h3 { margin:1mm 0 0; }
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > ul { margin-block:0; }
+ .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child { margin-bottom:0; }
+ .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) { break-inside:avoid; }
+ .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > h3 { margin:1mm 0 0; }
+ .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > ul { margin-block:0; }
 }
 @media print {
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child th,
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child td { padding-block:1mm; }
+ .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child th,
+ .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child td { padding-block:1mm; }
+}
+@media print {
+ html[data-lang="ja"] #ch-5-4 { break-inside:avoid; page-break-inside:avoid; }
 }
 """
 
@@ -62,12 +65,8 @@ def render(
     if delivery_mode not in {"paired", "html-lab"}:
         raise ValueError("Unknown document delivery mode")
     if delivery_mode == "html-lab":
-        profile = release.get_profile(release_profile)
-        if (profile != release.V300 or metadata.get("participantEdition") is not True
-                or metadata.get("version") != "3.0.0" or word_sha is not None
-                or not metadata.get("currentArtifactSet")
-                or metadata.get("deliveryMode") != "html-lab"):
-            raise ValueError("HTML+Lab delivery requires the current participant model and artifact binding")
+        from furusato_docs.current_publication import publication_for_model
+        profile = publication_for_model(root, metadata, word_sha, release_profile)
     else:
         profile = release.require_metadata_profile(metadata, release_profile)
     participant = bool(metadata.get("participantEdition"))
@@ -168,8 +167,8 @@ def render(
         footer_note = Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed.")
         footer_hash = f'<p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p>'
     guide_link = (
-        '<p><a href="https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/Lab" id="lab-guide">'
-        + plain_bilingual(Text("GitHubのLab手順書", "Lab instructions on GitHub")) + '</a></p>'
+        '<p><a href="https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/Lab/README.md" id="lab-guide">'
+        + plain_bilingual(Text("GitHubの正本Lab手順書", "Authoritative Lab guide on GitHub")) + '</a></p>'
         if delivery_mode == "html-lab" else
         f'<p><a download href="{profile.word_name}" id="word-download">'
         + plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide")) + '</a></p>'

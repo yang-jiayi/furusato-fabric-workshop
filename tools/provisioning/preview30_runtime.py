@@ -43,7 +43,8 @@ RUNTIME_INPUT_FILES = (
     "tools/provisioning/native_ui_observation.py",
     "tools/provisioning/preview30_activation_readiness.py",
     "tools/provisioning/workshop_runtime.py", "tools/provisioning/activation_runtime.py",
-    "tools/provisioning/reference_kql.py", "tools/data-agent/native_evaluation.py",
+    "tools/provisioning/reference_kql.py",     "tools/provisioning/requirements-preview30.txt",
+    "tools/data-agent/native_evaluation.py",
     "tools/data-agent/native_mcp.py",
     "tools/data-agent/source_grounded_profile.py", "tools/data-agent/answer_contract_profile.py",
     "tools/data-agent/time_layer_isolation.py", "tools/data-agent/fresh_grounded_profile.py",
@@ -692,10 +693,18 @@ def main() -> int:
     parser.add_argument("--native-copy", type=Path)
     parser.add_argument("--native-ui-receipt-root", type=Path)
     parser.add_argument("--native-ui-control-classification", type=Path)
+    parser.add_argument("--native-ui-correlation", type=Path)
+    parser.add_argument("--gold-method", choices=["sql-mcp", "onelake-delta-parquet"], default="sql-mcp")
+    parser.add_argument("--gold-job-receipt", type=Path)
     args = parser.parse_args()
     try:
         if args.include_relationships and args.command != "preflight":
             raise SafetyError("--include-relationships belongs to preflight; approve its new exact plan first.")
+        if args.gold_method != "sql-mcp" and args.command != "verify-gold":
+            raise SafetyError("--gold-method is only valid for verify-gold.")
+        if args.gold_job_receipt and (
+                args.command != "verify-gold" or args.gold_method != "onelake-delta-parquet"):
+            raise SafetyError("--gold-job-receipt is only valid with the OneLake verify-gold method.")
         if args.command == "preflight":
             result = preflight(args)
         elif args.command in {"start-activator", "stop-activator", "check-activator-readiness", "deliver-increment", "verify-delivery"}:
@@ -707,8 +716,10 @@ def main() -> int:
                           "verify-delivery": verify_delivery}[args.command](args)
         elif args.command.startswith("verify-"):
             from preview30_verify import verify_sources, verify_gold, verify_model
-            result = {"verify-sources": verify_sources, "verify-gold": verify_gold,
-                      "verify-model": verify_model}[args.command](args)
+            if args.command == "verify-gold":
+                result = verify_gold(args, method=args.gold_method)
+            else:
+                result = {"verify-sources": verify_sources, "verify-model": verify_model}[args.command](args)
         else:
             from preview30_deploy import (
                 deploy_sources, deploy_notebooks, deploy_realtime, deploy_core, deploy_relationships,

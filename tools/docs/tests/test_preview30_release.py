@@ -420,7 +420,7 @@ class ReleaseProfileTests(unittest.TestCase):
                     report = self.inspect_html(source.replace(head_title, replacement), metadata, profile)
                     self.assertIn("html.documentTitle", [finding.check for finding in report.failures])
 
-    def test_reference_spacing_fix_is_release_and_english_print_only(self):
+    def test_reference_spacing_fix_and_japanese_orphan_url_fix_are_release_print_only(self):
         preview = self.minimal_html(self.metadata(release.PREVIEW), release.PREVIEW)
         current = self.minimal_html(self.metadata(), release.V300)
         self.assertNotIn(html_renderer.RELEASE_PRINT_CSS, preview)
@@ -429,6 +429,9 @@ class ReleaseProfileTests(unittest.TestCase):
         self.assertEqual(2, html_renderer.RELEASE_PRINT_CSS.count('html[data-lang="en"] #ch-20-10'))
         self.assertIn('margin-bottom:2mm', html_renderer.RELEASE_PRINT_CSS)
         self.assertIn('margin-block:0', html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('html[data-lang="ja"] #ch-5-4', html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('break-inside:avoid', html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('page-break-inside:avoid', html_renderer.RELEASE_PRINT_CSS)
         for forbidden in ("display", "visibility", "overflow", "font-size", "height", "break-before"):
             self.assertNotIn(forbidden, html_renderer.RELEASE_PRINT_CSS)
 

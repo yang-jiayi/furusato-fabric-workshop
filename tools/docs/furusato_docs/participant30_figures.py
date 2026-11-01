@@ -12,6 +12,12 @@ FIGURES = {
         'alt': ('Workspace type 設定の実画面。現在の種類は Fabric、SKU は F16、リージョンは West US 2、Capacity ID は redacted。Edit ボタンは操作しない。',
                 'Actual Workspace type settings showing Fabric, SKU F16, region West US 2 and a redacted Capacity ID. The Edit button is not to be used.'),
     },
+    'p30-11-notebook05-monitor-success': {
+        "caption": ('Notebook 05 の実際の Monitor 実行で Status=Success を確認します。これは Notebook の実行完了だけを示し、Gold の件数・金額・generation 整合性は OneLake の独立検証で確認します。',
+                    'Notebook 05 Monitor shows an actual run with Status=Success. This proves only the notebook run completed; verify Gold counts, amounts and generation consistency independently through OneLake.'),
+        "alt": ('Fabric Monitor の Notebook 05 実行で Status Success と実行時間が表示される。',
+                'Fabric Monitor showing a successful Notebook 05 run and its duration.'),
+    },
     'pc-17-published-kql-examples': {
         'caption': ('Published の Data Agent で、Setup から KQL Database の Example queries を選んだ画面です。Showing 9 items と最初の UTC 用の質問・KQL が表示されています。これは公開版の登録内容の確認です。9件すべての Valid、クエリの直接実行、Agent の回答とその精度は、それぞれ別に確認します。長い KQL の全文は下記の原文を使います。',
                     'Published Data Agent with Setup → KQL Database → Example queries selected. The screen shows Showing 9 items and the first UTC question/KQL pair. This verifies registered content in the published version. Check all nine Valid statuses, direct query execution, and Agent answers and accuracy separately. Use the complete KQL source below for long queries.'),
@@ -25,10 +31,10 @@ FIGURES = {
                 'Power BI report with All filters, four KPI cards, monthly donation amount and Top10 charts for recipient municipalities, gift categories and donor residence prefectures.'),
     },
     'pc-12-semantic-model-view': {
-        'caption': ('Semantic model のモデルビュー（Viewing）。寄附・寄附者・日付・自治体・返礼品の5テーブルと関係の配置、右側の寄附にある10メジャー、非表示ではない寄附金額列を確認します。この画面は構成の確認です。メジャーの定義・実際の DAX 結果・Ontology の Metrics は、それぞれ別に確認します。',
-                    'Semantic model view in Viewing mode. Inspect the five tables—寄附, 寄附者, 日付, 自治体 and 返礼品—their relationship layout, the ten measures under 寄附, and the visible 寄附金額 column. This screen verifies configuration. Check measure definitions, actual DAX results and ontology Metrics separately.'),
-        'alt': ('Viewing モードの Semantic model。5つのテーブルと関係図、寄附の10メジャーと非表示ではない寄附金額列が表示される。',
-                'Semantic model in Viewing mode showing five table cards and relationships, ten measures under 寄附, and the visible 寄附金額 column.'),
+        'caption': ('初回 framing 後の Semantic model を Viewing モードで表示し、5テーブルが読み込まれ、一部の列と関係が見える状態です。図全体は表示範囲外です。構成の参考であり、DAX の結果は別の実クエリで確認します。',
+                    'Semantic model in Viewing mode after initial framing, with five tables loaded and some columns and relationships visible. The full diagram is outside the viewport. This is a configuration illustration; verify DAX results with an actual query.'),
+        'alt': ('初回 framing 後の Viewing モード。Data pane に5テーブルがあり、画面の一部に列と関係図が表示される。',
+                'Viewing mode after initial framing, with five tables in the Data pane and part of the columns and relationship diagram visible.'),
     },
     'pc-16-unsupported-datasource': {
         'caption': ('Configure Graph の判定画面。この例では10 Entity が Ineligible、Gift の理由が Unsupported Datasource（ot_gift）で、Continue は無効です。右側は Preview であり、Graph not materialized と表示されています。理由を確認し、未対応の間は新規の実体化を止めます。この画面のように未実体化なら、GQL の確認も未実施として記録します。静的テーブルの検証とは分けて扱います。',
@@ -78,6 +84,12 @@ FIGURES = {
         "alt": ('Pipeline の実行の監視画面。Copy data1 が Succeeded、Output の JSON に rowsRead 5000 と rowsCopied 5000、右に実行の詳細',
                 'Pipeline run monitor: Copy data1 Succeeded; the output JSON shows rowsRead 5000 and rowsCopied 5000; run details on the right.'),
     },
+    'p30-08-kql-overview': {
+        "caption": ('実際の KQL Database overview。DonationEvents が Explorer にあり、画面上は丸め表示で 15K rows と示されます。ナビゲーション用の図であり、正確な件数、OneLake Delta の materialization、source reconciliation の証明ではありません。',
+                    'Actual KQL Database overview with DonationEvents in Explorer and a rounded 15K rows display. This is a navigation illustration, not proof of an exact count, OneLake Delta materialization or source reconciliation.'),
+        "alt": ('EH_Furusato_101 の Database overview。Explorer に DonationEvents が表示され、行数は丸め表示で 15K。',
+                'Database overview for EH_Furusato_101 with DonationEvents in Explorer and a rounded 15K row count.'),
+    },
     'p30-09-manual-recovery': {
         "caption": ('講師の指示で手動実行するときの Parameters。IncrementFileName にファイル名を入力し、Type・Subject・Source は空のまま',
                     "Parameters for a manual run on the instructor's instruction: enter the file name in IncrementFileName and leave Type, Subject and Source empty."),
@@ -90,17 +102,23 @@ FIGURES = {
         "alt": ('Activator のルールの History タブ。Activation count のグラフと、ファイルのパスと FileCreated が並ぶ Activation details の表',
                 'Activator rule History tab: an activation-count chart and an Activation details table of file paths and FileCreated types.'),
     },
+    'p30-09-pipeline-003-succeeded': {
+        "caption": ('実際の PL_Furusato_101 の実行画面。1件の Pipeline 実行と Copy data1 が Succeeded です。この画面だけでは、対象ファイルとの対応、行数・バイト数、自動起動、KQL の合計は証明されません。',
+                    'Actual PL_Furusato_101 run view showing one successful Pipeline run and Copy data1. This screen alone does not prove which source file it processed, row or byte counts, automatic triggering or KQL totals.'),
+        "alt": ('PL_Furusato_101 の実行画面。Copy data1 が Succeeded と表示される。',
+                'PL_Furusato_101 run view showing Copy data1 as Succeeded.'),
+    },
     'p30-09-source-events': {
-        "caption": ('イベントソースの Live feed タブ。アップロードしたファイルごとに、FileCreated イベント（api は PutBlob）が1行表示される（図は3ファイル分）',
-                    'Live feed tab of the event source: each uploaded file appears as one FileCreated event with api PutBlob (the figure shows all three files).'),
-        "alt": ('イベントソースの Live feed タブ。Event details の表に3つのファイルのパス、Microsoft.Fabric.OneLake.FileCreated、PutBlob が並ぶ',
-                'Event source Live feed: an Event details table with three increment file paths, type Microsoft.Fabric.OneLake.FileCreated and api PutBlob.'),
+        "caption": ('実際のイベントソース画面の観測値。3件の FileCreated が並び、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated、PutBlob です。イベントの観測であり、Pipeline 完了や Delta への materialization を示しません。',
+                    'Observed values from the actual event-source view. Three FileCreated rows are listed; the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. This shows an event, not Pipeline completion or Delta materialization.'),
+        "alt": ('donation_events_003.csv の選択行と3件のイベント、FileCreated、PutBlob、content length と text/csv を示す実際のイベントソース画面。',
+                'Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.'),
     },
     'p30-10-timeseries': {
-        "caption": ('IncomingDonationAmountYen を DonationEvents の金額の列に対応させた状態。型は Timeseries<Integer>、Timestamp column は DonatedAt',
-                    'Time-series binding: IncomingDonationAmountYen is mapped to the DonationEvents amount column as Timeseries<Integer>, with Timestamp column DonatedAt.'),
-        "alt": ('Property の対応表。静的 Property は ot_municipality の列、IncomingDonationAmountYen は Timeseries<Integer> で、Timestamp column は DonatedAt',
-                'Binding table: static properties map to ot_municipality columns; IncomingDonationAmountYen uses Timeseries<Integer> and Timestamp column DonatedAt.'),
+        "caption": ('時系列 Property の binding definition 画面。型と Timestamp column の設定例を示しますが、読み取り可能な source data、実行可能性、native query や GQL の成功を証明するものではありません。',
+                    'Time-series property binding-definition screen showing example type and timestamp-column settings. It does not prove readable source data, runtime availability, a native query or GQL success.'),
+        "alt": ('時系列 Property の definition 表。IncomingDonationAmountYen の型と Timestamp column DonatedAt の設定例。',
+                'Time-series property definition table showing example type and Timestamp column DonatedAt for IncomingDonationAmountYen.'),
     },
     'p30-11-executed-output': {
         "caption": ('Notebook 05 の適用の実行後の出力。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY の行を確認する',
@@ -109,8 +127,8 @@ FIGURES = {
                 'Notebook cell output listing schemas, sourceTables=13, outputTables=29, ANALYTICS_MODE=applied and ANALYTICS_READY.'),
     },
     'p30-11-gold': {
-        "caption": ('ops.dq_rule_results の品質チェックの結果。7つのルールすべてで期待値と実測値が一致し、Status は PASS（重複 100、増分の行数 15000）',
-                    'Quality results in ops.dq_rule_results: all seven rules have matching expected and actual values and Status PASS (100 duplicates, 15000 increment rows).'),
+        "caption": ('図は EvaluatedAtUtc=2026-09-29 の実行結果を示す参考例です（重複100件・増分15,000行などの表示値はこの実行時点のもの）。参加者は自分の Notebook 05 の最新実行ジョブと出力を確認し、7つすべての品質ルールの実際の判定を確認します。図の値を現在の結果として扱いません。',
+                    'This figure is an illustrative run dated EvaluatedAtUtc=2026-09-29; displayed values such as 100 duplicates and 15,000 increment rows belong to that run. Participants must check their own latest Notebook 05 job and output to verify the actual verdicts for all seven quality rules. Do not treat the figure’s values as current results.'),
         "alt": ('Lakehouse の ops.dq_rule_results の表。RuleName・Severity・ExpectedValue・ActualValue・Status の7行で、期待値と実測値が一致',
                 'Lakehouse table ops.dq_rule_results: seven rule rows with Severity, ExpectedValue, ActualValue and Status; the values match.'),
     },

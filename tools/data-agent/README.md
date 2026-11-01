@@ -14,6 +14,16 @@ and checks the actual ten model measures. Publication/readback and fresh answer
 validation are separate operator steps. Earlier reference-only and regression
 records below describe their own dated scopes; they are not the latest overall score.
 
+The bootstrap [`global-instructions.txt`](../../workshop/v3.0.0-preview/data-agent/global-instructions.txt)
+also keeps source-specific period defaults, raw/static population boundaries,
+event-identity limitations and native-query evidence requirements in the supported
+stage instructions. These safeguards cannot rely on legacy Ontology description
+fields surviving native serialization. For an instruction-only experiment, retain
+the actual source payloads and selections byte-for-byte; do not apply the full
+measured profile or create its SQL views merely to change a global instruction.
+Source edits and generated bundles are candidates, not proof of deployment or
+answer quality. Preserve the baseline and compare a separately registered fresh run.
+
 ### Native Ontology context check
 
 新しい Agent 定義は 3 個の通常 `datasource.json` と、別の
@@ -162,6 +172,41 @@ metadata client nor qualifies a durable question journal.
 接続も行わず、使用済みの出力先・intentを上書きしません。NotebookのCompleted表示だけで
 成功とせず、実プロトコルの結果とcleanupを確認してください。
 
+For the SDK Responses transport, a diagnostics `HTTPStatusError` is preserved
+with its HTTP status and raw body. Only the exact `403` optional-diagnostics
+feature-disabled signature is treated as unavailable diagnostics; other HTTP,
+permission, and transport failures remain fail-closed. If a batch stopped after
+a terminal response for this narrow case, `recover-plan` can carry that single
+slot into a new plan without changing its suite, rubric, repetitions, or
+denominator. The continuation map hash-binds the original record, terminal
+response, before/after configuration, native error, and diagnostics readback.
+It writes a separate derived record; the original capture remains untouched,
+the carried question is not submitted again, and all review conditions remain
+`UNCLEAR` until independently adjudicated.
+
+When a later batch stops on another terminal but incomplete capture (for example
+an unfinished native tool item), use `continue-plan` to register every verified
+terminal slot from the source campaign and leave only untouched cases runnable.
+The map binds each source record, batch, response/configuration artifacts and
+review by hash. A carried record keeps its original status and review bytes;
+neither continuation nor transport normalization awards a score. A started
+case without a terminal record blocks plan creation to prevent a duplicate
+submission.
+
+```powershell
+python -B .\tools\data-agent\evaluate_native.py `
+  --private-root '<absolute private directory outside Git>' recover-plan `
+  --name '<new recovery campaign>' --source-plan 'campaigns/<prior>/plan.json' `
+  --configuration '<frozen label>' --suite original --repeat 1 --case-id T01 `
+  --diagnostics-receipt '<verified private diagnostics receipt.json>'
+```
+
+```powershell
+python -B .\tools\data-agent\evaluate_native.py `
+  --private-root '<absolute private directory outside Git>' continue-plan `
+  --name '<new continuation campaign>' --source-plan 'campaigns/<prior>/plan.json'
+```
+
 **MCP is an answer-only evidence surface.** The observed native reply exposes
 answer text, not the internal executed SQL/KQL/GQL or their result rows.
 Neither a JSON-RPC ID nor an MCP session ID is a backend conversation ID.
@@ -267,6 +312,20 @@ python -B .\tools\data-agent\evaluate_native.py run `
 # Review the private per-case review.json files; then create a new report file:
 python -B .\tools\data-agent\evaluate_native.py report `
   --plan campaigns\candidate-next\plan.json --out reports\review-001.json
+```
+
+For the established `extended-public-49` comparison, B01–B19 are public
+regression material, not a held-out set. Freeze them with `--regression`, then
+use `--without-heldout` to preregister T01–T10 three times plus B01–B19 once:
+49 fresh-conversation slots and 290 conditions. This does not change the
+questions, rubric, or acceptance policy.
+
+```powershell
+python -B .\tools\data-agent\evaluate_native.py freeze --regression
+python -B .\tools\data-agent\evaluate_native.py plan `
+  --name public-49 --deployment published-agent.json --transport sdk `
+  --without-heldout --regression-suite suites\regression.json `
+  --repeats 3 --regression-repeats 1
 ```
 
 Repeat only the predeclared slots (including the separately labelled held-out

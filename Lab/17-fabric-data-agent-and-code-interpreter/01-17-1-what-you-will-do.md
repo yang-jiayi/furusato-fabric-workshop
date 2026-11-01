@@ -10,6 +10,7 @@ Fabric Data Agent を1件だけ使い、Lakehouse（SQL）・KQL Database（KQL�
 
 - 最初に17.5の教材と実施順を確認します。作業フォルダーの Data Agent（DA_Furusato_&lt;PID&gt;）を1件だけ使い、既存の設定がある場合は保存してから変更します。17.6〜17.7でソースを用意し、17.16のコマンドで採用済みの設定を適用・公開・読み戻しします。17.8〜17.15には入力先、原文、確認方法を収録しています。
 - 10章（時系列）と12章（Semantic model）が完了していることを確認します。
+- 参加者は、自分が利用を許可された Workspace とフォルダーを使い、実際の PID を設定に指定します。構成を公開しただけでは回答精度や完全な source/runtime qualification は保証されません。第19章・付録Cに従い、自分の公開版の回答と実際のソース・クエリ・返却結果を評価します。
 
 <details>
 <summary>English</summary>
@@ -24,5 +25,6 @@ Before you start
 
 - Start with the materials and order in 17.5. Use one Data Agent in your work folder (DA_Furusato_&lt;PID&gt;) and save any existing configuration before editing. Prepare sources in 17.6–17.7, then apply, publish and read back the adopted configuration with the commands in 17.16. Sections 17.8–17.15 contain field mappings, complete original text and verification steps.
 - Confirm that Chapters 10 (time series) and 12 (semantic model) are complete.
+- Use a workspace and folder you are authorized to use, and set your actual PID in the configuration. Publishing a configuration does not guarantee answer quality or complete source/runtime qualification. Evaluate your own publication's answers and actual sources, queries and returned results using Chapter 19 and Appendix C.
 
 </details>

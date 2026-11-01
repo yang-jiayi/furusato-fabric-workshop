@@ -10,7 +10,7 @@ import unittest
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'data-agent'))
 from measured_contract_profile import ONTOLOGY_SCHEMA
 from preview30_agent import build_profile
-from preview30_deploy import agent_definition_contract
+from preview30_deploy import AGENT_PUBLICATION_DESCRIPTION, agent_definition_contract
 from preview30_runtime import SafetyError
 
 
@@ -84,3 +84,40 @@ class DataAgentContextTests(unittest.TestCase):
         self.assertFalse(contract['nativeOntologyContextAvailabilityVerified'])
         self.assertFalse(contract['accuracyAccepted'])
         self.assertEqual(len([p for p in files if p.endswith('/datasource.json')]),4)
+        ontology=files['Files/Config/draft/ontology-{{name.ontology}}/datasource.json']
+        self.assertNotIn('IncomingDonationAmountYen', next(
+            item['description'] for item in ontology['elements'] if item['id']=='Municipality'))
+        self.assertIn('schema/context, not executed-instance evidence',ontology['userDescription'])
+        self.assertIn('actual GQL execution and returned results',ontology['userDescription'])
+        self.assertIn('other native SQL/KQL/DAX results',ontology['userDescription'])
+        self.assertIn('If a user explicitly requests GQL, do not silently substitute another language.',
+                      ontology['userDescription'])
+        self.assertIn('unless its binding and runtime are verified',ontology['userDescription'])
+
+    def test_global_tuning_preserves_source_defaults_and_evidence_boundaries(self):
+        files, _ = build_profile()
+        instructions = files['Files/Config/draft/stage_config.json']['aiInstructions']
+        self.assertLessEqual(len(instructions.encode('utf-16-le')) // 2, 10000)
+        for safeguard in (
+            'Source-specific instructions resolve defaults before clarification.',
+            'An explicit year for a static-data clause does not set the year for a separate observation clause.',
+            'without calculating or repeating a proposed combined number',
+            'Never use aggregate bucket fields',
+            'before aggregation and ranking',
+            'KEEPFILTERS intersection',
+            'Other native Ontology SQL/KQL/DAX results',
+            'unless its source binding and runtime are verified',
+            'Do not bypass a platform content block',
+        ):
+            with self.subTest(safeguard=safeguard):
+                self.assertIn(safeguard, instructions)
+        for frozen_answer in ('1,344,099,000', '253,886,000', '452025', 'T01', 'B15'):
+            self.assertNotIn(frozen_answer, instructions)
+
+    def test_publication_description_matches_verified_delivery_and_partial_mirror(self):
+        self.assertIn('automatic delivery is verified',AGENT_PUBLICATION_DESCRIPTION)
+        self.assertIn('002/003 only',AGENT_PUBLICATION_DESCRIPTION)
+        self.assertIn('001 backfill and Gen2 time-series query path remain unverified',
+                      AGENT_PUBLICATION_DESCRIPTION)
+        self.assertIn('Data Agent answer quality has not yet been evaluated',
+                      AGENT_PUBLICATION_DESCRIPTION)

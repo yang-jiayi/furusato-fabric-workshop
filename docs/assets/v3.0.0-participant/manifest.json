@@ -30,6 +30,45 @@
       "evidenceScope": "Notebook 01 final-cell Ready output; independent data and SQL checks are separate."
     },
     {
+      "id": "p30-08-kql-overview",
+      "file": "p30-08-kql-overview.png",
+      "sha256": "fe5e2f2c6ac4f3c5c05299f8676923eb98d6e641cf99db96bd4f2eb20f227e7a",
+      "source": "native-kql-database-overview-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-01",
+      "captureContext": "Requested workspace; actual PNG inspected at 1792 x 1039 pixels.",
+      "width": 1792,
+      "height": 1039,
+      "redactions": ["Account and avatar"],
+      "evidenceScope": "Navigation illustration showing DonationEvents and a rounded 15K row statistic. Not an exact count or evidence of OneLake Delta materialization."
+    },
+    {
+      "id": "p30-09-source-events",
+      "file": "p30-09-source-events.png",
+      "sha256": "6fc2608f90bbfb7187cefe852322e2426f5ecc296984e660b2bb4303999949b4",
+      "source": "native-fabric-event-source-003-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-01",
+      "captureContext": "Actual event-source observation; PNG inspected at 1200 x 940 pixels.",
+      "width": 1200,
+      "height": 940,
+      "redactions": ["Account and navigation chrome"],
+      "evidenceScope": "Three visible source-event rows; selected donation_events_003.csv event fields only. Does not prove Pipeline completion or Delta materialization."
+    },
+    {
+      "id": "p30-09-pipeline-003-succeeded",
+      "file": "p30-09-pipeline-003-succeeded.png",
+      "sha256": "a445c9c5ffc875418c1b828ae5946be0756d074e1ff1b7da6abfd0f7eb98972a",
+      "source": "native-fabric-pipeline-003-monitor-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-01",
+      "captureContext": "Actual Pipeline run monitor; PNG inspected at 1340 x 970 pixels.",
+      "width": 1340,
+      "height": 970,
+      "redactions": ["Account, owner and submitted-by fields"],
+      "evidenceScope": "One successful Pipeline/Copy run. Does not prove source-file association, row counts, automatic triggering or KQL totals."
+    },
+    {
       "id": "pc-11-notebook05-preview",
       "file": "notebook05-preview-output.png",
       "sha256": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e",
@@ -48,10 +87,28 @@
     {
       "id": "pc-12-semantic-model-view",
       "file": "semantic-model-tables-measures.png",
-      "sha256": "447923436f2f945c84d705e1f9e2060902a9b3a85db26abc6e44a07deac787a1",
-      "source": "native-semantic-model-viewing-mode-ui",
+      "sha256": "0376ccc052fc14c2ad0b45a521f6689d4a1cd6499a04dc9659aeaf7c1bbeb66b",
+      "source": "native-semantic-model-initialized-view-ui",
       "actualUI": true,
-      "evidenceScope": "Native model structure and visible field/measure names in Viewing mode; DAX results and Ontology Metrics require separate verification."
+      "capturedOn": "2026-11-01",
+      "captureContext": "Requested workspace; actual PNG inspected at 1819 x 1125 pixels.",
+      "width": 1819,
+      "height": 1125,
+      "redactions": ["Account avatar", "Left application sidebar"],
+      "evidenceScope": "Viewing-mode illustration after initial framing: five tables loaded and part of the columns/relationships visible. The full diagram and DAX results require separate verification."
+    },
+    {
+      "id": "p30-11-notebook05-monitor-success",
+      "file": "p30-11-notebook05-monitor-success.png",
+      "sha256": "cfa4644a21c9dc00e691f526e71fa9e8fc21dcaaaa03f55be39754a074e490e5",
+      "source": "native-notebook05-monitor-success-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-01",
+      "captureContext": "Actual Notebook 05 Monitor run; PNG inspected at 1885 x 940 pixels.",
+      "width": 1885,
+      "height": 940,
+      "redactions": ["Account avatar", "Submitter identity", "My workspace avatar"],
+      "evidenceScope": "Successful Notebook05 run only; Gold counts, amounts, control readiness and generation consistency require independent verification."
     },
     {
       "id": "pc-12-report-canvas",

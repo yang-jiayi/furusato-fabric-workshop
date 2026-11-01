@@ -110,6 +110,7 @@ class NativeClient:
             artifact_name=config["data_agent_id"],
             workspace_name=config["workspace_id"],
             ai_skill_stage=config["stage"], max_retries=0, timeout=timeout,
+            credential=credential,
         )
         if (str(self.client.artifact_id).lower() != config["data_agent_id"].lower()
                 or str(self.client.workspace_id).lower() != config["workspace_id"].lower()
@@ -131,9 +132,19 @@ class NativeClient:
         return unpack_raw(self.client.responses.with_raw_response.retrieve(response_id))
 
     def diagnostics(self, conversation_id: str, response_id: str) -> dict[str, Any]:
-        return self.client.diagnostics.get(
-            conversation_id=conversation_id, response_id=response_id,
-        )
+        from httpx import HTTPStatusError
+
+        try:
+            return self.client.diagnostics.get(
+                conversation_id=conversation_id, response_id=response_id,
+            )
+        except HTTPStatusError as exc:
+            response = exc.response
+            raise NativeEvidenceError(
+                f"Native diagnostics HTTP {response.status_code}; no question retry.",
+                response.content,
+                response.status_code,
+            ) from exc
 
     def close(self) -> None:
         self.client.close()
@@ -260,19 +271,21 @@ def validate_deployment(store: PrivateStore, value: dict[str, Any]) -> list[dict
 
 def create_plan(
     store: PrivateStore, name: str, deployment: dict[str, Any],
-    original_file: str, heldout_file: str, repeats: int, heldout_repeats: int,
+    original_file: str, heldout_file: str | None, repeats: int, heldout_repeats: int,
     transport: str | None = None, regression_file: str | None = None,
     regression_repeats: int = 1,
 ) -> str:
     label(name)
-    if repeats < 1 or heldout_repeats < 1 or regression_repeats < 1:
+    if (repeats < 1 or regression_repeats < 1
+            or (heldout_file is not None and heldout_repeats < 1)):
         raise EvaluationError("All suite repetition counts must be positive.")
-    suites = {
-        "original": load_suite(store, original_file),
-        "heldout": load_suite(store, heldout_file),
-    }
+    suites = {"original": load_suite(store, original_file)}
+    if heldout_file is not None:
+        suites["heldout"] = load_suite(store, heldout_file)
     if regression_file is not None:
         suites["regression"] = load_suite(store, regression_file)
+    if len(suites) == 1:
+        raise EvaluationError("A held-out or regression suite is required.")
     if any(suite["kind"] != kind for kind, suite in suites.items()):
         raise EvaluationError("Original, held-out and regression suites cannot be interchanged.")
     if transport is not None:
@@ -281,14 +294,20 @@ def create_plan(
             {**c, "transport": transport} for c in deployment.get("configurations", [])
         ]}
     configurations = validate_deployment(store, deployment)
-    defaults = {"original": repeats, "heldout": heldout_repeats, "regression": regression_repeats}
+    defaults = {"original": repeats}
+    if heldout_file is not None:
+        defaults["heldout"] = heldout_repeats
+    if regression_file is not None:
+        defaults["regression"] = regression_repeats
     schedules = {
         c["label"]: {kind: c.get(f"{kind}_repeats", defaults[kind]) for kind in suites}
         for c in configurations
     }
     if any(type(n) is not int or n < 1 for schedule in schedules.values() for n in schedule.values()):
         raise EvaluationError("Per-configuration repetition counts must be positive integers.")
-    files = {"original": original_file, "heldout": heldout_file}
+    files = {"original": original_file}
+    if heldout_file is not None:
+        files["heldout"] = heldout_file
     if regression_file is not None:
         files["regression"] = regression_file
     plan = {
@@ -311,6 +330,341 @@ def create_plan(
     return relative
 
 
+def _record_artifact(record: dict[str, Any], name: str) -> dict[str, str]:
+    matches = [
+        item for item in record.get("artifacts", [])
+        if Path(item.get("path", "")).name == name
+    ]
+    if len(matches) != 1:
+        raise EvaluationError(f"Expected one captured {name} artifact.")
+    return matches[0]
+
+
+def _continuation_entry(
+    store: PrivateStore, source_plan: dict[str, Any], slot: dict[str, Any],
+    case_id: str, diagnostics_receipt_path: str,
+) -> dict[str, Any]:
+    if not isinstance(diagnostics_receipt_path, str) or not diagnostics_receipt_path:
+        raise EvaluationError("Diagnostics readback receipt path is required.")
+    if slot not in source_plan.get("slots", []):
+        raise EvaluationError("Continuation source slot was not predeclared.")
+    suite = load_suite(store, source_plan["suite_files"][slot["suite"]])
+    if case_id not in {case["id"] for case in suite["cases"]}:
+        raise EvaluationError("Continuation case is not in the frozen source suite.")
+    source_record_path = f"{slot_path(source_plan, slot)}/{label(case_id)}/record.json"
+    record, record_sha = _read_capture_record(store, source_record_path)
+    if (record.get("status") != "evidence_incomplete"
+            or record.get("error_type") != "HTTPStatusError"
+            or record.get("submission_count") != 1
+            or record.get("fresh_conversation") is not True
+            or record.get("response", {}).get("status") != "completed"
+            or record.get("native_structure_issues") != []
+            or record.get("diagnostics_status") is not None
+            or record.get("configuration_before_sha256")
+            != record.get("configuration_after_sha256")):
+        raise EvaluationError("Continuation source is not the exact consumed T01 diagnostics-only capture.")
+    verify_record(store, record)
+    source_batch_path = f"{slot_path(source_plan, slot)}/batch.json"
+    source_batch = store.read(source_batch_path)
+    if (source_batch.get("status") != "stopped_fail_closed"
+            or source_batch.get("slot") != slot
+            or source_batch.get("case_statuses") != [
+                {"case_id": case_id, "status": "evidence_incomplete"},
+            ]):
+        raise EvaluationError("Continuation source batch is not the expected stopped T01 capture.")
+
+    response_artifact = _record_artifact(record, Path(record["response_artifact"]).name)
+    configuration_before = _record_artifact(record, "configuration-before.json")
+    configuration_after = _record_artifact(record, "configuration-after.json")
+    native_error = _record_artifact(record, "native-error.body")
+    diagnostics_receipt_sha = file_digest(store.path(diagnostics_receipt_path))
+    diagnostics_receipt = store.read(diagnostics_receipt_path)
+    diagnostics_body_path = diagnostics_receipt.get("body_path")
+    if not isinstance(diagnostics_body_path, str):
+        raise EvaluationError("Diagnostics readback body path is missing.")
+    diagnostics_body_sha = file_digest(store.path(diagnostics_body_path))
+    native_error_body = store.path(native_error["path"]).read_bytes()
+    diagnostics_body = store.path(diagnostics_body_path).read_bytes()
+    if (not diagnostics_feature_unavailable(
+                diagnostics_body, diagnostics_receipt.get("http_status"))
+            or diagnostics_body != native_error_body
+            or diagnostics_receipt.get("classification") != "feature_unavailable"
+            or diagnostics_receipt.get("matches_original_error_body") is not True
+            or diagnostics_receipt.get("source_record_path") != source_record_path
+            or diagnostics_receipt.get("source_record_sha256") != record_sha
+            or diagnostics_receipt.get("source_response_artifact_sha256")
+            != response_artifact["sha256"]
+            or diagnostics_receipt.get("response_id") != record["response"]["id"]
+            or diagnostics_receipt.get("conversation_id") != record["conversation_id"]
+            or diagnostics_receipt.get("body_sha256") != diagnostics_body_sha):
+        raise EvaluationError("Diagnostics readback is not bound to the exact feature-unavailable response.")
+    return {
+        "slot": slot,
+        "case_id": case_id,
+        "source_record_path": source_record_path,
+        "source_record_sha256": record_sha,
+        "source_batch_path": source_batch_path,
+        "source_batch_sha256": file_digest(store.path(source_batch_path)),
+        "source_response_artifact_path": response_artifact["path"],
+        "source_response_artifact_sha256": response_artifact["sha256"],
+        "source_configuration_before_artifact_path": configuration_before["path"],
+        "source_configuration_before_artifact_sha256": configuration_before["sha256"],
+        "source_configuration_after_artifact_path": configuration_after["path"],
+        "source_configuration_after_artifact_sha256": configuration_after["sha256"],
+        "source_definition_sha256": record["configuration_before_sha256"],
+        "source_native_error_artifact_path": native_error["path"],
+        "source_native_error_artifact_sha256": native_error["sha256"],
+        "diagnostics_receipt_path": diagnostics_receipt_path,
+        "diagnostics_receipt_sha256": diagnostics_receipt_sha,
+        "diagnostics_body_path": diagnostics_body_path,
+        "diagnostics_body_sha256": diagnostics_body_sha,
+        "diagnostics_http_status": diagnostics_receipt["http_status"],
+    }
+
+
+def _captured_slot_entry(
+    store: PrivateStore, source_plan: dict[str, Any], slot: dict[str, Any],
+    case_id: str,
+) -> dict[str, Any]:
+    if slot not in source_plan.get("slots", []):
+        raise EvaluationError("Captured continuation source slot was not predeclared.")
+    suite = load_suite(store, source_plan["suite_files"][slot["suite"]])
+    case = next((item for item in suite["cases"] if item["id"] == case_id), None)
+    if case is None:
+        raise EvaluationError("Captured continuation case is not in the frozen source suite.")
+    base = slot_path(source_plan, slot)
+    case_path = f"{base}/{label(case_id)}"
+    source_record_path = f"{case_path}/record.json"
+    record, record_sha = _read_capture_record(store, source_record_path)
+    if (record.get("case_id") != case_id or record.get("question") != case["question"]
+            or not captured_terminal_outcome(record)):
+        raise EvaluationError("Only one verified terminal question capture can be continued.")
+    verify_record(store, record)
+
+    source_batch_path = f"{base}/batch.json"
+    source_batch = store.read(source_batch_path)
+    matching = [
+        item for item in source_batch.get("case_statuses", [])
+        if item.get("case_id") == case_id
+    ]
+    if (source_batch.get("slot") != slot
+            or source_batch.get("status") not in {
+                "captured_pending_human_review", "stopped_fail_closed",
+            }
+            or len(matching) != 1
+            or matching[0].get("status") != record.get("status")):
+        raise EvaluationError("Captured continuation record differs from its source batch.")
+
+    baseline_path = f"campaigns/{source_plan['name']}/{slot['configuration']}/baseline-definition.json"
+    baseline = store.read(baseline_path)
+    baseline_sha = definition_digest(baseline)
+    if (baseline_sha != source_batch.get("configuration_sha256")
+            or record.get("configuration_before_sha256") != baseline_sha
+            or record.get("configuration_after_sha256") != baseline_sha):
+        raise EvaluationError("Captured continuation configuration differs from its frozen batch.")
+    response_artifact = _record_artifact(record, Path(record["response_artifact"]).name)
+    configuration_before = _record_artifact(record, "configuration-before.json")
+    configuration_after = _record_artifact(record, "configuration-after.json")
+    review_path = f"{case_path}/review.json"
+    review = store.read(review_path)
+    if not isinstance(review, dict) or review.get("case_id") != case_id:
+        raise EvaluationError("Captured continuation review is missing or belongs to another case.")
+    case_status = matching[0]
+    return {
+        "mode": "captured-slot",
+        "slot": slot,
+        "case_id": case_id,
+        "source_plan_sha256": digest(source_plan),
+        "source_record_path": source_record_path,
+        "source_record_sha256": record_sha,
+        "source_record_status": record["status"],
+        "source_batch_path": source_batch_path,
+        "source_batch_sha256": file_digest(store.path(source_batch_path)),
+        "source_response_artifact_path": response_artifact["path"],
+        "source_response_artifact_sha256": response_artifact["sha256"],
+        "source_configuration_before_artifact_path": configuration_before["path"],
+        "source_configuration_before_artifact_sha256": configuration_before["sha256"],
+        "source_configuration_after_artifact_path": configuration_after["path"],
+        "source_configuration_after_artifact_sha256": configuration_after["sha256"],
+        "source_definition_sha256": baseline_sha,
+        "source_review_path": review_path,
+        "source_review_sha256": file_digest(store.path(review_path)),
+        "source_capture_mode": case_status.get("capture_mode", "fresh_submission"),
+        "source_new_question_submissions": case_status.get(
+            "new_question_submissions", record.get("submission_count", 0),
+        ),
+    }
+
+
+def _validate_continuation_entry(
+    store: PrivateStore, source_plan: dict[str, Any], entry: dict[str, Any],
+) -> None:
+    if entry.get("mode") == "captured-slot":
+        source_slot = entry.get("slot")
+        case_id = entry.get("case_id")
+        if not isinstance(source_slot, dict) or not isinstance(case_id, str):
+            raise EvaluationError("Captured continuation entry lacks its slot or case.")
+        if _captured_slot_entry(store, source_plan, source_slot, case_id) != entry:
+            raise EvaluationError("Captured continuation mapping differs from its source evidence.")
+        return
+    source_slot = entry.get("slot")
+    case_id = entry.get("case_id")
+    if not isinstance(source_slot, dict) or not isinstance(case_id, str):
+        raise EvaluationError("Continuation entry lacks its exact source slot and case.")
+    rebuilt = _continuation_entry(
+        store, source_plan, source_slot, case_id, entry.get("diagnostics_receipt_path", ""),
+    )
+    if rebuilt != entry:
+        raise EvaluationError("Continuation mapping differs from the immutable source evidence.")
+
+
+def create_recovery_plan(
+    store: PrivateStore, name: str, source_plan_path: str,
+    configuration: str, suite_name: str, repeat: int, case_id: str,
+    diagnostics_receipt_path: str,
+) -> str:
+    label(name)
+    if type(repeat) is not int or repeat < 1:
+        raise EvaluationError("Continuation repeat must be a positive integer.")
+    source_plan = load_plan(store, source_plan_path, for_execution=False)
+    source_plan_sha = digest(source_plan)
+    slot = {"configuration": label(configuration), "suite": label(suite_name), "repeat": repeat}
+    entry = _continuation_entry(store, source_plan, slot, label(case_id), diagnostics_receipt_path)
+    continuation_path = f"campaigns/{name}/continuation-map.json"
+    continuation = {
+        "schema_version": 1,
+        "source_plan_path": source_plan_path,
+        "source_plan_sha256": source_plan_sha,
+        "entries": [entry],
+    }
+    continuation_sha = store.write(continuation_path, continuation)
+    plan = {
+        **source_plan,
+        "name": name,
+        "created_at_utc": now_utc(),
+        "harness_sources": harness_sources(),
+        "continuation_manifest_path": continuation_path,
+        "continuation_manifest_sha256": continuation_sha,
+        "continuation_source_plan_path": source_plan_path,
+        "continuation_source_plan_sha256": source_plan_sha,
+    }
+    _validate_continuation_plan(store, plan)
+    relative = f"campaigns/{name}/plan.json"
+    store.write(relative, {"plan": plan, "plan_sha256": digest(plan)})
+    return relative
+
+
+def create_continuation_plan(
+    store: PrivateStore, name: str, source_plan_path: str,
+) -> str:
+    label(name)
+    source_plan = load_plan(store, source_plan_path, for_execution=False)
+    source_plan_sha = digest(source_plan)
+    entries = []
+    for slot in source_plan["slots"]:
+        suite = load_suite(store, source_plan["suite_files"][slot["suite"]])
+        base = slot_path(source_plan, slot)
+        for case in suite["cases"]:
+            case_path = store.path(f"{base}/{case['id']}")
+            record_path = case_path / "record.json"
+            if record_path.is_file():
+                entries.append(_captured_slot_entry(store, source_plan, slot, case["id"]))
+            elif any((case_path / name).exists() for name in (
+                "started.json", "submission-intent.json",
+            )):
+                raise EvaluationError(
+                    "A started source case has no immutable record; refusing to resubmit it.",
+                )
+    if not entries:
+        raise EvaluationError("No verified terminal captures are available to continue.")
+    continuation_path = f"campaigns/{name}/continuation-map.json"
+    continuation = {
+        "schema_version": 1,
+        "mode": "captured-slots",
+        "source_plan_path": source_plan_path,
+        "source_plan_sha256": source_plan_sha,
+        "entries": entries,
+    }
+    continuation_sha = store.write(continuation_path, continuation)
+    plan = {
+        **source_plan,
+        "name": name,
+        "created_at_utc": now_utc(),
+        "harness_sources": harness_sources(),
+        "continuation_manifest_path": continuation_path,
+        "continuation_manifest_sha256": continuation_sha,
+        "continuation_source_plan_path": source_plan_path,
+        "continuation_source_plan_sha256": source_plan_sha,
+    }
+    _validate_continuation_plan(store, plan)
+    relative = f"campaigns/{name}/plan.json"
+    store.write(relative, {"plan": plan, "plan_sha256": digest(plan)})
+    return relative
+
+
+def _continuation_entries(
+    store: PrivateStore, plan: dict[str, Any],
+) -> dict[tuple[str, str, int, str], dict[str, Any]]:
+    manifest_path = plan.get("continuation_manifest_path")
+    if manifest_path is None:
+        if any(key in plan for key in (
+            "continuation_manifest_sha256", "continuation_source_plan_path",
+            "continuation_source_plan_sha256",
+        )):
+            raise EvaluationError("Continuation plan metadata is incomplete.")
+        return {}
+    if (not isinstance(manifest_path, str) or not manifest_path
+            or not store.path(manifest_path).is_file()
+            or file_digest(store.path(manifest_path))
+            != plan.get("continuation_manifest_sha256")):
+        raise EvaluationError("Continuation manifest hash mismatch.")
+    manifest = store.read(manifest_path)
+    source_path = plan.get("continuation_source_plan_path")
+    if (not isinstance(manifest, dict)
+            or not isinstance(source_path, str) or not source_path
+            or manifest.get("schema_version") != 1
+            or manifest.get("source_plan_path") != source_path
+            or manifest.get("source_plan_sha256")
+            != plan.get("continuation_source_plan_sha256")):
+        raise EvaluationError("Continuation manifest is not bound to its source plan.")
+    source_plan = load_plan(store, source_path, for_execution=False)
+    if digest(source_plan) != plan.get("continuation_source_plan_sha256"):
+        raise EvaluationError("Continuation source plan changed after registration.")
+    if any(key not in source_plan or plan.get(key) != source_plan[key] for key in (
+        "configurations", "suite_files", "suite_sha256", "repetitions",
+        "per_configuration_repetitions", "slots", "selection_policy",
+    )):
+        raise EvaluationError("Recovery plan changed the original evaluation scope.")
+    entries = manifest.get("entries")
+    if not isinstance(entries, list) or not entries:
+        raise EvaluationError("Continuation manifest must contain at least one carried slot.")
+    result = {}
+    mode = manifest.get("mode", "diagnostics-normalization")
+    if mode not in {"diagnostics-normalization", "captured-slots"}:
+        raise EvaluationError("Unknown continuation manifest type.")
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise EvaluationError("Malformed continuation entry.")
+        entry_mode = entry.get("mode", "diagnostics-normalization")
+        if entry_mode != mode and not (
+            mode == "captured-slots" and entry_mode == "captured-slot"
+        ):
+            raise EvaluationError("Continuation entry type differs from its manifest.")
+        _validate_continuation_entry(store, source_plan, entry)
+        slot = entry["slot"]
+        key = (slot["configuration"], slot["suite"], slot["repeat"], entry["case_id"])
+        if key in result:
+            raise EvaluationError("A predeclared slot cannot be carried more than once.")
+        if slot not in plan["slots"]:
+            raise EvaluationError("Continuation slot is not present in the recovery plan.")
+        result[key] = entry
+    return result
+
+
+def _validate_continuation_plan(store: PrivateStore, plan: dict[str, Any]) -> None:
+    _continuation_entries(store, plan)
+
+
 def load_plan(
     store: PrivateStore, relative: str, *, for_execution: bool = True,
 ) -> dict[str, Any]:
@@ -323,6 +677,7 @@ def load_plan(
     for kind, path in plan["suite_files"].items():
         if digest(load_suite(store, path)) != plan["suite_sha256"][kind]:
             raise EvaluationError("Campaign suite changed after pre-registration.")
+    _validate_continuation_plan(store, plan)
     return plan
 
 
@@ -531,6 +886,211 @@ def capture_case(
         record["finished_at_utc"] = now_utc()
         store.write(f"{relative}/record.json", record)
         store.write(f"{relative}/review.json", review_template(case, record))
+    return record
+
+
+def captured_terminal_outcome(record: dict[str, Any]) -> bool:
+    """A terminal captured response can be reviewed even when native evidence is incomplete."""
+    response = record.get("response")
+    return (
+        record.get("status") in {"completed", "native_failure_captured", "evidence_incomplete"}
+        and record.get("submission_count") == 1
+        and isinstance(record.get("response_artifact"), str)
+        and isinstance(response, dict) and response.get("status") in TERMINAL
+        and type(record.get("last_http_status")) is int
+        and 200 <= record["last_http_status"] < 300
+        and isinstance(record.get("configuration_before_sha256"), str)
+        and record["configuration_before_sha256"]
+        == record.get("configuration_after_sha256")
+        and not record.get("configuration_after_error_type")
+    )
+
+
+def carry_forward_case(
+    store: PrivateStore, relative: str, case: dict[str, Any],
+    entry: dict[str, Any], plan_sha256: str, expected_definition: str,
+) -> dict[str, Any]:
+    """Derive a reviewable record without resubmitting its already captured question."""
+    relative = store.path(relative).relative_to(store.root).as_posix()
+    source_path = entry["source_record_path"]
+    source_record, source_record_sha = _read_capture_record(store, source_path)
+    if source_record_sha != entry["source_record_sha256"]:
+        raise EvaluationError("Continuation source record changed before carry-forward.")
+    verify_record(store, source_record)
+    if (source_record.get("case_id") != case["id"]
+            or source_record.get("question") != case["question"]
+            or source_record.get("configuration_before_sha256") != expected_definition
+            or source_record.get("configuration_after_sha256") != expected_definition
+            or source_record.get("status") != "evidence_incomplete"):
+        raise EvaluationError("Continuation source differs from the frozen case or configuration.")
+
+    original_error = store.path(entry["source_native_error_artifact_path"]).read_bytes()
+    diagnostics_body = store.path(entry["diagnostics_body_path"]).read_bytes()
+    if (hashlib.sha256(original_error).hexdigest()
+            != entry["source_native_error_artifact_sha256"]
+            or hashlib.sha256(diagnostics_body).hexdigest()
+            != entry["diagnostics_body_sha256"]
+            or original_error != diagnostics_body
+            or not diagnostics_feature_unavailable(
+                diagnostics_body, entry["diagnostics_http_status"])):
+        raise EvaluationError("Continuation diagnostics evidence changed before carry-forward.")
+
+    store.write(f"{relative}/started.json", {
+        "at_utc": now_utc(), "case_id": case["id"], "plan_sha256": plan_sha256,
+        "capture_mode": "carried_forward", "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+    })
+    body_path = f"{relative}/diagnostics-unavailable.body"
+    body_sha = store.write_bytes(body_path, original_error)
+    receipt_path = f"{relative}/diagnostics-unavailable.json"
+    receipt = {
+        "status": "feature_unavailable",
+        "http_status": entry["diagnostics_http_status"],
+        "conversation_id": source_record["conversation_id"],
+        "response_id": source_record["response"]["id"],
+        "source_evidence": "Only the unchanged native response output may establish execution.",
+        "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+        "source_native_error_artifact_sha256": entry["source_native_error_artifact_sha256"],
+        "diagnostics_readback_receipt_path": entry["diagnostics_receipt_path"],
+        "diagnostics_readback_receipt_sha256": entry["diagnostics_receipt_sha256"],
+    }
+    receipt_sha = store.write(receipt_path, receipt)
+    interpretation_path = f"{relative}/derived-interpretation.json"
+    interpretation = {
+        "schema_version": 1,
+        "interpretation": (
+            "The original single question submission and terminal response are preserved. "
+            "The SDK raised HTTPStatusError only because its diagnostics GET returned the "
+            "exact 403 optional-feature-disabled response. This adapter interpretation "
+            "does not award any rubric condition or infer query execution."
+        ),
+        "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+        "source_batch_path": entry["source_batch_path"],
+        "source_batch_sha256": entry["source_batch_sha256"],
+        "source_response_artifact_path": entry["source_response_artifact_path"],
+        "source_response_artifact_sha256": entry["source_response_artifact_sha256"],
+        "source_configuration_before_artifact_path":
+            entry["source_configuration_before_artifact_path"],
+        "source_configuration_before_artifact_sha256":
+            entry["source_configuration_before_artifact_sha256"],
+        "source_configuration_after_artifact_path":
+            entry["source_configuration_after_artifact_path"],
+        "source_configuration_after_artifact_sha256":
+            entry["source_configuration_after_artifact_sha256"],
+        "source_definition_sha256": entry["source_definition_sha256"],
+        "source_native_error_artifact_path": entry["source_native_error_artifact_path"],
+        "source_native_error_artifact_sha256": entry["source_native_error_artifact_sha256"],
+        "diagnostics_receipt_path": entry["diagnostics_receipt_path"],
+        "diagnostics_receipt_sha256": entry["diagnostics_receipt_sha256"],
+        "diagnostics_http_status": entry["diagnostics_http_status"],
+        "derived_diagnostics_body_path": body_path,
+        "derived_diagnostics_body_sha256": body_sha,
+        "derived_diagnostics_receipt_path": receipt_path,
+        "derived_diagnostics_receipt_sha256": receipt_sha,
+    }
+    interpretation_sha = store.write(interpretation_path, interpretation)
+
+    record = dict(source_record)
+    record["source_capture_status"] = source_record["status"]
+    record["source_error_type"] = source_record.get("error_type")
+    record.pop("error_type", None)
+    record["status"] = "completed"
+    record["diagnostics_status"] = "feature_unavailable"
+    record["derived_interpretation"] = {
+        "path": interpretation_path,
+        "sha256": interpretation_sha,
+        "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+    }
+    record["artifacts"] = [
+        *source_record["artifacts"],
+        {"path": body_path, "sha256": body_sha},
+        {"path": receipt_path, "sha256": receipt_sha},
+        {"path": interpretation_path, "sha256": interpretation_sha},
+    ]
+    store.write(f"{relative}/record.json", record)
+    store.write(f"{relative}/review.json", review_template(case, record))
+    return record
+
+
+def carry_forward_captured_case(
+    store: PrivateStore, relative: str, case: dict[str, Any],
+    entry: dict[str, Any], plan_sha256: str, expected_definition: str,
+) -> dict[str, Any]:
+    """Copy one verified terminal capture with its outcome and review unchanged."""
+    relative = store.path(relative).relative_to(store.root).as_posix()
+    source_path = entry["source_record_path"]
+    source_record, source_record_sha = _read_capture_record(store, source_path)
+    if (source_record_sha != entry["source_record_sha256"]
+            or source_record.get("case_id") != case["id"]
+            or source_record.get("question") != case["question"]
+            or source_record.get("status") != entry["source_record_status"]
+            or source_record.get("configuration_before_sha256") != expected_definition
+            or source_record.get("configuration_after_sha256") != expected_definition
+            or not captured_terminal_outcome(source_record)):
+        raise EvaluationError("Captured continuation source changed or differs from its frozen case.")
+    verify_record(store, source_record)
+    review_body = store.path(entry["source_review_path"]).read_bytes()
+    if hashlib.sha256(review_body).hexdigest() != entry["source_review_sha256"]:
+        raise EvaluationError("Captured continuation review changed after registration.")
+    review = json.loads(review_body)
+    if not isinstance(review, dict) or review.get("case_id") != case["id"]:
+        raise EvaluationError("Captured continuation review is invalid.")
+
+    store.write(f"{relative}/started.json", {
+        "at_utc": now_utc(), "case_id": case["id"], "plan_sha256": plan_sha256,
+        "capture_mode": "carried_forward", "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+    })
+    interpretation_path = f"{relative}/continuation-interpretation.json"
+    interpretation = {
+        "schema_version": 1,
+        "interpretation": (
+            "This is an immutable carry-forward of an already submitted question. "
+            "Its source record status, terminal response and review are preserved; "
+            "carrying evidence does not award or alter a rubric judgment."
+        ),
+        "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+        "source_record_status": source_record["status"],
+        "source_batch_path": entry["source_batch_path"],
+        "source_batch_sha256": entry["source_batch_sha256"],
+        "source_response_artifact_path": entry["source_response_artifact_path"],
+        "source_response_artifact_sha256": entry["source_response_artifact_sha256"],
+        "source_configuration_before_artifact_path":
+            entry["source_configuration_before_artifact_path"],
+        "source_configuration_before_artifact_sha256":
+            entry["source_configuration_before_artifact_sha256"],
+        "source_configuration_after_artifact_path":
+            entry["source_configuration_after_artifact_path"],
+        "source_configuration_after_artifact_sha256":
+            entry["source_configuration_after_artifact_sha256"],
+        "source_definition_sha256": entry["source_definition_sha256"],
+        "source_review_path": entry["source_review_path"],
+        "source_review_sha256": entry["source_review_sha256"],
+        "source_capture_mode": entry["source_capture_mode"],
+        "source_new_question_submissions": entry["source_new_question_submissions"],
+        "previous_derived_interpretation": source_record.get("derived_interpretation"),
+        "previous_continuation_provenance": source_record.get("continuation_provenance"),
+    }
+    interpretation_sha = store.write(interpretation_path, interpretation)
+    record = dict(source_record)
+    record["continuation_provenance"] = {
+        "path": interpretation_path,
+        "sha256": interpretation_sha,
+        "source_record_path": source_path,
+        "source_record_sha256": source_record_sha,
+        "source_plan_sha256": entry.get("source_plan_sha256"),
+        "source_record_status": source_record["status"],
+    }
+    record["artifacts"] = [
+        *source_record["artifacts"],
+        {"path": interpretation_path, "sha256": interpretation_sha},
+    ]
+    store.write(f"{relative}/record.json", record)
+    store.write_bytes(f"{relative}/review.json", review_body)
     return record
 
 
@@ -875,6 +1435,7 @@ def run_batch(
         raise EvaluationError("Original guide/data changed; freeze and pre-register a new campaign.")
     if slot["suite"] == "regression" and digest(regression_suite(REPO)) != plan["suite_sha256"]["regression"]:
         raise EvaluationError("Regression suite sources changed; freeze and pre-register a new campaign.")
+    continuation_by_case = _continuation_entries(store, plan)
     relative = slot_path(plan, slot)
     store.write(f"{relative}/started.json", {
         "plan_sha256": digest(plan), "slot": slot, "at_utc": now_utc(),
@@ -920,18 +1481,47 @@ def run_batch(
                 store.write(exposed_file, {"at_utc": now_utc(), "plan_sha256": digest(plan), "slot": slot})
         used = set()
         for case in suite["cases"]:
-            if report["transport"] == "mcp":
+            continuation = continuation_by_case.get((
+                slot["configuration"], slot["suite"], slot["repeat"], case["id"],
+            ))
+            if continuation is not None:
+                if continuation.get("mode") == "captured-slot":
+                    record = carry_forward_captured_case(
+                        store, f"{relative}/{case['id']}", case,
+                        continuation, digest(plan), baseline_hash,
+                    )
+                else:
+                    record = carry_forward_case(
+                        store, f"{relative}/{case['id']}", case,
+                        continuation, digest(plan), baseline_hash,
+                    )
+                capture_mode = "carried_forward"
+                new_submissions = 0
+            elif report["transport"] == "mcp":
                 record = capture_mcp_case(
                     store, f"{relative}/{case['id']}", case, client,
                     lambda: reader.read(configuration), baseline_hash,
                 )
+                capture_mode = "fresh_submission"
+                new_submissions = record.get("submission_count", 0)
             else:
                 record = capture_case(
                     store, f"{relative}/{case['id']}", case, client,
                     lambda: reader.read(configuration), baseline_hash, used, timeout,
                 )
-            report["case_statuses"].append({"case_id": case["id"], "status": record["status"]})
-            if record["status"] not in {"completed", "native_failure_captured"}:
+                capture_mode = "fresh_submission"
+                new_submissions = record.get("submission_count", 0)
+            report["case_statuses"].append({
+                "case_id": case["id"], "status": record["status"],
+                "capture_mode": capture_mode,
+                "new_question_submissions": new_submissions,
+            })
+            has_terminal_capture = (
+                captured_terminal_outcome(record)
+                if report["transport"] != "mcp"
+                else record["status"] in {"completed", "native_failure_captured"}
+            )
+            if not has_terminal_capture:
                 report["status"] = "stopped_fail_closed"
                 break
         else:
@@ -955,6 +1545,7 @@ def run_batch(
 
 def report_campaign(store: PrivateStore, plan: dict[str, Any]) -> dict[str, Any]:
     batches, seen_responses, seen_conversations = [], set(), set()
+    continuation_by_case = _continuation_entries(store, plan)
     for slot in plan["slots"]:
         path = slot_path(plan, slot)
         config = next(c for c in plan["configurations"] if c["label"] == slot["configuration"])
@@ -985,6 +1576,12 @@ def report_campaign(store: PrivateStore, plan: dict[str, Any]) -> dict[str, Any]
             case_path = f"{path}/{case['id']}"
             record = store.read(f"{case_path}/record.json") if store.path(f"{case_path}/record.json").exists() else None
             review = store.read(f"{case_path}/review.json") if store.path(f"{case_path}/review.json").exists() else None
+            case_status = next(
+                (item for item in statuses if item.get("case_id") == case["id"]), {},
+            )
+            continuation = continuation_by_case.get((
+                slot["configuration"], slot["suite"], slot["repeat"], case["id"],
+            ))
             # Preserve valid per-question measurements from a partial batch,
             # but never call the unfinished batch accepted.
             integrity = [e for e in batch_errors if e != "batch_unfinished_or_incomplete"]
@@ -1010,9 +1607,56 @@ def report_campaign(store: PrivateStore, plan: dict[str, Any]) -> dict[str, Any]
                             if key in collection:
                                 raise EvaluationError("Native conversation/response reused across questions or repetitions.")
                             collection.add(key)
+                    if continuation is not None:
+                        if continuation.get("mode") == "captured-slot":
+                            provenance = record.get("continuation_provenance", {})
+                            carried_review = store.path(
+                                f"{path}/{case['id']}/review.json",
+                            ).read_bytes()
+                            if (not isinstance(provenance, dict)
+                                    or provenance.get("source_record_path")
+                                    != continuation["source_record_path"]
+                                    or provenance.get("source_record_sha256")
+                                    != continuation["source_record_sha256"]
+                                    or provenance.get("source_record_status")
+                                    != continuation["source_record_status"]
+                                    or record.get("status")
+                                    != continuation["source_record_status"]
+                                    or hashlib.sha256(carried_review).hexdigest()
+                                    != continuation["source_review_sha256"]
+                                    or case_status.get("capture_mode") != "carried_forward"
+                                    or case_status.get("new_question_submissions") != 0):
+                                raise EvaluationError(
+                                    "Carried case differs from its immutable source capture or review.",
+                                )
+                        else:
+                            derived = record.get("derived_interpretation", {})
+                            if (not isinstance(derived, dict)
+                                    or record.get("source_capture_status") != "evidence_incomplete"
+                                    or record.get("source_error_type") != "HTTPStatusError"
+                                    or derived.get("source_record_path")
+                                    != continuation["source_record_path"]
+                                    or derived.get("source_record_sha256")
+                                    != continuation["source_record_sha256"]
+                                    or case_status.get("capture_mode") != "carried_forward"
+                                    or case_status.get("new_question_submissions") != 0):
+                                raise EvaluationError(
+                                    "Carried case lacks its explicit no-resubmission derivation.",
+                                )
+                    elif case_status.get("capture_mode") == "carried_forward":
+                        raise EvaluationError("An undeclared case was marked as carried forward.")
                 except (EvaluationError, OSError) as exc:
                     integrity.append(type(exc).__name__ + ": evidence_integrity_failed")
             result = grade_case(case, record, review)
+            result["capture_provenance"] = (
+                "carried_forward_unchanged_capture"
+                if continuation is not None
+                and continuation.get("mode") == "captured-slot"
+                else "carried_forward_diagnostics_normalization"
+                if continuation is not None
+                else "fresh_submission_or_missing_capture"
+            )
+            result["new_question_submissions"] = case_status.get("new_question_submissions", 0)
             if integrity:
                 result.update(question_pass=False, **{"pass": 0, "fail": len(case["conditions"]), "na": 0})
                 result["gate_errors"] += integrity
@@ -1068,6 +1712,18 @@ def report_campaign(store: PrivateStore, plan: dict[str, Any]) -> dict[str, Any]
             "A question whose native answer is the platform content block stays FAIL in every strict denominator; "
             "platform_blocked_* and observable_condition_applicable are a diagnostic breakdown, never acceptance.",
         ],
+        "continuation": (
+            {
+            "source_plan_sha256": plan["continuation_source_plan_sha256"],
+            "carried_question_slots": len(continuation_by_case),
+            "new_question_submissions": sum(
+                item.get("new_question_submissions", 0)
+                for batch in batches for item in batch["cases"]
+            ),
+            "scope_preserved": True,
+            }
+            if continuation_by_case else None
+        ),
     }
 
 
@@ -1089,12 +1745,33 @@ def parser() -> argparse.ArgumentParser:
     plan.add_argument("--deployment", required=True, help="Private relative path to ready deployment JSON.")
     plan.add_argument("--original-suite", default="suites/original.json")
     plan.add_argument("--held-out-suite", default="suites/heldout.json")
+    plan.add_argument(
+        "--without-heldout", action="store_true",
+        help="Plan original plus regression only; do not relabel regression as held-out.",
+    )
     plan.add_argument("--regression-suite", help="Frozen regression suite; omit to plan without it.")
     plan.add_argument("--repeats", type=int, default=3)
     plan.add_argument("--held-out-repeats", type=int, default=1)
     plan.add_argument("--regression-repeats", type=int, default=1)
     plan.add_argument("--transport", choices=["mcp", "sdk", "responses-http"],
                       help="Freeze this transport for all configurations; no run-time override.")
+    recovery = commands.add_parser(
+        "recover-plan",
+        help="Pre-register an unchanged evaluation with a hash-bound prior capture carried once.",
+    )
+    recovery.add_argument("--name", required=True)
+    recovery.add_argument("--source-plan", required=True)
+    recovery.add_argument("--configuration", required=True)
+    recovery.add_argument("--suite", choices=["original", "heldout", "regression"], required=True)
+    recovery.add_argument("--repeat", type=int, required=True)
+    recovery.add_argument("--case-id", required=True)
+    recovery.add_argument("--diagnostics-receipt", required=True)
+    continuation_plan = commands.add_parser(
+        "continue-plan",
+        help="Pre-register remaining cases while carrying all verified terminal captures once.",
+    )
+    continuation_plan.add_argument("--name", required=True)
+    continuation_plan.add_argument("--source-plan", required=True)
     run = commands.add_parser("run", help="ONLINE: submit one fresh complete batch, once only.")
     run.add_argument("--plan", required=True)
     run.add_argument("--configuration", required=True)
@@ -1152,13 +1829,36 @@ def main(argv: list[str] | None = None) -> int:
                      f"{sum(len(c['conditions']) for c in regression['cases'])} conditions" if args.regression else "")
                   + ". No questions submitted.")
         elif args.command == "plan":
+            if args.without_heldout and not args.regression_suite:
+                raise EvaluationError("--without-heldout requires --regression-suite.")
             path = create_plan(
                 store, args.name, store.read(args.deployment), args.original_suite,
-                args.held_out_suite, args.repeats, args.held_out_repeats,
+                None if args.without_heldout else args.held_out_suite,
+                args.repeats, args.held_out_repeats,
                 transport=args.transport, regression_file=args.regression_suite,
                 regression_repeats=args.regression_repeats,
             )
             print(f"Pre-registered {path}. No questions submitted.")
+        elif args.command == "recover-plan":
+            path = create_recovery_plan(
+                store, args.name, args.source_plan, args.configuration,
+                args.suite, args.repeat, args.case_id, args.diagnostics_receipt,
+            )
+            plan = load_plan(store, path, for_execution=False)
+            continuation_count = len(_continuation_entries(store, plan))
+            print(
+                f"Pre-registered {path} with {continuation_count} hash-bound carried slot(s). "
+                "The source capture is unchanged; no questions submitted."
+            )
+        elif args.command == "continue-plan":
+            path = create_continuation_plan(store, args.name, args.source_plan)
+            plan = load_plan(store, path, for_execution=False)
+            continuation_count = len(_continuation_entries(store, plan))
+            print(
+                f"Pre-registered {path} with {continuation_count} verified captured slot(s) "
+                f"carried once across {len(plan['slots'])} unchanged evaluation slots. "
+                "The source captures are unchanged; no questions submitted."
+            )
         elif args.command == "run":
             if not args.allow_submit_native_questions:
                 raise EvaluationError("No question submitted: explicit --allow-submit-native-questions required.")
@@ -1170,6 +1870,10 @@ def main(argv: list[str] | None = None) -> int:
             }, args.credential, args.timeout)
             print(json.dumps({
                 "status": batch["status"], "captured_cases": len(batch["case_statuses"]),
+                "new_question_submissions": sum(
+                    item.get("new_question_submissions", 0)
+                    for item in batch["case_statuses"]
+                ),
                 "observability": batch.get("observability"), "quality_acceptance": "not established by capture",
             }))
             return 0 if batch["status"] == "captured_pending_human_review" else 2

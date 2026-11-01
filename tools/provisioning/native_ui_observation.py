@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import base64
+import csv
 import hashlib
 import json
 from pathlib import Path
@@ -11,12 +12,7 @@ from typing import Any, Mapping
 from activation_runtime import ActivationError, FILE_CREATED, PrivateStore, guid, parse_time
 
 
-EXPECTED_RECEIPTS = {
-    "activation/readiness-1793506889686561800/definition.json",
-    "increments/donation_events_001.csv/observation-01/history.json",
-    "increments/donation_events_001.csv/upload/upload-result.json",
-    "increments/donation_events_001.csv/bounded-monitor-01/native-copy-001.json",
-}
+DEFINITION_RECEIPT = "activation/readiness-1793506889686561800/definition.json"
 EXPECTED_SCREENSHOT_COVERAGE = {
     "rowCount", "timeUtc", "eventId", "subject", "type", "api", "contentLength", "contentType",
 }
@@ -171,24 +167,95 @@ def _definition_projection(
     return projection, bindings
 
 
+def _increment_receipts(
+    filename: str, receipt_list: Any = None,
+) -> tuple[set[str], dict[str, str]]:
+    match = re.fullmatch(r"donation_events_(00[1-3])\.csv", filename)
+    if not match:
+        raise ActivationError("Native UI evidence must target one released increment file.")
+    number = int(match.group(1))
+    prefix = f"increments/{filename}"
+    definition_path = DEFINITION_RECEIPT
+    if number > 1:
+        definition_paths = {
+            str(entry.get("path", "")).replace("\\", "/")
+            for entry in receipt_list if isinstance(entry, Mapping)
+            if re.fullmatch(r"activation/readiness-[0-9]+/definition\.json",
+                            str(entry.get("path", "")).replace("\\", "/"))
+        } if isinstance(receipt_list, list) else set()
+        if len(definition_paths) != 1:
+            raise ActivationError("Exactly one fresh owned-definition receipt is required.")
+        definition_path = next(iter(definition_paths))
+    paths = {
+        "definition": definition_path,
+        "history": (
+            f"{prefix}/observation-01/history.json" if number == 1
+            else f"{prefix}/event-capture-01/activation-history.json"
+        ),
+        "upload": f"{prefix}/upload/upload-result.json",
+        "copy": (
+            f"{prefix}/bounded-monitor-01/native-copy-001.json" if number == 1
+            else f"{prefix}/event-capture-01/native-copy.json"
+        ),
+    }
+    if number > 1:
+        paths["kqlBefore"] = f"{prefix}/observation-01/kql-before-preflight.json"
+        paths["kqlAfter"] = f"{prefix}/event-capture-01/kql-totals.json"
+    return set(paths.values()), paths
+
+
+def _increment_rows(filename: str) -> list[dict[str, str]]:
+    path = Path(__file__).resolve().parents[2] / "workshop" / "v3.0.0-preview" / "data" / "increment" / filename
+    try:
+        with path.open(encoding="utf-8", newline="") as handle:
+            return list(csv.DictReader(handle))
+    except OSError as exc:
+        raise ActivationError("Released increment data is unavailable for KQL reconciliation.") from exc
+
+
+def _expected_prior_kql(filename: str) -> dict[str, Any]:
+    number = int(filename.removeprefix("donation_events_").removesuffix(".csv"))
+    prior_files = [f"donation_events_{index:03d}.csv" for index in range(1, number)]
+    rows = 0
+    yen = 0
+    for prior in prior_files:
+        values = _increment_rows(prior)
+        rows += len(values)
+        yen += sum(int(value["DonationAmountYen"]) for value in values)
+    return {"RawRows": rows, "RawYen": yen, "Files": prior_files}
+
+
+def _expected_file_kql(filename: str) -> list[dict[str, int]]:
+    rows = _increment_rows(filename)
+    return [{"RawRows": len(rows), "RawYen": sum(int(row["DonationAmountYen"]) for row in rows)}]
+
+
 def validate_observation(
     observation: Mapping[str, Any], *, screenshot_root: Path, receipt_root: Path,
     workspace_id: str, tenant_id: str, activator_id: str, model_id: str, rule_id: str,
     pipeline_id: str, lakehouse_id: str, subject: str, expected_bytes: int,
     expected_upload_sha256: str, current_definition: Mapping[str, Any],
+    expected_filename: str = "donation_events_001.csv",
+    expected_visible_row_count: int = 1,
+    correlation_candidate: Mapping[str, Any] | None = None,
+    visual_review: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return observed event fields and verified provenance; never returns a synthetic event row."""
+    candidate = correlation_candidate if correlation_candidate is not None else observation.get("correlationCandidate")
+    candidate_receipts = candidate.get("receipts") if isinstance(candidate, Mapping) else None
+    expected_receipts, receipt_paths = _increment_receipts(expected_filename, candidate_receipts)
     if not isinstance(observation, Mapping) or observation.get("kind") != "native-ui-observation-not-csv-export":
         raise ActivationError("Input must be the explicitly tagged native UI observation.")
     if (observation.get("workspaceId") != workspace_id
             or observation.get("activatorId") != activator_id
-            or observation.get("visibleRowCount") != 1):
+            or observation.get("modelId") != model_id
+            or observation.get("visibleRowCount") != expected_visible_row_count):
         raise ActivationError("Native UI observation is outside scope or not unique.")
     if (not isinstance(expected_upload_sha256, str)
             or not re.fullmatch(r"[0-9a-f]{64}", expected_upload_sha256)):
         raise ActivationError("The owned upload receipt SHA-256 is missing or malformed.")
     capture = observation.get("captureMethod", {})
-    review = observation.get("visualReview", {})
+    review = visual_review if visual_review is not None else observation.get("visualReview", {})
     if (capture.get("originalDisplayRestored") is not True
             or capture.get("cloudWrites") is not False
             or capture.get("eventReplayed") is not False
@@ -199,8 +266,8 @@ def validate_observation(
         raise ActivationError("UI capture or review provenance is incomplete.")
 
     screenshots = observation.get("screenshots")
-    if not isinstance(screenshots, list) or len(screenshots) != 4:
-        raise ActivationError("Exactly four original screenshot records are required.")
+    if not isinstance(screenshots, list) or len(screenshots) < 4:
+        raise ActivationError("Original native UI screenshots are missing.")
     screenshot_paths: set[str] = set()
     coverage: set[str] = set()
     screenshot_hashes: dict[str, str] = {}
@@ -222,14 +289,13 @@ def validate_observation(
     if not EXPECTED_SCREENSHOT_COVERAGE <= coverage:
         raise ActivationError("Original screenshots do not cover the observed fields.")
 
-    candidate = observation.get("correlationCandidate")
     if not isinstance(candidate, Mapping):
         raise ActivationError("Native UI correlation metadata is missing.")
     receipt_list = candidate.get("receipts")
-    if (not isinstance(receipt_list, list) or len(receipt_list) != len(EXPECTED_RECEIPTS)
+    if (not isinstance(receipt_list, list) or len(receipt_list) != len(expected_receipts)
             or {str(item.get("path", "")).replace("\\", "/") for item in receipt_list if isinstance(item, Mapping)}
-            != EXPECTED_RECEIPTS):
-        raise ActivationError("Exactly the four reviewed source receipts must be referenced.")
+            != expected_receipts):
+        raise ActivationError("The exact selected increment's source receipts must be referenced.")
     receipt_bytes: dict[str, bytes] = {}
     receipt_hashes: dict[str, str] = {}
     for entry in receipt_list:
@@ -238,10 +304,10 @@ def validate_observation(
         receipt_bytes[path] = content
         receipt_hashes[path] = entry["sha256"]
     try:
-        saved_definition = json.loads(receipt_bytes["activation/readiness-1793506889686561800/definition.json"])
-        saved_history = json.loads(receipt_bytes["increments/donation_events_001.csv/observation-01/history.json"])
-        upload = json.loads(receipt_bytes["increments/donation_events_001.csv/upload/upload-result.json"])
-        copy = json.loads(receipt_bytes["increments/donation_events_001.csv/bounded-monitor-01/native-copy-001.json"])
+        saved_definition = json.loads(receipt_bytes[receipt_paths["definition"]])
+        saved_history = json.loads(receipt_bytes[receipt_paths["history"]])
+        upload = json.loads(receipt_bytes[receipt_paths["upload"]])
+        copy = json.loads(receipt_bytes[receipt_paths["copy"]])
     except (ValueError, KeyError) as exc:
         raise ActivationError("A hash-bound source receipt is malformed.") from exc
 
@@ -252,6 +318,8 @@ def validate_observation(
             or values.get("contentLength") != expected_bytes or values.get("contentType") != "text/csv"
             or not isinstance(values.get("eventId"), str)):
         raise ActivationError("Displayed native event fields do not match the upload contract.")
+    if expected_filename != "donation_events_001.csv" and candidate.get("eventId") != values.get("eventId"):
+        raise ActivationError("Selected native event ID differs from the hash-bound correlation sidecar.")
     guid(values["eventId"])
     if (candidate.get("nativeRuleId") != rule_id or candidate.get("eventReferenceEntityId") != model_id
             or candidate.get("pipelineId") != pipeline_id
@@ -299,7 +367,7 @@ def validate_observation(
             or source != expected_source or not properties.get("System.RuleVersion")
             or properties.get("___id") != candidate.get("activationId")):
         raise ActivationError("Saved activation does not uniquely correlate to the displayed event.")
-    if (upload.get("state") != "uploaded_unverified" or upload.get("filename") != "donation_events_001.csv"
+    if (upload.get("state") != "uploaded_unverified" or upload.get("filename") != expected_filename
             or upload.get("bytes") != expected_bytes or upload.get("uploadedBytesVerified") is not True
             or upload.get("sha256") != candidate.get("uploadedFileSha256")
             or upload.get("sha256") != expected_upload_sha256):
@@ -311,6 +379,24 @@ def validate_observation(
             or copy.get("output", {}).get("rowsCopied") != 5000
             or copy.get("output", {}).get("dataRead") != expected_bytes):
         raise ActivationError("Hash-bound Copy receipt differs from the observed delivery.")
+    kql_before = None
+    kql_after = None
+    if "kqlBefore" in receipt_paths:
+        try:
+            kql_before = json.loads(receipt_bytes[receipt_paths["kqlBefore"]])
+            kql_after = json.loads(receipt_bytes[receipt_paths["kqlAfter"]])
+        except (ValueError, KeyError) as exc:
+            raise ActivationError("A before/after KQL receipt is malformed.") from exc
+        expected_before = _expected_prior_kql(expected_filename)
+        if (not isinstance(kql_before, Mapping)
+                or not isinstance(kql_before.get("capturedUtc"), str)
+                or parse_time(kql_before["capturedUtc"]) >= parse_time(upload.get("atUtc", ""))
+                or kql_before.get("kqlTotals") != expected_before
+                or kql_after != _expected_file_kql(expected_filename)
+                or not isinstance(candidate.get("kqlAfterCapturedUtc"), str)
+                or parse_time(candidate["kqlAfterCapturedUtc"])
+                < parse_time(copy.get("activityRunEnd", ""))):
+            raise ActivationError("Before/after KQL receipts do not prove exact prior and delivered file totals.")
     return {
         "eventId": values["eventId"],
         "eventTimeUtc": values["timeUtc"],
@@ -327,6 +413,13 @@ def validate_observation(
         "fieldBindings": saved_bindings,
         "uploadSha256": upload["sha256"],
         "copyReceipt": copy,
+        "copyReceiptPath": receipt_paths["copy"],
+        "historyReceiptPath": receipt_paths["history"],
+        "uploadReceiptPath": receipt_paths["upload"],
+        "kqlBeforeReceiptPath": receipt_paths.get("kqlBefore"),
+        "kqlAfterReceiptPath": receipt_paths.get("kqlAfter"),
+        "kqlBefore": kql_before,
+        "kqlAfter": kql_after,
         "screenshotSha256": screenshot_hashes,
         "receiptSha256": receipt_hashes,
     }

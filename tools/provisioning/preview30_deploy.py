@@ -28,6 +28,14 @@ def part(path: str, content: bytes) -> dict[str, str]:
             "payloadType": "InlineBase64"}
 
 
+AGENT_PUBLICATION_DESCRIPTION = (
+    "Furusato v3 Preview candidate. Static and independent file-derived Gold/DAX are verified; "
+    "automatic delivery is verified. The OneLake event mirror matches increments 002/003 only; "
+    "the 001 backfill and Gen2 time-series query path remain unverified. "
+    "Data Agent answer quality has not yet been evaluated."
+)
+
+
 class Deployment:
     def __init__(self, args: Any):
         self.evidence = private_directory(args.evidence_dir)
@@ -1046,9 +1054,7 @@ def publish_agent_candidate(args: Any) -> dict[str, Any]:
     if intent_path.exists() and not was_published:
         raise SafetyError("A publication intent exists; reconcile outcome rather than retrying publish.")
     path = d.prefix + f"/dataAgents/{agent['id']}/staging/publish"
-    body = {"publishedDescription": (
-        "Furusato v3 Preview candidate. Static and independent file-derived Gold/DAX are verified; "
-        "native operational event delivery and AI answer-quality acceptance remain unverified.")}
+    body = {"publishedDescription": AGENT_PUBLICATION_DESCRIPTION}
     if not was_published:
         save(intent_path, {"timestampUtc": now(), "path": path, "body": body,
                            "scopeSha256": d.state["scopeSha256"], "accuracyAccepted": False})

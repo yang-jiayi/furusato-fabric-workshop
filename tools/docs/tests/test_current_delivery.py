@@ -14,9 +14,58 @@ sys.path[:0]=[str(ROOT/'tools/docs'),str(ROOT/'tools/html')]
 import current_delivery as delivery
 from furusato_html.preview30 import render
 from furusato_docs import preview30_release as release
+from furusato_docs.current_publication import CurrentPublication, publication_for_model
+from furusato_docs.participant30_deployment import append_deployment_sections
+from furusato_docs.participant30_text import PARAMETER_NOTES
+from furusato_html.model import Section, Text
 
 
 class CurrentDeliveryTests(unittest.TestCase):
+    def test_participant_checksums_and_notebook_help_follow_current_edition(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            scope = root / 'workshop/v3.0.0-preview/provisioning/scope.example.json'
+            scope.parent.mkdir(parents=True)
+            scope.write_bytes((ROOT / scope.relative_to(root)).read_bytes())
+            for version in ('3.0.0', '3.1.0'):
+                (root / 'WORKSHOP_VERSION').write_text(version, encoding='utf-8')
+                section = Section('ch-24', 1, '24', Text('Deployment', 'Deployment'), chapter=24)
+                append_deployment_sections(section, root)
+                text = repr(section)
+                self.assertIn(f'docs/v{version}/current', text)
+                self.assertIn(CurrentPublication(version).package_name, text)
+                self.assertNotIn('current-20261015.zip', text)
+                self.assertIn('source/workshop/v3.0.0-preview', text)
+        for description in PARAMETER_NOTES['NOTEBOOK_VERSION']:
+            self.assertIn('NOTEBOOK_VERSION', description)
+            self.assertNotIn('3.0.0', description)
+
+    def test_current_filenames_follow_workshop_version_without_rewriting_word_profiles(self):
+        version=(ROOT/'WORKSHOP_VERSION').read_text(encoding='utf-8').strip()
+        self.assertEqual(delivery.PUBLICATION.version,version)
+        self.assertEqual(delivery.HTML_NAME,'furusato-workshop-v'+version.replace('.','-')+'-complete.html')
+        self.assertEqual(delivery.PACKAGE_NAME,'Furusato_Workshop_v'+version+'_current.zip')
+        self.assertEqual(release.V300.version,'3.0.0')
+        self.assertEqual(release.V300.html_name,'furusato-workshop-v3-0-0-complete.html')
+        for invalid in ('3.1','../3.1.0','3.1.0/guide','3.1.0-preview'):
+            with self.subTest(version=invalid),self.assertRaises(ValueError):
+                CurrentPublication(invalid)
+
+    def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp)
+            for version in ('3.0.0','3.1.0'):
+                (root/'WORKSHOP_VERSION').write_text(version,encoding='utf-8')
+                metadata={'version':version,'participantEdition':True,'deliveryMode':'html-lab',
+                          'currentArtifactSet':{'workshopVersion':version}}
+                self.assertEqual(publication_for_model(root,metadata,None,None).version,version)
+                for word_sha,profile in ((None,release.V300),('b'*64,None)):
+                    with self.subTest(version=version,profile=profile),self.assertRaises(ValueError):
+                        publication_for_model(root,metadata,word_sha,profile)
+                metadata['currentArtifactSet']['workshopVersion']='2.7.0'
+                with self.assertRaises(ValueError):
+                    publication_for_model(root,metadata,None,None)
+
     def test_explicit_browser_takes_priority_on_linux_and_windows(self):
         chromium=object()
         for platform in ('linux','win32'):

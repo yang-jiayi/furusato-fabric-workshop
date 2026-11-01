@@ -4,6 +4,7 @@
 
 - 寄付明細では、寄付者の在住県・受入自治体の県・業者の県を別の役割として ID と名前で示します。カタログ登録を製造・発送・履行と同一視しません。
 - 暦月は要求されたタイムゾーンで開始日以上・翌月開始日未満の区間にし、時刻の表示と抽出範囲を区別します。JST と UTC が混在する回答には一律の UTC 表記を付けません。
+- 年なしの運用期間はEventhouse指示のソース既定年で解決し、静的スナップショットの年を流用しません。複合質問で指定された年は指定ソースだけに適用します。
 - 取得した必要項目、件数・金額、ソースと粒度を省略せず、異なる母集団を合算できないときはその境界を説明します。Semantic Model の列・メジャー契約は、そのソースの指示に配置します。
 
 KQL 指示、9 件の KQL 例、選択契約、ソース説明、SQL スキーマ照合用クエリは旧版と同一です。旧版 [measured-contract-20261009](../measured-contract-20261009/README.md) の入力と過去の評価は維持しています。`profile-manifest.json` は 8 個のコンパイラ入力を SHA-256 で固定します。各指示は 10,000 UTF16 単位以内です。
@@ -23,6 +24,7 @@ KQL 指示、9 件の KQL 例、選択契約、ソース説明、SQL スキー�
 This version updates the supported global, Lakehouse SQL and Semantic Model instructions. Consult the [2026-10-15 work report](../../../../../docs/v3.0.0/tuning-20261015/README.md) for measured results and unresolved limitations, and the [calibration procedure](../../../../../docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md) for reevaluation and document checks. Instructions alone do not guarantee answer accuracy or native Ontology connectivity.
 
 The changes separate resident, recipient and supplier prefecture roles; preserve requested IDs and names; distinguish catalog registration from manufacturing or fulfillment; use half-open calendar-month ranges in the requested timezone; and avoid applying an all-UTC footer to mixed-timezone answers. Required fetched fields, counts, amounts, source and grain must remain visible, and incompatible populations must remain separate. The Semantic Model schema contract resides in that source's instructions.
+Yearless operational periods use only the Eventhouse source's documented default, never the static snapshot year. In cross-source questions, an explicit year applies only to the source it describes.
 
 KQL instructions, nine KQL examples, source selections, descriptions and the SQL schema-inventory query retain their historical bytes. The [2026-10-09 profile](../measured-contract-20261009/README.md) and its evaluation remain available. The manifest binds all eight compiler inputs, and each instruction is limited to 10,000 UTF16 units.
 

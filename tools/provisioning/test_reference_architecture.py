@@ -376,6 +376,52 @@ class ReferenceArchitectureTests(unittest.TestCase):
             )
         self.assertEqual(len(client.polled), 2)
 
+    def test_uncompiled_null_graph_collections_never_authorize_refresh(self):
+        class Client(runtime.WorkshopFabricClient):
+            def __init__(self, compiled_after=None):
+                self.now = datetime(2026, 1, 1, tzinfo=timezone.utc)
+                self.reads = 0
+                self.compiled_after = compiled_after
+                super().__init__(
+                    lambda: self.fail_network(), lambda: self.fail_network(),
+                    clock=lambda: self.now, sleeper=self.sleep,
+                    timeout_seconds=20, poll_interval_seconds=10,
+                )
+
+            def fail_network(self, *args, **kwargs):
+                raise AssertionError("Uncompiled graph must not submit or inspect refresh jobs")
+
+            def sleep(self, seconds):
+                self.now += timedelta(seconds=seconds)
+
+            def get_definition(self, workspace_id, item_id):
+                self.reads += 1
+                value = [] if self.compiled_after and self.reads >= self.compiled_after else None
+                return {"parts": [
+                    encoded("graphType.json", {"nodeTypes": value, "edgeTypes": value}),
+                    encoded("dataSources.json", {"dataSources": value}),
+                    encoded("graphDefinition.json", {"nodeTables": value, "edgeTables": value}),
+                ]}
+
+            recent_jobs = fail_network
+            start_job = fail_network
+
+        zero_counts = dict.fromkeys(
+            ("nodeTypes", "edgeTypes", "dataSources", "nodeTables", "edgeTables"), 0,
+        )
+        client = Client()
+        with self.assertRaisesRegex(
+            runtime.OperationTimeoutError, r"actual=.*'nodeTypes': None.*No refresh was submitted",
+        ):
+            client.run_or_reuse_graph_refresh("workspace", "graph", expected_counts=zero_counts)
+        self.assertEqual(2, client.reads)
+        recovering = Client(compiled_after=2)
+        self.assertEqual(
+            zero_counts,
+            recovering.wait_for_graph_compilation("workspace", "graph", expected_counts=zero_counts),
+        )
+        self.assertEqual(2, recovering.reads)
+
     def test_reference_is_off_by_default_and_does_not_replace_core_name(self):
         config = runtime.ProvisioningConfig(participant_id="912")
         runtime.validate_config(config)

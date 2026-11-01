@@ -1,19 +1,19 @@
 # Furusato Workshop 3.0.0 — 参加者用教材 / Participant materials
 
-[画面ごとのLab手順書](../../../Lab/README.md) · [単一ファイルの日英HTML](guide/furusato-workshop-v3-0-0-complete.html) · [参加者用ZIP](Furusato_Workshop_v3.0.0_current.zip) · [SHA-256](SHA256SUMS.txt)
+[GitHub上の正本Lab手順書](../../../Lab/README.md) · [オフライン用・単一ファイルの日英HTML](guide/furusato-workshop-v3-0-0-complete.html) · [参加者用ZIP](Furusato_Workshop_v3.0.0_current.zip) · [SHA-256](SHA256SUMS.txt)
 
-LabとHTMLには、準備から配置・取り込み・モデル・Data Agentの設定・回答評価まで、24章・5付録の全手順を収録しています。Labは操作やキャプチャごとのMarkdownで読み、HTMLはファイルを保存してオフラインで使えます。どちらかを操作手順書にして、同じ版のZIPを合わせて使います。
+このページから開くGitHub上のLabを正本とし、HTMLはオフライン用に保存して使えます。ZIPは実行資産用です。ZIP内の案内コピーと異なる場合は、このページから開く現行のLabとHTMLを使ってください。両方のガイドは、準備から配置・取り込み・モデル・Data Agentの設定・回答評価まで、24章・5付録を収録しています。
 
-Lab and HTML contain the complete 24 chapters and five appendices, from preparation and deployment through ingestion, models, Agent configuration and answer evaluation. Read Lab as Markdown pages organized by operation and capture, or save the standalone bilingual HTML for offline use. Use either guide with the matching participant ZIP.
+The GitHub Lab linked from this page is the authoritative participant guide; save the standalone bilingual HTML for offline use. The ZIP is for runtime assets. If its bundled guide copy differs, use the current Lab and HTML linked here. Both guides cover all 24 chapters and five appendices, from preparation and deployment through ingestion, models, Agent configuration and answer evaluation.
 
 ## 始め方 / Start
 
 1. ZIPのSHA-256を、配布元の[SHA256SUMS.txt](SHA256SUMS.txt)と照合してから展開します。
-2. `guide/`の日英HTML、または`Lab/README.md`を開きます。Notebook・データ・実行ツールのコマンドは`source/`から実行します。
+2. 手順は[GitHub Lab](../../../Lab/README.md)を使います。オフラインの場合はこのページのHTMLリンクを保存してください。Notebook・データ・実行ツールのコマンドは`source/`から実行します。
 3. 第4章でワークスペース、容量、権限、空の作業フォルダー、参加者IDを確認します。
 4. 第24章の配置手順と各章の操作・完了条件を、順番に進めます。
 
-Verify the ZIP's external SHA-256, extract every file, open the HTML in `guide/` or `Lab/README.md`, and run source commands from `source/`. Start with Chapter 4's prerequisites and follow Chapter 24's deployment stages together with the corresponding chapter procedures.
+Verify the ZIP's external SHA-256 and extract every file. Use the linked GitHub Lab as the authoritative procedure, or save the linked HTML for offline use; run source commands from `source/`. Start with Chapter 4's prerequisites and follow Chapter 24's deployment stages together with the corresponding chapter procedures.
 
 | 順序 / Order | 箇所 / Sections | 実施すること / Work |
 | --- | --- | --- |

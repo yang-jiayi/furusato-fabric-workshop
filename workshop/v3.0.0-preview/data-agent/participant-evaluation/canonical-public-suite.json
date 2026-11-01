@@ -1433,7 +1433,7 @@
         "workshop/v3.0.0-preview/data/dataset-manifest.json": "f2fef22164e0187f8bcf46c20e46388c9a9d194c43440a15da72138979d91555",
         "workshop/v3.0.0-preview/data/SHA256SUMS.txt": "9227c1b294d029a4603b86822998584d7d0caf65d7904acd773d8a7292934f1d",
         "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.SemanticModel/definition/tables/寄附.tmdl": "5738ee3c72899575255fda4bb639b75cc6603d808b7402e264ff46474f630a94",
-        "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb": "c93c3a73a112847b1c9907a15498a503ebca98bd40490c0df8c0b1db42b7a67e",
+        "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb": "689834cc5186e818d9c1e4eba7606ac0c8f52fc369c2f33be14ebfa3545e3e2e",
         "workshop/v3.0.0-preview/ontology/generation2-contract.json": "77c2efbf3522a6b89b1fbaecad7e559f9830da64f417ef22f1078eaddb31e491"
       }
     }

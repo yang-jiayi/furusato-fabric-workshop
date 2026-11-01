@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import sys
 import tempfile
+from types import ModuleType, SimpleNamespace
 import unittest
 from unittest.mock import MagicMock, patch
 from uuid import UUID
@@ -71,6 +72,326 @@ class RunnerTests(unittest.TestCase):
             self.store, relative, self.case, self.client, self.read_definition,
             runner.definition_digest(self.baseline), set(), 10, **kwargs,
         )
+
+    def test_sdk_client_receives_explicit_headless_credential(self):
+        credential = object()
+        workspace_id, agent_id = str(UUID(int=1)), str(UUID(int=2))
+        sdk_client = SimpleNamespace(
+            artifact_id=agent_id, workspace_id=workspace_id,
+            ai_skill_stage="production", api_type="responses",
+            close=MagicMock(),
+        )
+        sdk_factory = MagicMock(return_value=sdk_client)
+        set_default = MagicMock()
+
+        modules = {}
+        for name in (
+            "fabric", "fabric.analytics", "fabric.analytics.environment",
+            "fabric.analytics.environment.credentials", "fabric.dataagent",
+            "fabric.dataagent.client",
+        ):
+            module = ModuleType(name)
+            module.__path__ = []
+            modules[name] = module
+        modules["fabric"].analytics = modules["fabric.analytics"]
+        modules["fabric.analytics"].environment = modules["fabric.analytics.environment"]
+        modules["fabric.analytics.environment"].credentials = modules[
+            "fabric.analytics.environment.credentials"]
+        modules["fabric.analytics.environment.credentials"].SetFabricAnalyticsDefaultTokenCredentialsGlobally = set_default
+        modules["fabric"].dataagent = modules["fabric.dataagent"]
+        modules["fabric.dataagent"].client = modules["fabric.dataagent.client"]
+        modules["fabric.dataagent.client"].FabricOpenAIResponses = sdk_factory
+        with patch.dict(sys.modules, modules):
+            client = runner.NativeClient({
+                "workspace_id": workspace_id, "data_agent_id": agent_id,
+                "stage": "production",
+            }, credential, 17)
+
+        set_default.assert_called_once_with(credential)
+        sdk_factory.assert_called_once_with(
+            artifact_name=agent_id, workspace_name=workspace_id,
+            ai_skill_stage="production", max_retries=0, timeout=17,
+            credential=credential,
+        )
+        client.close()
+        sdk_client.close.assert_called_once_with()
+
+    def test_sdk_diagnostics_http_error_preserves_native_gate_evidence(self):
+        body = ne.encode({
+            "Message": "Data Agent diagnostics feature is not enabled.",
+            "Source": "AISKILL",
+            "error_code": "PERMISSION_DENIED",
+        })
+        class FakeHTTPStatusError(Exception):
+            def __init__(self, response):
+                super().__init__("HTTP status failure")
+                self.response = response
+
+        fake_httpx = ModuleType("httpx")
+        fake_httpx.HTTPStatusError = FakeHTTPStatusError
+        error = FakeHTTPStatusError(SimpleNamespace(status_code=403, content=body))
+        diagnostics_get = MagicMock(side_effect=error)
+        client = runner.NativeClient.__new__(runner.NativeClient)
+        client.client = SimpleNamespace(diagnostics=SimpleNamespace(get=diagnostics_get))
+
+        with patch.dict(sys.modules, {"httpx": fake_httpx}):
+            with self.assertRaises(runner.NativeEvidenceError) as normalized:
+                client.diagnostics("conversation-id", "response-id")
+
+        self.assertEqual(normalized.exception.http_status, 403)
+        self.assertEqual(normalized.exception.native_body, body)
+        self.assertTrue(runner.diagnostics_feature_unavailable(
+            normalized.exception.native_body, normalized.exception.http_status,
+        ))
+        diagnostics_get.assert_called_once_with(
+            conversation_id="conversation-id", response_id="response-id",
+        )
+        for status, other_body in (
+            (403, ne.encode({"Message": "Access denied."})),
+            (500, body),
+        ):
+            diagnostics_get.side_effect = FakeHTTPStatusError(
+                SimpleNamespace(status_code=status, content=other_body),
+            )
+            with patch.dict(sys.modules, {"httpx": fake_httpx}):
+                with self.assertRaises(runner.NativeEvidenceError) as other:
+                    client.diagnostics("conversation-id", "response-id")
+            self.assertFalse(runner.diagnostics_feature_unavailable(
+                other.exception.native_body, other.exception.http_status,
+            ))
+
+    def test_recovery_carries_hash_bound_diagnostics_failure_without_resubmission(self):
+        original = ne.original_suite(runner.REPO)
+        regression = runner.regression_suite(runner.REPO)
+        ne.freeze_suite(self.store, "suites/original.json", original)
+        ne.freeze_suite(self.store, "suites/regression.json", regression)
+        self.store.write("data.json", {"fixture": True})
+        deployment = {"configurations": [{
+            "label": "baseline", "workspace_id": str(UUID(int=1)),
+            "data_agent_id": str(UUID(int=2)), "stage": "production",
+            "data_fingerprint_file": "data.json",
+        }]}
+        source_plan_path = runner.create_plan(
+            self.store, "source", deployment,
+            "suites/original.json", None, 3, 1, transport="sdk",
+            regression_file="suites/regression.json", regression_repeats=1,
+        )
+        source_plan = runner.load_plan(self.store, source_plan_path, for_execution=False)
+        slot = {"configuration": "baseline", "suite": "original", "repeat": 1}
+        case = original["cases"][0]
+
+        class HTTPStatusError(Exception):
+            def __init__(self, response):
+                super().__init__("Diagnostics request failed.")
+                self.response = response
+
+        error_body = ne.encode({
+            "Message": "Data Agent diagnostics feature is not enabled.",
+            "Source": "AISKILL",
+            "error_code": "PERMISSION_DENIED",
+        })
+
+        def diagnostics_failure(*_args):
+            raise HTTPStatusError(SimpleNamespace(content=error_body))
+
+        self.client.diagnostics = diagnostics_failure
+        source_case_path = f"{runner.slot_path(source_plan, slot)}/{case['id']}"
+        source_record = runner.capture_case(
+            self.store, source_case_path, case, self.client,
+            self.read_definition, runner.definition_digest(self.baseline), set(), 10,
+        )
+        self.assertEqual(source_record["status"], "evidence_incomplete")
+        self.assertEqual(source_record["error_type"], "HTTPStatusError")
+        self.assertEqual(len(self.client.submissions), 1)
+
+        batch_path = f"{runner.slot_path(source_plan, slot)}/batch.json"
+        self.store.write(batch_path, {
+            "status": "stopped_fail_closed", "slot": slot,
+            "case_statuses": [{"case_id": case["id"], "status": "evidence_incomplete"}],
+        })
+        source_record_path = f"{source_case_path}/record.json"
+        source_record_sha = ne.file_digest(self.store.path(source_record_path))
+        response_artifact = next(a for a in source_record["artifacts"]
+                                 if a["path"] == source_record["response_artifact"])
+        native_error = next(a for a in source_record["artifacts"]
+                            if a["path"].endswith("/native-error.body"))
+        diagnostics_body_path = "diagnostics-readback.body"
+        diagnostics_body_sha = self.store.write_bytes(diagnostics_body_path, error_body)
+        diagnostics_receipt_path = "diagnostics-readback.json"
+        self.store.write(diagnostics_receipt_path, {
+            "http_status": 403, "classification": "feature_unavailable",
+            "matches_original_error_body": True,
+            "source_record_path": source_record_path,
+            "source_record_sha256": source_record_sha,
+            "source_response_artifact_sha256": response_artifact["sha256"],
+            "response_id": source_record["response"]["id"],
+            "conversation_id": source_record["conversation_id"],
+            "body_path": diagnostics_body_path,
+            "body_sha256": diagnostics_body_sha,
+        })
+
+        recovery_path = runner.create_recovery_plan(
+            self.store, "recovery", source_plan_path,
+            "baseline", "original", 1, case["id"], diagnostics_receipt_path,
+        )
+        recovery_plan = runner.load_plan(self.store, recovery_path, for_execution=False)
+        self.assertEqual(len(recovery_plan["slots"]), 4)
+        self.assertEqual(
+            sum(len(ne.load_suite(self.store, recovery_plan["suite_files"][kind])["cases"])
+                * recovery_plan["repetitions"][kind]
+                for kind in recovery_plan["suite_files"]),
+            49,
+        )
+        self.assertEqual(
+            sum(sum(len(case["conditions"]) for case in ne.load_suite(
+                self.store, recovery_plan["suite_files"][kind],
+            )["cases"]) * recovery_plan["repetitions"][kind]
+                for kind in recovery_plan["suite_files"]),
+            290,
+        )
+        entry = runner._continuation_entries(self.store, recovery_plan)[
+            ("baseline", "original", 1, case["id"])
+        ]
+        derived = runner.carry_forward_case(
+            self.store,
+            f"{runner.slot_path(recovery_plan, slot)}/{case['id']}",
+            case, entry, ne.digest(recovery_plan),
+            runner.definition_digest(self.baseline),
+        )
+        self.assertEqual(len(self.client.submissions), 1)
+        self.assertEqual(derived["status"], "completed")
+        self.assertEqual(derived["source_capture_status"], "evidence_incomplete")
+        self.assertEqual(derived["diagnostics_status"], "feature_unavailable")
+        runner.verify_record(self.store, derived)
+        self.assertEqual(
+            ne.file_digest(self.store.path(source_record_path)), source_record_sha,
+        )
+        self.assertEqual(
+            ne.file_digest(self.store.path(response_artifact["path"])),
+            response_artifact["sha256"],
+        )
+        review = self.store.read(
+            f"{runner.slot_path(recovery_plan, slot)}/{case['id']}/review.json",
+        )
+        self.assertTrue(all(item["verdict"] == "UNCLEAR" for item in review["conditions"]))
+
+        recovery_slot_path = runner.slot_path(recovery_plan, slot)
+        baseline_path = f"campaigns/recovery/baseline/baseline-definition.json"
+        self.store.write(baseline_path, self.baseline)
+        baseline_sha = runner.definition_digest(self.baseline)
+        self.store.write(f"{recovery_slot_path}/started.json", {
+            "plan_sha256": ne.digest(recovery_plan), "slot": slot,
+        })
+        self.store.write(f"{recovery_slot_path}/batch.json", {
+            "status": "stopped_fail_closed", "slot": slot,
+            "configuration_sha256": baseline_sha,
+            "case_statuses": [{
+                "case_id": case["id"], "status": "completed",
+                "capture_mode": "carried_forward", "new_question_submissions": 0,
+            }],
+        })
+        report = runner.report_campaign(self.store, recovery_plan)
+        self.assertFalse(report["acceptance"])
+        self.assertEqual(report["continuation"]["carried_question_slots"], 1)
+        self.assertEqual(report["continuation"]["new_question_submissions"], 0)
+        carried = next(
+            item for batch in report["batches"] for item in batch["cases"]
+            if item["case_id"] == case["id"] and item["capture_provenance"]
+            == "carried_forward_diagnostics_normalization"
+        )
+        self.assertFalse(carried["question_pass"])
+        self.assertEqual(carried["pass"], 0)
+
+    def test_continuation_plan_carries_terminal_capture_and_review_without_scoring_it(self):
+        original = ne.original_suite(runner.REPO)
+        regression = runner.regression_suite(runner.REPO)
+        ne.freeze_suite(self.store, "suites/original.json", original)
+        ne.freeze_suite(self.store, "suites/regression.json", regression)
+        self.store.write("data.json", {"fixture": True})
+        deployment = {"configurations": [{
+            "label": "baseline", "workspace_id": str(UUID(int=1)),
+            "data_agent_id": str(UUID(int=2)), "stage": "production",
+            "data_fingerprint_file": "data.json",
+        }]}
+        source_plan_path = runner.create_plan(
+            self.store, "source", deployment,
+            "suites/original.json", None, 3, 1, transport="sdk",
+            regression_file="suites/regression.json", regression_repeats=1,
+        )
+        source_plan = runner.load_plan(self.store, source_plan_path, for_execution=False)
+        slot = {"configuration": "baseline", "suite": "original", "repeat": 1}
+        case = original["cases"][0]
+        source_slot_path = runner.slot_path(source_plan, slot)
+        source_case_path = f"{source_slot_path}/{case['id']}"
+        source_record = runner.capture_case(
+            self.store, source_case_path, case, self.client,
+            self.read_definition, runner.definition_digest(self.baseline), set(), 10,
+        )
+        source_record_path = f"{source_case_path}/record.json"
+        source_record_sha = ne.file_digest(self.store.path(source_record_path))
+        source_review_path = f"{source_case_path}/review.json"
+        source_review = self.store.path(source_review_path).read_bytes()
+        baseline_sha = runner.definition_digest(self.baseline)
+        self.store.write(f"campaigns/source/baseline/baseline-definition.json", self.baseline)
+        self.store.write(f"{source_slot_path}/batch.json", {
+            "status": "captured_pending_human_review", "slot": slot,
+            "configuration_sha256": baseline_sha,
+            "case_statuses": [{
+                "case_id": case["id"], "status": source_record["status"],
+                "capture_mode": "fresh_submission", "new_question_submissions": 1,
+            }],
+        })
+
+        continuation_path = runner.create_continuation_plan(
+            self.store, "continued", source_plan_path,
+        )
+        continuation_plan = runner.load_plan(
+            self.store, continuation_path, for_execution=False,
+        )
+        entries = runner._continuation_entries(self.store, continuation_plan)
+        self.assertEqual(len(entries), 1)
+        entry = entries[("baseline", "original", 1, case["id"])]
+        carried = runner.carry_forward_captured_case(
+            self.store,
+            f"{runner.slot_path(continuation_plan, slot)}/{case['id']}",
+            case, entry, ne.digest(continuation_plan), baseline_sha,
+        )
+        self.assertEqual(len(self.client.submissions), 1)
+        self.assertEqual(carried["status"], source_record["status"])
+        self.assertEqual(
+            ne.file_digest(self.store.path(source_record_path)), source_record_sha,
+        )
+        carried_review_path = (
+            f"{runner.slot_path(continuation_plan, slot)}/{case['id']}/review.json"
+        )
+        self.assertEqual(self.store.path(carried_review_path).read_bytes(), source_review)
+
+        target_slot_path = runner.slot_path(continuation_plan, slot)
+        self.store.write("campaigns/continued/baseline/baseline-definition.json", self.baseline)
+        self.store.write(f"{target_slot_path}/started.json", {
+            "plan_sha256": ne.digest(continuation_plan), "slot": slot,
+        })
+        self.store.write(f"{target_slot_path}/batch.json", {
+            "status": "stopped_fail_closed", "slot": slot,
+            "configuration_sha256": baseline_sha,
+            "case_statuses": [{
+                "case_id": item["id"],
+                "status": carried["status"] if item["id"] == case["id"] else "not_submitted",
+                "capture_mode": "carried_forward" if item["id"] == case["id"] else "not_submitted",
+                "new_question_submissions": 0,
+            } for item in original["cases"]],
+        })
+        report = runner.report_campaign(self.store, continuation_plan)
+        result = next(
+            item for batch in report["batches"] for item in batch["cases"]
+            if item["case_id"] == case["id"] and item["capture_provenance"]
+            == "carried_forward_unchanged_capture"
+        )
+        self.assertFalse(result["question_pass"])
+        self.assertEqual(result["pass"], 0)
+        self.assertFalse(report["acceptance"])
+        self.assertEqual(report["continuation"]["carried_question_slots"], 1)
+        self.assertEqual(report["continuation"]["new_question_submissions"], 0)
 
     def test_one_original_wire_question_no_instructions_or_rewriting(self):
         record = self.capture()
@@ -341,6 +662,51 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(len(report["batches"]), 4)
         self.assertTrue(all("batch_unfinished_or_incomplete" in b["batch_gate_errors"]
                             for b in report["batches"]))
+
+    def test_public_49_plan_keeps_regression_distinct_from_heldout(self):
+        ne.freeze_suite(self.store, "suites/original.json", ne.original_suite(runner.REPO))
+        ne.freeze_suite(self.store, "suites/regression.json", runner.regression_suite(runner.REPO))
+        self.store.write("data.json", {"fixture": True})
+        self.store.write("deployment.json", {"configurations": [{
+            "label": "published-agent", "workspace_id": str(UUID(int=1)),
+            "data_agent_id": str(UUID(int=2)), "stage": "production",
+            "data_fingerprint_file": "data.json",
+        }]})
+
+        with patch("builtins.print"):
+            result = runner.main([
+                "--private-root", str(self.store.root), "plan",
+                "--name", "public-49", "--deployment", "deployment.json",
+                "--transport", "sdk", "--without-heldout",
+                "--regression-suite", "suites/regression.json",
+                "--repeats", "3", "--regression-repeats", "1",
+            ])
+
+        self.assertEqual(result, 0)
+        plan = runner.load_plan(self.store, "campaigns/public-49/plan.json")
+        self.assertEqual(set(plan["suite_files"]), {"original", "regression"})
+        self.assertEqual(len(plan["slots"]), 4)
+        self.assertEqual(
+            sum(
+                len(ne.load_suite(self.store, plan["suite_files"][kind])["cases"])
+                * plan["repetitions"][kind]
+                for kind in plan["suite_files"]
+            ),
+            49,
+        )
+        self.assertEqual(
+            sum(
+                sum(len(case["conditions"]) for case in ne.load_suite(
+                    self.store, plan["suite_files"][kind],
+                )["cases"]) * plan["repetitions"][kind]
+                for kind in plan["suite_files"]
+            ),
+            290,
+        )
+        report = runner.report_campaign(self.store, plan)
+        self.assertEqual({group["suite"] for group in report["groups"]},
+                         {"original", "regression"})
+        self.assertEqual(len(report["batches"]), 4)
 
     def test_repetition_overrides_are_frozen_per_configuration(self):
         original = ne.original_suite(Path(__file__).resolve().parents[3])

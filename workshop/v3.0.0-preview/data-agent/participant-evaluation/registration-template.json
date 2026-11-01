@@ -3,7 +3,7 @@
   "campaignLabel": "FILL-BEFORE-FIRST-QUESTION",
   "protocol": "extended-public-49",
   "registeredAtUtc": "",
-  "frozenQuestionAndRubricSha256": "130f796cc3db5f2e4af56c4026970fa5c58450322f520348a3d52b052d30d508",
+  "frozenQuestionAndRubricSha256": "f8ffdb5cd1d2d3ddabc08c1f130d2468d16007de32ccaa2267fc3f737f85d979",
   "questionLanguage": "ja",
   "interface": "Fabric published Data Agent chat",
   "timeoutSeconds": 600,

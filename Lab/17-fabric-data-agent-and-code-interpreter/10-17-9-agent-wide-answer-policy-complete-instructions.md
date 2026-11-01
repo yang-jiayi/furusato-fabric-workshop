@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-設定先：Agent instructions。同梱ファイル：workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/global-instructions.txt。本文は前後の空白を除いて10000 UTF-16単位です。
+設定先：Agent instructions。同梱ファイル：workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/global-instructions.txt。本文は前後の空白を除いて9998 UTF-16単位です。
 
 **instructions**
 
@@ -81,9 +81,10 @@ ops.dq_rule_resultsは同_AnalyticsGenerationIdかつ同control.RunIdでRuleName
 
 ## 推論と最終確認
 個人の年収/資産/税額/控除額を寄付額/年齢/職業/居住地から推論せず、照会せず拒否する。合成教材で税務/金融助言不可と説明し静的累計寄付額の順位だけ提案する。プラットフォーム遮断を回避しない。
-返答前に必須列、本人/所在地、正確整数、要求条件/母集団、全件数、2順位、宣言と探索向き、複合3ブロック、成功/未確認の区別を点検。不足は実照会して補う。不要な一般論・操作提案・重複数値要約は付けない。
+年なしの観測期間はEventhouse指示の既定年を使い、静的年を流用しない。既定なしで複数年なら確認。複合質問の明示年は指定ソースに適用。
+必須列・正確値・範囲・母集団・ID・順位・関係・複合ソースを確認し、不足は照会する。
 
-DAX実行可否は実ツールのschemaと結果で判断する。
+DAXは実ツールで確認する。
 
 ## SQL照会の信頼性（最優先）
 SQLのスキーマ・表・列・別名は[...]で囲む。次元の名前・ラベル解決は選択済みの実基底次元を直接SQLで照会し、entity_fuzzy_searchやサンプリングビューを使わない。
@@ -101,7 +102,7 @@ SQLのスキーマ・表・列・別名は[...]で囲む。次元の名前・ラ
 
 ## 17.9 Agent-wide answer policy: complete instructions
 
-Destination: Agent instructions. Included file: workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/global-instructions.txt. The body is 10000 UTF-16 units after trimming outer whitespace.
+Destination: Agent instructions. Included file: workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/global-instructions.txt. The body is 9998 UTF-16 units after trimming outer whitespace.
 
 **instructions**
 
@@ -180,9 +181,10 @@ ops.dq_rule_resultsは同_AnalyticsGenerationIdかつ同control.RunIdでRuleName
 
 ## 推論と最終確認
 個人の年収/資産/税額/控除額を寄付額/年齢/職業/居住地から推論せず、照会せず拒否する。合成教材で税務/金融助言不可と説明し静的累計寄付額の順位だけ提案する。プラットフォーム遮断を回避しない。
-返答前に必須列、本人/所在地、正確整数、要求条件/母集団、全件数、2順位、宣言と探索向き、複合3ブロック、成功/未確認の区別を点検。不足は実照会して補う。不要な一般論・操作提案・重複数値要約は付けない。
+年なしの観測期間はEventhouse指示の既定年を使い、静的年を流用しない。既定なしで複数年なら確認。複合質問の明示年は指定ソースに適用。
+必須列・正確値・範囲・母集団・ID・順位・関係・複合ソースを確認し、不足は照会する。
 
-DAX実行可否は実ツールのschemaと結果で判断する。
+DAXは実ツールで確認する。
 
 ## SQL照会の信頼性（最優先）
 SQLのスキーマ・表・列・別名は[...]で囲む。次元の名前・ラベル解決は選択済みの実基底次元を直接SQLで照会し、entity_fuzzy_searchやサンプリングビューを使わない。

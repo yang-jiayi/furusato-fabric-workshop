@@ -8,7 +8,7 @@ import v3_artifacts
 class ArtifactVersionTests(unittest.TestCase):
     def test_current_artifact_snapshot_has_coherent_component_versions(self):
         result = v3_artifacts.snapshot()
-        self.assertEqual(result["workshopVersion"], "3.0.0")
+        self.assertEqual(result["workshopVersion"], rt.WORKSHOP_VERSION)
         self.assertEqual(result["edition"]["datasetVersion"], "2.7.0-realistic.1")
         self.assertEqual(result["csvFiles"], 11)
         self.assertEqual(set(result["notebooks"]), {"01", "02", "03", "04", "05"})
@@ -29,6 +29,16 @@ class ArtifactVersionTests(unittest.TestCase):
         bad["cells"][3]["source"].append("\nunexpected_change = True\n")
         with self.assertRaises(ValueError):
             v3_artifacts.verify_notebook(bad, old)
+
+    def test_notebook05_exit_value_contract_is_the_only_processing_delta(self):
+        path = next((rt.PREVIEW / "notebooks").glob("Notebook_05_*.ipynb"))
+        old = rt.load(next((rt.BASE / "notebooks").glob("Notebook_05_*.ipynb")))
+        value = rt.load(path)
+        self.assertTrue(v3_artifacts.verify_notebook(value, old, number="05"))
+        bad = copy.deepcopy(value)
+        bad["cells"][-1]["source"].append("\nunexpected_change = True\n")
+        with self.assertRaises(ValueError):
+            v3_artifacts.verify_notebook(bad, old, number="05")
 
 
 if __name__ == "__main__":

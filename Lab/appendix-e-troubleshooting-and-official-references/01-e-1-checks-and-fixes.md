@@ -47,6 +47,7 @@
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export
+- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources
 - https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview
@@ -105,6 +106,7 @@ Common symptoms, with what to check and how to fix them. Do not change settings 
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export
+- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources
 - https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview

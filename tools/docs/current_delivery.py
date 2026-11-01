@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'tools/docs'), str(ROOT / 'tools/html'), str(ROOT / 'tools/provisioning')]
 from furusato_docs.lab import load_model, write_lab, validate_lab
 from furusato_docs.preview30_content import verify_artifact_manifest
-from furusato_docs import preview30_release as release
+from furusato_docs.current_publication import current_publication
 from furusato_docs.typography import ascii_parentheses
 from furusato_html.preview30 import render
 from furusato_html.model import Text
@@ -32,14 +32,16 @@ from lxml import html as html_parser
 import preview30_runtime as runtime
 import v3_artifacts
 
-HTML_NAME = 'furusato-workshop-v3-0-0-complete.html'
-PACKAGE_NAME = 'Furusato_Workshop_v3.0.0_current.zip'
+PUBLICATION = current_publication(ROOT)
+HTML_NAME = PUBLICATION.html_name
+PACKAGE_NAME = PUBLICATION.package_name
 SOURCE_MANIFEST = 'SOURCE_ARTIFACT_SET.json'
 NEW_AUTHORING_FILES = {
     'tools/docs/current_delivery.py', 'tools/docs/CURRENT_HTML_LAB.md',
     'tools/docs/build_lab.py', 'tools/docs/furusato_docs/lab.py',
     'tools/docs/furusato_docs/lab_clients.py', 'tools/docs/tests/test_lab.py',
     'tools/docs/tests/test_current_delivery.py',
+    'tools/docs/furusato_docs/current_publication.py',
 }
 DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg','.pdf'}
 PRIVATE_NAMES = {'storage-state.json','cookies.json','credentials.json','msal_token_cache.json','msal_token_cache.bin'}
@@ -273,7 +275,7 @@ def build(root, out, artifact_manifest=None):
     metadata.update(deliveryMode='html-lab')
     metadata['sourceRevision'] = source_revision(root, metadata['currentArtifactSet'])
     text = render(document, context, facts, carrier, evidence, metadata, None, root,
-                  release_profile=release.V300, delivery_mode='html-lab')
+                  release_profile=None, delivery_mode='html-lab')
     path = out / HTML_NAME
     path.write_text(text, encoding='utf-8', newline='\n')
     receipt = {'schemaVersion': 'furusato-current-html-lab-validation/v1', 'deliveryMode': 'html-lab',
@@ -452,7 +454,7 @@ def package(root, path, lab, receipt_path, output):
     files['source/artifact-set.json'] = manifest_path.read_bytes()
     add_lab_aliases(files,root,lab,source_files,path.read_bytes())
     files['START_HERE.txt'] = (
-        'Furusato Workshop 3.0.0\n\n'
+        PUBLICATION.title + '\n\n' +
         'guide/ の日英HTML、または Lab/README.md の全手順を開き、第4章の準備から進めます。\n'
         'Open the standalone bilingual HTML in guide/ or the complete Lab/README.md; start with Chapter 4.\n'
         'source/ からNotebook・データ・配置ツールを実行します。\n'
@@ -463,7 +465,8 @@ def package(root, path, lab, receipt_path, output):
         'Check file integrity with SHA256SUMS.txt.\n'
     ).encode('utf-8')
     files['PACKAGE_MANIFEST.json'] = json_bytes({'schemaVersion':'furusato-current-html-lab-package/v1',
-        'deliveryMode':'html-lab','files':{name:digest(blob) for name,blob in sorted(files.items())},
+        'deliveryMode':'html-lab','workshopVersion':PUBLICATION.version,
+        'files':{name:digest(blob) for name,blob in sorted(files.items())},
         'liveFabricValidationClaimed':False})
     files['SHA256SUMS.txt'] = ''.join(digest(blob)+'  '+name+'\n' for name,blob in sorted(files.items())).encode()
     if any(name.endswith('.docx') for name in files):

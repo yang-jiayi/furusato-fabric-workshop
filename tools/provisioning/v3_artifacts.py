@@ -17,7 +17,7 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def verify_notebook(notebook, baseline=None):
+def verify_notebook(notebook, baseline=None, *, number=None):
     metadata = notebook["metadata"]["furusato"]
     if (metadata.get("version") != rt.WORKSHOP_VERSION
             or metadata.get("edition") != "v" + rt.WORKSHOP_VERSION
@@ -44,7 +44,30 @@ def verify_notebook(notebook, baseline=None):
             parameters["source"] = [
                 'NOTEBOOK_VERSION = "2.7.0"\n' if line == current else line for line in parameters["source"]]
         code = lambda value: [c["source"] for c in value["cells"] if c["cell_type"] == "code"]
-        if code(normalized) != code(baseline):
+        current_code, baseline_code = code(normalized), code(baseline)
+        if number == "05":
+            if len(current_code) != len(baseline_code):
+                raise ValueError("Notebook05 code-cell count differs from the immutable baseline.")
+            final = current_code[-1]
+            additions = {
+                'IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n',
+                "if not IS_INTERACTIVE:\n",
+                "    notebookutils.notebook.exit(json.dumps(\n",
+                "        ANALYTICS_RESULT, ensure_ascii=False, sort_keys=True, allow_nan=False,\n",
+                "    ))\n",
+            }
+            if (final.count('IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n') != 1
+                    or final.count("    is_interactive=IS_INTERACTIVE,\n") != 1
+                    or final.count("if not IS_INTERACTIVE:\n") != 1
+                    or sum("notebookutils.notebook.exit" in line for line in final) != 1):
+                raise ValueError("Notebook05 result exit contract is missing or ambiguous.")
+            current_code[-1] = [
+                '    is_interactive=bool(context.get("isForInteractive", False)),\n'
+                if line == "    is_interactive=IS_INTERACTIVE,\n" else line
+                for line in final if line not in additions
+            ]
+            current_code[-1][-1] = current_code[-1][-1].rstrip("\n")
+        if current_code != baseline_code:
             raise ValueError("A data-processing code cell changed beyond the declared audit/display version.")
     return True
 
@@ -99,7 +122,7 @@ def snapshot():
         path = next((rt.PREVIEW / "notebooks").glob(f"Notebook_{number}_*.ipynb"))
         value = rt.load(path)
         old = rt.load(next((rt.BASE / "notebooks").glob(f"Notebook_{number}_*.ipynb"))) if number in {"01", "05"} else None
-        verify_notebook(value, old)
+        verify_notebook(value, old, number=number)
         notebooks[number] = {"path": path.relative_to(rt.REPO).as_posix(), "sha256": sha(path.read_bytes()),
                              "workshopVersion": rt.WORKSHOP_VERSION}
         if number in {"02", "03", "04"}:

@@ -46,8 +46,9 @@ and authentication outside Git.
    実行成功とはしません。クエリや結果が見えなければ実行根拠をUNCLEARにします。
 6. 失敗をソース・期間・粒度・意味・実行に分類し、1つの原因に対する指示変更を
    決めます。変更前後の全文を保存し、Draftの対象指示欄だけを変更してSave、Publish、
-   公開版を開き直して確認します。配布Globalは10,000 UTF-16単位の上限のため、
-   追記でなく対象の文を置き換え、長さを確認します。固定profile用helperは独自候補を
+   公開版を開き直して確認します。Global指示欄の上限は10,000 UTF-16単位です。
+   選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は
+   対象の文を置き換えます。固定profile用helperは独自候補を
    配布設定へ戻すか一致確認に失敗するため、候補の適用・認定に使いません。同じ全49枠を
    final として実施します。データや選択を変えた比較は別の実験として扱います。
 7. suite / repeat / case_id / condition_id をキーに前後を結合します。質問、条件、
@@ -83,9 +84,10 @@ and authentication outside Git.
    text alone is not execution proof. Missing execution details are UNCLEAR.
 6. Classify source, time, grain, meaning or execution failures. Propose one scoped
    instruction change and save both complete texts. Edit only the intended Draft
-   field, Save, Publish, reopen and inspect the publication. The distributed global
-   instructions already use 10,000 UTF-16 units; replace wording rather than append
-   notes, and check length. Do not use the fixed-profile helper to apply or certify
+   field, Save, Publish, reopen and inspect the publication. The global instruction
+   field supports up to 10,000 UTF-16 units. Measure the selected profile's actual
+   length and confirm it is within the limit; replace wording if it exceeds the limit.
+   Do not use the fixed-profile helper to apply or certify
    a custom candidate: it restores the distributed profile or reports mismatch. Run all 49
    final slots. A changed dataset or selection constitutes a different experiment.
 7. Pair suite / repeat / case_id / condition_id. Confirm equal questions, criteria
@@ -128,24 +130,18 @@ and authentication outside Git.
   selected quality-processing tables contain it. Retain the original criterion,
   record the caveat and do not substitute the quality population for observations.
 
-## 過去結果との関係 / Relation to historical results
+## 評価結果の扱い / Interpreting evaluation results
 
-2026-10-15の51枠・296条件には非公開の未使用2問・6条件が含まれました。
-このキットは公開49枠・290条件を再現します。過去の対応比較281条件の
-189→217 PASS（67.26→77.22%）は補助条件充足率で、一般的な正答率や保証値では
-ありません。今回の分岐、失敗、製品状態で分母と結果は変わります。
-公開済みの29問を新しい「未使用問題」と呼びません。未知の問題への一般化を
-調べる場合は、別の人が新しい問題と基準を事前固定し、調整者に見せず実施し、
-その結果はこの49枠と別に報告します。過去の非公開問題は配布しません。
+公開29問はすでに既知の問題であり、未知の問題への一般化を示すものでは
+ありません。対応比較の共通分母は、290条件から実際に適用外となった条件を
+除いて求めます。未知の問題への一般化を調べる場合は、別の人が新しい質問と
+基準を事前固定し、調整者に開示せず実施し、その結果を公開評価と別に報告します。
 
-The historical 51-slot / 296-condition phases included two private unused
-questions with six conditions. This kit reproduces the public 49-slot / 290-condition
-portion. The historical 189→217 PASS on 281 paired applicable conditions
-(67.26→77.22%) is supplemental condition fulfillment, not general accuracy or a
-guarantee. Your branches, failures and service state determine your denominator
-and result. Published questions are not new unseen tests. For generalization,
-have another person freeze new private questions and keys before tuning and report
-them separately. Historical private questions are not distributed.
+The 29 public questions are already known and do not establish generalization to unseen
+questions. Calculate the matched denominator from the 290 conditions minus actual
+inapplicable conditions. To test generalization, have another person preregister new
+questions and criteria, withhold them from the tuner and report the results separately
+from the public evaluation.
 
 ## 保守担当者向けの確認 / Maintainer verification
 

@@ -1,6 +1,6 @@
-# Furusato Workshop Lab
+# Furusato Workshop 3.1.0 Lab
 
-Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent を、合成データで順に構築して確かめます。この Lab と [HTML 手順書](../docs/furusato-workshop-v3-0-0-complete.html) は、最新版の操作手順を提供します。
+Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent を、合成データで順に構築して確かめます。この Lab と [HTML 手順書](../docs/furusato-workshop-v3-1-0-complete.html) は、最新版の操作手順を提供します。
 
 初回は **4章 → 24.4〜24.6 → 5〜8章の確認 → 24.7と9〜11章 → 24.8 → 17章 → 19章・付録C** の順で進めます。作成済みのデータやアイテムを重複して作成・取り込みしません。各章の目次から操作ページへ進み、完了条件を確認してください。
 

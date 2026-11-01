@@ -21,6 +21,7 @@ from .participant30_text import CHAPTER_TITLES, APPENDIX_TITLES
 from .preview30_public_evidence import load as load_evidence
 from .preview30_content import verify_artifact_manifest
 from .docx_kit import StyleCarrier
+from .current_publication import current_publication
 from furusato_html.model import Section, Text, Document
 
 def digest(value):
@@ -98,6 +99,7 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
     committed artifact manifest. No release-approval record is manufactured.
     """
     root = Path(root).resolve()
+    publication = current_publication(root)
     if artifact_manifest_path is None:
         sys.path.insert(0, str(root / "tools/provisioning"))
         import v3_artifacts
@@ -131,7 +133,7 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
         if isinstance(value, dict):
             return {key: normalize(item, block_id) for key, item in value.items()}
         if isinstance(value, str) and "Furusato_Workshop_v3.0.0_current-20261015.zip" in value:
-            updated = value.replace("Furusato_Workshop_v3.0.0_current-20261015.zip", "Furusato_Workshop_v3.0.0_current.zip")
+            updated = value.replace("Furusato_Workshop_v3.0.0_current-20261015.zip", publication.package_name)
             changes.append({"block": block_id, "before": value, "after": updated,
                             "reason": "Use the current HTML+Lab package filename."})
             return updated
@@ -302,9 +304,9 @@ def write_lab(root: Path, out: Path, *, model=None):
     expected_ids = [f'{s.ident}:{i}' for s in document.walk() for i, b in enumerate(s.blocks)]
     if model_ids != expected_ids:
         raise ValueError('Source block ordering, omission or duplication detected')
-    index = '# Furusato Workshop Lab\n\n'
+    index = f'# Furusato Workshop {metadata["version"]} Lab\n\n'
     index += ('Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent を、合成データで順に構築して確かめます。'
-              'この Lab と [HTML 手順書](../docs/furusato-workshop-v3-0-0-complete.html) は、最新版の操作手順を提供します。\n\n'
+              f'この Lab と [HTML 手順書](../docs/{current_publication(root).html_name}) は、最新版の操作手順を提供します。\n\n'
               '初回は **4章 → 24.4〜24.6 → 5〜8章の確認 → 24.7と9〜11章 → 24.8 → 17章 → 19章・付録C** の順で進めます。'
               '作成済みのデータやアイテムを重複して作成・取り込みしません。各章の目次から操作ページへ進み、完了条件を確認してください。\n\n'
               '各画面キャプチャは1つの操作ページにまとめ、キャプチャが不要な説明・コマンド・参照表も省略せずに収録しています。'

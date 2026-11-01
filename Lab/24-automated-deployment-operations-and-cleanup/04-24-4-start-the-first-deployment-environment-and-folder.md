@@ -11,7 +11,7 @@
 **PowerShell**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 -LiteralPath "C:\Downloads\Furusato_Workshop_v3.0.0_current.zip"
+Get-FileHash -Algorithm SHA256 -LiteralPath "C:\Downloads\Furusato_Workshop_v3.1.0_current.zip"
 ```
 
 同じ版の参加者用 ZIP をすべて展開します。Windows の PowerShell で Python 3.11以降と Azure CLI を確認します。未導入の場合は次の2行で導入し、PowerShell を開き直します。Linux では同じバージョンの Python と Azure CLI を使い、Python のパスと変数構文をシェルに合わせます。
@@ -73,7 +73,7 @@ Obtain the ZIP and its matching SHA256SUMS.txt from docs/v3.0.0/current at the d
 **PowerShell**
 
 ```powershell
-Get-FileHash -Algorithm SHA256 -LiteralPath "C:\Downloads\Furusato_Workshop_v3.0.0_current.zip"
+Get-FileHash -Algorithm SHA256 -LiteralPath "C:\Downloads\Furusato_Workshop_v3.1.0_current.zip"
 ```
 
 Extract the participant ZIP of the same version. In Windows PowerShell, check for Python 3.11 or newer and Azure CLI. If absent, install them with these two lines and reopen PowerShell. On Linux, use the same Python and Azure CLI requirements and adapt paths and variable syntax to your shell.

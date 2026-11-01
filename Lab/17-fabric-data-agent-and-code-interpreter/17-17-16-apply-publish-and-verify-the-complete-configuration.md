@@ -71,7 +71,7 @@ PrivateRoot の prepared.json と compile-receipt.json を開き、対象、プ�
 .\.venv\Scripts\python.exe -B tools/data-agent/participant_profile.py verify @ProfileArgs --stage published
 ```
 
-公開版の確認で directSources=3、selectedSqlObjects=17、selectedSqlColumns=143、activeKqlExamples=9、ontologyContextPreserved=true を確認します。ontologyContextAvailabilityVerified=false と answerAccuracyVerified=false は、このコマンドが接続成功や回答精度まで保証しないことを示します。17.2と19章の実回答評価を続けます。
+論理ソースは Lakehouse・KQL Database・Ontology・Semantic model の4つです。公開定義の directSources=3 は標準形式の物理 datasource レコード数で、native serialization された Ontology はこの数に含まれません。両方を区別して、directSources=3、selectedSqlObjects=17、selectedSqlColumns=143、activeKqlExamples=9、ontologyContextPreserved=true を確認します。ontologyContextAvailabilityVerified=false と answerAccuracyVerified=false は、このコマンドが native 接続や回答精度を証明しないことを示します。現在の49-slot評価も完了するまでは精度の根拠にしません。
 
 apply や publish の送信後にタイムアウトした場合は、同じ書き込みを繰り返しません。次の読み取り専用 verify で対象の段階を確認します。apply-intent.json / publish-intent.json は二重送信を防ぐ記録なので削除しません。別の人や画面操作で設定が変わったというエラーも、自動で上書きせず現在の変更を確認します。復元が必要なら inputs.json と apply-backup.json / publish-backup.json を保持し、17.15の同じ Agent の復元手順で指示と選択を戻します。
 
@@ -156,7 +156,7 @@ The next publish checks Draft equality and all nine KQL examples being Valid, pu
 .\.venv\Scripts\python.exe -B tools/data-agent/participant_profile.py verify @ProfileArgs --stage published
 ```
 
-In the published verification, confirm directSources=3, selectedSqlObjects=17, selectedSqlColumns=143, activeKqlExamples=9 and ontologyContextPreserved=true. ontologyContextAvailabilityVerified=false and answerAccuracyVerified=false mean this command does not establish native connectivity or answer quality. Continue to actual-answer checks in 17.2 and Chapter 19.
+The logical source contract has four sources: Lakehouse, KQL Database, Ontology and semantic model. In the published definition, directSources=3 counts physical datasource records in the standard format; the natively serialized ontology is not included in that count. Distinguish the two and confirm directSources=3, selectedSqlObjects=17, selectedSqlColumns=143, activeKqlExamples=9 and ontologyContextPreserved=true. ontologyContextAvailabilityVerified=false and answerAccuracyVerified=false mean this command does not prove native connectivity or answer quality. Do not treat the current 49-slot evaluation as evidence of accuracy until it is complete.
 
 If apply or publish times out after sending, do not repeat the write. Use the read-only verify below for the affected stage. Do not delete apply-intent.json or publish-intent.json: they prevent duplicate sends. If the configuration changed through another user or the UI, inspect that change rather than overwriting it automatically. For restoration, retain inputs.json and apply-backup.json / publish-backup.json and use the same-agent restoration procedure in 17.15.
 

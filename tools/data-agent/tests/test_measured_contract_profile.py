@@ -75,6 +75,32 @@ class MeasuredContractTests(unittest.TestCase):
         mutator(docs)
         return {"parts": [inline_part(path, value) for path, value in docs.items()]}
 
+    def test_operational_year_resolution_is_source_owned(self):
+        instructions, _, _, _, _ = measured.profile_inputs()
+        global_instructions = instructions["global"]
+        kusto_instructions = instructions["kusto"]
+        self.assertIn("年なしの観測期間はEventhouse指示の既定年を使い", global_instructions)
+        self.assertIn("静的年を流用しない", global_instructions)
+        self.assertIn("複合質問の明示年は指定ソースに適用", global_instructions)
+        self.assertIn("A month or day request without a year", kusto_instructions)
+
+    def test_ontology_descriptions_separate_graph_evidence_from_native_results(self):
+        _, descriptions, _, _, _ = measured.profile_inputs()
+        template_path = measured.REPO / (
+            "workshop/v3.0.0-preview/data-agent/definition/Files/Config/draft/"
+            "ontology-{{name.ontology}}/datasource.json"
+        )
+        template = json.loads(template_path.read_bytes())["userDescription"]
+        for description in (descriptions["ontology"], template):
+            self.assertIn("actual GQL execution", description)
+            self.assertIn("returned results", description)
+            self.assertIn("SQL/KQL/DAX", description)
+            self.assertIn("substitute another language", description)
+        self.assertIn(
+            "Treat `IncomingDonationAmountYen` as unavailable unless its binding and runtime are verified from current evidence.",
+            template,
+        )
+
     def test_compilation_is_deterministic_and_preserves_published_evidence_and_identity(self):
         definition, inputs = self.fixture()
         saved = copy.deepcopy((definition, inputs))
@@ -92,7 +118,7 @@ class MeasuredContractTests(unittest.TestCase):
                 self.assertEqual(before[pub]["elements"], after[draft]["elements"])
         self.assertNotIn("Files/Config/draft/lakehouse_tables/fewshots.json", after)
         self.assertEqual(len(after["Files/Config/draft/kusto/fewshots.json"]["fewShots"]), 9)
-        self.assertEqual(receipt["instructionUtf16Units"], {"global": 10000, "lakehouse_tables": 9905,
+        self.assertEqual(receipt["instructionUtf16Units"], {"global": 9998, "lakehouse_tables": 9905,
                          "kusto": 8665, "ontology": 4963, "semantic_model": 7212})
         self.assertEqual(receipt["cloudCalls"], 0)
         self.assertFalse(receipt["freshDeploymentOrAnswerAccuracyVerified"])

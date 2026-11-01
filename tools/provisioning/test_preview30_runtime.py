@@ -24,7 +24,11 @@ class PreviewRuntimeTests(unittest.TestCase):
     def test_source_paths_are_explicit(self):
         self.assertTrue((runtime.REPO / "tools" / "provisioning" / "preview30_runtime.py").is_file())
         self.assertEqual(runtime.PREVIEW.name, "v3.0.0-preview")
-        self.assertEqual(runtime.WORKSHOP_VERSION, "3.0.0")
+        self.assertEqual(
+            runtime.WORKSHOP_VERSION,
+            (runtime.REPO / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip(),
+        )
+        self.assertEqual((runtime.REPO / "VERSION").read_text(encoding="utf-8").strip(), "2.7.0")
 
     def test_production_does_not_plan_a_temp_folder(self):
         plan = runtime.build_plan(scope(), {"items": [], "recoverableItems": []},

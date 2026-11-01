@@ -14,7 +14,7 @@
     },
     {
       "children": [],
-      "description": "MunicipalityId,MunicipalityName,MunicipalityDisplayName,MunicipalityStaticCount,MunicipalityStaticTotalYen,MunicipalityAmountRank,MunicipalityPrefAmountRank,IncomingDonationAmountYen",
+      "description": "MunicipalityId,MunicipalityName,MunicipalityDisplayName,MunicipalityStaticCount,MunicipalityStaticTotalYen,MunicipalityAmountRank,MunicipalityPrefAmountRank",
       "display_name": "Municipality",
       "id": "Municipality",
       "is_selected": true,
@@ -87,6 +87,6 @@
   ],
   "metadata": {},
   "type": "ontology",
-  "userDescription": "Relationship traversal over the modeled Furusato ontology. Use it for connectivity, path, neighbourhood, membership and containment questions across Prefecture, Municipality, Donor, Gift, GiftCategory, Supplier, Donation and the pre-aggregated metric entities. Entity properties carry the same stable IDs as the Lakehouse snapshot, so resolve an ID before traversing a name. Reverse traversal is written with `<-Relationship-`, and there is no direct Supplier-to-Donor edge. The model also mirrors the August observation measure as the modeled time-series property `IncomingDonationAmountYen` on Municipality; the Eventhouse remains the numeric authority for operational observation metrics, and this source is used by the Agent for relationship paths only.",
+  "userDescription": "Ontology context for the modeled Furusato business vocabulary, selected entity keys and declared relationships. Use it to understand connectivity, paths, neighbourhood, membership and containment across Prefecture, Municipality, Donor, Gift, GiftCategory, Supplier, Donation and the pre-aggregated metric entities. Resolve entity IDs from the Lakehouse before traversing by name; reverse traversal uses `<-Relationship-`, and there is no direct Supplier-to-Donor edge. These declarations are schema/context, not executed-instance evidence, and do not by themselves prove binding or queryability. Treat `IncomingDonationAmountYen` as unavailable unless its binding and runtime are verified from current evidence. Claim graph traversal or GQL results only when actual GQL execution and returned results are available; for other native SQL/KQL/DAX results, identify the actual language and source and preserve query/result evidence. If a user explicitly requests GQL, do not silently substitute another language. Eventhouse KQL remains the operational-observation authority; use Lakehouse for complete attributes and data.",
   "workspaceId": "{{workspace.id}}"
 }

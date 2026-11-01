@@ -4,9 +4,9 @@
 
 The current participant delivery is one standalone bilingual HTML file and the complete GitHub `Lab/` guide. Both are generated from the same 24-chapter, five-appendix participant model. This route does not generate an Office document; the historical paired-document commands remain separate.
 
-既存の完全版Labを共有原稿 `tools/docs/furusato_docs/participant30_text.py` で修正します。既存Wordは移行時の比較・レビュー用に保持し、現行手順の正本にはしません。教材リリースは **3.0.0** のままで、文書の修正やローカル検査は実環境への配置の承認ではありません。
+既存の完全版Labを共有原稿 `tools/docs/furusato_docs/participant30_text.py` で修正します。既存Wordは移行時の比較・レビュー用に保持し、現行手順の正本にはしません。教材版と現行ファイル名は `WORKSHOP_VERSION` に従います。`VERSION` はデータ処理の基準版であり変更しません。文書の修正やローカル検査は実環境への配置の承認ではありません。
 
-Revise the existing complete Lab through the shared source `tools/docs/furusato_docs/participant30_text.py`. Keep the existing Word for transition comparison/review, not as the authoritative current instructions. The course release remains **3.0.0**; documentation edits and local checks are not authorization for live deployment.
+Revise the existing complete Lab through the shared source `tools/docs/furusato_docs/participant30_text.py`. Keep the existing Word for transition comparison/review, not as the authoritative current instructions. The course edition and current filenames follow `WORKSHOP_VERSION`; preserve `VERSION` as the data-processing baseline. Standalone publication does not consume historical Word approval profiles, and local checks do not authorize live deployment.
 
 ## 準備 / Setup
 
@@ -54,6 +54,10 @@ python -B tools\docs\current_delivery.py validate --out "$Stage\guide" --browser
 
 After editing both languages, review exact file-parameter/run-evidence correlation, instructor-provisioned native prerequisites, and distinctions between unconfigured, failed and unverified states. Add screenshots only after real capture and review. Choose fresh private `Stage` and `Review` directories for each build; do not share or commit them. Keep source inputs unchanged through generation, validation and packaging.
 
+版を変更すると、LabのHTMLリンクの参照先も変わります。先に実際のHTMLを生成・検証し、その正確なファイルを`docs/`へ配置してからLabを生成・検査します。旧版のHTMLを新しい名前で代用したり、リンク検査を省略したりしません。
+
+On a version change, Lab links point to a new HTML filename. Build and validate the actual HTML first, install those exact bytes under `docs/`, then generate and check Lab. Do not substitute renamed old HTML or skip link validation.
+
 管理されたクラウド環境では、`/workspace`や`/tmp`などのプラットフォーム用Gitマーカーのあるツリーを避け、Gitの管理外にある `/var/tmp` 内に毎回新しい非公開ステージとレビュー先を作ります。次はBash用のレシピです。作成失敗やGit管理下の判定時には明示的に停止し、そのまま生成を続けません。出力はレビュー後に安全に削除し、共有・コミットしません。
 
 In managed cloud environments, avoid platform Git-marker trees such as `/workspace` and `/tmp`. Create fresh private stage and review directories below `/var/tmp`, outside Git. The following Bash recipe stops explicitly on creation failure or a Git-managed destination; do not continue generation after a failure. Safely remove private outputs after review; never share or commit them.
@@ -77,12 +81,16 @@ for Output in "$Stage" "$Review"; do
     fail "Output is inside Git: $Output"
   fi
 done
-python -B tools/docs/build_lab.py --out "$Stage/Lab" --receipt "$Review/lab-coverage.json"
-python -B tools/docs/build_lab.py --out "$Stage/Lab" --receipt "$Review/lab-coverage.json" --check
+Version="$(python -c "from pathlib import Path; print(Path('WORKSHOP_VERSION').read_text().strip())")"
+HtmlName="furusato-workshop-v${Version//./-}-complete.html"
+PackageName="Furusato_Workshop_v${Version}_current.zip"
 python -B tools/docs/current_delivery.py build --out "$Stage/guide"
 python -B tools/docs/current_delivery.py validate --out "$Stage/guide" --browser
+cp -- "$Stage/guide/$HtmlName" "docs/$HtmlName"
+python -B tools/docs/build_lab.py --out "$Stage/Lab" --receipt "$Review/lab-coverage.json"
+python -B tools/docs/build_lab.py --out "$Stage/Lab" --receipt "$Review/lab-coverage.json" --check
 python -B tools/docs/current_delivery.py package --out "$Stage/guide" \
-  --lab "$Stage/Lab" --package "$Stage/Furusato_Workshop_v3.0.0_current.zip"
+  --lab "$Stage/Lab" --package "$Stage/$PackageName"
 ```
 
 `build_lab.py --help`でレビュー出力先の指定を確認してください。生成したLabの全章・付録を既存完全版および移行用Wordと比較し、同じ原稿のHTMLも確認します。Chromiumは選択したHTMLだけを一時的にループバック配信します。他のネットワーク要求は拒否され、検査後にサーバーを停止します。

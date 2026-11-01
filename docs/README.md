@@ -1,11 +1,11 @@
 # Furusato Workshop — ダウンロード
 
-最新版の操作手順は [Lab](../Lab/README.md) と、保存して使える日英HTMLで提供します。実行資産は同じ版の参加者用ZIPを使用してください。
+GitHub上の[Lab](../Lab/README.md)を参加者手順の正本とし、保存して使える日英HTMLをオフライン用に提供します。参加者用ZIPは実行資産にも使います。ZIP内の案内コピーと異なる場合は、このLabとHTMLの現行リンクを使ってください。
 
 | ファイル | ダウンロード | 内容 |
 |---|---|---|
-| 日英HTML手順書 | [HTMLを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/furusato-workshop-v3-0-0-complete.html) | 24章・5付録の全手順。日英切替、検索、進捗チェック、印刷に対応 |
-| 参加者用ZIP | [ZIPを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/Furusato_Workshop_v3.0.0_current.zip) | HTML・Lab、Notebook、CSV、SQL、モデル、ツール、添付資料、評価用紙 |
+| 日英HTML手順書 | [HTMLを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/furusato-workshop-v3-1-0-complete.html) | 24章・5付録の全手順。日英切替、検索、進捗チェック、印刷に対応 |
+| 参加者用ZIP | [ZIPを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/Furusato_Workshop_v3.1.0_current.zip) | HTML・Lab、Notebook、CSV、SQL、モデル、ツール、添付資料、評価用紙 |
 | 配布SHA-256 | [SHA256SUMS.txt](SHA256SUMS.txt) | HTMLとZIPの取得後の照合用 |
 | HTML検証記録 | [DOCUMENT_VALIDATION.json](DOCUMENT_VALIDATION.json) | 同じHTMLバイト列の日英静的・Chromium検査。Fabricの配置・Agent回答品質は認定しません |
 | Lab検証記録 | [LAB_VALIDATION.json](LAB_VALIDATION.json) | 24章・5付録、ソース本文・画像・リンクの対応確認 |
@@ -13,7 +13,7 @@
 ## 始め方
 
 1. 保存したZIPのSHA-256を、上の配布一覧にある同じファイル名の値と照合します。
-2. ZIPをすべて展開します。GitHubで読む場合は[Labの目次](../Lab/README.md)、ファイルで読む場合はHTMLを開きます。
+2. ZIPをすべて展開します。手順はGitHubの[Labの目次](../Lab/README.md)を使い、オフラインの場合はこのページから現行HTMLを保存して開きます。
 3. 第4章の前提確認を終え、第24.4〜24.6節で自分の作業フォルダーへ配置します。
 4. 第5〜8章でデータと設定を確認し、第24.7節と第9〜11章で取り込みと品質処理を進めます。
 5. 第24.8節と第17章でモデルとAgentを構成・公開し、第19章と付録Cで回答を評価します。
@@ -26,7 +26,7 @@ Labはキャプチャごとの操作ページに、準備、設定の全文、�
 
 ## English
 
-Use the current [Lab guide](../Lab/README.md) on GitHub or save the standalone bilingual HTML. Download the matching participant ZIP above and verify it against [SHA256SUMS.txt](SHA256SUMS.txt) before extraction.
+The [GitHub Lab guide](../Lab/README.md) is the authoritative participant procedure; save the standalone bilingual HTML linked here for offline use. Use the participant ZIP for runtime assets, and use these current guide links if its bundled guide copy differs. Verify the ZIP against [SHA256SUMS.txt](SHA256SUMS.txt) before extraction.
 
 The [HTML validation receipt](DOCUMENT_VALIDATION.json) records static and Chromium checks for the exact document bytes, not Fabric deployment or Agent answer quality. The [Lab receipt](LAB_VALIDATION.json) records source-text, image and link coverage. Before the first increment, safely verify OneLake mirroring for `DonationEvents` only; policy readback alone does not prove Delta data arrival or native Ontology time-series execution.
 

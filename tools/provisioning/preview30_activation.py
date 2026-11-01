@@ -4,6 +4,7 @@ import base64
 import hashlib
 import json
 import csv
+from collections import Counter
 from pathlib import Path
 from typing import Any
 from preview30_deploy import Deployment, kusto_call
@@ -115,6 +116,63 @@ def deliver_increment(args: Any) -> dict[str, Any]:
             "manualPipelineFallbackAllowed": False}
 
 
+def _expected_increment_reconciliation(number: int) -> dict[str, int]:
+    records: list[dict[str, str]] = []
+    for index in range(1, number + 1):
+        path = BASE / "data/increment" / f"donation_events_{index:03d}.csv"
+        with path.open(encoding="utf-8", newline="") as handle:
+            records.extend(csv.DictReader(handle))
+    multiplicities = Counter(row["EventID"] for row in records)
+    return {
+        "RawRows": len(records),
+        "RawYen": sum(int(row["DonationAmountYen"]) for row in records),
+        "UniqueEventIDs": len(multiplicities),
+        "DuplicateKeys": sum(count > 1 for count in multiplicities.values()),
+        "DuplicateRows": sum(count - 1 for count in multiplicities.values() if count > 1),
+        "MissingEventIDs": sum(not row["EventID"] for row in records),
+    }
+
+
+def _verify_cumulative_kql(d: Deployment, number: int) -> dict[str, int]:
+    from reference_kql import kusto_result_rows
+    expected = _expected_increment_reconciliation(number)
+    conditions = []
+    for index in range(1, number + 1):
+        filename = f"donation_events_{index:03d}.csv"
+        with (BASE / "data/increment" / filename).open(encoding="utf-8", newline="") as handle:
+            source = list(csv.DictReader(handle))
+        source_files = {row["SourceFile"] for row in source}
+        runs = {row["WorkshopRunId"] for row in source}
+        if len(source_files) != 1 or len(runs) != 1:
+            raise SafetyError("Canonical increments have ambiguous cumulative provenance.")
+        conditions.append(
+            "(SourceFile == " + json.dumps(next(iter(source_files)))
+            + " and WorkshopRunId == " + json.dumps(next(iter(runs))) + ")"
+        )
+    scoped = "DonationEvents | where " + " or ".join(conditions)
+    totals = kusto_result_rows(
+        kusto_call(
+            d, scoped + " | summarize RawRows=count(), RawYen=sum(DonationAmountYen), "
+            "MissingEventIDs=countif(isempty(EventID))",
+        ),
+        required_columns=("RawRows", "RawYen", "MissingEventIDs"),
+    )
+    multiplicities = kusto_result_rows(
+        kusto_call(
+            d, scoped + " | summarize Multiplicity=count() by EventID "
+            "| summarize UniqueEventIDs=count(), DuplicateKeys=countif(Multiplicity > 1), "
+            "DuplicateRows=sumif(Multiplicity - 1, Multiplicity > 1)",
+        ),
+        required_columns=("UniqueEventIDs", "DuplicateKeys", "DuplicateRows"),
+    )
+    if len(totals) != 1 or len(multiplicities) != 1:
+        raise SafetyError("Fresh cumulative KQL did not return one exact reconciliation row.")
+    actual = {**totals[0], **multiplicities[0]}
+    if actual != expected:
+        raise SafetyError("Exact cumulative KQL rows, amount, EventIDs, or duplicates differ from released increments.")
+    return actual
+
+
 def verify_delivery(args: Any) -> dict[str, Any]:
     """Validate native event exports or explicitly tagged UI evidence against fresh reads."""
     from activation_runtime import (
@@ -144,14 +202,48 @@ def verify_delivery(args: Any) -> dict[str, Any]:
     )
     if not isinstance(native_input, list) and not is_ui_observation:
         raise SafetyError("Expected the unchanged native event array or a tagged native UI observation.")
-    if is_ui_observation and (number != 1 or not getattr(args, "native_ui_receipt_root", None)
+    if is_ui_observation and (not getattr(args, "native_ui_receipt_root", None)
                               or not getattr(args, "native_ui_control_classification", None)):
-        raise SafetyError("Tagged UI evidence is limited to 001 and requires its receipt root and control classification.")
+        raise SafetyError("Tagged UI evidence requires its receipt root and control classification.")
     if is_ui_observation:
         PrivateStore._reject_git_path(args.native_ui_control_classification.resolve())
+        correlation_candidate = None
+        visual_review = None
+        correlation_path = getattr(args, "native_ui_correlation", None)
+        if number == 1:
+            if correlation_path:
+                raise SafetyError("001 correlation remains embedded in its original observation.")
+        else:
+            if not correlation_path:
+                raise SafetyError("002/003 require a separate hash-bound correlation sidecar.")
+            PrivateStore._reject_git_path(correlation_path.resolve())
+            correlation = load(correlation_path)
+            observation_sha256 = hashlib.sha256(args.native_events.read_bytes()).hexdigest()
+            if (not isinstance(correlation, dict)
+                    or correlation.get("kind") != "native-ui-correlation-sidecar/v1"
+                    or correlation.get("filename") != filename
+                    or correlation.get("sourceObservationSha256") != observation_sha256
+                    or not isinstance(correlation.get("scope"), dict)
+                    or not isinstance(correlation.get("correlationCandidate"), dict)
+                    or not isinstance(correlation.get("visualReview"), dict)):
+                raise SafetyError("Correlation sidecar does not bind this exact observation and increment.")
+            correlation_candidate = correlation["correlationCandidate"]
+            visual_review = correlation["visualReview"]
     activator, rule_id = _targets(d)
     pipeline = d.state["items"]["pipeline"]
     lakehouse = d.state["items"]["lakehouse"]
+    if is_ui_observation and number > 1:
+        expected_scope = {
+            "workspaceId": d.scope["workspaceId"],
+            "tenantId": d.scope["tenantId"],
+            "folderId": d.scope["folderId"],
+            "activatorId": activator["id"],
+            "pipelineId": pipeline["id"],
+            "lakehouseId": lakehouse["id"],
+            "modelId": native_input["modelId"],
+        }
+        if correlation["scope"] != expected_scope:
+            raise SafetyError("Correlation sidecar scope differs from the frozen deployment items.")
     before = load(d.evidence / "increments" / filename / "jobs-before.json")
     after = d.client.paged(d.prefix + f"/items/{pipeline['id']}/jobs/instances")
     token = lambda: d.client.credential.get_token("https://api.fabric.microsoft.com/.default").token
@@ -172,20 +264,20 @@ def verify_delivery(args: Any) -> dict[str, Any]:
             native_input, screenshot_root=args.native_events.resolve().parent,
             receipt_root=args.native_ui_receipt_root, workspace_id=d.scope["workspaceId"],
             tenant_id=d.scope["tenantId"], activator_id=activator["id"],
-            model_id=native_input["correlationCandidate"]["eventReferenceEntityId"],
+            model_id=native_input["modelId"],
             rule_id=rule_id, pipeline_id=pipeline["id"], lakehouse_id=lakehouse["id"],
             subject=subject, expected_bytes=delivery["bytes"],
             expected_upload_sha256=delivery["upload"].get("sha256"),
             current_definition=current_definition,
+            expected_filename=filename, expected_visible_row_count=number,
+            correlation_candidate=correlation_candidate, visual_review=visual_review,
         )
         classification = load(args.native_ui_control_classification)
         known_manual_ids = set(d.state.get("manualPipelineJobIds", []))
         classified = validate_control_classification(
             classification, known_manual_job_ids=known_manual_ids,
         )
-        copy_receipt_path = (
-            "increments/donation_events_001.csv/bounded-monitor-01/native-copy-001.json"
-        )
+        copy_receipt_path = proof["copyReceiptPath"]
         copy_sha = proof["receiptSha256"][copy_receipt_path]
         if hashlib.sha256(args.native_copy.read_bytes()).hexdigest() != copy_sha or native_copy != proof["copyReceipt"]:
             raise SafetyError("Provided Copy receipt differs from the original hash-bound native Copy receipt.")
@@ -240,6 +332,9 @@ def verify_delivery(args: Any) -> dict[str, Any]:
             "sourceReceiptSha256": proof["receiptSha256"],
             "uploadSha256": proof["uploadSha256"],
             "nativeUiObservationSha256": hashlib.sha256(args.native_events.read_bytes()).hexdigest(),
+            "nativeUiCorrelationSha256": (
+                hashlib.sha256(correlation_path.read_bytes()).hexdigest() if correlation_path else None
+            ),
             "jobsBeforeSha256": hashlib.sha256(
                 json.dumps(before, sort_keys=True, ensure_ascii=False).encode("utf-8")
             ).hexdigest(),
@@ -285,24 +380,39 @@ def verify_delivery(args: Any) -> dict[str, Any]:
     if len(rows) != 1 or rows[0] != {"RawRows": len(raw), "RawYen": sum(int(r["DonationAmountYen"]) for r in raw)}:
         raise SafetyError("KQL did not reconcile the exact native file/run scope to its immutable CSV.")
     if is_ui_observation:
-        before_path = private / "observation-01" / "kql-totals.json"
-        after_path = private / "bounded-monitor-01" / "kql-totals.json"
-        before_bytes, after_bytes = before_path.read_bytes(), after_path.read_bytes()
-        before_kql, after_kql = load(before_path), load(after_path)
         expected_totals = {"RawRows": len(raw), "RawYen": sum(int(r["DonationAmountYen"]) for r in raw)}
-        if (before_kql != [{"RawRows": 0, "RawYen": 0}]
-                or after_kql != [expected_totals] or rows[0] != expected_totals):
+        if number == 1:
+            before_path = private / "observation-01" / "kql-totals.json"
+            after_path = private / "bounded-monitor-01" / "kql-totals.json"
+            before_kql = load(before_path)
+            after_kql = load(after_path)
+            before_value = before_kql[0] if isinstance(before_kql, list) and len(before_kql) == 1 else None
+            after_value = after_kql[0] if isinstance(after_kql, list) and len(after_kql) == 1 else None
+            before_sha = hashlib.sha256(before_path.read_bytes()).hexdigest()
+            after_sha = hashlib.sha256(after_path.read_bytes()).hexdigest()
+            if before_value != {"RawRows": 0, "RawYen": 0} or after_value != expected_totals:
+                raise SafetyError("Hash-bound 001 before/after KQL receipts do not reconcile.")
+        else:
+            before_value = proof["kqlBefore"]["kqlTotals"]
+            after_value = proof["kqlAfter"][0]
+            before_sha = proof["receiptSha256"][proof["kqlBeforeReceiptPath"]]
+            after_sha = proof["receiptSha256"][proof["kqlAfterReceiptPath"]]
+            if after_value != expected_totals:
+                raise SafetyError("Hash-bound post-increment KQL receipt differs from the selected increment.")
+        if rows[0] != expected_totals:
             raise SafetyError("Hash-bound before/after KQL receipts do not reconcile to current KQL and source CSV.")
+        cumulative = _verify_cumulative_kql(d, number)
         result.update({
             "kqlEvidenceKind": "fresh-read-matched-to-hash-bound-before-after-receipts",
-            "kqlBefore": before_kql[0],
-            "kqlBeforeSha256": hashlib.sha256(before_bytes).hexdigest(),
-            "kqlAfter": after_kql[0],
-            "kqlAfterSha256": hashlib.sha256(after_bytes).hexdigest(),
+            "kqlBefore": before_value,
+            "kqlBeforeSha256": before_sha,
+            "kqlAfter": after_value,
+            "kqlAfterSha256": after_sha,
             "kqlFresh": rows[0],
             "kqlFreshSha256": hashlib.sha256(
                 json.dumps(rows[0], sort_keys=True, ensure_ascii=False).encode("utf-8")
             ).hexdigest(),
+            "kqlCumulativeExact": cumulative,
         })
     result.update({"timestampUtc": now(), "copyAndDataVerified": True,
                    "copyEvidenceKind": copy_evidence_kind,

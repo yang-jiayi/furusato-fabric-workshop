@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-6. Metrics が未設定または利用できない場合は「未設定」または「実行できない」と記録し、講師に伝えます。Generate Ontology で2件目を作ったり、主 Ontology を置き換えたりしません。Semantic model の直接 DAX の確認は、そのまま別に記録します。
+6. Metrics が未設定または利用できない場合は「講師のnative事前設定が未達：未設定」または「実行できない」と記録し、講師に伝えます。native Metrics の確認を完了扱いにせず、未確認の設定操作を推測して補いません。Generate Ontology で2件目を作ったり、主 Ontology を置き換えたりしません。Semantic model の直接 DAX の確認は、そのまま別に記録します。
 7. 任意：既存の SM_Furusato_Analytics_&lt;PID&gt; に接続した RPT_Furusato_Analytics_&lt;PID&gt; が配置済みの場合だけ開き、接続先が同じモデルであることを確認します（付録D）。レポートが無い場合はこの手順を省略し、新しいモデルや Ontology を作る必要はありません。年・寄附先都道府県を All にして、4つの KPI を同じ条件の直接 DAX と照合します。平均は表示の丸めを考慮します。グラフを検証するときは、対象・粒度・フィルターをそろえて値を個別に確認します。
 
 ![All フィルターの Power BI レポート。4つの KPI、月別寄附総額、寄附先自治体・返礼品カテゴリ・寄附者居住都道府県の Top10 グラフを表示する。](../assets/pc-12-report-canvas.png)
@@ -20,7 +20,7 @@
 
 ## 12.2 Steps
 
-6. If Metrics are unconfigured or unavailable, record that state and tell the instructor. Do not create a second ontology with Generate Ontology or replace the main ontology. Keep direct semantic-model DAX checks as a separate record.
+6. If Metrics are unconfigured or unavailable, record 'instructor native setup prerequisite unmet: unconfigured' or 'unavailable' and tell the instructor. Do not mark native Metrics verification complete or improvise unverified setup operations. Do not create a second ontology with Generate Ontology or replace the main ontology. Keep direct semantic-model DAX checks as a separate record.
 7. Optional: open RPT_Furusato_Analytics_&lt;PID&gt; only if it is already deployed against the existing SM_Furusato_Analytics_&lt;PID&gt;, and verify that it uses that same model (Appendix D). Skip this step when no report is deployed; no new model or ontology is required. Set Year and recipient prefecture to All and compare the four KPIs with direct DAX under matching filters, allowing for display rounding of the average. Check chart values individually under the same scope, grain and filters when validating them.
 
 ![Power BI report with All filters, four KPI cards, monthly donation amount and Top10 charts for recipient municipalities, gift categories and donor residence prefectures.](../assets/pc-12-report-canvas.png)

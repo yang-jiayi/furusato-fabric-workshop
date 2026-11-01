@@ -3,6 +3,19 @@
   "purpose": "Participant guide figures; separate from the historical evidence projection.",
   "figures": [
     {
+      "id": "pc-04-workspace-type-current",
+      "file": "workspace-type-current.png",
+      "sha256": "4bb62bcdc2c38884089fab03769b52818b3e3832f3fedd6a67c4a546a8a70e60",
+      "source": "native-workspace-settings-workspace-type-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-01",
+      "captureContext": "Requested workspace; actual PNG inspected at 1053 x 910 pixels.",
+      "width": 1053,
+      "height": 910,
+      "redactions": ["Capacity ID"],
+      "evidenceScope": "Current-UI read-only preflight example showing Fabric, F16 and West US 2. F16 is an example, not a minimum requirement. Not post-deployment evidence; participants do not edit settings. Historical captures remain unchanged."
+    },
+    {
       "id": "pc-01-architecture",
       "file": "architecture.png",
       "sha256": "adcede5b0d4dd1d0f9069b3c252e7ca3066e0d3e87bb1ec45f1777710dd57daa",

@@ -116,7 +116,7 @@ def append_tuning_sections(chapter: Section, root: Path, *, figures):
              "If you cannot edit, ask the workspace administrator for access to your assigned scope. Resolve tenant or capacity prerequisites before continuing when they disable a feature. Participants without administrative permissions do not need to change tenant settings."),
         ]),
         _table([("用途", "Purpose"), ("ZIP 内の場所", "Location in ZIP")], [
-            [("今回採用した指示・選択・例", "Adopted instructions, selections and examples"), str(PROFILE_REL)],
+            [("今回採用した指示・選択・例", "Adopted instructions, selections and examples"), PROFILE_REL.as_posix()],
             [("前半4つの SQL ビュー", "First four SQL views"), "workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views"],
             [("後半2つの SQL ビュー", "Last two SQL views"), "workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views"],
             [("既存モデルの照合元", "Existing-model contract source"), "tools/data-agent/measured_contract_profile.py / MEASURES"],
@@ -196,8 +196,8 @@ def append_tuning_sections(chapter: Section, root: Path, *, figures):
         units = len(value.encode("utf-16-le")) // 2
         if units > 10000:
             raise ValueError("Participant instruction exceeds the service field limit: " + filename)
-        blocks = [_paragraph("設定先：" + field + "。同梱ファイル：" + str(PROFILE_REL / filename) + "。本文は前後の空白を除いて" + str(units) + " UTF-16単位です。",
-                             "Destination: " + field + ". Included file: " + str(PROFILE_REL / filename) + ". The body is " + str(units) + " UTF-16 units after trimming outer whitespace."),
+        blocks = [_paragraph("設定先：" + field + "。同梱ファイル：" + (PROFILE_REL / filename).as_posix() + "。本文は前後の空白を除いて" + str(units) + " UTF-16単位です。",
+                             "Destination: " + field + ". Included file: " + (PROFILE_REL / filename).as_posix() + ". The body is " + str(units) + " UTF-16 units after trimming outer whitespace."),
                   _code(value, "instructions", canonical=True)]
         if filename == "kusto-instructions.txt":
             blocks.insert(0, _paragraph("KQL Database は Eventhouse の入れ物ではなく、その中のデータベースを選択します。DonationObservationSummaryForAgent だけを選び、次の10列をすべて選びます。この集計の粒度は自治体・1分・WorkshopRunId・ParticipantAlias・SourceFile の5項目です。ObservationCount の合計が観測件数であり、集計後の行数ではありません。",

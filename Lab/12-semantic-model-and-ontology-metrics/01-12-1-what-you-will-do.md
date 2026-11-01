@@ -4,7 +4,7 @@
 
 Semantic model（SM_Furusato_Analytics_&lt;PID&gt;）は Gold を Direct Lake で読み、寄附総額・寄附件数などの DAX メジャーを持ちます。DAX は Semantic model 側で定義され、Ontology の Metrics はそのメジャーを参照するだけです。
 
-この章では、Semantic model に定義された DAX とフィルターの意味を確認します。標準構成の Ontology は1件のままにし、Metrics は同じ Ontology に設定済みの場合だけ確認します。
+この章では、Semantic model に定義された DAX とフィルターの意味を確認します。native Metrics の確認には、講師が同じ主 Ontology に Metrics を事前設定し、利用可能であることを確認しておく必要があります。この章はその事前設定を実施する手順ではありません。標準構成の Ontology は1件のままにします。
 
 準備するもの・確認すること
 
@@ -18,7 +18,7 @@ Semantic model（SM_Furusato_Analytics_&lt;PID&gt;）は Gold を Direct Lake �
 
 The semantic model (SM_Furusato_Analytics_&lt;PID&gt;) reads Gold through Direct Lake and owns DAX measures such as 寄附総額 and 寄附件数. The DAX is defined in the semantic model; ontology Metrics only refer to those measures.
 
-Check the DAX and filter behavior defined in the semantic model. Keep exactly one ontology in the standard setup, and inspect Metrics only if they are already configured on that same ontology.
+Check the DAX and filter behavior defined in the semantic model. Native Metrics verification requires the instructor to configure Metrics on that same main ontology beforehand and confirm availability. This chapter does not provide the native setup procedure. Keep exactly one ontology in the standard setup.
 
 Before you start
 

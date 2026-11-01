@@ -1,11 +1,25 @@
 # Furusato Workshop 3.0.0
 
-現行mainの手順・Word・日英HTML・ZIPは [current](current/README.md) を使用してください。
+現行mainの参加者向け手順は、既存の完全版 [Lab](../../Lab/README.md) と
+[currentの日英HTML・ZIP](current/README.md) を使用してください。
+既存Wordは移行レビュー用に保持しますが、現行手順の正本ではありません。
+作成・検証は [現行HTML・Lab経路](../../tools/docs/CURRENT_HTML_LAB.md) を使用します。
+教材リリースは **3.0.0** のままです。文書修正は実環境への配置を承認せず、
+新しい画面取得や機能完了も証明しません。
 再配置・実回答評価と校正手順は [2026-10-15資料](tuning-20261015/README.md) にあります。
 以下は元の3.0.0リリースを再現するための保持記録です。
-Use [current](current/README.md) for the current main workshop. The original 3.0.0
-release record below is retained separately.
+Use the existing complete [Lab](../../Lab/README.md) and
+[current bilingual HTML/package](current/README.md) for participant instructions,
+and the [current author route](../../tools/docs/CURRENT_HTML_LAB.md) for generation
+and validation. Retain Word for transition review, not as the current authority.
+The release remains **3.0.0**; documentation edits authorize neither live
+deployment nor new screenshot/feature-completion claims.
 
+## 元のリリース記録 / Original release record
+
+以下の文書ペア、画面配置数、評価、再生成手順は元の3.0.0の保持記録です。
+The paired documents, capture counts, evaluations and reproduction commands
+below are retained historical records of the original 3.0.0 release.
 
 **既知の制約を開示した教材リリースです。AI回答品質・全機能の合格、Fabric機能のGAを意味しません。**
 

@@ -22,6 +22,8 @@ Labは24章・5付録の全手順を収録しています。キャプチャご�
 
 利用にはFabricの有効な容量と必要な権限が必要です。機能の提供条件はテナント・リージョンによって異なります。設定画面の表示、実際の実行、公開後の動作はそれぞれ確認します。同じ設定の再現が、同じ回答精度を保証するわけではありません。
 
+Ontologyのnative Metricsは講師による事前設定が必要です。未設定の場合は設定済みと扱わず、講師に確認します。[第4章](Lab/04-prerequisites-deployment-scope-and-safe-execution/README.md)の容量画面は実環境の例であり、表示されたF16は最小要件ではありません。増分取り込みの確認では、対象ファイル・イベント・Activator・Pipelineの実行を対応付けます。成功表示や行数だけで自動配信の完了とは判定しません。
+
 データはすべて学習用の合成データです。自治体名と自治体コードだけが実在の参照ラベルで、寄付・寄付者・事業者・返礼品は架空です。静的寄付と増分の観測は母集団と粒度が異なるため、混同して集計しません。
 
 ## 実行資産
@@ -42,3 +44,5 @@ Build and inspect a Microsoft Fabric solution with synthetic data, one Ontology 
 Follow Chapters 4 and 24 for scoped deployment, Chapters 5–13 for data and model checks, Chapter 17 for the complete adopted Agent configuration, and Chapter 19 plus Appendix C for evaluation and improvement. Each Lab operation has its own Markdown page; expand **English** for the equivalent procedure. All 24 chapters and five appendices include the preparation, commands, full settings, reference tables and completion checks.
 
 Use an authorized workspace and folder with active capacity and the required feature permissions. Verify actual execution and published behavior separately from configuration. Matching a configuration does not guarantee an identical answer score. All data is synthetic training material, and static donations must remain distinct from operational observations.
+
+Native Ontology Metrics require instructor setup; an unconfigured feature is not a verified configuration. The Chapter 4 capacity screenshot is a real environment example, not an F16 minimum requirement. Correlate the exact increment file, event, Activator and Pipeline run before accepting automatic delivery; a success label or row count alone is insufficient.

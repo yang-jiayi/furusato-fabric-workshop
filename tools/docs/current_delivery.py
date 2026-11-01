@@ -144,7 +144,7 @@ def validate_source_manifest_paths(root, manifest, *, require_git=False):
 
 def markdown_links(lab):
     for path in sorted(lab.rglob('*.md')):
-        for value in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text()):
+        for value in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text(encoding='utf-8')):
             parsed=urlsplit(value)
             if not parsed.scheme and parsed.path:
                 yield path,unquote(parsed.path)
@@ -152,6 +152,8 @@ def markdown_links(lab):
 
 def add_lab_aliases(files, root, lab, source_files, html_blob):
     """Keep GitHub-relative Lab links valid in the portable package too."""
+    root = Path(root).resolve()
+    lab = Path(lab).resolve()
     for page,target in markdown_links(lab):
         virtual_lab=(root/'Lab').resolve()
         destination=(virtual_lab/page.relative_to(lab).parent/target).resolve()
@@ -283,7 +285,24 @@ def build(root, out, artifact_manifest=None):
     return receipt
 
 
-def browser_check(path, out, executable=Path('/usr/bin/chromium')):
+def select_browser_executable(chromium, executable=None):
+    if executable is not None:
+        selected = Path(executable)
+        if not selected.is_file():
+            raise FileNotFoundError('Browser executable must be an existing file: ' + str(selected))
+        return selected.resolve()
+    system = Path('/usr/bin/chromium')
+    if sys.platform.startswith('linux') and system.is_file():
+        return system
+    selected = Path(chromium.executable_path)
+    if not selected.is_file():
+        raise FileNotFoundError(
+            'Playwright Chromium is not installed. Run "python -m playwright install chromium" '
+            'with this Python environment, or use --browser-executable with an existing browser file.')
+    return selected
+
+
+def browser_check(path, out, executable=None):
     """Exercise the standalone guide; serve only its exact HTML bytes locally."""
     from playwright.sync_api import sync_playwright
     from pypdf import PdfReader
@@ -307,7 +326,8 @@ def browser_check(path, out, executable=Path('/usr/bin/chromium')):
     checks, print_pages, errors, external = [], {}, [], []
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(executable_path=str(executable), headless=True, args=['--no-sandbox'])
+            selected = select_browser_executable(p.chromium, executable)
+            browser = p.chromium.launch(executable_path=str(selected), headless=True, args=['--no-sandbox'])
             version = browser.version
             context = browser.new_context(viewport={'width':1440,'height':1000})
             def route_request(route):
@@ -393,7 +413,7 @@ def require_validated(path, receipt):
 def package(root, path, lab, receipt_path, output):
     if output.exists():
         raise ValueError('Refusing to overwrite an existing package')
-    receipt = json.loads(receipt_path.read_text())
+    receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
     require_validated(path, receipt)
     if not (lab / 'README.md').is_file():
         raise ValueError('The complete Lab guide is required')
@@ -414,7 +434,7 @@ def package(root, path, lab, receipt_path, output):
     files = {'guide/' + path.name:path.read_bytes(), 'DOCUMENT_VALIDATION.json':json_bytes(receipt)}
     files['LAB_VALIDATION.json']=json_bytes(lab_validation)
     attachment_root=root/'workshop/v3.0.0-preview/attachments'
-    attachment_manifest=json.loads((attachment_root/'manifest.json').read_text())
+    attachment_manifest=json.loads((attachment_root/'manifest.json').read_text(encoding='utf-8'))
     for name in ('business-requirements.pdf','data-dictionary.txt','domain-model.png',
                  'revision-requirements.txt','manifest.json','SHA256SUMS.txt'):
         blob=(attachment_root/name).read_bytes()
@@ -466,13 +486,24 @@ def package(root, path, lab, receipt_path, output):
     return {'entries':len(files),'sha256':digest(output.read_bytes()),'deliveryMode':'html-lab','packagedLabLinksChecked':links}
 
 
-def main():
+def parse_args(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='command',required=True)
     p=sub.add_parser('build');p.add_argument('--out',type=Path,required=True);p.add_argument('--artifact-manifest',type=Path)
     p=sub.add_parser('validate');p.add_argument('--out',type=Path,required=True);p.add_argument('--browser',action='store_true');p.add_argument('--artifact-manifest',type=Path)
+    p.add_argument('--browser-executable',type=Path,help='Existing Chromium executable (requires --browser); otherwise use Linux system Chromium or Playwright Chromium')
     p=sub.add_parser('package');p.add_argument('--out',type=Path,required=True);p.add_argument('--lab',type=Path,default=ROOT/'Lab');p.add_argument('--package',type=Path,required=True)
-    args=parser.parse_args()
+    args=parser.parse_args(argv)
+    if args.command=='validate' and args.browser_executable is not None:
+        if not args.browser:
+            parser.error('--browser-executable requires --browser')
+        if not args.browser_executable.is_file():
+            parser.error('--browser-executable must be an existing file')
+    return args
+
+
+def main():
+    args=parse_args()
     if args.command=='build':
         result=build(ROOT,args.out,args.artifact_manifest)
     elif args.command=='validate':
@@ -484,7 +515,7 @@ def main():
         result['static']=inspect_html(args.out/HTML_NAME,document,metadata)
         result['sourceRevision']=source_revision(ROOT, metadata['currentArtifactSet'])
         if args.browser:
-            result['browser']=browser_check(args.out/HTML_NAME,args.out)
+            result['browser']=browser_check(args.out/HTML_NAME,args.out,args.browser_executable)
         receipt_path.write_bytes(json_bytes(result))
     else:
         result=package(ROOT,args.out/HTML_NAME,args.lab,args.out/'DOCUMENT_VALIDATION.json',args.package)

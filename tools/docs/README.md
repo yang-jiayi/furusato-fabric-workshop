@@ -1,4 +1,33 @@
-# tools/docs — Office 配布物の build と validation / Office deliverable build and validation
+# tools/docs — 参加者向け文書の生成と検証 / Participant document build and validation
+
+## 現行の作成経路 / Current author route
+
+参加者向けの正本は、既存の完全版 [Lab](../../Lab/README.md) と
+[current の日英HTML](../../docs/v3.0.0/current/README.md)です。
+[現行HTML・Labの生成手順](CURRENT_HTML_LAB.md)を先に使用してください。
+24章・5付録の共有原稿 `furusato_docs/participant30_text.py` を修正し、
+レビュー後に同じモデルからLabとHTMLを生成・検証します。新しい簡略版Labは作りません。
+既存Wordは移行レビュー用に保持しますが、現行手順の正本ではありません。
+教材リリースは **3.0.0** のままです。文書の修正・生成は実環境への配置を承認せず、
+新しい画面キャプチャや機能の完了も証明しません。
+
+The authoritative participant instructions are the existing complete
+[Lab](../../Lab/README.md) and [current bilingual HTML](../../docs/v3.0.0/current/README.md).
+Start with [CURRENT_HTML_LAB.md](CURRENT_HTML_LAB.md), edit the shared participant
+source, review it, then generate and validate both outputs from that model.
+Do not create a new abbreviated Lab. Retain the existing Word for transition
+review, not as the current authority. The course release remains **3.0.0**;
+documentation changes/builds authorize neither live deployment nor claims of
+new screenshot capture or feature completion.
+
+## 保守担当者向けの過去の文書ペア経路 / Historical paired route for maintainers
+
+以下のOffice・Word/HTMLペア用手順と評価記録は、過去の配布物の再現・保守用です。
+現行参加者向けの作成経路ではなく、アーカイブや既存の承認範囲を変更しません。
+
+The Office/paired Word-HTML procedures and evidence below are retained for
+historical reproduction and maintenance, not current participant authoring.
+Archives and their original approval boundaries remain unchanged.
 
 The historical Preview1 evidence decision remains **実装・検証結果を収録したPreview**:
 NativeUI Compat48 PASS/36 FAIL, not AI-quality accepted or GA, with main unpromoted.
@@ -9,9 +38,9 @@ does not authorize later-candidate builds, publication or main promotion. See
 [public evaluation](../../docs/v3-preview/reports/evaluation-report.md) and
 [public progress](../../docs/v3-preview/reports/progress-report.md).
 
-## Current measured workshop and proofreading
+## Historical measured pair and proofreading
 
-The current participant pair and package are under
+The retained measured participant pair and package are under
 [`docs/v3.0.0/current`](https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/docs/v3.0.0/current). Use
 [`measured-contract-20261015`](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
 and the bilingual [calibration/proofreading procedure](../../docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md)
@@ -96,7 +125,7 @@ report directory and current artifact manifest.
 
 ## Native Data Agent tuning addendum
 
-### Current v3 artifact consistency
+### Artifact consistency for the historical paired route
 
 `WORKSHOP_VERSION` identifies the course and distributed Notebook edition.
 The root `VERSION` remains the compatible legacy processing baseline; CSV
@@ -104,7 +133,7 @@ dataset and Fabric protocol versions have distinct roles.
 
 Build the v3 source assets, then run `tools\provisioning\v3_artifacts.py --out
 workshop\v3.0.0-preview\provisioning\artifact-set.json` from the verified source
-revision. For a separately generated current Word/HTML pair, pass that exact
+revision. For a separately reproduced historical Word/HTML pair, pass that exact
 file using `--artifact-manifest` to `build_preview30.py`, `validate_preview30.py`
 and `package_preview30.py`. The shared document adds the component-version map,
 actual current Notebook defaults and production-without-Temp procedure.
@@ -112,7 +141,7 @@ The build refuses stale file hashes; both output formats retain the manifest
 SHA, and the HTML also records the actual paired Word SHA.
 
 Add `--participant-edition` (v3.0.0 profile with `--artifact-manifest`) to all
-three commands to build the guide that is distributed to participants. It keeps
+three commands to reproduce that historical participant guide. It keeps
 only the procedure: for every chapter what you will do, the numbered steps,
 completion checks, generated reference tables and official references. Release
 notices, evaluation records, the v2.7 reference copy, capture times and hashes are
@@ -123,8 +152,9 @@ The prose lives in `furusato_docs/participant30_text.py`, screenshot captions in
 composes them; `validate_preview30.py` additionally fails if working or history
 wording reaches the participant Word or HTML.
 
-Use a new output location such as `docs\v3.0.0\current`; do not replace an old
-release tag or its guide assets. Artifact consistency is not AI-answer or
+Use a fresh private output location for historical pair reproduction; do not
+overwrite the active HTML/Lab delivery, an old release tag or its guide assets.
+Artifact consistency is not AI-answer or
 all-feature acceptance. The normal release/evidence/acceptance gates still apply.
 
 `build_native_tuning_addendum.py` generates a **separately dated Word/HTML pair**
@@ -765,17 +795,17 @@ HTML の動的な日英 UI に適用します。元の runtime、評価問題・
 画像の画素は変更しません。内容検証は括弧の表示差だけを正規化し、
 生成物に全角括弧が残っている場合は別の typography ゲートで失敗します。
 
-### 最新版の文書ペア
+### 保持する旧版の文書ペア
 
-release edition は `unified-20260923` です。現在の文書配布対象は次の 2 点だけです。
-検証済みペアをこの名前で配置しています。
+この旧版の release edition は `unified-20260923` です。次の2点は過去の検証済みペアです。
+現行参加者向けの正本は冒頭のLabとHTMLを使用します。
 
 この修正版は、正式なActivator初回開始／停止、完成CSVのPutBlob1回送信、
 設定状態・実配送・Copy／KQLの段階別判定を第12〜13章・付録Dへ反映します。
 日英ミラー、READMEの依頼プロンプト、配布CLI、Notebook04の引継ぎ表示と参加者契約も同期します。
 公開化前の診断ログや実環境IDは収録せず、Agent指示・標準10問／84条件・合成データは保持します。
 
-現在のペアは profile revision 13 を反映した Word と対応 HTML です。
+この旧版のペアは profile revision 13 を反映した Word と対応 HTML です。
 照会可能な質問への言い直し・同意待ち・訂正時の再確認・取消を同期しています。
 指示による動作と強制制御を区別し、出典・KQL・CI・安全な拒否の確認も保持します。
 返礼品の選択と受領、導出順位と保存済み順位、実際の返却列・出典と説明用ラベルを区別します。
@@ -793,7 +823,7 @@ build は、別の新しい外部 PRIVATE ステージングへ named edition �
 `docs/data-validation-checklist.md` は手で保守しますが、同じ runtime の値に対して
 `validate_docs.py` が検証します。
 
-### 公開文書は Word + HTML の 2 ファイルだけ
+### 旧版の公開文書は Word + HTML の 2 ファイルだけ
 
 公開用には `--public-documents-only --edition unified-20260923 --out <外部の非公開ステージング>` を
 build / validation の両方へ指定します。PowerShell は
@@ -1162,12 +1192,13 @@ and query snippet is read from the shipped v2.7.0 runtime at build time; nothing
 is transcribed by hand. If the runtime changes and the documentation would drift,
 the build fails instead of emitting a stale deliverable.
 
-### Latest document pair
+### Retained historical document pair
 
-The release edition is `unified-20260923`. Only these two documents are current
-downloads. The validated pair is installed under these names.
+This historical release edition is `unified-20260923`. These two documents are
+the retained validated pair, not current participant downloads. Use the Lab and
+HTML author route at the top for current participant instructions.
 
-The current Word/HTML pair uses profile revision13 and synchronizes answerable
+This historical Word/HTML pair uses profile revision13 and synchronizes answerable
 rephrasing, consent, correction/reconfirmation and cancellation. It distinguishes
 instructions from enforced control and retains source, KQL, CI and refusal checks.
 It also separates selected gifts from receipt, derived ranks from stored ranks,
@@ -1187,7 +1218,7 @@ separate fresh external PRIVATE stage. In addition to participant Word,
 `docs/data-validation-checklist.md` is hand-maintained but validated by
 `validate_docs.py` against the same runtime values.
 
-### Public documents: exactly one Word and one matching HTML
+### Historical public documents: exactly one Word and one matching HTML
 
 Pass `--public-documents-only --edition unified-20260923 --out <external-private-staging>`
 to both Python entry points, or use

@@ -6,7 +6,7 @@ Lakehouse の SQL analytics endpoint を開き、New SQL query を選びます�
 
 テーブルが見えなければ、5章の Notebook 01 と11章の Notebook 05 の完了、SQL endpoint の同期状態、接続先 Lakehouse を確認します。CREATE VIEW 権限がなければ、その Lakehouse の管理者に権限または下記の実行を依頼します。ビュー名だけがある状態では完了ではありません。
 
-実行するファイル：workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_donation_detail.sql
+実行するファイル：workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_donation_detail.sql
 
 **SQL**
 
@@ -42,7 +42,7 @@ JOIN dbo.ot_gift AS g ON g.GiftId = d.GiftId
 JOIN dbo.ot_gift_category AS c ON c.CategoryId = g.CategoryId
 ```
 
-実行するファイル：workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_donor_catalog_supplier.sql
+実行するファイル：workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_donor_catalog_supplier.sql
 
 **SQL**
 
@@ -79,7 +79,7 @@ FROM (
 ) AS pairs
 ```
 
-実行するファイル：workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_municipality_snapshot.sql
+実行するファイル：workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_municipality_snapshot.sql
 
 **SQL**
 
@@ -98,7 +98,7 @@ FROM dbo.ot_municipality AS m
 JOIN dbo.ot_prefecture AS p ON p.PrefectureId = m.PrefectureId
 ```
 
-実行するファイル：workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_supplier_catalog.sql
+実行するファイル：workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_supplier_catalog.sql
 
 **SQL**
 
@@ -122,7 +122,7 @@ JOIN dbo.ot_gift AS g ON g.GiftId = sg.GiftId
 JOIN dbo.ot_gift_category AS c ON c.CategoryId = g.CategoryId
 ```
 
-実行するファイル：workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_relationship_dictionary.sql
+実行するファイル：workshop\v3.0.0-preview\data-agent\candidates\complete-contract\views\agent_relationship_dictionary.sql
 
 **SQL**
 
@@ -148,7 +148,7 @@ UNION ALL SELECT 'ResidencePrefHasFlow','Prefecture','PrefectureDonationFlow'
 UNION ALL SELECT 'FlowToRecipientPref','PrefectureDonationFlow','Prefecture'
 ```
 
-実行するファイル：workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_prefecture_category_metric.sql
+実行するファイル：workshop\v3.0.0-preview\data-agent\candidates\complete-contract\views\agent_prefecture_category_metric.sql
 
 **SQL**
 
@@ -208,7 +208,7 @@ Open the Lakehouse SQL analytics endpoint and select New SQL query. Run the six 
 
 If tables are absent, check completion of Notebook 01 in Chapter 5 and Notebook 05 in Chapter 11, SQL endpoint synchronization and the selected Lakehouse. If CREATE VIEW permission is missing, request permission or execution of the blocks from that Lakehouse's administrator. A view name alone does not establish completion.
 
-File to run: workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_donation_detail.sql
+File to run: workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_donation_detail.sql
 
 **SQL**
 
@@ -244,7 +244,7 @@ JOIN dbo.ot_gift AS g ON g.GiftId = d.GiftId
 JOIN dbo.ot_gift_category AS c ON c.CategoryId = g.CategoryId
 ```
 
-File to run: workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_donor_catalog_supplier.sql
+File to run: workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_donor_catalog_supplier.sql
 
 **SQL**
 
@@ -281,7 +281,7 @@ FROM (
 ) AS pairs
 ```
 
-File to run: workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_municipality_snapshot.sql
+File to run: workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_municipality_snapshot.sql
 
 **SQL**
 
@@ -300,7 +300,7 @@ FROM dbo.ot_municipality AS m
 JOIN dbo.ot_prefecture AS p ON p.PrefectureId = m.PrefectureId
 ```
 
-File to run: workshop/v3.0.0-preview/data-agent/candidates/source-grounded/views/agent_supplier_catalog.sql
+File to run: workshop\v3.0.0-preview\data-agent\candidates\source-grounded\views\agent_supplier_catalog.sql
 
 **SQL**
 
@@ -324,7 +324,7 @@ JOIN dbo.ot_gift AS g ON g.GiftId = sg.GiftId
 JOIN dbo.ot_gift_category AS c ON c.CategoryId = g.CategoryId
 ```
 
-File to run: workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_relationship_dictionary.sql
+File to run: workshop\v3.0.0-preview\data-agent\candidates\complete-contract\views\agent_relationship_dictionary.sql
 
 **SQL**
 
@@ -350,7 +350,7 @@ UNION ALL SELECT 'ResidencePrefHasFlow','Prefecture','PrefectureDonationFlow'
 UNION ALL SELECT 'FlowToRecipientPref','PrefectureDonationFlow','Prefecture'
 ```
 
-File to run: workshop/v3.0.0-preview/data-agent/candidates/complete-contract/views/agent_prefecture_category_metric.sql
+File to run: workshop\v3.0.0-preview\data-agent\candidates\complete-contract\views\agent_prefecture_category_metric.sql
 
 **SQL**
 

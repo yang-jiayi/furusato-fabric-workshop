@@ -39,7 +39,7 @@ ROW(
 [受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
 ```
 
-5. 主 Ontology（ONT_Furusato_&lt;PID&gt;）の Metrics が設定済みかを確認します。設定されている場合だけ、各 Metric の Source、Applies to、View expression を Semantic model の定義と比べます。表示例は画面の読み方を示し、現在の配置の完了を証明するものではありません。
+5. 講師によるnative事前設定の前提を確認し、主 Ontology（ONT_Furusato_&lt;PID&gt;）の Metrics が設定済みで利用可能かを実画面で確認します。前提が満たされた場合だけ、各 Metric の Source、Applies to、View expression を Semantic model の定義と比べます。表示例は画面の読み方を示し、現在の配置や実行の完了を証明するものではありません。
 
 ![「寄附」の Metrics 表。10 metrics と、Metric name・Source・Result type・Description の列に、受入増分寄附件数などのメジャー](../assets/p30-12-metric-list.png)
 
@@ -87,7 +87,7 @@ ROW(
 [受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
 ```
 
-5. Check whether Metrics are configured on the main ontology (ONT_Furusato_&lt;PID&gt;). Only when configured, compare each metric's Source, Applies to and View expression with the semantic model definitions. The illustrations explain the screen; they do not establish completion of the current deployment.
+5. Confirm the instructor-provisioned native setup prerequisite, then inspect the actual main ontology (ONT_Furusato_&lt;PID&gt;) for configured, available Metrics. Only when that prerequisite is met, compare each metric's Source, Applies to and View expression with the semantic model definitions. The illustrations explain the screen; they do not establish completion of the current deployment or execution.
 
 ![Metrics table of the 寄附 entity: 10 metrics with Metric name, Source, Result type and Description columns.](../assets/p30-12-metric-list.png)
 

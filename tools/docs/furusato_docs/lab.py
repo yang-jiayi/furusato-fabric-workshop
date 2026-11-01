@@ -156,7 +156,7 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
               "conditions": sum(len(test.evidence) + len(test.pass_criteria) for test in tests)}
     if counts["conditions"] != 84:
         raise ValueError("Original evaluation conditions changed")
-    metadata = {"version": (root / "WORKSHOP_VERSION").read_text().strip(), "counts": counts,
+    metadata = {"version": (root / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip(), "counts": counts,
                 "participantEdition": True, "delivery": "html-lab", "contentSha256": digest(asdict(document)),
                 "participantFigures": composition["figures"], "participantEvaluation": composition["evaluation"],
                 "currentArtifactSet": binding, "currentDeliveryChanges": changes,
@@ -353,7 +353,7 @@ def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
         path = (out / page['path']).resolve()
         if not path.is_relative_to(out):
             raise ValueError('Lab page path escapes output')
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         if not text.count('<details>') == text.count('</details>') == 1:
             raise ValueError(path)
         if not len(re.findall('^#{1,2} ', text, re.M)) >= 2:
@@ -393,7 +393,7 @@ def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
         if not original.read_bytes() == local.read_bytes():
             raise ValueError(ident)
     for path in out.rglob('*.md'):
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         if not not re.search('\\bWord\\b|\\.docx|76 PASS|48 PASS|\\bholdout\\b|\\bR8\\b', text, re.I):
             raise ValueError(path)
         in_fence = False

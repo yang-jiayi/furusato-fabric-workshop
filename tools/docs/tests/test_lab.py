@@ -5,6 +5,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path[:0] = [str(ROOT / "tools/docs"), str(ROOT / "tools/html")]
@@ -16,7 +17,7 @@ class LabExportTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.model = lab.load_model(ROOT)
-        cls.temporary = tempfile.TemporaryDirectory(prefix="furusato-lab-test-")
+        cls.temporary = tempfile.TemporaryDirectory(prefix="furusato-lab-test-", dir=ROOT)
         cls.addClassCleanup(cls.temporary.cleanup)
         cls.out = Path(cls.temporary.name) / "Lab"
         cls.receipt = lab.write_lab(ROOT, cls.out, model=cls.model)
@@ -40,13 +41,22 @@ class LabExportTests(unittest.TestCase):
         self.assertGreater(result["canonicalCodeAndPromptBlocksChecked"], 100)
         self.assertFalse(result["newDeploymentCaptureClaimed"])
 
+    def test_profile_paths_are_platform_independent(self):
+        chapter=self.out/'17-fabric-data-agent-and-code-interpreter'
+        prefix='workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015'
+        start=(chapter/'06-17-5-start-here-materials-and-order.md').read_text(encoding='utf-8')
+        instructions=(chapter/'10-17-9-agent-wide-answer-policy-complete-instructions.md').read_text(encoding='utf-8')
+        self.assertIn(prefix,start)
+        self.assertIn(prefix+'/global-instructions.txt',instructions)
+        self.assertNotIn(prefix.replace('/','\\'),start+instructions)
+
     def test_omitted_japanese_step_is_rejected(self):
         page = next(p for p in self.receipt["pagesCoverage"] if p["section"] == "ch-4-2")
         path = self.out / page["path"]
         block = next(s for s in self.model[0].walk() if s.ident == "ch-4-2").blocks[0]
         text = lab.prose(block["items"][0], "ja", "test")
-        self.assertIn(text, path.read_text())
-        self.mutate(path, path.read_text().replace(text, "", 1).encode())
+        self.assertIn(text, path.read_text(encoding="utf-8"))
+        self.mutate(path, path.read_text(encoding="utf-8").replace(text, "", 1).encode())
         with self.assertRaises(ValueError):
             self.validate()
 
@@ -55,7 +65,7 @@ class LabExportTests(unittest.TestCase):
         path = self.out / page["path"]
         blocks = {f"{s.ident}:{i}": b for s in self.model[0].walk() for i, b in enumerate(s.blocks)}
         block = next(blocks[ident] for ident in page["sourceBlockIds"] if blocks[ident].kind == "code")
-        changed = path.read_text().replace(block["text"], "CHANGED COMMAND", 2)
+        changed = path.read_text(encoding="utf-8").replace(block["text"], "CHANGED COMMAND", 2)
         self.mutate(path, changed.encode())
         with self.assertRaises(ValueError):
             self.validate()
@@ -69,8 +79,8 @@ class LabExportTests(unittest.TestCase):
 
     def test_broken_navigation_is_rejected(self):
         path = self.out / "README.md"
-        changed = path.read_text().replace("/README.md)", "/missing.md)", 1)
-        self.assertNotEqual(changed, path.read_text())
+        changed = path.read_text(encoding="utf-8").replace("/README.md)", "/missing.md)", 1)
+        self.assertNotEqual(changed, path.read_text(encoding="utf-8"))
         self.mutate(path, changed.encode())
         with self.assertRaises(ValueError):
             self.validate()
@@ -80,6 +90,18 @@ class LabExportTests(unittest.TestCase):
         self.mutate(path, path.read_bytes() + b"\nDownload the Word guide.\n")
         with self.assertRaises(ValueError):
             self.validate()
+
+    def test_bilingual_validation_uses_explicit_utf8(self):
+        read_text = Path.read_text
+
+        def read_utf8(path, *args, **kwargs):
+            self.assertEqual("utf-8", kwargs.get("encoding"))
+            return read_text(path, *args, **kwargs)
+
+        with patch.object(Path, "read_text", read_utf8):
+            result = self.validate()
+        self.assertEqual("passed", result["status"])
+        self.assertGreater(result["bilingualTextValuesChecked"], 0)
 
 
 if __name__ == "__main__":

@@ -1,11 +1,17 @@
 """Participant captions for screenshots (Japanese, English).
 
-Keys are capture IDs from docs/assets/v3.0.0-evidence/manifest.json. Each image was reviewed for
+Keys are capture IDs from the v3.0.0-evidence and v3.0.0-participant asset manifests. Each image was reviewed for
 what it shows, privacy and agreement with the steps; images that show history, failed states or
 internal notes are not used.
 """
 
 FIGURES = {
+    'pc-04-workspace-type-current': {
+        'caption': ('2026-11-01 に対象ワークスペースで取得・確認した Settings → Workspace type の実画面。Fabric、F16、West US 2 を示す現在のUIでの事前確認の例です。F16 はこの例の容量であり、最低要件ではありません。Capacity ID は伏せています。配置後の成功証拠ではありません。参加者は表示を確認するだけで、Edit を押さず設定を変更しません。',
+                    'Actual Settings → Workspace type screen captured and reviewed in the requested workspace on 2026-11-01. This current-UI preflight example shows Fabric, F16 and West US 2. F16 is the example capacity, not a minimum requirement. Capacity ID is redacted. This is not post-deployment evidence. Participants only inspect the display; do not click Edit or change settings.'),
+        'alt': ('Workspace type 設定の実画面。現在の種類は Fabric、SKU は F16、リージョンは West US 2、Capacity ID は redacted。Edit ボタンは操作しない。',
+                'Actual Workspace type settings showing Fabric, SKU F16, region West US 2 and a redacted Capacity ID. The Edit button is not to be used.'),
+    },
     'pc-17-published-kql-examples': {
         'caption': ('Published の Data Agent で、Setup から KQL Database の Example queries を選んだ画面です。Showing 9 items と最初の UTC 用の質問・KQL が表示されています。これは公開版の登録内容の確認です。9件すべての Valid、クエリの直接実行、Agent の回答とその精度は、それぞれ別に確認します。長い KQL の全文は下記の原文を使います。',
                     'Published Data Agent with Setup → KQL Database → Example queries selected. The screen shows Showing 9 items and the first UTC question/KQL pair. This verifies registered content in the published version. Check all nine Valid statuses, direct query execution, and Agent answers and accuracy separately. Use the complete KQL source below for long queries.'),

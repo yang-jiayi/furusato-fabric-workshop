@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "46c4e44b5f6f477673740b548a46b765cd00e0a4",
+  "sourceCommit": "3e4118fd3c97c3ffcf1f4cd80667613227ec73cc",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "46c6c146958267b251259081c5d493d98819047da69dbd9f0adc7aa65fbed287",
+  "sourceTreeSha256": "5aa3e1b55f28eb3f90131449e54744b75fb152664a3c5039746df1365576419a",
   "candidateSourceSha256": "76a8afd797332d944b4f7db36cb3025d78711d20667fec4a05bacf7207997743",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -264,10 +264,10 @@
     "tools/docs/furusato_docs/oox.py": "7cb5eb525c55da01c53fd44a6241b567134b2e4e35d1866be8baca6bd62c13ef",
     "tools/docs/furusato_docs/parameters.py": "fe95dea7493841ddcd8381c0d388e5e7274458e9127e49934539b1d14f57562b",
     "tools/docs/furusato_docs/participant30.py": "c22a7c0d6276d112793b87cc62407e61bf489fd1535df71121bd04a86c53f24e",
-    "tools/docs/furusato_docs/participant30_deployment.py": "4c5578bfe9f513f37c749babc6b04463a86881b797aafbb80941cebd192d3460",
+    "tools/docs/furusato_docs/participant30_deployment.py": "9766af0c33e816c58532d35b2cb75cc5221c01ddc13811f5b2042e71f62b49cb",
     "tools/docs/furusato_docs/participant30_evaluation.py": "c0d599d9e67a9cfe4dff152b1147062ee81b0bc3adad2bc3fd7766d69cd861fa",
     "tools/docs/furusato_docs/participant30_figures.py": "71e2be35ed66e8fa891db6c8c94e088c7ddbfe1e943a1cf072354b0525885fa7",
-    "tools/docs/furusato_docs/participant30_text.py": "6ae37100a2ef06c9dd41e22e81732a1e5eab1614f22af4586a67217becd23ab6",
+    "tools/docs/furusato_docs/participant30_text.py": "21f22c4f84caf06f3adce75a0d71c5421a5e32e52b0c8965e9b39053ff202c46",
     "tools/docs/furusato_docs/participant30_tuning.py": "d0970a7f7d68aceece5fbc70567d6e7c6c7afc1fd9da8a45e4292e32fdf4a21a",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
     "tools/docs/furusato_docs/participant_word.py": "a530d0b14223209049fd7c5913ea3ad6f99fa9e4d03343514113c8aec5afadfc",
@@ -297,7 +297,7 @@
     "tools/docs/tests/test_ascii_parentheses.py": "f6dbb1e805e0463695723f440955fb0734879d7c6d1a3f3841c029a08aa986f9",
     "tools/docs/tests/test_capture_policy.py": "3ddeda1c7cb793af10e5fc7f1bfef68e7cd714a74a1a4438696f3b8717b0d1aa",
     "tools/docs/tests/test_capture_quality.py": "e1fa7d40222c5cea497f39d0d2c164397ce3aec714931358a0b0d06f1746569d",
-    "tools/docs/tests/test_current_delivery.py": "c6cf4b0b12513538c6cbc4d8fb6f8e327636b47c7947688019ef5c36f177220a",
+    "tools/docs/tests/test_current_delivery.py": "d3a285ade4ffbc56db44e8843be8ff6b4bb90fe0eab3b4217cb36ce004b1665c",
     "tools/docs/tests/test_data_agent_practice_gates.py": "b6295d8bd396d48ea59601886d1a107167283bd67b4421f4f1138e724508cbd5",
     "tools/docs/tests/test_deliverable_editions.py": "ff3311922b77ecfc89c06c78b3423250b7228d9ed4834c1f7122b3871aaf39a5",
     "tools/docs/tests/test_deployment_procedure_content.py": "6cda966d46f4c266b957ac431d46bdcdf8d2fbe4c28055a5d2d24e35c0ae3b35",
@@ -429,7 +429,8 @@
     "tools/provisioning/test_preview30_quality.py": "b14adb106b3749a1ad043f26af1a5cd66f39c27d2007eaa3cbe647458640573d",
     "tools/provisioning/test_preview30_relationships.py": "825fddc62cdc792d72e415d7e7c92365514341e3835eccc97b30a5eb02356fe1",
     "tools/provisioning/test_preview30_released_package.py": "f1ea49cd6e2968b736e3c712907068ce6b13d0614796b01a4b597a30f4fb43f4",
-    "tools/provisioning/test_preview30_runtime.py": "ab655eefb18fc900d8358429b8f17de96afad1e315c209bcb955f73ad6ee2589",
+    "tools/provisioning/test_preview30_runtime.py": "db48c800258351546b304021b239a05ea073340c70eef69722997a442b1417e5",
+    "tools/provisioning/test_preview30_verify.py": "108bdc31545218ee00d5bd6617017a4fde2dfe2ea2bb4bc38b936d7ee81c5af2",
     "tools/provisioning/test_reference_architecture.py": "09c29db857fe7ebf6b829258908390085bc312ef94663d17ce87357aac098a89",
     "tools/provisioning/test_reference_kql.py": "28f7dbf136d977b3651bea678cf9bbefab67f97d1746df4a4d6f0619844b5250",
     "tools/provisioning/test_reference_packaging.py": "69f0cd7e2b35a38f33dd68eb3669f126540a112a17db09024be18bed360b3bce",
@@ -967,9 +968,9 @@
     "lab": "Lab/README.md"
   },
   "documentationSourceRevision": {
-    "baseCommit": "46c4e44b5f6f477673740b548a46b765cd00e0a4",
+    "baseCommit": "3e4118fd3c97c3ffcf1f4cd80667613227ec73cc",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "46c6c146958267b251259081c5d493d98819047da69dbd9f0adc7aa65fbed287"
+    "sourceTreeSha256": "5aa3e1b55f28eb3f90131449e54744b75fb152664a3c5039746df1365576419a"
   }
 }

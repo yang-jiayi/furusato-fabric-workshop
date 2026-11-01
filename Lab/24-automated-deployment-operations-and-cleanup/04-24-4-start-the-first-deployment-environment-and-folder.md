@@ -6,7 +6,7 @@
 
 管理者から利用可能な Fabric ワークスペース、容量と必要な機能、読み取り・作成・編集の権限を用意してもらいます。これは組織のアクセス設定です。Pipeline、Activator、Semantic model を講師に作ってもらう必要はなく、以下のコマンドで自分の範囲へ配置します。ワークスペースの権限で許可された空の作業フォルダーと、他の参加者と重ならない001〜999の参加者IDを使います。容量の一覧を読めないなどの権限エラーは、権限を管理者に確認してから再開します。
 
-配布元の docs/v3.0.0/current にある SHA256SUMS.txt と同じ版のZIPを受け取り、展開前にZIPのSHA-256を照合します。PowerShellでは次のパスを自分のダウンロード先に変更します。表示されたハッシュが配布元の同じファイル名の値と一致してから展開します。ZIP内だけのハッシュを外部の配布確認の代わりにしません。
+配布元の docs/v3.1.0/current にある SHA256SUMS.txt と同じ版のZIPを受け取り、展開前にZIPのSHA-256を照合します。PowerShellでは次のパスを自分のダウンロード先に変更します。表示されたハッシュが配布元の同じファイル名の値と一致してから展開します。ZIP内だけのハッシュを外部の配布確認の代わりにしません。
 
 **PowerShell**
 
@@ -68,7 +68,7 @@ For your first workshop, start here after the checks in Chapter 4. Create the co
 
 Your administrator must provide an available Fabric workspace, capacity, required features and permission to read, create and edit resources. These are organizational access prerequisites. You do not need an instructor to create the Pipeline, Activator or semantic model; the commands below deploy them in your scope. Use an authorized empty folder and a participant ID from 001 to 999 that is distinct from other participants. If access fails, including capacity-list access, resolve it with the administrator before continuing.
 
-Obtain the ZIP and its matching SHA256SUMS.txt from docs/v3.0.0/current at the distribution source. Before extraction, verify the ZIP SHA-256. Change the path below to your download location and compare the output with the same filename in the distributor’s checksum list. Do not substitute a checksum found only inside the ZIP for this external check.
+Obtain the ZIP and its matching SHA256SUMS.txt from docs/v3.1.0/current at the distribution source. Before extraction, verify the ZIP SHA-256. Change the path below to your download location and compare the output with the same filename in the distributor’s checksum list. Do not substitute a checksum found only inside the ZIP for this external check.
 
 **PowerShell**
 

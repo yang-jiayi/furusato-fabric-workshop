@@ -10,7 +10,7 @@ Notebook 02〜04 は自動配置の別インターフェイスです。標準経
 
 | Notebook | パラメーター | 既定値 | 意味 |
 | --- | --- | --- | --- |
-| Notebook 01 | NOTEBOOK_VERSION | '3.1.0' | Notebook の配布版（3.0.0）。出力の READY の行に記録されます。変更しません。 |
+| Notebook 01 | NOTEBOOK_VERSION | '3.1.0' | Notebook の配布版。既定値は同じ表の NOTEBOOK_VERSION を確認します。出力の READY の行に記録されます。変更しません。 |
 | Notebook 01 | PARTICIPANT_ID | '001' | 自分の3桁の参加者ID（001〜999）。アイテム名や対象の特定に使います。既定の 001 が自分の ID でなければ、そのまま実行しません。 |
 | Notebook 01 | INPUT_DIR | 'Files/furusato/seed' | 静的データの8つの CSV を読む Lakehouse のフォルダー（Files/furusato/seed）。変更しません。 |
 | Notebook 01 | RUN_OPTIMIZE_VORDER | False | 書き込み後の最適化の要求。False のままにします。 |
@@ -88,7 +88,7 @@ Notebooks 02–04 are alternative interfaces to automated deployment. The standa
 
 | Notebook | Parameter | Default | Meaning |
 | --- | --- | --- | --- |
-| Notebook 01 | NOTEBOOK_VERSION | '3.1.0' | Distributed Notebook edition (3.0.0), recorded in the READY output line. Do not change it. |
+| Notebook 01 | NOTEBOOK_VERSION | '3.1.0' | Distributed Notebook edition; use the NOTEBOOK_VERSION default in this table. It is recorded in the READY output line. Do not change it. |
 | Notebook 01 | PARTICIPANT_ID | '001' | Your three-digit participant ID (001–999), used to name and identify items. Do not run with the default 001 unless it is your ID. |
 | Notebook 01 | INPUT_DIR | 'Files/furusato/seed' | Lakehouse folder from which the eight static-data CSV files are read (Files/furusato/seed). Do not change it. |
 | Notebook 01 | RUN_OPTIMIZE_VORDER | False | Request for optimization after writing. Leave it False. |

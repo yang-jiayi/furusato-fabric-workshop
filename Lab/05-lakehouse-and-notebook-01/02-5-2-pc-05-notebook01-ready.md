@@ -7,7 +7,7 @@
 3. アップロードしたファイルのサイズを data フォルダーの dataset-manifest.json と比べ、8ファイルがそろっていることを確認します。
 4. Notebook 01 を作業フォルダーにインポートし、LH_Furusato_&lt;PID&gt; を接続（attach）します。
 5. 先頭のパラメーターセルで PARTICIPANT_ID を自分の &lt;PID&gt; に変更します。ほかの値は変更しません（INPUT_DIR は "Files/furusato/seed" のままにします）。
-6. すべてのセルを先頭から順に実行します（Run all）。最後に「READY: Furusato ontology data v3.0.0」で始まる行と、20テーブルの確認が出力されれば完了です。
+6. すべてのセルを先頭から順に実行します（Run all）。最後に「READY: Furusato ontology data v」に NOTEBOOK_VERSION の値が続く行と、20テーブルの確認が出力されれば完了です。
 
 ![Notebook 01 の最終コードセルと成功のチェック、READY v3.0.0・20テーブルの検査完了・利用前の再確認を示す実行出力。](../assets/pc-05-notebook01-ready.png)
 
@@ -23,7 +23,7 @@ Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 loa
 3. Compare the uploaded file sizes with dataset-manifest.json in the data folder and confirm that all eight files are present.
 4. Import Notebook 01 into your work folder and attach LH_Furusato_&lt;PID&gt;.
 5. In the first parameter cell, change PARTICIPANT_ID to your &lt;PID&gt;. Leave all other values unchanged (INPUT_DIR stays "Files/furusato/seed").
-6. Run all cells from the top (Run all). It is complete when the output ends with a line starting "READY: Furusato ontology data v3.0.0" and a confirmation for all 20 tables.
+6. Run all cells from the top (Run all). It is complete when the output ends with "READY: Furusato ontology data v" followed by the NOTEBOOK_VERSION value and a confirmation for all 20 tables.
 
 ![Notebook 01 final code cell with a successful execution tick and output showing READY v3.0.0, checks for 20 tables, and the consumer recheck warning.](../assets/pc-05-notebook01-ready.png)
 

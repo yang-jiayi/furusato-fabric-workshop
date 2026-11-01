@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "91dfea01eadd386f861300d95e8c5a24bb1730df",
+  "sourceCommit": "1a467f64ef7d00c24819ee7c3fd3edd1869b718c",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "48a4db97c40b9aee70a2c7107f0c996595f24b3856009dc39b6a97f9aa2952a0",
+  "sourceTreeSha256": "1a5a066fd006f7948bae03feb7ea1d628006ff29616bb27340f49830e40608b6",
   "candidateSourceSha256": "76a8afd797332d944b4f7db36cb3025d78711d20667fec4a05bacf7207997743",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -266,7 +266,7 @@
     "tools/docs/furusato_docs/oox.py": "7cb5eb525c55da01c53fd44a6241b567134b2e4e35d1866be8baca6bd62c13ef",
     "tools/docs/furusato_docs/parameters.py": "fe95dea7493841ddcd8381c0d388e5e7274458e9127e49934539b1d14f57562b",
     "tools/docs/furusato_docs/participant30.py": "75c7a19ff711d33e1bebc3c35ba4c819348d88618f681412e378a82b0a9c0fcb",
-    "tools/docs/furusato_docs/participant30_deployment.py": "130f990244c59573f1bec0fa9ce3b00236cb72e4131d713919cbd3434791d09d",
+    "tools/docs/furusato_docs/participant30_deployment.py": "6605d9a284bcb4e7bb0745a0e632e56640078fa481da1dfa89731ee85a00acb2",
     "tools/docs/furusato_docs/participant30_evaluation.py": "c0d599d9e67a9cfe4dff152b1147062ee81b0bc3adad2bc3fd7766d69cd861fa",
     "tools/docs/furusato_docs/participant30_figures.py": "71e2be35ed66e8fa891db6c8c94e088c7ddbfe1e943a1cf072354b0525885fa7",
     "tools/docs/furusato_docs/participant30_text.py": "21f22c4f84caf06f3adce75a0d71c5421a5e32e52b0c8965e9b39053ff202c46",
@@ -301,7 +301,7 @@
     "tools/docs/tests/test_capture_policy.py": "3ddeda1c7cb793af10e5fc7f1bfef68e7cd714a74a1a4438696f3b8717b0d1aa",
     "tools/docs/tests/test_capture_quality.py": "e1fa7d40222c5cea497f39d0d2c164397ce3aec714931358a0b0d06f1746569d",
     "tools/docs/tests/test_current_delivery.py": "2598701785d1692cffa28b70ef865b707740af2f81fe641efbc65ca24f656410",
-    "tools/docs/tests/test_current_profile_guide.py": "67fc2af0b889605c90011d3e1b9afd08be82a24e967cf8148408b6546d98f1b3",
+    "tools/docs/tests/test_current_profile_guide.py": "96531bd2189836b969469c78365840b9dcba47fd4904393c167dea04cf65c924",
     "tools/docs/tests/test_data_agent_practice_gates.py": "b6295d8bd396d48ea59601886d1a107167283bd67b4421f4f1138e724508cbd5",
     "tools/docs/tests/test_deliverable_editions.py": "ff3311922b77ecfc89c06c78b3423250b7228d9ed4834c1f7122b3871aaf39a5",
     "tools/docs/tests/test_deployment_procedure_content.py": "6cda966d46f4c266b957ac431d46bdcdf8d2fbe4c28055a5d2d24e35c0ae3b35",
@@ -983,9 +983,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "91dfea01eadd386f861300d95e8c5a24bb1730df",
-    "workingTreeMatchesCommit": false,
+    "baseCommit": "1a467f64ef7d00c24819ee7c3fd3edd1869b718c",
+    "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "48a4db97c40b9aee70a2c7107f0c996595f24b3856009dc39b6a97f9aa2952a0"
+    "sourceTreeSha256": "1a5a066fd006f7948bae03feb7ea1d628006ff29616bb27340f49830e40608b6"
   }
 }

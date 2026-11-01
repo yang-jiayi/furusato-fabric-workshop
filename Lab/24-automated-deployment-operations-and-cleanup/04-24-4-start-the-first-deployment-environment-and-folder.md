@@ -23,7 +23,7 @@ winget install --exact --id Python.Python.3.11
 winget install --exact --id Microsoft.AzureCLI
 ```
 
-最初のパスを自分の展開先へ変更します。以後は ZIP の source フォルダーが作業場所です。配布済みの定義・Notebook・CSV は編集せず、そのまま使います。配置の途中で新しい版へ入れ替えません。既に17.16で同じ仮想環境を用意した場合は、その環境を使います。
+最初のパスを自分の展開先へ変更します。以後は ZIP の source フォルダーが作業場所です。配布済みの定義・Notebook・CSV は編集せず、そのまま使います。配置の途中で新しい版へ入れ替えません。
 
 **PowerShell**
 
@@ -85,7 +85,7 @@ winget install --exact --id Python.Python.3.11
 winget install --exact --id Microsoft.AzureCLI
 ```
 
-Change the first path to your extracted directory. Work from the ZIP's source folder. Use the distributed definitions, Notebooks and CSVs without editing them, and do not switch versions during deployment. If you already prepared the same virtual environment in 17.16, reuse it.
+Change the first path to your extracted directory. Work from the ZIP's source folder. Use the distributed definitions, Notebooks and CSVs without editing them, and do not switch versions during deployment.
 
 **PowerShell**
 

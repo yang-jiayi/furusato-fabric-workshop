@@ -1,7 +1,7 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "5dd6a969537bbde7323a956fb56646006753d0af455e6a53532183f76a633816",
+  "contentSha256": "3cd11c074978bb00c6fb97d69100a272e170b9968147962940db234e4ce41c57",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
@@ -12,18 +12,18 @@
     "figures": 34,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "230576c701d103781bb6af60e8914e31b20712e285754709762f41656a1d0dc6"
+    "htmlSha256": "dec5f75654ab77364e56e8fec6e7c5265a70458657826bcbd259119c675ab443"
   },
   "sourceRevision": {
-    "baseCommit": "91dfea01eadd386f861300d95e8c5a24bb1730df",
-    "workingTreeMatchesCommit": false,
+    "baseCommit": "1a467f64ef7d00c24819ee7c3fd3edd1869b718c",
+    "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "48a4db97c40b9aee70a2c7107f0c996595f24b3856009dc39b6a97f9aa2952a0"
+    "sourceTreeSha256": "1a5a066fd006f7948bae03feb7ea1d628006ff29616bb27340f49830e40608b6"
   },
   "currentArtifactSet": {
-    "manifestSha256": "a819dd407cebfb59139a753b66731ba0bb3b34f408319e7c0d2b302262315deb",
-    "sourceCommit": "91dfea01eadd386f861300d95e8c5a24bb1730df",
-    "sourceTreeSha256": "48a4db97c40b9aee70a2c7107f0c996595f24b3856009dc39b6a97f9aa2952a0",
+    "manifestSha256": "eed2586083e64c5468b4f5468541c52bcfd21fd534253cdf31f388ff6160cae2",
+    "sourceCommit": "1a467f64ef7d00c24819ee7c3fd3edd1869b718c",
+    "sourceTreeSha256": "1a5a066fd006f7948bae03feb7ea1d628006ff29616bb27340f49830e40608b6",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "230576c701d103781bb6af60e8914e31b20712e285754709762f41656a1d0dc6",
+    "htmlSha256": "dec5f75654ab77364e56e8fec6e7c5265a70458657826bcbd259119c675ab443",
     "checks": [
       "all29chaptersAndAppendices",
       "ja.languagePersists",

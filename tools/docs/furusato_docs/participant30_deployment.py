@@ -22,7 +22,7 @@ def _stage(command, *, read_only=False, extra=""):
                  'if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }', "PowerShell")
 
 
-def append_deployment_sections(chapter: Section, root: Path):
+def append_deployment_sections(chapter: Section, root: Path, *, current_profile=False):
     if chapter.chapter != 24:
         raise ValueError("Participant core deployment belongs to Chapter 24")
     publication = current_publication(root)
@@ -96,7 +96,13 @@ def append_deployment_sections(chapter: Section, root: Path):
         _paragraph("同じフォルダーに Data Agent を1件作り、初期構成を公開します。Lakehouse、KQL Database、主 Ontology、Semantic model と Code Interpreter の配置を読み戻します。初期公開の完了は、今回の調整済みプロファイルの適用や回答品質の合格ではありません。", "Create one Data Agent in the same folder and publish its initial configuration. Read back the Lakehouse, KQL database, main ontology, semantic model and Code Interpreter configuration. Initial publication does not establish application of the adopted tuned profile or passing answer quality."),
         _stage("deploy-agent"),
         _stage("publish-agent"),
-        _paragraph("ここで初回配置は完了です。12〜13章の確認を終え、17.5から6つの SQL ビューと選択、9例の直接実行を確認して、17.16で measured-contract-20261015 を同じ Agent に適用・公開・読み戻します。配置の記録フォルダーと、17章のプロファイル適用記録フォルダーは別に保持します。", "The initial deployment is complete. Finish the Chapter 12–13 checks, then start at 17.5 to prepare six SQL views, selections and direct execution of nine examples. Use 17.16 to apply, publish and read back measured-contract-20261015 on the same agent. Retain separate record folders for resource deployment and Chapter 17 profile application."),
+        _paragraph(
+            "ここで初回配置は完了です。12〜13章の確認を終え、17.5以降で同じ Agent に実験用 current profile を適用・公開・読み戻します。設定の読み戻しは回答精度の採用を意味しません。配置とプロファイル適用の記録は別に保持します。",
+            "The initial deployment is complete. Finish the Chapter 12–13 checks, then use Chapter 17.5 onward to apply, publish and read back the experimental current profile on the same agent. Configuration readback does not mean answer accuracy has been accepted. Keep deployment and profile-application records separate.",
+        ) if current_profile else _paragraph(
+            "ここで初回配置は完了です。12〜13章の確認を終え、17.5から6つの SQL ビューと選択、9例の直接実行を確認して、17.16で measured-contract-20261015 を同じ Agent に適用・公開・読み戻します。配置の記録フォルダーと、17章のプロファイル適用記録フォルダーは別に保持します。",
+            "The initial deployment is complete. Finish the Chapter 12–13 checks, then start at 17.5 to prepare six SQL views, selections and direct execution of nine examples. Use 17.16 to apply, publish and read back measured-contract-20261015 on the same agent. Retain separate record folders for resource deployment and Chapter 17 profile application.",
+        ),
     ])
     _append(chapter, 9, ("途中で止まった場合と完了確認", "Stops, recovery and completion checks"), [
         _table([("状況", "Situation"), ("次の操作", "Next action")], [

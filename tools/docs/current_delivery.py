@@ -45,6 +45,7 @@ NEW_AUTHORING_FILES = {
 }
 DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg','.pdf'}
 PRIVATE_NAMES = {'storage-state.json','cookies.json','credentials.json','msal_token_cache.json','msal_token_cache.bin'}
+CURRENT_PROFILE_DIR = 'workshop/v3.0.0-preview/data-agent/profiles/current-experimental'
 
 
 def digest(value):
@@ -86,12 +87,33 @@ def approved_doc_files(root, tracked):
     return names
 
 
+def current_profile_files(root):
+    profile = root / CURRENT_PROFILE_DIR
+    manifest_path = profile / 'profile-manifest.json'
+    manifest = json.loads(manifest_path.read_bytes())
+    expected = {'global-instructions.txt', 'source-instructions.json', 'selection-contract.json',
+                'definition/stage_config.json', 'definition/lakehouse_tables.json',
+                'definition/kusto.json', 'definition/semantic_model.json', 'definition/ontology.json'}
+    if (manifest.get('profile') != 'current-experimental' or manifest.get('status') != 'experimental'
+            or manifest.get('answerAccuracyAccepted') is not False
+            or set(manifest.get('sha256', {})) != expected):
+        raise ValueError('Unknown or incomplete current experimental profile.')
+    for name in expected:
+        path = profile / name
+        if path.is_symlink() or digest(path.read_bytes()) != manifest['sha256'][name]:
+            raise ValueError('Current experimental profile hash mismatch: ' + name)
+    if manifest_path.is_symlink():
+        raise ValueError('Current profile manifest must not be a symlink.')
+    return {CURRENT_PROFILE_DIR + '/' + name for name in expected | {'profile-manifest.json'}}
+
+
 def current_source_manifest(root):
     """Freeze a bounded actual source inventory before composing either guide."""
     manifest=v3_artifacts.snapshot()
     tracked=set(subprocess.check_output(['git','-C',str(root),'ls-files','-z']).decode().split('\0'))
     names={name for name in manifest['files'] if not name.startswith('docs/') and not name.endswith('.docx')}
     names.update(runtime.RUNTIME_INPUT_FILES)
+    names.update(current_profile_files(root))
     names.add('workshop/v3.0.0-preview/provisioning/baseline-hashes.json')
     names.add('tools/provisioning/unified_agent.py')
     # Public CLI helpers load adjacent schemas, SQL and evaluation resources.
@@ -108,7 +130,9 @@ def current_source_manifest(root):
     names.update(approved_doc_files(root,tracked))
     manifest['files']={name:digest((root/name).read_bytes()) for name in sorted(names)}
     manifest['sourceTreeSha256']=runtime.digest(manifest['files'])
-    manifest['documentationBinding']={'deliveryMode':'html-lab','guide':'guide/'+HTML_NAME,'lab':'Lab/README.md'}
+    manifest['documentationBinding']={'deliveryMode':'html-lab','guide':'guide/'+HTML_NAME,'lab':'Lab/README.md',
+                                      'experimentalAgentProfile':CURRENT_PROFILE_DIR,
+                                      'agentAnswerQualityAccepted':False}
     manifest['documentationSourceRevision']=source_revision(root,manifest)
     return manifest
 

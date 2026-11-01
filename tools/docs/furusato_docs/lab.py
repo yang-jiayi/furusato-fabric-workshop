@@ -74,8 +74,8 @@ def current_text(value, language, block_id, changes=None):
     return text
 
 
-def prose(value, language, block_id, *, table=False):
-    text = current_text(value, language, block_id)
+def prose(value, language, block_id, *, table=False, canonical=False):
+    text = value.get(language) if canonical and isinstance(value, Text) else current_text(value, language, block_id)
     text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
     if table:
         text = text.replace('|', '&#124;').replace('\n', '<br>')
@@ -121,7 +121,8 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
                       Text(f"付録 {letter} {v[0]}", f"Appendix {letter} {v[1]}"), appendix=letter)
               for letter, v in APPENDIX_TITLES.items()]
     composition = compose(roots, root=root, context=context, facts=facts, tests=tests,
-                          evidence=evidence, manifest=manifest, legacy_original={})
+                          evidence=evidence, manifest=manifest, legacy_original={},
+                          current_profile=True)
     from .lab_clients import append_sections
     append_sections(next(section for section in roots if section.chapter == 24))
     changes = []
@@ -224,10 +225,11 @@ class LabWriter:
             # Prompts are canonical literal source text: do not translate or rewrite.
             return fence(block['text'].get(language))
         if kind == 'table':
-            headers = [p(value, table=True) for value in block['headers']]
+            canonical = bool(block.get('canonicalLiteral'))
+            headers = [p(value, table=True, canonical=canonical) for value in block['headers']]
             rows = ['| ' + ' | '.join(headers) + ' |', '| ' + ' | '.join('---' for _ in headers) + ' |']
-            rows += ['| ' + ' | '.join(p(cell, table=True) for cell in row) + ' |' for row in block['rows']]
-            return '**' + p(block['caption']) + '**\n\n' + '\n'.join(rows) + '\n'
+            rows += ['| ' + ' | '.join(p(cell, table=True, canonical=canonical) for cell in row) + ' |' for row in block['rows']]
+            return '**' + p(block['caption'], canonical=canonical) + '**\n\n' + '\n'.join(rows) + '\n'
         if kind == 'figure':
             image = self.asset(block)
             alt = p(block['alt']).replace('[', '\\[').replace(']', '\\]')
@@ -376,7 +378,13 @@ def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
                 checked_literals += 1
             for value in values(block):
                 for lang in ('ja', 'en'):
-                    wanted = prose(value, lang, ident, table=block.kind == 'table')
+                    wanted = prose(
+                        value,
+                        lang,
+                        ident,
+                        table=block.kind == 'table',
+                        canonical=bool(block.get('canonicalLiteral')),
+                    )
                     if block.kind == 'figure':
                         wanted = wanted.replace('[', '\\[').replace(']', '\\]')
                     if not same_space(wanted) in same_space(text):
@@ -394,9 +402,21 @@ def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
             raise ValueError('Lab validation failed')
         if not original.read_bytes() == local.read_bytes():
             raise ValueError(ident)
+    literal_writer = LabWriter(root, out, context, evidence)
     for path in out.rglob('*.md'):
         text = path.read_text(encoding="utf-8")
-        if not not re.search('\\bWord\\b|\\.docx|76 PASS|48 PASS|\\bholdout\\b|\\bR8\\b', text, re.I):
+        prose_text = text
+        page = next((entry for entry in receipt['pagesCoverage']
+                     if (out / entry['path']).resolve() == path.resolve()), None)
+        if page:
+            for ident in page['sourceBlockIds']:
+                block = source[ident]
+                if block.get('canonicalLiteral'):
+                    for language in ('ja', 'en'):
+                        prose_text = prose_text.replace(
+                            literal_writer.render_block(block, language, ident), ''
+                        )
+        if not not re.search('\\bWord\\b|\\.docx|76 PASS|48 PASS|\\bholdout\\b|\\bR8\\b', prose_text, re.I):
             raise ValueError(path)
         in_fence = False
         fence_len = 0

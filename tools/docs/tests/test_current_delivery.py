@@ -21,6 +21,19 @@ from furusato_html.model import Section, Text
 
 
 class CurrentDeliveryTests(unittest.TestCase):
+    def test_exact_experimental_profile_inputs_are_bound_in_current_package(self):
+        files=delivery.current_profile_files(ROOT)
+        self.assertEqual(len(files),9)
+        self.assertTrue(all(name.startswith(delivery.CURRENT_PROFILE_DIR+'/') for name in files))
+        self.assertIn(delivery.CURRENT_PROFILE_DIR+'/global-instructions.txt',files)
+        with tempfile.TemporaryDirectory() as temp:
+            import shutil
+            root=Path(temp)
+            shutil.copytree(ROOT/delivery.CURRENT_PROFILE_DIR,root/delivery.CURRENT_PROFILE_DIR)
+            (root/delivery.CURRENT_PROFILE_DIR/'global-instructions.txt').write_text('drift',encoding='utf-8')
+            with self.assertRaisesRegex(ValueError,'profile hash mismatch'):
+                delivery.current_profile_files(root)
+
     def test_participant_checksums_and_notebook_help_follow_current_edition(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

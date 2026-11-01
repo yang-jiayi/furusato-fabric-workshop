@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "profile": "current-experimental",
+  "status": "experimental",
+  "answerAccuracyAccepted": false,
+  "instructionUtf16Units": 9422,
+  "instructionLimitUtf16Units": 10000,
+  "logicalSources": 4,
+  "directSources": 3,
+  "nativeOntologyContexts": 1,
+  "definitionFewshotFiles": 0,
+  "requiredActiveExamples": 0,
+  "sourcePublishedCanonicalSha256": "20c767cc09bfe1a104627adba120f4edf3a35e8f1b360a823b7f214abe5c8be2",
+  "sourceCandidateCanonicalSha256": "ae3b9b49f88256a9b0d84da4bd3cfbcef58c553c8df06eea270f8b4cd5c42499",
+  "counts": {
+    "kusto": {
+      "kusto": 1,
+      "kusto.column": 10,
+      "kusto.table": 1
+    },
+    "lakehouse_tables": {
+      "lakehouse_tables.column": 88,
+      "lakehouse_tables.schema": 1,
+      "lakehouse_tables.table": 11,
+      "schema_grouping": 1,
+      "table_grouping": 1
+    },
+    "ontology": {
+      "ontology.entity": 10
+    },
+    "semantic_model": {
+      "semantic_model.column": 31,
+      "semantic_model.measure": 10,
+      "semantic_model.table": 5
+    }
+  },
+  "sha256": {
+    "definition/kusto.json": "88e50f84c7498de1a581cbcb87ee8be9bd2395706838495df39c36c225c81fbf",
+    "definition/lakehouse_tables.json": "a1c6bbc9242b7e763768d24527c5e7c841f51f61910c17dfe5bade5785c59024",
+    "definition/ontology.json": "76c43099f7df10d812b729de21820a782beccd906d7e9e6d20207d5221956d98",
+    "definition/semantic_model.json": "2e351c5a0fdd61fe103618244631c35d2fbfd7a236c390b848e9cc66b69ee9c5",
+    "definition/stage_config.json": "14a16a98e7c1abbc9b5688f6c361b0bccf651635114d07282a9e47f630bd7bbc",
+    "global-instructions.txt": "324cd04bb69d7f5f1db71aa40119336d781bbfe35e80c4c6f95e4dce1cdefd85",
+    "selection-contract.json": "66941c5ce70e2b5972a3900f0b18adca1f358402720bc145dce19f55e792446b",
+    "source-instructions.json": "c745d4a7ce21d239b3410c364a788e1c4e464f2f8e85dd7c806b2f6f72e4c7d2"
+  }
+}

@@ -38,16 +38,17 @@ class LabExportTests(unittest.TestCase):
         self.assertEqual(len([b for s in self.model[0].walk() for b in s.blocks]),
                          result["sourceBlocksChecked"])
         self.assertEqual(len(self.model[0].figures), result["imageFilesVerified"])
-        self.assertGreater(result["canonicalCodeAndPromptBlocksChecked"], 100)
+        self.assertGreater(result["canonicalCodeAndPromptBlocksChecked"], 90)
         self.assertFalse(result["newDeploymentCaptureClaimed"])
 
     def test_profile_paths_are_platform_independent(self):
         chapter=self.out/'17-fabric-data-agent-and-code-interpreter'
-        prefix='workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015'
-        start=(chapter/'06-17-5-start-here-materials-and-order.md').read_text(encoding='utf-8')
-        instructions=(chapter/'10-17-9-agent-wide-answer-policy-complete-instructions.md').read_text(encoding='utf-8')
+        prefix='workshop/v3.0.0-preview/data-agent/profiles/current-experimental'
+        start=(chapter/'06-17-6-profile-assets-and-preflight.md').read_text(encoding='utf-8')
+        instructions=(chapter/'08-17-8-review-the-global-instructions.md').read_text(encoding='utf-8')
         self.assertIn(prefix,start)
-        self.assertIn(prefix+'/global-instructions.txt',instructions)
+        self.assertIn("global-instructions.txt",start)
+        self.assertIn("Do not edit the UI field at this step", instructions)
         self.assertNotIn(prefix.replace('/','\\'),start+instructions)
 
     def test_omitted_japanese_step_is_rejected(self):

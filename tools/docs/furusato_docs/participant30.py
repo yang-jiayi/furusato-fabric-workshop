@@ -458,7 +458,11 @@ def evaluation_sections(appendix: Section, legacy_chapter: Section, start: int):
         add_section(appendix, str(start + offset), (title_ja, title_en), blocks)
 
 
-def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, legacy_original):
+def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, legacy_original,
+            current_profile=False):
+    current_tuning = None
+    if current_profile:
+        from . import participant_current_tuning as current_tuning
     figures = FigureFactory(context, evidence)
     tables = Tables(root, context, facts, manifest)
     tables.tests = tests
@@ -469,7 +473,9 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
     for number, section in chapters.items():
         ja, en = text_source.CHAPTER_TITLES[number]
         section.title = Text(f"{number}. {ja}", f"{number}. {en}")
-        spec = text_source.CHAPTERS[number]
+        spec = (current_tuning.current_chapter_spec()
+                if current_tuning is not None and number == 17
+                else text_source.CHAPTERS[number])
         intro = [paragraph(value) for value in spec["intro"]]
         if spec.get("before"):
             intro.append(paragraph(("準備するもの・確認すること", "Before you start")))
@@ -490,9 +496,14 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
             suffix += 1
         if spec.get("links"):
             add_section(section, str(suffix), SECTION_TITLES["links"], [link_list(spec["links"])])
-    participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
+    if current_profile:
+        current_tuning.append_current_tuning_sections(chapters[17], root)
+    else:
+        participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
     participant30_evaluation.append_chapter_sections(chapters[19], root)
-    participant30_deployment.append_deployment_sections(chapters[24], root)
+    participant30_deployment.append_deployment_sections(
+        chapters[24], root, current_profile=current_profile
+    )
     for letter, section in appendices.items():
         ja, en = text_source.APPENDIX_TITLES[letter]
         section.title = Text(f"付録 {letter}　{ja}", f"Appendix {letter} — {en}")

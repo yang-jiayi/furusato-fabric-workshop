@@ -20,6 +20,8 @@ GitHub上の[Lab](../Lab/README.md)を参加者手順の正本とし、保存し
 
 まず標準10問で操作と採点方法を確認し、その後、公開29問による改善前後の比較へ進みます。回答、実際の問い合わせ、返された値、未確認の内容を区別して記録します。同じ設定を適用しても、回答精度の再現を保証するものではありません。
 
+第17章の `current-experimental` profile は実験用です。設定の読み戻しは回答精度の採用・保証を意味しません。ソース、Graph、時系列、mirroring の完全性と実行結果は個別に確認し、自分の公開版を第19章・付録Cで評価してください。
+
 Labはキャプチャごとの操作ページに、準備、設定の全文、コマンド、参照表、完了条件を収録しています。キャプチャがない操作も手順を省略していません。HTMLはブラウザーで直接開ける単一ファイルです。
 
 初回の増分取り込みより前に、`DonationEvents` だけの OneLake mirroring を安全に確認します。policy の設定確認は実際の Delta データ到着や native Ontology 時系列の実行証明ではありません。手順書の照合条件を満たしてから進めてください。
@@ -31,3 +33,5 @@ The [GitHub Lab guide](../Lab/README.md) is the authoritative participant proced
 The [HTML validation receipt](DOCUMENT_VALIDATION.json) records static and Chromium checks for the exact document bytes, not Fabric deployment or Agent answer quality. The [Lab receipt](LAB_VALIDATION.json) records source-text, image and link coverage. Before the first increment, safely verify OneLake mirroring for `DonationEvents` only; policy readback alone does not prove Delta data arrival or native Ontology time-series execution.
 
 The complete procedure covers 24 chapters and five appendices. Start with Chapters 4/24 for deployment, inspect data and models in Chapters 5–13, configure and publish the same Data Agent in Chapter 17, then evaluate and improve answers in Chapter 19 and Appendix C. Start with ten practice questions before the public 29-question comparison. Record actual queries and results separately from unsupported or unobserved behavior; matching configuration does not guarantee matching accuracy.
+
+Chapter 17's `current-experimental` profile is experimental. Configuration readback is not accepted or guaranteed answer accuracy. Verify source, Graph, time-series and mirroring completeness and execution results separately, then evaluate your own publication using Chapter 19 and Appendix C.

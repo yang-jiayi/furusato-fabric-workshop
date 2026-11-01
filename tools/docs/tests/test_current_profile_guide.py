@@ -204,24 +204,38 @@ class CurrentProfileGuideTests(unittest.TestCase):
 
         current = chapter()
         append_deployment_sections(current, ROOT, current_profile=True)
-        current_text = " ".join(
+        current_sections = {section.ident: section for section in current.children}
+        current_setup_text = " ".join(
             part
-            for block in current.children[-2].blocks
+            for block in current_sections["chapter-24-4"].blocks
             for part in self._strings(block.payload)
         )
-        self.assertIn("experimental current profile", current_text)
-        self.assertNotIn("six SQL views", current_text)
-        self.assertNotIn("measured-contract-20261015", current_text)
+        self.assertNotIn("17.16", current_setup_text)
+        current_handoff_text = " ".join(
+            part
+            for block in current_sections["chapter-24-8"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("experimental current profile", current_handoff_text)
+        self.assertNotIn("six SQL views", current_handoff_text)
+        self.assertNotIn("measured-contract-20261015", current_handoff_text)
 
         historical = chapter()
         append_deployment_sections(historical, ROOT)
-        historical_text = " ".join(
+        historical_sections = {section.ident: section for section in historical.children}
+        historical_setup_text = " ".join(
             part
-            for block in historical.children[-2].blocks
+            for block in historical_sections["chapter-24-4"].blocks
             for part in self._strings(block.payload)
         )
-        self.assertIn("six SQL views", historical_text)
-        self.assertIn("measured-contract-20261015", historical_text)
+        self.assertIn("17.16", historical_setup_text)
+        historical_handoff_text = " ".join(
+            part
+            for block in historical_sections["chapter-24-8"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("six SQL views", historical_handoff_text)
+        self.assertIn("measured-contract-20261015", historical_handoff_text)
 
     @staticmethod
     def _strings(value):

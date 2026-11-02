@@ -15,8 +15,7 @@ from .model import Text
 from .render import RenderContext, esc, plain_bilingual, render_block
 
 
-# Keep terminal references with preceding content at print size.
-# Compact only affected chapters 7/15/19/22; preserve font sizes and the earlier MCP fix.
+# Scoped release-print pagination fixes; preserve type sizes and unrelated chapter breaks.
 RELEASE_PRINT_CSS = """
 @media print {
  html[data-lang="en"] #ch-20-10 > .callout:last-of-type { margin-bottom:2mm; }
@@ -35,6 +34,29 @@ RELEASE_PRINT_CSS = """
 @media print {
  html[data-lang="ja"] #ch-5-4 { break-inside:avoid; page-break-inside:avoid; }
 }
+@media print {
+ html[data-lang="en"] #ch-16-4 { break-inside:avoid; page-break-inside:avoid; }
+ #figure-2 .figure__frame img { width:auto; max-width:100%; height:auto; }
+ #figure-32 .figure__frame img { width:auto; max-width:100%; height:auto; }
+ html[data-lang="en"] #ch-17-7 { page:selection-contract; break-before:page; }
+ html[data-lang="en"] #ch-17-7 table { width:100%; min-width:0; table-layout:fixed; }
+ html[data-lang="en"] #ch-17-7 .table-wrap { break-inside:auto; page-break-inside:auto; }
+ html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(1) { width:11%; }
+ html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(2) { width:26%; }
+ html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(3) { width:8%; }
+ html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(4) { width:9%; }
+ html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(5) { width:15%; }
+ html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(6) { width:31%; }
+ html[data-lang="en"] #ch-17-7 th,
+ html[data-lang="en"] #ch-17-7 td { overflow-wrap:anywhere; }
+ html[data-lang="en"] #ch-17-8 { page:auto; break-before:page; }
+ html[data-lang="en"] #ch-19-2 > .callout:nth-last-child(-n+2) { margin-block:1mm; padding-block:1mm; }
+ html[data-lang="en"] #appendix-c-25-canonical-evaluation .table-wrap { margin-block:1mm; }
+ html[data-lang="en"] #appendix-c-25-canonical-evaluation .table-wrap:last-of-type { break-inside:auto; page-break-inside:auto; }
+ html[data-lang="en"] #appendix-c-25-canonical-evaluation th,
+ html[data-lang="en"] #appendix-c-25-canonical-evaluation td { padding-block:1.5mm; }
+}
+@page selection-contract { size:A4 landscape; margin:12mm; }
 """
 
 

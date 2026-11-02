@@ -1,7 +1,7 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "122a1a8da0e08978be235dbaa03d6a2849d025fbfa7310b4b6b7fcd730376e61",
+  "contentSha256": "45a1c5716fe192909127f0403318aff4d1f9a4b7d557a6b293651f8f795354ef",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
@@ -12,18 +12,18 @@
     "figures": 34,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "62a045389833b8a7cc9d484d520b983890e8c61b8370170e19f1ecd9077f3828"
+    "htmlSha256": "3b9ef3614d0a3096c23969ae1dca700ef59fba060376c91f08048819b53686ac"
   },
   "sourceRevision": {
-    "baseCommit": "ade5b474ec0da0589422a1e7aab691707d3af5ea",
-    "workingTreeMatchesCommit": true,
+    "baseCommit": "db1c7a3d169696c44512fcb28d8c5b6a6bd293c7",
+    "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "d71bfd6f1c8d4d5a402e19b14eb8f948352d90f237f56c88c99dd7437cdb7bbc"
+    "sourceTreeSha256": "589fcc29e91a753c55d838e8d46901e7f8db3c6f085115c6372045cf72622e14"
   },
   "currentArtifactSet": {
-    "manifestSha256": "7667fb05ddf1619b272677182b25c52128065fe507d738cb1a681a4d3247621a",
-    "sourceCommit": "ade5b474ec0da0589422a1e7aab691707d3af5ea",
-    "sourceTreeSha256": "d71bfd6f1c8d4d5a402e19b14eb8f948352d90f237f56c88c99dd7437cdb7bbc",
+    "manifestSha256": "59ed155a1ba59eab77a401e3965e05f5668e39707ed8945f7ab57196c014cc7c",
+    "sourceCommit": "db1c7a3d169696c44512fcb28d8c5b6a6bd293c7",
+    "sourceTreeSha256": "589fcc29e91a753c55d838e8d46901e7f8db3c6f085115c6372045cf72622e14",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "62a045389833b8a7cc9d484d520b983890e8c61b8370170e19f1ecd9077f3828",
+    "htmlSha256": "3b9ef3614d0a3096c23969ae1dca700ef59fba060376c91f08048819b53686ac",
     "checks": [
       "all29chaptersAndAppendices",
       "ja.languagePersists",
@@ -53,8 +53,8 @@
       "noExternalRequests"
     ],
     "printedPages": {
-      "ja": 224,
-      "en": 230
+      "ja": 225,
+      "en": 216
     },
     "allPrintedPagesVisuallyReviewed": false
   },

@@ -42,6 +42,13 @@ NEW_AUTHORING_FILES = {
     'tools/docs/furusato_docs/lab_clients.py', 'tools/docs/tests/test_lab.py',
     'tools/docs/tests/test_current_delivery.py',
     'tools/docs/furusato_docs/current_publication.py',
+    'tools/provisioning/check_current_ontology.py',
+    'tools/docs/tests/test_current_validation_entries.py',
+    'docs/assets/v3.0.0-participant/graph-eligibility-controls-crop.png',
+}
+PARTICIPANT_VALIDATION_FILES = {
+    'tools/data/Test-IncrementConsistency.ps1',
+    'tools/provisioning/check_current_ontology.py',
 }
 DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg','.pdf'}
 PRIVATE_NAMES = {'storage-state.json','cookies.json','credentials.json','msal_token_cache.json','msal_token_cache.bin'}
@@ -113,6 +120,7 @@ def current_source_manifest(root):
     tracked=set(subprocess.check_output(['git','-C',str(root),'ls-files','-z']).decode().split('\0'))
     names={name for name in manifest['files'] if not name.startswith('docs/') and not name.endswith('.docx')}
     names.update(runtime.RUNTIME_INPUT_FILES)
+    names.update(PARTICIPANT_VALIDATION_FILES)
     names.update(current_profile_files(root))
     names.add('workshop/v3.0.0-preview/provisioning/baseline-hashes.json')
     names.add('tools/provisioning/unified_agent.py')
@@ -150,6 +158,12 @@ def checked_lab_files(lab, expected):
             if (lab/name).read_bytes() != blob:
                 raise ValueError('Lab bytes differ from generated content: '+name)
     return sorted(actual)
+
+
+def validate_participant_validation_entries(manifest):
+    missing = PARTICIPANT_VALIDATION_FILES - set(manifest.get('files', {}))
+    if missing:
+        raise ValueError('Missing current participant validation entries: ' + ', '.join(sorted(missing)))
 
 
 def validate_source_manifest_paths(root, manifest, *, require_git=False):
@@ -450,6 +464,7 @@ def package(root, path, lab, receipt_path, output):
     if not (lab / 'README.md').is_file():
         raise ValueError('The complete Lab guide is required')
     manifest_path=receipt_path.parent/SOURCE_MANIFEST
+    validate_participant_validation_entries(json.loads(manifest_path.read_bytes()))
     validate_source_manifest_paths(root,json.loads(manifest_path.read_bytes()),require_git=True)
     manifest,binding=verify_artifact_manifest(root,manifest_path)
     if binding != receipt.get('currentArtifactSet'):

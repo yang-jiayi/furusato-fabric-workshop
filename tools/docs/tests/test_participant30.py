@@ -1,5 +1,6 @@
 """Participant edition of the v3.0.0 guide: procedure only, no working records or history."""
 
+import hashlib
 import json
 import re
 import sys
@@ -207,6 +208,43 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("not supported for Graph projection", checks)
         self.assertNotIn("AzureStorage.DataLake", intro + before + steps + checks)
         self.assertNotIn("DirectLake means", intro + before + steps + checks)
+
+    def test_graph_selection_figure_is_controls_only_and_uses_verified_crop(self):
+        ident = "p30-16-eligibility"
+        caption_ja, caption_en = figures.FIGURES[ident]["caption"]
+        alt_ja, alt_en = figures.FIGURES[ident]["alt"]
+        manifest = participant30.participant_figures()[ident]
+
+        self.assertTrue(manifest["actualUI"])
+        self.assertEqual("graph-eligibility-controls-crop.png", manifest["file"])
+        self.assertEqual(
+            "8216fcf88f718a59b843ceb054775f83712bae555ea7e1836d107d1d4d3b0cea",
+            manifest["sha256"],
+        )
+        self.assertEqual((686, 883), (manifest["width"], manifest["height"]))
+        self.assertEqual((1372, 883), (manifest["originalWidth"], manifest["originalHeight"]))
+        self.assertEqual([0, 0, 686, 883], manifest["cropBox"])
+        self.assertEqual("Lab/assets/p30-16-eligibility.png", manifest["originalFile"])
+        self.assertEqual(
+            "3bc15540e94fe29adca9a564130f23ed3ad96d7e6afffc2705cce3ac0512ff3b",
+            manifest["originalSha256"],
+        )
+        image = participant30.PARTICIPANT_ASSETS / manifest["file"]
+        self.assertEqual(manifest["sha256"], hashlib.sha256(image.read_bytes()).hexdigest())
+
+        for caption in (caption_ja, caption_en):
+            self.assertTrue(any(term in caption for term in ("Status", "status")))
+        self.assertIn("現在の適格性の証拠ではありません", caption_ja)
+        self.assertIn("not current eligibility evidence", caption_en)
+        for alt in (alt_ja, alt_en):
+            self.assertIn("Status", alt)
+            self.assertNotIn("Eligible", alt)
+            self.assertNotIn("適格", alt)
+
+        graph_step = text.CHAPTERS[16]["steps"][1]
+        self.assertIn("必須範囲の Status を実行時に確認", graph_step["text"][0])
+        self.assertIn("Check Status for your own required scope", graph_step["text"][1])
+        self.assertIn("select only Eligible items", graph_step["text"][1])
 
     def test_protected_evaluation_questions_are_complete(self):
         appendix_c = next(s for s in self.document.sections if s.appendix == "C")

@@ -217,10 +217,10 @@ FIGURES = {
                 'Proposed DonationQualityScope with a description; DataLayer is Local, String, Unbound; the answer shows Error 0, Warning 1.'),
     },
     'p30-16-eligibility': {
-        "caption": ('Configure Graph の Choose what to project。各 Entity の Status と Source を確認する（図は全体を選んだ状態。演習では必要な範囲だけを選ぶ）',
-                    "Choose what to project in Configure Graph: check each entity's Status and Source. The figure shows the whole model selected; in this lab, select only what you need."),
-        "alt": ('Choose what to project の画面。Use the entire Ontology は Yes で、10の Entity がすべて選ばれて Eligible、Source は ot_* テーブル。右に関係のグラフ、左下に Continue',
-                'Choose what to project: Use the entire Ontology is Yes and all ten entities are checked and Eligible, with ot_* sources; a relationship graph and a Continue button.'),
+        "caption": ('「Choose what to project」の選択画面。Use the entire Ontology の切り替え、Entity のチェック欄、Status・Source で範囲を確認します。操作例であり、現在の適格性の証拠ではありません。',
+                    'Configure Graph “Choose what to project”: use the whole-model toggle, entity checkboxes, and Status/Source to review scope. Navigation example only—not current eligibility evidence.'),
+        "alt": ('Configure Graph の Choose what to project 画面。Use the entire Ontology の切り替え、Entity のチェック欄、Status・Source 列、Continue ボタンが見える。',
+                'Configure Graph Choose what to project screen showing the Use the entire Ontology toggle, entity checkboxes, Status and Source columns, and Continue button.'),
     },
     'p30-16-gql': {
         "caption": ('全体を実体化した Graph で、Prefecture にフィルターを付けて Run query した結果。矢印は自治体 → 都道府県。ノードの数字は ID とは限らないため、Table view で確かめる',

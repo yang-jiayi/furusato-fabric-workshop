@@ -1,6 +1,7 @@
-"""Offline release-profile fixtures; no real Word, browser, cloud or publication."""
+"""Offline release-profile fixtures; no real Word, cloud or publication."""
 
 import copy
+import base64
 import hashlib
 import io
 import json
@@ -432,8 +433,135 @@ class ReleaseProfileTests(unittest.TestCase):
         self.assertIn('html[data-lang="ja"] #ch-5-4', html_renderer.RELEASE_PRINT_CSS)
         self.assertIn('break-inside:avoid', html_renderer.RELEASE_PRINT_CSS)
         self.assertIn('page-break-inside:avoid', html_renderer.RELEASE_PRINT_CSS)
-        for forbidden in ("display", "visibility", "overflow", "font-size", "height", "break-before"):
+        for forbidden in ("display", "visibility", "font-size"):
             self.assertNotIn(forbidden, html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('html[data-lang="en"] #ch-17-7 { page:selection-contract; break-before:page; }',
+                      html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('html[data-lang="en"] #ch-17-8 { page:auto; break-before:page; }',
+                      html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('html[data-lang="en"] #ch-17-7 td { overflow-wrap:anywhere; }',
+                      html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('html[data-lang="en"] #ch-17-7 .table-wrap { break-inside:auto; page-break-inside:auto; }',
+                      html_renderer.RELEASE_PRINT_CSS)
+        self.assertIn('html[data-lang="en"] #appendix-c-25-canonical-evaluation .table-wrap:last-of-type { break-inside:auto; page-break-inside:auto; }',
+                      html_renderer.RELEASE_PRINT_CSS)
+
+    def test_figure32_print_image_preserves_crop_aspect_against_shared_width_rule(self):
+        image_path = ROOT / "docs" / "assets" / "v3.0.0-participant" / "graph-eligibility-controls-crop.png"
+        image_uri = "data:image/png;base64," + base64.b64encode(image_path.read_bytes()).decode("ascii")
+        base_css = (ROOT / "tools" / "html" / "assets" / "preview30.css").read_text(encoding="utf-8")
+        competing_shared_rule = (
+            "@media print { .figure__frame img { width:100%; height:auto; } }"
+        )
+        self.assertIn("#figure-32 .figure__frame img { width:auto; max-width:100%; height:auto; }",
+                      html_renderer.RELEASE_PRINT_CSS)
+
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            self.skipTest("Playwright is unavailable for painted-image geometry validation")
+
+        with sync_playwright() as playwright:
+            try:
+                browser = playwright.chromium.launch()
+            except Exception as exc:
+                self.skipTest(f"Chromium is unavailable for painted-image geometry validation: {exc}")
+            page = browser.new_page(viewport={"width": 1200, "height": 1000})
+            page.set_content(
+                f'<style>{base_css}{competing_shared_rule}{html_renderer.RELEASE_PRINT_CSS}</style>'
+                '<figure id="figure-32"><button class="figure__frame">'
+                f'<img src="{image_uri}" width="686" height="883" alt="Graph selection controls">'
+                '</button><figcaption>Selection controls only</figcaption></figure>'
+            )
+            page.emulate_media(media="print")
+            page.wait_for_function(
+                "img => img.complete && img.naturalWidth === 686",
+                arg=page.locator("#figure-32 img").element_handle(),
+            )
+            geometry = page.locator("#figure-32 img").evaluate(
+                """img => ({
+                    paintedWidth: img.getBoundingClientRect().width,
+                    paintedHeight: img.getBoundingClientRect().height,
+                    naturalWidth: img.naturalWidth,
+                    naturalHeight: img.naturalHeight
+                })"""
+            )
+            browser.close()
+
+        painted_aspect = geometry["paintedWidth"] / geometry["paintedHeight"]
+        source_aspect = geometry["naturalWidth"] / geometry["naturalHeight"]
+        relative_error = abs(painted_aspect - source_aspect) / source_aspect
+        self.assertLessEqual(
+            relative_error,
+            0.005,
+            f"Figure 32 print image distorted: painted={geometry}, relative aspect error={relative_error:.4%}",
+        )
+
+    def test_figure2_print_image_preserves_actual_workspace_capture_aspect(self):
+        manifest_path = ROOT / "docs" / "assets" / "v3.0.0-participant" / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        entry = next(item for item in manifest["figures"] if item["id"] == "pc-04-workspace-type-current")
+        image_path = ROOT / "docs" / "assets" / "v3.0.0-participant" / entry["file"]
+        image_bytes = image_path.read_bytes()
+        self.assertEqual(entry["sha256"], hashlib.sha256(image_bytes).hexdigest())
+        self.assertEqual((1053, 910), (entry["width"], entry["height"]))
+        image_uri = "data:image/png;base64," + base64.b64encode(image_bytes).decode("ascii")
+        base_css = (ROOT / "tools" / "html" / "assets" / "preview30.css").read_text(encoding="utf-8")
+        shared_width_rule = "@media print { .figure__frame img { width:100%; height:auto; } }"
+        scoped_rule = "#figure-2 .figure__frame img { width:auto; max-width:100%; height:auto; }"
+        self.assertIn(scoped_rule, html_renderer.RELEASE_PRINT_CSS)
+
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            self.skipTest("Playwright is unavailable for painted-image geometry validation")
+
+        with sync_playwright() as playwright:
+            try:
+                browser = playwright.chromium.launch()
+            except Exception as exc:
+                self.skipTest(f"Chromium is unavailable for painted-image geometry validation: {exc}")
+            page = browser.new_page(viewport={"width": 1200, "height": 1000})
+            page.set_content(
+                f'<style>{base_css}{shared_width_rule}</style>'
+                '<figure id="figure-2"><button class="figure__frame">'
+                f'<img src="{image_uri}" width="1053" height="910" alt="Workspace type">'
+                '</button><figcaption>Workspace preflight example</figcaption></figure>'
+            )
+            page.emulate_media(media="print")
+            page.wait_for_function(
+                "img => img.complete && img.naturalWidth === 1053 && img.naturalHeight === 910",
+                arg=page.locator("#figure-2 img").element_handle(),
+            )
+            measure = lambda: page.locator("#figure-2 img").evaluate(
+                """img => ({
+                    paintedWidth: img.getBoundingClientRect().width,
+                    paintedHeight: img.getBoundingClientRect().height,
+                    naturalWidth: img.naturalWidth,
+                    naturalHeight: img.naturalHeight
+                })"""
+            )
+            baseline = measure()
+            page.add_style_tag(content=f"@media print {{ {scoped_rule} }}")
+            corrected = measure()
+            browser.close()
+
+        def relative_aspect_error(geometry):
+            painted = geometry["paintedWidth"] / geometry["paintedHeight"]
+            intrinsic = geometry["naturalWidth"] / geometry["naturalHeight"]
+            return abs(painted - intrinsic) / intrinsic
+
+        self.assertGreater(
+            relative_aspect_error(baseline),
+            0.005,
+            f"Fixture must reproduce the pre-fix painted distortion: {baseline}",
+        )
+        self.assertLessEqual(
+            relative_aspect_error(corrected),
+            0.005,
+            f"Figure 2 print image distorted: painted={corrected}, "
+            f"relative aspect error={relative_aspect_error(corrected):.4%}",
+        )
 
     def test_validator_rejects_wrong_title_link_profile_or_selected_provenance(self):
         metadata = self.metadata()

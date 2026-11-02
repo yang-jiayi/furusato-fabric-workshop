@@ -101,6 +101,22 @@
       "evidenceScope": "Notebook 05 preview plan output only; apply, Gold data and SQL synchronization require separate verification."
     },
     {
+      "id": "p30-16-eligibility",
+      "file": "graph-eligibility-controls-crop.png",
+      "sha256": "8216fcf88f718a59b843ceb054775f83712bae555ea7e1836d107d1d4d3b0cea",
+      "source": "native-ontology-graph-selection-controls-ui",
+      "actualUI": true,
+      "width": 686,
+      "height": 883,
+      "originalFile": "Lab/assets/p30-16-eligibility.png",
+      "originalSha256": "3bc15540e94fe29adca9a564130f23ed3ad96d7e6afffc2705cce3ac0512ff3b",
+      "originalWidth": 1372,
+      "originalHeight": 883,
+      "cropBox": [0, 0, 686, 883],
+      "captureContext": "Source-pixel crop of the Graph selection controls; no resizing.",
+      "evidenceScope": "Navigation illustration of selection controls only. It does not establish current eligibility; check the required scope's Status during the participant's own session."
+    },
+    {
       "id": "pc-16-unsupported-datasource",
       "file": "ontology-graph-ineligible.png",
       "sha256": "c6f630237e66e3577093214c141d037351e8b4ca918c2a30d695e5f59b985867",

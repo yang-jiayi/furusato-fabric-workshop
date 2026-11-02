@@ -99,6 +99,30 @@ class ParticipantEditionTests(unittest.TestCase):
             if not ident.startswith("diagram:") and ident not in participant30.participant_figures():
                 self.assertIn(ident, self.evidence["captures"])
 
+    def test_history_illustration_cannot_substitute_for_target_file_evidence(self):
+        caption_ja, caption_en = figures.FIGURES["p30-09-native-delivery"]["caption"]
+        step = next(step for step in text.CHAPTERS[9]["steps"]
+                    if "p30-09-native-delivery" in step.get("figures", []))
+        instruction_ja, instruction_en = step["text"]
+        self.assertIn("この概要だけでは001の処理", caption_ja)
+        self.assertIn("does not verify processing of 001", caption_en)
+        self.assertIn("six KPIs", caption_en)
+        self.assertIn("/Files/increment/donation_events_001.csv", instruction_en)
+        self.assertIn("record the actual activation row", instruction_en)
+        self.assertIn("stop without re-uploading", instruction_en)
+        self.assertIn("未確認", instruction_ja)
+        self.assertIn("再アップロードせずに停止", instruction_ja)
+        capture = next(block for block in self.document.figures
+                       if block["source_key"] == "p30-09-native-delivery")
+        self.assertEqual("participant-capture", capture["source_kind"])
+        manifest = participant30.participant_figures()["p30-09-native-delivery"]
+        self.assertTrue(manifest["actualUI"])
+        self.assertEqual((1469, 593), (manifest["width"], manifest["height"]))
+        self.assertEqual(
+            "7b78f7761dfa691c2b4a0ad9dfc8b779c436a05728fb426dedf6437bc9ef9353",
+            manifest["originalSha256"],
+        )
+
     def test_protected_evaluation_questions_are_complete(self):
         appendix_c = next(s for s in self.document.sections if s.appendix == "C")
         questions = [child for child in appendix_c.children if re.search(r"\bT\d\d\b", child.title.ja)]

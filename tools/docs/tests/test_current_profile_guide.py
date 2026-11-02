@@ -8,6 +8,7 @@ sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
 from furusato_docs.participant_current_tuning import (  # noqa: E402
     _assets,
+    _profile_command,
     append_current_tuning_sections,
     current_chapter_spec,
 )
@@ -16,6 +17,25 @@ from furusato_html.model import Section, Text  # noqa: E402
 
 
 class CurrentProfileGuideTests(unittest.TestCase):
+    def test_powershell_commands_break_between_complete_arguments(self):
+        for action, extra in (
+            ("prepare", "--routing-origin $RoutingOrigin"),
+            ("apply", "--apply"),
+            ("publish", "--apply"),
+            ("verify", "--stage draft"),
+            ("verify", "--stage published"),
+        ):
+            command = _profile_command(action, extra)
+            lines = command.splitlines()
+            self.assertTrue(all(len(line) <= 90 for line in lines))
+            self.assertTrue(all(line.endswith(" `") for line in lines[:-1]))
+            self.assertFalse(lines[-1].endswith("`"))
+            joined = command.replace(" `\n", " ")
+            self.assertIn(f"current_profile.py {action}", joined)
+            for flag in ("workspace-id", "folder-id", "agent-id", "private-root"):
+                self.assertEqual(1, joined.count("--" + flag + " "))
+            self.assertEqual(1, joined.count(extra))
+
     @classmethod
     def setUpClass(cls):
         cls.assets = _assets(ROOT)

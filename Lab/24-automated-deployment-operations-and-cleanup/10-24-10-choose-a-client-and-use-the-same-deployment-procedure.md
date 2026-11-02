@@ -17,6 +17,16 @@
 
 ローカルCLIを利用する場合の計画開始例です。導入済みのバージョンが各オプションを提供することを--helpで確認してから実行します。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+copilot --plan --prompt "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+claude --permission-mode plan "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+codex --sandbox read-only --ask-for-approval on-request "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -77,6 +87,16 @@ Every client uses the same distributed files, scope, plan and approval records f
 | Microsoft 365 Copilot Cowork | Inspect available Fabric/Power BI connections and supported operations. Procedure assistance does not establish a local shell or deployment permission; run required commands in your authenticated terminal. |
 
 These examples start local CLI planning. Before use, confirm with --help that your installed version provides each option.
+
+**Readable wrapped view — PowerShell**
+
+<div>
+copilot --plan --prompt "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+claude --permission-mode plan "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+codex --sandbox read-only --ask-for-approval on-request "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 

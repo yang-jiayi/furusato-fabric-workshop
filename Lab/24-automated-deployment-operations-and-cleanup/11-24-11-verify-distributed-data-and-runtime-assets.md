@@ -15,6 +15,34 @@ if ($LASTEXITCODE -ne 0) { throw "Ontology check failed" }
 
 ソースの再現性も調べる場合だけ、Gitでコミットを固定したクリーンなcheckoutとPython 3.13を使い、次の使い捨てコピーでreseal_runtime.py --checkを実行します。このコマンドは読み取り専用ではありません。元の配置元で実行したり、差分を通すために生成物を配置元へ戻したりしません。CSV・NotebookのSHAだけを確認したい参加者はこの再生成検査を行う必要はありません。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+$ErrorActionPreference = "Stop"<br>
+python -c "import sys; assert sys.version_info[:2] == (3, 13)"<br>
+if ($LASTEXITCODE -ne 0) { throw "Use Python 3.13 for byte-identical gzip output" }<br>
+$Dirty = git status --porcelain<br>
+if ($LASTEXITCODE -ne 0) { throw "Git status failed" }<br>
+if ($Dirty) { throw "Use a clean pinned checkout; preserve existing edits" }<br>
+$CheckRoot = Join-Path ([IO.Path]::GetTempPath()) ("furusato-check-" + [guid]::NewGuid().ToString("N"))<br>
+New-Item -ItemType Directory -Path $CheckRoot | Out-Null<br>
+$Archive = Join-Path $CheckRoot "source.zip"<br>
+$Source = Join-Path $CheckRoot "source"<br>
+git archive --format=zip --output=$Archive HEAD<br>
+if ($LASTEXITCODE -ne 0) { throw "Git archive failed" }<br>
+Expand-Archive -LiteralPath $Archive -DestinationPath $Source<br>
+Push-Location -LiteralPath $Source<br>
+try {<br>
+    python -B ./tools/provisioning/reseal_runtime.py --check<br>
+    if ($LASTEXITCODE -ne 0) { throw "Runtime drift; do not deploy this generated copy" }<br>
+}<br>
+finally {<br>
+    Pop-Location<br>
+}
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -60,6 +88,34 @@ if ($LASTEXITCODE -ne 0) { throw "Ontology check failed" }
 ```
 
 Only when checking source regeneration reproducibility, use a clean Git checkout pinned to a commit and Python 3.13, then run reseal_runtime.py --check in the disposable copy below. This command is not read-only. Never run it in the deployment checkout or copy regenerated output back to force a match. Participants who only need to verify CSV/Notebook hashes do not need this regeneration check.
+
+**Readable wrapped view — PowerShell**
+
+<div>
+$ErrorActionPreference = "Stop"<br>
+python -c "import sys; assert sys.version_info[:2] == (3, 13)"<br>
+if ($LASTEXITCODE -ne 0) { throw "Use Python 3.13 for byte-identical gzip output" }<br>
+$Dirty = git status --porcelain<br>
+if ($LASTEXITCODE -ne 0) { throw "Git status failed" }<br>
+if ($Dirty) { throw "Use a clean pinned checkout; preserve existing edits" }<br>
+$CheckRoot = Join-Path ([IO.Path]::GetTempPath()) ("furusato-check-" + [guid]::NewGuid().ToString("N"))<br>
+New-Item -ItemType Directory -Path $CheckRoot | Out-Null<br>
+$Archive = Join-Path $CheckRoot "source.zip"<br>
+$Source = Join-Path $CheckRoot "source"<br>
+git archive --format=zip --output=$Archive HEAD<br>
+if ($LASTEXITCODE -ne 0) { throw "Git archive failed" }<br>
+Expand-Archive -LiteralPath $Archive -DestinationPath $Source<br>
+Push-Location -LiteralPath $Source<br>
+try {<br>
+    python -B ./tools/provisioning/reseal_runtime.py --check<br>
+    if ($LASTEXITCODE -ne 0) { throw "Runtime drift; do not deploy this generated copy" }<br>
+}<br>
+finally {<br>
+    Pop-Location<br>
+}
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 

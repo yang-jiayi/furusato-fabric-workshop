@@ -5,6 +5,14 @@
 1. アップロード前に、8章と24.6で DonationEvents だけの mirroring（parquet、IsEnabled=true、TargetLatencyInMinutes=5）と所有範囲・schema・RLS の確認が通っていることを確認します。未確認ならファイルを置かず停止します。取り込み後の有効化を、過去行の公開が済んだこととして扱いません。
 2. Pipeline を開き、Copy data1 の設定を確認します。コピー元は Lakehouse の Files にある increment フォルダー、コピー先は KQL Database の DonationEvents、取り込みマッピングは DonationEvents_IncrementCsvMap です。パラメーターは IncrementFileName、Type、Subject、Source の4つです。ファイル名は次の式で決まります（Subject の最後の部分。Subject が空のときは IncrementFileName）。ここでは Pipeline を手動で実行しません。
 
+**Readable wrapped view — Pipeline expression**
+
+<div>
+@if(empty(pipeline().parameters.Subject), pipeline().parameters.IncrementFileName, last(split(pipeline().parameters.Subject, '/')))
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **Pipeline expression**
 
 ```text
@@ -27,6 +35,14 @@
 
 1. Before uploading, confirm that Chapters 8 and 24.6 verified DonationEvents-only mirroring (parquet, IsEnabled=true, TargetLatencyInMinutes=5), ownership scope, schema and RLS. If unverified, stop without uploading. Enabling after ingestion does not establish that historical rows have been published.
 2. Open the Pipeline and check the settings of Copy data1. The source is the increment folder in the Lakehouse Files, the destination is DonationEvents in the KQL database, and the ingestion mapping is DonationEvents_IncrementCsvMap. There are four parameters: IncrementFileName, Type, Subject and Source. The file name is determined by the following expression (the last segment of Subject, or IncrementFileName when Subject is empty). Do not run the Pipeline manually here.
+
+**Readable wrapped view — Pipeline expression**
+
+<div>
+@if(empty(pipeline().parameters.Subject), pipeline().parameters.IncrementFileName, last(split(pipeline().parameters.Subject, '/')))
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **Pipeline expression**
 

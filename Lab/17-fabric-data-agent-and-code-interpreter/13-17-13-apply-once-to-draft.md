@@ -7,7 +7,12 @@
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py apply --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --apply
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py apply `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --apply
 ```
 
 Draft の完全な shared-field readback と complete-stage の結果を確認します。失敗や不一致がある場合は停止し、公開しません。既存の Agent、Schema、Selection を作成・拡張する回避策を試しません。
@@ -22,7 +27,12 @@ After reviewing the target, diffs and readbacks from prepare, apply the candidat
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py apply --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --apply
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py apply `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --apply
 ```
 
 Inspect complete shared-field readback and complete-stage results for Draft. Stop and do not publish on failure or mismatch. Do not work around the problem by creating or expanding agents, schema or selections.

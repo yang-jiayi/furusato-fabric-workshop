@@ -35,6 +35,17 @@ def _code(value, label="text", *, canonical=False):
 def _steps(rows):
     return Block("list", {"numbered": True, "items": [_text(*row) for row in rows]})
 
+def _profile_command(action, *extra):
+    lines = [
+        rf".venv\Scripts\python.exe -B tools/data-agent/current_profile.py {action}",
+        "  --workspace-id $WorkspaceId",
+        "  --folder-id $FolderId",
+        "  --agent-id $AgentId",
+        "  --private-root $PrivateRoot",
+        *("  " + option for option in extra),
+    ]
+    return " `\n".join(lines)
+
 
 def _append(chapter: Section, suffix: int, title, blocks):
     number = f"{chapter.number}.{suffix}"
@@ -223,8 +234,6 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         raise ValueError("Current-profile instructions belong to Chapter 17")
     assets = _assets(root)
     profile_rel = PROFILE_REL.as_posix()
-    command = r".venv\Scripts\python.exe -B tools/data-agent/current_profile.py"
-    args = "--workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot"
 
     _append(chapter, 5, ("対象と準備", "Scope and prerequisites"), [
         _paragraph(
@@ -314,7 +323,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "PowerShell",
         ),
         _code(
-            f"{command} prepare {args} --routing-origin $RoutingOrigin",
+            _profile_command("prepare", "--routing-origin $RoutingOrigin"),
             "PowerShell",
         ),
     ])
@@ -342,7 +351,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         _paragraph(
             "直前の prepare で対象・差分・readback を確認してから、同じ既存 Agent の Draft に候補を一度だけ適用します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。",
             "After reviewing the target, diffs and readbacks from prepare, apply the candidate exactly once to Draft on the same existing agent. No write occurs without explicit --apply. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify."),
-        _code(f"{command} apply {args} --apply", "PowerShell"),
+        _code(_profile_command("apply", "--apply"), "PowerShell"),
         _paragraph(
             "Draft の完全な shared-field readback と complete-stage の結果を確認します。失敗や不一致がある場合は停止し、公開しません。既存の Agent、Schema、Selection を作成・拡張する回避策を試しません。",
             "Inspect complete shared-field readback and complete-stage results for Draft. Stop and do not publish on failure or mismatch. Do not work around the problem by creating or expanding agents, schema or selections."),
@@ -351,15 +360,15 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         _paragraph(
             "Draft が完全に一致し、全ての事前条件と readback が通った場合に限り、同じ既存 Agent の公開を一度だけ実行します。明示的な --apply が必要です。publish intent を再利用・削除せず、応答不明や timeout のときは再送しません。",
             "Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout."),
-        _code(f"{command} publish {args} --apply", "PowerShell"),
+        _code(_profile_command("publish", "--apply"), "PowerShell"),
     ])
     _append(chapter, 15, ("Draft と公開版を読み取り専用で検証する", "Verify Draft and publication read-only"), [
         _paragraph(
             "verify は read-only で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。verifyの成功も、回答精度、Graph/GQL、時系列、mirror完全性を証明しません。",
             "verify is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. Successful verify does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness."),
         _code(
-            f"{command} verify {args} --stage draft\n"
-            f"{command} verify {args} --stage published",
+            _profile_command("verify", "--stage draft") + "\n"
+            + _profile_command("verify", "--stage published"),
             "PowerShell",
         ),
         _paragraph(

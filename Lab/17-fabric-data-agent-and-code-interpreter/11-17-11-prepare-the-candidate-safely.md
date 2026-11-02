@@ -20,7 +20,12 @@ $RoutingOrigin = "https://<observed-region>.analysis.windows.net"
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py prepare --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --routing-origin $RoutingOrigin
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py prepare `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --routing-origin $RoutingOrigin
 ```
 
 <details>
@@ -46,7 +51,12 @@ $RoutingOrigin = "https://<observed-region>.analysis.windows.net"
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py prepare --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --routing-origin $RoutingOrigin
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py prepare `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --routing-origin $RoutingOrigin
 ```
 
 </details>

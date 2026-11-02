@@ -7,8 +7,18 @@ verify は read-only で、Draft または Published を明示して確認しま
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --stage draft
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --stage published
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --stage draft
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --stage published
 ```
 
 記録には自分の作業で得た実際の stage、状態、読み戻し、理由だけを残します。設定の readback と、実際に観測したSQL/KQL/DAX/GQL実行・結果・Agent回答を別にします。回答品質の採用・正確性・保証を主張しません。
@@ -23,8 +33,18 @@ verify is read-only and explicitly targets Draft or Published. Read back both st
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --stage draft
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --stage published
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --stage draft
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py verify `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --stage published
 ```
 
 Record only the actual stage, status, readbacks and reasons from your own run. Keep configuration readback separate from observed SQL/KQL/DAX/GQL executions, results and Agent answers. Do not claim accepted, accurate or guaranteed answer quality.

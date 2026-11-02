@@ -38,6 +38,16 @@ DonationEvents
 
 8. 日ごとの分布を確認します。UTC で 2026-08-01〜08-31 の31日すべてに行があり、1日 450〜582行です。2026-08-11 が 582行と多いのは、重複がこの日に集中しているためです。
 
+**Readable wrapped view — KQL**
+
+<div>
+DonationEvents<br>
+| summarize Rows=count(), TotalYen=sum(DonationAmountYen) by UtcDay=bin(DonatedAt, 1d)<br>
+| order by UtcDay asc
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **KQL**
 
 ```kql
@@ -95,6 +105,16 @@ DonationEvents
 ```
 
 8. Check the daily distribution. Every one of the 31 UTC days from 2026-08-01 to 08-31 has rows, with 450 to 582 rows per day. 2026-08-11 has 582 rows because the duplicates are concentrated on that day.
+
+**Readable wrapped view — KQL**
+
+<div>
+DonationEvents<br>
+| summarize Rows=count(), TotalYen=sum(DonationAmountYen) by UtcDay=bin(DonatedAt, 1d)<br>
+| order by UtcDay asc
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **KQL**
 

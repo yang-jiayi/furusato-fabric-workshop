@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
+import re
 import sys
 import tempfile
 import unittest
@@ -50,6 +52,121 @@ class LabExportTests(unittest.TestCase):
         self.assertIn("global-instructions.txt",start)
         self.assertIn("Do not edit the UI field at this step", instructions)
         self.assertNotIn(prefix.replace('/','\\'),start+instructions)
+
+    def test_selection_contract_is_a_bilingual_source_ordered_field_list(self):
+        ident = lab.SELECTION_CONTRACT_BLOCK_ID
+        page = next(p for p in self.receipt["pagesCoverage"] if ident in p["sourceBlockIds"])
+        content = (self.out / page["path"]).read_text(encoding="utf-8")
+        block = next(b for s in self.model[0].walk() for i, b in enumerate(s.blocks)
+                     if f"{s.ident}:{i}" == ident)
+        profile = lab.PROFILE_REL.as_posix()
+        reference = f"{profile}/selection-contract.json"
+
+        self.assertIn(f"**Readable field list — source order from `{reference}`**", content)
+        self.assertNotIn("| Source kind |", content)
+        for language, record_label in (("ja", "レコード"), ("en", "Record")):
+            numbers = [int(value) for value in re.findall(
+                rf"<strong>{record_label} (\d+)</strong><br>", content
+            )]
+            self.assertEqual(list(range(1, len(block["rows"]) + 1)), numbers)
+            for value in block["headers"] + [cell for row in block["rows"] for cell in row]:
+                expected = lab.prose(value, language, ident, table=True, canonical=True)
+                self.assertIn(expected, content)
+            description_index = next(
+                index for index, value in enumerate(block["headers"])
+                if value.get(language) in ("Description", "説明")
+            )
+            description_label = block["headers"][description_index].get(language)
+            empty_descriptions = sum(not row[description_index].get(language) for row in block["rows"])
+            self.assertGreater(empty_descriptions, 0)
+            self.assertEqual(
+                empty_descriptions,
+                len(re.findall(rf"<strong>{re.escape(description_label)}:</strong>(?=\n</p>)", content)),
+            )
+
+    def test_readable_instruction_and_prompt_views_keep_canonical_literals(self):
+        pages = {ident: (self.out / page["path"]).read_text(encoding="utf-8")
+                 for page in self.receipt["pagesCoverage"]
+                 for ident in page["sourceBlockIds"]}
+        sources = {f"{s.ident}:{i}": b for s in self.model[0].walk()
+                   for i, b in enumerate(s.blocks)}
+        profile = lab.PROFILE_REL.as_posix()
+
+        global_id = "ch-17-8:1"
+        global_text = pages[global_id]
+        global_source = sources[global_id]["text"]
+        global_ref = f"{profile}/global-instructions.txt"
+        self.assertIn(f"**Readable instruction view — `{global_ref}` (`global instructions`)**",
+                      global_text)
+        self.assertIn(lab.readable_literal(global_source), global_text)
+        self.assertIn(global_source, global_text)
+
+        source_id = "ch-17-9:1"
+        source_page = pages[source_id]
+        source_block = sources[source_id]["text"]
+        source_values = json.loads(source_block)
+        source_ref = f"{profile}/source-instructions.json"
+        for name in ("kusto", "lakehouse_tables", "semantic_model"):
+            field = f"{name}.instructions"
+            value = source_values[name]["instructions"]
+            self.assertIn(f"**Readable instruction view — `{source_ref}` (`{field}`)**",
+                          source_page)
+            self.assertIn(lab.readable_literal(value), source_page)
+        self.assertIn(source_block, source_page)
+
+        definition_paths = {
+            "ch-17-12:8": "definition/kusto.json",
+            "ch-17-12:9": "definition/lakehouse_tables.json",
+            "ch-17-12:11": "definition/semantic_model.json",
+            "ch-17-12:12": "definition/stage_config.json",
+        }
+        for ident, path in definition_paths.items():
+            content = pages[ident]
+            source = sources[ident]["text"]
+            definition = json.loads(source)
+            key = "aiInstructions" if "aiInstructions" in definition else "dataSourceInstructions"
+            reference = f"{profile}/{path}"
+            self.assertIn(f"**Readable instruction view — `{reference}` (`{key}`)**", content)
+            self.assertIn(lab.readable_literal(definition[key]), content)
+            self.assertIn(source, content)
+
+        ontology_page = pages["ch-17-12:10"]
+        self.assertNotIn(f"**Readable instruction view — `{profile}/definition/ontology.json`",
+                         ontology_page)
+        self.assertIn(sources["ch-17-12:10"]["text"], ontology_page)
+
+        prompt_ids = [ident for ident, block in sources.items() if block.kind == "prompt"]
+        self.assertTrue(prompt_ids)
+        for ident in prompt_ids:
+            content = pages[ident]
+            prompt = sources[ident]["text"]
+            for language, label in (("ja", "日本語"), ("en", "English")):
+                literal = prompt.get(language)
+                self.assertIn(f"**Readable prompt — {label}**", content)
+                self.assertIn(lab.readable_literal(literal), content)
+                self.assertIn(literal, content)
+
+    def test_long_non_json_code_gets_a_wrapping_view_and_verbatim_copy(self):
+        pages = {ident: (self.out / page["path"]).read_text(encoding="utf-8")
+                 for page in self.receipt["pagesCoverage"]
+                 for ident in page["sourceBlockIds"]}
+        sources = {f"{s.ident}:{i}": b for s in self.model[0].walk()
+                   for i, b in enumerate(s.blocks)}
+        checked = []
+        for ident, block in sources.items():
+            if block.kind != "code":
+                continue
+            label = block.get("language")
+            label = label.get("en") if hasattr(label, "get") else str(label or "")
+            if ("json" in label.lower() or
+                    max(map(len, block["text"].splitlines()), default=0) <= lab.READABLE_CODE_LINE_LIMIT):
+                continue
+            content = pages[ident]
+            self.assertIn(lab.readable_literal(block["text"]), content)
+            self.assertIn(block["text"], content)
+            checked.append(ident)
+        self.assertIn("ch-9-2:1", checked)
+        self.assertGreaterEqual(len(checked), 5)
 
     def test_omitted_japanese_step_is_rejected(self):
         page = next(p for p in self.receipt["pagesCoverage"] if p["section"] == "ch-4-2")

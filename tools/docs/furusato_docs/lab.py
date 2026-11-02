@@ -22,6 +22,7 @@ from .preview30_public_evidence import load as load_evidence
 from .preview30_content import verify_artifact_manifest
 from .docx_kit import StyleCarrier
 from .current_publication import current_publication
+from .participant_current_tuning import PROFILE_REL
 from furusato_html.model import Section, Text, Document
 
 def digest(value):
@@ -87,6 +88,16 @@ def fence(value, language='text'):
     runs = [len(m.group()) for m in re.finditer(r'`+', value)]
     ticks = '`' * max([3, *[n + 1 for n in runs]])
     return f'{ticks}{language}\n{value}\n{ticks}\n'
+
+
+SELECTION_CONTRACT_BLOCK_ID = 'ch-17-7:1'
+READABLE_CODE_LINE_LIMIT = 80
+
+
+def readable_literal(value):
+    """Render literal source text as escaped, naturally wrapping HTML prose."""
+    value = value.replace('\r\n', '\n').replace('\r', '\n')
+    return '<div>\n' + html.escape(value, quote=False).replace('\n', '<br>\n') + '\n</div>'
 
 
 
@@ -197,6 +208,60 @@ class LabWriter:
                        'source': path.relative_to(self.root).as_posix(), 'sha256': sha256(raw).hexdigest()}
         return '../assets/' + name
 
+    def profile_ref(self, filename):
+        return f'{PROFILE_REL.as_posix()}/{filename}'
+
+    def readable_instruction_views(self, block, block_id):
+        if block_id == 'ch-17-8:1':
+            return [(self.profile_ref('global-instructions.txt'), 'global instructions',
+                     block['text'])]
+        if block_id == 'ch-17-9:1':
+            source = json.loads(block['text'])
+            ref = self.profile_ref('source-instructions.json')
+            return [(ref, f'{name}.instructions', source[name]['instructions'])
+                    for name in ('kusto', 'lakehouse_tables', 'semantic_model')]
+        definition_files = {
+            'ch-17-12:8': 'definition/kusto.json',
+            'ch-17-12:9': 'definition/lakehouse_tables.json',
+            'ch-17-12:11': 'definition/semantic_model.json',
+            'ch-17-12:12': 'definition/stage_config.json',
+        }
+        filename = definition_files.get(block_id)
+        if filename is None:
+            return []
+        source = json.loads(block['text'])
+        key = 'aiInstructions' if 'aiInstructions' in source else 'dataSourceInstructions'
+        return [(self.profile_ref(filename), key, source[key])]
+
+    def render_readable_instruction_views(self, block, block_id):
+        views = []
+        for reference, field, value in self.readable_instruction_views(block, block_id):
+            views.append(
+                f'**Readable instruction view — `{reference}` (`{field}`)**\n\n'
+                f'{readable_literal(value)}'
+            )
+        return '\n\n'.join(views)
+
+    def render_selection_contract(self, block, language, block_id):
+        canonical = bool(block.get('canonicalLiteral'))
+        p = lambda value: prose(value, language, block_id, table=True, canonical=canonical)
+        reference = self.profile_ref('selection-contract.json')
+        record_label = 'レコード' if language == 'ja' else 'Record'
+        records = []
+        for number, row in enumerate(block['rows'], 1):
+            fields = [
+                f'<strong>{p(header)}:</strong>' + (f' {p(value)}' if p(value) else '')
+                for header, value in zip(block['headers'], row)
+            ]
+            records.append(
+                f'<p><strong>{record_label} {number}</strong><br>\n' +
+                '<br>\n'.join(fields) +
+                '\n</p>'
+            )
+        return (
+            f'**Readable field list — source order from `{reference}`**\n\n' +
+            '\n\n'.join(records) + '\n'
+        )
 
     def render_block(self, block, language, block_id):
         p = lambda v, **kw: prose(v, language, block_id, **kw)
@@ -220,12 +285,27 @@ class LabWriter:
             label = label.get(language) if isinstance(label, Text) else str(label or '')
             syntax = next((v for v in ('python', 'sql', 'kql', 'dax', 'json', 'powershell', 'bash', 'gql')
                            if v in label.lower()), 'text')
-            return (('**' + html.escape(label) + '**\n\n') if label else '') + fence(block['text'], syntax)
+            readable = self.render_readable_instruction_views(block, block_id)
+            if not readable and syntax != 'json' and any(
+                    len(line) > READABLE_CODE_LINE_LIMIT for line in block['text'].splitlines()):
+                readable = (
+                    f'**Readable wrapped view — {html.escape(label) or "literal source"}**\n\n'
+                    f'{readable_literal(block["text"])}'
+                )
+            if readable:
+                readable += '\n\n**Verbatim source follows; copy from the canonical block.**\n\n'
+            return readable + (('**' + html.escape(label) + '**\n\n') if label else '') + fence(block['text'], syntax)
         if kind == 'prompt':
             # Prompts are canonical literal source text: do not translate or rewrite.
-            return fence(block['text'].get(language))
+            label = '日本語' if language == 'ja' else 'English'
+            return (f'**Readable prompt — {label}**\n\n' +
+                    readable_literal(block['text'].get(language)) +
+                    '\n\n**Verbatim prompt follows.**\n\n' +
+                    fence(block['text'].get(language)))
         if kind == 'table':
             canonical = bool(block.get('canonicalLiteral'))
+            if block_id == SELECTION_CONTRACT_BLOCK_ID:
+                return '**' + p(block['caption'], canonical=canonical) + '**\n\n' + self.render_selection_contract(block, language, block_id)
             headers = [p(value, table=True, canonical=canonical) for value in block['headers']]
             rows = ['| ' + ' | '.join(headers) + ' |', '| ' + ' | '.join('---' for _ in headers) + ' |']
             rows += ['| ' + ' | '.join(p(cell, table=True, canonical=canonical) for cell in row) + ' |' for row in block['rows']]

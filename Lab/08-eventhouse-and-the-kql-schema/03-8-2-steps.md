@@ -30,6 +30,14 @@
 9. 現在の配置では、上の5つの基本コマンドとは別の前提として、初回取り込みと Activator 用のファイルアップロードより前に DonationEvents だけの OneLake mirroring を有効にします。24.6の deploy-realtime の結果を確認し、所有者・承認済みフォルダー・12列の schema・RLS と既存 mirroring policy を読み取ります。RLS が有効、既存 policy が互換でない、または確認できない場合は停止し、セキュリティを無効にしません。データベース全体や集計ビューは有効にしません。
 10. 参加者自身が所有する新規ワークスペースで、対象テーブルが空であり、所有範囲・承認済みフォルダー・schema・RLS・既存 policy の全項目を確認できた場合に限り、次の設定を適用します。現在供給されている共有ワークスペースでは設定を書き換えません。deploy-realtime で適用済みなら再実行せず、下の読み取りだけで IsEnabled=true と TargetLatencyInMinutes=5 を確認します。読み取りは許可した項目だけを出力し、ConnectionStrings を含む policy 応答を保存・共有しません。
 
+**Readable wrapped view — KQL**
+
+<div>
+.alter-merge table DonationEvents policy mirroring dataformat=parquet with (IsEnabled=true,TargetLatencyInMinutes=5);
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **KQL**
 
 ```kql
@@ -82,6 +90,14 @@
 8. Confirm that DonationEvents has zero rows before ingestion. If unexpected rows exist, do not continue; check the counts per SourceFile and tell the instructor.
 9. For the current deployment, enabling OneLake mirroring only for DonationEvents is a prerequisite separate from the five base commands, before first ingestion and before uploading any Activator input. Inspect the deploy-realtime result in 24.6 and verify ownership, the approved folder, the 12-column schema, RLS and the existing mirroring policy. Stop if RLS is enabled, an existing policy is incompatible, or verification is unavailable; never disable security. Do not enable the whole database or the summary view.
 10. Only in a new workspace owned by the participant, with an empty target table and verified ownership scope, approved folder, schema, RLS and existing policy, apply the following setting. Do not write settings in the currently supplied shared workspace. If deploy-realtime already applied it, do not repeat the write; use only the readback below to confirm IsEnabled=true and TargetLatencyInMinutes=5. Output only the allowlisted fields; never save or share a policy response containing ConnectionStrings.
+
+**Readable wrapped view — KQL**
+
+<div>
+.alter-merge table DonationEvents policy mirroring dataformat=parquet with (IsEnabled=true,TargetLatencyInMinutes=5);
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **KQL**
 

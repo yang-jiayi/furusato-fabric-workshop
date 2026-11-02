@@ -6,6 +6,15 @@
 
 ANALYTICS_READY の後、11章の画面または SQL で ops.dq_rule_results の7つの品質ルールがPASSかを自分で確認します。次の読み取りコマンドは明示的に OneLake Delta/Parquet を使い、最新 Delta version の active file を実際に読み取って件数を検証します。Gold94,900件・1,596,157,000円、受入増分14,900件・252,058,000円、quarantine100件、Ready と出力世代の一致を検査します。7ルールの判定確認は別です。SQL endpoint に Gold のテーブルが表示されない場合、SQL で推測したり代用したりせず、この明示した読み取り経路を使います。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py verify-gold @Common --gold-method onelake-delta-parquet<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -15,6 +24,15 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 
 Semantic model を配布定義から自分の Gold に接続して作成し、初回の Direct Lake refresh と実DAXを順に確認します。各ブロックの成功を見て次へ進みます。モデルはこのコマンドで参加者自身が作成するため、講師による事前配置は不要です。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py deploy-semantic-model @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -22,12 +40,30 @@ Semantic model を配布定義から自分の Gold に接続して作成し、�
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py refresh-model @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
 .\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py refresh-model @Write
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
+
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py verify-model @Common<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 
@@ -40,12 +76,30 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 
 同じフォルダーに Data Agent を1件作り、初期構成を公開します。Lakehouse、KQL Database、主 Ontology、Semantic model と Code Interpreter の配置を読み戻します。初期公開の完了は、今回の調整済みプロファイルの適用や回答品質の合格ではありません。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py deploy-agent @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
 .\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py deploy-agent @Write
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
+
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py publish-agent @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 
@@ -65,6 +119,15 @@ Go to Chapter 11, open the already deployed Notebook 05 and attach your Lakehous
 
 After ANALYTICS_READY, inspect ops.dq_rule_results through the Chapter 11 UI or SQL and confirm all seven quality rules PASS. The following read-only command explicitly uses OneLake Delta/Parquet and counts rows from the actual active files in the latest Delta version. It checks Gold 94,900 rows / JPY 1,596,157,000, accepted increments 14,900 / JPY 252,058,000, quarantine 100, Ready state and matching output generations. Checking all seven rule verdicts is separate. If Gold tables are not visible in the SQL endpoint, do not infer or substitute a SQL result; use this explicit read path.
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py verify-gold @Common --gold-method onelake-delta-parquet<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -74,6 +137,15 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 
 Create the semantic model from the supplied definition against your Gold, then verify its initial Direct Lake refresh and actual DAX. Inspect each block before continuing. These commands create the model for you; an instructor does not need to deploy it first.
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py deploy-semantic-model @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -81,12 +153,30 @@ Create the semantic model from the supplied definition against your Gold, then v
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py refresh-model @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
 .\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py refresh-model @Write
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
+
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py verify-model @Common<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 
@@ -99,12 +189,30 @@ Chapter 12 lets you inspect this same model's ten measures and filters. Check Me
 
 Create one Data Agent in the same folder and publish its initial configuration. Read back the Lakehouse, KQL database, main ontology, semantic model and Code Interpreter configuration. Initial publication does not establish application of the adopted tuned profile or passing answer quality.
 
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py deploy-agent @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
 .\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py deploy-agent @Write
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
+
+**Readable wrapped view — PowerShell**
+
+<div>
+.\.venv\Scripts\python.exe -B tools/provisioning/preview30_runtime.py publish-agent @Write<br>
+if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 

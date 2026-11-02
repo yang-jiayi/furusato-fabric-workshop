@@ -97,10 +97,10 @@ FIGURES = {
                 'Pipeline run Parameters: IncrementFileName is donation_events_001.csv; Type, Subject and Source are empty.'),
     },
     'p30-09-native-delivery': {
-        "caption": ('ルールの History タブ。Activation details に、起動のもとになったファイルのパスと FileCreated が表示される（図は 002 と 003 の2件）',
-                    'Rule History tab: Activation details list the path of each file that triggered the rule and the FileCreated type (the figure shows files 002 and 003).'),
-        "alt": ('Activator のルールの History タブ。Activation count のグラフと、ファイルのパスと FileCreated が並ぶ Activation details の表',
-                'Activator rule History tab: an activation-count chart and an Activation details table of file paths and FileCreated types.'),
+        "caption": ('ルールの History の概要。6つの KPI、Time の選択、UTC の Activation count グラフを示します。数値は表示時点と選択期間で変わります。下にスクロールして Activation details を開き、自分の001の対象パスと FileCreated を記録します。この概要だけでは001の処理や Pipeline・Copy の成功は確認できません。',
+                    'Rule History overview showing six KPIs, the Time selector and the UTC Activation count chart. Values depend on the observation time and selected period. Scroll down to Activation details and record your own 001 target path and FileCreated. This overview alone does not verify processing of 001 or Pipeline/Copy success.'),
+        "alt": ('Activator の History の概要。Running のルール、Last 24 hours の選択、欠けのない6つの KPI と UTC の Activation count グラフ。Activation details の対象行はこの図に含まれない。',
+                'Activator History overview with the Running rule, Last 24 hours selector, six complete KPIs and the UTC Activation count chart. The target Activation details row is not included.'),
     },
     'p30-09-pipeline-003-succeeded': {
         "caption": ('実際の PL_Furusato_101 の実行画面。1件の Pipeline 実行と Copy data1 が Succeeded です。この画面だけでは、対象ファイルとの対応、行数・バイト数、自動起動、KQL の合計は証明されません。',

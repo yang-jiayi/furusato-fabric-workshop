@@ -8,6 +8,14 @@
 
 配布元の docs/v3.1.0/current にある SHA256SUMS.txt と同じ版のZIPを受け取り、展開前にZIPのSHA-256を照合します。PowerShellでは次のパスを自分のダウンロード先に変更します。表示されたハッシュが配布元の同じファイル名の値と一致してから展開します。ZIP内だけのハッシュを外部の配布確認の代わりにしません。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+Get-FileHash -Algorithm SHA256 -LiteralPath "C:\Downloads\Furusato_Workshop_v3.1.0_current.zip"
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -25,6 +33,19 @@ winget install --exact --id Microsoft.AzureCLI
 
 最初のパスを自分の展開先へ変更します。以後は ZIP の source フォルダーが作業場所です。配布済みの定義・Notebook・CSV は編集せず、そのまま使います。配置の途中で新しい版へ入れ替えません。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+Set-Location "C:\Workshop\Furusato_Workshop\source"<br>
+py -3 --version<br>
+az version<br>
+$env:PYTHONDONTWRITEBYTECODE = "1"<br>
+py -3 -B -m venv .venv<br>
+.\.venv\Scripts\python.exe -m pip install -r tools/provisioning/requirements-preview30.txt -r tools/provisioning/requirements-activation.txt
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -39,6 +60,25 @@ py -3 -B -m venv .venv
 1. Fabric のアカウントでテナントを確認し、Workspace の URL の /groups/ に続く GUID と、正確なワークスペース表示名を記録します。作業フォルダーを開いた URL の subfolderId は数値の参照です。API に使う folderId の GUID とは別物です。
 2. F12 → Network を開いてワークスペースのフォルダー一覧を再読み込みし、実際のフォルダー一覧を返す要求を見つけます。環境によっては /powerbi/metadata/groupmetadata/?folderObjectId=&lt;自分のWorkspace GUID&gt; などの要求に含まれます。固定のパスだけを前提にせず、要求URLとResponseの内容を確認します。Response の subfolders 配列で id が URL の subfolderId と一致する行を見つけ、その行の objectId を folderId の GUID として使います。行の folderId や、同じ表示名の別の行ではありません。応答と要求URLの対応を自分の記録として保存します。
 3. 次の変数を自分の値へ変更します。DeploymentPrivate は ZIP や Git の外の新しいフォルダーです。作成後、前の手順の応答本文だけを folder-map.json に保存し、要求URLと確認日時を folder-map-note.txt に記録します。Cookie、Authorization、トークン、HAR は保存しません。対応を確認できない場合は、folderMappingVerified を true にせず停止します。
+
+**Readable wrapped view — PowerShell**
+
+<div>
+$TenantId = "&lt;tenant GUID&gt;"<br>
+$WorkspaceId = "&lt;workspace GUID&gt;"<br>
+$WorkspaceName = "&lt;exact workspace display name&gt;"<br>
+$FolderId = "&lt;objectId GUID from the matching folder row&gt;"<br>
+$PortalSubfolderId = "&lt;numeric subfolderId from the folder URL&gt;"<br>
+$ParticipantId = "001"<br>
+$Environment = "dev"<br>
+$DeploymentPrivate = Join-Path $env:USERPROFILE "furusato-private\deployment-001-01"<br>
+New-Item -ItemType Directory -Path $DeploymentPrivate -ErrorAction Stop<br>
+$MappingEvidence = Join-Path $DeploymentPrivate "folder-map.json"<br>
+$Scope = Join-Path $DeploymentPrivate "scope.json"<br>
+az login --tenant $TenantId --use-device-code --allow-no-subscriptions
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 
@@ -70,6 +110,14 @@ Your administrator must provide an available Fabric workspace, capacity, require
 
 Obtain the ZIP and its matching SHA256SUMS.txt from docs/v3.1.0/current at the distribution source. Before extraction, verify the ZIP SHA-256. Change the path below to your download location and compare the output with the same filename in the distributor’s checksum list. Do not substitute a checksum found only inside the ZIP for this external check.
 
+**Readable wrapped view — PowerShell**
+
+<div>
+Get-FileHash -Algorithm SHA256 -LiteralPath "C:\Downloads\Furusato_Workshop_v3.1.0_current.zip"
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -87,6 +135,19 @@ winget install --exact --id Microsoft.AzureCLI
 
 Change the first path to your extracted directory. Work from the ZIP's source folder. Use the distributed definitions, Notebooks and CSVs without editing them, and do not switch versions during deployment.
 
+**Readable wrapped view — PowerShell**
+
+<div>
+Set-Location "C:\Workshop\Furusato_Workshop\source"<br>
+py -3 --version<br>
+az version<br>
+$env:PYTHONDONTWRITEBYTECODE = "1"<br>
+py -3 -B -m venv .venv<br>
+.\.venv\Scripts\python.exe -m pip install -r tools/provisioning/requirements-preview30.txt -r tools/provisioning/requirements-activation.txt
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -101,6 +162,25 @@ py -3 -B -m venv .venv
 1. Confirm the tenant in your Fabric account. Record the GUID after /groups/ in the workspace URL and the exact workspace display name. The subfolderId in the opened folder URL is a numeric portal reference, distinct from the folderId GUID used by the API.
 2. Open F12 → Network, reload the workspace folder list and find the actual request that returns the folders. Depending on the environment this may be /powerbi/metadata/groupmetadata/?folderObjectId=&lt;your workspace GUID&gt;. Inspect the request URL and Response rather than assuming one fixed endpoint. In Response, find the row in subfolders whose id matches the URL's subfolderId; use that row's objectId as the folder GUID. Do not use the row's folderId or a different same-named row. Save the response together with its request-URL association in your private records.
 3. Replace the variables below with your values. DeploymentPrivate is a new folder outside ZIP and Git. After creating it, save only the prior response body as folder-map.json and record its request URL and inspection time in folder-map-note.txt. Never save cookies, Authorization headers, tokens or HAR files. If the mapping cannot be verified, stop without setting folderMappingVerified to true.
+
+**Readable wrapped view — PowerShell**
+
+<div>
+$TenantId = "&lt;tenant GUID&gt;"<br>
+$WorkspaceId = "&lt;workspace GUID&gt;"<br>
+$WorkspaceName = "&lt;exact workspace display name&gt;"<br>
+$FolderId = "&lt;objectId GUID from the matching folder row&gt;"<br>
+$PortalSubfolderId = "&lt;numeric subfolderId from the folder URL&gt;"<br>
+$ParticipantId = "001"<br>
+$Environment = "dev"<br>
+$DeploymentPrivate = Join-Path $env:USERPROFILE "furusato-private\deployment-001-01"<br>
+New-Item -ItemType Directory -Path $DeploymentPrivate -ErrorAction Stop<br>
+$MappingEvidence = Join-Path $DeploymentPrivate "folder-map.json"<br>
+$Scope = Join-Path $DeploymentPrivate "scope.json"<br>
+az login --tenant $TenantId --use-device-code --allow-no-subscriptions
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 

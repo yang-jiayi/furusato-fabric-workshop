@@ -43,6 +43,22 @@
       "evidenceScope": "Navigation illustration showing DonationEvents and a rounded 15K row statistic. Not an exact count or evidence of OneLake Delta materialization."
     },
     {
+      "id": "p30-09-native-delivery",
+      "file": "activator-history-overview.png",
+      "sha256": "04bb5828ceafe002f01b4d72ed720082803398a0c57779cc275335a020747403",
+      "source": "native-fabric-pwa-activator-history-overview",
+      "actualUI": true,
+      "capturedOn": "2026-11-02",
+      "captureContext": "Existing rule History, captured read-only. Six complete overview KPIs, full UTC activation chart and Time selector. The native rule-title cursor remains unchanged.",
+      "width": 1469,
+      "height": 593,
+      "originalSha256": "7b78f7761dfa691c2b4a0ad9dfc8b779c436a05728fb426dedf6437bc9ef9353",
+      "cropBoxXyxy": [44, 147, 1513, 740],
+      "pixelEdits": ["Crop only; lossless PNG encoding of original decoded RGB pixels; no resize or reconstruction"],
+      "redactions": ["Account/avatar and outer application chrome excluded by crop"],
+      "evidenceScope": "History overview illustration only. Does not show Subject/FileCreated, complete activation detail rows or downstream Pipeline/Copy success. No new events/runs requested."
+    },
+    {
       "id": "p30-09-source-events",
       "file": "p30-09-source-events.png",
       "sha256": "6fc2608f90bbfb7187cefe852322e2426f5ecc296984e660b2bb4303999949b4",

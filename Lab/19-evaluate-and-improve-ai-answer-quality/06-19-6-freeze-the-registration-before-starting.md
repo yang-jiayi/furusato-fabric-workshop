@@ -12,11 +12,27 @@ baselineの公開定義は最初の質問より前に保存します。finalの�
 
 ファイルのSHA-256を調べるには、第17章で使ったPythonのターミナルをZIP内のsourceフォルダー（Gitならリポジトリ直下）で開き、次を実行します。最初のコマンドの出力をdataManifestSha256へ記録します。2つ目は最後の引用符内を実際に保存した公開定義JSONのパスへ置き換え、該当する段階のPublishedDefinitionSha256へ記録します。公開定義が取得できなければ空欄と理由を残します。
 
+**Readable wrapped view — Python: データ配布版**
+
+<div>
+python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest())" "workshop/v3.0.0-preview/data/dataset-manifest.json"
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **Python: データ配布版**
 
 ```python
 python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest())" "workshop/v3.0.0-preview/data/dataset-manifest.json"
 ```
+
+**Readable wrapped view — Python: 保存した公開定義**
+
+<div>
+python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest())" "&lt;published-definition-json-path&gt;"
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **Python: 保存した公開定義**
 
@@ -55,11 +71,27 @@ Save the baseline publication before its first question. Add the final publicati
 
 To calculate SHA-256, use the Chapter 17 Python terminal from the ZIP's source folder or the Git repository root. Record the first command's output as dataManifestSha256. In the second command, replace the final quoted path with your saved published-definition JSON and record its hash for that phase. If the publication cannot be obtained, leave its hash blank with the reason.
 
+**Readable wrapped view — Python: data distribution**
+
+<div>
+python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest())" "workshop/v3.0.0-preview/data/dataset-manifest.json"
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **Python: data distribution**
 
 ```python
 python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest())" "workshop/v3.0.0-preview/data/dataset-manifest.json"
 ```
+
+**Readable wrapped view — Python: saved publication**
+
+<div>
+python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest())" "&lt;published-definition-json-path&gt;"
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **Python: saved publication**
 

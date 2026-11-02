@@ -4,6 +4,86 @@
 
 次の source-instructions.json は各実ソース欄の正確な参照値です。この段階では画面上の指示・説明・Ontology context を変更しません。prepare で照合し、対象と差分を確認後、許可された apply 手順だけで各値を対応する同じ欄へ適用します。本文を翻訳・短縮したり、他ソースへ移したり、Ontology 用 source instruction を作ったりしません。
 
+**Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/source-instructions.json` (`kusto.instructions`)**
+
+<div>
+Query only the `DonationObservationSummaryForAgent` materialized view.<br>
+<br>
+- This source is the numeric authority for every August 2026 operational observation metric. No other approved source may be used to state, correct or confirm an observation count or observed amount, and the Ontology time-series mirror is never a substitute for it.<br>
+- Every row is an aggregate bucket, not one observation. Use `sum(ObservationCount)` for observation totals and `sum(ObservedAmountYen)` for amount totals; `count()` counts buckets.<br>
+- Filter and group periods on `EventMinute`, and rebin it for coarser periods, for example `bin(EventMinute, 1h)`. Use `min(FirstObservedAt)` and `max(LastObservedAt)` for the observed range.<br>
+- `FirstObservedAt` and `LastObservedAt` are the source column names. File/run output must print them under the response headers `FirstObservedAtUtc` and `LastObservedAtUtc` and include the sentence `All timestamps are UTC.` Do not print unlabeled `FirstObservedAt`/`LastObservedAt` headers and do not relabel these source values as JST.<br>
+- All timestamps are UTC. Convert with `datetime_utc_to_local(..., "Asia/Tokyo")` only when the question asks for Japan time, and label the timezone either way.<br>
+- Group workshop-run questions by `WorkshopRunId`, `SourceFile` and `ParticipantAlias`, and use `max(LastPublishedAtUtc)` for publication checks.<br>
+- For every municipality aggregate, project `MunicipalityID` with the metrics. A missing display name is expected and is not a query failure; a multi-source caller must resolve that exact ID in Lakehouse and may then traverse its Prefecture in Ontology.<br>
+- `MunicipalityID` is recipient context only. Donor, Gift, Supplier, payment method, approval, fulfillment and lifecycle state are not available here; say so instead of substituting a static fact.<br>
+<br>
+DEDUPLICATION LIMIT<br>
+- MANDATORY FIRST STEP for every duplicate, unique-event, or deduplication question: execute a raw aggregate over the requested UTC window with `RawObservationCount=sum(ObservationCount)` and `RawObservedAmountYen=sum(ObservedAmountYen)`. Report both returned values before explaining the limit. Never stop at schema inspection and never use the all-sources-failed fallback after this aggregate returns a row.<br>
+- EventID is the only valid deduplication identity, and no approved Agent source exposes it: it is absent from this materialized view, from the Lakehouse snapshot and from the Ontology. State that scope exactly; do not imply that another approved source could prove it.<br>
+- Never use EventMinute, MunicipalityID, SourceFile, WorkshopRunId, a materialized-view row, or any composite of those fields as a surrogate deduplication key. Never invent `UniqueObservationCount` or `UniqueObservedAmountYen`.<br>
+- Report only the raw aggregates and the missing-identity limit. Never print, estimate, approximate or imply a deduplicated count or deduplicated amount, and never present the raw aggregate as if it were one.<br>
+- ObservationCount is a raw aggregate and may include duplicates. Never label it `重複なし`, unique, deduplicated, confirmed, or exact distinct.<br>
+<br>
+GRAIN AND COMPOSITION<br>
+- The observations are append-only and independent of the static snapshot. Never add these totals to static donation totals and never describe them as pending, unconfirmed, approved or corrected.<br>
+- Never calculate or display a combined total with Lakehouse static metrics, even as a reference value.<br>
+- In a top-Municipality comparison, preserve MunicipalityID, ObservationCount and ObservedAmountYen through final answer composition; the response is incomplete if either metric is omitted.<br>
+<br>
+Three supported query shapes, because this source has no example-query bundle:<br>
+<br>
+- Hourly profile for one recipient municipality across the observation month:<br>
+  filter `MunicipalityID == "012190"`, filter `EventMinute` to the August 2026 window,<br>
+  `summarize sum(ObservationCount), sum(ObservedAmountYen) by bin(EventMinute, 1h)`, order ascending by that hour bucket.<br>
+- Run-level summary across the observation month:<br>
+  filter `EventMinute` to the August 2026 window,<br>
+  `summarize sum(ObservationCount), sum(ObservedAmountYen), min(FirstObservedAt), max(LastObservedAt) by WorkshopRunId, SourceFile`, order by run then source file,<br>
+  then union one `TOTAL` row carrying the same four aggregates across all files. Preserve the literal WorkshopRunId string; never replace it with `dcount(WorkshopRunId)`, a count of run IDs, or a blank.<br>
+- Windowed recipient-municipality leaderboard for an explicitly requested window:<br>
+  filter `EventMinute` to that window,<br>
+  `summarize sum(ObservationCount), sum(ObservedAmountYen) by MunicipalityID`,<br>
+  order by the metric the question named, and keep both metrics plus `MunicipalityID` in every returned row.<br>
+  Never return an ID with a blank metric, and never resolve the display name here.
+</div>
+
+**Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/source-instructions.json` (`lakehouse_tables.instructions`)**
+
+<div>
+- Mandatory exact-Donation SQL projection: when DonationId is specified, the SQL result must include `d.DonationId`, `d.DonationAmountYen`, `donor.DonorId`, `donor.DonorName`, `donor.PrefectureId AS DonorResidencePrefectureId`, `donor_pref.PrefectureName AS DonorResidencePrefectureName`, `municipality.MunicipalityId`, `municipality.MunicipalityName`, `municipality.PrefectureId AS RecipientPrefectureId`, `recipient_pref.PrefectureName AS RecipientPrefectureName`, `gift.GiftId`, `gift.GiftName`, `category.CategoryId`, `category.CategoryName`, `supplier.SupplierId`, and `supplier.SupplierName`. Join the exact foreign keys through `ot_donor`, both aliases of `ot_prefecture`, `ot_municipality`, `ot_gift`, `ot_gift_category`, `ot_supplier_gift`, and `ot_supplier`, filter only `d.DonationId = &lt;exact ID&gt;`, and order by SupplierId. Do not issue an ID-only projection.<br>
+Query the `dbo` schema of this Lakehouse for static snapshot facts.<br>
+<br>
+- Always return the stable ID next to every named row: PrefectureId, MunicipalityId, DonorId, GiftId, CategoryId, SupplierId, DonationId. Resolve names to IDs before filtering, and never exact-match a partial or non-unique display name.<br>
+- `ot_prefecture` carries both readings side by side. `PrefReceived*` is donation received by municipalities in that prefecture; `PrefResident*` is donation made by residents of that prefecture. Choose deliberately and say which reading you used. For a bare place phrase such as `Xの寄付`, issue one query that selects both column families and report both, or ask the user which meaning they intend; never choose one silently.<br>
+- For an unqualified popularity or ranking question, return both the count and amount metrics, the stable ID, and the nationwide or filtered scope. Never choose only one metric and call it popularity.<br>
+- `ot_donation` is the only transaction grain. `ot_donor`, `ot_gift`, `ot_municipality`, `ot_gift_category` and `ot_prefecture` carry pre-aggregated static counts and totals for their own grain, and `ot_mun_category_metric`, `ot_pref_category_metric` and `ot_pref_donation_flow` are already summarized pairs. Never re-aggregate a pre-aggregated column across a different grain, and never sum a rank.<br>
+- `ot_supplier_gift` is a many-to-many registration bridge. Never use it in a donation count or amount aggregation.<br>
+- `DonationSelectedGift` means the donation selected that return gift; `SupplierProvidesGift` means the supplier registered that gift in the catalog. Neither proves purchase, delivery or allocation of a donation to one supplier. `ot_pref_donation_flow` origin is residence and destination is recipient; they are not interchangeable.<br>
+- Use `DonorResidenceAmountRank` only inside a residence prefecture and `DonorOverallAmountRank` only nationwide; the same rule applies to `MunicipalityPrefAmountRank` versus `MunicipalityAmountRank`. Print the rank scope with the rank.<br>
+- `MunicipalityAmountRank` and `MunicipalityPrefAmountRank` are amount ranks, and `PrefReceivedAmountRank`, `PrefResidentAmountRank`, `DonorOverallAmountRank`, `DonorResidenceAmountRank`, `GiftAmountRank`, `CategoryAmountRank`, `MunCategoryAmountRank`, `PrefCategoryAmountRank`, `PrefFlowOriginRank` and `PrefFlowDestinationRank` are amount ranks too. No stored column ranks by record count. A count rank must be derived in the query by ordering the count column, and the answer must label it a derived count rank, never quote a stored amount rank as one.<br>
+- Month filters use `DonationYearMonthJst` (`yyyy-MM`) or `DonationDateJst` (`yyyy-MM-dd`); both are Asia/Tokyo, while `DonatedAtUtc` is UTC.<br>
+- Lakehouse relationship-key columns may support SQL joins, but Ontology owns modeled connectivity. In a multi-source question that explicitly asks for a Prefecture relationship, return the Municipality stable ID and static metrics only; do not use Lakehouse Prefecture fields as the relationship answer.<br>
+- Membership or containment questions - which Municipalities belong to, sit under, hang from, 属する or ぶら下がる a Prefecture - belong to Ontology. Do not answer them by counting or grouping `ot_municipality.PrefectureId`; return static metrics only and let Ontology return the relationship-backed total.<br>
+- When a MunicipalityID comes from Eventhouse, filter `ot_municipality.MunicipalityId` on that exact ID and return its display name, static metrics and requested ranking scope. The absence of a name in Eventhouse is not a reason to stop a cross-source comparison.<br>
+- This source is independent of the Eventhouse observations. Never add its rows or amounts to Eventhouse observation totals and never call its rows approved, confirmed or finalized.<br>
+- For an exact Donation trace, return DonationId, DonationAmountYen, DonorId, MunicipalityId and GiftId from `ot_donation`; resolve residence PrefectureId, recipient PrefectureId, CategoryId and catalog-registered SupplierIds in separate owning tables without inventing a direct Donor-to-Supplier relationship.<br>
+- Do not invoke Ontology for a static place-metric question unless the user explicitly asks for a relationship or connectivity path. Return only query-backed static values and never invent overlap or reconciliation numbers between received and resident branches.<br>
+- Static snapshot is a dataset label, not proof of deduplication, approval, confirmation or finality. Never add its metrics to Eventhouse observations, even as a reference value.<br>
+- Canonical Gift category relationship name: `Gift -GiftInCategory-&gt; GiftCategory`. Use that exact name in every Donation trace.<br>
+- `_WorkshopGenerationId` is an opaque publication generation, never a calendar year. The `ot_*` tables already represent the static 2025 snapshot. Never filter `_WorkshopGenerationId` to 2025 or to any year; for a current static query, omit that filter.<br>
+- `MunicipalityId` is a string key. Preserve leading zeros and compare an Eventhouse MunicipalityID as an exact quoted string. For a cross-source comparison, query the exact MunicipalityId row and return `MunicipalityStaticCount`, `MunicipalityStaticTotalYen`, `MunicipalityAmountRank`, and `MunicipalityPrefAmountRank`; do not substitute a generation filter for the MunicipalityId filter.<br>
+- For Supplier lookup in a Donation trace, filter `ot_supplier_gift.GiftId` to the exact selected GiftId, then resolve only those SupplierIds in `ot_supplier`. Never list suppliers merely because they catalog another gift for the same Municipality.<br>
+- Return every ID/name pair from the same SQL row. For an exact Donation trace, resolve attributes through exact-key joins and never infer MunicipalityName from PrefectureName or MunicipalityId. Use Lakehouse for attributes and Ontology only for modeled paths.<br>
+
+</div>
+
+**Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/source-instructions.json` (`semantic_model.instructions`)**
+
+<div>
+Use source-owned DAX measures. Preserve current dimension filters and label StaticSeed versus RealtimeIncrement. Do not infer raw Eventhouse counts from Gold.
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **JSON**
 
 ```json
@@ -36,6 +116,86 @@
 ## 17.9 Review source instructions, descriptions and Ontology context
 
 The source-instructions.json below contains the exact reference values for each actual source field. Do not edit UI instructions, descriptions or Ontology context at this step. Reconcile them in prepare; after reviewing the target and diffs, apply values only through the authorized apply procedure to their corresponding fields. Do not translate, shorten or move text to another source, or invent an Ontology source instruction.
+
+**Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/source-instructions.json` (`kusto.instructions`)**
+
+<div>
+Query only the `DonationObservationSummaryForAgent` materialized view.<br>
+<br>
+- This source is the numeric authority for every August 2026 operational observation metric. No other approved source may be used to state, correct or confirm an observation count or observed amount, and the Ontology time-series mirror is never a substitute for it.<br>
+- Every row is an aggregate bucket, not one observation. Use `sum(ObservationCount)` for observation totals and `sum(ObservedAmountYen)` for amount totals; `count()` counts buckets.<br>
+- Filter and group periods on `EventMinute`, and rebin it for coarser periods, for example `bin(EventMinute, 1h)`. Use `min(FirstObservedAt)` and `max(LastObservedAt)` for the observed range.<br>
+- `FirstObservedAt` and `LastObservedAt` are the source column names. File/run output must print them under the response headers `FirstObservedAtUtc` and `LastObservedAtUtc` and include the sentence `All timestamps are UTC.` Do not print unlabeled `FirstObservedAt`/`LastObservedAt` headers and do not relabel these source values as JST.<br>
+- All timestamps are UTC. Convert with `datetime_utc_to_local(..., "Asia/Tokyo")` only when the question asks for Japan time, and label the timezone either way.<br>
+- Group workshop-run questions by `WorkshopRunId`, `SourceFile` and `ParticipantAlias`, and use `max(LastPublishedAtUtc)` for publication checks.<br>
+- For every municipality aggregate, project `MunicipalityID` with the metrics. A missing display name is expected and is not a query failure; a multi-source caller must resolve that exact ID in Lakehouse and may then traverse its Prefecture in Ontology.<br>
+- `MunicipalityID` is recipient context only. Donor, Gift, Supplier, payment method, approval, fulfillment and lifecycle state are not available here; say so instead of substituting a static fact.<br>
+<br>
+DEDUPLICATION LIMIT<br>
+- MANDATORY FIRST STEP for every duplicate, unique-event, or deduplication question: execute a raw aggregate over the requested UTC window with `RawObservationCount=sum(ObservationCount)` and `RawObservedAmountYen=sum(ObservedAmountYen)`. Report both returned values before explaining the limit. Never stop at schema inspection and never use the all-sources-failed fallback after this aggregate returns a row.<br>
+- EventID is the only valid deduplication identity, and no approved Agent source exposes it: it is absent from this materialized view, from the Lakehouse snapshot and from the Ontology. State that scope exactly; do not imply that another approved source could prove it.<br>
+- Never use EventMinute, MunicipalityID, SourceFile, WorkshopRunId, a materialized-view row, or any composite of those fields as a surrogate deduplication key. Never invent `UniqueObservationCount` or `UniqueObservedAmountYen`.<br>
+- Report only the raw aggregates and the missing-identity limit. Never print, estimate, approximate or imply a deduplicated count or deduplicated amount, and never present the raw aggregate as if it were one.<br>
+- ObservationCount is a raw aggregate and may include duplicates. Never label it `重複なし`, unique, deduplicated, confirmed, or exact distinct.<br>
+<br>
+GRAIN AND COMPOSITION<br>
+- The observations are append-only and independent of the static snapshot. Never add these totals to static donation totals and never describe them as pending, unconfirmed, approved or corrected.<br>
+- Never calculate or display a combined total with Lakehouse static metrics, even as a reference value.<br>
+- In a top-Municipality comparison, preserve MunicipalityID, ObservationCount and ObservedAmountYen through final answer composition; the response is incomplete if either metric is omitted.<br>
+<br>
+Three supported query shapes, because this source has no example-query bundle:<br>
+<br>
+- Hourly profile for one recipient municipality across the observation month:<br>
+  filter `MunicipalityID == "012190"`, filter `EventMinute` to the August 2026 window,<br>
+  `summarize sum(ObservationCount), sum(ObservedAmountYen) by bin(EventMinute, 1h)`, order ascending by that hour bucket.<br>
+- Run-level summary across the observation month:<br>
+  filter `EventMinute` to the August 2026 window,<br>
+  `summarize sum(ObservationCount), sum(ObservedAmountYen), min(FirstObservedAt), max(LastObservedAt) by WorkshopRunId, SourceFile`, order by run then source file,<br>
+  then union one `TOTAL` row carrying the same four aggregates across all files. Preserve the literal WorkshopRunId string; never replace it with `dcount(WorkshopRunId)`, a count of run IDs, or a blank.<br>
+- Windowed recipient-municipality leaderboard for an explicitly requested window:<br>
+  filter `EventMinute` to that window,<br>
+  `summarize sum(ObservationCount), sum(ObservedAmountYen) by MunicipalityID`,<br>
+  order by the metric the question named, and keep both metrics plus `MunicipalityID` in every returned row.<br>
+  Never return an ID with a blank metric, and never resolve the display name here.
+</div>
+
+**Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/source-instructions.json` (`lakehouse_tables.instructions`)**
+
+<div>
+- Mandatory exact-Donation SQL projection: when DonationId is specified, the SQL result must include `d.DonationId`, `d.DonationAmountYen`, `donor.DonorId`, `donor.DonorName`, `donor.PrefectureId AS DonorResidencePrefectureId`, `donor_pref.PrefectureName AS DonorResidencePrefectureName`, `municipality.MunicipalityId`, `municipality.MunicipalityName`, `municipality.PrefectureId AS RecipientPrefectureId`, `recipient_pref.PrefectureName AS RecipientPrefectureName`, `gift.GiftId`, `gift.GiftName`, `category.CategoryId`, `category.CategoryName`, `supplier.SupplierId`, and `supplier.SupplierName`. Join the exact foreign keys through `ot_donor`, both aliases of `ot_prefecture`, `ot_municipality`, `ot_gift`, `ot_gift_category`, `ot_supplier_gift`, and `ot_supplier`, filter only `d.DonationId = &lt;exact ID&gt;`, and order by SupplierId. Do not issue an ID-only projection.<br>
+Query the `dbo` schema of this Lakehouse for static snapshot facts.<br>
+<br>
+- Always return the stable ID next to every named row: PrefectureId, MunicipalityId, DonorId, GiftId, CategoryId, SupplierId, DonationId. Resolve names to IDs before filtering, and never exact-match a partial or non-unique display name.<br>
+- `ot_prefecture` carries both readings side by side. `PrefReceived*` is donation received by municipalities in that prefecture; `PrefResident*` is donation made by residents of that prefecture. Choose deliberately and say which reading you used. For a bare place phrase such as `Xの寄付`, issue one query that selects both column families and report both, or ask the user which meaning they intend; never choose one silently.<br>
+- For an unqualified popularity or ranking question, return both the count and amount metrics, the stable ID, and the nationwide or filtered scope. Never choose only one metric and call it popularity.<br>
+- `ot_donation` is the only transaction grain. `ot_donor`, `ot_gift`, `ot_municipality`, `ot_gift_category` and `ot_prefecture` carry pre-aggregated static counts and totals for their own grain, and `ot_mun_category_metric`, `ot_pref_category_metric` and `ot_pref_donation_flow` are already summarized pairs. Never re-aggregate a pre-aggregated column across a different grain, and never sum a rank.<br>
+- `ot_supplier_gift` is a many-to-many registration bridge. Never use it in a donation count or amount aggregation.<br>
+- `DonationSelectedGift` means the donation selected that return gift; `SupplierProvidesGift` means the supplier registered that gift in the catalog. Neither proves purchase, delivery or allocation of a donation to one supplier. `ot_pref_donation_flow` origin is residence and destination is recipient; they are not interchangeable.<br>
+- Use `DonorResidenceAmountRank` only inside a residence prefecture and `DonorOverallAmountRank` only nationwide; the same rule applies to `MunicipalityPrefAmountRank` versus `MunicipalityAmountRank`. Print the rank scope with the rank.<br>
+- `MunicipalityAmountRank` and `MunicipalityPrefAmountRank` are amount ranks, and `PrefReceivedAmountRank`, `PrefResidentAmountRank`, `DonorOverallAmountRank`, `DonorResidenceAmountRank`, `GiftAmountRank`, `CategoryAmountRank`, `MunCategoryAmountRank`, `PrefCategoryAmountRank`, `PrefFlowOriginRank` and `PrefFlowDestinationRank` are amount ranks too. No stored column ranks by record count. A count rank must be derived in the query by ordering the count column, and the answer must label it a derived count rank, never quote a stored amount rank as one.<br>
+- Month filters use `DonationYearMonthJst` (`yyyy-MM`) or `DonationDateJst` (`yyyy-MM-dd`); both are Asia/Tokyo, while `DonatedAtUtc` is UTC.<br>
+- Lakehouse relationship-key columns may support SQL joins, but Ontology owns modeled connectivity. In a multi-source question that explicitly asks for a Prefecture relationship, return the Municipality stable ID and static metrics only; do not use Lakehouse Prefecture fields as the relationship answer.<br>
+- Membership or containment questions - which Municipalities belong to, sit under, hang from, 属する or ぶら下がる a Prefecture - belong to Ontology. Do not answer them by counting or grouping `ot_municipality.PrefectureId`; return static metrics only and let Ontology return the relationship-backed total.<br>
+- When a MunicipalityID comes from Eventhouse, filter `ot_municipality.MunicipalityId` on that exact ID and return its display name, static metrics and requested ranking scope. The absence of a name in Eventhouse is not a reason to stop a cross-source comparison.<br>
+- This source is independent of the Eventhouse observations. Never add its rows or amounts to Eventhouse observation totals and never call its rows approved, confirmed or finalized.<br>
+- For an exact Donation trace, return DonationId, DonationAmountYen, DonorId, MunicipalityId and GiftId from `ot_donation`; resolve residence PrefectureId, recipient PrefectureId, CategoryId and catalog-registered SupplierIds in separate owning tables without inventing a direct Donor-to-Supplier relationship.<br>
+- Do not invoke Ontology for a static place-metric question unless the user explicitly asks for a relationship or connectivity path. Return only query-backed static values and never invent overlap or reconciliation numbers between received and resident branches.<br>
+- Static snapshot is a dataset label, not proof of deduplication, approval, confirmation or finality. Never add its metrics to Eventhouse observations, even as a reference value.<br>
+- Canonical Gift category relationship name: `Gift -GiftInCategory-&gt; GiftCategory`. Use that exact name in every Donation trace.<br>
+- `_WorkshopGenerationId` is an opaque publication generation, never a calendar year. The `ot_*` tables already represent the static 2025 snapshot. Never filter `_WorkshopGenerationId` to 2025 or to any year; for a current static query, omit that filter.<br>
+- `MunicipalityId` is a string key. Preserve leading zeros and compare an Eventhouse MunicipalityID as an exact quoted string. For a cross-source comparison, query the exact MunicipalityId row and return `MunicipalityStaticCount`, `MunicipalityStaticTotalYen`, `MunicipalityAmountRank`, and `MunicipalityPrefAmountRank`; do not substitute a generation filter for the MunicipalityId filter.<br>
+- For Supplier lookup in a Donation trace, filter `ot_supplier_gift.GiftId` to the exact selected GiftId, then resolve only those SupplierIds in `ot_supplier`. Never list suppliers merely because they catalog another gift for the same Municipality.<br>
+- Return every ID/name pair from the same SQL row. For an exact Donation trace, resolve attributes through exact-key joins and never infer MunicipalityName from PrefectureName or MunicipalityId. Use Lakehouse for attributes and Ontology only for modeled paths.<br>
+
+</div>
+
+**Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/source-instructions.json` (`semantic_model.instructions`)**
+
+<div>
+Use source-owned DAX measures. Preserve current dimension filters and label StaticSeed versus RealtimeIncrement. Do not infer raw Eventhouse counts from Gold.
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **JSON**
 

@@ -7,7 +7,12 @@ Draft が完全に一致し、全ての事前条件と readback が通った場�
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py publish --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --apply
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py publish `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --apply
 ```
 
 <details>
@@ -20,7 +25,12 @@ Only after Draft fully matches and all prerequisites and readbacks pass, publish
 **PowerShell**
 
 ```powershell
-.venv\Scripts\python.exe -B tools/data-agent/current_profile.py publish --workspace-id $WorkspaceId --folder-id $FolderId --agent-id $AgentId --private-root $PrivateRoot --apply
+.venv\Scripts\python.exe -B tools/data-agent/current_profile.py publish `
+  --workspace-id $WorkspaceId `
+  --folder-id $FolderId `
+  --agent-id $AgentId `
+  --private-root $PrivateRoot `
+  --apply
 ```
 
 </details>

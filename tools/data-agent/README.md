@@ -24,6 +24,48 @@ measured profile or create its SQL views merely to change a global instruction.
 Source edits and generated bundles are candidates, not proof of deployment or
 answer quality. Preserve the baseline and compare a separately registered fresh run.
 
+### Separate result-fidelity candidate (unmeasured)
+
+`quality_candidate.compile_candidate(definition, model_definition)` is an offline-only follow-up
+experiment, not a replacement for the measured/current profile. It starts from a
+complete native Published definition, clones that stage to Draft, and changes only
+global instructions and the three direct-source instruction fields. It preserves
+Published/shared parts, source bindings/selections and native Ontology payloads;
+unexpected parts or changed instruction anchors stop compilation.
+The second input must be the fresh definition of the bound SemanticModel, not
+an assumed repository copy. Its ten observed TMDL measure expressions and authored
+descriptions are extracted into the semantic-model source instructions, with
+per-part hashes in the receipt. This preserves that historical experiment's
+construction, **not a supported NL2DAX tuning mechanism**: the
+[source-specific capability matrix](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-add-datasources#tab/dax)
+marks semantic-model Data Source Instructions and source descriptions unsupported.
+Round-trip persistence does not establish consumption. Use supported model
+metadata or model-side Prep for AI instead; agent instructions support routing.
+
+The candidate targets UTC transcription, per-file versus whole-source aggregate
+grain, transaction-level payment filters, ID/name retention and explanations
+grounded in actual measure definitions. Its tests verify construction and
+preservation, **not query execution or improved answer accuracy**. It makes no
+service calls. Do not apply it through the frozen identity-only profile helper
+or reuse a previous write authorization. Fresh scoped preparation, exact Draft
+readback, separately authorized publication and a focused live diagnostic set
+must precede any acceptance or wider comparative campaign.
+
+`decomposition_candidate.compile_candidate(agent_definition, model_definition)`
+is a separate offline, unmeasured follow-up pinned by default to the reviewed
+`fbc6a414...` Agent state and owning model part. It replaces only the Draft global
+decomposition paragraph: applicable shared constraints must reach each delegated
+subquestion, including rankings, unless the user explicitly changes scope.
+It preserves every source instruction, selection, identity, native Ontology part
+and Published part. Its separate model candidate appends descriptions to the five
+existing KEEPFILTERS measures, deriving the quoted definitions from actual TMDL;
+all ten executable measures and every non-description model byte remain exact.
+This uses existing model metadata, not invented Prep for AI annotations or
+unsupported source instructions. The two definitions are **review-only**:
+supported placement does not prove runtime consumption, successful model import
+or improved answers. No service calls, data changes, refresh, publication or
+evaluation are performed or authorized by compilation.
+
 ### Native Ontology context check
 
 新しい Agent 定義は 3 個の通常 `datasource.json` と、別の

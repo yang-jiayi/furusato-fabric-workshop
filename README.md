@@ -2,7 +2,7 @@
 
 Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent を組み合わせ、合成データから業務の意味を共有できる分析基盤を作るハンズオンです。
 
-[**Labで始める（GitHub上の正本）**](Lab/README.md) · [**日英HTML手順書**](docs/furusato-workshop-v3-1-0-complete.html) · [**参加者用ZIP**](docs/Furusato_Workshop_v3.1.0_current.zip) · [ダウンロードとSHA-256](docs/README.md)
+[**Labで始める（GitHub上の正本）**](Lab/README.md) · [**日英HTML手順書**](docs/furusato-workshop-v3-1-0-complete.html?raw=true) · [**参加者用ZIP**](docs/Furusato_Workshop_v3.1.0_current.zip?raw=true) · [ダウンロードとSHA-256](docs/README.md)
 
 ![Furusato Workshopの完成アーキテクチャ](Lab/assets/pc-01-architecture.png)
 
@@ -37,17 +37,16 @@ Ontologyのnative Metricsは講師による事前設定が必要です。未設�
 | 場所 | 内容 |
 |---|---|
 | [Lab/](Lab/README.md) | 最新版の参加者用Markdown手順書と画面キャプチャ |
-| [docs/](docs/README.md) | 保存して使える日英HTML、参加者用ZIP、SHA-256 |
-| [workshop/v3.0.0-preview/](workshop/v3.0.0-preview/) | Notebook、CSV、Ontology、モデル、Agent設定、添付資料 |
+| [docs/](docs/README.md) | [日英HTML](docs/furusato-workshop-v3-1-0-complete.html?raw=true)、[参加者用ZIP](docs/Furusato_Workshop_v3.1.0_current.zip?raw=true)、[SHA-256](docs/SHA256SUMS.txt) |
 | [tools/](tools/) | 配置、データ検証、回答評価、教材生成のツール |
 
-参加者用ZIPはすべて展開し、同じ版の手順書と実行資産を使ってください。ローカルのコマンドはリポジトリのルート、ZIPでは展開先の `source/` を起点に実行します。資格情報、環境固有の接続情報、非公開の回答ログはGitHubへ追加しません。[SECURITY.md](SECURITY.md)も確認してください。
+参加者用ZIPはすべて展開し、同じ版の手順書と実行資産を使ってください。GitHubのリポジトリで作業する場合、コマンドはリポジトリのルートを起点に実行します。ZIPを使う場合は、ZIPを展開した後、その中の `source/` を起点に実行します。資格情報、環境固有の接続情報、非公開の回答ログはGitHubへ追加しません。[SECURITY.md](SECURITY.md)も確認してください。
 
 ## English
 
-Build and inspect a Microsoft Fabric solution with synthetic data, one Ontology and one Data Agent. The GitHub [Lab guide](Lab/README.md) is the authoritative participant path; save the [bilingual HTML](docs/furusato-workshop-v3-1-0-complete.html) for offline use. Download the matching [participant ZIP](docs/Furusato_Workshop_v3.1.0_current.zip) and verify its [SHA-256](docs/SHA256SUMS.txt).
+Build and inspect a Microsoft Fabric solution with synthetic data, one Ontology and one Data Agent. The GitHub [Lab guide](Lab/README.md) is the authoritative participant path; save the [bilingual HTML](docs/furusato-workshop-v3-1-0-complete.html?raw=true) for offline use. Download the matching [participant ZIP](docs/Furusato_Workshop_v3.1.0_current.zip?raw=true) and verify its [SHA-256](docs/SHA256SUMS.txt).
 
-Follow Chapters 4 and 24 for scoped deployment, Chapters 5–13 for data and model checks, Chapter 17 to configure and read back the current experimental profile on the same Data Agent, and Chapter 19 plus Appendix C for evaluation and improvement. Each Lab operation has its own Markdown page; expand **English** for the equivalent procedure. All 24 chapters and five appendices include the preparation, commands, full settings, reference tables and completion checks.
+Follow Chapters 4 and 24 for scoped deployment, Chapters 5–13 for data and model checks, Chapter 17 to configure and read back the current experimental profile on the same Data Agent, and Chapter 19 plus Appendix C for evaluation and improvement. Each Lab operation has its own Markdown page; expand **English** for the equivalent procedure. All 24 chapters and five appendices include the preparation, commands, full settings, reference tables and completion checks. Run commands from the repository root in a Git checkout, or from the extracted `source/` directory when using the participant ZIP.
 
 Use an authorized workspace and folder with active capacity and the required feature permissions. Verify actual execution and published behavior separately from configuration. Matching a configuration does not guarantee an identical answer score. All data is synthetic training material, and static donations must remain distinct from operational observations.
 

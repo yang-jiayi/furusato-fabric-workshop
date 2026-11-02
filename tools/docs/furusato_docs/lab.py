@@ -77,10 +77,49 @@ def current_text(value, language, block_id, changes=None):
 
 def prose(value, language, block_id, *, table=False, canonical=False):
     text = value.get(language) if canonical and isinstance(value, Text) else current_text(value, language, block_id)
-    text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-    if table:
-        text = text.replace('|', '&#124;').replace('\n', '<br>')
-    return text
+
+    def escape_plain(value):
+        value = value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+        if table:
+            value = value.replace('|', '&#124;').replace('\n', '<br>')
+        return value
+
+    runs = [
+        match for match in re.finditer(r'`+', text)
+        if len(re.search(r'\\*$', text[:match.start()]).group()) % 2 == 0
+    ]
+    spans = []
+    index = 0
+    while index < len(runs):
+        opener = runs[index]
+        closer_index = next(
+            (i for i in range(index + 1, len(runs))
+             if len(runs[i].group()) == len(opener.group())),
+            None,
+        )
+        if closer_index is None:
+            index += 1
+            continue
+        closer = runs[closer_index]
+        spans.append((opener.start(), closer.end(), text[opener.end():closer.start()]))
+        index = closer_index + 1
+
+    result = []
+    position = 0
+    for start, end, content in spans:
+        result.append(escape_plain(text[position:start]))
+        if table and any(char in content for char in '|\r\n'):
+            normalized = content.replace('\r\n', '\n').replace('\r', '\n').replace('\n', ' ')
+            if (normalized.startswith(' ') and normalized.endswith(' ')
+                    and normalized.strip(' ')):
+                normalized = normalized[1:-1]
+            escaped = html.escape(normalized, quote=False).replace('|', '&#124;')
+            result.append('<code>' + escaped + '</code>')
+        else:
+            result.append(text[start:end])
+        position = end
+    result.append(escape_plain(text[position:]))
+    return ''.join(result)
 
 
 def fence(value, language='text'):
@@ -394,8 +433,10 @@ def write_lab(root: Path, out: Path, *, model=None):
               '各画面キャプチャは1つの操作ページにまとめ、キャプチャが不要な説明・コマンド・参照表も省略せずに収録しています。'
               '各ページ末尾の **English** を開くと同じ内容を英語で読めます。\n\n')
     index += '\n'.join(f'- [{title.ja}]({quote(folder)}/README.md)' for folder, title in root_links) + '\n\n'
-    index += ('Notebook・CSV・モデル・Agent 設定は [`workshop/v3.0.0-preview/`](../workshop/v3.0.0-preview/) にあります。'
-              'ローカルコマンドはリポジトリのルート、参加者用 ZIP では展開先の `source/` を起点に実行します。\n')
+    publication = current_publication(root)
+    index += (f'Notebook・CSV・モデル・Agent 設定は、リポジトリの README で案内する同じ版の参加者用 ZIP に収録されています。'
+              f'[日英 HTML](../docs/{publication.html_name})も利用できます。'
+              'コマンドは Git リポジトリのルート、ZIP を使う場合は展開先の `source/` を起点に実行します。\n')
     (out / 'README.md').write_text(index, encoding='utf-8', newline='\n')
     counts = Counter(b.kind for s in document.walk() for b in s.blocks)
     receipt = {'schemaVersion': 'furusato-lab-source-coverage/v1', 'chapters': 24, 'appendices': 5,

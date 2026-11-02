@@ -123,6 +123,91 @@ class ParticipantEditionTests(unittest.TestCase):
             manifest["originalSha256"],
         )
 
+    def test_notebook05_preview_figure_is_plan_only_and_crop_excludes_execution_header(self):
+        ident = "pc-11-notebook05-preview"
+        caption_ja, caption_en = figures.FIGURES[ident]["caption"]
+        alt_ja, alt_en = figures.FIGURES[ident]["alt"]
+        manifest = participant30.participant_figures()[ident]
+
+        self.assertEqual([32, 32, 704, 246], manifest["cropBox"])
+        self.assertEqual((672, 214), (manifest["width"], manifest["height"]))
+        self.assertEqual((1480, 270), (manifest["originalWidth"], manifest["originalHeight"]))
+        self.assertEqual(
+            "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e",
+            manifest["originalSha256"],
+        )
+        self.assertIn("PLAN_SHA256 は使わず", caption_ja)
+        self.assertIn("図の PLAN_SHA256", caption_ja)
+        self.assertIn("value freshly printed by your own preview", caption_en)
+        self.assertIn("Do not reuse the illustrated PLAN_SHA256", caption_en)
+        for caption in (caption_ja, caption_en):
+            self.assertIn("13", caption)
+            self.assertIn("29", caption)
+        self.assertNotIn("成功のチェック", alt_ja)
+        self.assertNotIn("実行時刻", alt_ja)
+        self.assertNotIn("execution tick", alt_en.lower())
+        self.assertNotIn("execution time", alt_en.lower())
+        self.assertIn("apply", caption_en)
+        self.assertIn("Gold updates", caption_en)
+        self.assertIn("fresh 3.1 run", caption_en)
+
+    def test_kql_overview_figure_distinguishes_rounded_ingestion_from_today(self):
+        ident = "p30-08-kql-overview"
+        caption_ja, caption_en = figures.FIGURES[ident]["caption"]
+        alt_ja, alt_en = figures.FIGURES[ident]["alt"]
+        manifest = participant30.participant_figures()[ident]
+
+        self.assertEqual("p30-08-kql-overview-current.png", manifest["file"])
+        self.assertEqual(
+            "3e7ac914132d9a100eda22893c2cedc22552bacc77520d5c6ba6c53425138a03",
+            manifest["sha256"],
+        )
+        self.assertEqual((1241, 720), (manifest["width"], manifest["height"]))
+        for caption in (caption_ja, caption_en):
+            self.assertIn("15K", caption)
+            self.assertTrue(any(term in caption.lower() for term in ("exact", "正確")))
+            for unavailable_claim in ("OneLakeDisabled", "mirror disabled", "execution tick"):
+                self.assertNotIn(unavailable_claim.lower(), caption.lower())
+        self.assertIn("3D", caption_ja)
+        self.assertIn("3D", caption_en)
+        self.assertIn("Rows today は 0", caption_ja)
+        self.assertIn("Rows today is 0", caption_en)
+        self.assertIn("exact total", caption_en)
+        self.assertIn("正確な総数ではなく", caption_ja)
+        self.assertIn("source reconciliation", caption_en)
+        self.assertIn("source reconciliation", caption_ja)
+        self.assertIn("not evidence of a fresh execution", caption_en)
+        self.assertIn("実行、新規データの materialization", caption_ja)
+        self.assertIn("table mirroring", caption_en)
+        for value in (caption_ja, caption_en, alt_ja, alt_en):
+            self.assertNotIn("completeDataActivityTracker", value)
+        self.assertIn("DonationEvents", alt_en)
+        self.assertIn("DonationEvents", alt_ja)
+        self.assertIn("3D", alt_en)
+        self.assertIn("3D", alt_ja)
+
+    def test_graph_prerequisites_and_stop_guidance_follow_projection_support(self):
+        graph = text.CHAPTERS[16]
+        intro = " ".join(value for row in graph["intro"] for value in row)
+        before = " ".join(value for row in graph["before"] for value in row)
+        steps = " ".join(step["text"][1] for step in graph["steps"])
+        checks = repr(graph["checks"])
+
+        self.assertIn("narrower source requirements than general Ontology source support", intro)
+        self.assertIn("Delta tables from Lakehouses or mirrored databases", intro)
+        self.assertIn("bound to semantic models are unsupported", intro)
+        self.assertIn("multiple backing tables", intro)
+        self.assertIn("generic binding type alone", intro)
+        self.assertIn("how-to-use-ontology-graph#limitations", " ".join(graph["links"]))
+        self.assertIn("semantic-model binding or multiple backing tables", steps)
+        self.assertIn("generic binding display", steps)
+        self.assertIn("required entity or relationship is Ineligible", steps)
+        self.assertIn("stop new materialization for that scope", steps)
+        self.assertIn("independent SQL, KQL and DAX", steps)
+        self.assertIn("not supported for Graph projection", checks)
+        self.assertNotIn("AzureStorage.DataLake", intro + before + steps + checks)
+        self.assertNotIn("DirectLake means", intro + before + steps + checks)
+
     def test_protected_evaluation_questions_are_complete(self):
         appendix_c = next(s for s in self.document.sections if s.appendix == "C")
         questions = [child for child in appendix_c.children if re.search(r"\bT\d\d\b", child.title.ja)]

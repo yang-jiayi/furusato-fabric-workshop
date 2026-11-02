@@ -4,8 +4,8 @@ GitHub上の[Lab](../Lab/README.md)を参加者手順の正本とし、保存し
 
 | ファイル | ダウンロード | 内容 |
 |---|---|---|
-| 日英HTML手順書 | [HTMLを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/furusato-workshop-v3-1-0-complete.html) | 24章・5付録の全手順。日英切替、検索、進捗チェック、印刷に対応 |
-| 参加者用ZIP | [ZIPを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/Furusato_Workshop_v3.1.0_current.zip) | HTML・Lab、Notebook、CSV、SQL、モデル、ツール、添付資料、評価用紙 |
+| 日英HTML手順書 | [HTMLを保存](furusato-workshop-v3-1-0-complete.html?raw=true) | 24章・5付録の全手順。日英切替、検索、進捗チェック、印刷に対応 |
+| 参加者用ZIP | [ZIPを保存](Furusato_Workshop_v3.1.0_current.zip?raw=true) | HTML・Lab、Notebook、CSV、SQL、モデル、ツール、添付資料、評価用紙 |
 | 配布SHA-256 | [SHA256SUMS.txt](SHA256SUMS.txt) | HTMLとZIPの取得後の照合用 |
 | HTML検証記録 | [DOCUMENT_VALIDATION.json](DOCUMENT_VALIDATION.json) | 同じHTMLバイト列の日英静的・Chromium検査。Fabricの配置・Agent回答品質は認定しません |
 | Lab検証記録 | [LAB_VALIDATION.json](LAB_VALIDATION.json) | 24章・5付録、ソース本文・画像・リンクの対応確認 |

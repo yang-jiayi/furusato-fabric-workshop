@@ -21,7 +21,7 @@ header nav { margin-left:auto; display:flex; gap:.4rem; }
 .controls input { width:min(100%,34rem); border:1px solid #527d6c; border-radius:6px; padding:.4rem; margin:.4rem; }
 .controls label { display:block; font-weight:600; }
 .controls p { margin:.2rem 0; }
-.toc ol { columns:2; padding-left:1.5rem; }
+.toc ol { columns:2; padding-left:0; list-style:none; }
 .toc li { break-inside:avoid; padding:.25rem; font-size:.9rem; }
 main { background:var(--paper); overflow-wrap:anywhere; }
 .chapter { margin:1.5rem 0 4rem; padding-top:1rem; border-top:4px solid #8ebfad; }
@@ -69,6 +69,20 @@ dialog img,dialog svg { max-width:100%; height:auto; }
 .skip-link:focus { top:0; }
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
 @media(max-width:700px) { .hero,.controls,.toc,main,footer { padding:1rem; } .toc ol { columns:1; } body { font-size:16px; } header { gap:.4rem; } }
+@media screen {
+ #ch-17-7 table { min-width:1440px; table-layout:fixed; }
+ #ch-17-7 :is(th,td):nth-child(1) { width:12%; white-space:nowrap; }
+ #ch-17-7 :is(th,td):nth-child(2) { width:22%; }
+ #ch-17-7 :is(th,td):nth-child(3) { width:17%; white-space:nowrap; }
+ #ch-17-7 :is(th,td):nth-child(4) { width:8%; white-space:nowrap; }
+ #ch-17-7 :is(th,td):nth-child(5) { width:12%; }
+ #ch-17-7 :is(th,td):nth-child(6) { width:29%; }
+ #appendix-b-1 table { min-width:1120px; table-layout:fixed; }
+ #appendix-b-1 :is(th,td):nth-child(1) { width:12%; white-space:nowrap; }
+ #appendix-b-1 :is(th,td):nth-child(2) { width:27%; }
+ #appendix-b-1 :is(th,td):nth-child(3) { width:20%; }
+ #appendix-b-1 :is(th,td):nth-child(4) { width:41%; }
+}
 @media print {
  @page { size:A4; margin:18mm 16mm; }
  body { background:white; font-size:9.5pt; line-height:1.55; }
@@ -80,6 +94,12 @@ dialog img,dialog svg { max-width:100%; height:auto; }
  h2,h3,h4,h5,h6,summary { break-inside:avoid; page-break-inside:avoid; break-after:avoid; page-break-after:avoid; }
  p,li { widows:3; orphans:3; }
  table { font-size:8pt; table-layout:fixed; }
+ #ch-6-4 :is(th,td):nth-child(1) { width:27%; }
+ #ch-6-4 :is(th,td):nth-child(2) { width:24%; }
+ #ch-6-4 :is(th,td):nth-child(3) { width:10%; }
+ #ch-6-4 :is(th,td):nth-child(4) { width:27%; }
+ #ch-6-4 :is(th,td):nth-child(5) { width:12%; }
+ .table-wrap { break-inside:avoid; page-break-inside:avoid; }
  .table-scroll { overflow:visible; }
  thead { display:table-header-group; }
  caption { break-after:avoid; }

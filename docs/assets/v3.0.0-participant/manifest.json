@@ -31,16 +31,16 @@
     },
     {
       "id": "p30-08-kql-overview",
-      "file": "p30-08-kql-overview.png",
-      "sha256": "fe5e2f2c6ac4f3c5c05299f8676923eb98d6e641cf99db96bd4f2eb20f227e7a",
+      "file": "p30-08-kql-overview-current.png",
+      "sha256": "3e7ac914132d9a100eda22893c2cedc22552bacc77520d5c6ba6c53425138a03",
       "source": "native-kql-database-overview-ui",
       "actualUI": true,
-      "capturedOn": "2026-11-01",
-      "captureContext": "Requested workspace; actual PNG inspected at 1792 x 1039 pixels.",
-      "width": 1792,
-      "height": 1039,
-      "redactions": ["Account and avatar"],
-      "evidenceScope": "Navigation illustration showing DonationEvents and a rounded 15K row statistic. Not an exact count or evidence of OneLake Delta materialization."
+      "capturedOn": "2026-11-02",
+      "captureContext": "Native KQL Database overview; source-pixel crop with an opaque privacy mask on the table-card avatar. No interpolation or reconstruction.",
+      "width": 1241,
+      "height": 720,
+      "redactions": ["Table-card avatar"],
+      "evidenceScope": "Navigation illustration showing DonationEvents, the 3D activity interval with a rounded 15K rows display, and a separate Rows today metric. Not an exact count, fresh execution or evidence of table-level mirror state, OneLake Delta materialization or source reconciliation."
     },
     {
       "id": "p30-09-native-delivery",
@@ -86,10 +86,18 @@
     },
     {
       "id": "pc-11-notebook05-preview",
-      "file": "notebook05-preview-output.png",
-      "sha256": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e",
+      "file": "notebook05-preview-output-crop.png",
+      "sha256": "a7fa9754992c4b6164b7c871e338594fdad737fde6b870c1524981020a0d5919",
       "source": "native-notebook-preview-output",
       "actualUI": true,
+      "originalFile": "notebook05-preview-output.png",
+      "originalSha256": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e",
+      "originalWidth": 1480,
+      "originalHeight": 270,
+      "width": 672,
+      "height": 214,
+      "cropBox": [32, 32, 704, 246],
+      "captureContext": "Pixel-preserving crop of all ten genuine preview output lines; removes the execution header and unused horizontal space. No resizing, reconstruction or fresh execution.",
       "evidenceScope": "Notebook 05 preview plan output only; apply, Gold data and SQL synchronization require separate verification."
     },
     {

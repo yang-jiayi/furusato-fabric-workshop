@@ -855,6 +855,8 @@ CHAPTERS = {
         "intro": [
             ("Graph は、関係の経路そのものを問う質問のために、必要な Entity と Relationship だけを選んで実体化するものです。すべての Ontology に必要な工程ではなく、自動では作られません。",
              "A graph is materialized from only the entities and relationships you select, for questions about the relationship path itself. It is not required for every ontology and is not created automatically."),
+            ("Graph projection のデータソース要件は Ontology 全体の source 対応とは異なります。Microsoft Learn によると、Graph が使えるのは Lakehouse または mirrored database の Delta table で、Semantic model に binding された Entity type は未対応です。複数の backing table を使う Entity type も Eligible になりません。binding の汎用的な型だけから、どの条件に該当するかは推定しません。",
+             "Graph projection has narrower source requirements than general Ontology source support. Microsoft Learn states that Graph supports Delta tables from Lakehouses or mirrored databases; entity types bound to semantic models are unsupported, and entity types using multiple backing tables are not eligible. Do not infer which condition applies from a generic binding type alone."),
             ("Ontology の SQL 問い合わせが成功しても、Graph model の存在や準備状態、GQL の実行成功は証明されません。逆に、他のデータ経路の部分状態だけから Graph model が存在しないとも判断しません。Graph の状態と実際の GQL query/result を別々に確認します。Microsoft Learn は Graph model が存在する場合の関係 traversal に GQL を示しています。",
              "Successful SQL against an ontology does not prove that a graph model exists or is ready, or that GQL has executed successfully. Conversely, a partial state in another data path does not prove that no graph model exists. Check graph state and actual GQL queries/results separately. Microsoft Learn describes GQL for relationship traversals when a graph model exists."),
             ("この章では「この返礼品を登録している事業者はどこか」という問いのために Gift・Supplier・SupplierProvidesGift を実体化し、GQL の結果を SQL の対応表と照らし合わせます。講師が全体を実体化済みの場合は、まず現在 load 済みのモデルを照会します。",
@@ -869,8 +871,8 @@ CHAPTERS = {
         "steps": [
             {"text": ("問いを決め、必要な最小の範囲（Gift、Supplier、SupplierProvidesGift）を書き出します。講師の指示で全体を使う場合は、10 Entity・15 Relationship を選びます。",
                       "Fix the question and write down the smallest scope it needs (Gift, Supplier and SupplierProvidesGift). If the instructor tells you to use the whole model, select all 10 entities and 15 relationships.")},
-            {"text": ("Home の Manage graph から Configure Graph を開き、各項目の Status を確認します。Ineligible の項目は、ツールチップで理由を読みます。講師の指示で全体を使う場合を除き、Use the entire Ontology を Yes のままにせず、手順1で決めた範囲の Eligible な項目だけを選びます（Entity を展開すると、その Relationship を選べます）。選んだ範囲が Eligible で、Continue が有効な場合だけ次へ進みます。Unsupported Datasource などで対象外の場合は理由を記録し、新規の実体化を止めます。未実体化の場合は GQL の確認も未実施として記録します。静的テーブルの検証結果とは分けて扱います。",
-                      "Open Configure Graph from Manage graph on Home and check each item's Status. For Ineligible items, read the reason in the tooltip. Unless the instructor tells you to use the whole model, do not leave Use the entire Ontology at Yes; select only the Eligible items in the scope from step 1 (expand an entity to select its relationships). Continue only when the selected scope is Eligible and the button is enabled. If Unsupported Datasource or another reason makes it ineligible, record the reason and stop new materialization. If the graph is not materialized, record GQL checks as unrun. Treat this separately from static-table verification."),
+            {"text": ("Home の Manage graph から Configure Graph を開き、各項目の Status を確認します。Ineligible の項目は、ツールチップで理由を読みます。講師の指示で全体を使う場合を除き、Use the entire Ontology を Yes のままにせず、手順1で決めた範囲の Eligible な項目だけを選びます（Entity を展開すると、その Relationship を選べます）。Semantic model binding や複数の backing table が理由なら、その組合せは Graph projection の対象外です。汎用的な binding 表示から source の種類を推定したり、根拠のない修復・再 binding をしません。必要な Entity/Relationship が Ineligible の場合は理由を記録し、その範囲の新規実体化を止めます。Continue は選んだ必須範囲がすべて Eligible で有効な場合だけ進みます。未実体化なら GQL は未実施として記録し、独立して実施可能な SQL・KQL・DAX の確認と区別します。",
+                      "Open Configure Graph from Manage graph on Home and check each item's Status. For Ineligible items, read the reason in the tooltip. Unless the instructor tells you to use the whole model, do not leave Use the entire Ontology at Yes; select only Eligible items in the scope from step 1 (expand an entity to select its relationships). If semantic-model binding or multiple backing tables is the reason, that combination is unsupported for Graph projection. Do not infer the source category from a generic binding display or attempt an unsupported repair or rebind. If a required entity or relationship is Ineligible, record the reason and stop new materialization for that scope. Continue only when the entire required scope is Eligible and the button is enabled. If the graph is not materialized, record GQL as unrun and distinguish it from independent SQL, KQL and DAX checks."),
              "figures": ["p30-16-eligibility", "pc-16-unsupported-datasource"]},
             {"text": ("Projection Summary で Node と Edge の範囲を確認し、Materialize を選びます。完了するまで待ちます。失敗や処理中の状態を、成功として扱いません。",
                       "Check the node and edge scope in Projection Summary and select Materialize. Wait until it completes. Do not treat a failed or pending state as success.")},
@@ -900,7 +902,7 @@ CHAPTERS = {
             (("実体化の完了と失敗を、現在の結果で区別した", "You distinguished completed and failed materialization using current results"),
              ("InvalidPropertyType などの場合は、時系列を削除・変更せず、エラーと対象を記録して停止します。直接 Graph の照会と、native Ontology consumer や Manage graph の画面表示は、別々に確認します。", "For InvalidPropertyType or similar errors, record the error and target and stop without deleting or retyping the time series. Verify direct graph queries separately from native ontology consumption and the Manage graph display.")),
             (("Ineligible の項目の理由が分かる", "You know why items are Ineligible"),
-             ("ツールチップの理由を確認します。キーが無い、バインドされていない、Semantic model から作った、複数のテーブルにバインドされている Entity type は、対象外になることがあります。", "Read the reason in the tooltip. Entity types without a key, without bindings, generated from a semantic model or bound to more than one table can be ineligible.")),
+             ("ツールチップの理由を確認します。キーが無い・未 binding の場合のほか、Semantic model に binding された Entity type と複数の backing table を使う Entity type は Graph projection の対象外です。", "Read the tooltip reason. In addition to missing keys or bindings, entity types bound to semantic models and entity types using multiple backing tables are not supported for Graph projection.")),
         ],
         "tips": [
             ("通常の件数や合計は SQL・KQL・DAX で求めます。GQL は、関係の経路が問われるときに使います。",
@@ -909,7 +911,7 @@ CHAPTERS = {
              "Aggregating donation amounts through the many-to-many SupplierProvidesGift can count the same donation more than once. Distinguish registration relationships from actual shipment."),
         ],
         "tables": [],
-        "links": ["how-to-use-ontology-graph"],
+        "links": ["how-to-use-ontology-graph", "https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph#limitations"],
     },
     17: {
         "intro": [

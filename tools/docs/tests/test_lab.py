@@ -27,6 +27,56 @@ class LabExportTests(unittest.TestCase):
     def validate(self):
         return lab.validate_lab(ROOT, self.out, self.receipt, model=self.model)
 
+    def test_prose_preserves_inline_code_and_keeps_table_pipes_safe(self):
+        prose = (
+            "Traversal: `<-MunicipalityInPrefecture-` and "
+            "`Relationship: Municipality -MunicipalityInPrefecture-> Prefecture`; "
+            "literal <tag> & text."
+        )
+        rendered = lab.prose(prose, "en", "inline-code-test")
+        self.assertIn("`<-MunicipalityInPrefecture-`", rendered)
+        self.assertIn("`Relationship: Municipality -MunicipalityInPrefecture-> Prefecture`", rendered)
+        self.assertIn("literal &lt;tag&gt; &amp; text.", rendered)
+        self.assertNotIn("&lt;-MunicipalityInPrefecture-", rendered)
+        self.assertNotIn("-&gt; Prefecture`", rendered)
+        variable_delimiters = lab.prose("Use ``a `tick` and <tag>`` plus `plain`.", "en", "ticks-test")
+        self.assertIn("``a `tick` and <tag>``", variable_delimiters)
+        self.assertIn("`plain`", variable_delimiters)
+
+        table = lab.prose(
+            "Keep `left|right <node> & value` intact | escape <outside> & text",
+            "en", "inline-code-table-test", table=True,
+        )
+        self.assertIn("<code>left&#124;right &lt;node&gt; &amp; value</code>", table)
+        self.assertIn("&#124; escape &lt;outside&gt; &amp; text", table)
+        self.assertNotIn("left|right", table)
+
+        multiline = lab.prose("`first\nsecond`", "en", "multiline-table-test", table=True)
+        self.assertEqual("<code>first second</code>", multiline)
+
+        unmatched = lab.prose(r"Unmatched ` tick and escaped \` tick <outside>", "en", "unmatched-test")
+        self.assertIn(r"Unmatched ` tick and escaped \` tick &lt;outside&gt;", unmatched)
+
+    def test_canonical_table_relationship_code_spans_survive_rendering(self):
+        section = next(s for s in self.model[0].walk()
+                       if s.ident == "appendix-c-5-canonical-evaluation")
+        target = "`Relationship: Municipality -MunicipalityInPrefecture-> Prefecture`"
+        block_index = next(
+            i for i, block in enumerate(section.blocks)
+            if block.kind == "table" and any(
+                target in value.get("en")
+                for row in block["rows"] for value in row
+                if hasattr(value, "get") and value.get("en")
+            )
+        )
+        ident = f"{section.ident}:{block_index}"
+        page = next(page for page in self.receipt["pagesCoverage"]
+                    if ident in page["sourceBlockIds"])
+        rendered = (self.out / page["path"]).read_text(encoding="utf-8")
+        self.assertIn(target, rendered)
+        self.assertNotIn("&lt;-MunicipalityInPrefecture-", rendered)
+        self.assertNotIn("-&gt; Prefecture`", rendered)
+
     def mutate(self, path, replacement):
         original = path.read_bytes()
         self.addCleanup(path.write_bytes, original)
@@ -42,6 +92,27 @@ class LabExportTests(unittest.TestCase):
         self.assertEqual(len(self.model[0].figures), result["imageFilesVerified"])
         self.assertGreater(result["canonicalCodeAndPromptBlocksChecked"], 90)
         self.assertFalse(result["newDeploymentCaptureClaimed"])
+        index = (self.out / "README.md").read_text(encoding="utf-8")
+        self.assertIn("同じ版の参加者用 ZIP", index)
+        self.assertIn("リポジトリの README", index)
+        self.assertIn("../docs/furusato-workshop-v3-1-0-complete.html", index)
+        self.assertIn("`source/`", index)
+        self.assertNotIn("../workshop/v3.0.0-preview/", index)
+
+    def test_repository_download_navigation_uses_matching_revision(self):
+        repository_readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        downloads = (ROOT / "docs/README.md").read_text(encoding="utf-8")
+        current_readme = (ROOT / "docs/v3.1.0/current/README.md").read_text(encoding="utf-8")
+
+        self.assertNotIn("[workshop/v3.0.0-preview/]", repository_readme)
+        self.assertIn("Furusato_Workshop_v3.1.0_current.zip", repository_readme)
+        self.assertIn("source/", repository_readme)
+        self.assertIn("リポジトリのルート", repository_readme)
+        self.assertIn("(furusato-workshop-v3-1-0-complete.html?raw=true)", downloads)
+        self.assertIn("(Furusato_Workshop_v3.1.0_current.zip?raw=true)", downloads)
+        self.assertNotIn("raw/refs/heads/main", downloads)
+        self.assertIn("SHA256SUMS.txt", downloads)
+        self.assertNotIn("v3.0.0-preview", current_readme)
 
     def test_profile_paths_are_platform_independent(self):
         chapter=self.out/'17-fabric-data-agent-and-code-interpreter'

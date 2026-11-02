@@ -43,10 +43,10 @@ FIGURES = {
                 'Configure Graph shows ten Ineligible entities, the Gift Unsupported Datasource popup naming ot_gift, Graph not materialized, and disabled Continue.'),
     },
     'pc-11-notebook05-preview': {
-        'caption': ('Notebook 05 のプレビュー実行。PREVIEW_ONLY・ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルと PLAN_SHA256 を確認します。これは適用前の計画です。適用には、自分のプレビュー実行で表示されたハッシュを使います。',
-                    'Notebook 05 preview run. Check PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables, 29 planned output tables and PLAN_SHA256. This is the plan before apply. Use the hash from your own preview execution for apply.'),
-        'alt': ('Notebook 05 のプレビュー出力。成功のチェックと実行時刻、PREVIEW_ONLY、PLAN_SHA256、5スキーマ、入力13・出力29テーブル、ANALYTICS_MODE=preview が表示されている。',
-                'Notebook 05 preview output with an execution tick/time, PREVIEW_ONLY, PLAN_SHA256, five schemas, 13 source and 29 output tables, and ANALYTICS_MODE=preview.'),
+        'caption': ('Notebook 05 のプレビュー計画出力（表示行のみを切り抜き）。PREVIEW_ONLY、ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルを確認します。これはプレビュー計画だけで、apply・Gold 更新・新しい3.1実行の証拠ではありません。図の PLAN_SHA256 は使わず、適用時は自分のプレビューで新たに表示された値を使います。',
+                    'Notebook 05 preview-plan output, cropped to the displayed lines. It shows PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables and 29 planned output tables. This is preview-plan evidence only—not evidence of apply, Gold updates or a fresh 3.1 run. Do not reuse the illustrated PLAN_SHA256; use the value freshly printed by your own preview.'),
+        'alt': ('Notebook 05 のプレビュー出力の切り抜き。PREVIEW_ONLY、ANALYTICS_MODE=preview、入力13・出力予定29テーブル、5スキーマ、PLAN_SHA256 が表示されている。',
+                'Crop of Notebook 05 preview output showing PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source and 29 planned output tables, five schemas, and PLAN_SHA256.'),
     },
     'pc-05-notebook01-ready': {
         'caption': ('Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 load audit の計20テーブルの検査完了が表示されます。利用前に Ready の根拠を再確認し、SQL endpoint での同期も次の手順で確認します。',
@@ -85,10 +85,10 @@ FIGURES = {
                 'Pipeline run monitor: Copy data1 Succeeded; the output JSON shows rowsRead 5000 and rowsCopied 5000; run details on the right.'),
     },
     'p30-08-kql-overview': {
-        "caption": ('実際の KQL Database overview。DonationEvents が Explorer にあり、画面上は丸め表示で 15K rows と示されます。ナビゲーション用の図であり、正確な件数、OneLake Delta の materialization、source reconciliation の証明ではありません。',
-                    'Actual KQL Database overview with DonationEvents in Explorer and a rounded 15K rows display. This is a navigation illustration, not proof of an exact count, OneLake Delta materialization or source reconciliation.'),
-        "alt": ('EH_Furusato_101 の Database overview。Explorer に DonationEvents が表示され、行数は丸め表示で 15K。',
-                'Database overview for EH_Furusato_101 with DonationEvents in Explorer and a rounded 15K row count.'),
+        "caption": ('現在の KQL Database overview。Explorer に DonationEvents が表示されます。Data Activity Tracker は 3D の表示期間で、Ingestion は丸め表示の 15K rows です。別期間の Rows today は 0。15K は正確な総数ではなく、この図は実行、新規データの materialization、table mirror、source reconciliation の証拠ではありません。',
+                    'Current KQL Database overview: Explorer shows DonationEvents. Data Activity Tracker is set to 3D; Ingestion shows a rounded 15K rows. Rows today is 0 for a separate interval. 15K is not an exact total; this overview is not evidence of a fresh execution, new-data materialization, table mirroring or source reconciliation.'),
+        "alt": ('現在の KQL Database overview。Explorer に DonationEvents、Data Activity Tracker に 3D・Ingestion 15K rows、別期間の Rows today 0 が表示される。15K は丸め表示。',
+                'Current KQL Database overview showing DonationEvents in Explorer, Data Activity Tracker at 3D with Ingestion 15K rows, and Rows today 0 for a separate interval. 15K is rounded.'),
     },
     'p30-09-manual-recovery': {
         "caption": ('講師の指示で手動実行するときの Parameters。IncrementFileName にファイル名を入力し、Type・Subject・Source は空のまま',

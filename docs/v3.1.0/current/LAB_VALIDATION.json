@@ -3,9 +3,9 @@
   "chapters": 24,
   "appendices": 5,
   "sections": 185,
-  "modelBlocks": 631,
+  "modelBlocks": 632,
   "blocksByKind": {
-    "paragraph": 203,
+    "paragraph": 204,
     "list": 135,
     "figure": 34,
     "callout": 44,
@@ -729,7 +729,7 @@
       ],
       "sourceBlockSha256": {
         "ch-8-2:0": "2de8295f09e7ea2c2071e323fa15ec58d0c8a9909dee00ba4b7d9aa8c6aa9035",
-        "ch-8-2:1": "cefbe985b1f2fd27e9cb02dcf3066be1b07adaff626915863fb8969e8bb3f425"
+        "ch-8-2:1": "1c13123c60bbc5ed90042adef0ad315afacb1f145aae1b1c7fcb4ef4db078664"
       },
       "capture": "p30-08-kql-overview",
       "codeBlocks": 0,
@@ -838,8 +838,8 @@
         "ch-9-2:5"
       ],
       "sourceBlockSha256": {
-        "ch-9-2:4": "cc76f84226e0b90bdbd2f49f87829b6561b56dbbfb3757fb29faf9500164e67e",
-        "ch-9-2:5": "a5d4215891de64e5e71bcadd67e76524a56d56a1850919d57cf8ecd87f2323f3"
+        "ch-9-2:4": "b1dfebb513895186152f1a487716220f1e16adb27a147ecf7c805011847857f9",
+        "ch-9-2:5": "1ef6967a897238adfca0dd761f543d283ec01c33c9433cae457a081347eb15ea"
       },
       "capture": "p30-09-native-delivery",
       "codeBlocks": 0,
@@ -1061,7 +1061,7 @@
       ],
       "sourceBlockSha256": {
         "ch-11-2:0": "0f5eff1bb292063f1623864814fe4a549d021eb1a67d212dac82b0085c381253",
-        "ch-11-2:1": "6164aeee19e358e007fdcd1550aaa759f182f1480d7f4626f7f7004632264892"
+        "ch-11-2:1": "821ca312948fce2af99d46d3e1608012b36e2828770bcff9af0a16d50bbc67fb"
       },
       "capture": "pc-11-notebook05-preview",
       "codeBlocks": 0,
@@ -1672,14 +1672,16 @@
         "ch-16-1:1",
         "ch-16-1:2",
         "ch-16-1:3",
-        "ch-16-1:4"
+        "ch-16-1:4",
+        "ch-16-1:5"
       ],
       "sourceBlockSha256": {
         "ch-16-1:0": "618b4eb35fd2c8f808e9767ca5d618f66898100634fb38ae18fb8acbd990fe54",
-        "ch-16-1:1": "31856f281bcaf5014319f392a86f346c3485f904de49fd8ec424fcc56b116df5",
-        "ch-16-1:2": "236c93133daf845c1ec3b42643152172ab5c4e36696d5d94923d9a4333110545",
-        "ch-16-1:3": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
-        "ch-16-1:4": "a65a891a6508285bf01072f3116879fce3b017bda7c0db591ec7ef0e19e819d3"
+        "ch-16-1:1": "c76ed1c46881d9c7809a1a5dec2571ba369ca48e066e9821b3d0991a33d2540b",
+        "ch-16-1:2": "31856f281bcaf5014319f392a86f346c3485f904de49fd8ec424fcc56b116df5",
+        "ch-16-1:3": "236c93133daf845c1ec3b42643152172ab5c4e36696d5d94923d9a4333110545",
+        "ch-16-1:4": "23f0b341b1aa1e7ed8bd709af9abee186f872dd957630e8bc8f89e1b116e78c0",
+        "ch-16-1:5": "a65a891a6508285bf01072f3116879fce3b017bda7c0db591ec7ef0e19e819d3"
       },
       "capture": null,
       "codeBlocks": 0,
@@ -1694,7 +1696,7 @@
         "ch-16-2:1"
       ],
       "sourceBlockSha256": {
-        "ch-16-2:0": "5fd09eaf682f40bbf7c954f469acaa0476e8da311578deaa3a113a039ca3eeae",
+        "ch-16-2:0": "ab83adff510f1b1586d8390f1d0544c9ca571edc97cdac537b9f6d58722fbd34",
         "ch-16-2:1": "2a2a3d4edfe56a8c52fa66ffe59b9cf4c5410208db1b5205c0f0018a7a841617"
       },
       "capture": "p30-16-eligibility",
@@ -1765,7 +1767,7 @@
         "ch-16-3:0"
       ],
       "sourceBlockSha256": {
-        "ch-16-3:0": "5cd33f0f217a80a170775144020b477ee23ffeb6b37c594128aa136e9e8fbe07"
+        "ch-16-3:0": "0fb2902178712b21ca029e48a5b665747161a3d5a5e182aac81798b3592d1719"
       },
       "capture": null,
       "codeBlocks": 0,
@@ -1779,7 +1781,7 @@
         "ch-16-4:0"
       ],
       "sourceBlockSha256": {
-        "ch-16-4:0": "60558c443a471891ba0cbc6d742625bfa67cf861fa8c8b0466e13ffa83543341"
+        "ch-16-4:0": "9e7e6ff7687a5977d7e1d6158e6be7e98ca8de0ce0c850547942ae6358fe3ddf"
       },
       "capture": null,
       "codeBlocks": 0,
@@ -1963,7 +1965,7 @@
         "ch-17-11:0": "f34bd33e98f270d321c1c88609a1a0b28c78052d6a8f73725d859a7f27b76ea6",
         "ch-17-11:1": "a65cfdc2095ab9bde373889f45d4ceb220bd31bc855bd83649a51acd8db8f24a",
         "ch-17-11:2": "38462155579de23b088f97ea14f25464fa72b5f6f1e0afd8eca68fc85967cb96",
-        "ch-17-11:3": "2a64aaf500ef584651064bebd3e772849ad1f3dabf5d1f4a1008bec2e00ed529"
+        "ch-17-11:3": "e71f2fa940765e82981202c477df759bcb5c3a4ece79bef23723b73a1f8b63ac"
       },
       "capture": null,
       "codeBlocks": 2,
@@ -2018,7 +2020,7 @@
       ],
       "sourceBlockSha256": {
         "ch-17-13:0": "d552c73b45b42252fca38fdb6b78c4f52ab5284f7c83b524c75df658af7217ea",
-        "ch-17-13:1": "d004898765365125fff2a8baedea550f7f5328e7ec8d7faab46a7ebaa8068a29",
+        "ch-17-13:1": "88bbd7dcd6e58fc8e24043417b1875502ff38c79a698ddad2a8cae78814f8e88",
         "ch-17-13:2": "a978fc33b0debfccb0806a5327d1036175ec51f493e7f7af95b0c0cd6bcb3c57"
       },
       "capture": null,
@@ -2035,7 +2037,7 @@
       ],
       "sourceBlockSha256": {
         "ch-17-14:0": "057b1ece107c28ad53367653a58c5b3617c9abbb6669d512dedfd8e1e280d987",
-        "ch-17-14:1": "14df9beee5c6fd9b77d99703eabcdb5186f716615d2e5ce33ea148c7a10b2d37"
+        "ch-17-14:1": "8f23a415d00e14d70ed8a8f336b4b30c84cd7437e3f129d1d7321318bc55a134"
       },
       "capture": null,
       "codeBlocks": 1,
@@ -2052,7 +2054,7 @@
       ],
       "sourceBlockSha256": {
         "ch-17-15:0": "363d57be756da95615c84ae3fac965a94890513e5d831df21ae14e6b397247ff",
-        "ch-17-15:1": "61b858f67ad085059a7dcd6b70b903d6d1aef053aa4e304eeb623e4145f7f7ce",
+        "ch-17-15:1": "063293c0f986d0b9033679c203aa4bf20655cc1c7b06d7e15068ceb7119a2f1f",
         "ch-17-15:2": "e208cb91f76e43921e1ca951dcd78330ed9334a904b368a50856f032afaab073"
       },
       "capture": null,
@@ -3679,8 +3681,8 @@
     {
       "id": "p30-08-kql-overview",
       "page": "08-eventhouse-and-the-kql-schema/02-8-2-p30-08-kql-overview.md",
-      "captionJa": "実際の KQL Database overview。DonationEvents が Explorer にあり、画面上は丸め表示で 15K rows と示されます。ナビゲーション用の図であり、正確な件数、OneLake Delta の materialization、source reconciliation の証明ではありません。",
-      "captionEn": "Actual KQL Database overview with DonationEvents in Explorer and a rounded 15K rows display. This is a navigation illustration, not proof of an exact count, OneLake Delta materialization or source reconciliation."
+      "captionJa": "現在の KQL Database overview。Explorer に DonationEvents が表示されます。Data Activity Tracker は 3D の表示期間で、Ingestion は丸め表示の 15K rows です。別期間の Rows today は 0。15K は正確な総数ではなく、この図は実行、新規データの materialization、table mirror、source reconciliation の証拠ではありません。",
+      "captionEn": "Current KQL Database overview: Explorer shows DonationEvents. Data Activity Tracker is set to 3D; Ingestion shows a rounded 15K rows. Rows today is 0 for a separate interval. 15K is not an exact total; this overview is not evidence of a fresh execution, new-data materialization, table mirroring or source reconciliation."
     },
     {
       "id": "p30-09-source-events",
@@ -3691,8 +3693,8 @@
     {
       "id": "p30-09-native-delivery",
       "page": "09-pipeline-and-onelake-event-integration/03-9-2-p30-09-native-delivery.md",
-      "captionJa": "ルールの History タブ。Activation details に、起動のもとになったファイルのパスと FileCreated が表示される（図は 002 と 003 の2件）",
-      "captionEn": "Rule History tab: Activation details list the path of each file that triggered the rule and the FileCreated type (the figure shows files 002 and 003)."
+      "captionJa": "ルールの History の概要。6つの KPI、Time の選択、UTC の Activation count グラフを示します。数値は表示時点と選択期間で変わります。下にスクロールして Activation details を開き、自分の001の対象パスと FileCreated を記録します。この概要だけでは001の処理や Pipeline・Copy の成功は確認できません。",
+      "captionEn": "Rule History overview showing six KPIs, the Time selector and the UTC Activation count chart. Values depend on the observation time and selected period. Scroll down to Activation details and record your own 001 target path and FileCreated. This overview alone does not verify processing of 001 or Pipeline/Copy success."
     },
     {
       "id": "p30-09-copy-002",
@@ -3721,8 +3723,8 @@
     {
       "id": "pc-11-notebook05-preview",
       "page": "11-quality-processing-and-gold-with-notebook-05/02-11-2-pc-11-notebook05-preview.md",
-      "captionJa": "Notebook 05 のプレビュー実行。PREVIEW_ONLY・ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルと PLAN_SHA256 を確認します。これは適用前の計画です。適用には、自分のプレビュー実行で表示されたハッシュを使います。",
-      "captionEn": "Notebook 05 preview run. Check PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables, 29 planned output tables and PLAN_SHA256. This is the plan before apply. Use the hash from your own preview execution for apply."
+      "captionJa": "Notebook 05 のプレビュー計画出力（表示行のみを切り抜き）。PREVIEW_ONLY、ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルを確認します。これはプレビュー計画だけで、apply・Gold 更新・新しい3.1実行の証拠ではありません。図の PLAN_SHA256 は使わず、適用時は自分のプレビューで新たに表示された値を使います。",
+      "captionEn": "Notebook 05 preview-plan output, cropped to the displayed lines. It shows PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables and 29 planned output tables. This is preview-plan evidence only—not evidence of apply, Gold updates or a fresh 3.1 run. Do not reuse the illustrated PLAN_SHA256; use the value freshly printed by your own preview."
     },
     {
       "id": "p30-11-executed-output",
@@ -3885,8 +3887,8 @@
     "p30-08-kql-overview": {
       "file": "assets/p30-08-kql-overview.png",
       "kind": "participant-capture",
-      "source": "docs/assets/v3.0.0-participant/p30-08-kql-overview.png",
-      "sha256": "fe5e2f2c6ac4f3c5c05299f8676923eb98d6e641cf99db96bd4f2eb20f227e7a"
+      "source": "docs/assets/v3.0.0-participant/p30-08-kql-overview-current.png",
+      "sha256": "3e7ac914132d9a100eda22893c2cedc22552bacc77520d5c6ba6c53425138a03"
     },
     "p30-09-source-events": {
       "file": "assets/p30-09-source-events.png",
@@ -3896,9 +3898,9 @@
     },
     "p30-09-native-delivery": {
       "file": "assets/p30-09-native-delivery.png",
-      "kind": "reviewed-capture",
-      "source": "docs/assets/v3.0.0-evidence/captures/b7f2bf77c40504f1431756d0c5b50f775c982f41cf31c55740ea618455db8f13.png",
-      "sha256": "b7f2bf77c40504f1431756d0c5b50f775c982f41cf31c55740ea618455db8f13"
+      "kind": "participant-capture",
+      "source": "docs/assets/v3.0.0-participant/activator-history-overview.png",
+      "sha256": "04bb5828ceafe002f01b4d72ed720082803398a0c57779cc275335a020747403"
     },
     "p30-09-copy-002": {
       "file": "assets/p30-09-copy-002.png",
@@ -3927,8 +3929,8 @@
     "pc-11-notebook05-preview": {
       "file": "assets/pc-11-notebook05-preview.png",
       "kind": "participant-capture",
-      "source": "docs/assets/v3.0.0-participant/notebook05-preview-output.png",
-      "sha256": "8f3ea3cce01a1a17799da5f2a913f1a5d956435803f6365d2c76bcf039790d7e"
+      "source": "docs/assets/v3.0.0-participant/notebook05-preview-output-crop.png",
+      "sha256": "a7fa9754992c4b6164b7c871e338594fdad737fde6b870c1524981020a0d5919"
     },
     "p30-11-executed-output": {
       "file": "assets/p30-11-executed-output.png",
@@ -4052,11 +4054,11 @@
     }
   },
   "newDeploymentScreenshotsClaimed": false,
-  "contentSha256": "3cd11c074978bb00c6fb97d69100a272e170b9968147962940db234e4ce41c57",
+  "contentSha256": "122a1a8da0e08978be235dbaa03d6a2849d025fbfa7310b4b6b7fcd730376e61",
   "currentArtifactSet": {
-    "manifestSha256": "eed2586083e64c5468b4f5468541c52bcfd21fd534253cdf31f388ff6160cae2",
-    "sourceCommit": "1a467f64ef7d00c24819ee7c3fd3edd1869b718c",
-    "sourceTreeSha256": "1a5a066fd006f7948bae03feb7ea1d628006ff29616bb27340f49830e40608b6",
+    "manifestSha256": "7667fb05ddf1619b272677182b25c52128065fe507d738cb1a681a4d3247621a",
+    "sourceCommit": "ade5b474ec0da0589422a1e7aab691707d3af5ea",
+    "sourceTreeSha256": "d71bfd6f1c8d4d5a402e19b14eb8f948352d90f237f56c88c99dd7437cdb7bbc",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,

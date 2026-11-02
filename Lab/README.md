@@ -36,4 +36,4 @@ Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data A
 - [付録 D　任意の追加演習](appendix-d-optional-extensions/README.md)
 - [付録 E　トラブルシューティング・公式資料](appendix-e-troubleshooting-and-official-references/README.md)
 
-Notebook・CSV・モデル・Agent 設定は [`workshop/v3.0.0-preview/`](../workshop/v3.0.0-preview/) にあります。ローカルコマンドはリポジトリのルート、参加者用 ZIP では展開先の `source/` を起点に実行します。
+Notebook・CSV・モデル・Agent 設定は、リポジトリの README で案内する同じ版の参加者用 ZIP に収録されています。[日英 HTML](../docs/furusato-workshop-v3-1-0-complete.html)も利用できます。コマンドは Git リポジトリのルート、ZIP を使う場合は展開先の `source/` を起点に実行します。

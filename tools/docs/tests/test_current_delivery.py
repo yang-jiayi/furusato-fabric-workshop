@@ -8,6 +8,7 @@ import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
+from lxml import html as html_parser
 
 ROOT=Path(__file__).resolve().parents[3]
 sys.path[:0]=[str(ROOT/'tools/docs'),str(ROOT/'tools/html')]
@@ -128,6 +129,52 @@ class CurrentDeliveryTests(unittest.TestCase):
         self.assertNotIn('class="hero__status"', html)
         self.assertIn('Do not crop, flip, rotate or distort them', html)
         self.assertIn('https://learn.microsoft.com/azure/architecture/icons/', html)
+
+    def test_long_reference_tables_show_horizontal_scroll_cues_before_content(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        for ident, table_class in (
+            ('ch-17-7', 'selection-contract'),
+            ('appendix-b-1', 'notebook-parameters'),
+        ):
+            with self.subTest(section=ident):
+                section = tree.get_element_by_id(ident)
+                wrapper = section.xpath(
+                    ".//div[contains(concat(' ', normalize-space(@class), ' '), ' table-wrap ')]"
+                )[0]
+                hints = wrapper.xpath(
+                    ".//p[contains(concat(' ', normalize-space(@class), ' '), ' table-hint ')]"
+                )
+                hint = hints[0]
+                region = wrapper.xpath(
+                    ".//div[contains(concat(' ', normalize-space(@class), ' '), ' table-scroll ')]"
+                )[0]
+                table = region.xpath(".//table")[0]
+                self.assertEqual(1, len(hints))
+                self.assertIn('table-hint--top', hint.get('class', '').split())
+                self.assertLess(list(wrapper).index(hint), list(wrapper).index(region))
+                self.assertIn(table_class, table.get('class', '').split())
+                self.assertEqual('0', region.get('tabindex'))
+                self.assertEqual('region', region.get('role'))
+                hint_text = ''.join(hint.itertext())
+                self.assertIn('横スクロールできる表', hint_text)
+                self.assertIn('Horizontally scrollable table', hint_text)
+                if ident == 'ch-17-7':
+                    source_table = next(
+                        block for block in delivery.load_model(ROOT)[0].tables
+                        if block['caption'].en == 'Actual flat selection contract'
+                    )
+                    source_description = next(
+                        row[5].en for row in source_table['rows']
+                        if 'PrefectureId,PrefectureName' in row[5].en
+                    )
+                    description = section.xpath(
+                        ".//table/tbody/tr/td[5][contains(., 'PrefectureId,PrefectureName')]//span[@data-l='en']"
+                    )[0]
+                    self.assertEqual(source_description, description.text_content())
+                    self.assertGreater(len(description.xpath(".//wbr")), 0)
 
     def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
         with tempfile.TemporaryDirectory() as temp:

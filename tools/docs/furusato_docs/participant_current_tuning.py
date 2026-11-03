@@ -276,6 +276,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "実際の flat selection contract",
             "Actual flat selection contract",
             canonical=True,
+            table_class="selection-contract scroll-hint-top",
         ),
     ])
     _append(chapter, 8, ("全体指示を確認する", "Review the global instructions"), [
@@ -400,7 +401,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
     }
 
 
-def _table(headers, rows, ja, en, *, canonical=False):
+def _table(headers, rows, ja, en, *, canonical=False, table_class=None):
     payload = {
         "number": 0,
         "headers": [_text(str(value)) if isinstance(value, str) else _text(*value) for value in headers],
@@ -410,4 +411,6 @@ def _table(headers, rows, ja, en, *, canonical=False):
     }
     if canonical:
         payload["canonicalLiteral"] = True
+    if table_class:
+        payload["tableClass"] = table_class
     return Block("table", payload)

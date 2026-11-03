@@ -449,7 +449,8 @@ class Tables:
                 rows.append([f"Notebook {number}", name, repr(value),
                              pair(meaning) if meaning else Text("—", "—")])
         return [text_table(["Notebook", ("パラメーター", "Parameter"), ("既定値", "Default"), ("意味", "Meaning")],
-                           rows, ("Notebook のパラメーター", "Notebook parameters"))]
+                           rows, ("Notebook のパラメーター", "Notebook parameters"),
+                           class_name="notebook-parameters scroll-hint-top")]
 
     def questions(self):
         rows = [[str(q.number), q.test_id, Text(q.question, q.question), str(len(q.evidence) + len(q.pass_criteria))]

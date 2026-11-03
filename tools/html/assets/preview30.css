@@ -273,9 +273,30 @@ li + li { margin-top: .25rem; }
 table { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.6; }
 th, td { border: 1px solid #d4e0da; padding: .65rem .75rem; vertical-align: top; text-align: left; overflow-wrap: normal; word-break: normal; }
 th { overflow-wrap: normal; word-break: normal; }
+.table-hint--top { margin-block: .35rem; }
 .canonical-condition-rubric { min-width: 60rem; }
 .canonical-condition-rubric tbody th { white-space: nowrap; overflow-wrap: normal; }
 table code { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+#ch-17-7 table.selection-contract {
+  width: 120rem;
+  min-width: 120rem;
+  table-layout: fixed;
+}
+#ch-17-7 table.selection-contract tr > :nth-child(1) { width: 9rem; }
+#ch-17-7 table.selection-contract tr > :nth-child(2) { width: 22rem; }
+#ch-17-7 table.selection-contract tr > :nth-child(3) { width: 14rem; }
+#ch-17-7 table.selection-contract tr > :nth-child(4) { width: 9rem; }
+#ch-17-7 table.selection-contract tr > :nth-child(5) { width: 20rem; }
+#ch-17-7 table.selection-contract tr > :nth-child(6) { width: 46rem; }
+#appendix-b-1 table.notebook-parameters {
+  width: 84rem;
+  min-width: 84rem;
+  table-layout: fixed;
+}
+#appendix-b-1 table.notebook-parameters tr > :nth-child(1) { width: 10rem; }
+#appendix-b-1 table.notebook-parameters tr > :nth-child(2) { width: 22rem; }
+#appendix-b-1 table.notebook-parameters tr > :nth-child(3) { width: 18rem; }
+#appendix-b-1 table.notebook-parameters tr > :nth-child(4) { width: 34rem; }
 thead th { background: #155e4b; color: white; }
 tbody th { font-weight: 650; }
 tr:nth-child(even) { background: #f4f8f5; }

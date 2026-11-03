@@ -33,8 +33,9 @@ FIXTURE = """
 <td>ot_pref_donation_flow</td><td>5</td></tr>
 </tbody></table></div></div></section>
 <section id="ch-17-7"><div class="table-wrap">
+<p class="table-hint table-hint--top">Horizontally scrollable table</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Source selection">
-<table><caption>Actual flat selection contract</caption>
+<table class="selection-contract"><caption>Actual flat selection contract</caption>
 <thead><tr><th>Source kind</th><th>Semantic path</th><th>Type</th>
 <th>is_selected</th><th>Display name</th><th>Description</th></tr></thead>
 <tbody><tr><th>lakehouse_tables</th>
@@ -56,8 +57,9 @@ for identity and this property for human-readable output.</td></tr>
 <tr><th scope="row">B01.boundary.long-provenance-id</th><td>Do not infer unsupported data scope or runtime behavior.</td></tr></tbody>
 </table></div></div></section>
 <section id="appendix-b-1"><div class="table-wrap">
+<p class="table-hint table-hint--top">Horizontally scrollable table</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Notebook parameters">
-<table><caption>Notebook parameters</caption>
+<table class="notebook-parameters"><caption>Notebook parameters</caption>
 <thead><tr><th>Notebook</th><th>Parameter</th><th>Default</th><th>Meaning</th></tr></thead>
 <tbody><tr><th>Notebook 03</th><td>EXPECTED_DEFINITION_SHA256</td><td>''</td>
 <td>Hash of the ontology definition checked before applying. If the definition
@@ -158,7 +160,14 @@ class PreviewTableLayoutTests(unittest.TestCase):
                         "()=>document.documentElement.scrollWidth<=window.innerWidth"
                     ))
                     if width == 390:
+                        selection_table = self.page.locator("#ch-17-7 table")
+                        self.assertAlmostEqual(
+                            1920,
+                            selection_table.bounding_box()["width"],
+                            delta=1,
+                        )
                         prose = self.page.locator("#ch-17-7 tbody tr:first-child td:nth-child(6)")
+                        self.assertLessEqual(prose.bounding_box()["width"], 740)
                         self.assertEqual("normal", prose.evaluate(
                             "node=>getComputedStyle(node).whiteSpace"
                         ))
@@ -167,6 +176,25 @@ class PreviewTableLayoutTests(unittest.TestCase):
                           return new Set([...range.getClientRects()].filter(rect=>rect.width>0)
                             .map(rect=>Math.round(rect.top))).size;
                         }"""), 1)
+                        self.assertLess(
+                            self.page.locator("#ch-17-7 tbody tr").evaluate_all(
+                                "rows=>Math.max(...rows.map(row=>row.getBoundingClientRect().height))"
+                            ),
+                            180,
+                        )
+                        parameters = self.page.locator("#appendix-b-1 table")
+                        self.assertAlmostEqual(1344, parameters.bounding_box()["width"], delta=1)
+                        self.assertLessEqual(
+                            self.page.locator("#appendix-b-1 tbody tr:first-child td:nth-child(4)")
+                            .bounding_box()["width"],
+                            545,
+                        )
+                        self.assertLess(
+                            self.page.locator("#appendix-b-1 tbody tr").evaluate_all(
+                                "rows=>Math.max(...rows.map(row=>row.getBoundingClientRect().height))"
+                            ),
+                            150,
+                        )
                     for section in ("#ch-17-7", "#appendix-b-1", "#appendix-c-25-canonical-evaluation"):
                         region = self.page.locator(section + " .table-scroll")
                         self.assertEqual("auto", region.evaluate(
@@ -178,6 +206,19 @@ class PreviewTableLayoutTests(unittest.TestCase):
                                 "node=>{node.scrollLeft=node.scrollWidth;return node.scrollLeft>0}"
                             ))
                         region.evaluate("node=>{node.scrollLeft=0}")
+
+    def test_long_reference_tables_keep_scroll_cues_before_the_table(self):
+        for section in ("#ch-17-7", "#appendix-b-1"):
+            with self.subTest(section=section):
+                wrapper = self.page.locator(section + " .table-wrap")
+                hint = wrapper.locator(".table-hint--top")
+                region = wrapper.locator(".table-scroll")
+                self.assertEqual(1, hint.count())
+                self.assertLess(
+                    hint.bounding_box()["y"],
+                    region.bounding_box()["y"],
+                )
+                self.assertIn("Horizontally scrollable table", hint.inner_text())
 
     def test_canonical_condition_ids_remain_whole_in_a_scoped_scrollable_table(self):
         self.page.set_content("""<html data-lang="en"><main>
@@ -214,11 +255,11 @@ class PreviewTableLayoutTests(unittest.TestCase):
 
     def test_fragmentation_probe_detects_original_narrow_column_regression(self):
         self.page.add_style_tag(content="""
-        #ch-17-7 :is(th,td):nth-child(3) {
-          width:2%; white-space:normal; overflow-wrap:anywhere;
+        #ch-17-7 table.selection-contract tr > :nth-child(3) {
+          width:2rem !important; white-space:normal !important; overflow-wrap:anywhere !important;
         }
-        #appendix-b-1 :is(th,td):nth-child(1) {
-          width:2%; white-space:normal; overflow-wrap:anywhere;
+        #appendix-b-1 table.notebook-parameters tr > :nth-child(1) {
+          width:2rem !important; white-space:normal !important; overflow-wrap:anywhere !important;
         }
         """)
         problems = self.page.evaluate(MEASURE)

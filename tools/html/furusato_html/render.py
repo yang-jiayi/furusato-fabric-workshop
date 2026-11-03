@@ -93,6 +93,13 @@ def rich(text: str, *, verbatim: bool = False) -> str:
     return "".join(out)
 
 
+def soft_breaks_after_commas(markup: str) -> str:
+    parts = re.split(r"(<[^>]+>)", markup)
+    for index in range(0, len(parts), 2):
+        parts[index] = parts[index].replace(",", ",<wbr>")
+    return "".join(parts)
+
+
 SYNONYM_MARKERS = ("同義語（NB02 が登録）：", "Synonyms (registered by NB02): ")
 JAPANESE_RE = re.compile(r"[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff]")
 
@@ -257,17 +264,27 @@ def render_table(block: Block, ctx: RenderContext) -> str:
     for row in block["rows"]:
         cells: list[str] = []
         for column, cell in enumerate(row):
+            markup = cell_markup(cell)
+            if "selection-contract" in str(block.get("tableClass", "")).split() and column == 5:
+                markup = soft_breaks_after_commas(markup)
             if column == 0:
-                cells.append(f'<th scope="row">{cell_markup(cell)}</th>')
+                cells.append(f'<th scope="row">{markup}</th>')
             else:
-                cells.append(f"<td>{cell_markup(cell)}</td>")
+                cells.append(f"<td>{markup}</td>")
         body_rows.append("<tr>" + "".join(cells) + "</tr>")
     hint = ctx.label("table.scroll")
     table_class = f'cols-{len(block["headers"])}'
     if block.get("tableClass"):
         table_class += " " + esc(block["tableClass"])
+    top_hint = (
+        f'<p class="table-hint table-hint--top">{hint}</p>'
+        if "scroll-hint-top" in str(block.get("tableClass", "")).split()
+        else ""
+    )
+    bottom_hint = "" if top_hint else f'<p class="table-hint">{hint}</p>'
     return (
         '<div class="table-wrap" data-search-block>'
+        f'{top_hint}'
         f'<div class="table-scroll" tabindex="0" role="region" '
         f'aria-label="{esc(caption.ja)}">'
         f'<table class="{table_class}">'
@@ -275,7 +292,7 @@ def render_table(block: Block, ctx: RenderContext) -> str:
         f"<thead><tr>{head}</tr></thead>"
         f"<tbody>{''.join(body_rows)}</tbody>"
         "</table></div>"
-        f'<p class="table-hint">{hint}</p>'
+        f'{bottom_hint}'
         "</div>"
     )
 

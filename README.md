@@ -2,7 +2,7 @@
 
 合成データを使い、Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent をつなぐ日英ハンズオンです。
 
-**[日英HTML手順書をダウンロード](docs/furusato-workshop-v3-1-0-complete.html?raw=true)**して、ブラウザーで開いてください。HTMLは必要なスタイル・動作・図を含む単一ファイルで、教材を読むだけならZIPやWebサイトは不要です。[GitHub Lab](Lab/README.md)は各手順の番号付きMarkdown版です。Notebook・データ・設定・コマンドなど、実習を実行する資産には同じ版の[参加者用ZIP](docs/Furusato_Workshop_v3.1.0_current.zip?raw=true)を使い、[SHA-256一覧](docs/SHA256SUMS.txt)で照合してください。[配布物と検証記録](docs/README.md)で現行ファイルを確認できます。リポジトリを使う場合はZIPの代わりにこのGitHub上の資産を利用できます。
+[日英HTML手順書をダウンロード](docs/furusato-workshop-v3-1-0-complete.html?raw=true)して、ブラウザーで開いてください。HTMLは必要なスタイル・動作・図を含む単一ファイルで、教材を読むだけならZIPやWebサイトは不要です。[GitHub Lab](Lab/README.md)は各手順の番号付きMarkdown版です。Notebook・データ・設定・コマンドなど、実習を実行する資産には同じ版の[参加者用ZIP](docs/Furusato_Workshop_v3.1.0_current.zip?raw=true)を使い、[SHA-256一覧](docs/SHA256SUMS.txt)で照合してください。[配布物と検証記録](docs/README.md)で現行ファイルを確認できます。リポジトリを使う場合はZIPの代わりにこのGitHub上の資産を利用できます。
 
 ![Furusato Workshopの構成図](Lab/assets/pc-01-architecture-ja.svg)
 

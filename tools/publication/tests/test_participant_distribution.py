@@ -15,6 +15,9 @@ PACKAGE='Furusato_Workshop_v3.1.0_current.zip'
 
 class ParticipantDistributionTests(unittest.TestCase):
     def test_active_entrypoints_offer_only_current_guides(self):
+        japanese_readme=(ROOT/'README.md').read_text(encoding='utf-8')
+        self.assertIn('[日英HTML手順書をダウンロード](docs/furusato-workshop-v3-1-0-complete.html?raw=true)して',japanese_readme)
+        self.assertNotIn('**[日英HTML手順書をダウンロード]',japanese_readme)
         for relative in ('README.md','docs/README.md','docs/v3.1.0/current/README.md'):
             with self.subTest(path=relative):
                 text=(ROOT/relative).read_text(encoding='utf-8')

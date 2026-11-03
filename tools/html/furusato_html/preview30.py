@@ -162,6 +162,8 @@ def render(
         legacy_button = f'<button type="button" id="legacy-toggle">{plain_bilingual(Text("旧版参考をすべて開閉", "Toggle all baseline references"))}</button>'
         footer_note = Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed.")
         footer_hash = f'<p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p>'
+    digest_line_markup = f" {digest_line}" if digest_line else ""
+    legacy_button_markup = f" {legacy_button}" if legacy_button else ""
     guide_link = (
         '<a class="button-link button-link--secondary" href="https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/Lab/README.md" id="lab-guide">'
         + plain_bilingual(Text("GitHub Labの補助手順へ", "Open the companion GitHub Lab")) + '</a>'
@@ -190,12 +192,12 @@ def render(
   <a class="button-link" href="#contents">{plain_bilingual(Text("目次から読む", "Start with the contents"))}</a>
   {guide_link}
  </div>
- {digest_line}
+{digest_line_markup}
 </div>
 <aside class="controls"><label for="search">{plain_bilingual(Text("この言語の全文を検索", "Search the full text in this language"))}</label>
  <input id="search" type="search" autocomplete="off"><button type="button" id="search-clear">{plain_bilingual(Text("検索解除", "Clear search"))}</button>
  <p id="search-status" role="status" aria-live="polite"></p>
- {legacy_button}
+{legacy_button_markup}
  <button type="button" id="progress-reset">{plain_bilingual(Text("学習記録をリセット", "Reset learning progress"))}</button>
  <p id="progress" role="status"></p>
 </aside>

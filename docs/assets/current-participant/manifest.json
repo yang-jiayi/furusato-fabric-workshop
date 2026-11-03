@@ -43,6 +43,34 @@
       "evidenceScope": "Navigation illustration showing DonationEvents, the 3D activity interval with a rounded 15K rows display, and a separate Rows today metric. Not an exact count, fresh execution or evidence of table-level mirror state, OneLake Delta materialization or source reconciliation."
     },
     {
+      "id": "p30-06-entities",
+      "file": "p30-06-municipality-configure.png",
+      "sha256": "832606ce00e581c253387d1267f54dd2b48ee64928555e714ec27d0940d7d01e",
+      "source": "native-fabric-municipality-configure-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-04",
+      "captureContext": "Fresh native Edge capture; read-only navigation to the existing Municipality Configure view. Contiguous crop only.",
+      "width": 1494,
+      "height": 857,
+      "cropBox": [88, 118, 1582, 975],
+      "pixelEdits": ["Contiguous crop from the native capture; retained pixels unchanged."],
+      "evidenceScope": "The view shows MunicipalityId as the key, eight property rows and types, a truncated ot_municipality source label, a truncated time-series property marked Timeseries / Unbound, and a clipped relationship graph. Full source-column names, the time-series property name, complete relationships and successful queries are not verified."
+    },
+    {
+      "id": "p30-06-binding-properties",
+      "file": "p30-06-municipality-binding-properties.png",
+      "sha256": "a1d152b03365057555c6378bff3e66dc5b5ac9349b32d13a0163b6e49ff44026",
+      "source": "native-fabric-municipality-bind-data-properties-ui",
+      "actualUI": true,
+      "capturedOn": "2026-11-04",
+      "captureContext": "Fresh native Edge capture; read-only navigation through Bind data to Properties for the existing Primary ot_municipality source. Contiguous crop only.",
+      "width": 1494,
+      "height": 757,
+      "cropBox": [88, 118, 1582, 875],
+      "pixelEdits": ["Contiguous crop from the native capture; retained pixels unchanged."],
+      "evidenceScope": "The Properties view shows eight property names, source-column controls and property types with the existing ot_municipality source marked Primary. Source-column labels are ellipsized; full source-column names are not verified. No binding change or save was made."
+    },
+    {
       "id": "p30-09-native-delivery",
       "file": "activator-history-overview.png",
       "sha256": "04bb5828ceafe002f01b4d72ed720082803398a0c57779cc275335a020747403",

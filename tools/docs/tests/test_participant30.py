@@ -7,6 +7,8 @@ import unittest
 import zipfile
 from pathlib import Path
 
+from PIL import Image
+
 ROOT = Path(__file__).resolve().parents[3]
 sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
@@ -415,7 +417,8 @@ class ParticipantEditionTests(unittest.TestCase):
 
     def test_reviewed_captions_describe_the_display_without_internal_disclaimers(self):
         for ident, expected in {
-            "p30-06-entities": ("Municipality Configure", "MunicipalityId"),
+            "p30-06-entities": ("Municipality Configure", "truncated data-source labels"),
+            "p30-06-binding-properties": ("Municipality Bind data: Properties", "Source-column labels are truncated"),
             "p30-07-relationships": ("Ontology Home", "Visible: 10 of 10 entities"),
             "p30-09-activation-detail-001": ("Subject and Type fields", "FileCreated"),
             "p30-12-metric-list-detail": ("Metrics panel", "count of 10"),
@@ -427,6 +430,34 @@ class ParticipantEditionTests(unittest.TestCase):
             self.assertNotIn("prove", english.lower())
             self.assertNotIn("証明", japanese)
         self.assertNotIn("参加者の配置完了を証明", figures.FIGURES["p30-07-relationships"]["caption"][0])
+
+    def test_chapter6_binding_captures_are_current_native_assets_with_truthful_scope(self):
+        manifest = participant30.participant_figures()
+        for ident, dimensions, expected_hash in (
+            ("p30-06-entities", (1494, 857), "832606ce00e581c253387d1267f54dd2b48ee64928555e714ec27d0940d7d01e"),
+            ("p30-06-binding-properties", (1494, 757), "a1d152b03365057555c6378bff3e66dc5b5ac9349b32d13a0163b6e49ff44026"),
+        ):
+            entry = manifest[ident]
+            image_path = participant30.figure_path(ident)
+            self.assertEqual(expected_hash, hashlib.sha256(image_path.read_bytes()).hexdigest())
+            self.assertEqual(expected_hash, entry["sha256"])
+            with Image.open(image_path) as image:
+                self.assertEqual(dimensions, image.size)
+            self.assertIs(entry["actualUI"], True)
+            self.assertTrue(any(
+                marker in entry["evidenceScope"].lower()
+                for marker in ("ellipsized", "truncated")
+            ))
+
+        steps = text.CHAPTERS[6]["steps"]
+        binding_step = next(step for step in steps if "p30-06-binding-properties" in step.get("figures", []))
+        japanese, english = binding_step["text"]
+        for phrase in ("Bind data", "Primary", "全名", "変更せず講師に確認"):
+            self.assertIn(phrase, japanese)
+        for phrase in ("Bind data", "Primary", "full source-column names", "make no changes and ask the instructor"):
+            self.assertIn(phrase, english)
+        self.assertIn("Cancel", english)
+        self.assertIn("Cancel", japanese)
 
     def test_chapter12_measure_definitions_are_copyable_code_and_figure2_is_participant_facing(self):
         definitions = (

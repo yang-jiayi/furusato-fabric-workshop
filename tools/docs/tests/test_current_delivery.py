@@ -202,7 +202,7 @@ class CurrentDeliveryTests(unittest.TestCase):
             r'workshop/v2\.7\.0/notebooks/Notebook_0[145]',
         )
 
-    def test_chapter6_binding_entry_stays_conditional_and_caption_does_not_claim_a_route(self):
+    def test_chapter6_binding_crops_match_the_observed_route_and_keep_mapping_checks(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / 'guide'
             delivery.build(ROOT, output)
@@ -212,10 +212,18 @@ class CurrentDeliveryTests(unittest.TestCase):
         for phrase in (
             'Manage property bindings',
             'Bind data',
+            'Data sources',
+            'Properties',
+            'Primary',
+            'ot_municipality',
+            'Source-column labels are truncated',
+            'full names',
+            'make no changes and ask the instructor',
+            'close with Cancel',
             'stop without creating or saving and ask the instructor',
-            'This image illustrates values to verify; it does not guarantee which entry controls are currently shown.',
         ):
             self.assertIn(phrase, text)
+        self.assertIn('Municipality Bind data: Properties view', text)
 
     def test_chapter19_practice_callout_does_not_print_markdown_emphasis(self):
         with tempfile.TemporaryDirectory() as temp:

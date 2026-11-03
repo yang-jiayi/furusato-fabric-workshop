@@ -73,10 +73,16 @@ FIGURES = {
                 'Conceptual paths from eight CSV files to Lakehouse, three increment files through OneLake event, Activator and Pipeline to Eventhouse, and static tables plus increment files through Notebook 05 to Gold and Semantic model; also Ontology, Graph, Data Agent and MCP.'),
     },
     'p30-06-entities': {
-        "caption": ('Municipality の Configure 画面例。キーは MunicipalityId、静的 Property は ot_municipality にバインドされ、時系列 Property は10章で設定するまで Unbound です。自分の画面で表示される binding の入口を使います。',
-                    'Municipality Configure example: MunicipalityId is the key, static properties are bound to ot_municipality, and the time-series property stays Unbound until Chapter 10. Use the binding entry shown in your own view.'),
-        "alt": ('Municipality の Properties 表。キー MunicipalityId、Local の各 Property の型と Data source（ot_municipality）、時系列 Property は Unbound',
-                'Municipality Properties table: key MunicipalityId, Local properties with their types bound to ot_municipality, and an Unbound time-series property.'),
+        "caption": ('Municipality の Configure 画面。Entity type key は MunicipalityId です。Properties 表に8行の型と省略表示されたデータソースがあり、時系列 Property は Timeseries / Unbound と表示されています。',
+                    'Municipality Configure view: MunicipalityId is the entity type key. The Properties table shows types and truncated data-source labels for eight rows; the time-series property is marked Timeseries / Unbound.'),
+        "alt": ('Municipality の Configure 画面。Entity type key は MunicipalityId。8行の Property と型、Timeseries / Unbound の行が表示され、一部の名前は省略されている。',
+                'Municipality Configure view with MunicipalityId as the entity type key, eight property rows and types, and a Timeseries / Unbound row; some names are truncated.'),
+    },
+    'p30-06-binding-properties': {
+        "caption": ('Municipality の Bind data: Properties 画面。Data sources では ot_municipality が Primary と表示され、8行の Property 名・source column・型が並びます。source column 名は省略表示のため、手順に沿って全名を照合してください。',
+                    'Municipality Bind data: Properties view. The Data sources pane marks ot_municipality as Primary; eight rows show property names, source columns and types. Source-column labels are truncated, so verify their full names as described in the steps.'),
+        "alt": ('Municipality の Bind data: Properties 画面。Primary の ot_municipality と、8行の Property 名、source column、型を表示。source column 名は省略表示。',
+                'Municipality Bind data: Properties view showing Primary ot_municipality and eight property names, source columns and types; source-column labels are truncated.'),
     },
     'p30-06-instances': {
         "caption": ('Municipality の Instances タブ。実際の行が表示され、012262 のように ID の先頭のゼロも残っている',

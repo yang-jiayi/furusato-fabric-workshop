@@ -1,29 +1,29 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "f6633bfbe16cf453179c24505ea2731997f056d6e328f60cd4a3b770664a9f6c",
+  "contentSha256": "382442b8edb198bc504d1fff8fe7a9ae8c3e22e1c53a951e599ae33531238452",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
     "sections": 187,
-    "modelBlocks": 640,
-    "bilingualValuesChecked": 8292,
+    "modelBlocks": 641,
+    "bilingualValuesChecked": 8296,
     "literalCodeAndPromptsChecked": 104,
-    "figures": 37,
+    "figures": 38,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "d95b3cc13351b7dcc7d35c6a60e51cd805be10956c7fa030ab8500e984049e47"
+    "htmlSha256": "3627fdbd64c29f7c2eac140bfe4888d10b328e79ee6c25e2face9ff3ed76cbaa"
   },
   "sourceRevision": {
-    "baseCommit": "5ff0eff2d64b468d6e34e8dea3490e3e5f8b7f6e",
+    "baseCommit": "a02316399d6a8468cf518a833c565dfc663a3419",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "f6553d5057ef033508a1ed886bd2166c79319dac0cc4743d500d33469c30c521"
+    "sourceTreeSha256": "dad28dc9a96b802e48cdfd3cb195961967f3185dccfc81d925684d97d0e73a7d"
   },
   "currentArtifactSet": {
-    "manifestSha256": "89aa13db93166510aef546cccca0bb5c82144d23ea8ed545e12386d75f5bfebc",
-    "sourceCommit": "5ff0eff2d64b468d6e34e8dea3490e3e5f8b7f6e",
-    "sourceTreeSha256": "f6553d5057ef033508a1ed886bd2166c79319dac0cc4743d500d33469c30c521",
+    "manifestSha256": "13dc68fb4f92736f8fba3a3e6f103d290f7fc66014e8942e54e7b17ec33360b9",
+    "sourceCommit": "a02316399d6a8468cf518a833c565dfc663a3419",
+    "sourceTreeSha256": "dad28dc9a96b802e48cdfd3cb195961967f3185dccfc81d925684d97d0e73a7d",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "d95b3cc13351b7dcc7d35c6a60e51cd805be10956c7fa030ab8500e984049e47",
+    "htmlSha256": "3627fdbd64c29f7c2eac140bfe4888d10b328e79ee6c25e2face9ff3ed76cbaa",
     "checks": [
       "all29chaptersAndAppendices",
       "noPrintOrPdfExport",

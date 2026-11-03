@@ -456,10 +456,10 @@ class ParticipantDetailSourceTests(unittest.TestCase):
         model = lab.load_model(ROOT)
         originals = [b for b in model[0].figures if b['source_key'] not in details.DETAILS
                      or details.DETAILS[b['source_key']].get('primary')]
-        self.assertEqual(list(range(1, 34)), [b['number'] for b in originals])
-        self.assertEqual('p30-16-eligibility', originals[30]['source_key'])
-        self.assertEqual('pc-16-unsupported-datasource', originals[31]['source_key'])
-        self.assertEqual('p30-16-gql', originals[32]['source_key'])
+        self.assertEqual(list(range(1, 35)), [b['number'] for b in originals])
+        self.assertEqual('p30-16-eligibility', originals[31]['source_key'])
+        self.assertEqual('pc-16-unsupported-datasource', originals[32]['source_key'])
+        self.assertEqual('p30-16-gql', originals[33]['source_key'])
         for block in model[0].figures:
             if block['source_key'] in details.DETAILS and not details.DETAILS[block['source_key']].get('primary'):
                 parent = details.DETAILS[block['source_key']]['parent']
@@ -468,15 +468,15 @@ class ParticipantDetailSourceTests(unittest.TestCase):
                 index = siblings.index(block['source_key'])
                 suffix = '-detail' if index == 0 else f'-detail-{index + 1}'
                 self.assertEqual(f'{number}{suffix}', block['number'])
-        self.assertEqual('p30-16-gql', originals[32]['source_key'])
+        self.assertEqual('p30-16-gql', originals[33]['source_key'])
 
     def test_current_guide_contains_only_the_currently_reviewed_figure_set(self):
         current = lab.load_model(ROOT)
         labels = {block['source_key']: block['number'] for block in current[0].figures}
-        self.assertEqual(37, current[-1]['counts']['figures'])
+        self.assertEqual(38, current[-1]['counts']['figures'])
         self.assertNotIn('p30-17-ci-sql-output', labels)
         self.assertNotIn('p30-22-import', labels)
-        self.assertEqual(33, labels['p30-16-gql'])
+        self.assertEqual(34, labels['p30-16-gql'])
 
     def test_lab_supplements_keep_original_page_segments_and_bilingual_vector_provenance(self):
         model = lab.load_model(ROOT)

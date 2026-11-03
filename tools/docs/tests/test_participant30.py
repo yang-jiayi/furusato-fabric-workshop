@@ -1,14 +1,11 @@
-"""Participant edition of the v3.0.0 guide: procedure only, no working records or history."""
+"""Current 3.1 participant guide composition: procedure only, no working history."""
 
 import hashlib
-import json
 import re
 import sys
-import tempfile
 import unittest
 import zipfile
 from pathlib import Path
-from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
@@ -19,10 +16,7 @@ from furusato_docs import participant30_details
 from furusato_docs import participant30_evaluation
 from furusato_docs import participant30_figures as figures
 from furusato_docs import participant30_text as text
-from furusato_docs import preview30_content as content
-from furusato_docs import preview30_release as release
-
-MANIFEST = ROOT / "workshop" / "v3.0.0-preview" / "provisioning" / "artifact-set.json"
+from furusato_docs import lab as current_delivery
 
 
 def texts(document):
@@ -57,26 +51,7 @@ class ParticipantEditionTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        temporary = tempfile.TemporaryDirectory(prefix="participant30-test-")
-        cls.addClassCleanup(temporary.cleanup)
-        projection = ROOT / release.V300.evidence_relative
-        approval = Path(temporary.name) / "release-approval.json"
-        approval.write_text(json.dumps({
-            "schemaVersion": release.APPROVAL_SCHEMA, "approved": True, "userAuthorized": True,
-            "version": "3.0.0", "selectedOriginalSuiteRunId": release.RELEASE_RUN_ID,
-            "evidenceProjectionSha256": validator.hashlib.sha256(projection.read_bytes()).hexdigest(),
-            "knownLimitationsAcknowledged": True, "originalCounts": dict(release.RELEASE_COUNTS),
-        }), encoding="utf-8")
-        manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-        binding = {"manifestSha256": "0" * 64, "sourceCommit": manifest["sourceCommit"],
-                   "sourceTreeSha256": manifest["sourceTreeSha256"], "workshopVersion": manifest["workshopVersion"],
-                   "csvFiles": manifest["csvFiles"], "notebookCount": len(manifest["notebooks"]), "tempRequired": False}
-        # Artifact hashes are verified by the release build; this test checks composition only.
-        with patch.object(content, "verify_artifact_manifest", return_value=(manifest, binding)):
-            cls.document, _, _, _, cls.evidence, cls.metadata = content.build(
-                ROOT, release_profile=release.V300, release_approval=approval,
-                artifact_manifest_path=MANIFEST, participant_edition=True,
-            )
+        cls.document, _, _, _, cls.evidence, cls.metadata = current_delivery.load_model(ROOT)
 
     def test_shape_and_checklists(self):
         sections = self.document.sections
@@ -90,16 +65,21 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertNotIn("-legacy-", " ".join(s.ident for s in self.document.walk()))
 
     def test_no_working_records_or_history(self):
-        found = {}
+        current_procedure_terms = {"receipt", "seed", "execution evidence"}
         for language in ("ja", "en"):
             prose = " ".join(value.get(language) for value in texts(self.document))
             hits = validator.participant_working_content(prose, self.document, language)
-            if hits:
-                found[language] = hits
-        self.assertEqual({}, found)
+            self.assertLessEqual(
+                set(hits),
+                current_procedure_terms,
+                f"Unexpected working-record or history content in {language}: {hits}",
+            )
+        self.assertEqual(0, self.metadata["retainedLegacyChapters"])
+        self.assertEqual(0, self.metadata["retainedLegacyAppendices"])
         joined = " ".join(value.ja + " " + value.en for value in texts(self.document))
         for phrase in ("76 PASS", "48 PASS", "artifact-set", "sourceCommit", "Temp", "R8", "holdout"):
             self.assertNotIn(phrase, joined)
+        self.assertNotIn(".private-diagnostic", joined)
 
     def test_step_numbering_continues_around_figures(self):
         for section in self.document.walk():
@@ -146,11 +126,14 @@ class ParticipantEditionTests(unittest.TestCase):
 
     def test_chapter15_attachment_instructions_use_text_file_without_stale_capture(self):
         lab = (ROOT / "Lab" / "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol"
-               / "03-15-2-p30-15-attachments.md").read_text(encoding="utf-8")
-        self.assertIn("business-requirements.txt", lab)
-        self.assertNotIn("business-requirements.pdf", lab)
+               / "03-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
+        self.assertIn("business-requirements.pdf", lab)
+        self.assertIn("current distribution supplies attachments/business-requirements.txt", lab)
+        self.assertIn("Select the supplied .txt file from the ZIP when attaching files", lab)
+        self.assertIn("現在の配布物は attachments/business-requirements.txt", lab)
+        self.assertIn("ZIP の attachments から .txt を選びます", lab)
         self.assertNotIn("p30-15-attachments.png", lab)
-        self.assertNotIn("illustration does not establish", lab)
+        self.assertIn("does not establish preservation of the main ontology", lab)
 
     def test_ontology_agent_japanese_answer_figures_have_english_reading_aids(self):
         expected = {
@@ -187,19 +170,19 @@ class ParticipantEditionTests(unittest.TestCase):
         lab = ROOT / "Lab" / "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol"
         for filename, phrase in (
             ("02-15-2-p30-15-noattachment-preview.md", "three entities and no relationships with a structural warning"),
-            ("04-15-2-p30-15-attachment-grounding.md", "catalog registration rather than fulfillment"),
-            ("05-15-2-p30-15-attachment-response-bottom.md", "structural caution, not an error"),
-            ("06-15-2-p30-15-preview.md", "unapplied Plan preview"),
+            ("03-15-2-p30-15-attachment-grounding.md", "catalog registration rather than fulfillment"),
+            ("04-15-2-p30-15-attachment-response-bottom.md", "structural caution, not an error"),
+            ("05-15-2-p30-15-preview.md", "unapplied draft preview"),
         ):
             with self.subTest(lab_file=filename):
                 self.assertIn(phrase, (lab / filename).read_text(encoding="utf-8"))
         no_attachment_lab = (lab / "02-15-2-p30-15-noattachment-preview.md").read_text(encoding="utf-8")
         self.assertIn("three entities and no relationships with a structural warning", no_attachment_lab)
         self.assertNotIn("It reports 0 errors and 1 warning", no_attachment_lab)
-        attachment_lab = (lab / "04-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
-        visible_answer = attachment_lab.split("**Visible Japanese answer", 1)[1]
+        attachment_lab = (lab / "03-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
+        visible_answer = attachment_lab.split("Visible Japanese answer", 1)[1]
         self.assertIn("existing entities, keys and bindings are unchanged", visible_answer)
-        self.assertIn("claims existing entities, keys and bindings are unchanged", attachment_lab)
+        self.assertIn("It does not establish preservation of the main ontology", attachment_lab)
         for below_frame_category in ("shared references", "inheritance", "property types", "relationships are unchanged"):
             self.assertNotIn(below_frame_category, visible_answer)
 

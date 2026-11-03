@@ -265,8 +265,8 @@ FIGURES = {
                 'Excerpt of the answer without attachments: Entity types 3, Relationship types 0 and missing data-layer context; the proposal canvas and mode toggle are not included.'),
     },
     'p30-15-preview': {
-        "caption": ('添付あり（B）の提案の参考例。DataLayer の説明は承認や配送を意味しないとしていますが、右の回答は関係の層が無いと述べています。15 Relationship を保持する主 Ontology の合格例ではありません。Error 0・Warning 1 の表示にかかわらず、実際の定義が一致しなければ停止し、適用しません。',
-                    'Proposal with attachments (B): DataLayer is Local, String and Unbound. Its file-grounded description says this data layer does not imply approval or delivery; the screen shows Error 0 and Warning 1. The visible Japanese response says the missing relationship layer may limit cross-entity questions and that only reading plus an unapplied draft preview was performed. However, the response says no relationship layer is present: this is not a passing example for the main ontology retaining fifteen relationships. Stop if actual definitions do not reconcile, regardless of the AI validation labels, and do not apply.'),
+        "caption": ('添付あり（B）の提案の参考例。右上のフィードバック通知が回答欄の上部に重なり、回答の一部は読み取れません。画面例であり、回答全文の記録ではありません。DataLayer の説明は承認や配送を意味しないとしていますが、右の回答は関係の層が無いと述べています。15 Relationship を保持する主 Ontology の合格例ではありません。Error 0・Warning 1 の表示にかかわらず、実際の定義が一致しなければ停止し、適用しません。',
+                    'Proposal with attachments (B): a feedback notification overlaps the upper part of the answer pane, so part of the response is unreadable; this is an illustration, not a complete transcript. DataLayer is Local, String and Unbound. Its file-grounded description says the data layer does not imply approval or delivery; the visible response says the missing relationship layer may limit cross-entity questions and that only reading plus an unapplied draft preview was performed. However, it says no relationship layer is present: this is not a passing example for the main ontology retaining fifteen relationships. Stop if actual definitions do not reconcile, regardless of the AI validation labels, and do not apply.'),
         "alt": ('不一致の提案例。DonationQualityScope の DataLayer は Local・String・Unbound。右の回答は関係の層が無いと述べ、Error 0・Warning 1 と表示するが、15 Relationship を保持した証拠ではない。',
                 'Mismatched proposal example: DonationQualityScope has Local, String, Unbound DataLayer. The response claims no relationship layer and shows Error 0 and Warning 1; this does not establish preservation of fifteen relationships.'),
     },
@@ -277,8 +277,8 @@ FIGURES = {
                 'Configure Graph Choose what to project screen showing the Use the entire Ontology toggle, entity checkboxes, Status and Source columns, and Continue button.'),
     },
     'p30-16-gql': {
-        "caption": ('全体を実体化した Graph で、Prefecture にフィルターを付けて Run query した結果。矢印は自治体 → 都道府県。ノードの数字は ID とは限らないため、Table view で確かめる',
-                    'Run query with a filter on Prefecture in a graph of the whole model: arrows go from municipality to prefecture. Numbers on nodes may not be IDs, so check them in Table view.'),
+        "caption": ('全体を実体化した Graph で、Prefecture にフィルターを付けて Run query した結果。上部の図は自治体 → 都道府県の方向を示します。下部の全体グラフはラベルが密集し、一部は重なり・省略されているため、すべてのラベルの判読例ではありません。ノードの数字は ID とは限らないため、名称と ID は Table view で個別に確かめる',
+                    'Run query with a filter on Prefecture in a graph of the whole model. The upper diagram shows municipality → prefecture direction. Labels in the lower overview graph are dense, with some overlapping or ellipsized; it is not an example where every label is legible. Node numbers may not be IDs, so verify names and IDs individually in Table view.'),
         "alt": ('Explore graph のクエリ画面。Municipality → Prefecture の図と、1つの都道府県に多数の自治体がつながる結果のグラフ',
                 'Explore graph query: a Municipality-to-Prefecture pattern; the result links many municipalities to one prefecture.'),
     },

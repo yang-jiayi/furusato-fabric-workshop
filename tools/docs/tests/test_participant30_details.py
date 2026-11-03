@@ -161,6 +161,15 @@ class ParticipantDetailSourceTests(unittest.TestCase):
             "p30-15-attachment-response-bottom"]["caption"][1])
         self.assertIn("not a passing example", figures.FIGURES[
             "p30-15-preview"]["caption"][1])
+        self.assertIn("通知が回答欄の上部に重なり", figures.FIGURES[
+            "p30-15-preview"]["caption"][0])
+        self.assertIn("feedback notification overlaps the upper part of the answer pane",
+                      figures.FIGURES["p30-15-preview"]["caption"][1])
+        self.assertIn("一部は重なり・省略", figures.FIGURES["p30-16-gql"]["caption"][0])
+        self.assertIn("some overlapping or ellipsized", figures.FIGURES["p30-16-gql"]["caption"][1])
+        self.assertIn("Table view で個別に確かめる", figures.FIGURES["p30-16-gql"]["caption"][0])
+        self.assertIn("verify names and IDs individually in Table view",
+                      figures.FIGURES["p30-16-gql"]["caption"][1])
 
     def test_authentic_detail_recipes_are_exact_contiguous_pixel_crops(self):
         for ident, spec in details.DETAILS.items():

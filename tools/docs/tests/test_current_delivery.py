@@ -198,6 +198,23 @@ class CurrentDeliveryTests(unittest.TestCase):
         ):
             self.assertIn(phrase, text)
 
+    def test_chapter19_practice_callout_does_not_print_markdown_emphasis(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        chapter = tree.get_element_by_id('ch-19-2')
+        callout = next(
+            item for item in chapter.xpath(
+                ".//aside[contains(concat(' ', normalize-space(@class), ' '), ' callout--note ')]"
+            )
+            if 'Test the ontology' in item.text_content()
+        )
+        text = ' '.join(callout.itertext())
+        self.assertIn('Ontology agent の Test the ontology', text)
+        self.assertIn('Questions from Test the ontology', text)
+        self.assertNotIn('**Test the ontology**', text)
+
     def test_html_lab_hero_does_not_repeat_the_purpose_as_a_status(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / 'guide'

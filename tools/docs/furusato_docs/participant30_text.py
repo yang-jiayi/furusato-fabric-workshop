@@ -1073,8 +1073,8 @@ CHAPTERS = {
         "tips": [
             ("Agent が自分で断るかどうかを見たい場合は、個人を特定しない別の質問（例：「寄付額が多い人は年収も高いと言えますか？」）で試し、別に記録します。この結果は T10 の採点には使いません。",
              "To see whether the agent itself declines, try a separate question that does not target individuals (for example, \"Can we say that people who donate more also earn more?\") and record it separately. Do not use that result to score T10."),
-            ("Ontology agent の **Test the ontology** の質問や、自分で作った質問は練習用で、固定問題の採点とは分けます。補助評価の合格率は、事実だけでなく、指定された ID・見出し・説明と取得経路などの条件充足率です。事実誤り、項目の不足、経路の未達、取得の中断や実行結果の未確認を分けて記録し、全体を純粋な事実の正答率とは呼びません。",
-             "Questions from **Test the ontology** and questions you write yourself are for practice; keep them separate from scoring the fixed questions. Supplemental pass rates measure fulfillment of conditions covering facts, required IDs, headings, explanations and retrieval routes. Record factual errors, omitted elements, unmet routes, interrupted answer retrieval and query results that could not be verified separately; do not label the overall rate pure factual accuracy."),
+            ("Ontology agent の Test the ontology の質問や、自分で作った質問は練習用で、固定問題の採点とは分けます。補助評価の合格率は、事実だけでなく、指定された ID・見出し・説明と取得経路などの条件充足率です。事実誤り、項目の不足、経路の未達、取得の中断や実行結果の未確認を分けて記録し、全体を純粋な事実の正答率とは呼びません。",
+             "Questions from Test the ontology and questions you write yourself are for practice; keep them separate from scoring the fixed questions. Supplemental pass rates measure fulfillment of conditions covering facts, required IDs, headings, explanations and retrieval routes. Record factual errors, omitted elements, unmet routes, interrupted answer retrieval and query results that could not be verified separately; do not label the overall rate pure factual accuracy."),
             ("評価の計画作成、公開49回・290条件の実施、条件ごとの採点、比較、改善採否の手順は本章の追加節にあり、問題全文は付録Cにあります。",
              "The additional sections in this chapter cover planning, the public 49-slot / 290-condition evaluation, per-condition scoring, comparison and adoption decisions; Appendix C contains the complete questions."),
         ],

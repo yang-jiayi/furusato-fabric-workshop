@@ -1,4 +1,4 @@
-"""Build, verify and package the current standalone HTML and GitHub Lab guide.
+"""Build, verify, package and publish the current standalone HTML and GitHub Lab guide.
 
 The historical paired-document pipeline remains separate. This pipeline never
 creates an Office document or claims live Fabric validation.
@@ -11,6 +11,7 @@ from dataclasses import asdict
 from hashlib import sha256
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -610,7 +611,141 @@ def package(root, path, lab, receipt_path, output):
         with tempfile.TemporaryDirectory(prefix='furusato-package-links-') as temp:
             archive.extractall(temp)
             links=validate_packaged_links(Path(temp))
+    (receipt_path.parent/'LAB_VALIDATION.json').write_bytes(json_bytes(lab_validation))
     return {'entries':len(files),'sha256':digest(output.read_bytes()),'deliveryMode':'html-lab','packagedLabLinksChecked':links}
+
+
+def tree_bytes(directory):
+    if directory.is_symlink() or not directory.is_dir():
+        raise ValueError('Refusing to publish an unsafe or missing Lab directory: ' + str(directory))
+    files = {}
+    for path in directory.rglob('*'):
+        if path.is_symlink():
+            raise ValueError('Refusing to publish symbolic links: ' + str(path))
+        if path.is_file():
+            files[path.relative_to(directory).as_posix()] = path.read_bytes()
+    return files
+
+
+def atomic_write(path, content):
+    if path.is_symlink() or not path.parent.is_dir():
+        raise ValueError('Refusing to write outside the current publication directories: ' + str(path))
+    descriptor, temporary_name = tempfile.mkstemp(prefix=path.name+'.', suffix='.tmp', dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, 'wb') as stream:
+            stream.write(content)
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def publish(root, out, lab, package_path):
+    root = root.resolve()
+    out = out.resolve()
+    lab = lab.resolve()
+    package_path = package_path.resolve()
+    if out.is_relative_to(root) or package_path.is_relative_to(root):
+        raise ValueError('Build and package staging must remain outside the repository')
+    if package_path != out.parent/PACKAGE_NAME or lab != out.parent/'Lab':
+        raise ValueError('Publish requires the staged package and Lab output in the selected build directory')
+
+    html_path = out/HTML_NAME
+    document_receipt_path = out/'DOCUMENT_VALIDATION.json'
+    lab_receipt_path = out/'LAB_VALIDATION.json'
+    artifact_manifest_path = out/SOURCE_MANIFEST
+    for path in (html_path, document_receipt_path, lab_receipt_path, artifact_manifest_path, package_path):
+        if not path.is_file() or path.is_symlink():
+            raise ValueError('Missing or unsafe staged publication file: ' + str(path))
+    html_blob = html_path.read_bytes()
+    document_receipt = json.loads(document_receipt_path.read_text(encoding='utf-8'))
+    require_validated(html_path, document_receipt)
+    lab_blob = lab_receipt_path.read_bytes()
+    manifest_blob = artifact_manifest_path.read_bytes()
+    lab_files = tree_bytes(lab)
+    if not lab_files or tree_bytes(root/'Lab') != lab_files:
+        raise ValueError('Staged Lab bytes must match the repository Lab before publication')
+
+    with zipfile.ZipFile(package_path) as archive:
+        if archive.testzip() is not None:
+            raise ValueError('Package CRC verification failed')
+        names = set(archive.namelist())
+        if archive.read('guide/'+HTML_NAME) != html_blob:
+            raise ValueError('Package HTML differs from the validated staged HTML')
+        if archive.read('DOCUMENT_VALIDATION.json') != document_receipt_path.read_bytes():
+            raise ValueError('Package document receipt differs from the staged receipt')
+        if archive.read('LAB_VALIDATION.json') != lab_blob:
+            raise ValueError('Package Lab receipt differs from the staged receipt')
+        if archive.read('source/artifact-set.json') != manifest_blob:
+            raise ValueError('Package artifact set differs from the staged manifest')
+        packaged_lab = {
+            name.removeprefix('Lab/'): archive.read(name)
+            for name in names if name.startswith('Lab/')
+        }
+        if packaged_lab != lab_files:
+            raise ValueError('Package Lab bytes differ from the staged Lab')
+        package_manifest = json.loads(archive.read('PACKAGE_MANIFEST.json'))
+        if (package_manifest.get('deliveryMode') != 'html-lab'
+                or package_manifest.get('workshopVersion') != PUBLICATION.version):
+            raise ValueError('Package manifest does not describe the current HTML+Lab edition')
+        package_files = package_manifest.get('files', {})
+        if not package_files:
+            raise ValueError('Package manifest has no file hashes')
+        if set(package_files) != names-{'PACKAGE_MANIFEST.json', 'SHA256SUMS.txt'}:
+            raise ValueError('Package manifest inventory does not match the ZIP')
+        for name, expected in package_files.items():
+            if name not in names or digest(archive.read(name)) != expected:
+                raise ValueError('Package manifest hash mismatch: ' + name)
+
+    docs = root/'docs'
+    versioned = docs/f'v{PUBLICATION.version}'/'current'
+    versioned_guide = versioned/'guide'
+    if not docs.is_dir() or not versioned_guide.is_dir():
+        raise ValueError('Root and versioned current publication directories must already exist')
+    package_blob = package_path.read_bytes()
+    targets = {
+        docs/HTML_NAME: html_blob,
+        docs/PACKAGE_NAME: package_blob,
+        docs/'DOCUMENT_VALIDATION.json': document_receipt_path.read_bytes(),
+        docs/'LAB_VALIDATION.json': lab_blob,
+        versioned_guide/HTML_NAME: html_blob,
+        versioned/PACKAGE_NAME: package_blob,
+        versioned/'DOCUMENT_VALIDATION.json': document_receipt_path.read_bytes(),
+        versioned/'LAB_VALIDATION.json': lab_blob,
+        versioned/'artifact-set.json': manifest_blob,
+    }
+    if not (versioned/'README.md').is_file():
+        raise ValueError('The versioned current README is required')
+    for path, content in targets.items():
+        atomic_write(path, content)
+
+    root_sums = {
+        HTML_NAME: digest((docs/HTML_NAME).read_bytes()),
+        PACKAGE_NAME: digest((docs/PACKAGE_NAME).read_bytes()),
+    }
+    versioned_sums = {
+        'README.md': digest((versioned/'README.md').read_bytes()),
+        'DOCUMENT_VALIDATION.json': digest((versioned/'DOCUMENT_VALIDATION.json').read_bytes()),
+        'LAB_VALIDATION.json': digest((versioned/'LAB_VALIDATION.json').read_bytes()),
+        'artifact-set.json': digest((versioned/'artifact-set.json').read_bytes()),
+        'guide/'+HTML_NAME: digest((versioned_guide/HTML_NAME).read_bytes()),
+        PACKAGE_NAME: digest((versioned/PACKAGE_NAME).read_bytes()),
+    }
+    atomic_write(docs/'SHA256SUMS.txt', ''.join(
+        root_sums[name]+'  '+name+'\n' for name in sorted(root_sums)
+    ).encode('ascii'))
+    atomic_write(versioned/'SHA256SUMS.txt', ''.join(
+        versioned_sums[name]+'  '+name+'\n' for name in sorted(versioned_sums)
+    ).encode('ascii'))
+    return {
+        'deliveryMode': 'html-lab',
+        'published': True,
+        'htmlSha256': digest(html_blob),
+        'packageSha256': digest(package_blob),
+        'versionedHtmlMatches': (docs/HTML_NAME).read_bytes() == (versioned_guide/HTML_NAME).read_bytes(),
+        'versionedPackageMatches': (docs/PACKAGE_NAME).read_bytes() == (versioned/PACKAGE_NAME).read_bytes(),
+    }
 
 
 def parse_args(argv=None):
@@ -620,6 +755,7 @@ def parse_args(argv=None):
     p=sub.add_parser('validate');p.add_argument('--out',type=Path,required=True);p.add_argument('--browser',action='store_true');p.add_argument('--artifact-manifest',type=Path)
     p.add_argument('--browser-executable',type=Path,help='Existing Chromium executable (requires --browser); otherwise use Linux system Chromium or Playwright Chromium')
     p=sub.add_parser('package');p.add_argument('--out',type=Path,required=True);p.add_argument('--lab',type=Path,default=ROOT/'Lab');p.add_argument('--package',type=Path,required=True)
+    p=sub.add_parser('publish');p.add_argument('--out',type=Path,required=True);p.add_argument('--lab',type=Path,required=True);p.add_argument('--package',type=Path,required=True)
     args=parser.parse_args(argv)
     if args.command=='validate' and args.browser_executable is not None:
         if not args.browser:
@@ -644,8 +780,10 @@ def main():
         if args.browser:
             result['browser']=browser_check(args.out/HTML_NAME,args.out,args.browser_executable)
         receipt_path.write_bytes(json_bytes(result))
-    else:
+    elif args.command=='package':
         result=package(ROOT,args.out/HTML_NAME,args.lab,args.out/'DOCUMENT_VALIDATION.json',args.package)
+    else:
+        result=publish(ROOT,args.out,args.lab,args.package)
     print(json.dumps(result,ensure_ascii=False,indent=2))
 
 

@@ -28,7 +28,14 @@ class ParticipantDistributionTests(unittest.TestCase):
                 self.assertNotRegex(text,r'189/281|217/281|2026-09-17|参考実績|Historical evaluations')
 
     def test_current_html_and_checksums_match_distribution_bytes(self):
-        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(ROOT/'docs/v3.1.0/current/guide'/HTML).read_bytes())
+        versioned=ROOT/'docs/v3.1.0/current'
+        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(versioned/'guide'/HTML).read_bytes())
+        self.assertEqual((ROOT/'docs'/PACKAGE).read_bytes(),(versioned/PACKAGE).read_bytes())
+        for name in ('DOCUMENT_VALIDATION.json','LAB_VALIDATION.json'):
+            self.assertEqual((ROOT/'docs'/name).read_bytes(),(versioned/name).read_bytes())
+        with zipfile.ZipFile(ROOT/'docs'/PACKAGE) as archive:
+            self.assertEqual((versioned/'artifact-set.json').read_bytes(),
+                             archive.read('source/artifact-set.json'))
         for relative in ('docs/SHA256SUMS.txt','docs/v3.1.0/current/SHA256SUMS.txt'):
             path=ROOT/relative
             entries={}

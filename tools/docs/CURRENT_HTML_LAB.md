@@ -42,10 +42,20 @@ python -B tools\docs\current_delivery.py build --out "$Stage\guide"
 python -B tools\docs\current_delivery.py validate --out "$Stage\guide" --browser
 python -B tools\docs\build_lab.py --out "$Stage\Lab" --receipt "$Review\lab-coverage.json"
 python -B tools\docs\build_lab.py --out "$Stage\Lab" --receipt "$Review\lab-coverage.json" --check
-Copy-Item -LiteralPath "$Stage\guide\$HtmlName" -Destination "docs\$HtmlName"
 python -B tools\docs\current_delivery.py package --out "$Stage\guide" `
   --lab "$Stage\Lab" --package "$Stage\$PackageName"
+python -B tools\docs\current_delivery.py publish --out "$Stage\guide" `
+  --lab "$Stage\Lab" --package "$Stage\$PackageName"
 ```
+
+`publish` は検証済みHTML、Lab、ZIPをルートと `docs/v3.1.0/current/` の両方に配置し、
+両方のSHA-256一覧、検証記録、版管理されたソース資産一覧を更新します。配置前に
+ZIPの内容、HTML・Lab・資産一覧との一致、および既存のルートLabとの一致を検査します。
+
+`publish` copies the validated HTML, Lab and ZIP to both root and
+`docs/v3.1.0/current/`, then refreshes both SHA-256 manifests, validation receipts
+and the versioned source artifact set. Before writing, it checks package contents
+and requires the staged Lab to match the repository Lab.
 
 ブラウザー検査は実際のHTMLハッシュに結び付き、日英切替、検索、進捗チェック、コピー、画像拡大、320/390/768/1440px幅、スクリプトエラー、外部ネットワーク要求のないことを確認します。静的検査は全セクション、日英本文、コマンド・質問、図、アンカー、単一HTML内のリソースを検査します。画面サイズの確認はFabric上の表示や全ての利用環境を認定するものではありません。
 

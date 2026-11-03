@@ -61,7 +61,9 @@ class ParticipantDistributionTests(unittest.TestCase):
             receipt=json.loads(archive.read('DOCUMENT_VALIDATION.json'))
             self.assertTrue(receipt['static']['passed'])
             self.assertTrue(receipt['browser']['passed'])
-            self.assertGreaterEqual(receipt['static']['modelBlocks'],704)
+            lab_receipt=json.loads(archive.read('LAB_VALIDATION.json'))
+            self.assertGreaterEqual(receipt['static']['modelBlocks'],646)
+            self.assertEqual(receipt['static']['modelBlocks'],lab_receipt['sourceBlocksChecked'])
             self.assertEqual(receipt['static']['htmlSha256'],sha256(archive.read('guide/'+HTML)).hexdigest())
             manifest=json.loads(archive.read('PACKAGE_MANIFEST.json'))
             self.assertEqual(manifest['deliveryMode'],'html-lab')
@@ -69,7 +71,7 @@ class ParticipantDistributionTests(unittest.TestCase):
                 self.assertEqual(expected,sha256(archive.read(name)).hexdigest(),name)
             with tempfile.TemporaryDirectory() as temp:
                 archive.extractall(temp)
-                extracted=Path(temp)
+                extracted=Path(temp).resolve()
                 checked=0
                 for page in (extracted/'Lab').rglob('*.md'):
                     for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',

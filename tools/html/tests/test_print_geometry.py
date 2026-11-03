@@ -15,16 +15,17 @@ import sys
 from playwright.sync_api import sync_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parents[3]
-TARGET = ROOT / "docs" / "furusato-workshop-v2-7-0-complete.html"
+WORKSHOP_VERSION = (ROOT / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip()
+TARGET = ROOT / "docs" / f"furusato-workshop-v{WORKSHOP_VERSION.replace('.', '-')}-complete.html"
 
 #: A4 portrait at 96 dpi - the width at which the defects appear.
 A4_PRINT_WIDTH_PX = 794
 
 #: Compares every text rect against its own cell's content box and against the
-#: next cell's edge, for all eight columns, head and body.
+#: next cell's edge, for every wide reference table, head and body.
 GEOMETRY_JS = """() => {
   const problems = [];
-  document.querySelectorAll('table.cols-8 tr').forEach(tr => {
+  document.querySelectorAll('table.evaluation-reference tr, table.selection-contract tr, table.notebook-parameters tr').forEach(tr => {
     const cells = [].slice.call(tr.children).filter(c => c.offsetParent !== null);
     if (cells.length < 2) { return; }
     const boxes = cells.map(c => c.getBoundingClientRect());
@@ -61,20 +62,25 @@ GEOMETRY_JS = """() => {
 #: at least one reported problem).
 FIXTURES = (
     (
-        "an identifier paints past the safety-gate column",
-        "@media print{table.cols-8 tbody td:nth-child(7){overflow-wrap:normal !important;}}",
-        "c7",
+        "the first reference column paints past its cell",
+        "@media print{table.evaluation-reference,table.selection-contract,table.notebook-parameters{table-layout:fixed !important;width:100% !important;min-width:0 !important;}"
+        "table.evaluation-reference tr>:first-child,table.selection-contract tr>:first-child,table.notebook-parameters tr>:first-child{width:3px !important;min-width:0 !important;"
+        "max-width:3px !important;white-space:nowrap !important;}}",
+        "pastBorder",
     ),
     (
-        "a slash-run paints past the default-behaviour column",
-        "@media print{table.cols-8 tbody td:nth-child(6){overflow-wrap:normal !important;}}",
-        "c6",
+        "a narrow second reference column paints past its cell",
+        "@media print{table.evaluation-reference,table.selection-contract,table.notebook-parameters{table-layout:fixed !important;width:100% !important;min-width:0 !important;}"
+        "table.evaluation-reference tr>:nth-child(2),table.selection-contract tr>:nth-child(2),table.notebook-parameters tr>:nth-child(2){width:3px !important;min-width:0 !important;"
+        "max-width:3px !important;white-space:nowrap !important;}}",
+        "pastBorder",
     ),
     (
-        "the section header overflows the table's right edge",
-        "@media print{table.cols-8 thead th:nth-child(8),table.cols-8 tbody td:nth-child(8)"
-        "{width:5% !important;}table.cols-8 thead th{white-space:nowrap !important;}}",
-        "c8",
+        "a narrow final reference column paints past its cell",
+        "@media print{table.evaluation-reference,table.selection-contract,table.notebook-parameters{table-layout:fixed !important;width:100% !important;min-width:0 !important;}"
+        "table.evaluation-reference tr>:last-child,table.selection-contract tr>:last-child,table.notebook-parameters tr>:last-child{width:3px !important;min-width:0 !important;"
+        "max-width:3px !important;white-space:nowrap !important;}}",
+        "pastBorder",
     ),
 )
 
@@ -94,11 +100,15 @@ def main(argv: list[str] | None = None) -> int:
         page = browser.new_page(viewport={"width": A4_PRINT_WIDTH_PX, "height": 1000})
         page.goto(target.as_uri())
         page.wait_for_timeout(1200)
+        if page.locator("table.evaluation-reference, table.selection-contract, table.notebook-parameters").count() == 0:
+            print("  FAIL current guide has no wide reference tables to measure")
+            browser.close()
+            return 1
 
         for language in ("ja", "en"):
             page.emulate_media(media="screen")
             page.wait_for_timeout(200)
-            page.click(f"[data-set-lang='{language}']")
+            page.click(f"button[data-language='{language}']")
             page.wait_for_timeout(350)
             page.emulate_media(media="print")
             page.wait_for_timeout(500)

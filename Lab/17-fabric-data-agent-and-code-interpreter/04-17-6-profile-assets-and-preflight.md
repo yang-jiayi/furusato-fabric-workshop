@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-同梱の `workshop/v3.0.0-preview/data-agent/profiles/current-experimental` にある profile-manifest.json、global-instructions.txt、source-instructions.json、selection-contract.json、定義と portable stage template を確認します。manifest の SHA-256 と実ファイルを照合し、プロファイル名が current-experimental であることを確認します。global-instructions.txt は末尾を含めてそのまま使用し、Trimや編集をしません。
+同梱の `workshop/v3.0.0-preview/data-agent/profiles/current-experimental` にある `profile-manifest.json`、`global-instructions.txt`、`source-instructions.json`、`selection-contract.json`、定義と portable stage template を確認します。manifest の SHA-256 と実ファイルを照合し、プロファイル名が `current-experimental` であることを確認します。`global-instructions.txt` は末尾を含めてそのまま使用し、Trimや編集をしません。
 
 **manifest の選択資産件数**
 
@@ -20,7 +20,7 @@
 
 ## 17.6 Profile assets and preflight
 
-Inspect profile-manifest.json, global-instructions.txt, source-instructions.json, selection-contract.json, the definition and portable stage template under `workshop/v3.0.0-preview/data-agent/profiles/current-experimental`. Compare manifest SHA-256 values with the files and confirm the profile name is current-experimental. Use global-instructions.txt exactly as stored, including its ending; do not trim or edit it.
+Inspect `profile-manifest.json`, `global-instructions.txt`, `source-instructions.json`, `selection-contract.json`, the definition and portable stage template under `workshop/v3.0.0-preview/data-agent/profiles/current-experimental`. Compare manifest SHA-256 values with the files and confirm the profile name is `current-experimental`. Use `global-instructions.txt` exactly as stored, including its ending; do not trim or edit it.
 
 **Manifest selection inventory**
 

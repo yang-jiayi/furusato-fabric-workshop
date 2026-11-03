@@ -1,4 +1,4 @@
-"""Keep corrected Word filenames, HTML links and provenance on the same edition."""
+"""Keep baseline processing outputs separate from participant-edition names."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from validate_html import Report, Structure, check_office_sources, validate
 
 
 class DeliverableEditionTests(unittest.TestCase):
-    def test_original_names_are_unchanged(self):
+    def test_processing_baseline_keeps_office_inputs_separate_from_public_html(self):
         names = deliverable_names("2.7.0")
         self.assertEqual(
             names.participant, "Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0.docx"
@@ -27,7 +27,7 @@ class DeliverableEditionTests(unittest.TestCase):
         self.assertEqual(
             names.workbook, "Furusato_Notebook_01-05_Processing_Specification_v2.7.0.xlsx"
         )
-        self.assertEqual(names.html, "furusato-workshop-v2-7-0-complete.html")
+        self.assertEqual(names.html, "furusato-workshop-processing-baseline.html")
 
     def test_edition_changes_all_names_not_the_version(self):
         original = deliverable_names("2.7.0")

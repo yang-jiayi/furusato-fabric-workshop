@@ -43,8 +43,8 @@ FIGURES = {
                 'Configure Graph shows ten Ineligible entities, the Gift Unsupported Datasource popup naming ot_gift, Graph not materialized, and disabled Continue.'),
     },
     'pc-11-notebook05-preview': {
-        'caption': ('Notebook 05 のプレビュー計画出力（表示行のみを切り抜き）。PREVIEW_ONLY、ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルを確認します。これはプレビュー計画だけで、apply・Gold 更新・新しい3.1実行の証拠ではありません。図の PLAN_SHA256 は使わず、適用時は自分のプレビューで新たに表示された値を使います。',
-                    'Notebook 05 preview-plan output, cropped to the displayed lines. It shows PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables and 29 planned output tables. This is preview-plan evidence only—not evidence of apply, Gold updates or a fresh 3.1 run. Do not reuse the illustrated PLAN_SHA256; use the value freshly printed by your own preview.'),
+        'caption': ('Notebook 05 のプレビュー計画出力（表示行のみを切り抜き）。PREVIEW_ONLY、ANALYTICS_MODE=preview、入力13テーブル・出力予定29テーブルを確認します。これはプレビュー計画だけで、apply・Gold 更新・新しい3.1実行の証拠ではありません。図の PLAN_SHA256 は使わず、適用時は自分のプレビューで新たに表示された値を使います。ハッシュは入力・実行ごとに異なり、図14と図15は対応する一組ではありません。',
+                    'Notebook 05 preview-plan output, cropped to the displayed lines. It shows PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source tables and 29 planned output tables. This is preview-plan evidence only—not evidence of apply, Gold updates or a fresh 3.1 run. Do not reuse the illustrated PLAN_SHA256; use the value freshly printed by your own preview. Hashes vary by inputs and run; Figures 14 and 15 are not a matched pair.'),
         'alt': ('Notebook 05 のプレビュー出力の切り抜き。PREVIEW_ONLY、ANALYTICS_MODE=preview、入力13・出力予定29テーブル、5スキーマ、PLAN_SHA256 が表示されている。',
                 'Crop of Notebook 05 preview output showing PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source and 29 planned output tables, five schemas, and PLAN_SHA256.'),
     },
@@ -73,8 +73,8 @@ FIGURES = {
                 'Conceptual paths from eight CSV files to Lakehouse, three increment files through OneLake event, Activator and Pipeline to Eventhouse, and static tables plus increment files through Notebook 05 to Gold and Semantic model; also Ontology, Graph, Data Agent and MCP.'),
     },
     'p30-06-entities': {
-        "caption": ('Municipality の Configure 画面。キーは MunicipalityId で、静的 Property は ot_municipality にバインド済み。時系列 Property は10章でバインドするまで Unbound',
-                    'Municipality Configure page: the key is MunicipalityId and the static properties are bound to ot_municipality. The time-series property stays Unbound until Chapter 10.'),
+        "caption": ('Municipality の Configure 画面例。キーは MunicipalityId、静的 Property は ot_municipality にバインド済みで、時系列 Property は10章まで Unbound。この図は値の確認例で、現在表示される入口を保証するものではありません。',
+                    'Illustrative Municipality Configure page: MunicipalityId is the key, static properties are bound to ot_municipality, and the time-series property stays Unbound until Chapter 10. This image illustrates values to verify; it does not guarantee which entry controls are currently shown.'),
         "alt": ('Municipality の Properties 表。キー MunicipalityId、Local の各 Property の型と Data source（ot_municipality）、時系列 Property は Unbound',
                 'Municipality Properties table: key MunicipalityId, Local properties with their types bound to ot_municipality, and an Unbound time-series property.'),
     },
@@ -223,8 +223,8 @@ FIGURES = {
                 'Edit rule form: name SupplierAttribution, an English definition, linked Supplier, Gift and Donation, and empty Rule metadata.'),
     },
     'p30-14-inheritance': {
-        "caption": ('継承で作った Municipality。AreaName は Inherited、Details の Direct Parent は AdministrativeArea',
-                    'Municipality created with inheritance: AreaName shows as Inherited, and Details list AdministrativeArea as the Direct Parent.'),
+        "caption": ('継承の参考例。Municipality の AreaName は Inherited、Details の Direct Parent は AdministrativeArea です。標準構成の Municipality に親を追加する手順ではありません。',
+                    'Inheritance illustration: Municipality shows AreaName as Inherited and AdministrativeArea as its Direct Parent. This is not an instruction to add a parent to the standard Municipality.'),
         "alt": ('Municipality の Configure 画面。Properties 表で AreaName が Inherited、ほかは Local。Details に Direct Parent AdministrativeArea、Ancestors 1',
                 'Municipality Configure: AreaName Inherited, others Local; Details show Direct Parent AdministrativeArea, Ancestors 1.'),
     },

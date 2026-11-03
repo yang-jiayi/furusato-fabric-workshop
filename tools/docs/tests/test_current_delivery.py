@@ -4,10 +4,12 @@ from contextlib import redirect_stderr
 import io
 import json
 from pathlib import Path
+import re
 import sys
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
+from urllib.parse import unquote, urlsplit
 from lxml import html as html_parser
 
 ROOT=Path(__file__).resolve().parents[3]
@@ -87,7 +89,7 @@ class CurrentDeliveryTests(unittest.TestCase):
             scope = root / 'workshop/v3.0.0-preview/provisioning/scope.example.json'
             scope.parent.mkdir(parents=True)
             scope.write_bytes((ROOT / scope.relative_to(root)).read_bytes())
-            for version in ('3.0.0', '3.1.0'):
+            for version in (delivery.PUBLICATION.version,):
                 (root / 'WORKSHOP_VERSION').write_text(version, encoding='utf-8')
                 section = Section('ch-24', 1, '24', Text('Deployment', 'Deployment'), chapter=24)
                 append_deployment_sections(section, root)
@@ -114,11 +116,87 @@ class CurrentDeliveryTests(unittest.TestCase):
         self.assertEqual(delivery.PUBLICATION.version,version)
         self.assertEqual(delivery.HTML_NAME,'furusato-workshop-v'+version.replace('.','-')+'-complete.html')
         self.assertEqual(delivery.PACKAGE_NAME,'Furusato_Workshop_v'+version+'_current.zip')
-        self.assertEqual(release.V300.version,'3.0.0')
-        self.assertEqual(release.V300.html_name,'furusato-workshop-v3-0-0-complete.html')
         for invalid in ('3.1','../3.1.0','3.1.0/guide','3.1.0-preview'):
             with self.subTest(version=invalid),self.assertRaises(ValueError):
                 CurrentPublication(invalid)
+
+    def test_current_support_and_architecture_links_resolve(self):
+        source_paths = (
+            ROOT / 'docs/public-onboarding/README.md',
+            ROOT / 'docs/single-agent-workshop.md',
+            ROOT / 'SECURITY.md',
+            ROOT / 'docs/architecture/README.md',
+            ROOT / 'docs/architecture/overview.ja.md',
+            ROOT / 'docs/architecture/overview.en.md',
+            ROOT / 'docs/architecture/sources.md',
+        )
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        guide_ids = set(tree.xpath('//*[@id]/@id'))
+        for source in source_paths:
+            markdown = source.read_text(encoding='utf-8')
+            for target in re.findall(r'\[[^\]]+\]\(([^)]+)\)', markdown):
+                parsed = urlsplit(target.strip())
+                if parsed.scheme or parsed.netloc:
+                    continue
+                path = (source.parent / unquote(parsed.path)).resolve() if parsed.path else source.resolve()
+                with self.subTest(source=source.relative_to(ROOT), target=target):
+                    try:
+                        path.relative_to(ROOT.resolve())
+                    except ValueError:
+                        self.fail('Local documentation link escapes the repository')
+                    self.assertTrue(path.exists(), f'Missing linked path: {target}')
+                    if parsed.fragment and path.name == delivery.HTML_NAME:
+                        self.assertIn(parsed.fragment, guide_ids, f'Missing HTML fragment: {target}')
+
+        ja_svg = (ROOT / 'Lab/assets/pc-01-architecture-ja.svg').read_text(encoding='utf-8')
+        en_svg = (ROOT / 'Lab/assets/pc-01-architecture-en.svg').read_text(encoding='utf-8')
+        self.assertIn('Semantic model', ja_svg)
+        self.assertIn('DAX', ja_svg)
+        self.assertIn('Semantic model', en_svg)
+        self.assertIn('DAX', en_svg)
+        for source in source_paths[2:]:
+            content = source.read_text(encoding='utf-8')
+            self.assertNotRegex(
+                content,
+                r'(?i)\bthree sources\b|\b3 sources\b|3 ソース|ネイティブ GQL',
+            )
+        security = (ROOT / 'SECURITY.md').read_text(encoding='utf-8')
+        self.assertIn('84', security)
+        self.assertIn('General', security)
+        self.assertIn('Git-native', security)
+        self.assertNotRegex(
+            security,
+            r'(?i)reviewed\s*v?3\.0\.0|v2\.7\.0|versioned public pairs|versioned copies|corresponding edition',
+        )
+        source_anchors = (ROOT / 'docs/architecture/sources.md').read_text(encoding='utf-8')
+        for notebook in (
+            'Notebook_01_Furusato_Prepare_Ontology_Data.ipynb',
+            'Notebook_04_Furusato_Provision_Complete_Workshop.ipynb',
+            'Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb',
+        ):
+            self.assertIn(f'../../workshop/v3.0.0-preview/notebooks/{notebook}', source_anchors)
+        self.assertNotRegex(
+            source_anchors,
+            r'workshop/v2\.7\.0/notebooks/Notebook_0[145]',
+        )
+
+    def test_chapter6_binding_entry_stays_conditional_and_caption_does_not_claim_a_route(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        chapter = tree.get_element_by_id('ch-6')
+        text = ' '.join(chapter.itertext())
+        for phrase in (
+            'Manage property bindings',
+            'Bind data',
+            'stop without creating or saving and ask the instructor',
+            'This image illustrates values to verify; it does not guarantee which entry controls are currently shown.',
+        ):
+            self.assertIn(phrase, text)
 
     def test_html_lab_hero_does_not_repeat_the_purpose_as_a_status(self):
         with tempfile.TemporaryDirectory() as temp:

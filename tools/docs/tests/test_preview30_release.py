@@ -168,7 +168,7 @@ class ReleaseProfileTests(unittest.TestCase):
                 files[name] = {"sha256": packager.sha(blob)}
         (directory / "manifest.json").write_text(json.dumps({"files": files}), encoding="utf-8")
 
-    def test_profiles_are_explicit_immutable_and_keep_legacy_names(self):
+    def test_profiles_are_explicit_immutable_and_legacy_outputs_need_no_repository_pair(self):
         self.assertIs(release.PREVIEW, release.get_profile())
         self.assertEqual(("3.0.0-preview", "Furusato Workshop 3.0 Preview"), (
             release.PREVIEW.version, release.PREVIEW.title,
@@ -179,9 +179,11 @@ class ReleaseProfileTests(unittest.TestCase):
             self.assertEqual(content.WORD_NAME, module.WORD_NAME)
             self.assertEqual(content.HTML_NAME, module.HTML_NAME)
         self.assertEqual(packager.PACKAGE_NAME, "Furusato_Workshop_v3.0.0-preview_DRAFT.zip")
-        self.assertEqual("Fabric_IQ_Ontology_Workshop_Furusato_Participant_v3.0.0.docx", release.V300.word_name)
-        self.assertEqual("furusato-workshop-v3-0-0-complete.html", release.V300.html_name)
-        self.assertEqual("Furusato_Workshop_v3.0.0.zip", release.V300.package_name)
+        self.assertEqual(
+            f"furusato-workshop-v{release.V300.version.replace('.', '-')}-complete.html",
+            release.V300.html_name,
+        )
+        self.assertEqual(f"Furusato_Workshop_v{release.V300.version}.zip", release.V300.package_name)
         with self.assertRaises(FrozenInstanceError):
             release.V300.version = "GA"
         for value in ("latest", "3.0.0", None, [], replace(release.V300, version="GA")):
@@ -195,8 +197,8 @@ class ReleaseProfileTests(unittest.TestCase):
         self.assertEqual(before, self.projection.read_bytes())
         self.assertEqual(dict(release.RELEASE_COUNTS), binding["originalCounts"])
         self.assertEqual("workshop/v3.0.0-preview", binding["sourceAssetFolder"])
-        self.assertEqual("docs/v3.0.0/guide", binding["publicGuideDirectory"])
-        self.assertEqual("docs/v3.0.0/reports", binding["publicReportsDirectory"])
+        self.assertEqual(release.V300.guide_relative.as_posix(), binding["publicGuideDirectory"])
+        self.assertEqual(release.V300.reports_relative.as_posix(), binding["publicReportsDirectory"])
         self.assertTrue(binding["userAuthorized"])
         self.assertTrue(binding["knownLimitationsAcknowledged"])
         for key in ("originalSuiteAccepted", "aiAnswerQualityAccepted", "mainPromoted",

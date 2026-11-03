@@ -71,7 +71,6 @@ def selected_report_payloads(evidence, *, branch_url=None, release_url=None):
     publication = {
         "previewBranchUrl": publication_link(branch_url, "branch"),
         "previewReleaseUrl": publication_link(release_url, "release"),
-        "stableVersion": "v2.7.0 / unified-20260923", "stableArtifactsReplaced": False,
     }
     summary = {
         "kind": "sanitized-preview-evaluation-and-progress",
@@ -284,7 +283,6 @@ def report_payloads(projection: Path, *, root=ROOT, branch_url=None, release_url
     publication = {
         "previewBranchUrl": publication_link(branch_url, "branch"),
         "previewReleaseUrl": publication_link(release_url, "release"),
-        "stableVersion": "v2.7.0 / unified-20260923", "stableArtifactsReplaced": False,
     }
     cases = [
         {"case": ident, "pass": passed, "fail": failed, "sourceExecutions": count, "nativeGate": gate}
@@ -478,9 +476,12 @@ The382px Gold panes were not enlarged to satisfy a600px completion gate.
 ## Publication / 公開先
 
 {chr(10).join(publication_rows)}
-- Stable **v2.7.0 / unified-20260923** is retained, not replaced:
-  [Word](../../Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx) /
-  [JA/EN HTML](../../furusato-workshop-v2-7-0-complete_unified-20260923.html).
+
+このPreview評価レポートは現行参加者向け版の回答精度を示しません。
+最新版の教材は [README](../../../README.md) から確認してください。
+
+This preview evaluation report does not represent current participant-edition answer quality.
+Open the latest participant materials from the [README](../../../README.md).
 """
     return {
         "evaluation-summary.json": (json.dumps(summary, ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode("utf-8"),

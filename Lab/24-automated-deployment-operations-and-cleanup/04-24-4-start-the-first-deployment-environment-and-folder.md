@@ -128,7 +128,7 @@ Write-Host ("API displayName (quoted JSON representation; do not copy): " + (Con
 Write-Host ("API displayName UTF-16 code units: " + (($WorkspaceName.ToCharArray() | ForEach-Object { [int]$_ }) -join ","))
 ```
 
-dev はこの演習の明示的な環境名です。組織で test や prod が指定されている場合だけ変更し、全段階で同じ値を使います。初回の本人認証は画面の案内に従い、後のコマンドは期限内の Azure CLI ログインを再利用します。
+`dev` はこの演習の明示的な環境名です。組織で `test` や `prod` が指定されている場合だけ変更し、全段階で同じ値を使います。初回の本人認証は画面の案内に従い、後のコマンドは期限内の Azure CLI ログインを再利用します。
 
 <details>
 <summary>English</summary>
@@ -261,6 +261,6 @@ Write-Host ("API displayName (quoted JSON representation; do not copy): " + (Con
 Write-Host ("API displayName UTF-16 code units: " + (($WorkspaceName.ToCharArray() | ForEach-Object { [int]$_ }) -join ","))
 ```
 
-dev is the explicit environment label for this lab. Use test or prod only when that is your assigned environment, and keep the same value for every stage. Complete initial user authentication as prompted; subsequent commands reuse a valid Azure CLI login.
+`dev` is the explicit environment label for this lab. Use `test` or `prod` only when that is your assigned environment, and keep the same value for every stage. Complete initial user authentication as prompted; subsequent commands reuse a valid Azure CLI login.
 
 </details>

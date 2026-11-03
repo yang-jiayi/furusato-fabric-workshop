@@ -2,14 +2,15 @@
 
 [日本語](overview.ja.md) · [English](overview.en.md) · [Interactive explorer](index.html)
 
-**The architecture of the existing `v2.7.0 / unified-20260923` workshop.**
-The diagrams describe the released implementation and its optional analytics extension.
+**The architecture of the current participant edition, Workshop 3.1.0.**
+Repository runtime inputs may retain directory names such as `workshop/v2.7.0/`;
+those are actual file paths, not the participant-edition number.
 All donation, donor and supplier records are synthetic teaching data.
 
 | 日本語 | English |
 |---|---|
-| [![日本語の全体アーキテクチャ](../assets/architecture/furusato-architecture.ja.png)](../assets/architecture/furusato-architecture.ja.svg) | [![Overall architecture in English](../assets/architecture/furusato-architecture.en.png)](../assets/architecture/furusato-architecture.en.svg) |
-| [解説](overview.ja.md) · [SVG](../assets/architecture/furusato-architecture.ja.svg) · [PNG](../assets/architecture/furusato-architecture.ja.png) | [Explanation](overview.en.md) · [SVG](../assets/architecture/furusato-architecture.en.svg) · [PNG](../assets/architecture/furusato-architecture.en.png) |
+| [![Workshop 3.1.0 の現行アーキテクチャ](../../Lab/assets/pc-01-architecture-ja.svg)](../../Lab/assets/pc-01-architecture-ja.svg) | [![Current Workshop 3.1.0 architecture](../../Lab/assets/pc-01-architecture-en.svg)](../../Lab/assets/pc-01-architecture-en.svg) |
+| [解説](overview.ja.md) · [SVG](../../Lab/assets/pc-01-architecture-ja.svg) | [Explanation](overview.en.md) · [SVG](../../Lab/assets/pc-01-architecture-en.svg) |
 
 ## Explore locally / ローカルで見る
 
@@ -26,8 +27,8 @@ font download, remote analytics, sign-in or Fabric connection.
   **J / E** language, **Escape** overview. Shortcuts pause inside controls.
 - At **2560 × 1440**, use browser zoom **100%** for the full diagram and readable detail panel.
   The diagram scrolls horizontally on small screens; controls and explanation reflow.
-- Use **Expand diagram** for a full-width reading view. The PNG files are exactly
-  **2560 × 1440**, rasterized from their corresponding SVGs.
+- Use **Expand diagram** for a full-width reading view. The participant Lab SVGs linked above
+  are the canonical bilingual architecture diagrams.
 
 ## An ending for the architecture walkthrough / 動画の最後に使う
 
@@ -36,7 +37,7 @@ This is a browser-based explorer, not a slide deck. A suggested closing route:
 1. **Overview** — begin with the business question.
 2. **01 Static & meaning** — follow donation facts into business relationships.
 3. **02 Observations** — distinguish the operational observation population.
-4. **03 One Agent** — connect the three query languages to their evidence.
+4. **03 One Agent** — connect the four logical sources to their actual query evidence.
 5. **04 Quality & BI** — follow the separate, quality-gated analytics branch.
 6. **00 Setup** — identify the preview / consent boundary briefly.
 7. **Learning outcomes** — finish on the positive value statement.
@@ -61,7 +62,5 @@ The icon source is the **user-specified
 Microsoft icons retain their original artwork and applicable Microsoft terms.
 The workshop's MIT license does not relicense Microsoft marks.
 
-Documentation baseline: `32d296ebd673df4f180ac56670542cc0eaf350db` · reviewed 2026-09-21.
-Lifecycle update: 2026-09-23 · official `start_rule` / `stop_rule`, complete-file PutBlob
-and separate native event/activation/job/Copy/KQL gates. The data architecture is unchanged.
-The documentation uses logical names and `{PID}` placeholders; environment identifiers stay external.
+The diagrams use logical names and `{PID}` placeholders. They explain the repository design;
+they do not report live Fabric status or expose environment identifiers.

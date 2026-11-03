@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-次の全体指示は参照用の正確な全文です。この段階では画面上の欄を変更しません。prepare で対象・差分・readback を確認してから、許可された apply 手順だけで適用します。本文・末尾の空白・改行を編集せず、readback は元ファイルと照合します。
+次の全体指示は参照用の正確な全文です。この段階では画面上の欄を変更しません。`prepare` で対象・差分・readback を確認してから、許可された `apply` 手順だけで適用します。本文・末尾の空白・改行を編集せず、readback は元ファイルと照合します。
 
 冒頭の `You are the Furusato Workshop v3 Preview assistant.` は、同梱設定に保存された役割ラベルです。Workshop の版を示すものではありません。設定本文は正確に使い、参加者向け版は本書と `WORKSHOP_VERSION` で確認してください。
 
@@ -103,7 +103,7 @@ Answer composition and capability boundaries:
 
 ## 17.8 Review the global instructions
 
-The global instructions below are the exact reference text. Do not edit the UI field at this step. After reviewing the target, diffs and readbacks in prepare, apply changes only through the authorized apply procedure. Do not edit the text or its trailing whitespace/line endings; compare readback with the source file.
+The global instructions below are the exact reference text. Do not edit the UI field at this step. After reviewing the target, diffs and readbacks in `prepare`, apply changes only through the authorized `apply` procedure. Do not edit the text or its trailing whitespace/line endings; compare readback with the source file.
 
 The opening `You are the Furusato Workshop v3 Preview assistant.` is the role label stored in the supplied configuration, not the Workshop edition. Use the instruction text exactly as supplied; identify the participant edition from this handbook and `WORKSHOP_VERSION`.
 

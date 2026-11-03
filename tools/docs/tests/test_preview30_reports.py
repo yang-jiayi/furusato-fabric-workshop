@@ -53,7 +53,10 @@ class PublicFinalReportTests(unittest.TestCase):
         summary = json.loads(first["evaluation-summary.json"])
         self.assertIsNone(summary["publication"]["previewBranchUrl"])
         self.assertIsNone(summary["publication"]["previewReleaseUrl"])
-        self.assertFalse(summary["publication"]["stableArtifactsReplaced"])
+        self.assertEqual(
+            {"previewBranchUrl", "previewReleaseUrl"},
+            set(summary["publication"]),
+        )
         self.assertFalse(summary["qualityAccepted"])
         self.assertEqual(4, summary["postcheck"]["unchangedPublications"])
         self.assertFalse(summary["postcheck"]["republished"])
@@ -85,6 +88,10 @@ class PublicFinalReportTests(unittest.TestCase):
         self.assertNotIn("conversation_id", text)
         self.assertNotIn("answer_pointer", text)
         self.assertNotIn("reasoningItems", text)
+        self.assertIn("latest participant materials", text.lower())
+        self.assertNotIn("v2.7.0 / unified-20260923", text)
+        self.assertNotIn("furusato-workshop-v2-7-0-complete", text)
+        self.assertNotIn("Participant_v2.7.0_unified-20260923.docx", text)
 
     def test_fake_or_private_publication_links_are_rejected(self):
         for value in ("https://example.com/preview", "http://github.com/o/r/tree/preview",

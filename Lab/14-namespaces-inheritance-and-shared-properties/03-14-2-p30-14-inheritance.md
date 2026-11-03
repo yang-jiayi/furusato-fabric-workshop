@@ -6,7 +6,7 @@
 
 ![Municipality の Configure 画面。Properties 表で AreaName が Inherited、ほかは Local。Details に Direct Parent AdministrativeArea、Ancestors 1](../assets/p30-14-inheritance.png)
 
-継承で作った Municipality。AreaName は Inherited、Details の Direct Parent は AdministrativeArea
+継承の参考例。Municipality の AreaName は Inherited、Details の Direct Parent は AdministrativeArea です。標準構成の Municipality に親を追加する手順ではありません。
 
 <details>
 <summary>English</summary>
@@ -17,6 +17,6 @@
 
 ![Municipality Configure: AreaName Inherited, others Local; Details show Direct Parent AdministrativeArea, Ancestors 1.](../assets/p30-14-inheritance.png)
 
-Municipality created with inheritance: AreaName shows as Inherited, and Details list AdministrativeArea as the Direct Parent.
+Inheritance illustration: Municipality shows AreaName as Inherited and AdministrativeArea as its Direct Parent. This is not an instruction to add a parent to the standard Municipality.
 
 </details>

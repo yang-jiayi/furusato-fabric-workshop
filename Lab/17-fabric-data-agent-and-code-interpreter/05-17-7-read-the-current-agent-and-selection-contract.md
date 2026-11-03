@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-既存 Agent の実定義から ID-only binding を解決し、selection-contract.json の path・type・is_selected と照合します。対象は資産ファイルに列挙された選択だけです。欠落・曖昧・予期しない差分があれば停止します。UI で親を再選択して子要素を増やしたり、存在しない ID を作ったりしません。
+既存 Agent の実定義から ID-only binding を解決し、`selection-contract.json` の path・type・is_selected と照合します。対象は資産ファイルに列挙された選択だけです。欠落・曖昧・予期しない差分があれば停止します。UI で親を再選択して子要素を増やしたり、存在しない ID を作ったりしません。
 
 **実際の flat selection contract**
 
@@ -1543,7 +1543,7 @@
 
 ## 17.7 Read the current agent and selection contract
 
-Resolve ID-only bindings from the existing agent's live definition and compare them with path, type and is_selected in selection-contract.json. Only selections listed in the asset are in scope. Stop on missing, ambiguous or unexpected differences. Do not reselect parent items to expand children or invent IDs.
+Resolve ID-only bindings from the existing agent's live definition and compare them with path, type and is_selected in `selection-contract.json`. Only selections listed in the asset are in scope. Stop on missing, ambiguous or unexpected differences. Do not reselect parent items to expand children or invent IDs.
 
 **Actual flat selection contract**
 

@@ -1,8 +1,9 @@
-"""Validate docs/furusato-workshop-v2-7-0-complete.html.
+"""Validate the isolated processing-baseline mirror.
 
-Every check is derived from the shipped v2.7.0 runtime or from the rendered
-markup itself; nothing is transcribed by hand. ``--json`` emits a machine
-readable report; the exit code is non-zero on any FAIL.
+This compatibility validator is not the current participant-delivery validator.
+Use ``tools/docs/current_delivery.py validate`` for the Workshop 3.1 HTML+Lab
+release. ``--out`` must name the staging directory used by the baseline builder.
+``--json`` emits a machine-readable report; the exit code is non-zero on any FAIL.
 """
 
 from __future__ import annotations
@@ -49,7 +50,7 @@ from furusato_html.mirror import load_mirror, load_ui_strings, suspicious_englis
 from furusato_html.model import Text, build_document  # noqa: E402
 from furusato_html.render import diagram_title, rich  # noqa: E402
 
-OUTPUT_NAME = "furusato-workshop-v2-7-0-complete.html"
+OUTPUT_NAME = "furusato-workshop-processing-baseline.html"
 GITHUB_FILE_LIMIT = 100 * 1000 * 1000
 
 VOID_ELEMENTS = {
@@ -2305,7 +2306,7 @@ def main(argv: list[str] | None = None) -> int:
             except (ValueError, OSError):
                 pass
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", default=None, help="directory holding the HTML (default: docs/)")
+    parser.add_argument("--out", required=True, help="staging directory holding the baseline mirror")
     parser.add_argument("--edition", default="", type=validate_edition, help="Named correction edition")
     parser.add_argument(
         "--public-documents-only", action="store_true",

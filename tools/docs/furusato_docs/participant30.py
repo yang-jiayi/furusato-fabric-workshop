@@ -134,8 +134,12 @@ def text_table(headers, rows, caption, widths=None, class_name=None) -> Block:
         if isinstance(value, tuple):
             return pair(value)
         return Text(str(value), str(value))
+    resolved_headers = [cell(h) for h in headers]
+    classes = [class_name] if class_name else []
+    if len(resolved_headers) >= 3 and resolved_headers[0].ja in {"項目", "フィールド", "Item", "Field"}:
+        classes.append("wide-reference")
     payload = {
-        "number": 0, "headers": [cell(h) for h in headers],
+        "number": 0, "headers": resolved_headers,
         "rows": [[cell(c) for c in row] for row in rows],
         "caption": cell(caption), "wide": len(headers) >= 5,
     }
@@ -143,8 +147,8 @@ def text_table(headers, rows, caption, widths=None, class_name=None) -> Block:
         if len(widths) != len(headers):
             raise ValueError("Table widths must match the number of columns")
         payload["widths"] = list(widths)
-    if class_name:
-        payload["tableClass"] = class_name
+    if classes:
+        payload["tableClass"] = " ".join(classes)
     return Block("table", payload)
 
 
@@ -503,22 +507,37 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
         steps = step_blocks(spec["steps"], figures) + [callout(value) for value in spec.get("tips", ())]
         add_section(section, "2", SECTION_TITLES["steps"], steps)
         suffix = 3
-        if spec.get("checks"):
+        if spec.get("checks") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["checks"], [text_table(
                 [("確認すること", "What to check"), ("うまくいかないとき", "If it does not work")],
                 [[pair(check), pair(fix)] for check, fix in spec["checks"]],
                 ("この章の完了条件", "Completion checks for this chapter"), widths=(2.4, 4.2))])
             suffix += 1
-        if spec.get("tables"):
+        if spec.get("tables") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["tables"],
                         [block for name in spec["tables"] for block in tables.build(name)])
             suffix += 1
-        if spec.get("links"):
+        if spec.get("links") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["links"], [link_list(spec["links"])])
     if current_profile:
         current_tuning.append_current_tuning_sections(chapters[17], root)
     else:
         participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
+    chapter17_spec = (current_tuning.current_chapter_spec() if current_tuning is not None
+                      else text_source.CHAPTERS[17])
+    suffix = 17
+    if chapter17_spec.get("checks"):
+        add_section(chapters[17], str(suffix), SECTION_TITLES["checks"], [text_table(
+            [("確認すること", "What to check"), ("うまくいかないとき", "If it does not work")],
+            [[pair(check), pair(fix)] for check, fix in chapter17_spec["checks"]],
+            ("この章の完了条件", "Completion checks for this chapter"), widths=(2.4, 4.2))])
+        suffix += 1
+    if chapter17_spec.get("tables"):
+        add_section(chapters[17], str(suffix), SECTION_TITLES["tables"],
+                    [block for name in chapter17_spec["tables"] for block in tables.build(name)])
+        suffix += 1
+    if chapter17_spec.get("links"):
+        add_section(chapters[17], str(suffix), SECTION_TITLES["links"], [link_list(chapter17_spec["links"])])
     participant30_evaluation.append_chapter_sections(chapters[19], root)
     participant30_deployment.append_deployment_sections(
         chapters[24], root, current_profile=current_profile
@@ -543,6 +562,7 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
             blocks.extend(tables.build(name))
         blocks.extend(callout(value) for value in spec.get("tips", ()))
         if spec.get("links") and letter != "E":
+            blocks.append(paragraph(("Microsoft Learn の参考資料", "Microsoft Learn references")))
             blocks.append(link_list(spec["links"]))
         add_section(section, "1", ({"A": ("期待値", "Expected values"), "B": ("パラメーター", "Parameters"),
                                     "C": ("使い方", "How to use this appendix"), "D": ("一覧", "List"),

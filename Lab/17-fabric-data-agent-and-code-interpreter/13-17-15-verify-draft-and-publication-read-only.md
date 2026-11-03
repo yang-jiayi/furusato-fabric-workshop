@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-verify は read-only で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。verifyの成功も、回答精度、Graph/GQL、時系列、mirror完全性を証明しません。
+`verify` は read-only で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。`verify` の成功も、回答精度、Graph/GQL、時系列、mirror完全性を証明しません。
 
 **PowerShell**
 
@@ -28,7 +28,7 @@ verify は read-only で、Draft または Published を明示して確認しま
 
 ## 17.15 Verify Draft and publication read-only
 
-verify is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful verify does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness.
+`verify` is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness.
 
 **PowerShell**
 

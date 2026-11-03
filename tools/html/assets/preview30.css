@@ -59,7 +59,7 @@ header {
   z-index: 5;
   display: flex;
   min-height: 4.25rem;
-  align-items: center;
+  align-items: start;
   gap: .75rem;
   flex-wrap: wrap;
   border-bottom: 1px solid rgb(186 207 196 / 80%);
@@ -225,6 +225,7 @@ header nav { display: flex; gap: .4rem; margin-left: auto; }
   font-size: .74rem;
   font-variant-numeric: tabular-nums;
   font-weight: 750;
+  margin-top: .1rem;
 }
 .toc a:hover { transform: translateY(-1px); border-color: #9ac8b3; background: #f3faf6; }
 
@@ -278,9 +279,13 @@ th { overflow-wrap: normal; word-break: normal; }
 .canonical-condition-rubric tbody th { white-space: nowrap; overflow-wrap: normal; }
 table.evaluation-reference > thead > tr > th:first-child,
 table.evaluation-reference > tbody > tr > th:first-child {
-  width: 10rem;
-  min-width: 10rem;
-  white-space: nowrap;
+  width: 13rem;
+  min-width: 13rem;
+}
+.wide-reference > thead > tr > th:first-child,
+.wide-reference > tbody > tr > th:first-child {
+  width: 13rem;
+  min-width: 13rem;
 }
 table code { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 #ch-17-7 table.selection-contract {
@@ -306,7 +311,7 @@ table code { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 thead th { background: #155e4b; color: white; }
 tbody th { font-weight: 650; }
 tr:nth-child(even) { background: #f4f8f5; }
-caption { caption-side: top; padding: .55rem 0; color: var(--muted); font-size: .9rem; text-align: left; }
+caption { caption-side: top; padding: .55rem .65rem; color: var(--muted); font-size: .9rem; text-align: left; }
 .caption__num { color: var(--brand-dark); font-weight: 750; }
 .table-hint { margin: .35rem .1rem; color: var(--muted); font-size: .78rem; }
 
@@ -314,6 +319,7 @@ code { font-family: Consolas, "Yu Gothic UI", monospace; font-size: .91em; overf
 code.cli-option { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 .codeblock { overflow: hidden; margin: 1rem 0; border: 1px solid #d3dee3; border-radius: .8rem; background: #f1f5f7; }
 .codeblock > button { float: right; margin: .45rem; }
+.codeblock__copy { display: inline-flex; align-items: center; gap: .35rem; }
 .codeblock__bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; border-bottom: 1px solid #d3dee3; background: #e7eef1; padding: .4rem .7rem; }
 .codeblock__copy svg { width: 1rem; height: 1rem; }
 pre { clear: both; overflow-x: auto; margin: 0; padding: 1rem; line-height: 1.65; tab-size: 4; white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -330,7 +336,7 @@ figure { margin: 1.4rem 0; }
 figure img, figure svg { display: block; max-width: 100%; height: auto; margin: auto; }
 .figure--participant-diagram .figure__art svg { width: 100%; height: auto; }
 figcaption { margin-top: .65rem; color: var(--muted); font-size: .88rem; line-height: 1.65; }
-.figure__zoom { display: inline-flex; align-items: center; gap: .3rem; margin-top: .5rem; }
+.figure__zoom { display: inline-flex; align-items: center; gap: .3rem; margin: .5rem 0 0 .35rem; }
 .figure__zoom svg { width: 1rem; height: 1rem; }
 
 dialog { width: min(95vw, 1500px); max-height: 94vh; border: 1px solid #547d6b; border-radius: 1rem; padding: 1rem; }

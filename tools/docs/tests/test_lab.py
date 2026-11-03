@@ -124,17 +124,22 @@ class LabExportTests(unittest.TestCase):
     def test_profile_paths_are_platform_independent(self):
         chapter=self.out/'17-fabric-data-agent-and-code-interpreter'
         prefix='workshop/v3.0.0-preview/data-agent/profiles/current-experimental'
-        start=(chapter/'06-17-6-profile-assets-and-preflight.md').read_text(encoding='utf-8')
-        instructions=(chapter/'08-17-8-review-the-global-instructions.md').read_text(encoding='utf-8')
+        start_pages=list(chapter.glob('*-17-6-profile-assets-and-preflight.md'))
+        instruction_pages=list(chapter.glob('*-17-8-review-the-global-instructions.md'))
+        self.assertEqual(1,len(start_pages))
+        self.assertEqual(1,len(instruction_pages))
+        start=start_pages[0].read_text(encoding='utf-8')
+        instructions=instruction_pages[0].read_text(encoding='utf-8')
         self.assertIn(prefix,start)
         self.assertIn("global-instructions.txt",start)
         self.assertIn("Do not edit the UI field at this step", instructions)
         self.assertNotIn(prefix.replace('/','\\'),start+instructions)
 
     def test_portable_definition_filenames_label_their_own_lab_code_blocks(self):
-        page = self.out / "17-fabric-data-agent-and-code-interpreter" / (
-            "12-17-12-review-instruction-selection-and-definition-diffs.md"
-        )
+        chapter = self.out / "17-fabric-data-agent-and-code-interpreter"
+        pages = list(chapter.glob("*-17-12-review-instruction-selection-and-definition-diffs.md"))
+        self.assertEqual(1, len(pages))
+        page = pages[0]
         content = page.read_text(encoding="utf-8")
         filenames = (
             "kusto.json",

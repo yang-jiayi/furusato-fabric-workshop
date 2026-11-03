@@ -143,8 +143,16 @@ DETAILS = {
 }
 
 DETAILS_BY_PARENT: dict[str, tuple[str, ...]] = {}
+SUPPRESSED_PARTICIPANT_DETAILS = {
+    "pc-05-notebook01-ready-detail",
+    "pc-05-notebook01-ready-detail-continuation",
+    "p30-09-copy-002-output-detail",
+    "p30-11-gold-dq-detail",
+    "p30-11-gold-dq-left-detail",
+    "p30-11-gold-dq-right-detail",
+}
 for _ident, _spec in DETAILS.items():
-    if _spec.get("primary"):
+    if _spec.get("primary") or _ident in SUPPRESSED_PARTICIPANT_DETAILS:
         continue
     DETAILS_BY_PARENT.setdefault(_spec["parent"], ())
     DETAILS_BY_PARENT[_spec["parent"]] += (_ident,)

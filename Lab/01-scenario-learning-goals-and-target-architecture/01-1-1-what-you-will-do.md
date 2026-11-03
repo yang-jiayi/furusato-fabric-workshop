@@ -20,7 +20,7 @@
 
 ## 1.1 What you will do
 
-Use the bilingual HTML as the primary handbook, the GitHub Lab as the step-by-step Markdown companion, and the participant ZIP of the same version. In the ZIP, guide contains the HTML, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Read back the configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.
+Use the bilingual HTML as the primary handbook, the GitHub Lab as the step-by-step Markdown companion, and the participant ZIP of the same version. In the ZIP, `guide/` contains the HTML, `attachments/` the reference files, and `source/` the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Read back the configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.
 
 In this workshop you use synthetic data about furusato (hometown tax) donations and combine Microsoft Fabric Lakehouse, Eventhouse, Ontology, semantic model and Data Agent into a data platform that shares business meaning. Only municipality names and codes are real reference labels; all donations, donors, suppliers and gifts are fictitious.
 

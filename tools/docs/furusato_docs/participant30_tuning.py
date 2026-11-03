@@ -101,8 +101,8 @@ def append_tuning_sections(chapter: Section, root: Path, *, figures):
         raise ValueError("Participant tuning belongs to Chapter 17")
     profile, manifest, selections, examples, descriptions, measures = _assets(root)
     _append(chapter, 5, ("ここから始める：教材と実施順", "Start here: materials and order"), [
-        _paragraph("この章の到達点は、配布版と同じ指示・データ選択・クエリ例を自分の1件の Data Agent に設定し、公開後に確認して、19章で再評価できることです。同じ数値の評価結果を保証するものではありません。17.5〜17.8で準備し、17.11の KQL 選択、17.12の9例の直接実行、17.13のモデル選択、17.14の Ontology を確認したら、17.16のコマンドを実施します。17.9〜17.14の指示原文は設定の確認用です。その後17.2の SQL と Code Interpreter の確認へ戻ります。",
-                   "The goal is to configure your one Data Agent with the distributed instructions, data selection and query examples, verify the published configuration, and evaluate it in Chapter 19. An identical evaluation score is not guaranteed. Prepare in 17.5–17.8, check KQL selection in 17.11, directly execute all nine examples in 17.12, check model selection in 17.13 and ontology in 17.14, then run the commands in 17.16. The original instruction text in 17.9–17.14 is a configuration reference. Afterwards return to the SQL and Code Interpreter checks in 17.2."),
+        _paragraph("この節では、既存の Data Agent に採用済み設定を反映し、公開後に構成を読み戻して確認する手順を扱います。回答精度や評価スコアを保証するものではありません。手順と指示原文は後続の節にあります。",
+                   "This section covers applying the adopted configuration to the existing Data Agent and reading it back after publication. It does not guarantee answer quality or an evaluation score. The procedures and instruction text follow in the later sections."),
         _steps([
             ("参加者用 ZIP をすべて展開します。展開先の START_HERE.txt、guide、attachments、source を確認します。以下の workshop/ と tools/ のパスは、展開先の source フォルダーを起点とします。Word または HTML を操作手順書にして、長い指示や SQL は同梱ファイルを UTF-8 のテキストとしてコピーできます。別の README を探して手順を補う必要はありません。",
              "Extract the entire participant ZIP and locate START_HERE.txt, guide, attachments and source. All workshop/ and tools/ paths below start at the extracted source folder. Use Word or HTML as the procedure; long instructions and SQL can be copied from the supplied UTF-8 files. No separate README search is needed to fill in these steps."),

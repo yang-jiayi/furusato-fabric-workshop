@@ -6,6 +6,7 @@ import re
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,6 +15,8 @@ sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
 import validate_preview30 as validator
 from furusato_docs import participant30
+from furusato_docs import participant30_details
+from furusato_docs import participant30_evaluation
 from furusato_docs import participant30_figures as figures
 from furusato_docs import participant30_text as text
 from furusato_docs import preview30_content as content
@@ -32,6 +35,26 @@ def texts(document):
 
 
 class ParticipantEditionTests(unittest.TestCase):
+    def test_current_package_paths_are_explained_without_renaming_working_assets(self):
+        setup = " ".join(value for pair in text.CHAPTERS[4]["before"] for value in pair)
+        self.assertIn("source/WORKSHOP_VERSION", setup)
+        self.assertIn("not the course edition", setup)
+        self.assertIn("Do not rename", setup)
+        for chapter, relative in (
+            (5, "workshop/v3.0.0-preview/data/seed"),
+            (8, "workshop/v3.0.0-preview/kql/Furusato_Eventhouse_Setup_v2.7.0.kql"),
+            (11, "workshop/v3.0.0-preview/notebooks"),
+        ):
+            with self.subTest(chapter=chapter):
+                before = " ".join(value for pair in text.CHAPTERS[chapter]["before"] for value in pair)
+                self.assertIn("source/" + relative, before)
+                self.assertIn("Git checkout", before)
+                self.assertIn("先頭の source/ を除", before)
+                self.assertIn("current ZIP", before)
+                self.assertTrue((ROOT / relative).exists())
+        kql = " ".join(value for pair in text.CHAPTERS[8]["before"] for value in pair)
+        self.assertIn("actual current filename, not the course edition", kql)
+
     @classmethod
     def setUpClass(cls):
         temporary = tempfile.TemporaryDirectory(prefix="participant30-test-")
@@ -97,8 +120,167 @@ class ParticipantEditionTests(unittest.TestCase):
             spec = figures.FIGURES[ident]
             for key in ("caption", "alt"):
                 self.assertTrue(all(part.strip() for part in spec[key]), ident)
-            if not ident.startswith("diagram:") and ident not in participant30.participant_figures():
+            if (not ident.startswith("diagram:")
+                    and ident not in participant30.participant_figures()
+                    and ident not in participant30_details.DETAILS):
                 self.assertIn(ident, self.evidence["captures"])
+
+    def test_english_captions_translate_japanese_screen_meaning(self):
+        self.assertIn(
+            "Only accepted increments quality-checked and deduplicated by Notebook 05; separate from Eventhouse observations.",
+            figures.FIGURES["p30-12-metrics"]["caption"][1],
+        )
+        for ident, expected in {
+            "p30-12-metrics": "accepted-increment donation total",
+            "pc-12-report-canvas": "The Japanese card labels mean total donations",
+            "p30-15-noattachment-preview": "the available evidence does not establish what the data layer means",
+            "p30-15-attachment-grounding": "distinguish static donations, Eventhouse observations and Notebook 05 quality-processed Gold",
+            "p30-15-preview": "does not imply approval or delivery",
+        }.items():
+            with self.subTest(figure=ident):
+                self.assertIn(expected, figures.FIGURES[ident]["caption"][1])
+        self.assertIn(
+            "not a passing example for the main ontology retaining fifteen relationships",
+            figures.FIGURES["p30-15-preview"]["caption"][1],
+        )
+
+    def test_chapter15_attachment_instructions_use_text_file_without_stale_capture(self):
+        lab = (ROOT / "Lab" / "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol"
+               / "03-15-2-p30-15-attachments.md").read_text(encoding="utf-8")
+        self.assertIn("business-requirements.txt", lab)
+        self.assertNotIn("business-requirements.pdf", lab)
+        self.assertNotIn("p30-15-attachments.png", lab)
+        self.assertNotIn("illustration does not establish", lab)
+
+    def test_ontology_agent_japanese_answer_figures_have_english_reading_aids(self):
+        expected = {
+            "p30-15-noattachment-preview": (
+                "Visible Japanese answer (translated summary; illustrative, not an accepted result)",
+                "three entities and no relationships with a structural warning",
+            ),
+            "p30-15-attachment-grounding": (
+                "StaticSeed as static data, RealtimeIncrement as quality-accepted increments",
+                "catalog registration rather than fulfillment",
+            ),
+            "p30-15-attachment-response-bottom": (
+                "without a relationship layer, cross-entity questions may not be answerable",
+                "unapplied Plan draft preview",
+            ),
+            "p30-15-preview": (
+                "missing relationship layer may limit cross-entity questions",
+                "this is not a passing example for the main ontology retaining fifteen relationships",
+            ),
+        }
+        for ident, phrases in expected.items():
+            with self.subTest(figure=ident):
+                caption = figures.FIGURES[ident]["caption"][1]
+                for phrase in phrases:
+                    self.assertIn(phrase, caption)
+        no_attachment = figures.FIGURES["p30-15-noattachment-preview"]["caption"][1]
+        self.assertIn("three entities and no relationships with a structural warning", no_attachment)
+        self.assertNotIn("zero errors and one warning", no_attachment)
+        attachment = figures.FIGURES["p30-15-attachment-grounding"]["caption"][1]
+        self.assertIn("existing entities, keys and bindings are unchanged", attachment)
+        for below_frame_category in ("shared references", "inheritance", "property types", "relationships are unchanged"):
+            self.assertNotIn(below_frame_category, attachment)
+
+        lab = ROOT / "Lab" / "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol"
+        for filename, phrase in (
+            ("02-15-2-p30-15-noattachment-preview.md", "three entities and no relationships with a structural warning"),
+            ("04-15-2-p30-15-attachment-grounding.md", "catalog registration rather than fulfillment"),
+            ("05-15-2-p30-15-attachment-response-bottom.md", "structural caution, not an error"),
+            ("06-15-2-p30-15-preview.md", "unapplied Plan preview"),
+        ):
+            with self.subTest(lab_file=filename):
+                self.assertIn(phrase, (lab / filename).read_text(encoding="utf-8"))
+        no_attachment_lab = (lab / "02-15-2-p30-15-noattachment-preview.md").read_text(encoding="utf-8")
+        self.assertIn("three entities and no relationships with a structural warning", no_attachment_lab)
+        self.assertNotIn("It reports 0 errors and 1 warning", no_attachment_lab)
+        attachment_lab = (lab / "04-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
+        visible_answer = attachment_lab.split("**Visible Japanese answer", 1)[1]
+        self.assertIn("existing entities, keys and bindings are unchanged", visible_answer)
+        self.assertIn("claims existing entities, keys and bindings are unchanged", attachment_lab)
+        for below_frame_category in ("shared references", "inheritance", "property types", "relationships are unchanged"):
+            self.assertNotIn(below_frame_category, visible_answer)
+
+    def test_appendix_e_wording_and_ontology_agent_link_are_clear_and_unique(self):
+        appendix = text.APPENDICES["E"]
+        self.assertTrue(any(
+            question == ("Instances に行が表示されない", "The Instances tab shows no rows")
+            for question, _ in appendix["troubleshooting"]
+        ))
+        agent_url = participant30.LEARN_BASE + "how-to-use-ontology-agent"
+        resolved_links = [
+            participant30.LEARN_BASE + link if not link.startswith("http") else link
+            for link in appendix["links"]
+        ]
+        self.assertEqual(1, resolved_links.count(agent_url))
+
+    def test_existing_ontology_rule_is_checked_before_creation_and_only_changed_rules_are_saved(self):
+        steps = text.CHAPTERS[13]["steps"]
+        list_instruction = steps[2]["text"]
+        create_instruction = steps[3]["text"]
+        save_instruction = steps[4]["text"]
+        self.assertIn("SupplierAttribution が既にあるか", list_instruction[0])
+        self.assertIn("look for an existing SupplierAttribution", list_instruction[1])
+        self.assertIn("見つからない場合だけ New rule", list_instruction[0])
+        self.assertIn("only if it is missing", list_instruction[1])
+        self.assertIn("SupplierAttribution が見つからなかった場合", create_instruction[0])
+        self.assertIn("If SupplierAttribution was not found", create_instruction[1])
+        self.assertIn("必要な変更がある場合だけ Save", save_instruction[0])
+        self.assertIn("only when you made an actual change", save_instruction[1])
+        self.assertIn("Save を有効にするためだけに", save_instruction[0])
+        self.assertIn("just to enable it", save_instruction[1])
+
+    def test_shared_workspace_guards_apply_to_target_resources_not_unrelated_items(self):
+        chapter8_instruction = text.CHAPTERS[8]["steps"][3]["text"]
+        chapter9_preparation = text.CHAPTERS[9]["before"][0]
+        self.assertIn("共有 Workspace であることだけでは停止理由になりません", chapter8_instruction[0])
+        self.assertIn("A shared workspace alone is not a reason to stop", chapter8_instruction[1])
+        self.assertIn("他の参加者が所有・使用する既存リソースには書き込みません", chapter8_instruction[0])
+        self.assertIn("never write to supplied shared resources", chapter8_instruction[1])
+        self.assertIn("共有ワークスペース内の別リソースにデータがあることだけでは停止しません", chapter9_preparation[0])
+        self.assertIn("Data in unrelated resources elsewhere in the shared workspace alone is not a stop condition", chapter9_preparation[1])
+        self.assertIn("対象の DonationEvents", chapter9_preparation[0])
+        self.assertIn("target if its DonationEvents table already has rows", chapter9_preparation[1])
+
+    def test_scoring_condition_tables_have_a_scoped_screen_layout_class(self):
+        condition_tables = [
+            block for section in self.document.walk() for block in section.blocks
+            if block.kind == "table" and "Condition ID" in [cell.en for cell in block["headers"]]
+        ]
+        self.assertTrue(condition_tables)
+        self.assertTrue(all(block.get("tableClass") == "canonical-condition-rubric"
+                            for block in condition_tables))
+
+    def test_evaluation_kit_points_to_current_lab_and_html_guide(self):
+        readme = (ROOT / "workshop" / "v3.0.0-preview" / "data-agent"
+                  / "participant-evaluation" / "README.md").read_text(encoding="utf-8")
+        self.assertEqual(participant30_evaluation.README, readme)
+        for content in (participant30_evaluation.README, readme):
+            self.assertIn("docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html", content)
+            self.assertIn("guide/furusato-workshop-v3-1-0-complete.html", content)
+            self.assertIn("Lab/19-evaluate-and-improve-ai-answer-quality/", content)
+            self.assertIn("Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/", content)
+            self.assertIn("Git checkout", content)
+            self.assertIn("ZIP root", content)
+            self.assertNotIn("source/docs/v3.1.0/", content)
+            self.assertNotIn("Word / HTML", content)
+
+        package = ROOT / "docs" / "v3.1.0" / "current" / "Furusato_Workshop_v3.1.0_current.zip"
+        with zipfile.ZipFile(package) as archive:
+            names = set(archive.namelist())
+        self.assertIn("guide/furusato-workshop-v3-1-0-complete.html", names)
+        self.assertIn("Lab/19-evaluate-and-improve-ai-answer-quality/README.md", names)
+        self.assertIn("Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/README.md", names)
+        self.assertIn(
+            "source/workshop/v3.0.0-preview/data-agent/participant-evaluation/README.md",
+            names,
+        )
+        self.assertNotIn(
+            "source/docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html",
+            names,
+        )
 
     def test_history_illustration_cannot_substitute_for_target_file_evidence(self):
         caption_ja, caption_en = figures.FIGURES["p30-09-native-delivery"]["caption"]
@@ -123,6 +305,43 @@ class ParticipantEditionTests(unittest.TestCase):
             "7b78f7761dfa691c2b4a0ad9dfc8b779c436a05728fb426dedf6437bc9ef9353",
             manifest["originalSha256"],
         )
+        detail = next(
+            block for block in self.document.figures
+            if block["source_key"] == "p30-09-activation-detail-001"
+        )
+        self.assertEqual("participant-detail", detail["source_kind"])
+        self.assertIn("one of three UUID-filtered rows", participant30_details.DETAILS[
+            "p30-09-activation-detail-001"
+        ]["limitations"])
+        self.assertIn("neither is shown in this crop", participant30_details.DETAILS[
+            "p30-09-activation-detail-001"
+        ]["limitations"])
+        caption_ja, caption_en = figures.FIGURES["p30-09-activation-detail-001"]["caption"]
+        self.assertIn("実際の001 activation 行", caption_ja)
+        self.assertIn("図の外に時刻や全処理チェーンの証明はありません", caption_ja)
+        self.assertIn("actual 001 activation row", caption_en)
+        self.assertIn("does not show the event time or prove the full processing chain", caption_en)
+        for internal_detail in ("2026-11-02", "UUID", "three", "left-hand", "receipt", "participant-102"):
+            self.assertNotIn(internal_detail, caption_en)
+        lesson = (ROOT / "Lab" / "09-pipeline-and-onelake-event-integration"
+                  / "03-9-2-p30-09-native-delivery.md").read_text(encoding="utf-8")
+        self.assertIn(caption_ja, lesson)
+        self.assertIn(caption_en, lesson)
+        self.assertNotIn("2026-11-02", lesson)
+        self.assertNotIn("one of three UUID-filtered rows", lesson)
+
+    def test_chapter09_nonempty_guard_is_scoped_to_the_exact_target(self):
+        source_ja, source_en = text.CHAPTERS[9]["before"][0]
+        lab_path = ROOT / "Lab" / "09-pipeline-and-onelake-event-integration" / "01-9-1-what-you-will-do.md"
+        lab_content = lab_path.read_text(encoding="utf-8").replace("&lt;", "<").replace("&gt;", ">")
+        for value in (source_ja, source_en):
+            self.assertIn(value, lab_content)
+        self.assertIn("対象の DonationEvents", source_ja)
+        self.assertIn("対象 Lakehouse の Files/increment または OneLake Delta", source_ja)
+        self.assertIn("別リソースにデータがあることだけでは停止しません", source_ja)
+        self.assertIn("target if its DonationEvents table already has rows", source_en)
+        self.assertIn("its Lakehouse Files/increment or OneLake Delta", source_en)
+        self.assertIn("Data in unrelated resources elsewhere", source_en)
 
     def test_notebook05_preview_figure_is_plan_only_and_crop_excludes_execution_header(self):
         ident = "pc-11-notebook05-preview"
@@ -186,6 +405,25 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("DonationEvents", alt_ja)
         self.assertIn("3D", alt_en)
         self.assertIn("3D", alt_ja)
+
+    def test_kql_overview_explains_preserved_avatar_privacy_redaction(self):
+        figure = figures.FIGURES["p30-08-kql-overview"]
+        for field in ("caption", "alt"):
+            ja, en = figure[field]
+            for token in ("テーブルカードのアバター", "プライバシー保護", "意図的に黒塗り"):
+                self.assertIn(token, ja)
+            for token in ("table-card avatar", "intentionally blacked out", "for privacy"):
+                self.assertIn(token, en)
+            for value in (ja, en):
+                self.assertIn("3D", value)
+                self.assertIn("15K", value)
+                self.assertIn("Rows today", value)
+        manifest = participant30.participant_figures()["p30-08-kql-overview"]
+        self.assertEqual(
+            "3e7ac914132d9a100eda22893c2cedc22552bacc77520d5c6ba6c53425138a03",
+            manifest["sha256"],
+        )
+        self.assertEqual((1241, 720), (manifest["width"], manifest["height"]))
 
     def test_graph_prerequisites_and_stop_guidance_follow_projection_support(self):
         graph = text.CHAPTERS[16]

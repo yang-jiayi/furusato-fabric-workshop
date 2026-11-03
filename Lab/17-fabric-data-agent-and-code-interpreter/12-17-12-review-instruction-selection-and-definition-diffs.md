@@ -2,9 +2,9 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-PrivateRoot 内の prepare receipt、candidate、definition/readback artifacts を確認し、manifest の全ファイルハッシュ、global の9422 UTF-16単位、各 source text/description、Ontology context、各 flat selection の path/type/is_selected、active few-shot file/example 数が資産に一致することを確かめます。readback では4つの論理ソースと3つの通常形式の物理 datasource record を区別し、native Ontology context を別に確認します。
+PrivateRoot 内の prepare receipt、candidate、definition/readback artifacts を確認し、manifest の全ファイルハッシュ、global の9422 UTF-16単位、各 source text/description、Ontology context、各 flat selection の path/type/is_selected、active few-shot file/example 数が資産に一致することを確かめます。semantic model source の instructions/description と semantic_model.json の dataSourceInstructions は、serialized definition の比較対象にすぎず、サポートされる編集欄や有効な DAX 設定とは扱いません。readback は文字列・定義の一致を示すだけで、実行時の効果を証明しません。readback では4つの論理ソースと3つの通常形式の物理 datasource record を区別し、native Ontology context を別に確認します。
 
-shared-field readbacks と complete-stage が全て一致し、停止条件がない場合だけ続行します。項目不足や意味差分を手で埋めず、Selection contractを書き換えて通過させません。
+shared-field readbacks と complete-stage が全て一致し、停止条件がない場合だけ続行します。apply は対応欄だけの部分更新ではなく、Draft の compiled definition 全体を updateDefinition へ送ります。適用前に、現行 Draft と candidate の semantic model source の Instructions/Description（serialized `dataSourceInstructions`/`userDescription`）が同一であることを確認します。どちらかが異なる、または差分を確実に比較できない場合は apply せず、ここで停止してレビューを依頼します。readback で保持されていることだけでは apply 前後の不変性を保証しません。項目不足や意味差分を手で埋めず、Selection contractを書き換えて通過させません。
 
 portable stage template は definition/ の5部品だけです。root・resource ID/name の token と、実際の path/type から解決する target token 以外は置き換えません。SQL の異なる列 path 間で native node ID が重複する場合があるため、UUID の一意性を前提にしません。schema、metadata、text、selection semantics の予期しない差分があれば helper は fail-closed で停止します。
 
@@ -1262,6 +1262,8 @@ Query the `dbo` schema of this Lakehouse for static snapshot facts.<br>
 
 ```
 
+注意: これは experimental definition の比較用 serialized reference です。Data Agent がサポートする編集欄ではなく、有効な DAX 設定でもありません。UI に転記せず、効果を推定しないでください。
+
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/semantic_model.json` (`dataSourceInstructions`)**
 
 <div>
@@ -1726,9 +1728,9 @@ Answer composition and capability boundaries:<br>
 
 ## 17.12 Review instruction, selection and definition diffs
 
-Inspect the prepare receipt, candidate and definition/readback artifacts under PrivateRoot. Verify all manifest hashes, the 9422-UTF-16-unit global text, each source text/description, Ontology context, every flat selection path/type/is_selected and active few-shot file/example counts against the assets. Distinguish the four logical sources from three standard-format physical datasource records, and verify the natively serialized Ontology context separately.
+Inspect the prepare receipt, candidate and definition/readback artifacts under PrivateRoot. Verify all manifest hashes, the 9422-UTF-16-unit global text, each source text/description, Ontology context, every flat selection path/type/is_selected and active few-shot file/example counts against the assets. The semantic-model source instructions/description and `dataSourceInstructions` in `semantic_model.json` are serialized definition comparison references only, not supported editable fields or effective DAX configuration. A matching readback verifies serialized text/definition only; it does not prove runtime effect. Distinguish the four logical sources from three standard-format physical datasource records, and verify the natively serialized Ontology context separately.
 
-Continue only when all shared-field readbacks and complete-stage checks match and no stop condition remains. Do not manually fill missing items or edit the selection contract to make checks pass.
+Continue only when all shared-field readbacks and complete-stage checks match and no stop condition remains. Apply sends the entire compiled Draft definition to `updateDefinition`; it is not a selective update of supported fields only. Before applying, confirm that the current Draft and candidate have identical semantic-model-source Instructions/Description (`dataSourceInstructions`/`userDescription` in the serialized definition). If either differs, or the comparison cannot be made with certainty, do not apply: stop here and request review. A readback alone does not guarantee these fields will remain unchanged across apply. Do not manually fill missing items or edit the selection contract to make checks pass.
 
 The portable stage template contains only the five parts under definition/. Replace only root/resource ID/name tokens and target tokens resolved from actual path/type. Native SQL node IDs can repeat across different column paths, so do not assume globally unique UUIDs. The helper fails closed on unexpected schema, metadata, text or selection-semantic differences.
 
@@ -2985,6 +2987,8 @@ Query the `dbo` schema of this Lakehouse for static snapshot facts.<br>
 }
 
 ```
+
+Note: this is a serialized reference for comparing the experimental definition. It is not a Data Agent-supported editable field or effective DAX configuration. Do not paste it into a UI field or infer an effect from it.
 
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/semantic_model.json` (`dataSourceInstructions`)**
 

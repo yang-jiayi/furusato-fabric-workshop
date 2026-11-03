@@ -14,6 +14,7 @@ from . import preview30_evaluation as evaluation
 from . import preview30_evidence as private
 
 SCHEMA = "furusato-preview30-public-evidence/v1"
+CURRENT_CAPTURE_SCHEMA = "furusato-current-participant-captures/v1"
 DEFAULT_RELATIVE = Path("docs") / "assets" / "v3-preview-evidence" / "manifest.json"
 SCOPE = "historical-observed-run"
 LEGACY_ORIGINAL_SUITE_RUN_ID = "compat-native-ui-final"
@@ -264,6 +265,67 @@ def public_file(base: Path, value: str, expected: str, root: Path):
     if private.digest(path) != expected:
         raise ValueError("Public sanitized-image digest mismatch")
     return path
+
+
+def load_current_captures(path: Path, *, root: Path | None = None):
+    """Validate only the reviewed screenshots used by the current participant guide."""
+    root = (root or private.ROOT).resolve()
+    path = path.resolve()
+    if not path.is_relative_to(root) or not path.is_file():
+        raise ValueError("Current participant captures must be inside the clean source root")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    exact_fields(data, {"schemaVersion", "reviewedAt", "reviewer", "captures"},
+                 "current participant captures", {"schemaVersion", "reviewedAt", "reviewer", "captures"})
+    if data["schemaVersion"] != CURRENT_CAPTURE_SCHEMA:
+        raise ValueError("Unexpected current participant capture schema")
+    reviewed_at = timestamp(data["reviewedAt"], "current capture reviewedAt")
+    if not isinstance(data["reviewer"], str) or not re.fullmatch(r"[a-z][a-z0-9-]{0,63}", data["reviewer"]):
+        raise ValueError("Use a portable reviewer role, not a person/account identifier")
+    safe_text(data["reviewer"], "reviewer role")
+    if not isinstance(data["captures"], list) or not data["captures"]:
+        raise ValueError("Current participant captures must be a non-empty list")
+    requested = {item["id"] for item in private.requests()}
+    captures = {}
+    for capture in data["captures"]:
+        exact_fields(capture, CAPTURE_FIELDS, "current participant capture", CAPTURE_FIELDS)
+        ident = capture["id"]
+        if ident not in requested or ident in captures:
+            raise ValueError("Unknown/duplicate current participant capture id")
+        if (capture["actualUI"] is not True or capture["experience"] != "new"
+                or capture["privacyReview"] != "accounts-urls-ids-paths-removed"
+                or type(capture["completionEvidence"]) is not bool):
+            raise ValueError("Current participant images require reviewed actual UI and privacy state")
+        for key in ("sha256", "originalSha256"):
+            if not isinstance(capture[key], str) or not private.SHA.fullmatch(capture[key]):
+                raise ValueError("Invalid current participant capture digest")
+        captured_at = timestamp(capture["capturedAt"], "current capture capturedAt")
+        capture_review = timestamp(capture["reviewedAt"], "current capture reviewedAt")
+        if captured_at > capture_review or capture_review > reviewed_at:
+            raise ValueError("Current capture review chronology is inconsistent")
+        caption = pair(capture["caption"], "current participant caption")
+        image_path = public_file(path.parent, capture["file"], capture["sha256"], root)
+        with Image.open(image_path) as image:
+            if image.format != "PNG":
+                raise ValueError("Current participant captures must be reviewed PNGs")
+            image.verify()
+        with Image.open(image_path) as image:
+            if image.getexif() or any(isinstance(value, (str, bytes)) for value in image.info.values()):
+                raise ValueError("Strip image metadata before approving a current participant capture")
+            if capture["completionEvidence"]:
+                if image.width < 600 or image.height < 250:
+                    raise ValueError("Current completion capture is too small to be legible")
+            elif min(image.size) < 320 or max(image.size) < 500 or image.width * image.height < 200000:
+                raise ValueError("Current partial capture is too small for orientation")
+        captures[ident] = {
+            "path": image_path, "sha256": capture["sha256"], "caption": caption,
+            "capturedAt": capture["capturedAt"], "originalSha256": capture["originalSha256"],
+            "completionEvidence": capture["completionEvidence"],
+        }
+    return {
+        "captures": captures, "currentParticipantCaptures": True,
+        "reviewedAt": data["reviewedAt"],
+        "projectionSha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+    }
 
 
 def load(path: Path, *, root: Path | None = None):

@@ -870,7 +870,7 @@ def load_context(
     entities, relationships = _load_ontology(template, semantic)
 
     diagrams: dict[str, dict[str, Path]] = {}
-    assets = root / "docs" / "assets" / f"v{version}"
+    assets = root / "docs" / "assets" / "current-diagrams"
     for key in DIAGRAM_KEYS:
         entry: dict[str, Path] = {}
         for suffix in ("svg", "png"):
@@ -939,7 +939,7 @@ RUNTIME_INPUT_GLOBS = (
     "workshop/v{version}/provisioning/bundle/data-pipeline/*.json",
     "workshop/v{version}/variable-library-template/*.json",
     "workshop/v{version}/variable-library-template/valueSets/*.json",
-    "docs/assets/v{version}/*.png",
+    "docs/assets/current-diagrams/*.png",
 )
 
 

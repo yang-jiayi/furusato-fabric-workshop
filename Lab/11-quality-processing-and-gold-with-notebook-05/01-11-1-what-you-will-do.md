@@ -9,7 +9,7 @@ Notebook 05 は、Lakehouse の静的テーブルと Files/increment の3つの 
 準備するもの・確認すること
 
 - 5章（Notebook 01）が完了し、Files/increment に3つの CSV がそろっていることを確認します（9〜10章）。
-- 24.6で取り込んだ Notebook 05 を開き、LH_Furusato_&lt;PID&gt; を接続します。まだ無い場合だけ source/workshop/v3.0.0-preview/notebooks の Notebook 05 を作業フォルダーにインポートします。
+- 24.6で取り込んだ Notebook 05 を開き、LH_Furusato_&lt;PID&gt; を接続します。まだ無い場合だけ、現行ZIPの source/workshop/v3.0.0-preview/notebooks にある Notebook 05 を作業フォルダーにインポートします。Git checkout では先頭の source/ を除きます。これは4章で確認した現行パッケージのパスで、別の版を用意する指示ではありません。
 
 <details>
 <summary>English</summary>
@@ -23,6 +23,6 @@ With all three increment fixtures present and a verified Notebook 05 run/output,
 Before you start
 
 - Confirm that Chapter 5 (Notebook 01) is complete and that the three CSV files are in Files/increment (Chapters 9–10).
-- Open Notebook 05 imported in 24.6 and attach LH_Furusato_&lt;PID&gt;. Only if absent, import Notebook 05 from source/workshop/v3.0.0-preview/notebooks into the work folder.
+- Open Notebook 05 imported in 24.6 and attach LH_Furusato_&lt;PID&gt;. Only if absent, import Notebook 05 from source/workshop/v3.0.0-preview/notebooks in the current ZIP into the work folder. In a Git checkout, omit the leading source/. This is the current package path checked in Chapter 4, not a request for another edition.
 
 </details>

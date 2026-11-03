@@ -645,7 +645,7 @@
       "rubric": "evidence + pass_criteria, verbatim and in source order",
       "clarification": "guide_agent.py §17.13; T03 numeric-only conditions",
       "files": {
-        "tools/docs/furusato_docs/context.py": "e8d6188b6761749a4971f31e3c8dbdf482bae348e0e25ab6b280336e88fd345c",
+        "tools/docs/furusato_docs/context.py": "3021b1ffaf5eca4eb4eb8d552e5d9c6109733d1922ffc20a8494d0c26d4f813c",
         "tools/docs/furusato_docs/facts.py": "1d42a02eefa99b333d719d480c9bffe5eff48f82e40bc67f3e74093865944cfe",
         "tools/docs/furusato_docs/tests10.py": "40cf9811c674533713467530978971f667eba7c50aed99e35577dd92b48b2dc8",
         "workshop/v2.7.0/data/increment/donation_events_001.csv": "c9d01c88c4a1035d24883e0143b7ee6901cfe4871dc1718ad8771f5bd8de5139",

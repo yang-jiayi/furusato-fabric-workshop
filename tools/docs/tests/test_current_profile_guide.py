@@ -110,6 +110,15 @@ class CurrentProfileGuideTests(unittest.TestCase):
         self.assertTrue(global_block.get("canonicalLiteral"))
         self.assertEqual(9_422, len(global_code.encode("utf-16-le")) // 2)
         self.assertEqual(self.assets["global"], global_code)
+        self.assertIn("You are the Furusato Workshop v3 Preview assistant.", global_code)
+        global_reference = " ".join(
+            part
+            for block in sections["chapter-17-8"].blocks
+            if block.kind == "paragraph"
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("Workshop の版を示すものではありません", global_reference)
+        self.assertIn("not the Workshop edition", global_reference)
         source_block = next(
             block
             for block in sections["chapter-17-9"].blocks

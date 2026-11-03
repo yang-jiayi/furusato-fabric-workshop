@@ -9,55 +9,14 @@ import json
 from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME
 from furusato_docs import preview30_release as release
 from furusato_docs.participant30 import TAGLINE, figure_path as participant_figure_path
+from furusato_docs.participant30_details import (
+    architecture_svg_variants, crop_png as participant_detail_crop,
+)
 from .assets import build_library, encode_screenshot, screenshot_size
+from .diagrams import load_map
 from .mirror import load_ui_strings
 from .model import Text
 from .render import RenderContext, esc, plain_bilingual, render_block
-
-
-# Scoped release-print pagination fixes; preserve type sizes and unrelated chapter breaks.
-RELEASE_PRINT_CSS = """
-@media print {
- html[data-lang="en"] #ch-20-10 > .callout:last-of-type { margin-bottom:2mm; }
- html[data-lang="en"] #ch-20-10 > p:nth-last-child(-n+2) { margin-block:0; }
-}
-@media print {
- .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child { margin-bottom:0; }
- .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) { break-inside:avoid; }
- .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > h3 { margin:1mm 0 0; }
- .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > ul { margin-block:0; }
-}
-@media print {
- .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child th,
- .chapter:is(#ch-5,#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child td { padding-block:1mm; }
-}
-@media print {
- html[data-lang="ja"] #ch-5-4 { break-inside:avoid; page-break-inside:avoid; }
-}
-@media print {
- html[data-lang="en"] #ch-16-4 { break-inside:avoid; page-break-inside:avoid; }
- #figure-2 .figure__frame img { width:auto; max-width:100%; height:auto; }
- #figure-32 .figure__frame img { width:auto; max-width:100%; height:auto; }
- html[data-lang="en"] #ch-17-7 { page:selection-contract; break-before:page; }
- html[data-lang="en"] #ch-17-7 table { width:100%; min-width:0; table-layout:fixed; }
- html[data-lang="en"] #ch-17-7 .table-wrap { break-inside:auto; page-break-inside:auto; }
- html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(1) { width:11%; }
- html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(2) { width:26%; }
- html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(3) { width:8%; }
- html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(4) { width:9%; }
- html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(5) { width:15%; }
- html[data-lang="en"] #ch-17-7 :is(th,td):nth-child(6) { width:31%; }
- html[data-lang="en"] #ch-17-7 th,
- html[data-lang="en"] #ch-17-7 td { overflow-wrap:anywhere; }
- html[data-lang="en"] #ch-17-8 { page:auto; break-before:page; }
- html[data-lang="en"] #ch-19-2 > .callout:nth-last-child(-n+2) { margin-block:1mm; padding-block:1mm; }
- html[data-lang="en"] #appendix-c-25-canonical-evaluation .table-wrap { margin-block:1mm; }
- html[data-lang="en"] #appendix-c-25-canonical-evaluation .table-wrap:last-of-type { break-inside:auto; page-break-inside:auto; }
- html[data-lang="en"] #appendix-c-25-canonical-evaluation th,
- html[data-lang="en"] #appendix-c-25-canonical-evaluation td { padding-block:1.5mm; }
-}
-@page selection-contract { size:A4 landscape; margin:12mm; }
-"""
 
 
 def register_reviewed_captures(assets, captures):
@@ -101,6 +60,18 @@ def render(
             assets.register_digest("participant-capture:" + block["source_key"], blob)
             assets.screenshots[block["source_key"]] = encode_screenshot(blob)
             assets.screenshot_sizes[block["source_key"]] = screenshot_size(blob)
+        elif block["source_kind"] == "participant-detail":
+            blob = participant_detail_crop(block["source_key"])
+            assets.register_digest("participant-detail:" + block["source_key"], blob)
+            assets.screenshots[block["source_key"]] = encode_screenshot(blob)
+            assets.screenshot_sizes[block["source_key"]] = screenshot_size(blob)
+        elif block["source_kind"] == "participant-diagram":
+            japanese, english = architecture_svg_variants(load_map())
+            source = japanese.encode("utf-8")
+            assets.register_digest("participant-diagram:" + block["source_key"], source)
+            assets.register_digest("participant-diagram-en:" + block["source_key"], english.encode("utf-8"))
+            assets.diagrams[block["source_key"]] = japanese
+            assets.diagrams_en[block["source_key"]] = english
     ctx = RenderContext(
         ui=load_ui_strings(public_documents_only=True, context=context), assets=assets,
         version=profile.version, fingerprint=metadata["contentSha256"][:16], runtime_fingerprint="",
@@ -153,7 +124,10 @@ def render(
     toc = "".join(f'<li><a href="#{s.ident}">{plain_bilingual(s.title)}</a></li>' for s in document.sections)
     content = "".join(section_markup(s) for s in document.sections)
     notice = TAGLINE if participant else release.presentation(metadata, profile)
-    state = Text(notice["ja"], notice["en"])
+    hero_status = ""
+    if delivery_mode != "html-lab":
+        state = Text(notice["ja"], notice["en"])
+        hero_status = f'<p class="hero__status" role="status">{plain_bilingual(state)}</p>'
     public_metadata = {
         **metadata,
         "htmlFilename": profile.html_name,
@@ -167,14 +141,13 @@ def render(
         public_metadata.update(deliveryMode="html-lab", labPath="../Lab/README.md")
     encoded_metadata = json.dumps(public_metadata, ensure_ascii=False).replace("<", "\\u003c")
     css = (root / "tools" / "html" / "assets" / "preview30.css").read_text(encoding="utf-8")
-    if profile.is_release:
-        css += RELEASE_PRINT_CSS
     js = (root / "tools" / "html" / "assets" / "preview30.js").read_text(encoding="utf-8")
     if participant:
         description = f"Bilingual participant guide for {profile.title}: 24 chapters and 5 appendices."
-        hero_line = Text("24章・5付録／Word版と同じ内容の日英版", "24 chapters · 5 appendices · the same content as the Word guide, in Japanese and English")
+        hero_line = Text("24章・5付録／日英HTML教科書", "24 chapters · 5 appendices · bilingual HTML textbook")
         if delivery_mode == "html-lab":
-            hero_line = Text("24章・5付録／Labと同じ内容の日英版", "24 chapters · 5 appendices · the same content as Lab, in Japanese and English")
+            hero_line = Text("24章・5付録／GitHub Labと連携する日英HTML教科書",
+                             "24 chapters · 5 appendices · bilingual HTML textbook with a GitHub Lab companion")
         digest_line = ""
         legacy_button = ""
         footer_note = Text(
@@ -183,17 +156,15 @@ def render(
         footer_hash = ""
     else:
         description = f"Complete 24-chapter bilingual {profile.title}; honest per-lab evidence status."
-        hero_line = Text("24章・5付録／Wordと同じ共有原稿／全19章の旧教材も保持", "24 chapters · 5 appendices · shared Word source · complete 19-chapter baseline retained")
+        hero_line = Text("24章・5付録／日英HTML教科書", "24 chapters · 5 appendices · bilingual HTML textbook")
         digest_line = f'<p class="digest">Word SHA-256: <code>{word_sha}</code></p>'
         legacy_button = f'<button type="button" id="legacy-toggle">{plain_bilingual(Text("旧版参考をすべて開閉", "Toggle all baseline references"))}</button>'
         footer_note = Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed.")
         footer_hash = f'<p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p>'
     guide_link = (
-        '<p><a href="https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/Lab/README.md" id="lab-guide">'
-        + plain_bilingual(Text("GitHubの正本Lab手順書", "Authoritative Lab guide on GitHub")) + '</a></p>'
-        if delivery_mode == "html-lab" else
-        f'<p><a download href="{profile.word_name}" id="word-download">'
-        + plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide")) + '</a></p>'
+        '<a class="button-link button-link--secondary" href="https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/Lab/README.md" id="lab-guide">'
+        + plain_bilingual(Text("GitHub Labの補助手順へ", "Open the companion GitHub Lab")) + '</a>'
+        if delivery_mode == "html-lab" else ""
     )
     return f"""<!doctype html>
 <html lang="ja" data-lang="ja">
@@ -206,13 +177,18 @@ def render(
  <a href="#top" class="brand">Furusato / Fabric IQ · {profile.display_version}</a>
  <nav aria-label="Language"><button type="button" data-language="ja" aria-pressed="true">日本語</button>
  <button type="button" data-language="en" aria-pressed="false">English</button></nav>
- <button type="button" id="print">{plain_bilingual(Text("印刷", "Print"))}</button>
 </header>
 <div id="top" class="hero"><p class="eyebrow">MICROSOFT FABRIC · SYNTHETIC HANDS-ON WORKSHOP</p>
  <h1>Furusato Workshop<br>{profile.display_version}</h1>
- <p>{plain_bilingual(hero_line)}</p>
- <p class="status" role="status">{plain_bilingual(state)}</p>
- {guide_link}
+ <p class="hero__edition">{plain_bilingual(hero_line)}</p>
+ <p class="hero__lead">{plain_bilingual(Text(
+     "合成データを使い、Lakehouse・Eventhouse・Ontology・Data Agentを順に構築して確かめるハンズオン教材です。",
+     "Build and inspect a Microsoft Fabric solution with synthetic data, from Lakehouse and Eventhouse through Ontology and a Data Agent."))}</p>
+ {hero_status}
+ <div class="hero__actions">
+  <a class="button-link" href="#contents">{plain_bilingual(Text("目次から読む", "Start with the contents"))}</a>
+  {guide_link}
+ </div>
  {digest_line}
 </div>
 <aside class="controls"><label for="search">{plain_bilingual(Text("この言語の全文を検索", "Search the full text in this language"))}</label>
@@ -222,7 +198,7 @@ def render(
  <button type="button" id="progress-reset">{plain_bilingual(Text("学習記録をリセット", "Reset learning progress"))}</button>
  <p id="progress" role="status"></p>
 </aside>
-<nav class="toc" aria-label="Contents"><h2>{plain_bilingual(Text("目次", "Contents"))}</h2><ol>{toc}</ol></nav>
+<nav class="toc" id="contents" aria-label="Contents"><h2>{plain_bilingual(Text("目次", "Contents"))}</h2><ol>{toc}</ol></nav>
 <main id="main">{content}</main>
 <footer><p>{plain_bilingual(footer_note)}</p>
  {footer_hash}</footer>

@@ -98,14 +98,6 @@
     dialog.showModal();
   }));
   document.getElementById("lightbox-close").addEventListener("click",() => dialog.close());
-  let printState=[];
-  window.addEventListener("beforeprint",() => {
-    printState=[...document.querySelectorAll("details")].map(d => [d,d.open]);
-    printState.forEach(([d]) => { d.open=true; });
-    document.querySelectorAll("main > .chapter").forEach(s => { s.hidden=false; });
-  });
-  window.addEventListener("afterprint",() => { printState.forEach(([d,open]) => {d.open=open;}); performSearch(); });
-  document.getElementById("print").addEventListener("click",() => window.print());
   setLanguage(new URL(location.href).searchParams.get("lang") || "ja");
   root.dataset.ready="true";
 })();

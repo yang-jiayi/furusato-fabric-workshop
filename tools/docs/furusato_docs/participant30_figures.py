@@ -1,6 +1,6 @@
 """Participant captions for screenshots (Japanese, English).
 
-Keys are capture IDs from the v3.0.0-evidence and v3.0.0-participant asset manifests. Each image was reviewed for
+Keys are capture IDs from the current participant capture and image manifests. Each image was reviewed for
 what it shows, privacy and agreement with the steps; images that show history, failed states or
 internal notes are not used.
 """
@@ -26,9 +26,9 @@ FIGURES = {
     },
     'pc-12-report-canvas': {
         'caption': ('任意の Power BI レポート。年・寄附先都道府県が All の表示で、Gold 全体の寄附総額1,596,157,000円・94,900件、平均16,819円（表示丸め）、高額寄付1,392件が表示されています。母集団は静的80,000件と受入増分14,900件です。Eventhouse の重複を含む観測15,000行や、静的データだけの値とは区別し、同じ条件の直接 DAX と照合します。',
-                    'Optional Power BI report with Year and recipient prefecture both set to All. The cards show all Gold: JPY 1,596,157,000, 94,900 donations, average JPY 16,819 after display rounding, and 1,392 high-value donations. This population combines 80,000 static donations with 14,900 accepted increments. Keep it distinct from the 15,000 duplicate-inclusive Eventhouse observations and static-only values, and compare with direct DAX under matching filters.'),
+                    'Optional Power BI report with Year and recipient prefecture both set to All. The Japanese card labels mean total donations, donation count, average donation amount, and high-value donation count. The charts show monthly totals (current year vs the same period last year) and Top 10 recipient municipalities, gift categories, and donor-residence prefectures. The cards show all Gold: JPY 1,596,157,000, 94,900 donations, average JPY 16,819 after display rounding, and 1,392 high-value donations. This population combines 80,000 static donations with 14,900 accepted increments. Keep it distinct from the 15,000 duplicate-inclusive Eventhouse observations and static-only values, and compare with direct DAX under matching filters.'),
         'alt': ('All フィルターの Power BI レポート。4つの KPI、月別寄附総額、寄附先自治体・返礼品カテゴリ・寄附者居住都道府県の Top10 グラフを表示する。',
-                'Power BI report with All filters, four KPI cards, monthly donation amount and Top10 charts for recipient municipalities, gift categories and donor residence prefectures.'),
+                'Power BI report with Year and recipient prefecture set to All. English legend for Japanese labels: total donations, donation count, average donation amount, high-value donation count; monthly totals (current year vs same period last year); and Top 10 recipient municipalities, gift categories and donor-residence prefectures.'),
     },
     'pc-12-semantic-model-view': {
         'caption': ('初回 framing 後の Semantic model を Viewing モードで表示し、5テーブルが読み込まれ、一部の列と関係が見える状態です。図全体は表示範囲外です。構成の参考であり、DAX の結果は別の実クエリで確認します。',
@@ -49,16 +49,28 @@ FIGURES = {
                 'Crop of Notebook 05 preview output showing PREVIEW_ONLY, ANALYTICS_MODE=preview, 13 source and 29 planned output tables, five schemas, and PLAN_SHA256.'),
     },
     'pc-05-notebook01-ready': {
-        'caption': ('Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 load audit の計20テーブルの検査完了が表示されます。利用前に Ready の根拠を再確認し、SQL endpoint での同期も次の手順で確認します。',
-                    'Notebook 01 final cell. The output reports READY v3.0.0 and completed checks for 20 tables: 8 staging, 11 ontology, and 1 load audit. Recheck Ready evidence before use, then verify SQL endpoint synchronization in the next steps.'),
-        'alt': ('Notebook 01 の最終コードセルと成功のチェック、READY v3.0.0・20テーブルの検査完了・利用前の再確認を示す実行出力。',
-                'Notebook 01 final code cell with a successful execution tick and output showing READY v3.0.0, checks for 20 tables, and the consumer recheck warning.'),
+        'caption': ('Notebook 01 の最終セルのコード部分を示す実画面の抜粋です。READY、8 staging・11 Ontology・1 load audit の計20テーブル、利用前の再確認に関する表示処理を確認できます。実行結果や現在の成功を示す図ではありません。自分の実行出力で Ready の根拠を確認し、次の手順で SQL endpoint の同期を確認します。',
+                    'Actual UI excerpt showing the code in the final Notebook 01 cell: the READY message, 20 tables (8 staging, 11 ontology and 1 load audit), and the consumer recheck warning. This is not an execution result or evidence of current success. Check Ready evidence in your own run output, then verify SQL endpoint synchronization in the next steps.'),
+        'alt': ('Notebook 01 最終セルのコード部分。READY、20テーブルと利用前の再確認を表示するコード。実行結果は含まれない。',
+                'Code portion of the final Notebook 01 cell, printing READY, the 20-table checks and consumer recheck warning; execution results are not included.'),
+    },
+    'pc-05-notebook01-ready-detail': {
+        'caption': ('20テーブルの制御証拠と利用前の再確認警告を示す実出力の抜粋例の左側。次の図と100ピクセル重なります。この抜粋は現在の成功を証明しません。自分の実行で確認してください。',
+                    'Left excerpt of actual output illustrating the 20-table control evidence and consumer recheck warning, overlapping the next panel by 100 pixels. This example does not establish current success. Verify your own run.'),
+        'alt': ('20テーブルの制御証拠と利用前の再確認警告の2行の左側。',
+                'Left portion of the two output lines for 20-table control evidence and the consumer recheck warning.'),
+    },
+    'pc-05-notebook01-ready-detail-continuation': {
+        'caption': ('同じ2行の右側の続き。テーブル単位の置換はatomicですが、テーブル間のmulti-ACID atomicityは主張しない、という警告を保持します。前の左側と合わせて読みます。この抜粋だけで自分の実行結果を確認済みとは扱いません。',
+                    'Right continuation of the same two lines, retaining the warning that per-table replacement is atomic but cross-table multi-ACID atomicity is not claimed. Read with the overlapping left panel; this excerpt does not verify your own execution.'),
+        'alt': ('同じ出力2行の右側のピクセル切り抜き。furusato_publish_controlとcross-table multi-ACID atomicityの警告を保持。',
+                'Right pixel crop of the same two output lines, retaining furusato_publish_control and the cross-table multi-ACID atomicity warning.'),
     },
     'pc-01-architecture': {
-        "caption": ('完成したときのデータの流れ。静的データ、8月の観測データ、品質処理とモデル、意味と AI での利用の4つに分かれます',
-                    'Data flow of the finished setup, in four lanes: static data, August observation data, quality processing and model, and meaning and AI'),
-        "alt": ('8つの CSV から Lakehouse、増分ファイルから Eventhouse、Notebook 05 から Gold と Semantic model、Ontology・Graph・Data Agent・MCP への流れを示す図',
-                'Diagram of the flows: CSV files to Lakehouse, increment files to Eventhouse, Notebook 05 to Gold and the semantic model, and Ontology, Graph, Data Agent and MCP'),
+        "caption": ('データ経路を分けて示す概念図。各環境でのネイティブなバインディングや Graph 実体化の確認を示すものではありません。',
+                    'Conceptual diagram with separate data paths. It does not establish native bindings or Graph materialization in any environment.'),
+        "alt": ('8つの CSV から Lakehouse、3つの増分ファイルから OneLake イベント・Activator・Pipeline・Eventhouse、静的テーブルと増分ファイルから Notebook 05・Gold・Semantic model への経路、および Ontology・Graph・Data Agent・MCP を示す概念図。',
+                'Conceptual paths from eight CSV files to Lakehouse, three increment files through OneLake event, Activator and Pipeline to Eventhouse, and static tables plus increment files through Notebook 05 to Gold and Semantic model; also Ontology, Graph, Data Agent and MCP.'),
     },
     'p30-06-entities': {
         "caption": ('Municipality の Configure 画面。キーは MunicipalityId で、静的 Property は ot_municipality にバインド済み。時系列 Property は10章でバインドするまで Unbound',
@@ -73,10 +85,10 @@ FIGURES = {
                 'Municipality Instances tab: a table of municipality rows with eight columns, from MunicipalityId to PrefectureId.'),
     },
     'p30-07-relationships': {
-        "caption": ('Relationship を作成した後の Home。グラフの下に Visible: 10 of 10 entities | 15 of 15 relationships と表示される',
-                    'Ontology Home after creating the relationships: the status under the graph reads Visible: 10 of 10 entities | 15 of 15 relationships.'),
-        "alt": ('Ontology の Home。Explorer に10の Entity type、中央に Relationship で結ばれたグラフ、下部に 10 of 10 entities・15 of 15 relationships の表示',
-                'Ontology Home with ten entity types in Explorer, a relationship graph, and the status 10 of 10 entities, 15 of 15 relationships.'),
+        "caption": ('Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されていますが、図の一部は表示範囲外です。参加者の配置完了を証明する図ではありません。24.6で配置済みなら既存の15関係を読み取り確認し、不完全な対象で不足する関係だけを作成します。',
+                    'Illustrative Ontology Home viewport. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, while part of the graph is outside the viewport. This does not prove your deployment is complete. If already deployed in 24.6, inspect the existing fifteen relationships; create only missing relationships in an incomplete target.'),
+        "alt": ('Ontology Home の Relationship グラフの表示例。参加者自身の15関係の存在・向き・列は別途確認する。',
+                'Illustrative Ontology Home relationship graph; separately verify the existence, direction and columns of your own fifteen relationships.'),
     },
     'p30-09-copy-002': {
         "caption": ('Pipeline の実行の Copy data1 の Output。Succeeded で、rowsRead と rowsCopied がともに 5000（1ファイル分）',
@@ -84,23 +96,35 @@ FIGURES = {
         "alt": ('Pipeline の実行の監視画面。Copy data1 が Succeeded、Output の JSON に rowsRead 5000 と rowsCopied 5000、右に実行の詳細',
                 'Pipeline run monitor: Copy data1 Succeeded; the output JSON shows rowsRead 5000 and rowsCopied 5000; run details on the right.'),
     },
+    'p30-09-copy-002-output-detail': {
+        'caption': ('同じ保存済み画面の Output JSON の連続した切り抜き。rowsRead と rowsCopied はそれぞれ5000です。この表示だけでは新しい実行や001の自動連鎖を証明しません。',
+                    'Contiguous crop of the same retained Output JSON. rowsRead and rowsCopied are each 5000. This display alone proves neither a fresh run nor an automatic 001 chain.'),
+        'alt': ('Copy data1 の成功した Output JSON と、rowsRead 5000・rowsCopied 5000 の表示。',
+                'Successful Copy data1 Output JSON showing rowsRead 5000 and rowsCopied 5000.'),
+    },
     'p30-08-kql-overview': {
-        "caption": ('現在の KQL Database overview。Explorer に DonationEvents が表示されます。Data Activity Tracker は 3D の表示期間で、Ingestion は丸め表示の 15K rows です。別期間の Rows today は 0。15K は正確な総数ではなく、この図は実行、新規データの materialization、table mirror、source reconciliation の証拠ではありません。',
-                    'Current KQL Database overview: Explorer shows DonationEvents. Data Activity Tracker is set to 3D; Ingestion shows a rounded 15K rows. Rows today is 0 for a separate interval. 15K is not an exact total; this overview is not evidence of a fresh execution, new-data materialization, table mirroring or source reconciliation.'),
-        "alt": ('現在の KQL Database overview。Explorer に DonationEvents、Data Activity Tracker に 3D・Ingestion 15K rows、別期間の Rows today 0 が表示される。15K は丸め表示。',
-                'Current KQL Database overview showing DonationEvents in Explorer, Data Activity Tracker at 3D with Ingestion 15K rows, and Rows today 0 for a separate interval. 15K is rounded.'),
+        "caption": ('現在の KQL Database overview。Explorer に DonationEvents が表示されます。テーブルカードのアバターはプライバシー保護のため意図的に黒塗りにしています。Data Activity Tracker は 3D の表示期間で、Ingestion は丸め表示の 15K rows です。別期間の Rows today は 0。15K は正確な総数ではなく、この図は実行、新規データの materialization、table mirror、source reconciliation の証拠ではありません。',
+                    'Current KQL Database overview: Explorer shows DonationEvents. The table-card avatar is intentionally blacked out for privacy. Data Activity Tracker is set to 3D; Ingestion shows a rounded 15K rows. Rows today is 0 for a separate interval. 15K is not an exact total; this overview is not evidence of a fresh execution, new-data materialization, table mirroring or source reconciliation.'),
+        "alt": ('現在の KQL Database overview。Explorer に DonationEvents、Data Activity Tracker に 3D・Ingestion 15K rows、別期間の Rows today 0 が表示される。15K は丸め表示。テーブルカードのアバターはプライバシー保護のため意図的に黒塗り。',
+                'Current KQL Database overview showing DonationEvents in Explorer, Data Activity Tracker at 3D with Ingestion 15K rows, and Rows today 0 for a separate interval. 15K is rounded. The table-card avatar is intentionally blacked out for privacy.'),
     },
     'p30-09-manual-recovery': {
-        "caption": ('講師の指示で手動実行するときの Parameters。IncrementFileName にファイル名を入力し、Type・Subject・Source は空のまま',
-                    "Parameters for a manual run on the instructor's instruction: enter the file name in IncrementFileName and leave Type, Subject and Source empty."),
-        "alt": ('Pipeline run の Parameters 表。IncrementFileName の値は donation_events_001.csv、Type・Subject・Source の値は空欄',
-                'Pipeline run Parameters: IncrementFileName is donation_events_001.csv; Type, Subject and Source are empty.'),
+        "caption": ('講師の指示で手動実行するときの Parameters。IncrementFileName にファイル名を入力し、Type・Subject・Source の入力値は実際に空にします。図ではその3欄に Value と表示されていますが、その表示だけでは入力値が空かは判定できません。文字列 Value を入力・コピーしないでください。',
+                    "Parameters for an instructor-directed manual run: enter the filename in IncrementFileName and ensure the entered values for Type, Subject and Source are genuinely empty. The image displays Value in those three fields; that display alone does not establish whether an entered value is empty. Do not type or copy the literal string Value."),
+        "alt": ('Pipeline run の Parameters 表。IncrementFileName は donation_events_001.csv。Type・Subject・Source の欄には Value の表示が見える。実際の入力値が空であることは各自で確認する。',
+                'Pipeline run Parameters showing donation_events_001.csv and the visible text Value in Type, Subject and Source; independently ensure their entered values are empty.'),
     },
     'p30-09-native-delivery': {
         "caption": ('ルールの History の概要。6つの KPI、Time の選択、UTC の Activation count グラフを示します。数値は表示時点と選択期間で変わります。下にスクロールして Activation details を開き、自分の001の対象パスと FileCreated を記録します。この概要だけでは001の処理や Pipeline・Copy の成功は確認できません。',
                     'Rule History overview showing six KPIs, the Time selector and the UTC Activation count chart. Values depend on the observation time and selected period. Scroll down to Activation details and record your own 001 target path and FileCreated. This overview alone does not verify processing of 001 or Pipeline/Copy success.'),
         "alt": ('Activator の History の概要。Running のルール、Last 24 hours の選択、欠けのない6つの KPI と UTC の Activation count グラフ。Activation details の対象行はこの図に含まれない。',
                 'Activator History overview with the Running rule, Last 24 hours selector, six complete KPIs and the UTC Activation count chart. The target Activation details row is not included.'),
+    },
+    'p30-09-activation-detail-001': {
+        "caption": ('実際の001 activation 行から Subject と Type 欄を示す説明用の抜粋です。図の外に時刻や全処理チェーンの証明はありません。各自の環境で自分の001行を確認してください。',
+                    'Illustrative excerpt of the Subject and Type fields from an actual 001 activation row. The image does not show the event time or prove the full processing chain. Verify your own 001 row in your environment.'),
+        "alt": ('Subject /Files/increment/donation_events_001.csv と Type Microsoft.Fabric.OneLake.FileCreated の表示部分。',
+                'Visible Subject /Files/increment/donation_events_001.csv and Type Microsoft.Fabric.OneLake.FileCreated fields.'),
     },
     'p30-09-pipeline-003-succeeded': {
         "caption": ('実際の PL_Furusato_101 の実行画面。1件の Pipeline 実行と Copy data1 が Succeeded です。この画面だけでは、対象ファイルとの対応、行数・バイト数、自動起動、KQL の合計は証明されません。',
@@ -109,8 +133,8 @@ FIGURES = {
                 'PL_Furusato_101 run view showing Copy data1 as Succeeded.'),
     },
     'p30-09-source-events': {
-        "caption": ('実際のイベントソース画面の観測値。3件の FileCreated が並び、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated、PutBlob です。イベントの観測であり、Pipeline 完了や Delta への materialization を示しません。',
-                    'Observed values from the actual event-source view. Three FileCreated rows are listed; the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. This shows an event, not Pipeline completion or Delta materialization.'),
+        "caption": ('イベントソース画面の参考例。003までのイベントがある状態で、3 rows と表示され、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated、PutBlob です。手順5で001だけを置いた直後の期待画面ではありません。図に合わせて002・003を追加せず、自分の001の行を確認します。イベントの観測であり、Pipeline 完了や Delta への materialization を示しません。',
+                    'Illustrative event-source view with events through 003: the screen reads 3 rows, and the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. This is not the expected screen immediately after uploading only 001 in step 5. Do not upload 002 or 003 to match the image; check your own 001 row. This shows an event, not Pipeline completion or Delta materialization.'),
         "alt": ('donation_events_003.csv の選択行と3件のイベント、FileCreated、PutBlob、content length と text/csv を示す実際のイベントソース画面。',
                 'Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.'),
     },
@@ -121,16 +145,40 @@ FIGURES = {
                 'Time-series property definition table showing example type and Timestamp column DonatedAt for IncomingDonationAmountYen.'),
     },
     'p30-11-executed-output': {
-        "caption": ('Notebook 05 の適用の実行後の出力。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY の行を確認する',
-                    'Output after the Notebook 05 apply run: check ANALYTICS_MODE=applied, outputTables=29 and the ANALYTICS_READY line.'),
+        "caption": ('Notebook 05 の適用出力の参考例。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY を確認する箇所を示します。自分の最新ジョブと出力で確認してください。この図は自分の実行の成功や Gold 件数を証明しません。',
+                    'Illustrative Notebook 05 apply output showing where to check ANALYTICS_MODE=applied, outputTables=29 and ANALYTICS_READY. Verify your own latest job and output; this image does not establish your execution success or Gold counts.'),
         "alt": ('Notebook のセルの出力。schemas、sourceTables=13、outputTables=29、ANALYTICS_MODE=applied、ANALYTICS_READY の行が並ぶ',
                 'Notebook cell output listing schemas, sourceTables=13, outputTables=29, ANALYTICS_MODE=applied and ANALYTICS_READY.'),
+    },
+    'p30-11-executed-output-detail': {
+        'caption': ('同じ参考例の APPLY_REQUESTED から ANALYTICS_READY までの連続した出力部分の拡大。generation は伏せられています。自分のジョブと出力を別に確認し、この図を自分の成功や Gold 件数の証拠として扱いません。',
+                    'Enlarged contiguous APPLY_REQUESTED-through-ANALYTICS_READY output from the same example, with generation redacted. Independently check your own job and output; do not treat this image as evidence of your success or Gold counts.'),
+        'alt': ('applied 出力の参考例。PLAN_SHA256、sourceTables、outputTables、generation の伏せ字と ANALYTICS_READY を含む。',
+                'Illustrative applied-output block, including PLAN_SHA256, sourceTables, outputTables, the redacted generation and ANALYTICS_READY.'),
     },
     'p30-11-gold': {
         "caption": ('図は EvaluatedAtUtc=2026-09-29 の実行結果を示す参考例です（重複100件・増分15,000行などの表示値はこの実行時点のもの）。参加者は自分の Notebook 05 の最新実行ジョブと出力を確認し、7つすべての品質ルールの実際の判定を確認します。図の値を現在の結果として扱いません。',
                     'This figure is an illustrative run dated EvaluatedAtUtc=2026-09-29; displayed values such as 100 duplicates and 15,000 increment rows belong to that run. Participants must check their own latest Notebook 05 job and output to verify the actual verdicts for all seven quality rules. Do not treat the figure’s values as current results.'),
         "alt": ('Lakehouse の ops.dq_rule_results の表。RuleName・Severity・ExpectedValue・ActualValue・Status の7行で、期待値と実測値が一致',
                 'Lakehouse table ops.dq_rule_results: seven rule rows with Severity, ExpectedValue, ActualValue and Status; the values match.'),
+    },
+    'p30-11-gold-dq-detail': {
+        'caption': ('同じ保存済み表のヘッダーと7行すべての連続した切り抜きです。RunId と generation は伏せ字、RuleName と EvaluatedAtUtc は省略表示のままです。履歴の例であり、現在の Gold アクセス証拠ではありません。',
+                    'Contiguous crop of the same retained table header and all seven rows. RunId and generation remain redacted; RuleName and EvaluatedAtUtc remain ellipsized. This is a historical illustration, not current Gold-access evidence.'),
+        'alt': ('DQ 結果表のヘッダーと7行すべて。Severity、ExpectedValue、ActualValue、Status を含む表示列を保持し、伏せ字と省略表示もそのまま残す。',
+                'DQ result-table header and all seven rows, retaining the displayed Severity, ExpectedValue, ActualValue and Status columns, with redactions and ellipses unchanged.'),
+    },
+    'p30-11-gold-dq-left-detail': {
+        'caption': ('同じ7行とヘッダーの左側拡大。行番号、RunId、RuleName、Severity、ExpectedValue、ActualValueを保持します。次の右側とActualValue列が重なり、行の順序と高さは同じです。伏せ字と省略表示は復元していません。',
+                    'Enlarged left panel of the same seven rows and header: row indexes, RunId, RuleName, Severity, ExpectedValue and ActualValue. ActualValue overlaps the next right panel; row order and heights are unchanged. Redactions and ellipses are not recovered.'),
+        'alt': ('DQ全7行の左側。行番号とRunIdからActualValueまでの表示列。元の全体表と同じ行順。',
+                'Left panel of all seven DQ rows, with row indexes and displayed columns from RunId through ActualValue, in the same order as the retained full grid.'),
+    },
+    'p30-11-gold-dq-right-detail': {
+        'caption': ('同じ7行とヘッダーの右側拡大。左側と重なるActualValue、Status、EvaluatedAtUtc、伏せ字の最終列を保持します。行順・高さとActualValueの重なりで左側に対応づけます。値は実行ごとに変わるため、自分の最新の結果を確認します。',
+                    'Enlarged right panel of the same seven rows and header: the overlapping ActualValue column, Status, EvaluatedAtUtc and redacted final column. Match rows to the left panel using unchanged order/heights and the ActualValue overlap. Values can change between runs; check your own latest output.'),
+        'alt': ('DQ全7行の右側。ActualValue列の重なり、Status、EvaluatedAtUtcと伏せ字の最終列。元の行順・高さを保持。',
+                'Right panel of all seven DQ rows: overlapping ActualValue, Status, EvaluatedAtUtc and the redacted final column, preserving original row order and heights.'),
     },
     'p30-11-schema-preview': {
         "caption": ('gold.donations の列と先頭の行。DataSource で静的データと増分を区別し、IsHighValue は 57,000円を超える寄付で true',
@@ -144,11 +192,23 @@ FIGURES = {
         "alt": ('「寄附」の Metrics 表。10 metrics と、Metric name・Source・Result type・Description の列に、受入増分寄附件数などのメジャー',
                 'Metrics table of the 寄附 entity: 10 metrics with Metric name, Source, Result type and Description columns.'),
     },
+    'p30-12-metric-list-detail': {
+        'caption': ('同じ保存済み画面の Metrics パネル全体の連続した切り抜き。10件の表示数と見える行を保持しますが、非表示の行は補わず、省略表示と伏せ字もそのまま残します。',
+                    'Contiguous crop of the complete visible Metrics panel from the same retained screenshot. It preserves the 10-item count and visible rows; hidden rows are not supplied, and ellipses and redactions remain unchanged.'),
+        'alt': ('Metrics パネルの全可視範囲。10 metrics の件数、表示されている名前・Source・Result type・Description を保持し、伏せ字を含む。',
+                'Full visible Metrics panel retaining the 10-metric count and displayed names, Source, Result type and Description, including redactions.'),
+    },
     'p30-12-metrics': {
         "caption": ('Metric の詳細（受入増分寄附総額）。View expression で表示した元の DAX と、Applies to の「寄附」を確認する',
-                    'Metric details (受入増分寄附総額): the original DAX shown with View expression, and Applies to 寄附.'),
+                    'Metric details (受入増分寄附総額, accepted-increment donation total): the original DAX shown with View expression, and Applies to 寄附. Description: Only accepted increments quality-checked and deduplicated by Notebook 05; separate from Eventhouse observations.'),
         "alt": ('Metric の詳細画面。DAX の式 CALCULATE…RealtimeIncrement、Applies to「寄附」、Description、Synonyms 欄',
-                'Metric details for 受入増分寄附総額: a DAX expression filtering RealtimeIncrement, Applies to 寄附, Description and Synonyms.'),
+                'Metric details for 受入増分寄附総額: a DAX expression filtering RealtimeIncrement, Applies to 寄附, and a description stating that only accepted increments quality-checked and deduplicated by Notebook 05 are included, separate from Eventhouse observations; the Synonyms field is also shown.'),
+    },
+    'p30-12-metrics-expression-detail': {
+        'caption': ('同じ保存済み画面から、式・Applies to・説明の見える範囲を連続して切り抜きました。Source は伏せ字、synonyms は未提供のままです。DAX のコピー可能な原文は本文に残します。',
+                    'Contiguous crop of the visible expression, Applies to and description from the same retained screenshot. Source remains redacted and synonyms unavailable. The copyable DAX source remains in the text.'),
+        'alt': ('DAX 式、Applies to の寄附、説明文を含む Metric 詳細の見える範囲。Source の伏せ字と Synonyms unavailable の表示も保持。',
+                'Visible Metric details including the DAX expression, Applies to 寄附 and description, preserving the redacted Source and Synonyms unavailable message.'),
     },
     'p30-13-rule-list': {
         "caption": ('Explorer の Overview → Rules で開く Business rules 画面。保存した Rule と、関連する Entity type が一覧表示される（図は4つの Rule がある状態）',
@@ -174,12 +234,6 @@ FIGURES = {
         "alt": ('AdministrativeArea の Properties 表。Define entity type key ボタンと、AreaName（Global・String・Unbound）の1行',
                 'AdministrativeArea Properties: a Define entity type key button and one row, AreaName, Global, String, Unbound.'),
     },
-    'p30-15-attachments': {
-        "caption": ('新しい会話で4つのファイルを添付した状態。Plan のままプロンプトを入力して送信する',
-                    'In a new conversation, attach the four files, keep Plan selected, then enter the prompt and send.'),
-        "alt": ('Ontology agent の開始画面。候補3件、入力欄に4つのファイル、Plan/Act の切り替え、送信ボタン',
-                'Ontology agent start screen with three suggestions; the input box holds four file chips, a Plan/Act toggle and Send.'),
-    },
     'p30-15-additive-plan': {
         "caption": ('Plan の提案を開いた読み取り専用の画面。AI Proposal に、追加される PaymentMethod が表示される（まだ保存されていない）',
                     'The Plan proposal opens in a read-only view; the PaymentMethod entity to be added appears under AI Proposal. Nothing is saved yet.'),
@@ -193,28 +247,28 @@ FIGURES = {
                 'PaymentMethod Configure tab: no key; PaymentMethodName is Local, String, Unbound; the description is filled in.'),
     },
     'p30-15-attachment-grounding': {
-        "caption": ('添付あり（B）の回答例。4つの資料からデータの層の違いを読み取り、配送や発送を推測していない',
-                    'Answer with attachments (B): it uses all four files to keep the data layers apart and does not assume delivery or shipment.'),
-        "alt": ('Ontology agent の回答。4つのファイル名、層の区別の箇条書き、不足点、DonationQualityScope の追加案と変更しない項目',
-                'Agent answer: the four files, layer distinctions, missing links, a DonationQualityScope draft and unchanged items.'),
+        "caption": ('添付あり（B）の回答の参考例。4つの資料から層の違いを説明していますが、既存 Entity として AdministrativeArea と Municipality を挙げています。この章の主 Ontology の定義を正しく保持した証拠ではありません。資料の読み取りと定義の正しさは別に確認し、10 Entity・15 Relationship と一致しない回答は不一致として停止します。',
+                    'Answer with attachments (B): the Japanese response uses all four files to distinguish static donations, Eventhouse observations and Notebook 05 quality-processed Gold, but lists AdministrativeArea and Municipality as existing entities. It does not establish preservation of the main ontology. Visible Japanese answer (translated summary; illustrative, not an accepted result): the files describe StaticSeed as static data, RealtimeIncrement as quality-accepted increments, and Gold as input-validated and deduplicated; they do not represent actual shipment or delivery, and SupplierProvidesGift is catalog registration rather than fulfillment. The answer says the layer connections and an actually fulfilling supplier are not represented in the inspected ontology, then proposes one keyless, unbound DonationQualityScope with a String DataLayer property and says existing entities, keys and bindings are unchanged. Check document grounding separately from definition fidelity; stop on assertions inconsistent with the ten-entity, fifteen-relationship baseline. It does not infer delivery or shipment.'),
+        "alt": ('主 Ontology には不一致の回答例。4つの資料名、層の区別、不足点、DonationQualityScope の追加案があるが、既存 Entity に AdministrativeArea を挙げており、既存項目の保持は未確認。',
+                'Mismatched answer example for the main ontology: it names four files, distinguishes data layers, identifies missing links and proposes DonationQualityScope, but lists AdministrativeArea as existing. Its claim to preserve existing items is not verified.'),
     },
     'p30-15-attachment-response-bottom': {
-        "caption": ('回答の末尾。検証の結果（エラー0件・警告1件）を確認し、緑の Preview ontology ボタンで提案を開く',
-                    'End of the answer: check the validation results (0 errors, 1 warning), then open the proposal with the green Preview ontology button.'),
-        "alt": ('回答の後半。変更しない項目、Validation Error 0・Warning 1、結論、提案を開く緑のボタン、Plan/Act の切り替えがある入力欄',
-                'Answer end: unchanged items, Validation Error 0 and Warning 1, the conclusion, a green button to open the proposal and the input box.'),
+        "caption": ('不一致を見つける回答例の末尾。Error 0・Warning 1 と表示されていますが、関係性が0件とも述べています。15 Relationship の主 Ontology に対する合格結果ではありません。AI の検証表示だけを信用せず、実際の定義と照合して停止します。Preview ontology ボタンがあっても適用しません。',
+                    'End of a mismatched answer example: it reports 0 errors, 1 warning, but also zero relationships. The Japanese warning says that without a relationship layer, cross-entity questions may not be answerable; it calls this a structural caution, not an error. The conclusion says only reading and an unapplied Plan draft preview were performed and offers a more readable diff summary. This is not a passing result for the main ontology with fifteen relationships. Check actual definitions rather than accepting AI validation claims, and stop on the mismatch; the Preview ontology button does not authorize applying it.'),
+        "alt": ('不一致の回答例の末尾。関係0件という主張と Validation Error 0・Warning 1、提案を開く緑のボタンと入力欄。主 Ontology の15 Relationship に対する合格結果ではない。',
+                'End of a mismatched answer example: a zero-relationship claim, Validation Error 0 and Warning 1, a green proposal button and the input box. Not a passing result for the main ontology with fifteen relationships.'),
     },
     'p30-15-noattachment-preview': {
-        "caption": ('添付なし（A）の提案。DataLayer（String）は追加されるが説明は空で、資料に無い層の意味は推測していない',
-                    'Proposal without attachments (A): DataLayer (String) is added, its description stays empty, and undefined layers are not guessed.'),
-        "alt": ('DonationQualityScope の提案画面。DataLayer は Local・String・Unbound で説明は空。右に、推測しないと述べる回答',
-                'Proposed DonationQualityScope: DataLayer is Local, String, Unbound; no description; the answer says it will not guess.'),
+        "caption": ('不一致として扱う添付なし（A）の回答例。Entity types 3・Relationship types 0、既存 AdministrativeArea と表示され、この章の主 Ontology の10 Entity・15 Relationship と一致しません。合格例や期待結果ではなく、この回答なら検証を停止します。層の意味を推測しない説明だけで定義の正しさは証明されません。提案の画面・入力欄・モード切替は図の範囲外です。依頼前に自分の画面で Plan を選択・確認し、提案を適用しません。',
+                    'Rejected/mismatched response example without attachments (A): Entity types 3, Relationship types 0 and existing AdministrativeArea do not match this chapter’s ten-entity, fifteen-relationship main ontology. This is not an expected or passing result; stop validation on such an answer. Saying that the available evidence does not establish what the data layer means does not establish definition fidelity. Visible Japanese answer (translated summary; illustrative, not an accepted result): StaticSeed, duplicate-inclusive Eventhouse observations and quality-accepted Gold are not established by the visible ontology metadata, so their meaning remains undefined; the proposed preview adds only one keyless, unbound DonationQualityScope entity with a String DataLayer property, while leaving existing entities and bindings unchanged. The draft preview displays three entities and no relationships with a structural warning; the answer says cross-entity questions may not work. The proposal canvas, input box and mode toggle are outside the crop. Do not infer the mode from this image; select and verify Plan in your own UI before prompting, and do not apply proposals.'),
+        "alt": ('添付なしの回答の抜粋。Entity types 3・Relationship types 0 と不足する層の説明。提案の画面とモード切替は含まれない。',
+                'Excerpt of the answer without attachments: Entity types 3, Relationship types 0 and missing data-layer context; the proposal canvas and mode toggle are not included.'),
     },
     'p30-15-preview': {
-        "caption": ('添付あり（B）の提案。DataLayer に加え、承認や配送を意味しないという説明が、資料をもとに入っている',
-                    'Proposal with attachments (B): besides DataLayer, it has a description, based on the files, saying that it implies no approval or delivery.'),
-        "alt": ('DonationQualityScope の提案画面。DataLayer は Local・String・Unbound で説明あり。右に Error 0・Warning 1',
-                'Proposed DonationQualityScope with a description; DataLayer is Local, String, Unbound; the answer shows Error 0, Warning 1.'),
+        "caption": ('添付あり（B）の提案の参考例。DataLayer の説明は承認や配送を意味しないとしていますが、右の回答は関係の層が無いと述べています。15 Relationship を保持する主 Ontology の合格例ではありません。Error 0・Warning 1 の表示にかかわらず、実際の定義が一致しなければ停止し、適用しません。',
+                    'Proposal with attachments (B): DataLayer is Local, String and Unbound. Its file-grounded description says this data layer does not imply approval or delivery; the screen shows Error 0 and Warning 1. The visible Japanese response says the missing relationship layer may limit cross-entity questions and that only reading plus an unapplied draft preview was performed. However, the response says no relationship layer is present: this is not a passing example for the main ontology retaining fifteen relationships. Stop if actual definitions do not reconcile, regardless of the AI validation labels, and do not apply.'),
+        "alt": ('不一致の提案例。DonationQualityScope の DataLayer は Local・String・Unbound。右の回答は関係の層が無いと述べ、Error 0・Warning 1 と表示するが、15 Relationship を保持した証拠ではない。',
+                'Mismatched proposal example: DonationQualityScope has Local, String, Unbound DataLayer. The response claims no relationship layer and shows Error 0 and Warning 1; this does not establish preservation of fifteen relationships.'),
     },
     'p30-16-eligibility': {
         "caption": ('「Choose what to project」の選択画面。Use the entire Ontology の切り替え、Entity のチェック欄、Status・Source で範囲を確認します。操作例であり、現在の適格性の証拠ではありません。',

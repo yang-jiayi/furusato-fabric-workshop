@@ -395,6 +395,20 @@ class ParticipantEvaluationMaterialsTests(unittest.TestCase):
         self.assertIn("Measure the selected profile's actual length", rendered)
         self.assertNotIn("already fills", rendered)
 
+    def test_fixed_distribution_path_note_precedes_first_setup_path(self):
+        model = chapter(19)
+        evaluation.append_chapter_sections(model, ROOT)
+        first = model.children[0]
+        note = first.blocks[0]["text"]
+        for language in ("ja", "en"):
+            value = getattr(note, language)
+            for name in ("v3.0.0-preview", "v2.7.0",
+                         "requirements-preview30.txt", "build_preview30.py"):
+                self.assertIn(name, value)
+        self.assertIn("表示どおり", note.ja)
+        self.assertIn("exactly as shown", note.en)
+        self.assertIn("participant-evaluation", first.blocks[1]["text"].en)
+
     def test_participant_target_guidance_does_not_embed_the_shared_deployment(self):
         rendered = str(participant_text.CHAPTERS[17])
         for identifier in (
@@ -426,11 +440,16 @@ class ParticipantEvaluationMaterialsTests(unittest.TestCase):
                 for language in ("ja", "en"):
                     cells = [cell.get(language) for table in tables for row in table["rows"] for cell in row]
                     self.assertIn(case["expected"], cells)
+                    self.assertIn(evaluation.DISPLAY_TRANSLATIONS["expected"][case["id"]], cells)
                     if "query_shape" in case:
                         self.assertIn(case["query_shape"], cells)
                     for condition in case["conditions"]:
                         self.assertIn(condition["id"], cells)
                         self.assertIn(condition["text"], cells)
+                        self.assertIn(
+                            evaluation.DISPLAY_TRANSLATIONS["conditions"][condition["id"]],
+                            cells,
+                        )
                     if "expected_values" in case:
                         def leaves(value):
                             if isinstance(value, dict):
@@ -440,6 +459,33 @@ class ParticipantEvaluationMaterialsTests(unittest.TestCase):
                             return ["null" if value is None else str(value)]
                         self.assertCountEqual(leaves(case["expected_values"]),
                                               [row[1].get(language) for row in tables[-1]["rows"]])
+
+    def test_appendix_c_display_translations_are_additive_and_complete(self):
+        expected_cases = {case["id"] for case in self.cases}
+        condition_ids = {condition["id"] for case in self.cases for condition in case["conditions"]}
+        self.assertEqual(expected_cases, set(evaluation.DISPLAY_TRANSLATIONS["expected"]))
+        self.assertEqual(condition_ids, set(evaluation.DISPLAY_TRANSLATIONS["conditions"]))
+        for case, section in zip(self.cases, self.appendix.children):
+            expected_table, criteria_table = [
+                block for block in section.blocks if block.kind == "table"
+            ][:2]
+            self.assertEqual(
+                ["Condition ID", "Scoring criterion (verbatim Japanese)", "English explanation"],
+                [header.en for header in criteria_table["headers"]],
+            )
+            expected_cells = [cell for row in expected_table["rows"] for cell in row]
+            self.assertIn(case["expected"], [cell.en for cell in expected_cells])
+            self.assertIn(
+                evaluation.DISPLAY_TRANSLATIONS["expected"][case["id"]],
+                [cell.en for cell in expected_cells],
+            )
+            for condition in case["conditions"]:
+                row = next(row for row in criteria_table["rows"] if row[0].en == condition["id"])
+                self.assertEqual(condition["text"], row[1].en)
+                self.assertEqual(
+                    evaluation.DISPLAY_TRANSLATIONS["conditions"][condition["id"]],
+                    row[2].en,
+                )
 
     def test_blank_templates_register_every_49_slot_and_290_condition_per_phase(self):
         slots, conditions = self.rows("slots-template.csv"), self.rows("conditions-template.csv")

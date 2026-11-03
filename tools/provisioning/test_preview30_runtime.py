@@ -158,5 +158,128 @@ class PreviewRuntimeTests(unittest.TestCase):
                 runtime.preflight(args)
             self.assertTrue(progress.read_text(encoding="utf-8").startswith("EXISTING VERIFIED PHASE HISTORY"))
 
+    def test_preflight_does_not_promote_unbound_receipts_without_owned_state(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            s = scope()
+            runtime.save(root / "scope.json", s)
+            inventory_path = root / "inventory.json"
+            runtime.save(inventory_path, {
+                "workspace": {"id": s["workspaceId"]},
+                "folders": [{"id": s["folderId"]}],
+                "items": [{"id": "owned-item", "displayName": "ONT_Furusato_001", "type": "Ontology"}],
+                "recoverableItems": [],
+            })
+            prior_receipt = {"id": "owned-resource", "state": "verified"}
+            runtime.save(root / "result.json", {
+                "phases": {"deploy-core": {"status": "succeeded", "result": prior_receipt}},
+                "deployed": True,
+                "items": {"lakehouse": prior_receipt},
+                "jobs": {"copy": {"id": "owned-job"}},
+            })
+            args = SimpleNamespace(scope=root / "scope.json", environment="dev",
+                                   evidence_dir=root, online=False, inventory=inventory_path)
+            baseline = {"treeSha256": "b" * 64, "files": {}}
+            with patch.object(runtime, "immutable_baseline", return_value=baseline):
+                blocked = runtime.preflight(args)
+                self.assertEqual("blocked", blocked["phases"]["preflight"]["status"])
+                self.assertIn("blocked", blocked["actualReadiness"])
+                runtime.save(inventory_path, {
+                    "workspace": {"id": s["workspaceId"]},
+                    "folders": [{"id": s["folderId"]}], "items": [], "recoverableItems": [],
+                })
+                passed = runtime.preflight(args)
+
+            self.assertEqual("preflight-passed-write-gated", passed["status"])
+            self.assertFalse(passed["deployed"])
+            self.assertEqual({}, passed["items"])
+            self.assertEqual({}, passed["jobs"])
+            self.assertEqual("preflight-passed-write-gated", passed["phases"]["preflight"]["status"])
+            self.assertEqual([], passed["phases"]["preflight"]["result"]["blockers"])
+            self.assertEqual(prior_receipt, passed["unverifiedPriorResult"]["items"]["lakehouse"])
+            self.assertEqual(prior_receipt, passed["unverifiedPriorResult"]["phases"]["deploy-core"]["result"])
+            self.assertNotIn("phases", passed["phases"]["preflight"]["result"])
+
+    def test_mismatched_result_scope_is_rejected_before_preflight_writes(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            s = scope()
+            runtime.save(root / "scope.json", s)
+            runtime.save(root / "inventory.json", {
+                "workspace": {"id": s["workspaceId"]},
+                "folders": [{"id": s["folderId"]}], "items": [], "recoverableItems": []})
+            prior_path = root / "result.json"
+            runtime.save(prior_path, {
+                "scopeSha256": "0" * 64, "workspaceId": s["workspaceId"],
+                "folderId": s["folderId"], "participantId": s["participantId"],
+                "deployed": True, "items": {"lakehouse": {"id": "other-scope"}},
+            })
+            prior_bytes = prior_path.read_bytes()
+            args = SimpleNamespace(scope=root / "scope.json", environment="dev",
+                                   evidence_dir=root, online=False, inventory=root / "inventory.json")
+
+            with patch.object(runtime, "immutable_baseline") as baseline:
+                with self.assertRaisesRegex(runtime.SafetyError, "different scope fingerprint"):
+                    runtime.preflight(args)
+                baseline.assert_not_called()
+
+            self.assertEqual(prior_bytes, prior_path.read_bytes())
+            for name in ("immutable-baseline.json", "resource-plan.json",
+                         "write-gate.template.json"):
+                self.assertFalse((root / name).exists(), name)
+
+    def test_same_scope_owned_state_preserves_phases_and_uses_owned_receipts(self):
+        from types import SimpleNamespace
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            s = scope()
+            runtime.save(root / "scope.json", s)
+            lakehouse = next(
+                item for item in runtime.planned_resources(s["participantId"])
+                if item["key"] == "lakehouse"
+            )
+            current_item = {
+                "id": "44444444-4444-4444-8444-444444444444",
+                "displayName": lakehouse["displayName"], "type": lakehouse["type"],
+                "folderId": s["folderId"],
+            }
+            inventory_path = root / "inventory.json"
+            runtime.save(inventory_path, {
+                "workspace": {"id": s["workspaceId"]},
+                "folders": [{"id": s["folderId"]}], "items": [current_item],
+                "recoverableItems": [],
+            })
+            runtime.save(root / "deployment-state.json", {
+                "scopeSha256": runtime.scope_fingerprint(s),
+                "items": {"lakehouse": current_item},
+                "jobs": {"copy": {"id": "current-job"}},
+            })
+            prior_receipt = {"id": "verified-deploy-receipt"}
+            runtime.save(root / "result.json", {
+                "workspaceId": s["workspaceId"], "folderId": s["folderId"],
+                "participantId": s["participantId"],
+                "scopeSha256": runtime.scope_fingerprint(s),
+                "deployed": True, "items": {"stale": {"id": "old-item"}},
+                "jobs": {"old-copy": {"id": "old-job"}},
+                "phases": {"deploy-core": {"status": "succeeded", "result": prior_receipt}},
+            })
+            args = SimpleNamespace(scope=root / "scope.json", environment="dev",
+                                   evidence_dir=root, online=False, inventory=inventory_path)
+            baseline = {"treeSha256": "b" * 64, "files": {}}
+            with patch.object(runtime, "immutable_baseline", return_value=baseline):
+                result = runtime.preflight(args)
+
+            self.assertTrue(result["deployed"])
+            self.assertEqual({"lakehouse": current_item}, result["items"])
+            self.assertEqual({"copy": {"id": "current-job"}}, result["jobs"])
+            self.assertEqual(prior_receipt, result["phases"]["deploy-core"]["result"])
+            self.assertEqual({"stale": {"id": "old-item"}},
+                             result["unverifiedPriorDeployment"]["items"])
+            self.assertEqual({"old-copy": {"id": "old-job"}},
+                             result["unverifiedPriorDeployment"]["jobs"])
+            self.assertEqual(runtime.scope_fingerprint(s), result["scopeSha256"])
+
 if __name__ == "__main__":
     unittest.main()

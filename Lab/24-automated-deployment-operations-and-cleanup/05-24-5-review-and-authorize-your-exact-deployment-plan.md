@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-フォルダーの対応を確認できたら、次のコマンドで自分の scope.json を作ります。forbiddenItemIds は操作対象外として明示された既存アイテムがあれば、その GUID を配列に入れます。空配列でも、配置ツールは他人の既存アイテムを引き継いだり上書きしたりしません。
+フォルダーの対応と Fabric REST API の WorkspaceName を確認できたら、次のコマンドで自分の scope.json を作ります。workspaceName はコマンドで設定した API の値そのものと完全一致させます。quoted JSON はエスケープを含む表現であり、値としてコピーしません。空白を Trim・正規化・再入力しません。forbiddenItemIds は操作対象外として明示された既存アイテムがあれば、その GUID を配列に入れます。空配列でも、配置ツールは他人の既存アイテムを引き継いだり上書きしたりしません。
 
 **Readable wrapped view — PowerShell**
 
@@ -42,7 +42,7 @@ $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $Common = @("--environment", $Environment, "--scope", $Scope, "--evidence-dir", $DeploymentPrivate)
 ```
 
-次の preflight は読み取りだけを行います。実ワークスペース、容量、フォルダー、既存・削除済みアイテムの名前衝突、配布データを照合します。status が preflight-passed-write-gated、blockers が空であることを確認します。書き込みはまだ許可されていません。
+次の preflight は読み取りだけを行います。実ワークスペースの API displayName と scope.workspaceName の完全一致（大文字小文字・先頭末尾の空白を含む）、容量、フォルダー、既存・削除済みアイテムの名前衝突、配布データを照合します。status が preflight-passed-write-gated、blockers が空であることを確認します。ポータル表示と API 値の見た目が違っても値を整形せず、API の表示と code unit で確認します。不一致なら停止し、書き込みません。
 
 **Readable wrapped view — PowerShell**
 
@@ -110,7 +110,7 @@ $Write = $Common + @("--write-gate", $Gate, "--confirm", $PlanSha)
 
 ## 24.5 Review and authorize your exact deployment plan
 
-After verifying the folder mapping, create your scope.json with the following commands. Put any explicitly forbidden existing item GUIDs in forbiddenItemIds. An empty array still does not allow the deployment tool to adopt or overwrite other users' existing items.
+After verifying the folder mapping and the Fabric REST API WorkspaceName, create your scope.json with the following commands. Keep workspaceName exactly equal to the unmodified API value set by the command. Quoted JSON is an escaped representation, not a value to copy. Do not trim, normalize or retype whitespace. Put any explicitly forbidden existing item GUIDs in forbiddenItemIds. An empty array still does not allow the deployment tool to adopt or overwrite other users' existing items.
 
 **Readable wrapped view — PowerShell**
 
@@ -150,7 +150,7 @@ $Utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $Common = @("--environment", $Environment, "--scope", $Scope, "--evidence-dir", $DeploymentPrivate)
 ```
 
-The following preflight only reads and checks the actual workspace, capacity, folder, active/recoverable name conflicts and distributed data. Confirm status preflight-passed-write-gated and an empty blockers list. Writes are not yet enabled.
+The following preflight only reads and checks exact equality between the workspace API displayName and scope.workspaceName (including case and leading/trailing whitespace), capacity, folder, active/recoverable name conflicts and distributed data. Confirm status preflight-passed-write-gated and an empty blockers list. If the portal label looks different from the API value, inspect the API output and code units without normalizing either value. Stop and do not write if they differ.
 
 **Readable wrapped view — PowerShell**
 

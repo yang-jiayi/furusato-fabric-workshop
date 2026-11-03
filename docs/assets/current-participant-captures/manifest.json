@@ -1,0 +1,327 @@
+{
+  "schemaVersion": "furusato-current-participant-captures/v1",
+  "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+  "reviewer": "coordinator-release-review",
+  "captures": [
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Configure shows the saved String key and static columns. This earlier view has an Unbound time series; distinguish it from the later saved-definition change in 10.5.",
+        "ja": "保存済みStringキーと静的列のConfigure表示。時系列がUnboundの修正前の画面であり、最新状態は10.5節の保存後差分と区別します。"
+      },
+      "capturedAt": "2026-09-29T15:45:43.265967+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/7a84cbc6bdccb87ced6d5ae92a7412d78440f605b1a7960bc8e85d088af2328d.png",
+      "id": "p30-06-entities",
+      "originalSha256": "0d8334bc1333589265801a46f285fe8fdc64aa58e824606382d82d3974ab14b3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "7a84cbc6bdccb87ced6d5ae92a7412d78440f605b1a7960bc8e85d088af2328d"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Municipality Instances after repair. A separate read-only comparison matched 17 rows by eight columns to source. The image shows the visible subset, not verification of all ten entities.",
+        "ja": "修復後のMunicipality Instances。別の読取照合で17行×8列がsourceと一致しました。この画面は表示中の行のみで、全10Entityの検証ではありません。"
+      },
+      "capturedAt": "2026-09-29T21:02:55.048040+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de.png",
+      "id": "p30-06-instances",
+      "originalSha256": "2b3adf03144e909eddfefd729af0373c820313d7fc5663b816fb117f74079d9a",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual Home with ten entities and fifteen relationships. The diagram and counts do not replace reconciliation of every direction, bridge and source key pair.",
+        "ja": "実Homeの10Entity・15Relationship。接続図と件数の観測であり、全関係の方向・bridge・実キー対照合を代替しません。"
+      },
+      "capturedAt": "2026-09-29T15:43:44.982569+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png",
+      "id": "p30-07-relationships",
+      "originalSha256": "b7cc414d0b6ab63e35305033db5fce01810010e994d85ebf4d592a75cc811700",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Existing automatic002 native Copy output shows5000read/copied and activity success. Top excerpt only; dataConsistencyVerification remainsNotVerified in the preserved full output. Content equality comes from separate independent KQL reconciliation.",
+        "ja": "既存automatic002のnative Copy outputに5,000読取／5,000コピーと成功表示。画面は冒頭抜粋で、末尾のdataConsistencyVerificationはNotVerifiedのまま。内容一致は別の独立KQL照合です。"
+      },
+      "capturedAt": "2026-10-01T03:20:52.360970+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/9f52acb6e8a07d2c355bc3730e603be56f8749df55bc4ef16050ceae40378153.png",
+      "id": "p30-09-copy-002",
+      "originalSha256": "92b683d17acf5a6cfe1f8d7e73615e8b19acb03443e48f3a88f26935d4602cc2",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "9f52acb6e8a07d2c355bc3730e603be56f8749df55bc4ef16050ceae40378153"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native Run UI parameters for001 recovery: IncrementFileName is supplied; Type/Subject/Source are blank (Value is a placeholder). Cropped parameter region only; job/Copy/query success is a separate receipt. Manual recovery is not automatic delivery.",
+        "ja": "native Run UIの001回復parameter。IncrementFileNameを指定し、Type/Subject/Sourceは空（Valueはplaceholder）です。設定領域だけの切抜きで、job/Copy/query成功は別receipt。手動回復を自動配送と呼びません。"
+      },
+      "capturedAt": "2026-09-30T03:22:18.803379+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/bde681cdcfb15ddfd734386ee82eb7c94212488941203e64e1b7e91e71948cce.png",
+      "id": "p30-09-manual-recovery",
+      "originalSha256": "c1ce6af4530441375123cf8f148a6dda1952bdde2b8b26223be5d86272288a80",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "bde681cdcfb15ddfd734386ee82eb7c94212488941203e64e1b7e91e71948cce"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native mapping at capture: IncomingDonationAmountYen, Timeseries<Integer> and DonatedAt. Later review retained added PrefectureId and confirmed 73 static plus one TS. Custom-status correction is a separate receipt, not functional-query acceptance.",
+        "ja": "撮影時のnative mapping: IncomingDonationAmountYen、Timeseries<Integer>、DonatedAt。後続reviewは追加PrefectureIdを保持し、73 static + 1 TSを確認。custom status補正は別receiptで、機能queryの合格ではありません。"
+      },
+      "capturedAt": "2026-09-29T22:34:22.102645+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f.png",
+      "id": "p30-10-timeseries",
+      "originalSha256": "ca436a4040a05c04b68c2425c1f4a9fae7730578d01c9d7b50a486d7b135cd65",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Historical native executed output shows 13 sourceTables / 29 outputTables, ANALYTICS_MODE=applied and ANALYTICS_READY, with plan hashes unchanged. Generation GUID masked; native No data input panel retained. Partial context only, not a rerun, Agent answer or publication approval.",
+        "ja": "過去のネイティブ実行出力に sourceTables=13、outputTables=29、ANALYTICS_MODE=applied、ANALYTICS_READY を保持し、計画ハッシュは変更しない。生成 GUID をマスクし、入力欄の No data も保持。部分的な状況証跡であり、再実行、Agent の回答、公開承認ではない。"
+      },
+      "capturedAt": "2026-10-01T02:23:29.210505+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/e9de3d299d1ca31b05a9ab94cd150736523360cda5c0d17eee04dfc0e61f1820.png",
+      "id": "p30-11-executed-output",
+      "originalSha256": "a2eb30730a671ace542d0309d930989b5c402ab08d33edde54a180e639ed3ea2",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "e9de3d299d1ca31b05a9ab94cd150736523360cda5c0d17eee04dfc0e61f1820"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native dq_rule_results viewport preserves seven PASS rows, duplicate expected/actual 100 and raw_rows expected/actual 15000. Lakehouse/run/generation IDs masked. RuleName labels remain natively clipped: partial context only, not complete readable rule or Gold-total count evidence.",
+        "ja": "ネイティブ dq_rule_results の表示範囲で、7行の PASS、重複の期待値・実測値100、raw_rows の期待値・実測値15000を保持。Lakehouse・実行・生成識別子をマスク。RuleName のラベルは元の省略表示のままで、全ルールを読める証跡や Gold 総件数の証跡ではなく、部分的な状況証跡。"
+      },
+      "capturedAt": "2026-10-01T02:32:35.128675+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/7362dcbd83633336b836ae0fa607cb764e88884a234b52f0bd459b4f67d6918f.png",
+      "id": "p30-11-gold",
+      "originalSha256": "8da78734a9b36c86932cad9745234fd073707282fbfd64f949395fad1b3d76f3",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "7362dcbd83633336b836ae0fa607cb764e88884a234b52f0bd459b4f67d6918f"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native Gold/donations schema-and-preview context preserves schema tree, visible column headers and unchanged synthetic business data. Workspace/Lakehouse identifiers masked. Showing 1000 rows is only a sampled preview, not 94900 total; clipped columns and tooltip-obscured tree remain partial.",
+        "ja": "ネイティブ Gold／donations のスキーマとプレビューの状況を示し、スキーマツリー、見える列見出し、元の合成業務データを保持。ワークスペース・Lakehouse 識別子をマスク。Showing 1000 rows はサンプル表示であり総件数94900ではない。列の省略表示とツールヒントで隠れたツリーを含む部分的な状況証跡。"
+      },
+      "capturedAt": "2026-10-01T02:33:56.548639+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/14c905263756f76a5fedad91ce4b7e0e17fcfb069c8ca78e520011954cf2f3f4.png",
+      "id": "p30-11-schema-preview",
+      "originalSha256": "37c9a89b78978ee4736eecd03caef5664dd858d62c0b2ab332b36902d75a3214",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "14c905263756f76a5fedad91ce4b7e0e17fcfb069c8ca78e520011954cf2f3f4"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "PARTIAL native 寄附 metrics table: 10 metrics/DOM rows were reported, but the bottom two rows and some names/descriptions are clipped. Source labels are masked; semantic-model icons remain. Configuration/metadata only, not DAX execution or full-model restore proof.",
+        "ja": "部分証跡（PARTIAL）：寄附のネイティブ指標表は10指標／DOM行の観測があるが、下2行と一部の名前・説明は切れている。ソース名をマスクし、セマンティックモデルのアイコンを保持。構成・メタデータのみで、DAX 実行やモデル全体の復元証明ではない。"
+      },
+      "capturedAt": "2026-10-01T02:41:32.757860+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068.png",
+      "id": "p30-12-metric-list",
+      "originalSha256": "1edf8b80a77626c4d450ea66c267462752b16ecd63092b1c5f7f005e887b6189",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native source-owned DAX is fully readable and applies to 寄附; the description separates accepted increment from raw Eventhouse observations. Only the environment-specific source label is masked; unavailable synonyms and disabled Save remain. Metadata resolution, not a new DAX run or rich-model restore.",
+        "ja": "ソース所有のネイティブ DAX 全文と適用先「寄附」を保持。説明は受入済み増分と Eventhouse の生観測を区別する。環境固有ソース名のみをマスクし、同義語の利用不可表示と無効な Save を保持。メタデータ解決であり、新規 DAX 実行やリッチモデル復元ではない。"
+      },
+      "capturedAt": "2026-10-01T02:43:38.936286+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/d8a86d6a963ab25caa00fc89c68e82239f3f7ebbaa762313b2fae8ebaecf83fe.png",
+      "id": "p30-12-metrics",
+      "originalSha256": "5091e71f8aaf460dd2688f29accfd500c82a1097f7fc4ac6ea66340142c561e7",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "d8a86d6a963ab25caa00fc89c68e82239f3f7ebbaa762313b2fae8ebaecf83fe"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Native list of four saved rules with linked entity concepts: RankTieBreak, RawObservationSemantics, StaticAndOperationalSeparation and SupplierAttribution. Context only; saved rules do not prove enforcement, actions or answer quality.",
+        "ja": "保存済み4ルールと関連エンティティ概念のネイティブ一覧：RankTieBreak、RawObservationSemantics、StaticAndOperationalSeparation、SupplierAttribution。文脈情報のみで、ルール強制、アクション実行、回答品質の証明ではない。"
+      },
+      "capturedAt": "2026-10-01T02:48:26.530457+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/335a63411b2cac229c86ed9813c2e8cd7af7c530b375482342ed450e13f59858.png",
+      "id": "p30-13-rule-list",
+      "originalSha256": "5b37c420ddecd5c7905ab5be58430318b3ec0a64038ca572924e09daf4ad4fe8",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "335a63411b2cac229c86ed9813c2e8cd7af7c530b375482342ed450e13f59858"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Full SupplierAttribution statement and Supplier/Gift/Donation links remain, with empty Rule metadata and disabled Save. Read-only context, not enforcement/actions/answer-quality proof. Core definition unchanged after Cancel is separate historical provenance.",
+        "ja": "SupplierAttribution の全文と Supplier／Gift／Donation の関連付け、空の Rule metadata、無効な Save を保持。読み取り専用の文脈情報で、強制・アクション・回答品質の証明ではない。Cancel 後のコア定義不変は別の過去証跡。"
+      },
+      "capturedAt": "2026-10-01T02:49:14.588737+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/e1dcfa2ecfe6c2c3102dc7c6686d9b17189bd87d84bb91d1cb09d88a0f787161.png",
+      "id": "p30-13-rules",
+      "originalSha256": "83fbc06b474ed757a65c69c9a5098965f343af2f847cafcd6e90876a73badd91",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "e1dcfa2ecfe6c2c3102dc7c6686d9b17189bd87d84bb91d1cb09d88a0f787161"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Municipality after the real rename, with String key, local bindings and AdministrativeArea inheritance. Entity/property IDs were preserved. No entity label was digitally replaced.",
+        "ja": "実rename後のMunicipality、Stringキー、ローカルbinding、AdministrativeAreaの継承。entity/property IDは保持。画面上の名前を画像編集で変更していません。"
+      },
+      "capturedAt": "2026-09-29T16:39:46.594101+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164.png",
+      "id": "p30-14-inheritance",
+      "originalSha256": "de286d9319ee4d15bd52dbe80168799cf7a1f667017c3db29fd00f65b036e886",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Before Act, AdministrativeArea.AreaName is Global / String / Unbound with no key. Cropped actual UI, not completed override/revert or binding evidence.",
+        "ja": "Act前のAdministrativeArea.AreaNameはGlobal / String / Unbound、キーなし。実画面の切抜きで、override/revertやbindingの完成証拠ではありません。"
+      },
+      "capturedAt": "2026-09-29T14:19:46.762553+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35.png",
+      "id": "p30-14-shared",
+      "originalSha256": "491e0e38fc23e3b23cde2ee704c0374647e0d958dff97fb1b3fcc04602bf084d",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "PARTIAL B grounding: StaticSeed, raw observations and quality-accepted Gold are distinguished; explicit Ontology connections are missing, not approval or physical shipment. Keyless/unbound draft prose remains native; the preservation list continues offscreen.",
+        "ja": "部分証跡 B の資料grounding：StaticSeed・生観測・quality-accepted Goldを区別し、Ontology上の明示的接続は不足と記載。承認・物理配送の事実ではない。keyless／unbound案と画面外へ続く保持一覧を原寸保持。"
+      },
+      "capturedAt": "2026-10-01T05:09:23.563718+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/917954d6dab1aea99ab4e5bdab32de4e8282b8fe9273d4792f74cc6f5fcfdffd.png",
+      "id": "p30-15-attachment-grounding",
+      "originalSha256": "18bb1d87482add3fa310b0108fcf248c31284c1cc62760d962263cf53d19fec8",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "917954d6dab1aea99ab4e5bdab32de4e8282b8fe9273d4792f74cc6f5fcfdffd"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "PARTIAL B: answer reports Error0/Warning1 and warns that absent relationships limit cross-entity answers. Preview ontology and Plan controls are retained. Counts are prose, not independently exposed internal validation.",
+        "ja": "部分証跡 B：回答文はError0／Warning1と、関係未定義による横断質問の制約を記載。Preview ontologyとPlan操作部を保持。件数は本文報告であり、独立した内部検証結果ではない。"
+      },
+      "capturedAt": "2026-10-01T05:09:56.587948+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/46e8485a0d4d2d3f412ae425fca636ec12589e361e1d2d8a64e323050ffbe767.png",
+      "id": "p30-15-attachment-response-bottom",
+      "originalSha256": "98d150690ce84025fe00028a4425ba0b8fe7811316cac2c779669dc6cccb4b24",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "46e8485a0d4d2d3f412ae425fca636ec12589e361e1d2d8a64e323050ffbe767"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "A read-only proposed Configure shows DataLayer / Local / String / Unbound with no defined key. The narrow response refuses to infer absent layer definitions and stays PARTIAL. Tiny graph text is unchanged; no saved/source-binding proof.",
+        "ja": "A の未適用read-only Configure は DataLayer／Local／String／Unbound、key未定義を表示。右本文は不足する層定義を推測せず、部分表示のまま。小さなグラフ文字も原寸を保持し、保存・実ソースbindingの証明ではない。"
+      },
+      "capturedAt": "2026-10-01T04:47:09.691401+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/c61a78fcce1e1131639ba7cf82902f842410e7a4c51da8b8848bcf03bb3f7e98.png",
+      "id": "p30-15-noattachment-preview",
+      "originalSha256": "a5663fff14c78b88f9a4e97a4a802a32585611e9e37b6ccfab688bf58f2ecbda",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "c61a78fcce1e1131639ba7cf82902f842410e7a4c51da8b8848bcf03bb3f7e98"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "B read-only proposed Configure shows DataLayer:String/Unbound and a metadata-only description excluding approval, shipment and physical state. This keyless draft is not saved/source-bound proof. Right prose is PARTIAL; tiny graph text stays native.",
+        "ja": "B の未適用read-only Configure は DataLayer:String／Unboundと、承認・配送・物理状態を含まないmetadata-only説明を表示。keyless案で、保存・実ソースbindingの証明ではない。右本文は部分表示、小さなグラフ文字は原寸のまま。"
+      },
+      "capturedAt": "2026-10-01T05:12:43.036777+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/8d2258108f8a836907ef8352d4aba066bd319f164cce3a919ffdb344027716e6.png",
+      "id": "p30-15-preview",
+      "originalSha256": "535e00933661be7c56f2374fdbc3b754745e6fc89864d9ad644b9bd94e489eff",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "8d2258108f8a836907ef8352d4aba066bd319f164cce3a919ffdb344027716e6"
+    },
+    {
+      "actualUI": true,
+      "caption": {
+        "en": "Actual Explore graph capture excluding the private Source header. It shows MunicipalityInPrefecture direction and rendering, but numeric node captions are ranks, not business IDs. Visible-path Table-view reconciliation and full-graph counts are separate receipts.",
+        "ja": "private Source headerを含まない実Explore graph。MunicipalityInPrefectureの方向と描画を確認できますが、node数字はrankでbusiness IDではありません。Table viewでの可視path照合とfull graph件数は別receiptです。"
+      },
+      "capturedAt": "2026-09-30T04:07:15.943000+00:00",
+      "completionEvidence": false,
+      "experience": "new",
+      "file": "captures/25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c.png",
+      "id": "p30-16-gql",
+      "originalSha256": "ae3698af3997d0d4d2496137e074a6d2424b05bdc42ba4d5e19d9b98e9272ad6",
+      "privacyReview": "accounts-urls-ids-paths-removed",
+      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+      "sha256": "25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c"
+    }
+  ]
+}

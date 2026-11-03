@@ -1,11 +1,21 @@
 # 参加者の評価キット / Participant evaluation kit
 
-Word / HTML の第19章と付録Cで、準備、操作、採点、前後比較を説明します。
+Git checkout では、GitHub Lab の `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と、現行 HTML ガイド
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html` の第19章・付録Cを
+参照します。配布 ZIP を展開した場合は、ZIP ルートの `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と `guide/furusato-workshop-v3-1-0-complete.html` を開きます。付録Cの Lab は
+`Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/` です。
 このフォルダーは公開の質問・採点基準と空の記録用紙です。採点基準や期待値を
 Data Agent の指示、例、ソース説明へコピーしません。実際の回答、実環境のID、
 クエリ、画面、認証は Git 外の作業用フォルダーへ保存します。
 
-Chapter 19 and Appendix C of Word / HTML contain the complete manual procedure.
+In a Git checkout, use the GitHub Lab at
+`Lab/19-evaluate-and-improve-ai-answer-quality/` and Chapter 19 and Appendix C in
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html`. After extracting
+the distribution ZIP, open `Lab/19-evaluate-and-improve-ai-answer-quality/` and
+`guide/furusato-workshop-v3-1-0-complete.html` from the ZIP root. The Appendix C
+Lab is `Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/`.
 This folder supplies public questions, scoring criteria and blank records. Never
 put questions, answer keys or grading criteria in Agent instructions, examples or
 source descriptions. Save actual answers, live identifiers, queries, screenshots

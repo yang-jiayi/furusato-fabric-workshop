@@ -535,8 +535,8 @@ def current_lessons(roots, context):
              "Use Start with Ontology agent on an empty item or toolbar → Ontology agent on an existing item; confirm Plan. Do not authorize unrelated-workspace discovery."),
             ("添付なし新会話で下のbounded promptを送り、discoveryのsource/table/列、draft、validateのerror/warning、read-only previewを保存します。まだActしません。",
              "In a fresh no-attachment conversation send the bounded prompt below; save discovery source/table/columns, draft, validation errors/warnings and read-only preview. Do not Act yet."),
-            ("ページrefresh等でfresh会話を始め、同じbaselineでbusiness-requirements.pdf、data-dictionary.txt、domain-model.png、revision-requirements.txtの現行4ファイルを添付します。hashを凍結し、upload表示と実際の内容利用を別々に記録します。",
-             "Start a fresh conversation, for example by page refresh, on the same baseline. Attach the current four files: business-requirements.pdf, data-dictionary.txt, domain-model.png and revision-requirements.txt. Freeze hashes and record both upload indication and actual use of their content."),
+            ("ページrefresh等でfresh会話を始め、同じbaselineでbusiness-requirements.txt、data-dictionary.txt、domain-model.png、revision-requirements.txtの現行4ファイルを添付します。hashを凍結し、upload表示と実際の内容利用を別々に記録します。",
+             "Start a fresh conversation, for example by page refresh, on the same baseline. Attach the current four files: business-requirements.txt, data-dictionary.txt, domain-model.png and revision-requirements.txt. Freeze hashes and record both upload indication and actual use of their content."),
             ("同じscope/promptでdraftとpreviewを比較し、居住/受入/登録、raw/unique、キー型、source binding、配送や富裕度の非推論を採点します。",
              "Compare drafts/previews under the same scope/prompt; score residence/recipient/registration, raw/unique, key types, bindings and non-inference of delivery/wealth."),
             ("修正はrevision-requirements.txtを明示してmetadataだけのpatchを求めます。追加/変更/削除とstable IDsをレビューし、validate/previewを再確認します。",
@@ -554,8 +554,8 @@ def current_lessons(roots, context):
             "Planのまま作業してください。対象は講師が指定した <LAB_ONTOLOGY_ID>、許可sourceは <LAKEHOUSE_ID>、<EVENTHOUSE_ID>、<SEMANTIC_MODEL_ID> のみです。未指定sourceを探索しないでください。現在の定義とstable IDsを読み、発見した実table/column/keyを根拠にdraft、validate、read-only previewを提示してください。Entityの新規作成・削除・データwrite・workspace変更はまだしないでください。居住地域、受入地域、供給登録を区別し、配送/受領/所得/資産を推定しないでください。各変更と変えない項目、未解決の警告、queryの実行根拠を示してください。",
             "Remain in Plan. Target only instructor-specified <LAB_ONTOLOGY_ID>; permitted sources are <LAKEHOUSE_ID>, <EVENTHOUSE_ID>, <SEMANTIC_MODEL_ID> only. Do not discover unspecified sources. Read the current definition and stable IDs, then discover actual tables/columns/keys and provide a grounded draft, validation and read-only preview. Do not yet create/delete entities, write data or change the workspace. Distinguish residence, recipient geography and registered supply; do not infer delivery, receipt, income or assets. Show each proposed change, stable items, unresolved warnings and actual query evidence."),
         prompt(
-            "business-requirements.pdf、data-dictionary.txt、domain-model.pngとrevision-requirements.txtを読み、Notebook05 GoldのStaticSeed/RealtimeIncrementとquality acceptanceを区別してください。manual approval・支払・発送・自動配送を推測しません。提案のobject kind、reusableProperty/redefines、native Version保存とsaved readback計画を示してください。同じ許可source/baselineでPlan→draft→validate→previewを行い、まだ保存しないでください。",
-            "Read business-requirements.pdf, data-dictionary.txt, domain-model.png and revision-requirements.txt. Distinguish Notebook05 Gold StaticSeed/RealtimeIncrement and quality acceptance from manual approval, payment, shipment or automatic delivery. Show the proposed object kind, reusableProperty/redefines, native Version preservation and saved-readback plan. Use the same approved sources/baseline for Plan→draft→validate→preview, without saving yet."),
+            "business-requirements.txt、data-dictionary.txt、domain-model.pngとrevision-requirements.txtを読み、Notebook05 GoldのStaticSeed/RealtimeIncrementとquality acceptanceを区別してください。manual approval・支払・発送・自動配送を推測しません。提案のobject kind、reusableProperty/redefines、native Version保存とsaved readback計画を示してください。同じ許可source/baselineでPlan→draft→validate→previewを行い、まだ保存しないでください。",
+            "Read business-requirements.txt, data-dictionary.txt, domain-model.png and revision-requirements.txt. Distinguish Notebook05 Gold StaticSeed/RealtimeIncrement and quality acceptance from manual approval, payment, shipment or automatic delivery. Show the proposed object kind, reusableProperty/redefines, native Version preservation and saved-readback plan. Use the same approved sources/baseline for Plan→draft→validate→preview, without saving yet."),
     ])
     sub(r[15], "5", ("Act承認・照会・会話記録", "Act approval, query and conversation records"), [
         prompt(
@@ -2139,6 +2139,9 @@ def build(
                 elif block.kind == "figure":
                     figures.append(block)
                     block.payload["number"] = len(figures)
+    if participant_edition:
+        from .participant30_details import number_figures
+        number_figures(figures)
     document = Document(roots, figures, tables, checklist)
     counts = {
         "chapters": len(CHAPTERS), "appendices": len(APPENDICES),

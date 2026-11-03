@@ -1,13 +1,13 @@
 # Participant profile reproduction
 
 現行の参加者向け手順は、既存の完全版 [Labの17章](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md) と
-[currentの日英HTML](../../docs/v3.0.0/current/README.md) です。既存Wordは移行レビュー用であり、
-正本ではありません。このヘルパーは構成を再現するだけで、回答品質を保証しません。
+[currentの日英HTML](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true) です。
+このヘルパーは構成を再現するだけで、回答品質を保証しません。
 参加者自身の実行履歴・実クエリ・結果による評価が必要です。この手順の掲載は実環境への変更の承認ではありません。
 
-`participant_profile.py` configures one **existing** workshop Data Agent with the fixed `measured-contract-20261015` profile. The participant [complete Lab, chapter 17](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md) and [current bilingual HTML](../../docs/v3.0.0/current/README.md) contain the preparation, SQL view definitions, instructions, examples and evaluation steps. The retained Word is for transition review, not current authority. Run this helper from the extracted package's `source/` directory, or the repository root. It does not require the instructor's private scripts, approval files or credentials. These instructions do not authorize live changes; apply and publish require separate approval.
+`participant_profile.py` configures one **existing** workshop Data Agent with the fixed `measured-contract-20261015` profile. The participant [complete Lab, chapter 17](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md) and [current bilingual HTML](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true) contain the preparation, SQL view definitions, instructions, examples and evaluation steps. Run this helper from the extracted package's `source/` directory, or the repository root. It does not require the instructor's private scripts, approval files or credentials. These instructions do not authorize live changes; apply and publish require separate approval.
 
-This reproduces a configuration. It does not establish Ontology availability, successful business query execution or an answer-quality score. No quality guarantee or score can be inferred without the participant's own execution history, actual queries and results. Historical comparison results remain in their dated reports, not as participant targets.
+This reproduces a configuration. It does not establish Ontology availability, successful business query execution or an answer-quality score. No quality guarantee or score can be inferred without the participant's own actual queries and results.
 
 ## Before running
 

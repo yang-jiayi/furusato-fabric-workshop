@@ -7,7 +7,11 @@
 
 ![Notebook のセルの出力。schemas、sourceTables=13、outputTables=29、ANALYTICS_MODE=applied、ANALYTICS_READY の行が並ぶ](../assets/p30-11-executed-output.png)
 
-Notebook 05 の適用の実行後の出力。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY の行を確認する
+Notebook 05 の適用出力の参考例。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY を確認する箇所を示します。自分の最新ジョブと出力で確認してください。この図は自分の実行の成功や Gold 件数を証明しません。
+
+![applied 出力の参考例。PLAN_SHA256、sourceTables、outputTables、generation の伏せ字と ANALYTICS_READY を含む。](../assets/p30-11-executed-output-detail.png)
+
+同じ参考例の APPLY_REQUESTED から ANALYTICS_READY までの連続した出力部分の拡大。generation は伏せられています。自分のジョブと出力を別に確認し、この図を自分の成功や Gold 件数の証拠として扱いません。
 
 <details>
 <summary>English</summary>
@@ -19,6 +23,10 @@ Notebook 05 の適用の実行後の出力。ANALYTICS_MODE=applied、outputTabl
 
 ![Notebook cell output listing schemas, sourceTables=13, outputTables=29, ANALYTICS_MODE=applied and ANALYTICS_READY.](../assets/p30-11-executed-output.png)
 
-Output after the Notebook 05 apply run: check ANALYTICS_MODE=applied, outputTables=29 and the ANALYTICS_READY line.
+Illustrative Notebook 05 apply output showing where to check ANALYTICS_MODE=applied, outputTables=29 and ANALYTICS_READY. Verify your own latest job and output; this image does not establish your execution success or Gold counts.
+
+![Illustrative applied-output block, including PLAN_SHA256, sourceTables, outputTables, the redacted generation and ANALYTICS_READY.](../assets/p30-11-executed-output-detail.png)
+
+Enlarged contiguous APPLY_REQUESTED-through-ANALYTICS_READY output from the same example, with generation redacted. Independently check your own job and output; do not treat this image as evidence of your success or Gold counts.
 
 </details>

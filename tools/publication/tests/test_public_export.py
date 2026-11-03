@@ -119,27 +119,29 @@ class PublicExportTests(unittest.TestCase):
             raw if raw is not None else self.markup(), encoding="utf-8", newline="\n"
         )
 
-    def test_export_is_exact_pair_byte_identical_and_manifest_external(self):
-        before = {p.name: p.read_bytes() for p in self.source.iterdir()}
-        result = publication.export(self.repo, self.source, self.output, EDITION, manifest=self.manifest)
-        self.assertEqual({p.name for p in self.output.iterdir()}, set(self.names.public_pair))
-        self.assertEqual({p.name: p.read_bytes() for p in self.output.iterdir()}, before)
-        self.assertEqual({p.name: p.read_bytes() for p in self.source.iterdir()}, before)
-        self.assertEqual(self.manifest.read_bytes().count(b"\n"), 2)
-        self.assertNotIn(b"\r", self.manifest.read_bytes())
-        self.assertFalse(result["published"])
-        self.validate_content.assert_called_once_with(self.repo, self.source, EDITION)
+    def test_legacy_pair_export_cli_is_retired(self):
+        with self.assertRaises(SystemExit) as error:
+            publication.main([
+                "--source", str(self.source), "--out", str(self.output), "--edition", EDITION,
+            ])
+        self.assertEqual(2, error.exception.code)
+        self.assertFalse(self.output.exists())
 
-    def test_no_manifest_is_added_by_default(self):
-        result = publication.export(self.repo, self.source, self.output, EDITION)
-        self.assertIsNone(result["manifest"])
-        self.assertEqual(len(list(self.output.iterdir())), 2)
+    def test_legacy_export_api_is_retired_without_writing(self):
+        source_before = {p.name: p.read_bytes() for p in self.source.iterdir()}
+        with self.assertRaisesRegex(PublicationError, "export is retired"):
+            publication.export(self.repo, self.source, self.output, EDITION, manifest=self.manifest)
+        self.assertEqual({p.name: p.read_bytes() for p in self.source.iterdir()}, source_before)
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.manifest.exists())
 
     def test_existing_pair_is_validated_read_only_not_overwritten(self):
-        publication.export(self.repo, self.source, self.output, EDITION, manifest=self.manifest)
+        self.output.mkdir()
+        for name in self.names.public_pair:
+            shutil.copyfile(self.source / name, self.output / name)
         before = publication._hashes(self.output, self.names)
-        with self.assertRaisesRegex(PublicationError, "overwrite"):
-            publication.export(self.repo, self.source, self.output, EDITION)
+        self.manifest.parent.mkdir(parents=True)
+        self.manifest.write_text(publication._manifest_text(before), encoding="utf-8", newline="\n")
         result = publication.validate_export(self.repo, self.output, EDITION, manifest=self.manifest)
         self.assertEqual(result["files"], before)
         self.assertTrue(result["validatedOnly"])
@@ -148,83 +150,20 @@ class PublicExportTests(unittest.TestCase):
             publication.validate_export(self.repo, self.output, EDITION, manifest=self.manifest)
         self.assertEqual(publication._hashes(self.output, self.names), before)
 
-    def test_unexpected_files_are_never_cleaned(self):
-        for extra in ("old.docx", self.names.workbook, self.names.validation, "notes.json", ".hidden"):
-            output = self.area / uuid.uuid4().hex[:6]
-            output.mkdir()
-            sentinel = output / extra
-            sentinel.write_bytes(b"preserve")
-            with self.subTest(extra=extra), self.assertRaisesRegex(PublicationError, "unexpected"):
-                publication.export(self.repo, self.source, output, EDITION)
-            self.assertEqual(list(output.iterdir()), [sentinel])
-            self.assertEqual(sentinel.read_bytes(), b"preserve")
-
-    def test_unexpected_source_companion_fails_without_changing_it(self):
-        companion = self.source / self.names.workbook
-        companion.write_bytes(b"internal workbook")
-        with self.assertRaisesRegex(PublicationError, "unexpected"):
-            publication.export(self.repo, self.source, self.output, EDITION)
-        self.assertEqual(companion.read_bytes(), b"internal workbook")
-        self.assertFalse(self.output.exists())
-
-    def test_missing_companion_is_not_required_but_missing_selected_word_fails(self):
+    def test_pair_validation_refuses_missing_selected_word(self):
         publication.validate_pair_policy(self.repo, self.source, "2.7.0", EDITION)
         (self.source / self.names.participant).rename(self.area / "held-word.docx")
         with self.assertRaisesRegex(PublicationError, "missing public documents"):
-            publication.export(self.repo, self.source, self.output, EDITION)
+            publication.validate_pair_policy(self.repo, self.source, "2.7.0", EDITION)
         self.assertFalse(self.output.exists())
 
-    def test_output_and_manifest_safety_precedes_content_validation(self):
-        cases = (
-            (self.repo / "docs" / "public", None),
-            (self.source, None),
-            (self.source / "nested", None),
-            (self.area, None),
-            (self.area / "x" / ".." / "export", None),
-            (self.output, self.output / "SHA256SUMS.txt"),
-            (self.output, self.source / "SHA256SUMS.txt"),
-            (self.output, self.repo / "hashes.txt"),
-        )
-        for output, manifest in cases:
-            with self.subTest(output=output, manifest=manifest), self.assertRaises(PublicationError):
-                publication.export(self.repo, self.source, output, EDITION, manifest=manifest)
-        self.validate_content.assert_not_called()
-        self.assertFalse(self.output.exists())
-
-    def test_manifest_is_not_overwritten(self):
+    def test_retired_export_does_not_overwrite_existing_manifest(self):
         self.manifest.parent.mkdir()
         self.manifest.write_bytes(b"existing evidence")
-        with self.assertRaisesRegex(PublicationError, "overwrite"):
+        with self.assertRaisesRegex(PublicationError, "export is retired"):
             publication.export(self.repo, self.source, self.output, EDITION, manifest=self.manifest)
         self.assertEqual(self.manifest.read_bytes(), b"existing evidence")
         self.assertFalse(self.output.exists())
-
-    def test_failed_content_validation_exports_nothing(self):
-        self.validate_content.side_effect = PublicationError("content gate failed")
-        with self.assertRaisesRegex(PublicationError, "content gate"):
-            publication.export(self.repo, self.source, self.output, EDITION)
-        self.assertFalse(self.output.exists())
-        self.assertFalse(self.manifest.exists())
-
-    def test_source_or_destination_change_during_validation_is_refused(self):
-        def change_source(*_):
-            with (self.source / self.names.html).open("a", encoding="utf-8", newline="\n") as handle:
-                handle.write("\n")
-
-        self.validate_content.side_effect = change_source
-        with self.assertRaisesRegex(PublicationError, "changed during validation"):
-            publication.export(self.repo, self.source, self.output, EDITION)
-        self.assertFalse(self.output.exists())
-        self.write_html()
-
-        def change_output(*_):
-            self.output.mkdir()
-            (self.output / self.names.html).write_bytes(b"concurrent file")
-
-        self.validate_content.side_effect = change_output
-        with self.assertRaisesRegex(PublicationError, "changed during validation"):
-            publication.export(self.repo, self.source, self.output, EDITION)
-        self.assertEqual((self.output / self.names.html).read_bytes(), b"concurrent file")
 
     def test_excluded_links_are_rejected_even_without_download_attribute(self):
         bad_links = (
@@ -240,7 +179,7 @@ class PublicExportTests(unittest.TestCase):
                 with self.assertRaisesRegex(PublicationError, "publication.links"):
                     publication.validate_pair_policy(self.repo, self.source, "2.7.0", EDITION)
 
-    def test_duplicate_href_rejected_before_export(self):
+    def test_duplicate_href_rejected_by_pair_validator(self):
         raw = self.markup().replace(
             f'<a href="{self.names.participant}"',
             f'<a href="data:application/zip;base64,UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA==" '
@@ -248,8 +187,7 @@ class PublicExportTests(unittest.TestCase):
         )
         self.write_html(raw)
         with self.assertRaisesRegex(PublicationError, "duplicate attribute"):
-            publication.export(self.repo, self.source, self.output, EDITION)
-        self.validate_content.assert_not_called()
+            publication.validate_pair_policy(self.repo, self.source, "2.7.0", EDITION)
         self.assertFalse(self.output.exists())
 
     def test_duplicate_attributes_rejected_case_insensitively_on_both_tag_forms(self):
@@ -308,7 +246,7 @@ class PublicExportTests(unittest.TestCase):
         structure.close()
         self.assertEqual(structure.errors, [])
 
-    def test_relocated_word_package_rejected_before_export(self):
+    def test_relocated_word_package_rejected_by_pair_validator(self):
         companion = (self.source / self.names.participant).read_bytes()
         content_types = CONTENT_TYPES.replace(
             "</Types>",
@@ -322,8 +260,7 @@ class PublicExportTests(unittest.TestCase):
         })
         self.write_html()
         with self.assertRaisesRegex(PublicationError, "embedded attachment"):
-            publication.export(self.repo, self.source, self.output, EDITION)
-        self.validate_content.assert_not_called()
+            publication.validate_pair_policy(self.repo, self.source, "2.7.0", EDITION)
         self.assertFalse(self.output.exists())
 
     def test_word_rejects_object_relationships_at_any_location(self):
@@ -524,7 +461,7 @@ class PublicExportTests(unittest.TestCase):
     def test_empty_edition_and_unsafe_filenames_are_rejected(self):
         for edition in ("", "../original", r"..\original"):
             with self.subTest(edition=edition), self.assertRaises(ValueError):
-                publication.export(self.repo, self.source, self.output, edition)
+                publication.validate_pair_policy(self.repo, self.source, "2.7.0", edition)
         names = deliverable_names("../2.7.0", EDITION)
         with self.assertRaisesRegex(PublicationError, "unsafe public filename"):
             check_directory(self.output, names)

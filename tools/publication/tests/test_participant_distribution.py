@@ -9,15 +9,15 @@ from urllib.parse import unquote, urlsplit
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[3]
-HTML='furusato-workshop-v3-0-0-complete.html'
-PACKAGE='Furusato_Workshop_v3.0.0_current.zip'
+HTML='furusato-workshop-v3-1-0-complete.html'
+PACKAGE='Furusato_Workshop_v3.1.0_current.zip'
 
 
 class ParticipantDistributionTests(unittest.TestCase):
     def test_active_entrypoints_offer_only_current_guides(self):
-        for relative in ('README.md','docs/README.md','docs/v3.0.0/current/README.md'):
+        for relative in ('README.md','docs/README.md','docs/v3.1.0/current/README.md'):
             with self.subTest(path=relative):
-                text=(ROOT/relative).read_text()
+                text=(ROOT/relative).read_text(encoding='utf-8')
                 self.assertIn('Lab',text)
                 self.assertIn(HTML,text)
                 self.assertIn(PACKAGE,text)
@@ -25,11 +25,11 @@ class ParticipantDistributionTests(unittest.TestCase):
                 self.assertNotRegex(text,r'189/281|217/281|2026-09-17|参考実績|Historical evaluations')
 
     def test_current_html_and_checksums_match_distribution_bytes(self):
-        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(ROOT/'docs/v3.0.0/current/guide'/HTML).read_bytes())
-        for relative in ('docs/SHA256SUMS.txt','docs/v3.0.0/current/SHA256SUMS.txt'):
+        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(ROOT/'docs/v3.1.0/current/guide'/HTML).read_bytes())
+        for relative in ('docs/SHA256SUMS.txt','docs/v3.1.0/current/SHA256SUMS.txt'):
             path=ROOT/relative
             entries={}
-            for line in path.read_text().splitlines():
+            for line in path.read_text(encoding='utf-8').splitlines():
                 digest,name=line.split('  ',1)
                 self.assertNotIn(name,entries)
                 entries[name]=digest
@@ -44,7 +44,13 @@ class ParticipantDistributionTests(unittest.TestCase):
             names=archive.namelist()
             self.assertEqual(len(names),len(set(names)))
             self.assertFalse(any(name.lower().endswith('.docx') for name in names))
-            self.assertFalse(any(name.startswith(('reports/','source/docs/v3.0.0/tuning-')) for name in names))
+            self.assertFalse(any(name.lower().endswith('.pdf') for name in names))
+            self.assertFalse(any(name.startswith(('reports/', 'source/docs/v3.0.0/',
+                                                  'source/docs/v3-preview/',
+                                                  'source/docs/assets/v2.7.0/',
+                                                  'source/docs/assets/v3.0.0-',
+                                                  'source/docs/assets/v3-preview-'))
+                                 for name in names))
             for name in ('Lab/README.md','guide/'+HTML,'source/artifact-set.json','START_HERE.txt','DOCUMENT_VALIDATION.json','LAB_VALIDATION.json'):
                 self.assertIn(name,names)
             for path in (ROOT/'Lab').rglob('*'):
@@ -66,7 +72,8 @@ class ParticipantDistributionTests(unittest.TestCase):
                 extracted=Path(temp)
                 checked=0
                 for page in (extracted/'Lab').rglob('*.md'):
-                    for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',page.read_text()):
+                    for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',
+                                             page.read_text(encoding='utf-8')):
                         parsed=urlsplit(target)
                         if parsed.scheme or not parsed.path:continue
                         destination=(page.parent/unquote(parsed.path)).resolve()
@@ -92,10 +99,11 @@ class ParticipantDistributionTests(unittest.TestCase):
             self.assertEqual(manifest['documentationBinding']['deliveryMode'],'html-lab')
 
     def test_current_local_markdown_links_resolve(self):
-        paths=[ROOT/'README.md',ROOT/'docs/README.md',ROOT/'docs/v3.0.0/current/README.md']
+        paths=[ROOT/'README.md',ROOT/'docs/README.md',ROOT/'docs/v3.1.0/current/README.md']
         paths.extend((ROOT/'Lab').rglob('*.md'))
         for path in paths:
-            for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text()):
+            for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',
+                                     path.read_text(encoding='utf-8')):
                 parsed=urlsplit(target)
                 if parsed.scheme or not parsed.path:continue
                 with self.subTest(path=path.relative_to(ROOT),target=target):

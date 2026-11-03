@@ -50,11 +50,21 @@ Microsoft Azure Public Service Icons V24 (July 2026)
 Copyright (c) Microsoft Corporation. All rights reserved.
 Source package:
 https://arch-center.azureedge.net/icons/Azure_Public_Service_Icons_V24.zip
-Usage guidance and terms:
+Usage guidance:
 https://learn.microsoft.com/azure/architecture/icons/
-Microsoft permits these icons only for architectural diagrams, training
-materials, or documentation unless Microsoft grants explicit permission.
+Canonical terms and source reference:
+https://learn.microsoft.com/azure/architecture/icons/
+The official page permits use of these icons in architectural diagrams,
+training materials or documentation. They may be copied, distributed and
+displayed only for those permitted purposes unless Microsoft grants explicit
+permission; Microsoft reserves all other rights. Use icons to illustrate how
+products can work together, keep the product name close to its icon in
+diagrams, and show icons as they appear within Azure. Do not crop, flip,
+rotate or distort icons, and do not use Microsoft product icons to represent
+your own product or service.
 These icon assets are not licensed under this repository's MIT License.
+The source PDF is not distributed; this notice retains the applicable terms
+and canonical upstream reference for the permitted icon use in this workshop.
 
 Microsoft Fabric product and item icons
 Source package: @fabric-msft/svg-icons 8.2.0 (MIT License)

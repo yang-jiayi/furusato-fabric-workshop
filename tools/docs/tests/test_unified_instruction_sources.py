@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import copy
 import hashlib
 import json
 from pathlib import Path
@@ -20,6 +21,60 @@ def static_strings(node):
         yield node.value
     for child in ast.iter_child_nodes(node):
         yield from static_strings(child)
+
+
+def canonical_ast_value(value):
+    if isinstance(value, ast.AST):
+        fields = []
+        for name, field_value in ast.iter_fields(value):
+            if name == "type_params" and field_value == []:
+                continue
+            fields.append([name, canonical_ast_value(field_value)])
+        return ["ast", type(value).__name__, fields]
+    if isinstance(value, list):
+        return ["list", [canonical_ast_value(item) for item in value]]
+    if isinstance(value, tuple):
+        return ["tuple", [canonical_ast_value(item) for item in value]]
+    if value is None:
+        return ["none"]
+    if isinstance(value, bool):
+        return ["bool", value]
+    if isinstance(value, int):
+        return ["int", str(value)]
+    if isinstance(value, float):
+        return ["float", value.hex()]
+    if isinstance(value, complex):
+        return ["complex", value.real.hex(), value.imag.hex()]
+    if isinstance(value, bytes):
+        return ["bytes", value.hex()]
+    if isinstance(value, str):
+        return ["str", value]
+    if value is Ellipsis:
+        return ["ellipsis"]
+    raise TypeError(f"Unsupported AST field value: {type(value).__name__}")
+
+
+def expression_digest(nodes):
+    encoded = json.dumps(
+        [canonical_ast_value(node) for node in nodes],
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def mutate_first_string_literal(node):
+    mutated = copy.deepcopy(node)
+    literal = next(
+        (child for child in ast.walk(mutated)
+         if isinstance(child, ast.Constant) and isinstance(child.value, str)),
+        None,
+    )
+    if literal is None:
+        raise AssertionError("Expression has no string literal to mutate")
+    literal.value += "x"
+    return mutated
 
 
 class UnifiedInstructionSourceTests(unittest.TestCase):
@@ -253,26 +308,43 @@ class UnifiedInstructionSourceTests(unittest.TestCase):
             node for node in ast.walk(ast.parse(source))
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "HeldOutTest"
         ]
-        questions = []
-        conditions = []
+        questions, conditions = [], []
         condition_count = 0
         for test in tests:
             fields = {keyword.arg: keyword.value for keyword in test.keywords}
-            questions.append(ast.dump(fields["question"], include_attributes=False))
+            questions.append(fields["question"])
             for field in ("evidence", "pass_criteria"):
-                conditions.append(ast.dump(fields[field], include_attributes=False))
+                conditions.append(fields[field])
                 condition_count += len(fields[field].elts)
         self.assertEqual(len(questions), 10)
         self.assertEqual(condition_count, 84)
-        for values, digest in (
-            (questions, "d970d7bb292c138d656e025592ffe5cb88303b337c902088ef66c87c7c2af509"),
-            (conditions, "4639f0db009ad6c023707deb10b85ccce45d7e747964b82dba39a7755bad897b"),
-        ):
-            encoded = json.dumps(values, ensure_ascii=False).encode("utf-8")
-            self.assertEqual(hashlib.sha256(encoded).hexdigest(), digest)
+        question_digest = "09265f71b534156e87adbbd31ca2b9df1b18d5ee3d23cae442fb65e34b3aa7d9"
+        condition_digest = "77f4d22ac95913c810adec46f665187d8fd43444913d2e4d58c36f1870cefb31"
+        self.assertEqual(expression_digest(questions), question_digest)
+        self.assertEqual(expression_digest(conditions), condition_digest)
+        self.assertNotEqual(
+            expression_digest([mutate_first_string_literal(questions[0]), *questions[1:]]),
+            question_digest,
+        )
+        self.assertNotEqual(
+            expression_digest([mutate_first_string_literal(conditions[0]), *conditions[1:]]),
+            condition_digest,
+        )
         self.assertIn("元の 10 問／84 条件を変えずに全問を再評価", self.confirmation_text)
         self.assertIn("両方の CI 演習も元の質問のまま再実施", self.confirmation_text)
         self.assertIn("置き換えたり、免除したりしません", self.confirmation_text)
+
+    def test_ast_fingerprint_preserves_literal_types_order_and_dynamic_fields(self):
+        def fingerprint(source):
+            return expression_digest([ast.parse(source, mode="eval").body])
+
+        self.assertNotEqual(fingerprint("('a', 'b')"), fingerprint("['a', 'b']"))
+        self.assertNotEqual(fingerprint("{1: 'a'}"), fingerprint("{'1': 'a'}"))
+        self.assertNotEqual(fingerprint("{1: 'a', 2: 'b'}"), fingerprint("{2: 'b', 1: 'a'}"))
+        self.assertNotEqual(fingerprint("values[0]"), fingerprint("values[1]"))
+        self.assertNotEqual(fingerprint("row.amount + offset"), fingerprint("row.amount - offset"))
+        self.assertNotEqual(fingerprint('f"{row.amount:{precision}}"'),
+                            fingerprint('f"{row.amount:{scale}}"'))
 
 
 if __name__ == "__main__":

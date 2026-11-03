@@ -89,7 +89,7 @@ class LabExportTests(unittest.TestCase):
         self.assertEqual(10, self.model[-1]["counts"]["tests"])
         self.assertEqual(len([b for s in self.model[0].walk() for b in s.blocks]),
                          result["sourceBlocksChecked"])
-        self.assertEqual(len(self.model[0].figures), result["imageFilesVerified"])
+        self.assertEqual(len(self.model[0].figures) + 1, result["imageFilesVerified"])
         self.assertGreater(result["canonicalCodeAndPromptBlocksChecked"], 90)
         self.assertFalse(result["newDeploymentCaptureClaimed"])
         index = (self.out / "README.md").read_text(encoding="utf-8")
@@ -98,6 +98,13 @@ class LabExportTests(unittest.TestCase):
         self.assertIn("../docs/furusato-workshop-v3-1-0-complete.html", index)
         self.assertIn("`source/`", index)
         self.assertNotIn("../workshop/v3.0.0-preview/", index)
+        self.assertIn("## English", index)
+        self.assertIn("Do not recreate existing items", index)
+        self.assertIn("Chapter 19 and Appendix C", index)
+        self.assertIn("Git checkout root", index)
+        self.assertIn("ZIP’s `source/` directory", index)
+        self.assertIn("24.4–24.6", index)
+        self.assertEqual(4, index.count("../docs/furusato-workshop-v3-1-0-complete.html"))
 
     def test_repository_download_navigation_uses_matching_revision(self):
         repository_readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -163,12 +170,11 @@ class LabExportTests(unittest.TestCase):
                    for i, b in enumerate(s.blocks)}
         profile = lab.PROFILE_REL.as_posix()
 
-        global_id = "ch-17-8:1"
+        global_id = "ch-17-8:2"
         global_text = pages[global_id]
         global_source = sources[global_id]["text"]
-        global_ref = f"{profile}/global-instructions.txt"
-        self.assertIn(f"**Readable instruction view — `{global_ref}` (`global instructions`)**",
-                      global_text)
+        self.assertIn("**Readable wrapped view — Agent-wide instructions**", global_text)
+        self.assertIn("configuration, not the Workshop edition", global_text)
         self.assertIn(lab.readable_literal(global_source), global_text)
         self.assertIn(global_source, global_text)
 

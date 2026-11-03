@@ -8,6 +8,10 @@
 
 ルールの History の概要。6つの KPI、Time の選択、UTC の Activation count グラフを示します。数値は表示時点と選択期間で変わります。下にスクロールして Activation details を開き、自分の001の対象パスと FileCreated を記録します。この概要だけでは001の処理や Pipeline・Copy の成功は確認できません。
 
+![Subject /Files/increment/donation_events_001.csv と Type Microsoft.Fabric.OneLake.FileCreated の表示部分。](../assets/p30-09-activation-detail-001.png)
+
+実際の001 activation 行から Subject と Type 欄を示す説明用の抜粋です。図の外に時刻や全処理チェーンの証明はありません。各自の環境で自分の001行を確認してください。
+
 <details>
 <summary>English</summary>
 
@@ -18,5 +22,9 @@
 ![Activator History overview with the Running rule, Last 24 hours selector, six complete KPIs and the UTC Activation count chart. The target Activation details row is not included.](../assets/p30-09-native-delivery.png)
 
 Rule History overview showing six KPIs, the Time selector and the UTC Activation count chart. Values depend on the observation time and selected period. Scroll down to Activation details and record your own 001 target path and FileCreated. This overview alone does not verify processing of 001 or Pipeline/Copy success.
+
+![Visible Subject /Files/increment/donation_events_001.csv and Type Microsoft.Fabric.OneLake.FileCreated fields.](../assets/p30-09-activation-detail-001.png)
+
+Illustrative excerpt of the Subject and Type fields from an actual 001 activation row. The image does not show the event time or prove the full processing chain. Verify your own 001 row in your environment.
 
 </details>

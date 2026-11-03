@@ -61,14 +61,6 @@
       "bytes": 4903
     },
     {
-      "localPath": "upstream/Microsoft_Terms_of_Use.pdf",
-      "upstreamPath": "Azure_Public_Service_Icons/Microsoft_Terms_of_Use.pdf",
-      "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",
-      "sourceUrl": "https://github.com/yang-jiayi/AzureDiagarm/blob/c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37/Azure_Public_Service_Icons/Microsoft_Terms_of_Use.pdf",
-      "sha256": "983e83cef1a8f85164760b076a96df54cb50af345861cb1d8344040037d0531c",
-      "bytes": 63859
-    },
-    {
       "localPath": "upstream/fabric-manifest.json",
       "upstreamPath": "Azure_Public_Service_Icons/fabric-manifest.json",
       "upstreamCommit": "c1b454cad21e8d9914bd28fd4cd8a16b9cb73c37",

@@ -9,7 +9,7 @@ Notebook 01 は、ファイル名・文字コード・ヘッダー・SHA-256・�
 準備するもの・確認すること
 
 - 標準経路では24.6で作成した Lakehouse（LH_Furusato_&lt;PID&gt;）と実行済み Notebook 01 を確認します。この章のファイル配置・インポート・Run all は構築方法の説明として読み、再実行せず、末尾の件数と SQL の確認を行います。別の手動構築を行う場合だけ、作業フォルダーの New item → Lakehouse でこの名前を指定し、Lakehouse schemas を有効にします。
-- 配布フォルダー workshop/v3.0.0-preview/data/seed にある8つの CSV を用意します（prefectures.csv、municipalities.csv、categories.csv、gifts.csv、businesses.csv、business_gifts.csv、donors.csv、donation_orders.csv）。
+- 現行ZIPの source/workshop/v3.0.0-preview/data/seed にある8つの CSV を用意します（prefectures.csv、municipalities.csv、categories.csv、gifts.csv、businesses.csv、business_gifts.csv、donors.csv、donation_orders.csv）。Git checkout では先頭の source/ を除いたパスです。4章のパス表記に従い、別の版のファイルを探しません。
 - 配布フォルダーの notebooks にある Notebook 01（Notebook_01_Furusato_Prepare_Ontology_Data.ipynb）を用意します。
 
 <details>
@@ -24,7 +24,7 @@ Notebook 01 checks file names, encoding, headers, SHA-256 values, keys and count
 Before you start
 
 - In the standard route, inspect the Lakehouse (LH_Furusato_&lt;PID&gt;) and completed Notebook 01 created in 24.6. Read the upload, import and Run all steps as an explanation of construction; do not repeat them, and perform the final count and SQL checks. Only for a separate manual build, use New item → Lakehouse in the work folder, enter this name and enable Lakehouse schemas.
-- Prepare the eight CSV files in workshop/v3.0.0-preview/data/seed of the distribution (prefectures.csv, municipalities.csv, categories.csv, gifts.csv, businesses.csv, business_gifts.csv, donors.csv and donation_orders.csv).
+- Prepare the eight CSV files in source/workshop/v3.0.0-preview/data/seed of the current ZIP (prefectures.csv, municipalities.csv, categories.csv, gifts.csv, businesses.csv, business_gifts.csv, donors.csv and donation_orders.csv). In a Git checkout, omit the leading source/. Follow the path convention in Chapter 4; do not look for files from another edition.
 - Prepare Notebook 01 (Notebook_01_Furusato_Prepare_Ontology_Data.ipynb) from the notebooks folder of the distribution.
 
 </details>

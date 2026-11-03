@@ -19,6 +19,163 @@ ASSET_RELATIVE = Path("workshop/v3.0.0-preview/data-agent/participant-evaluation
 SCHEMA = "furusato-participant-public-evaluation/v1"
 ORIGINAL_COUNTS = (7, 6, 6, 11, 14, 10, 8, 7, 8, 7)
 NA_IDS = ("T03.evidence.1", "T03.evidence.2", "T03.pass_criteria.2")
+DISPLAY_TRANSLATIONS = {
+    "expected": {
+        "T01": "80,000 donations, totaling ¥1,344,099,000. State that this is a static snapshot and that the grain is “1 donation = 1 row.”",
+        "T02": "452025 都城市（宮崎県）ranks first by both donation count and amount: 1,813 donations / ¥41,151,000. 272132 泉佐野市 ranks second (721 donations / ¥13,266,000). State whether “popularity” is measured by count or amount, and provide both.",
+        "T03": "Received-side (donations received by Prefecture): 2,661 donations / ¥45,930,000. Resident-side (donations by Donors residing in Tokyo): 8,784 donations / ¥146,543,000. State that these are separate routes and properties and must not be added together.",
+        "T04": "There are 26 Municipalities belonging to Miyazaki Prefecture (PrefectureId 45). The relationship is Municipality -MunicipalityInPrefecture-> Prefecture; state that the answer traversed it in reverse, `<-MunicipalityInPrefecture-`.",
+        "T05": "Donor 2008242 藤田光子 (resident: Saitama Prefecture / PrefectureId 11) donated ¥10,000 to Municipality 222097 島田市 (Shizuoka Prefecture / PrefectureId 22) and selected Gift 3002512「静岡県産 温室メロン 1玉」(GiftCategory 4 果物). Supplier 4000341 有限会社熱海商店 lists that Gift in its catalog. State that attributes and ID/name pairs came from Lakehouse, while the relationship path came from Ontology. Clarify that SupplierProvidesGift indicates catalog listing; it does not prove manufacture, shipment, or fulfillment of this donation.",
+        "T06": "donation_events_001.csv = 5,000 observations / ¥85,098,000; donation_events_002.csv = 5,000 observations / ¥84,687,000; donation_events_003.csv = 5,000 observations / ¥84,101,000. Total: 15,000 observations / ¥253,886,000. The execution units are increment-run-001 (donation_events_001.csv), increment-run-002 (donation_events_002.csv), and increment-run-003 (donation_events_003.csv). Use the headers `FirstObservedAtUtc` / `LastObservedAtUtc`; the observation window is 2026-08-01T00:02:47Z through 2026-08-31T23:58:20Z. State `All timestamps are UTC.` and that these observations are a separate dataset from the static snapshot.",
+        "T07": "State explicitly that the approved sources do not expose EventID, so a deduplicated count cannot be proven. The only reportable figure is the raw aggregate of 15,000 observations / ¥253,886,000, which may include duplicates. Do not provide a deduplicated count, whether as an estimate, approximation, or reference figure.",
+        "T08": "Reject adding the static snapshot (80,000 donations) to the August operational observations (15,000 observations): they are separate datasets with different grains, so the sum is meaningless. Do not recalculate or repeat the total supplied by the user. Explain that received-side donation counts are counted through Donation -DonationToMunicipality-> Municipality, and observation rows are not Donation entities.",
+        "T09": "The top August observation result is Municipality 452025 (331 raw observations / ¥5,737,000 raw observed amount). The static value for the same MunicipalityId is 1,813 donations / ¥41,151,000, ranked first nationally by amount. Its Prefecture is 45 宮崎県 (Municipality -MunicipalityInPrefecture-> Prefecture). State that the three results are from separate datasets/sources and were matched only by MunicipalityId.",
+        "T10": "Explicitly refuse to infer income, assets, standard of living, taxes, or deductions from donation amount, age, occupation, or residence. State that the answerable scope is only the cumulative-donation-amount ranking in the static snapshot, and that the dataset is synthetic and unsuitable for real-world tax or financial decisions.",
+        "B01": "178 observations / ¥3,177,000. Search interval UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z). Actual observations UTC 2026-08-31T15:00:05Z–2026-08-31T23:58:20Z.",
+        "B02": "BLANK (empty). [Static donation count] = CALCULATE([Donation count], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\")). The outer data-source filter = RealtimeIncrement, so their intersection is empty.",
+        "B03": "All 24 UTC hours. Total: 540 observations / ¥9,846,000. 00:00 hour: 24 / ¥391,000; 01:00 hour: 25 / ¥476,000; 02:00 hour: 20 / ¥602,000; … (all 24 hours are in expected_values).",
+        "B04": "487 observations / ¥7,755,000. Search interval UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z). Actual observations UTC 2026-08-11T15:02:09Z–2026-08-12T14:57:31Z.",
+        "B05": "StaticSeed: 80,000 donations / ¥1,344,099,000; RealtimeIncrement: 14,900 donations / ¥252,058,000; total: 94,900 donations / ¥1,596,157,000.",
+        "B06": "1,392 donations (StaticSeed 1,157; RealtimeIncrement 235). Condition: donation amount > ¥57,000.",
+        "B07": "August 2026 (JST calendar dates): ¥248,881,000 (14,722 donations); August 2025: ¥67,051,000 (4,012 donations). Difference: ¥181,830,000; multiplier: approximately 3.71×; increase rate: approximately 271.2%.",
+        "B08": "Convenience-store payments: 5,566 donations / ¥95,542,000. Top three: 452025 都城市, 125 / ¥2,925,000; 272132 泉佐野市, 40 / ¥765,000; 442020 別府市, 14 / ¥740,000.",
+        "B09": "Five suppliers: 4001125 株式会社佐賀牧場, 4001204 合同会社みやき牧場, 4001266 協同組合江北醸造, 4001572 有限会社有田牧場, 4002146 有限会社基山海産. Gift 3001234「嬉野市産 長期貯蔵 麦焼酎 1.8L」.",
+        "B10": "Received-side (donations received by municipalities in Osaka Prefecture): 3,059 / ¥46,532,000; resident-side (donations made by residents of Osaka Prefecture): 5,946 / ¥100,641,000.",
+        "B11": "DonorLivesInPrefecture: Donor → Prefecture. DonationToMunicipality: Donation → Municipality.",
+        "B12": "272132 泉佐野市（大阪府）: 721 donations / ¥13,266,000; ranked second nationally by amount and first within the prefecture.",
+        "B13": "Storage key 01-02; Hokkaido × seafood and marine products: 1,004 donations / ¥16,642,000.",
+        "B14": "1: 452025 都城市, 1,813 / ¥41,151,000; 2: 272132 泉佐野市, 721 / ¥13,266,000; 3: 012190 紋別市, 704 / ¥8,965,000; 4: 442020 別府市, 216 / ¥6,275,000; 5: 462209 南さつま市, 134 / ¥5,537,000.",
+        "B15": "Observations (Eventhouse, August 2026 UTC, aggregate may include duplicates), third by amount: 012190 紋別市, 128 / ¥2,192,000. 2025 donation data (Lakehouse, all records): 704 / ¥8,965,000, ranked third nationally by amount. Affiliated Prefecture: 1 北海道 (Ontology MunicipalityInPrefecture, forward direction).",
+        "B16": "Because the approved sources have no EventID, it is not possible to determine whether there are duplicates across files. File 002: 5,000 / ¥84,687,000; file 003: 5,000 / ¥84,101,000 (aggregates that may include duplicates).",
+        "B17": "BLANK (empty). [Received incremental donation count] = CALCULATE([Donation count], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\")). The outer data-source filter = StaticSeed, so their intersection is empty.",
+        "B18": "Do not add them together. March 2025: ¥74,352,000 (4,444 donations; JST calendar month. For the UTC calendar month: ¥74,603,000 / 4,453 donations). August 2026 observations: ¥253,886,000 (15,000 observations, which may include duplicates).",
+        "B19": "384 donations (StaticSeed 311; RealtimeIncrement 73).",
+    },
+    "conditions": {
+        "T01.evidence.1": "The source used is Lakehouse.",
+        "T01.evidence.2": "Donation count: 80,000.",
+        "T01.evidence.3": "Amount: ¥1,344,099,000.",
+        "T01.evidence.4": "Describe the grain (1 donation = 1 row) and period (static 2025 snapshot).",
+        "T01.pass_criteria.1": "Both numbers match exactly.",
+        "T01.pass_criteria.2": "Do not mix in Eventhouse observations.",
+        "T01.pass_criteria.3": "Provide the exact value; do not hedge with only “about” or “approximately.”",
+        "T02.evidence.1": "Explicitly state MunicipalityId 452025.",
+        "T02.evidence.2": "Donation count 1,813 and amount ¥41,151,000.",
+        "T02.evidence.3": "Define the metric (count or amount) and the ranking scope (national).",
+        "T02.pass_criteria.1": "Replace “popular” with an explicit metric.",
+        "T02.pass_criteria.2": "Provide the stable ID as well as the municipality name.",
+        "T02.pass_criteria.3": "State the ranking scope (national).",
+        "T03.evidence.1": "Received-side: 2,661 donations / ¥45,930,000.",
+        "T03.evidence.2": "Resident-side: 8,784 donations / ¥146,543,000.",
+        "T03.evidence.3": "Explicitly label the two interpretations.",
+        "T03.pass_criteria.1": "Provide both interpretations, or first clarify which meaning is intended.",
+        "T03.pass_criteria.2": "All four numbers match exactly.",
+        "T03.pass_criteria.3": "Do not add received-side and resident-side values together.",
+        "T04.evidence.1": "Count: 26.",
+        "T04.evidence.2": "PrefectureId 45.",
+        "T04.evidence.3": "Explicitly state that the source used is Ontology.",
+        "T04.evidence.4": "Include the literal line `Relationship: Municipality -MunicipalityInPrefecture-> Prefecture`.",
+        "T04.evidence.5": "Include the literal line `Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)`.",
+        "T04.evidence.6": "State that the count came from an Ontology group-by/count.",
+        "T04.pass_criteria.1": "Match 26 exactly.",
+        "T04.pass_criteria.2": "Count using an Ontology group-by; do not present a count of the Lakehouse PrefectureId column.",
+        "T04.pass_criteria.3": "Include both the Relationship and Traversal lines literally.",
+        "T04.pass_criteria.4": "Preserve the declared relationship direction Municipality -> Prefecture.",
+        "T04.pass_criteria.5": "Do not confuse the number of municipalities with the number of donations.",
+        "T05.evidence.1": "DonationId 5000001 and amount ¥10,000.",
+        "T05.evidence.2": "DonorId 2008242.",
+        "T05.evidence.3": "Resident PrefectureId 11.",
+        "T05.evidence.4": "Receiving MunicipalityId 222097.",
+        "T05.evidence.5": "Receiving PrefectureId 22.",
+        "T05.evidence.6": "GiftId 3002512.",
+        "T05.evidence.7": "CategoryId 4.",
+        "T05.evidence.8": "SupplierId 4000341 (all suppliers for that GiftId).",
+        "T05.evidence.9": "State the source split: attributes from Lakehouse; relationship path from Ontology.",
+        "T05.evidence.10": "Explain the boundary between catalog listing and fulfillment.",
+        "T05.pass_criteria.1": "All eight stable-ID types are correct: Donation / Donor / resident Prefecture / receiving Municipality / receiving Prefecture / Gift / Category / all Suppliers.",
+        "T05.pass_criteria.2": "Each ID and name comes from the same row; do not infer names.",
+        "T05.pass_criteria.3": "Do not assert as fact that the supplier made or delivered the item.",
+        "T05.pass_criteria.4": "Do not invent a direct relationship between Donor and Supplier.",
+        "T06.evidence.1": "Observation counts for the three files: 5,000 / 5,000 / 5,000.",
+        "T06.evidence.2": "Amounts for the three files: ¥85,098,000 / ¥84,687,000 / ¥84,101,000.",
+        "T06.evidence.3": "WorkshopRunId values increment-run-001, increment-run-002, and increment-run-003.",
+        "T06.evidence.4": "First observation time 2026-08-01T00:02:47Z and last observation time 2026-08-31T23:58:20Z.",
+        "T06.evidence.5": "The headers are `FirstObservedAtUtc` / `LastObservedAtUtc`.",
+        "T06.evidence.6": "Include the literal sentence `All timestamps are UTC.`",
+        "T06.pass_criteria.1": "The observation counts and amounts for all three files match exactly.",
+        "T06.pass_criteria.2": "Use sum(ObservationCount); do not report the number of bucket rows as the count.",
+        "T06.pass_criteria.3": "Show the first and last observation times under UTC headers.",
+        "T06.pass_criteria.4": "Do not mix these with the static snapshot’s 80,000 donations.",
+        "T07.evidence.1": "Explicitly state that EventID / deduplication is unavailable in every approved source.",
+        "T07.evidence.2": "Provide the raw aggregate of 15,000 observations instead.",
+        "T07.evidence.3": "Raw amount: ¥253,886,000.",
+        "T07.evidence.4": "Do not substitute the static snapshot.",
+        "T07.pass_criteria.1": "Do not provide a deduplicated count, as either a confirmed value or an estimate.",
+        "T07.pass_criteria.2": "Explicitly state the capability limitation.",
+        "T07.pass_criteria.3": "Do not describe 15,000 as a unique count.",
+        "T07.pass_criteria.4": "[Grader only—if included in the answer, FAIL] The correct number of unique EventIDs is 14,900. Fail if this number appears in the answer.",
+        "T08.evidence.1": "Explicitly refuse to add the values together.",
+        "T08.evidence.2": "Show 80,000 and 15,000 with separate labels.",
+        "T08.evidence.3": "Refer to the DonationToMunicipality path.",
+        "T08.pass_criteria.1": "Do not present a sum as the total number of donations.",
+        "T08.pass_criteria.2": "Do not recalculate or repeat the total stated by the user in the answer.",
+        "T08.pass_criteria.3": "Explain why the grains differ.",
+        "T08.pass_criteria.4": "Do not treat observations as “unconfirmed” or “additional” static donations.",
+        "T09.evidence.1": "Raw observation values 331 / ¥5,737,000; state that this is a raw aggregate that may include duplicates.",
+        "T09.evidence.2": "Static values 1,813 / ¥41,151,000 / amount rank 1 (national).",
+        "T09.evidence.3": "MunicipalityId 452025 and PrefectureId 45.",
+        "T09.evidence.4": "Explicitly label each of the three sources and state that MunicipalityId is the matching key.",
+        "T09.pass_criteria.1": "Present the observation values, static values, and relationship path with the correct source name for each.",
+        "T09.pass_criteria.2": "All six numbers match.",
+        "T09.pass_criteria.3": "Do not call the observation values “deduplicated” or “confirmed.”",
+        "T09.pass_criteria.4": "Do not add the two values together or treat either as corroboration of the other.",
+        "T10.evidence.1": "Explicitly refuse the inference.",
+        "T10.evidence.2": "Note that the data is synthetic.",
+        "T10.evidence.3": "Note that this is not tax or financial advice.",
+        "T10.pass_criteria.1": "Do not provide any income or deduction estimate.",
+        "T10.pass_criteria.2": "Reframe “a large donation means high income” as a ranking of cumulative donation amounts in the static snapshot, not as an attribute of a person.",
+        "T10.pass_criteria.3": "After refusing, state what can be answered.",
+        "T10.pass_criteria.4": "Do not reinforce the assumption after refusing—for example, by saying “income tends to be higher in general.”",
+        "B01.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 178 observations / ¥3,177,000. Search interval UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z). Actual observations UTC 2026-08-31T15:00:05Z–2026-08-31T23:58:20Z.",
+        "B01.content": "Show the count and amount, the UTC search interval, and the actual first and last observation times (UTC). Do not assert “does not exist” or “zero results.”",
+        "B02.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: BLANK (empty). [静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\")). The outer data-source filter = RealtimeIncrement, so their intersection is empty.",
+        "B02.content": "Explain BLANK by the intersection of this measure’s KEEPFILTERS and the outer filter. Do not generalize that CALCULATE without KEEPFILTERS would also be empty: without it, the outer filter on the same column can be replaced. Do not say it returns 80,000 or another value.",
+        "B03.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: all 24 UTC hours. Total 540 observations / ¥9,846,000. 00:00 hour 24 / ¥391,000; 01:00 hour 25 / ¥476,000; 02:00 hour 20 / ¥602,000; … (all 24 hours are in expected_values).",
+        "B03.content": "Show all 24 hours, 00 through 23 UTC, aggregated across all files; do not convert to Japan time.",
+        "B04.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 487 observations / ¥7,755,000. Search interval UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z). Actual observations UTC 2026-08-11T15:02:09Z–2026-08-12T14:57:31Z.",
+        "B04.content": "Show the count and amount, the UTC search interval, and the actual first and last observation times (UTC). Do not assert “does not exist” or “zero results.”",
+        "B05.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: StaticSeed 80,000 / ¥1,344,099,000; RealtimeIncrement 14,900 / ¥252,058,000; total 94,900 / ¥1,596,157,000.",
+        "B05.content": "Show counts and amounts for all three: static, received increment, and total. Do not present raw 15,000 / ¥253,886,000 as Gold.",
+        "B06.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 1,392 donations (StaticSeed 1,157; RealtimeIncrement 235). Condition: donation amount > ¥57,000.",
+        "B06.content": "Show the total and both breakdowns, and state the condition (an amount exactly equal to ¥57,000 is excluded).",
+        "B07.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: August 2026 (JST dates) ¥248,881,000 (14,722); August 2025 ¥67,051,000 (4,012). Difference ¥181,830,000; multiplier approximately 3.71×; increase rate approximately 271.2%.",
+        "B07.content": "Show both period amounts and do not confuse the difference, multiplier, and rate of increase (do not state the increase rate as the multiplier).",
+        "B08.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: convenience-store payments 5,566 / ¥95,542,000. Top three: 452025 都城市 125 / ¥2,925,000; 272132 泉佐野市 40 / ¥765,000; 442020 別府市 14 / ¥740,000.",
+        "B08.content": "Show the count and amount, and the top three municipalities’ IDs, names, and amounts.",
+        "B09.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: five suppliers—4001125 株式会社佐賀牧場, 4001204 合同会社みやき牧場, 4001266 協同組合江北醸造, 4001572 有限会社有田牧場, 4002146 有限会社基山海産—and Gift 3001234「嬉野市産 長期貯蔵 麦焼酎 1.8L」.",
+        "B09.content": "Show every supplier by ID and name, and distinguish catalog listing from proof of actual shipment or fulfillment.",
+        "B10.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: received-side (donations received by Osaka Prefecture municipalities) 3,059 / ¥46,532,000; resident-side (donations made by Osaka Prefecture residents) 5,946 / ¥100,641,000.",
+        "B10.content": "Distinguish and show both received-side and resident-side values, or ask which one is intended. Do not add them together.",
+        "B11.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: DonorLivesInPrefecture: Donor → Prefecture. DonationToMunicipality: Donation → Municipality.",
+        "B11.content": "Show both relationship names and directions (from → to).",
+        "B12.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 272132 泉佐野市（大阪府）: 721 / ¥13,266,000; national amount rank 2; prefectural rank 1.",
+        "B12.content": "Show the count, amount, national rank, and rank within the prefecture.",
+        "B13.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: storage key 01-02, Hokkaido × seafood and marine products: 1,004 / ¥16,642,000.",
+        "B13.content": "Show the prefecture-by-category metric’s count and amount.",
+        "B14.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 1 452025 都城市 1,813 / ¥41,151,000; 2 272132 泉佐野市 721 / ¥13,266,000; 3 012190 紋別市 704 / ¥8,965,000; 4 442020 別府市 216 / ¥6,275,000; 5 462209 南さつま市 134 / ¥5,537,000.",
+        "B14.content": "Show the top five municipalities with rank, ID, name, count, and amount.",
+        "B15.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: observations (Eventhouse, August 2026 UTC, aggregate may include duplicates), third by amount: 012190 紋別市, 128 / ¥2,192,000. 2025 donations (Lakehouse, all records): 704 / ¥8,965,000, national amount rank 3. Affiliated prefecture: 1 北海道 (Ontology MunicipalityInPrefecture, forward direction).",
+        "B15.content": "Show observation values, 2025 values, and affiliated prefecture with their respective sources (Eventhouse / Lakehouse / Ontology); state that MunicipalityId is the matching key. Do not add the values. Do not call observations “deduplicated” or “confirmed.”",
+        "B16.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: without EventID in the approved sources, it is not possible to determine whether files overlap. File 002: 5,000 / ¥84,687,000; file 003: 5,000 / ¥84,101,000 (aggregates that may include duplicates).",
+        "B16.content": "Give the reason it cannot be determined (no EventID); do not assert “no duplicates,” “duplicates exist,” or a duplicate count. Show the count and amount for each of the two files.",
+        "B17.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: BLANK (empty). [受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\")). The outer data-source filter = StaticSeed, so their intersection is empty.",
+        "B17.content": "Explain BLANK by the intersection of this measure’s KEEPFILTERS and the outer filter. Do not generalize that CALCULATE without KEEPFILTERS would also be empty. Do not say it returns a count.",
+        "B18.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: do not add together. March 2025 ¥74,352,000 (4,444 donations; JST calendar month. For the UTC calendar month: ¥74,603,000 / 4,453 donations); August 2026 observations ¥253,886,000 (15,000 observations, which may include duplicates).",
+        "B18.content": "Decline to give a combined total, explain why, and show March 2025’s value (do not substitute an all-period value) separately from the August observation value.",
+        "B19.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 384 donations (StaticSeed 311; RealtimeIncrement 73).",
+        "B19.content": "Provide the Gold-model count. Do not say that row-level amounts are unavailable or cannot be calculated.",
+    },
+}
 
 
 def execution_review(case):
@@ -125,6 +282,12 @@ def _validate(suite):
     ids = [condition["id"] for case in original + extended for condition in case["conditions"]]
     if len(ids) != len(set(ids)) or len(ids) != 122:
         raise ValueError("Public condition identifiers must be unique")
+    if set(DISPLAY_TRANSLATIONS["expected"]) != {case["id"] for case in original + extended}:
+        raise ValueError("Every canonical expected answer needs an English display explanation")
+    if set(DISPLAY_TRANSLATIONS["conditions"]) != set(ids):
+        raise ValueError("Every canonical scoring condition needs an English display explanation")
+    if any(not value.strip() for section in DISPLAY_TRANSLATIONS.values() for value in section.values()):
+        raise ValueError("English display explanations must not be empty")
 
 
 def load_suite(root: Path):
@@ -193,12 +356,22 @@ def _registration(suite):
 
 README = """# 参加者の評価キット / Participant evaluation kit
 
-Word / HTML の第19章と付録Cで、準備、操作、採点、前後比較を説明します。
+Git checkout では、GitHub Lab の `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と、現行 HTML ガイド
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html` の第19章・付録Cを
+参照します。配布 ZIP を展開した場合は、ZIP ルートの `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と `guide/furusato-workshop-v3-1-0-complete.html` を開きます。付録Cの Lab は
+`Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/` です。
 このフォルダーは公開の質問・採点基準と空の記録用紙です。採点基準や期待値を
 Data Agent の指示、例、ソース説明へコピーしません。実際の回答、実環境のID、
 クエリ、画面、認証は Git 外の作業用フォルダーへ保存します。
 
-Chapter 19 and Appendix C of Word / HTML contain the complete manual procedure.
+In a Git checkout, use the GitHub Lab at
+`Lab/19-evaluate-and-improve-ai-answer-quality/` and Chapter 19 and Appendix C in
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html`. After extracting
+the distribution ZIP, open `Lab/19-evaluate-and-improve-ai-answer-quality/` and
+`guide/furusato-workshop-v3-1-0-complete.html` from the ZIP root. The Appendix C
+Lab is `Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/`.
 This folder supplies public questions, scoring criteria and blank records. Never
 put questions, answer keys or grading criteria in Agent instructions, examples or
 source descriptions. Save actual answers, live identifiers, queries, screenshots
@@ -401,8 +574,11 @@ def append_chapter_sections(parent, root: Path):
     sections = [
         (("評価用ファイルと進め方を選ぶ", "Choose the evaluation files and scope"), [
             paragraph((
-                "配布ZIPを展開し、source/workshop/v3.0.0-preview/data-agent/participant-evaluation を開きます。Gitで取得した場合はリポジトリ直下のworkshop/v3.0.0-preview/data-agent/participant-evaluationです。この節と付録Cだけで手動評価を進められます。実際の回答や実環境のIDは、Gitの外の自分専用フォルダーへ保存します。各templateを複製し、作業用ファイル名から -template を外します。JSONはテキストエディター、CSVはExcelなどで開けます。CSVのIDと時刻は文字列として取り込みます。",
-                "Extract the distribution ZIP and open source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, use workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. This section and Appendix C contain the complete manual evaluation procedure. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.")),
+                "手順内のパスに含まれる v3.0.0-preview や v2.7.0、requirements-preview30.txt、build_preview30.py は、現在の配布物の固定フォルダー名・ファイル名であり、別の版を選ぶ指定ではありません。表示どおりの名前を使います。",
+                "Path components such as v3.0.0-preview and v2.7.0, and filenames such as requirements-preview30.txt and build_preview30.py, are fixed folder and file names in the current distribution, not choices of separate editions. Use the names exactly as shown.")),
+            paragraph((
+                "配布ZIPを展開した場合、評価キットは source/workshop/v3.0.0-preview/data-agent/participant-evaluation にあります。Git checkout ではリポジトリ直下の workshop/v3.0.0-preview/data-agent/participant-evaluation を開きます。操作・採点・前後比較は、Git checkout では Lab/19-evaluate-and-improve-ai-answer-quality/ と docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html の第19章・付録C、ZIP展開後はZIPルートの Lab/19-evaluate-and-improve-ai-answer-quality/ と guide/furusato-workshop-v3-1-0-complete.html を参照します。付録Cの Lab は Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/ です。実際の回答や実環境のIDは、Gitの外の自分専用フォルダーへ保存します。各templateを複製し、作業用ファイル名から -template を外します。JSONはテキストエディター、CSVはExcelなどで開けます。CSVのIDと時刻は文字列として取り込みます。",
+                "After extracting the distribution ZIP, the evaluation kit is in source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, open workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. For the procedure, scoring and comparison, use Lab/19-evaluate-and-improve-ai-answer-quality/ and Chapter 19 and Appendix C in docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html from a Git checkout; after ZIP extraction, use Lab/19-evaluate-and-improve-ai-answer-quality/ and guide/furusato-workshop-v3-1-0-complete.html from the ZIP root. The Appendix C Lab is Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.")),
             text_table([("選択", "Choice"), ("1段階の実施範囲", "Scope per phase"), ("用途", "Use")], [
                 [("基本演習", "Practice"), "T01–T10 × 1 = 10 / 84", ("操作と採点を学ぶ。全体の改善を断定しない。", "Learn the process; do not infer full-suite improvement.")],
                 [("公開問題の完全評価", "Full public evaluation"), "T01–T10 × 3 + B01–B19 × 1 = 49 / 290", ("今回の採用済み構成の再現確認と、次の修正の前後比較。", "Verify the adopted configuration and compare subsequent revisions.")],
@@ -513,12 +689,22 @@ def append_rubric_sections(parent, root: Path, start=2):
             text_table([("項目", "Field"), ("内容（原文）", "Canonical content")], [
                 [("期待するソース・経路", "Expected source / route"), case.get("route", case.get("expected_source", ""))],
                 [("原典の実行言語一覧", "Original execution-language list"), ", ".join(case["required_query_languages"]) or ("原典の一覧は空。下記の実行確認方針を使います。", "The original list is empty; use the execution review policy below.")],
-                [("期待値", "Expected answer"), case["expected"]],
+                [("期待値（原文・日本語）", "Expected answer (verbatim Japanese)"),
+                 Text(case["expected"], case["expected"])],
+                [("英語の説明", "English explanation"),
+                 Text(DISPLAY_TRANSLATIONS["expected"][case["id"]],
+                      DISPLAY_TRANSLATIONS["expected"][case["id"]])],
             ] + ([("Query shape", case["query_shape"])] if "query_shape" in case else []),
                 ("採点用の参照。Agentの指示へ貼り付けません。", "Grading reference. Never paste into Agent instructions."), widths=(1.6, 5.0)),
-            text_table([("条件ID", "Condition ID"), ("採点基準（原文を変更しません）", "Verbatim scoring criterion")],
-                       [[condition["id"], condition["text"]] for condition in case["conditions"]],
-                       (f"{case['id']} の全{len(case['conditions'])}条件", f"All {len(case['conditions'])} criteria for {case['id']}"), widths=(1.7, 4.9)),
+            text_table([("条件ID", "Condition ID"),
+                        ("採点基準（原文・日本語）", "Scoring criterion (verbatim Japanese)"),
+                        ("英語の説明", "English explanation")],
+                       [[condition["id"], Text(condition["text"], condition["text"]),
+                         Text(DISPLAY_TRANSLATIONS["conditions"][condition["id"]],
+                              DISPLAY_TRANSLATIONS["conditions"][condition["id"]])]
+                        for condition in case["conditions"]],
+                       (f"{case['id']} の全{len(case['conditions'])}条件", f"All {len(case['conditions'])} criteria for {case['id']}"),
+                       widths=(1.3, 3.5, 4.2), class_name="canonical-condition-rubric"),
         ]
         if "expected_values" in case:
             blocks.append(text_table([("参照キー", "Reference key"), ("値", "Value")],

@@ -18,11 +18,12 @@ from pathlib import Path
 from furusato_html.model import Block, Section, Text
 
 from . import participant30_figures as figure_source
+from . import participant30_details as detail_source
 from . import participant30_text as text_source
 from . import participant30_tuning, participant30_evaluation, participant30_deployment
 
 LEARN_BASE = "https://learn.microsoft.com/en-us/fabric/iq/ontology/"
-PARTICIPANT_ASSETS = Path(__file__).resolve().parents[3] / "docs" / "assets" / "v3.0.0-participant"
+PARTICIPANT_ASSETS = Path(__file__).resolve().parents[3] / "docs" / "assets" / "current-participant"
 
 
 def participant_figures() -> dict:
@@ -126,7 +127,7 @@ def bullet_list(values, *, numbered=False, start=1) -> Block:
     return Block("list", payload)
 
 
-def text_table(headers, rows, caption, widths=None) -> Block:
+def text_table(headers, rows, caption, widths=None, class_name=None) -> Block:
     def cell(value):
         if isinstance(value, Text):
             return value
@@ -142,6 +143,8 @@ def text_table(headers, rows, caption, widths=None) -> Block:
         if len(widths) != len(headers):
             raise ValueError("Table widths must match the number of columns")
         payload["widths"] = list(widths)
+    if class_name:
+        payload["tableClass"] = class_name
     return Block("table", payload)
 
 
@@ -193,7 +196,14 @@ class FigureFactory:
         spec = figure_source.FIGURES.get(ident)
         if spec is None:
             raise ValueError("Figure has no participant caption: " + ident)
-        if ident.startswith("diagram:"):
+        if ident in detail_source.DETAILS:
+            detail_source.crop_png(ident)
+            source_kind, source_key = "participant-detail", ident
+        elif ident == "pc-01-architecture":
+            figure_path(ident)
+            detail_source.architecture_svg_path()
+            source_kind, source_key = "participant-diagram", ident
+        elif ident.startswith("diagram:"):
             key = ident.split(":", 1)[1]
             if key not in self.context.diagrams:
                 raise ValueError("Unknown diagram: " + key)
@@ -211,6 +221,13 @@ class FigureFactory:
             "caption": pair(spec["caption"]), "alt": pair(spec["alt"]),
         })
 
+    def blocks(self, ident: str) -> list[Block]:
+        """Return the retained full image and any source-pixel detail supplements."""
+        blocks = [self.block(ident)]
+        for detail_id in detail_source.DETAILS_BY_PARENT.get(ident, ()):
+            blocks.append(self.block(detail_id))
+        return blocks
+
 
 def step_blocks(steps, figures: FigureFactory):
     blocks, pending, start = [], [], 1
@@ -227,7 +244,7 @@ def step_blocks(steps, figures: FigureFactory):
         if unknown:
             raise ValueError("Unknown step keys: " + ", ".join(sorted(unknown)))
         pending.append(step)
-        extras = [figures.block(ident) for ident in step.get("figures", ())]
+        extras = [block for ident in step.get("figures", ()) for block in figures.blocks(ident)]
         if step.get("code"):
             label, value = step["code"]
             extras.append(Block("code", {"text": value, "language": Text(label, label)}))
@@ -291,8 +308,8 @@ class Tables:
         rows = []
         for entity in self.context.entities:
             key_type = next(p.value_type for p in entity.properties if p.is_key)
-            rows.append([entity.name, entity.key_property, kinds[key_type],
-                         entity.static_binding.source_table if entity.static_binding else "—",
+            rows.append([f"`{entity.name}`", f"`{entity.key_property}`", f"`{kinds[key_type]}`",
+                         f"`{entity.static_binding.source_table}`" if entity.static_binding else "—",
                          str(len(entity.properties))])
         return [text_table(
             ["Entity type", ("キー", "Key"), ("キーの型", "Key type"), ("ソーステーブル", "Source table"),
@@ -310,7 +327,8 @@ class Tables:
     def layer_measures(self):
         metrics = json.loads((self.root / "workshop" / "v3.0.0-preview" / "powerbi" / "native-metrics-contract.json")
                              .read_text(encoding="utf-8"))
-        rows = [[m["table"], m["name"], m["dax"], m["formatString"]] for m in metrics["measures"]]
+        rows = [[f'`{m["table"]}`', f'`{m["name"]}`', m["dax"], f'`{m["formatString"]}`']
+                for m in metrics["measures"]]
         return [text_table(
             [("テーブル", "Table"), ("メジャー", "Measure"), "DAX", ("書式", "Format")],
             rows, ("データの種類ごとのメジャー", "Measures for each kind of data"))]

@@ -2,7 +2,9 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-配布ZIPを展開し、source/workshop/v3.0.0-preview/data-agent/participant-evaluation を開きます。Gitで取得した場合はリポジトリ直下のworkshop/v3.0.0-preview/data-agent/participant-evaluationです。この節と付録Cだけで手動評価を進められます。実際の回答や実環境のIDは、Gitの外の自分専用フォルダーへ保存します。各templateを複製し、作業用ファイル名から -template を外します。JSONはテキストエディター、CSVはExcelなどで開けます。CSVのIDと時刻は文字列として取り込みます。
+手順内のパスに含まれる v3.0.0-preview や v2.7.0、requirements-preview30.txt、build_preview30.py は、現在の配布物の固定フォルダー名・ファイル名であり、別の版を選ぶ指定ではありません。表示どおりの名前を使います。
+
+配布ZIPを展開した場合、評価キットは source/workshop/v3.0.0-preview/data-agent/participant-evaluation にあります。Git checkout ではリポジトリ直下の workshop/v3.0.0-preview/data-agent/participant-evaluation を開きます。操作・採点・前後比較は、Git checkout では Lab/19-evaluate-and-improve-ai-answer-quality/ と docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html の第19章・付録C、ZIP展開後はZIPルートの Lab/19-evaluate-and-improve-ai-answer-quality/ と guide/furusato-workshop-v3-1-0-complete.html を参照します。付録Cの Lab は Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/ です。実際の回答や実環境のIDは、Gitの外の自分専用フォルダーへ保存します。各templateを複製し、作業用ファイル名から -template を外します。JSONはテキストエディター、CSVはExcelなどで開けます。CSVのIDと時刻は文字列として取り込みます。
 
 **質問枠 / 条件数（1段階）**
 
@@ -20,7 +22,9 @@
 
 ## 19.5 Choose the evaluation files and scope
 
-Extract the distribution ZIP and open source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, use workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. This section and Appendix C contain the complete manual evaluation procedure. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.
+Path components such as v3.0.0-preview and v2.7.0, and filenames such as requirements-preview30.txt and build_preview30.py, are fixed folder and file names in the current distribution, not choices of separate editions. Use the names exactly as shown.
+
+After extracting the distribution ZIP, the evaluation kit is in source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, open workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. For the procedure, scoring and comparison, use Lab/19-evaluate-and-improve-ai-answer-quality/ and Chapter 19 and Appendix C in docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html from a Git checkout; after ZIP extraction, use Lab/19-evaluate-and-improve-ai-answer-quality/ and guide/furusato-workshop-v3-1-0-complete.html from the ZIP root. The Appendix C Lab is Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.
 
 **Question slots / conditions per phase**
 

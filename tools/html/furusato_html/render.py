@@ -222,14 +222,14 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
         code_text = (html.escape(block["text"], quote=True) if block.get("canonicalLiteral")
                      else esc(block["text"]))
         return (
-            f'<div class="codeblock"{long_attr}>'
+            f'<div class="codeblock codeblock--source"{long_attr}>'
             '<div class="codeblock__bar">'
             f'<span class="codeblock__lang">{language_html}</span>'
             f'<button type="button" class="codeblock__copy" data-copy-target="{block_id}" '
             f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"]["ja"])}">'
             f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(ctx.ui["copy.label"]["ja"])}</span>'
             "</button></div>"
-            f'<pre><code id="{block_id}">{code_text}</code></pre>'
+            f'<pre tabindex="0"><code id="{block_id}">{code_text}</code></pre>'
             f"{integrity}"
             "</div>"
         )
@@ -263,11 +263,14 @@ def render_table(block: Block, ctx: RenderContext) -> str:
                 cells.append(f"<td>{cell_markup(cell)}</td>")
         body_rows.append("<tr>" + "".join(cells) + "</tr>")
     hint = ctx.label("table.scroll")
+    table_class = f'cols-{len(block["headers"])}'
+    if block.get("tableClass"):
+        table_class += " " + esc(block["tableClass"])
     return (
         '<div class="table-wrap" data-search-block>'
         f'<div class="table-scroll" tabindex="0" role="region" '
         f'aria-label="{esc(caption.ja)}">'
-        f'<table class="cols-{len(block["headers"])}">'
+        f'<table class="{table_class}">'
         f"<caption>{caption_html}</caption>"
         f"<thead><tr>{head}</tr></thead>"
         f"<tbody>{''.join(body_rows)}</tbody>"
@@ -293,8 +296,12 @@ def render_figure(block: Block, ctx: RenderContext) -> str:
     alt = block["alt"]
     label = ctx.ui_text("figure.label")
     figure_label = f"{label.ja} {number} / {label.en} {number}"
-    kind_class = "figure--diagram" if block["source_kind"] == "diagram" else "figure--shot"
-    if block["source_kind"] == "diagram":
+    diagram = block["source_kind"] in {"diagram", "participant-diagram"}
+    kind_class = (
+        "figure--participant-diagram" if block["source_kind"] == "participant-diagram"
+        else "figure--diagram" if diagram else "figure--shot"
+    )
+    if diagram:
         key = block["source_key"]
         # One figure, two artworks. The Japanese SVG is the shipped asset; the
         # English one is derived at build time from the maintained translation

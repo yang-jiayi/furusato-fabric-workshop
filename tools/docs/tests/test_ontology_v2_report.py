@@ -14,6 +14,7 @@ import tempfile
 import sys
 import unittest
 import zipfile
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import build_ontology_v2_report as report
@@ -306,6 +307,8 @@ class SummaryContractTests(unittest.TestCase):
 
 
 class SyntheticRenderingTests(unittest.TestCase):
+    @unittest.skipUnless(callable(getattr(os, "getuid", None)),
+                         "Requires POSIX owner identity and 0700 mode checks for private output.")
     def test_actual_docx_html_render_shares_content_without_implying_live_evidence(self):
         parent = Path(os.environ["EVALUATION_TEST_TEMP"])
         self.assertTrue(parent.is_dir())
@@ -343,6 +346,12 @@ class SyntheticRenderingTests(unittest.TestCase):
     def test_build_refuses_repository_output_before_writing(self):
         with self.assertRaises(ValueError):
             report.private_output(report.REPO / "docs/disallowed-output", report.REPO)
+
+    def test_private_output_fails_closed_without_posix_owner_identity(self):
+        output = Path(tempfile.gettempdir()) / "report-private-output-platform-check"
+        with mock.patch.object(report.os, "getuid", None, create=True):
+            with self.assertRaisesRegex(ValueError, r"requires POSIX os\.getuid\(\)"):
+                report.private_output(output, report.REPO)
 
 
 if __name__ == "__main__":

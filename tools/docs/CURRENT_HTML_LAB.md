@@ -1,106 +1,66 @@
-# 現行のHTMLとLabを生成する / Build current HTML and Lab
+# 現行HTMLとLabの生成・検証 / Build and validate current HTML and Lab
 
-参加者向けの配布物は、単一ファイルの日英HTMLと、GitHubで読む`Lab/`です。24章・5付録を同じ参加者用モデルから生成します。現在の経路はOffice文書を生成せず、以前の文書ペア用コマンドとは別です。
+参加者向けの主教材は、検索・日英切替に対応した単一ファイルHTMLです。番号付きのGitHub Labは同じ24章・5付録の原稿から作るMarkdown版です。この現行経路はWordやPDFを生成せず、配布ZIPにもそれらの出力を含めません。
 
-The current participant delivery is one standalone bilingual HTML file and the complete GitHub `Lab/` guide. Both are generated from the same 24-chapter, five-appendix participant model. This route does not generate an Office document; the historical paired-document commands remain separate.
+The primary participant handbook is a searchable, bilingual, standalone HTML file. The numbered GitHub Lab is the Markdown companion, generated from the same 24-chapter, five-appendix source. This current route generates no Word or PDF and includes neither format in the participant ZIP.
 
-既存の完全版Labを共有原稿 `tools/docs/furusato_docs/participant30_text.py` で修正します。既存Wordは移行時の比較・レビュー用に保持し、現行手順の正本にはしません。教材版と現行ファイル名は `WORKSHOP_VERSION` に従います。`VERSION` はデータ処理の基準版であり変更しません。文書の修正やローカル検査は実環境への配置の承認ではありません。
+日英原稿は `tools/docs/furusato_docs/participant30_text.py`、画面説明は `participant30_figures.py` で管理します。新しい画面は実環境で取得・確認した場合だけ追加し、未確認のUIや機能完了を示す説明を作りません。教材版は `WORKSHOP_VERSION` に従い、データ処理の基準版 `VERSION` は変更しません。文書の生成・検証は実環境への配置や回答精度の承認ではありません。
 
-Revise the existing complete Lab through the shared source `tools/docs/furusato_docs/participant30_text.py`. Keep the existing Word for transition comparison/review, not as the authoritative current instructions. The course edition and current filenames follow `WORKSHOP_VERSION`; preserve `VERSION` as the data-processing baseline. Standalone publication does not consume historical Word approval profiles, and local checks do not authorize live deployment.
+Maintain bilingual prose in `tools/docs/furusato_docs/participant30_text.py` and figure descriptions in `participant30_figures.py`. Add screenshots only after capturing and checking the real UI; do not invent UI states or imply an unverified feature is complete. The course edition follows `WORKSHOP_VERSION`; preserve the data-processing baseline in `VERSION`. Document generation and validation do not authorize deployment or certify answer accuracy.
 
 ## 準備 / Setup
 
-Python 3.13を用意し、リポジトリのルートで次を実行します。Labの共有モデルもOffice用ライブラリをインポートします。文書用とprovisioning用の依存関係に加え、現行HTMLの解析に `lxml`、ブラウザー検査に `playwright` と `pypdf` が必要です。HTML用requirementsの任意test指定だけでは、これらの検査依存関係の導入を保証できません。
+リポジトリルートで、文書モデル、HTML解析、ブラウザー検査の依存関係を用意します。現在の検査経路はChromiumでHTMLの操作・レイアウト・ネットワーク境界を確認し、PDFを生成しません。
 
-With Python 3.13 available, run from the repository root. The shared Lab model also imports Office libraries. Install the documented docs/provisioning requirements plus `lxml` for current HTML parsing and `playwright`/`pypdf` for browser checks. The optional test markers in the HTML requirements alone do not ensure these validation dependencies are installed.
+From the repository root, prepare the document-model, HTML-parsing and browser-validation dependencies. Current browser checks verify HTML interaction, layout and network boundaries in Chromium; they do not generate PDFs.
 
-```bash
-python -m pip install -r tools/docs/requirements.txt \
-  -r tools/provisioning/requirements-preview30.txt \
-  "lxml>=5.0" "playwright>=1.44" "pypdf>=4.0"
-```
-
-ブラウザー検査は、Linuxで `/usr/bin/chromium` が存在すれば従来どおり使い、それ以外は同じPython環境のPlaywright管理Chromiumを使います。Windowsを含む環境では次のコマンドで管理ブラウザーを準備できます。ブラウザーが未導入なら依存関係エラーで停止し、検査やパッケージ化を省略しません。
-
-Browser validation preserves the existing Linux `/usr/bin/chromium` preference when that file exists; otherwise it uses Playwright-managed Chromium from the same Python environment. Prepare the managed browser on Windows or other platforms with the following command. A missing browser is a dependency error, not permission to skip validation or packaging checks.
-
-```text
+```powershell
+python -m pip install -r tools\docs\requirements.txt `
+  -r tools\provisioning\requirements-preview30.txt `
+  "lxml>=5.0" "playwright>=1.44"
 python -m playwright install chromium
 ```
 
-Debian/Ubuntu互換LinuxでシステムChromiumを使う場合は、従来どおりパスを確認します。
+システムにあるChromiumを明示する場合は、`validate` に `--browser` と `--browser-executable <既存の実行ファイル>` を指定します。存在しないファイルやディレクトリ、`--browser` なしの指定は拒否されます。ブラウザーが使えない場合は検証を省略せず、依存関係の問題として記録します。
 
-For system Chromium on Debian/Ubuntu-compatible Linux, verify the existing path as before.
+To select an existing Chromium executable explicitly, pass `--browser` and `--browser-executable <existing executable>` to `validate`. Missing files, directories and use without `--browser` are rejected. If a browser is unavailable, record the dependency blocker rather than skipping validation.
 
-```bash
-sudo apt-get update
-sudo apt-get install -y chromium
-test -x /usr/bin/chromium
-/usr/bin/chromium --version
-```
+## 生成・検証・パッケージ / Build, validate and package
 
-既存のChromium実行ファイルを明示する場合、`validate` の `--browser` とともに `--browser-executable` を指定します。次はPowerShellの例で、`$Stage` は後述の要件を満たす新しい非公開出力先です。実際の既存ファイルのパスへ置き換えてください。ディレクトリや存在しないパス、`--browser` なしの指定は拒否されます。
+毎回新しい非公開ステージと検証記録先を使い、Git管理外に配置します。生成、検証、パッケージ化の間はソースを変更しません。出力先を既存の作業物へ重ねず、共有・コミットしないでください。
 
-To select an existing Chromium executable explicitly, use `--browser-executable` only on `validate` together with `--browser`. This PowerShell example assumes `$Stage` is a fresh private output destination meeting the requirements below. Replace the executable path with a real existing file. Directories, missing files and use without `--browser` are rejected.
+Use fresh private stage and receipt directories outside the Git worktree. Keep source inputs unchanged through build, validation and packaging. Do not overwrite existing work or share/commit staging outputs.
 
 ```powershell
-python -B tools\docs\current_delivery.py validate --out "$Stage\guide" --browser `
-  --browser-executable "C:\Browsers\Chromium\chrome.exe"
+$Stage = Join-Path $env:TEMP ("furusato-stage-" + [guid]::NewGuid())
+$Review = Join-Path $env:TEMP ("furusato-review-" + [guid]::NewGuid())
+New-Item -ItemType Directory -Path $Stage, $Review | Out-Null
+$Version = (Get-Content WORKSHOP_VERSION -Raw).Trim()
+$HtmlName = "furusato-workshop-v$($Version.Replace('.', '-'))-complete.html"
+$PackageName = "Furusato_Workshop_v${Version}_current.zip"
+python -B tools\docs\current_delivery.py build --out "$Stage\guide"
+python -B tools\docs\current_delivery.py validate --out "$Stage\guide" --browser
+python -B tools\docs\build_lab.py --out "$Stage\Lab" --receipt "$Review\lab-coverage.json"
+python -B tools\docs\build_lab.py --out "$Stage\Lab" --receipt "$Review\lab-coverage.json" --check
+Copy-Item -LiteralPath "$Stage\guide\$HtmlName" -Destination "docs\$HtmlName"
+python -B tools\docs\current_delivery.py package --out "$Stage\guide" `
+  --lab "$Stage\Lab" --package "$Stage\$PackageName"
 ```
 
-## 作成・レビュー・検証 / Author, review and validate
+ブラウザー検査は実際のHTMLハッシュに結び付き、日英切替、検索、進捗チェック、コピー、画像拡大、320/390/768/1440px幅、スクリプトエラー、外部ネットワーク要求のないことを確認します。静的検査は全セクション、日英本文、コマンド・質問、図、アンカー、単一HTML内のリソースを検査します。画面サイズの確認はFabric上の表示や全ての利用環境を認定するものではありません。
 
-日英原稿を修正した後、正確なファイルパラメーターと実行証拠の対応、講師が事前設定するnative機能の前提、未設定・失敗・未確認の区別をレビューします。新しい画面は実環境で取得・確認した場合だけ追加します。`Stage`と`Review`は毎回新しい非公開出力先にし、共有・コミットしません。生成、検証、パッケージ化の間はソースを変更しません。
+Browser validation binds to the exact HTML digest and checks language switching, search, progress, copy, image zoom, 320/390/768/1440px widths, script errors and absence of external network requests. Static validation checks all sections, bilingual text, commands/prompts, figures, anchors and embedded resources. Viewport checks do not certify Fabric rendering or every user environment.
 
-After editing both languages, review exact file-parameter/run-evidence correlation, instructor-provisioned native prerequisites, and distinctions between unconfigured, failed and unverified states. Add screenshots only after real capture and review. Choose fresh private `Stage` and `Review` directories for each build; do not share or commit them. Keep source inputs unchanged through generation, validation and packaging.
+パッケージ処理は生成HTML・Lab・参照添付・実行ソースの各バイトを照合し、全ファイル名を検査して、`.docx`または`.pdf`の項目が1つでもあれば失敗します。第15章の業務要件資料は `business-requirements.txt` です。Microsoftアイコンの利用条件は `docs/assets/architecture/upstream/NOTICE.txt` に記載し、原本PDFはパッケージに含めません。配布前に、SHA-256、ZIPのCRC、Labリンク、HTMLの全内容、および文書形式の在庫を確認します。
 
-版を変更すると、LabのHTMLリンクの参照先も変わります。先に実際のHTMLを生成・検証し、その正確なファイルを`docs/`へ配置してからLabを生成・検査します。旧版のHTMLを新しい名前で代用したり、リンク検査を省略したりしません。
+Packaging verifies the HTML, Lab, reference attachments and executable source bytes. It rejects the package if any `.docx` or `.pdf` entry exists. Chapter 15 uses `business-requirements.txt`. Microsoft icon usage terms are recorded in `docs/assets/architecture/upstream/NOTICE.txt`; the source terms PDF is excluded from the package. Before distribution, check SHA-256, ZIP CRC, Lab links, full HTML content and the document-format inventory.
 
-On a version change, Lab links point to a new HTML filename. Build and validate the actual HTML first, install those exact bytes under `docs/`, then generate and check Lab. Do not substitute renamed old HTML or skip link validation.
+## 公開時の確認 / Publication checks
 
-管理されたクラウド環境では、`/workspace`や`/tmp`などのプラットフォーム用Gitマーカーのあるツリーを避け、Gitの管理外にある `/var/tmp` 内に毎回新しい非公開ステージとレビュー先を作ります。次はBash用のレシピです。作成失敗やGit管理下の判定時には明示的に停止し、そのまま生成を続けません。出力はレビュー後に安全に削除し、共有・コミットしません。
+`docs/README.md`、ルートREADME、Lab目次、現行成果物一覧のリンク・版・ファイル名は同じ検証済み成果物を指す必要があります。GitHub上のREADMEはダウンロードとナビゲーションを提供するものであり、Pages等の公開Webサイトが設定済みであることを意味しません。HTMLは取得してブラウザーで開けます。
 
-In managed cloud environments, avoid platform Git-marker trees such as `/workspace` and `/tmp`. Create fresh private stage and review directories below `/var/tmp`, outside Git. The following Bash recipe stops explicitly on creation failure or a Git-managed destination; do not continue generation after a failure. Safely remove private outputs after review; never share or commit them.
+Keep the root README, `docs/README.md`, Lab index and current artifact links/version/file names aligned with the same validated artifacts. GitHub README links provide download and navigation; they do not imply that a hosted website such as GitHub Pages is configured. Download and open the HTML in a browser.
 
-```bash
-# Run this entire recipe in one Bash shell from the repository root.
-set -euo pipefail
-umask 077
-fail() { printf '%s\n' "$*" >&2; exit 1; }
-PrivateRoot="$(cd /var/tmp && pwd -P)" || fail "Cannot access /var/tmp"
-if git -C "$PrivateRoot" rev-parse --show-toplevel >/dev/null 2>&1; then
-  fail "Private output root is inside Git; choose an approved root outside Git"
-fi
-Stage="$(mktemp -d "$PrivateRoot/furusato-stage.XXXXXXXXXX")" \
-  || fail "Cannot create private Stage"
-Review="$(mktemp -d "$PrivateRoot/furusato-review.XXXXXXXXXX")" \
-  || fail "Cannot create private Review; unused Stage remains at $Stage"
-for Output in "$Stage" "$Review"; do
-  test -d "$Output" && test -w "$Output" || fail "Output is not writable: $Output"
-  if git -C "$Output" rev-parse --show-toplevel >/dev/null 2>&1; then
-    fail "Output is inside Git: $Output"
-  fi
-done
-Version="$(python -c "from pathlib import Path; print(Path('WORKSHOP_VERSION').read_text().strip())")"
-HtmlName="furusato-workshop-v${Version//./-}-complete.html"
-PackageName="Furusato_Workshop_v${Version}_current.zip"
-python -B tools/docs/current_delivery.py build --out "$Stage/guide"
-python -B tools/docs/current_delivery.py validate --out "$Stage/guide" --browser
-cp -- "$Stage/guide/$HtmlName" "docs/$HtmlName"
-python -B tools/docs/build_lab.py --out "$Stage/Lab" --receipt "$Review/lab-coverage.json"
-python -B tools/docs/build_lab.py --out "$Stage/Lab" --receipt "$Review/lab-coverage.json" --check
-python -B tools/docs/current_delivery.py package --out "$Stage/guide" \
-  --lab "$Stage/Lab" --package "$Stage/$PackageName"
-```
+これらのローカル検査はFabricの配置、Ontology/Graphの準備状態、Data Agentの正答率や100%スコアを証明しません。公開版を第19章・付録Cで実際のソース、問い合わせ、結果を使って評価し、未実施・失敗・未確認を区別して記録してください。
 
-`build_lab.py --help`でレビュー出力先の指定を確認してください。生成したLabの全章・付録を既存完全版および移行用Wordと比較し、同じ原稿のHTMLも確認します。Chromiumは選択したHTMLだけを一時的にループバック配信します。他のネットワーク要求は拒否され、検査後にサーバーを停止します。
-
-Use `build_lab.py --help` for its review output options. Compare all generated Lab chapters/appendices with the existing complete edition and transition Word, and review the HTML from the same source. Browser checks temporarily serve only the selected HTML on loopback. Other network requests are blocked and the server is stopped after validation.
-
-静的検査は全セクション、日英本文、コードと質問の原文、図、アンカー、単一ファイル内のリソースを照合します。ブラウザー検査は日英切替・検索・学習記録・コードコピー・拡大・390px幅・印刷PDFを確認し、実際のHTMLハッシュに結び付けます。パッケージはこれらの検査結果が一致したファイルだけを受け付けます。ソースの保護対象と実行ツールはハッシュを維持して同梱し、過去の文書レポートは配布しません。
-
-Static validation checks sections, bilingual content, literal code/prompts, figures, anchors and embedded resources. Browser validation checks language, search, progress, copy, zoom, 390px layout and printed PDFs against the exact HTML digest. Packaging requires matching passed receipts and preserves the protected runtime/source hashes. Historical document reports are excluded from the participant package.
-
-この検査はFabricの配置やAgentの回答品質を認定しません。印刷PDFの生成は全ページの目視確認を意味しません。新しい画面キャプチャは実環境で取得・確認した後に共有モデルへ追加し、LabとHTMLの両方を再生成します。
-
-These checks do not certify Fabric deployment or Agent answer quality. PDF generation does not imply visual review of every printed page. Add new screenshots only after capturing and reviewing the real environment, then regenerate both Lab and HTML.
+Local checks do not prove Fabric deployment, Ontology/Graph readiness, Data Agent accuracy or a 100% score. Evaluate the actual publication with Chapter 19 and Appendix C using real sources, queries and results; report unrun, failed and unverified checks distinctly.

@@ -98,6 +98,9 @@ class ReadinessChecks(unittest.TestCase):
         with TemporaryDirectory() as t:
             d=deployment(Path(t));result=capture_readiness(d,{'id':A},RULE)
             self.assertTrue(result['isRuleInSync']);self.assertFalse(result['automaticDeliveryVerified'])
+            self.assertTrue(result['cliStartReceiptPresent'])
+            self.assertEqual('2026-01-01T00:00:00Z',result['formalStartAtUtc'])
+            self.assertEqual('fresh-native-readback-plus-cli-start-receipt',result['readbackBasis'])
             self.assertEqual(d.client.session.verify,'/explicit/ca.pem')
             self.assertEqual(d.client.session.proxies,{'https':'http://explicit-proxy:8080'})
             self.assertFalse(d.client.session.trust_env)
@@ -106,15 +109,54 @@ class ReadinessChecks(unittest.TestCase):
             for p in Path(t).rglob('*.json'):
                 self.assertNotIn(SECRET,p.read_text());self.assertNotIn('AAD-CREDENTIAL',p.read_text())
             self.assertFalse(any(c[0] in {'PUT','DELETE','PATCH'} for c in d.client.session.calls))
+    def test_fresh_native_readiness_accepts_running_state_without_fabricating_cli_receipt(self):
+        with TemporaryDirectory() as t:
+            d=deployment(Path(t));del d.state['nativeLifecycle']
+            with patch.object(activation,'Deployment',return_value=d),patch.object(activation,'_targets',return_value=({'id':A},RULE)):
+                result=activation.check_readiness(SimpleNamespace())
+            self.assertEqual('Running',result['backendRunningState'])
+            self.assertTrue(result['isRuleInSync'])
+            self.assertFalse(result['automaticDeliveryVerified'])
+            self.assertIsNone(result['formalStartAtUtc'])
+            self.assertFalse(result['cliStartReceiptPresent'])
+            self.assertEqual('fresh-native-readback-only; start origin unattributed',result['readbackBasis'])
+            self.assertNotIn('nativeLifecycle',d.state)
+            self.assertEqual(5,len(d.client.session.calls))
+            self.assertFalse(any(c[0] in {'PUT','DELETE','PATCH'} for c in d.client.session.calls))
+    def test_missing_cli_receipt_does_not_bypass_current_backend_running_gate(self):
+        with TemporaryDirectory() as t:
+            d=deployment(Path(t));del d.state['nativeLifecycle']
+            d.client.session.bodies[2]['timeSeriesViewState']['backendRunningState']='Starting'
+            with patch.object(activation,'Deployment',return_value=d),patch.object(activation,'_targets',return_value=({'id':A},RULE)):
+                with self.assertRaisesRegex(SafetyError,'Actual Activator backend is not Running'):
+                    activation.check_readiness(SimpleNamespace())
+            self.assertNotIn('nativeLifecycle',d.state)
+            self.assertEqual(5,len(d.client.session.calls))
+            self.assertFalse(any(c[0] in {'PUT','DELETE','PATCH'} for c in d.client.session.calls))
+    def test_running_backend_without_initialized_action_credentials_is_not_ready(self):
+        with TemporaryDirectory() as t:
+            d=deployment(Path(t));del d.state['nativeLifecycle']
+            d.client.session.bodies[4]['data']['fabricItemAction'][0]['system']['refreshToken']['state']='Uninitialized'
+            with patch.object(activation,'Deployment',return_value=d),patch.object(activation,'_targets',return_value=({'id':A},RULE)):
+                with self.assertRaisesRegex(SafetyError,'Native action credentials are not Initialized'):
+                    activation.check_readiness(SimpleNamespace())
+            self.assertNotIn('nativeLifecycle',d.state)
+            self.assertEqual(5,len(d.client.session.calls))
+            self.assertFalse(any(c[0] in {'PUT','DELETE','PATCH'} for c in d.client.session.calls))
     def test_capacity_mismatch_aborts_before_native_read(self):
         with TemporaryDirectory() as t:
             d=deployment(Path(t));d.client.session.bodies[1]['CapacityObjectId']=W
             with self.assertRaises(SafetyError):capture_readiness(d,{'id':A},RULE)
             self.assertEqual(len(d.client.session.calls),2)
-    def test_formal_start_receipt_required_before_native_requests(self):
-        for receipt in ({}, {'action':'stop','status':'verified'},
+    def test_present_invalid_cli_start_receipt_blocks_before_native_requests(self):
+        for receipt in (None, 'malformed', {}, {'action':'stop','status':'verified'},
                         {'action':'start','status':'pending'},
-                        {'action':'start','status':'verified','result':{'state':'running'}}):
+                        {'action':'start','status':'verified','result':{'state':'running'}},
+                        {'action':'start','status':'verified','timestampUtc':'not-a-timestamp',
+                         'result':{'state':'armed_unverified'}},
+                        {'action':'start','status':'verified','result':None},
+                        {'action':'start','status':'verified','timestampUtc':'2999-01-01T00:00:00Z',
+                         'result':{'state':'armed_unverified'}}):
             with TemporaryDirectory() as t:
                 d=deployment(Path(t));d.state['nativeLifecycle']=receipt
                 with self.subTest(receipt=receipt),self.assertRaises(SafetyError):capture_readiness(d,{'id':A},RULE)
@@ -155,6 +197,17 @@ class ReadinessChecks(unittest.TestCase):
             with patch.object(activation,'Deployment',return_value=d),patch.object(activation,'_targets',return_value=({'id':A},RULE)),patch('preview30_activation_readiness.capture_readiness',side_effect=SafetyError('backend Starting')):
                 with self.assertRaises(SafetyError):activation.deliver_increment(SimpleNamespace(increment=1))
             self.assertEqual(d.state['incrementDeliveries'],{})
+            self.assertFalse(list(Path(t).rglob('upload-intent.json')))
+    def test_readiness_without_cli_start_receipt_does_not_authorize_cli_upload(self):
+        with TemporaryDirectory() as t:
+            d=deployment(Path(t));del d.state['nativeLifecycle']
+            d.checkpoint=lambda:self.fail('Upload intent was written')
+            d.client.paged=lambda *a,**k:[]
+            d.client.request=lambda *a,**k:Reply({'properties':{'oneLakeFilesPath':'unused'}})
+            with patch.object(activation,'Deployment',return_value=d),patch.object(activation,'_targets',return_value=({'id':A},RULE)):
+                with self.assertRaisesRegex(SafetyError,'verified formal native start receipt'):
+                    activation.deliver_increment(SimpleNamespace(increment=1))
+            self.assertNotIn('incrementDeliveries',d.state)
             self.assertFalse(list(Path(t).rglob('upload-intent.json')))
 
 

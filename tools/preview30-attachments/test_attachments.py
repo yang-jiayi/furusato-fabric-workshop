@@ -6,7 +6,6 @@ import sys
 import unittest
 from pathlib import Path
 
-import fitz
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -22,11 +21,13 @@ class AttachmentTests(unittest.TestCase):
 
     def test_real_files_and_upload_budget(self):
         self.assertLessEqual(len(pack.PACK_NAMES), 10)
+        self.assertEqual("3.1.0", self.manifest["edition"])
         for name in pack.PACK_NAMES:
             path = self.out / name
             self.assertGreater(path.stat().st_size, 0)
             self.assertLessEqual(path.stat().st_size, pack.MAX_BYTES)
             self.assertEqual(pack.sha(path), self.manifest["files"][name]["sha256"])
+        self.assertFalse(any(path.suffix.lower() in {".docx", ".pdf"} for path in self.out.iterdir()))
         self.assertFalse(self.manifest["uploadObserved"])
         self.assertFalse(self.manifest["modelUseObserved"])
 
@@ -51,37 +52,21 @@ class AttachmentTests(unittest.TestCase):
         self.assertFalse(self.manifest["definitionContext"]["nativeBindingVerified"])
         self.assertFalse(self.manifest["definitionContext"]["generation2Payload"])
 
-    def test_pdf_is_readable_embeds_font_and_has_both_languages(self):
-        with fitz.open(self.out / "business-requirements.pdf") as pdf:
-            self.assertGreaterEqual(len(pdf), 2)
-            text = "\n".join(page.get_text() for page in pdf)
-            self.assertIn("業務要件", text)
-            self.assertIn("Business requirements", text)
-            self.assertIn("15,000", text)
-            self.assertIn("14,900", text)
-            self.assertIn("Gold", text)
-            self.assertIn("StaticSeed", text)
-            self.assertIn("RealtimeIncrement", text)
-            self.assertIn("manual business approval", " ".join(text.split()))
-            self.assertNotIn("\ufffd", text)
-            font_xrefs = {font[0] for page in pdf for font in page.get_fonts()}
-            embedded = [pdf.extract_font(xref)[3] for xref in font_xrefs]
-            self.assertTrue(any(embedded), "Japanese font must actually be embedded")
-            for page in pdf:
-                for block in page.get_text("dict")["blocks"]:
-                    if "lines" not in block:
-                        continue
-                    for line in block["lines"]:
-                        for span in line["spans"]:
-                            x0, y0, x1, y1 = span["bbox"]
-                            self.assertGreaterEqual(x0, 0)
-                            self.assertGreaterEqual(y0, 0)
-                            self.assertLessEqual(x1, page.rect.width + 1)
-                            self.assertLessEqual(y1, page.rect.height + 1)
-            pack.assert_portable(text)
-            for value in pdf.metadata.values():
-                if value:
-                    pack.assert_portable(value)
+    def test_requirements_text_is_complete_canonical_bilingual_source(self):
+        path = self.out / "business-requirements.txt"
+        actual = path.read_text(encoding="utf-8")
+        self.assertEqual(pack.requirements_text(), actual)
+        self.assertIn("3.1.0 · Synthetic training context · 2026-10-31", actual)
+        self.assertIn("業務要件", actual)
+        self.assertIn("Business requirements", actual)
+        self.assertIn("15,000", actual)
+        self.assertIn("14,900", actual)
+        self.assertIn("Gold", actual)
+        self.assertIn("StaticSeed", actual)
+        self.assertIn("RealtimeIncrement", actual)
+        self.assertIn("manual business approval", " ".join(actual.split()))
+        self.assertNotIn("\ufffd", actual)
+        pack.assert_portable(actual)
 
     def test_png_is_legible_schema_not_mock_ui(self):
         with Image.open(self.out / "domain-model.png") as image:

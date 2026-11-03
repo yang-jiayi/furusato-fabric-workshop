@@ -157,26 +157,7 @@ def snapshot():
         "workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md",
         "workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md",
         "tools/data-agent/README.md",
-        "docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md",
-        "docs/v3.0.0/tuning-20261010/README.md",
-        "docs/v3.0.0/tuning-20261010/result-20261010.json",
-        "docs/v3.0.0/tuning-20261010/furusato-data-agent-tuning-20261010.docx",
-        "docs/v3.0.0/tuning-20261010/furusato-data-agent-tuning-20261010.html",
-        "docs/v3.0.0/tuning-20261010/artifact-validation.json",
-        "docs/v3.0.0/tuning-20261010/SHA256SUMS.txt",
         "tools/docs/build_measured_tuning_report.py",
-        "docs/v3.0.0/tuning-20261015/README.md",
-        "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md",
-        "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.docx",
-        "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.html",
-        "docs/v3.0.0/tuning-20261015/calibration-artifact-validation.json",
-        "docs/v3.0.0/tuning-20261015/calibration-render-validation.json",
-        "docs/v3.0.0/tuning-20261015/result-20261015.json",
-        "docs/v3.0.0/tuning-20261015/furusato-ontology-v2-evaluation-20261015.docx",
-        "docs/v3.0.0/tuning-20261015/furusato-ontology-v2-evaluation-20261015.html",
-        "docs/v3.0.0/tuning-20261015/artifact-validation.json",
-        "docs/v3.0.0/tuning-20261015/report-render-validation.json",
-        "docs/v3.0.0/tuning-20261015/SHA256SUMS.txt",
         "tools/docs/build_ontology_v2_report.py",
         "tools/docs/build_ontology_v2_calibration.py",
         "tools/docs/README.md", "tools/html/README.md",
@@ -184,9 +165,14 @@ def snapshot():
     for folder in ("data", "kql", "notebooks", "ontology", "powerbi", "data-agent", "provisioning"):
         paths.update(p for p in (rt.PREVIEW / folder).rglob("*")
                      if p.is_file() and p.suffix != ".md" and p.name != "artifact-set.json")
-    participant_assets = rt.REPO / "docs" / "assets" / "v3.0.0-participant"
-    if participant_assets.is_dir():
-        paths.update(p for p in participant_assets.rglob("*") if p.is_file())
+    for relative in (
+        "docs/assets/current-participant",
+        "docs/assets/current-participant-captures",
+        "docs/assets/current-diagrams",
+    ):
+        asset_root = rt.REPO / relative
+        if asset_root.is_dir():
+            paths.update(p for p in asset_root.rglob("*") if p.is_file())
     paths.update(p for p in rt.BASE.rglob("*") if p.is_file())
     protected_files = {}
     for relative in rt.BASELINE_PROTECTED_PATHS:
@@ -218,7 +204,7 @@ def snapshot():
             "productionPlacement": "specified-folder-direct", "tempRequired": False,
             "declaredCodeDelta": "Notebook01 audit/display NOTEBOOK_VERSION and Notebook05 noninteractive ANALYTICS_RESULT exitValue transport only; data-processing logic and preview/apply gates are unchanged.",
             "historicalRunMetadataMustNotBeRewritten": True, "cloudDeploymentProvenByThisManifest": False,
-            "documentationBinding": "Paired Word/HTML must embed this manifest SHA; an outer package inventory hashes the documents separately."}
+            "documentationBinding": "HTML/Lab delivery binds this manifest SHA; the outer package inventory hashes participant artifacts separately."}
 
 
 if __name__ == "__main__":

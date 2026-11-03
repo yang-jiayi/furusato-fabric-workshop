@@ -41,17 +41,30 @@ NEW_AUTHORING_FILES = {
     'tools/docs/build_lab.py', 'tools/docs/furusato_docs/lab.py',
     'tools/docs/furusato_docs/lab_clients.py', 'tools/docs/tests/test_lab.py',
     'tools/docs/tests/test_current_delivery.py',
+    'tools/docs/tests/test_semantic_instruction_boundaries.py',
     'tools/docs/furusato_docs/current_publication.py',
     'tools/provisioning/check_current_ontology.py',
     'tools/docs/tests/test_current_validation_entries.py',
-    'docs/assets/v3.0.0-participant/graph-eligibility-controls-crop.png',
+    'tools/html/tests/test_reference_pagination.py',
+    'tools/html/tests/test_reference_table_tokens.py',
+    'tools/docs/furusato_docs/participant30_details.py',
+    'tools/docs/tests/test_participant30_details.py',
+    'tools/docs/tests/test_semantic_instruction_boundaries.py',
+    'docs/assets/current-participant/graph-eligibility-controls-crop.png',
+    'docs/assets/current-participant/activator-001-row-parameters-crop.png',
 }
 PARTICIPANT_VALIDATION_FILES = {
     'tools/data/Test-IncrementConsistency.ps1',
     'tools/provisioning/check_current_ontology.py',
 }
-DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg','.pdf'}
+DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg'}
 PRIVATE_NAMES = {'storage-state.json','cookies.json','credentials.json','msal_token_cache.json','msal_token_cache.bin'}
+MAINTAINER_ONLY_DOCS = {'tools/docs/README.md'}
+CURRENT_ASSET_PREFIXES = (
+    'docs/assets/current-participant/',
+    'docs/assets/current-participant-captures/',
+    'docs/assets/current-diagrams/',
+)
 CURRENT_PROFILE_DIR = 'workshop/v3.0.0-preview/data-agent/profiles/current-experimental'
 
 
@@ -84,11 +97,17 @@ def approved_doc_files(root, tracked):
             if not path.is_file() or '__pycache__' in path.parts:
                 continue
             relative=path.relative_to(root).as_posix()
+            if path.suffix.lower() == '.pdf':
+                continue
+            if relative in MAINTAINER_ONLY_DOCS:
+                continue
             if path.name.startswith('.env') or path.name.lower() in PRIVATE_NAMES:
                 raise ValueError('Private configuration is not a publication input: ' + relative)
             if path.suffix in {'.pyc','.docx'}:
                 continue
-            if path.suffix not in DOC_SOURCE_SUFFIXES or relative not in tracked | NEW_AUTHORING_FILES:
+            is_current_asset = relative.startswith(CURRENT_ASSET_PREFIXES)
+            if path.suffix not in DOC_SOURCE_SUFFIXES or (
+                    relative not in tracked | NEW_AUTHORING_FILES and not is_current_asset):
                 raise ValueError('Unapproved authoring source file: ' + relative)
             names.add(relative)
     return names
@@ -118,7 +137,8 @@ def current_source_manifest(root):
     """Freeze a bounded actual source inventory before composing either guide."""
     manifest=v3_artifacts.snapshot()
     tracked=set(subprocess.check_output(['git','-C',str(root),'ls-files','-z']).decode().split('\0'))
-    names={name for name in manifest['files'] if not name.startswith('docs/') and not name.endswith('.docx')}
+    names={name for name in manifest['files'] if not name.startswith('docs/')
+           and Path(name).suffix.lower() not in {'.docx','.pdf'}}
     names.update(runtime.RUNTIME_INPUT_FILES)
     names.update(PARTICIPANT_VALIDATION_FILES)
     names.update(current_profile_files(root))
@@ -136,6 +156,7 @@ def current_source_manifest(root):
     if names - (tracked | NEW_AUTHORING_FILES):
         raise ValueError('Unapproved runtime source files: ' + ', '.join(sorted(names - (tracked | NEW_AUTHORING_FILES))))
     names.update(approved_doc_files(root,tracked))
+    names.difference_update(MAINTAINER_ONLY_DOCS)
     manifest['files']={name:digest((root/name).read_bytes()) for name in sorted(names)}
     manifest['sourceTreeSha256']=runtime.digest(manifest['files'])
     manifest['documentationBinding']={'deliveryMode':'html-lab','guide':'guide/'+HTML_NAME,'lab':'Lab/README.md',
@@ -176,9 +197,9 @@ def validate_source_manifest_paths(root, manifest, *, require_git=False):
         if (path.is_absolute() or '..' in path.parts or '\\' in name
                 or {'private','.private','qa'} & set(path.parts)
                 or path.name.startswith('.env') or path.name.lower() in PRIVATE_NAMES
-                or path.suffix.lower() in {'.pem','.key','.pfx','.token','.secret'}):
+                or path.suffix.lower() in {'.pem','.key','.pfx','.token','.secret','.docx','.pdf'}):
             raise ValueError('Private or unsafe publication input: '+name)
-        if tracked is not None and name not in tracked | NEW_AUTHORING_FILES:
+        if tracked is not None and name not in tracked | NEW_AUTHORING_FILES and not name.startswith(CURRENT_ASSET_PREFIXES):
             raise ValueError('Unapproved publication input: '+name)
 
 
@@ -241,6 +262,15 @@ def retired_guide_reference(text):
                 or re.search(r'\.docx|\bmicrosoft\s+word\b|\bword\s+(?:guide|document|file)\b', text, re.I))
 
 
+def validate_retired_document_inventory(files):
+    retired = [name for name in files
+               if name.lower().endswith(('.docx', '.pdf'))]
+    if retired:
+        raise ValueError('The current package must not contain retired document exports: '
+                         + ', '.join(sorted(retired)))
+    return 0
+
+
 def inspect_html(path, document, metadata):
     raw = path.read_bytes()
     tree = html_parser.fromstring(raw)
@@ -254,6 +284,10 @@ def inspect_html(path, document, metadata):
     body = tree.find('body')
     if retired_guide_reference(body.text_content()) or tree.xpath('//*[@id="word-download"]'):
         raise ValueError('Retired guide references remain in the current participant HTML')
+    styles = '\n'.join(tree.xpath('//style/text()'))
+    if ('@media print' in styles or 'window.print' in raw.decode('utf-8')
+            or tree.xpath('//*[@id="print"]')):
+        raise ValueError('Print/PDF export controls are retired from the current participant HTML')
     sections = list(document.walk())
     if len(main.xpath('./section')) != 29:
         raise ValueError('The guide must contain 24 chapters and five appendices')
@@ -291,6 +325,8 @@ def inspect_html(path, document, metadata):
                     code_checked += 1
     if len(main.xpath('.//figure')) != len(document.figures):
         raise ValueError('Figure coverage differs from the model')
+    if main.xpath('.//figure/@id') != ['figure-' + str(block['number']) for block in document.figures]:
+        raise ValueError('Figure anchors differ from the stable model numbering')
     for node in tree.xpath('//*[@src] | //link[@href] | //script[@src]'):
         uri = node.get('src') or node.get('href')
         if not uri.startswith(('data:', '#')):
@@ -351,7 +387,6 @@ def select_browser_executable(chromium, executable=None):
 def browser_check(path, out, executable=None):
     """Exercise the standalone guide; serve only its exact HTML bytes locally."""
     from playwright.sync_api import sync_playwright
-    from pypdf import PdfReader
     raw = path.read_bytes()
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -369,7 +404,7 @@ def browser_check(path, out, executable=None):
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     origin = 'http://127.0.0.1:' + str(server.server_port)
-    checks, print_pages, errors, external = [], {}, [], []
+    checks, errors, external = [], [], []
     try:
         with sync_playwright() as p:
             selected = select_browser_executable(p.chromium, executable)
@@ -390,6 +425,8 @@ def browser_check(path, out, executable=None):
             page.wait_for_selector('html[data-ready=true]')
             assert page.locator('main > section').count() == 29
             checks.append('all29chaptersAndAppendices')
+            assert page.locator('#print').count() == 0
+            checks.append('noPrintOrPdfExport')
             for lang in ('ja', 'en'):
                 page.locator(f'button[data-language="{lang}"]').click()
                 assert page.locator('html').get_attribute('data-lang') == lang
@@ -399,17 +436,38 @@ def browser_check(path, out, executable=None):
                 assert page.locator('main > section:not([hidden])').count() > 0
                 page.locator('#search-clear').click()
                 assert page.locator('main > section:not([hidden])').count() == 29
+                for width in (320,390,768,1440):
+                    page.set_viewport_size({'width':width,'height':844})
+                    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                 page.set_viewport_size({'width':390,'height':844})
-                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                assert page.evaluate("""() => {
+                    const tokens = [...document.querySelectorAll('table code')]
+                        .filter(node => node.getClientRects().length);
+                    return tokens.every(node => {
+                        const range = document.createRange();
+                        range.selectNodeContents(node);
+                        return getComputedStyle(node).whiteSpace === 'nowrap'
+                            && range.getClientRects().length === 1;
+                    });
+                }""")
+                for selector in ('#ch-6-4 .table-scroll', '#ch-12-4 .table-scroll'):
+                    region = page.locator(selector)
+                    assert region.evaluate('node => node.scrollWidth > node.clientWidth')
+                code_check = page.evaluate("""() => {
+                    const blocks = [...document.querySelectorAll(
+                        '#ch-9-2 .codeblock--source pre, #ch-10-2 .codeblock--source pre')];
+                    const text = blocks.map(node => node.textContent).join('\\n');
+                    return blocks.length > 0
+                        && blocks.every(node => getComputedStyle(node).whiteSpace === 'pre')
+                        && blocks.some(node => node.scrollWidth > node.clientWidth)
+                        && ['EventID', 'DonationID', 'DonationAmountYen']
+                            .every(token => text.includes(token));
+                }""")
+                assert code_check
+                checks.append(f'{lang}.referenceTokensStayWholeWithHorizontalScroll')
                 page.set_viewport_size({'width':1440,'height':1000})
-                checks.extend([f'{lang}.languagePersists', f'{lang}.searchAndReset', f'{lang}.mobile390'])
-                page.emulate_media(media='print')
-                pdf = out / f'html-{lang}.pdf'
-                page.pdf(path=str(pdf), print_background=True, prefer_css_page_size=True)
-                print_pages[lang] = len(PdfReader(pdf).pages)
-                assert print_pages[lang] > 0
-                page.emulate_media(media='screen')
-                checks.append(f'{lang}.printPdf')
+                checks.extend([f'{lang}.languagePersists', f'{lang}.searchAndReset',
+                               f'{lang}.responsive320_390_768_1440'])
             checkbox = page.locator('input[data-step]').first
             checkbox.check()
             page.reload(wait_until='load')
@@ -430,10 +488,6 @@ def browser_check(path, out, executable=None):
             page.locator('#lightbox-close').click()
             assert not page.locator('#lightbox').is_visible()
             checks.append('figureZoom')
-            page.evaluate('window.print=()=>{window.__printInvoked=true}')
-            page.locator('#print').click()
-            assert page.evaluate('window.__printInvoked === true')
-            checks.append('printButton')
             assert not errors, errors
             assert not external, external
             checks.extend(['noScriptErrors','noExternalRequests'])
@@ -443,7 +497,7 @@ def browser_check(path, out, executable=None):
         server.server_close()
         thread.join(timeout=5)
     return {'passed':True, 'performed':True, 'browserVersion':version, 'htmlSha256':digest(raw),
-            'checks':checks, 'printedPages':print_pages, 'allPrintedPagesVisuallyReviewed':False}
+            'checks':checks}
 
 
 def require_validated(path, receipt):
@@ -482,7 +536,7 @@ def package(root, path, lab, receipt_path, output):
     files['LAB_VALIDATION.json']=json_bytes(lab_validation)
     attachment_root=root/'workshop/v3.0.0-preview/attachments'
     attachment_manifest=json.loads((attachment_root/'manifest.json').read_text(encoding='utf-8'))
-    for name in ('business-requirements.pdf','data-dictionary.txt','domain-model.png',
+    for name in ('business-requirements.txt','data-dictionary.txt','domain-model.png',
                  'revision-requirements.txt','manifest.json','SHA256SUMS.txt'):
         blob=(attachment_root/name).read_bytes()
         if name in attachment_manifest['files']:
@@ -511,11 +565,11 @@ def package(root, path, lab, receipt_path, output):
     ).encode('utf-8')
     files['PACKAGE_MANIFEST.json'] = json_bytes({'schemaVersion':'furusato-current-html-lab-package/v1',
         'deliveryMode':'html-lab','workshopVersion':PUBLICATION.version,
+        'participantManualFormat':'html','retiredManualFormats':['.docx','.pdf'],
         'files':{name:digest(blob) for name,blob in sorted(files.items())},
         'liveFabricValidationClaimed':False})
     files['SHA256SUMS.txt'] = ''.join(digest(blob)+'  '+name+'\n' for name,blob in sorted(files.items())).encode()
-    if any(name.endswith('.docx') for name in files):
-        raise ValueError('The current participant package must not contain a retired guide')
+    validate_retired_document_inventory(files)
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
         for name,blob in sorted(files.items()):
@@ -525,6 +579,7 @@ def package(root, path, lab, receipt_path, output):
     with zipfile.ZipFile(output) as archive:
         if archive.testzip() is not None:
             raise ValueError('Package CRC verification failed')
+        validate_retired_document_inventory(archive.namelist())
         for name,blob in files.items():
             if archive.read(name) != blob:
                 raise ValueError('Packaged bytes differ: ' + name)

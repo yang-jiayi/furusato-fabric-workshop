@@ -3,16 +3,15 @@
 現行Workshopでは [measured-contract-20261015](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
 を使います。4 個の論理的な接続先と Ontology 1 件を維持し、実在する native 要素・独立 SQL metadata・公開 model の
 10メジャー定義を照合してDraftを生成する可搬compilerです。作成だけではサービスへ公開しません。
-実回答で確認した改善と残件は [2026-10-10実測資料](../../docs/v3.0.0/tuning-20261010/README.md)、
-導入・比較評価・Word/HTML校正は [校正手順](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
-を参照してください。これらは当該日付の記録です。新しい配置・評価は
-[2026-10-15 作業レポート](../../docs/v3.0.0/tuning-20261015/README.md) を参照してください。
+参加者向けの手順と評価方法は、現行の[第17章](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md)、
+[第19章](../../Lab/19-evaluate-and-improve-ai-answer-quality/README.md)、
+[日英HTML手順書](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true)を参照してください。
+回答品質の判定には実際のソース、問い合わせ、結果を使用し、構成の再現だけで精度を受入済みにしません。
 
-Use the current measured profile linked above for the current course. It compiles
-locally from observed metadata, keeps one Ontology and all four logical source identities,
-and checks the actual ten model measures. Publication/readback and fresh answer
-validation are separate operator steps. Earlier reference-only and regression
-records below describe their own dated scopes; they are not the latest overall score.
+Use The current measured profile linked above compiles locally from observed metadata,
+keeps one Ontology and all four logical source identities, and checks the actual
+ten model measures. Publication/readback and fresh answer validation are separate
+operator steps; configuration generation is not an answer-accuracy result.
 
 The bootstrap [`global-instructions.txt`](../../workshop/v3.0.0-preview/data-agent/global-instructions.txt)
 also keeps source-specific period defaults, raw/static population boundaries,

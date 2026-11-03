@@ -4,6 +4,8 @@
 
 よくある症状と、確認すること・対処を示します。設定や権限を自分で変更せず、解決しない場合は講師に伝えてください。
 
+図の Microsoft Azure Public Service Icons V24（2026年7月）は Microsoft Corporation に帰属します。明示的な許可がない限り、建築図・教材・ドキュメントの目的に限って複製・配布・表示できます。図では製品名をアイコンの近くに置き、Azure 内での表示に沿って使います。切り抜き、反転、回転、変形、および自社製品・サービスを表すための使用は禁止です。これらのアイコンにリポジトリの MIT ライセンスは適用されず、Microsoft の後援・推奨を意味しません。Microsoft Fabric のアイコンは MIT ライセンスの `@fabric-msft/svg-icons` 8.2.0 を使用し、Microsoft Entra のアイコンは公式の利用条件に従って図・教材・ドキュメントに限り使用します。
+
 **うまくいかないときの確認**
 
 | 症状 | 確認と対処 |
@@ -19,7 +21,7 @@
 | 時系列の観測が0件になる | 所有範囲・schema・RLS、DonationEvents の mirroring policy の安全な読み取り、実際の Delta add と parquet、KQL との件数・金額・キー・UTC 時刻・重複の照合を確認します。その後、DonatedAt、MunicipalityID → MunicipalityId、DonationEvents テーブル（ビューではない）の native バインドと実行クエリを確認します。Delta が無い、不一致、Backfill=true の HTTP 400、RLS や policy が互換でない場合は停止し、再試行・reset・off/on・再取り込みやセキュリティ無効化をしません。CompletionPercentage=100% や定義の読み取りだけでは、native 時系列・Metrics の照会成功にはなりません。 |
 | Notebook 02 が停止する | 24章の自動配置で作成した Ontology か、handoff-ontology の実行前か、Metrics を追加していないかを確認します。適用が「Explicit expected-definition SHA differs」で止まった場合は、プレビューをやり直し、出力の beforeDefinitionSha256 を EXPECTED_DEFINITION_SHA256 に設定します。 |
 | Metrics が表示されない | 主 Ontology で Metrics が設定済みか、メジャーを持つテーブルと Read・Build 権限を確認します。未設定の場合は未設定として記録します。2件目を作成せず、直接 Semantic model の DAX を別に確認します。 |
-| Graph で Ineligible と表示される | ツールチップの理由を読みます。キー、バインド、ソースの種類（Semantic model から作った Entity は対象外）、バインド先のテーブルの数を確認します。 |
+| Graph で Ineligible と表示される | ツールチップの理由を読み、キー、現在のバインドと実際のソース、backing table の数を確認します。Graph projection は Lakehouse または mirrored database の Delta table が対象で、現在 Semantic model に binding された Entity type や複数の backing table を使う Entity type は未対応です。作成元や汎用的な binding 表示だけから理由を推定せず、必要な項目が Ineligible なら記録してその範囲の実体化を停止します。根拠のない再 binding は行いません。 |
 | Eligible なのに Materialize が失敗する | 時系列 Property などの型の対応を確認し、エラーを記録してその機能を停止します。主 Ontology や時系列は変更せず、別の Ontology も作りません。 |
 | Rule を登録しても通知されない | 仕様どおりです。Rules は AI が説明に使う文脈で、通知や処理は行いません。ファイルの到着による処理は Activator（9章）で行います。 |
 | 添付ファイルの内容が回答に使われない | 同じ会話で添付したか、ファイル名を挙げて依頼したか、1会話10ファイル・1ファイル 5 MB 以内かを確認します。ページを更新すると、添付は使えなくなります。 |
@@ -47,7 +49,6 @@
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources
 - https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview
@@ -55,6 +56,9 @@
 - https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse
 - https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction
 - https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs
+- https://learn.microsoft.com/azure/architecture/icons/
+- https://learn.microsoft.com/fabric/fundamentals/icons
+- https://learn.microsoft.com/entra/architecture/architecture-icons
 
 <details>
 <summary>English</summary>
@@ -62,6 +66,8 @@
 ## E.1 Checks and fixes
 
 Common symptoms, with what to check and how to fix them. Do not change settings or permissions yourself; if a problem is not solved, tell the instructor.
+
+The Microsoft Azure Public Service Icons V24 (July 2026) in the diagrams are © Microsoft Corporation. Unless Microsoft grants explicit permission, they may be copied, distributed and displayed only for architecture diagrams, training materials or documentation. Keep product names close to icons in diagrams and show the icons as they appear within Azure. Do not crop, flip, rotate or distort them, or use them to represent your own product or service. The repository's MIT license does not relicense these icons, and no Microsoft sponsorship or endorsement is implied. Microsoft Fabric icons use `@fabric-msft/svg-icons` 8.2.0 under its MIT license; Microsoft Entra icons are used only in diagrams, training materials and documentation under their official terms.
 
 **Troubleshooting**
 
@@ -72,13 +78,13 @@ Common symptoms, with what to check and how to fix them. Do not change settings 
 | Notebooks 02–04 stop at the checks before running | Check that ENVIRONMENT (dev, test or prod), SCOPE_FILE, PRIVATE_EVIDENCE_DIR (the run-record folder) and EXPECTED_WORKSPACE_NAME (the exact display name) are set. Also check that the Notebook is in the folder named in the scope file. Stages that write also need APPLY_CHANGES, CONFIRMED_PLAN_SHA256 and WRITE_GATE_FILE (the approval file). |
 | The Notebook 05 apply run stops on a hash mismatch | Run the preview again and copy the new PLAN_SHA256. If PARTICIPANT_ID, INCREMENT_PATH or ALLOW_AUTOMATED_APPLY (and, when it is True, EXPECTED_WORKSPACE_NAME) differ between the preview and the apply run, the hash changes. |
 | Tables are missing or counts look old in the SQL analytics endpoint | Wait for synchronization and check again. Do not rerun Notebook 01. |
-| Instances shows no rows | Check the bound table, columns and key, and the SQL analytics endpoint synchronization. |
+| The Instances tab shows no rows | Check the bound table, columns and key, and the SQL analytics endpoint synchronization. |
 | No Activator activation is recorded | Check that you did Edit action → Apply → Save while the rule was stopped, that you started the rule, that the file is in Files/increment and that FileCreated arrived in Live feed. Do not re-upload; stop the rule and tell the instructor. |
 | KQL row counts are twice the expected value | The same file was ingested twice (re-uploaded, or both automatic and manual). Stop further ingestion and tell the instructor. Deleting data requires the instructor's approval. |
 | The time series shows zero observations | Check ownership scope, schema and RLS, safe DonationEvents mirroring policy readback, actual Delta add/parquet, and reconciliation with KQL for counts, amounts, keys, UTC timestamps and duplicates. Then verify the native binding to DonatedAt, MunicipalityID → MunicipalityId and the DonationEvents table (not the view), plus the executed query. Stop for missing Delta, mismatches, Backfill=true HTTP 400, or incompatible RLS/policy; do not retry, reset, toggle off/on, replay or disable security. CompletionPercentage=100% or definition readback alone is not successful native time-series or Metrics query execution. |
 | Notebook 02 stops | Check that the ontology was created by the automated deployment in Chapter 24, that handoff-ontology has not run yet and that no Metrics were added. If the apply run stops with "Explicit expected-definition SHA differs", run the preview again and set EXPECTED_DEFINITION_SHA256 to the beforeDefinitionSha256 value in its output. |
 | Metrics are not shown | Check whether Metrics are configured on the main ontology, the measure-owning table, and Read and Build permissions. Record unconfigured state as such, retain one ontology, and check direct semantic-model DAX separately. |
-| Graph shows Ineligible | Read the reason in the tooltip. Check the key, the bindings, the source type (entities generated from a semantic model are not eligible) and the number of bound tables. |
+| Graph shows Ineligible | Read the tooltip reason and check the key, current bindings, actual source and number of backing tables. Graph projection supports Delta tables in Lakehouses or mirrored databases; entity types currently bound to semantic models or using multiple backing tables are unsupported. Do not infer the reason from creation provenance or a generic binding display. If a required item is Ineligible, record it and stop materialization for that scope; do not attempt an unsupported rebind. |
 | Materialize fails although items are Eligible | Check time-series and other type support, record the error and stop that feature. Keep the main ontology and time series unchanged without creating another ontology. |
 | A registered rule sends no alerts | This is expected. Rules are context for AI explanations and do not send alerts or run actions. Processing on file arrival is done by the Activator (Chapter 9). |
 | Attached file content is not used in answers | Check that you attached the files in the same conversation, referred to them by name, and stayed within 10 files per conversation and 5 MB per file. Refreshing the page makes attachments unavailable. |
@@ -106,7 +112,6 @@ Common symptoms, with what to check and how to fix them. Do not change settings 
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources
 - https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview
@@ -114,5 +119,8 @@ Common symptoms, with what to check and how to fix them. Do not change settings 
 - https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse
 - https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction
 - https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs
+- https://learn.microsoft.com/azure/architecture/icons/
+- https://learn.microsoft.com/fabric/fundamentals/icons
+- https://learn.microsoft.com/entra/architecture/architecture-icons
 
 </details>

@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-この Lab または HTML と、同じ版の参加者用 ZIP を1組で使います。ZIP の guide に手順書、attachments に添付資料、source に Notebook・データ・実行ツールがあります。初回は4章から24.4〜24.6へ進んで自分で基盤を配置し、5〜8章で作成済みの内容を確認します。24.7と9〜11章で取り込みと品質処理、24.8でモデルと Agent の配置を終えます。17章で調整済み構成を適用し、19章と付録Cで評価します。利用できないプレビュー機能は別に記録します。
+日英HTMLを主な手順書として開き、GitHub の Lab を各操作の Markdown 参照として使い、同じ版の参加者用 ZIP を利用します。ZIP の guide にHTML、attachments に添付資料、source に Notebook・データ・実行ツールがあります。初回は4章から24.4〜24.6へ進んで自分で基盤を配置し、5〜8章で作成済みの内容を確認します。24.7と9〜11章で取り込みと品質処理、24.8でモデルと Agent の配置を終えます。17章で構成を読み戻し、19章と付録Cで評価します。利用できないプレビュー機能は別に記録します。
 
 このワークショップでは、ふるさと納税を題材にした合成データを使います。Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent を組み合わせて、業務の意味を共有できるデータ基盤を作ります。自治体名と自治体コードだけが実在の参照ラベルで、寄付・寄付者・事業者・返礼品はすべて架空のデータです。
 
@@ -20,7 +20,7 @@
 
 ## 1.1 What you will do
 
-Use this Lab or HTML guide together with the participant ZIP of the same version. In the ZIP, guide contains instructions, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Apply the tuned configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.
+Use the bilingual HTML as the primary handbook, the GitHub Lab as the step-by-step Markdown companion, and the participant ZIP of the same version. In the ZIP, guide contains the HTML, attachments the reference files, and source the Notebooks, data and tools. On your first run, go from Chapter 4 to 24.4–24.6 to deploy your own core resources, then inspect them in Chapters 5–8. Complete ingestion and quality processing through 24.7 and Chapters 9–11, then deploy the model and Agent in 24.8. Read back the configuration in Chapter 17 and evaluate in Chapter 19 and Appendix C. Record unavailable preview features separately.
 
 In this workshop you use synthetic data about furusato (hometown tax) donations and combine Microsoft Fabric Lakehouse, Eventhouse, Ontology, semantic model and Data Agent into a data platform that shares business meaning. Only municipality names and codes are real reference labels; all donations, donors, suppliers and gifts are fictitious.
 

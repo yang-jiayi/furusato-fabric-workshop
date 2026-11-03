@@ -10,7 +10,6 @@ import os
 import re
 import sys
 from pathlib import Path
-from xml.sax.saxutils import escape
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools" / "docs"))
@@ -19,7 +18,7 @@ from furusato_docs.context import load_context  # noqa: E402
 
 MAX_BYTES = 5 * 1024 * 1024
 PACK_NAMES = (
-    "business-requirements.pdf",
+    "business-requirements.txt",
     "data-dictionary.txt",
     "domain-model.png",
     "revision-requirements.txt",
@@ -133,6 +132,28 @@ def assert_portable(text: str) -> None:
         raise ValueError("Attachment contains a GUID, URL, account, secret marker or machine path.")
 
 
+def requirements_text() -> str:
+    lines = [
+        "Furusato 業務要件 / Business requirements",
+        "",
+        "3.1.0 · Synthetic training context · 2026-10-31",
+        "",
+    ]
+    for number, (ja_title, ja, en_title, en) in enumerate(REQUIREMENTS, 1):
+        assert_portable(ja + en)
+        lines.extend([
+            f"{number}. {ja_title} / {en_title}",
+            "",
+            ja,
+            "",
+            en,
+            "",
+        ])
+    text = "\n".join(lines)
+    assert_portable(text)
+    return text
+
+
 def dictionary(context) -> str:
     lines = [
         "Furusato Workshop 3.0 Preview | portable data dictionary / データ辞書",
@@ -221,48 +242,6 @@ def dictionary(context) -> str:
     return text
 
 
-def requirements_pdf(output: Path, font: Path) -> None:
-    from reportlab.lib import colors
-    from reportlab.lib.enums import TA_LEFT
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib.styles import ParagraphStyle
-    from reportlab.pdfbase import pdfmetrics
-    from reportlab.pdfbase.ttfonts import TTFont
-    from reportlab.platypus import KeepTogether, Paragraph, SimpleDocTemplate, Spacer
-
-    pdfmetrics.registerFont(TTFont("WorkshopJP", str(font), subfontIndex=0))
-    normal = ParagraphStyle("normal", fontName="WorkshopJP", fontSize=10, leading=16, wordWrap="CJK", alignment=TA_LEFT)
-    title = ParagraphStyle("title", parent=normal, fontSize=19, leading=28, textColor=colors.HexColor("#075e54"), spaceAfter=12)
-    heading = ParagraphStyle("heading", parent=normal, fontSize=12, leading=18, textColor=colors.HexColor("#075e54"), spaceAfter=6)
-    doc = SimpleDocTemplate(
-        str(output), pagesize=A4, rightMargin=45, leftMargin=45, topMargin=48, bottomMargin=46,
-        title="Furusato synthetic business requirements / 合成業務要件",
-        author="Furusato Fabric Workshop", subject="Conversation-local ontology design context", invariant=1,
-    )
-    story = [
-        Paragraph("Furusato 業務要件 / Business requirements", title),
-        Paragraph("3.0 Preview · Synthetic training context · 2026-09-30", normal),
-        Spacer(1, 14),
-    ]
-    for number, (ja_title, ja, en_title, en) in enumerate(REQUIREMENTS, 1):
-        assert_portable(ja + en)
-        story.append(KeepTogether([
-            Paragraph(f"{number}. {escape(ja_title)} / {escape(en_title)}", heading),
-            Paragraph(escape(ja), normal),
-            Spacer(1, 5),
-            Paragraph(escape(en), normal),
-            Spacer(1, 13),
-        ]))
-
-    def footer(canvas, _doc):
-        canvas.setFont("WorkshopJP", 8)
-        canvas.setFillColor(colors.HexColor("#3f5550"))
-        canvas.drawString(45, 26, "Synthetic / 合成教材 · Context only / 会話文脈のみ")
-        canvas.drawRightString(A4[0] - 45, 26, str(_doc.page))
-
-    doc.build(story, onFirstPage=footer, onLaterPages=footer)
-
-
 def domain_png(output: Path, context, font: Path) -> None:
     from PIL import Image, ImageDraw, ImageFont, PngImagePlugin
 
@@ -310,8 +289,8 @@ def domain_png(output: Path, context, font: Path) -> None:
 def build(out: Path, font: Path) -> dict:
     context = load_context(ROOT, document_edition="unified-20260923", source_version="2.7.0")
     out.mkdir(parents=True, exist_ok=True)
+    (out / "business-requirements.txt").write_text(requirements_text(), encoding="utf-8", newline="\n")
     (out / "data-dictionary.txt").write_text(dictionary(context), encoding="utf-8", newline="\n")
-    requirements_pdf(out / "business-requirements.pdf", font)
     domain_png(out / "domain-model.png", context, font)
     revision = (
         "Revision exercise / 改訂演習 (Plan only until explicit approval)\n"
@@ -336,7 +315,7 @@ def build(out: Path, font: Path) -> dict:
             raise ValueError("Invalid attachment size: " + name)
         files[name] = {"bytes": path.stat().st_size, "sha256": sha(path)}
     manifest = {
-        "schemaVersion": "furusato-attachments/v1", "edition": "3.0.0-preview",
+        "schemaVersion": "furusato-attachments/v1", "edition": "3.1.0",
         "synthetic": True, "conversationScoped": True, "dataIngestion": False,
         "rdfImport": False, "containsPrivateEvaluationAnswers": False,
         "uploadObserved": False, "modelUseObserved": False,
@@ -346,7 +325,7 @@ def build(out: Path, font: Path) -> dict:
         },
         "maxFilesPerConversation": 10, "maxBytesPerFile": MAX_BYTES,
         "sourceDatasetVersion": context.dataset_manifest["datasetVersion"],
-        "font": {"name": font.name, "sha256": sha(font)},
+        "font": {"purpose": "Japanese labels in domain-model.png", "name": font.name, "sha256": sha(font)},
         "files": files,
     }
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

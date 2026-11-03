@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1770" viewBox="0 0 1600 1770" font-family="Segoe UI, Yu Gothic UI, Meiryo, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#435466"/>
+    </marker>
+    <style>
+      .lane { fill:#f7fafc; stroke:#b8c5d1; stroke-width:2; }
+      .lane-title { font-size:36px; font-weight:700; fill:#243447; }
+      .box { fill:#fff; stroke:#2872a8; stroke-width:3; }
+      .box-data { fill:#eaf5fb; stroke:#2872a8; stroke-width:3; }
+      .box-ai { fill:#eff8f1; stroke:#31804e; stroke-width:3; }
+      .name { font-size:34px; font-weight:700; fill:#172b3d; }
+      .detail { font-size:30px; fill:#34495e; }
+      .edge { stroke:#435466; stroke-width:4; fill:none; }
+      .edge-dash { stroke:#435466; stroke-width:4; fill:none; stroke-dasharray:12 9; }
+    </style>
+  </defs>
+  <rect width="1600" height="1690" fill="#fff"/>
+  <text x="60" y="82" font-size="42px" font-weight="700" fill="#172b3d">Furusato Fabric Workshop 3.1</text>
+  <text x="60" y="126" font-size="32px" font-weight="600" fill="#34495e">データフロー</text>
+
+  <rect class="lane" x="30" y="150" width="1540" height="235" rx="14"/>
+  <text class="lane-title" font-size="36" x="60" y="192">静的データ（5–7章）</text>
+  <rect class="box-data" x="60" y="215" width="380" height="150" rx="12"/>
+  <text class="name" font-size="34" x="82" y="260">8 CSV ファイル</text>
+  <text class="detail" font-size="30" x="82" y="304">寄附データ 80,000 件</text>
+  <text class="detail" font-size="30" x="82" y="345">Files/furusato/seed</text>
+  <rect class="box" x="600" y="215" width="360" height="150" rx="12"/>
+  <text class="name" font-size="34" x="622" y="260">Notebook 01</text>
+  <text class="detail" font-size="30" x="622" y="304">型付きテーブルを作成</text>
+  <rect class="box-data" x="1090" y="215" width="450" height="150" rx="12"/>
+  <text class="name" font-size="34" x="1112" y="260">Lakehouse</text>
+  <text class="detail" font-size="30" x="1112" y="304">ot_* テーブル 11 個</text>
+  <text class="detail" font-size="30" x="1114" y="345">1,344,099,000 円</text>
+  <path class="edge" marker-end="url(#arrow)" d="M440 290 H594"/>
+  <path class="edge" marker-end="url(#arrow)" d="M960 290 H1084"/>
+
+  <rect class="lane" x="30" y="395" width="1540" height="300" rx="14"/>
+  <text class="lane-title" font-size="36" x="60" y="437">8 月の観測データ（8–10章）</text>
+  <rect class="box-data" x="60" y="455" width="270" height="195" rx="12"/>
+  <text class="name" font-size="34" x="78" y="495">増分ファイル</text>
+  <text class="detail" font-size="30" x="78" y="535">5,000 行 × 3</text>
+  <text class="detail" font-size="30" x="80" y="575">重複を含む</text>
+  <text class="detail" font-size="30" x="82" y="615">Files/increment</text>
+  <rect class="box" x="355" y="455" width="270" height="185" rx="12"/>
+  <text class="name" font-size="34" x="373" y="495">OneLake</text>
+  <text class="detail" font-size="30" x="373" y="535">イベント</text>
+  <text class="detail" font-size="30" x="373" y="575">FileCreated</text>
+  <rect class="box" x="650" y="455" width="270" height="185" rx="12"/>
+  <text class="name" font-size="34" x="668" y="495">Activator</text>
+  <text class="detail" font-size="30" x="668" y="535">ルールで起動</text>
+  <rect class="box" x="945" y="455" width="270" height="185" rx="12"/>
+  <text class="name" font-size="34" x="963" y="495">Pipeline</text>
+  <text class="detail" font-size="30" x="963" y="535">Copy</text>
+  <rect class="box-data" x="1240" y="455" width="270" height="210" rx="12"/>
+  <text class="name" font-size="34" x="1258" y="495">Eventhouse</text>
+  <text class="detail" font-size="30" x="1258" y="535">(KQL)</text>
+  <text class="detail" font-size="30" x="1258" y="575">DonationEvents</text>
+  <text class="detail" font-size="30" x="1258" y="615">15,000 観測行</text>
+  <text class="detail" font-size="30" x="1260" y="655">253,886,000 円</text>
+  <path class="edge" marker-end="url(#arrow)" d="M330 545 H349"/>
+  <path class="edge" marker-end="url(#arrow)" d="M625 545 H644"/>
+  <path class="edge" marker-end="url(#arrow)" d="M920 545 H939"/>
+  <path class="edge" marker-end="url(#arrow)" d="M1215 545 H1234"/>
+  <text class="detail" font-size="30" x="60" y="745">静的データと観測データは別です。合算しません。</text>
+
+  <g transform="translate(0 80)">
+  <rect class="lane" x="30" y="705" width="1540" height="300" rx="14"/>
+  <text class="lane-title" font-size="36" x="790" y="747">品質処理とモデル（11–12章）</text>
+  <rect class="box-data" x="60" y="770" width="320" height="205" rx="12"/>
+  <text class="name" font-size="34" x="80" y="815">入力</text>
+  <text class="detail" font-size="30" x="80" y="860">静的: 11 ot_* 表</text>
+  <text class="detail" font-size="30" x="82" y="910">増分: 3 ファイル</text>
+  <rect class="box" x="460" y="770" width="300" height="205" rx="12"/>
+  <text class="name" font-size="34" x="480" y="815">Notebook 05</text>
+  <text class="detail" font-size="30" x="480" y="860">品質チェック</text>
+  <text class="detail" font-size="30" x="482" y="910">重複を隔離</text>
+  <rect class="box-data" x="830" y="770" width="350" height="230" rx="12"/>
+  <text class="detail" font-size="30" font-weight="700" x="850" y="815">Gold (gold.donations)</text>
+  <text class="detail" font-size="30" x="850" y="855">94,900 行</text>
+  <text class="detail" font-size="30" x="852" y="893">静的 80,000</text>
+  <text class="detail" font-size="30" x="854" y="933">増分 14,900 件</text>
+  <text class="detail" font-size="30" x="856" y="971">1,596,157,000 円</text>
+  <rect class="box-data" x="1210" y="770" width="340" height="205" rx="12"/>
+  <text class="name" font-size="34" x="1230" y="815">Semantic model</text>
+  <text class="detail" font-size="30" x="1230" y="855">DAX</text>
+  <text class="detail" font-size="30" x="1230" y="895">寄附総額・件数</text>
+  <text class="detail" font-size="30" x="1232" y="935">などのメジャー</text>
+  <path class="edge" marker-end="url(#arrow)" d="M380 870 H454"/>
+  <path class="edge" marker-end="url(#arrow)" d="M760 870 H824"/>
+  <path class="edge" marker-end="url(#arrow)" d="M1180 870 H1204"/>
+  <rect class="lane" x="30" y="1015" width="1540" height="580" rx="14"/>
+  <text class="lane-title" font-size="36" x="60" y="1057">意味と AI での利用（6–7章・10章・12–23章）</text>
+  <rect class="box-ai" x="60" y="1080" width="660" height="300" rx="12"/>
+  <text class="name" font-size="34" x="82" y="1125">Ontology</text>
+  <text class="detail" font-size="30" x="82" y="1165">Entity type 10 個</text>
+  <text class="detail" font-size="30" x="84" y="1205">Relationship 15 個</text>
+  <text class="detail" font-size="30" x="82" y="1245">Lakehouse の列をバインド</text>
+  <text class="detail" font-size="30" x="82" y="1285">時系列: Eventhouse から（10章）</text>
+  <text class="detail" font-size="30" x="82" y="1325">Metrics: Semantic model から（12章）</text>
+  <rect class="box-ai" x="800" y="1080" width="650" height="220" rx="12"/>
+  <text class="name" font-size="34" x="822" y="1125">Graph (GQL)</text>
+  <text class="detail" font-size="30" x="822" y="1165">必要な Entity を選択</text>
+  <text class="detail" font-size="30" x="822" y="1205">選んで実体化（16章）</text>
+  <text class="detail" font-size="30" x="822" y="1245">適格性を環境で確認</text>
+  <path class="edge" marker-end="url(#arrow)" d="M720 1170 H794"/>
+  <rect class="box-ai" x="60" y="1400" width="950" height="190" rx="12"/>
+  <text class="name" font-size="34" x="82" y="1445">Fabric Data Agent (1)</text>
+  <text class="detail" font-size="30" x="82" y="1485">直接ソース: Lakehouse SQL ・ Eventhouse KQL</text>
+  <text class="detail" font-size="30" x="84" y="1525">Ontology ・ Semantic model (DAX)</text>
+  <text class="detail" font-size="30" x="86" y="1565">Code Interpreter で表・グラフを作成</text>
+  <rect class="box" x="1070" y="1400" width="480" height="190" rx="12"/>
+  <text class="name" font-size="34" x="1092" y="1445">MCP</text>
+  <text class="detail" font-size="30" x="1092" y="1485">外部クライアント</text>
+  <path class="edge" marker-end="url(#arrow)" d="M1010 1495 H1064"/>
+  <text class="detail" font-size="30" x="60" y="1635">概念図。ネイティブなバインディングや Graph 実体化の確認を示しません。</text>
+  <text class="detail" font-size="30" x="60" y="1670">点線: 増分ファイルは Notebook 05 の入力にもなります。</text>
+  </g>
+  <path id="increment-to-notebook05" class="edge-dash" marker-end="url(#arrow)" data-from="increment-files" data-to="notebook05" d="M60 600 H45 V800 H610 V844"/>
+</svg>

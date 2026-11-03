@@ -21,6 +21,19 @@ from furusato_html.model import Section, Text
 
 
 class CurrentDeliveryTests(unittest.TestCase):
+    def test_current_author_route_matches_edition_and_maintenance_readme_stays_out_of_package(self):
+        readme = (ROOT / "tools/docs/README.md").read_text(encoding="utf-8")
+        self.assertIn("CURRENT_HTML_LAB.md", readme)
+        self.assertIn("WORKSHOP_VERSION", readme)
+        self.assertNotIn("docs/v3.0.0", readme)
+        self.assertNotIn("docs/v3-preview", readme)
+        self.assertIn("no Word or PDF", readme)
+        files = delivery.approved_doc_files(
+            ROOT, set(delivery.subprocess.check_output(
+                ["git", "-C", str(ROOT), "ls-files", "-z"]).decode().split("\0")))
+        self.assertNotIn("tools/docs/README.md", files)
+        self.assertIn("tools/docs/CURRENT_HTML_LAB.md", files)
+
     def test_retired_word_guard_distinguishes_literal_source_vocabulary(self):
         self.assertFalse(delivery.retired_guide_reference(
             'It usually opens with a place-of-origin word such as a prefecture name.'))
@@ -28,6 +41,28 @@ class CurrentDeliveryTests(unittest.TestCase):
                       'use the word document', 'download the word file'):
             with self.subTest(value=value):
                 self.assertTrue(delivery.retired_guide_reference(value))
+
+    def test_current_package_rejects_all_word_and_pdf_entries(self):
+        self.assertEqual(0, delivery.validate_retired_document_inventory([
+            'guide/current.html', 'attachments/business-requirements.txt']))
+        for name in ('guide/legacy.docx', 'attachments/requirements.pdf',
+                     'source/docs/assets/upstream/Microsoft_Terms_of_Use.PDF'):
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, 'retired document exports'):
+                delivery.validate_retired_document_inventory(['guide/current.html', name])
+
+    def test_current_source_binds_textual_icon_terms_without_pdf(self):
+        manifest = delivery.current_source_manifest(ROOT)
+        files = manifest['files']
+        self.assertIn('docs/assets/architecture/upstream/NOTICE.txt', files)
+        self.assertNotIn('docs/assets/architecture/upstream/Microsoft_Terms_of_Use.pdf', files)
+        self.assertFalse(any(Path(name).suffix.lower() in {'.docx', '.pdf'} for name in files))
+        icon_manifest = json.loads((ROOT / 'docs/assets/architecture/icon-manifest.json').read_text(encoding='utf-8'))
+        for item in icon_manifest['licensingEvidence']:
+            self.assertTrue((ROOT / 'docs/assets/architecture' / item['localPath']).is_file())
+            self.assertNotEqual('.pdf', Path(item['localPath']).suffix.lower())
+        notice = (ROOT / 'docs/assets/architecture/upstream/NOTICE.txt').read_text(encoding='utf-8')
+        self.assertIn('Do not crop, flip, rotate or distort icons', ' '.join(notice.split()))
+        self.assertIn('https://learn.microsoft.com/azure/architecture/icons/', notice)
 
     def test_exact_experimental_profile_inputs_are_bound_in_current_package(self):
         files=delivery.current_profile_files(ROOT)
@@ -57,6 +92,15 @@ class CurrentDeliveryTests(unittest.TestCase):
                 self.assertIn(CurrentPublication(version).package_name, text)
                 self.assertNotIn('current-20261015.zip', text)
                 self.assertIn('source/workshop/v3.0.0-preview', text)
+                self.assertIn('API displayName (raw; value is between markers)', text)
+                self.assertIn('unmodified API value set by the command', text)
+                self.assertIn('Quoted JSON is an escaped representation, not the value to copy into scope.json', text)
+                self.assertIn('inspect the API output and code units', text)
+                self.assertIn('do not write if they differ', text)
+                self.assertIn('PowerShell 7 (pwsh)', text)
+                self.assertIn('winget install --exact --id Microsoft.PowerShell', text)
+                self.assertIn('Microsoftの公式インストール手順', text)
+                self.assertIn("Microsoft's official installation instructions", text)
         for description in PARAMETER_NOTES['NOTEBOOK_VERSION']:
             self.assertIn('NOTEBOOK_VERSION', description)
             self.assertNotIn('3.0.0', description)
@@ -71,6 +115,19 @@ class CurrentDeliveryTests(unittest.TestCase):
         for invalid in ('3.1','../3.1.0','3.1.0/guide','3.1.0-preview'):
             with self.subTest(version=invalid),self.assertRaises(ValueError):
                 CurrentPublication(invalid)
+
+    def test_html_lab_hero_does_not_repeat_the_purpose_as_a_status(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            html = (output / delivery.HTML_NAME).read_text(encoding='utf-8')
+        self.assertEqual(
+            1,
+            html.count('合成データを使い、Lakehouse・Eventhouse・Ontology・Data Agentを順に構築して確かめるハンズオン教材です。'),
+        )
+        self.assertNotIn('class="hero__status"', html)
+        self.assertIn('Do not crop, flip, rotate or distort them', html)
+        self.assertIn('https://learn.microsoft.com/azure/architecture/icons/', html)
 
     def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
         with tempfile.TemporaryDirectory() as temp:
@@ -194,7 +251,9 @@ class CurrentDeliveryTests(unittest.TestCase):
             with self.assertRaises(ValueError):delivery.checked_lab_files(lab,{'README.md':expected})
 
     def test_supplied_manifest_cannot_bypass_private_path_guard(self):
-        for name in ('tools/docs/.env','tools/data-agent/private/answer.json','tools/docs/storage-state.json'):
+        for name in ('tools/docs/.env','tools/data-agent/private/answer.json',
+                     'tools/docs/storage-state.json','workshop/attachments/manual.pdf',
+                     'docs/manual.docx'):
             with self.subTest(name=name),self.assertRaises(ValueError):
                 delivery.validate_source_manifest_paths(ROOT,{'files':{name:'0'*64}})
 

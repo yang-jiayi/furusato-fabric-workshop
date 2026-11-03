@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "aa102168358156d65409c66660ba971c479586f8",
+  "sourceCommit": "914f8fe37abf66e784e9aab07dbffc3f47d9c2f5",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "e755d930c9d85ccb51e2b2b2f6e74c58af712a91a4fdd360d46fc4c27670b8b9",
+  "sourceTreeSha256": "5485278715a20f92b476c8dae3ec8f2bee30dd2ad282b0555773f1758ec6fa62",
   "candidateSourceSha256": "60f9fefeabb09f4045c4ef8e5ad56257c515e63a6f020540d7a260bb6249e506",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -233,7 +233,7 @@
     "tools/docs/furusato_docs/participant30_details.py": "2a2092370ce44640b5d053be2b7c4763313c99c55ee561bc7808929c25382040",
     "tools/docs/furusato_docs/participant30_evaluation.py": "b8565013a0ce73407eb240d4693d70cc462e107c97b5d8fef6fa222b78c8cf38",
     "tools/docs/furusato_docs/participant30_figures.py": "222a624e2e92bd602825d1fefb3243ba65f381b4c46e2d1ca38f7ab263c024bb",
-    "tools/docs/furusato_docs/participant30_text.py": "6188b64ef9415cc3df32787db8ea6243a5790480d385e412ebe55f3194c756d9",
+    "tools/docs/furusato_docs/participant30_text.py": "009b5d020d16274439f43c9f99e2d72311cc0a248b3d09be2c25b5ada17dc2c9",
     "tools/docs/furusato_docs/participant30_tuning.py": "b5456fe357005efc2733dccc0b313e3dd344d61ce0314a00cfd63318521b78a4",
     "tools/docs/furusato_docs/participant_current_tuning.py": "67515c390ceadd3f3b105482cbb08f2dc5cf68cb6cd7f5cf07c4fe969e30231d",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
@@ -277,7 +277,7 @@
     "tools/docs/tests/test_notebook_payload.py": "d074dbf1abbcc35a2f66b679462145286d0270f22b886ee015ccbc31d4e7ff44",
     "tools/docs/tests/test_ontology_v2_calibration.py": "25848a608a3a29b97e076312dcc64fe6e9a12c4ff3a9e535886e942d303cf4b5",
     "tools/docs/tests/test_ontology_v2_report.py": "a84f0c6478a31777c46aa3d3586e452411c0345bdf58f30404e2fba7f2f9eaa9",
-    "tools/docs/tests/test_participant30.py": "931cffc99882fa195630ef7c4133e4abffcd67f6eac98c897a66f6090eb1a2d4",
+    "tools/docs/tests/test_participant30.py": "ed1602b20d2696eeaf0cbe74d6e0c65bd2d2c2d3517c1b258771e291cfa21e07",
     "tools/docs/tests/test_participant30_details.py": "dd13f76a612af92c86ada3b8bcefd5e34de09d28ae6e7a41fcaf957003b512a8",
     "tools/docs/tests/test_participant_practice_boundaries.py": "f56da92e326e79ff587ce88d8b2f541a741ab4572033ea89fe2f1d37bef5e8dd",
     "tools/docs/tests/test_participant_self_service.py": "ef07fc24bed82c9a9d4d46768711df68d352ae0dbd09e7319f80229b4d3afc8f",
@@ -961,9 +961,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "aa102168358156d65409c66660ba971c479586f8",
+    "baseCommit": "914f8fe37abf66e784e9aab07dbffc3f47d9c2f5",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "e755d930c9d85ccb51e2b2b2f6e74c58af712a91a4fdd360d46fc4c27670b8b9"
+    "sourceTreeSha256": "5485278715a20f92b476c8dae3ec8f2bee30dd2ad282b0555773f1758ec6fa62"
   }
 }

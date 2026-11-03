@@ -627,6 +627,50 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertNotIn("AzureStorage.DataLake", intro + before + steps + checks)
         self.assertNotIn("DirectLake means", intro + before + steps + checks)
 
+    def test_chapter18_scenario_c_gates_gql_and_keeps_results_independent(self):
+        scenario = text.CHAPTERS[18]["steps"][2]
+        japanese, english = scenario["text"]
+        for phrase in (
+            "16章で GQL を正常に実行できた場合",
+            "dbo.ot_supplier_gift 対応表から実在する GiftId",
+            "SQL での Supplier 確認と Data Agent への質問は独立",
+            "SQL の結果と Data Agent の質問・回答は、それぞれ別に記録",
+            "Graph が実際に実体化され、GQL 実行画面が利用可能な場合だけ",
+            "同じ GiftId に絞ります",
+            "理由付きで未実施",
+            "失敗として記録",
+            "GQL 実行の証拠になりません",
+        ):
+            self.assertIn(phrase, japanese)
+        for phrase in (
+            "if GQL ran successfully in Chapter 16",
+            "real GiftId from the dbo.ot_supplier_gift mapping",
+            "independently, using the same GiftId",
+            "Record the SQL result and the Data Agent question and answer separately",
+            "only if the graph is actually materialized and a GQL execution surface is available",
+            "Filter GQL to the same GiftId",
+            "unrun with the reason",
+            "record it as failed",
+            "are not evidence that GQL ran",
+        ):
+            self.assertIn(phrase, english)
+        self.assertEqual(
+            ("GiftId <GiftId> の返礼品を登録している事業者（Supplier）を、SupplierId と名前ですべて示してください。この関係が何を意味し、何を意味しないかも説明してください。",
+             "Show all suppliers registered for the gift with GiftId <GiftId>, with SupplierId and name. Also explain what this relationship means and what it does not mean."),
+            scenario["prompt"],
+        )
+
+        outputs = (
+            ROOT / "Lab/18-cross-source-business-scenario-exercises/02-18-2-steps.md",
+            ROOT / "docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html",
+        )
+        for output in outputs:
+            rendered = output.read_text(encoding="utf-8")
+            for phrase in ("dbo.ot_supplier_gift", "SQL and Data Agent results are not evidence that GQL ran",
+                           "SQL や Data Agent の結果は GQL 実行の証拠になりません"):
+                with self.subTest(output=output.name, phrase=phrase):
+                    self.assertIn(phrase, rendered)
+
     def test_graph_selection_figure_is_controls_only_and_uses_verified_crop(self):
         ident = "p30-16-eligibility"
         caption_ja, caption_en = figures.FIGURES[ident]["caption"]

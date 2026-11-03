@@ -1,7 +1,7 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "e043f9264a86e9dcca1dfd0fd6aa79db92d445a173c0115a2ac5006ab4255b61",
+  "contentSha256": "36058946fd57cfe320546185f77c40f83b16573e69695994c46bdaaf4cbb673d",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
@@ -12,18 +12,18 @@
     "figures": 43,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "ec6571afeaa14c2e177511da240b8178711dcb62a290364bf6824f59b4682391"
+    "htmlSha256": "80e9627ea3fed1f6e60c3883c7ca9e9c3de9c42e80ef61976668818b295f4424"
   },
   "sourceRevision": {
-    "baseCommit": "20a933c20f448387b0067916b52f5e9f97d891fb",
+    "baseCommit": "0568088efab74c8212efd61bc3e87ea7575bb3bf",
     "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "ef369757be983061c074ad7ba0e0cd7173130d96bf6a8604dde216a2022f6a11"
+    "sourceTreeSha256": "7e67fbd32b032b4eab04973a292357de153c540acb42a5f673c004bd99140140"
   },
   "currentArtifactSet": {
-    "manifestSha256": "4738a81061cf8963e65110e1eed7758ec7484d72d8a63f068e8114f85e8befc7",
-    "sourceCommit": "20a933c20f448387b0067916b52f5e9f97d891fb",
-    "sourceTreeSha256": "ef369757be983061c074ad7ba0e0cd7173130d96bf6a8604dde216a2022f6a11",
+    "manifestSha256": "7bc0cb40041318cb7ae2cfbd0388c3a708a4e2df13e6cf1db56ec41c25da4e5a",
+    "sourceCommit": "0568088efab74c8212efd61bc3e87ea7575bb3bf",
+    "sourceTreeSha256": "7e67fbd32b032b4eab04973a292357de153c540acb42a5f673c004bd99140140",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,14 +33,16 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "ec6571afeaa14c2e177511da240b8178711dcb62a290364bf6824f59b4682391",
+    "htmlSha256": "80e9627ea3fed1f6e60c3883c7ca9e9c3de9c42e80ef61976668818b295f4424",
     "checks": [
       "all29chaptersAndAppendices",
       "noPrintOrPdfExport",
+      "ja.everyOverflowingTableHasCueBeforeScroller390",
       "ja.referenceTokensStayWholeWithHorizontalScroll",
       "ja.languagePersists",
       "ja.searchAndReset",
       "ja.responsive320_390_768_1440",
+      "en.everyOverflowingTableHasCueBeforeScroller390",
       "en.referenceTokensStayWholeWithHorizontalScroll",
       "en.languagePersists",
       "en.searchAndReset",

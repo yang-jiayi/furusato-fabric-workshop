@@ -7,11 +7,11 @@
 3. SupplierProvidesGift だけは Use mapping table? がオンで、ot_supplier_gift の SupplierId と GiftId がそれぞれ対応することを確認します。既存の設定は変更せず、新たに不足分を作成した場合だけ入力します。
 4. 既存関係の確認では Save を押さず Cancel で閉じます。不足分を作成して実際に設定を入力した場合だけ Save を選び、成功通知を確認してから閉じます。Configure の Relationships で向きと列を読み直します。変更がなく Save が無効でも、保存のために設定を変えません。
 5. 残りの関係も既存一覧と表を照合し、不完全な対象で不足するものだけを同じ手順で作成します。すべて存在すれば読み取り確認だけです。表の名前を使い、既存関係の作り直しや名前を変えた関係の追加は行いません。
-6. Home で、10の Entity type と15の Relationship がすべて表示されることを確認します（Visible: 10 of 10 entities | 15 of 15 relationships）。
+6. Home の Full ontology を開き、canvas 左下の fit view（＋／−の下にある四隅アイコン）を選んで全体を表示します。Visible 件数が 10 of 10 entities | 15 of 15 relationships になることを確認します。Visible の件数は表示範囲や拡大率で変わり、一部が見えないだけでは定義が不足しているとは限りません。既存の関係一覧と表を照合し、15の Relationship の存在・向き・両側のキー列を読み取り確認します。関係を作り直したり Save したりしません。
 
-![Ontology Home の Relationship グラフの表示例。参加者自身の15関係の存在・向き・列は別途確認する。](../assets/p30-07-relationships.png)
+![Home の Full ontology で fit view を選んだ画面。10 of 10 entities | 15 of 15 relationships と表示され、関係の存在・向き・両側のキーは別途確認する。](../assets/p30-07-relationships.png)
 
-Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されています（グラフの一部は画面外です）。24.6で配置済みなら既存の15関係を確認し、不足する関係だけを作成します。
+Home の Full ontology で fit view を選んだネイティブ画面。Visible は 10 of 10 entities | 15 of 15 relationships。表示件数は表示範囲や拡大率で変わります。各関係の存在・向き・両側のキーは別途読み取り確認してください。
 
 <details>
 <summary>English</summary>
@@ -23,10 +23,10 @@ Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 rel
 3. For SupplierProvidesGift only, set “Use mapping table?” to On; map SupplierId and GiftId from ot_supplier_gift to the corresponding entity keys. Inspect existing settings without changing them; enter them only for a newly created missing relationship.
 4. For an existing relationship inspection, close with Cancel without saving. Select Save only after entering settings for a newly created missing relationship, confirm success, then close. Read back the direction and columns in Configure → Relationships. If Save is disabled because nothing changed, do not edit settings merely to enable it.
 5. Compare the remaining relationships with the table and create only missing ones in an incomplete target. If all exist, inspect only. Use the listed names; do not recreate existing relationships or add renamed variants.
-6. On Home, confirm that all 10 entity types and 15 relationships are shown (Visible: 10 of 10 entities | 15 of 15 relationships).
+6. Open Full ontology on Home, then select fit view at the canvas lower left (the four-corner icon below + and −) to show the whole graph. Confirm the Visible count reads 10 of 10 entities | 15 of 15 relationships. Visible counts depend on the viewport and zoom; a partial view alone does not mean definitions are missing. Reconcile the existing relationship list with the table and inspect the existence, direction and keys on both sides of all 15 relationships read-only. Do not recreate relationships or Save.
 
-![Illustrative Ontology Home relationship graph; separately verify the existence, direction and columns of your own fifteen relationships.](../assets/p30-07-relationships.png)
+![Home Full ontology after fit view, showing 10 of 10 entities | 15 of 15 relationships; verify each relationship’s existence, direction and keys on both sides separately.](../assets/p30-07-relationships.png)
 
-Ontology Home example. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, with part of the graph outside the viewport. If deployed in Chapter 24.6, check the existing fifteen relationships and create only those that are missing.
+Native Home Full ontology view after selecting fit view. Visible reads 10 of 10 entities | 15 of 15 relationships. Counts vary with the viewport and zoom; separately inspect each relationship’s existence, direction and keys on both sides.
 
 </details>

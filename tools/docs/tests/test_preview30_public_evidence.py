@@ -474,6 +474,21 @@ class CurrentParticipantCaptureTests(unittest.TestCase):
         loaded = public.load_current_captures(path, root=ROOT)
         self.assertTrue(loaded["currentParticipantCaptures"])
         self.assertEqual(20, len(loaded["captures"]))
+        graph_capture = loaded["captures"]["p30-07-relationships"]
+        self.assertEqual("2026-11-03T20:09:45.607Z", graph_capture["capturedAt"])
+        self.assertEqual(
+            "369d1834b2fbd3bafc8239cfa053c0404a6610fd93c2d2030aeb2cc4ef036677",
+            graph_capture["originalSha256"],
+        )
+        self.assertEqual(
+            "6530af1754ccbece89dfd4d353ed036dbd395c4da4961c906086812dac6fee64",
+            graph_capture["sha256"],
+        )
+        with Image.open(graph_capture["path"]) as image:
+            self.assertEqual((1010, 1165), image.size)
+        self.assertFalse(
+            (path.parent / "captures" / "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png").exists()
+        )
         for capture in loaded["captures"].values():
             self.assertTrue(capture["path"].is_relative_to(path.parent))
             self.assertTrue(capture["path"].is_relative_to(ROOT / "docs" / "assets" / "current-participant-captures"))

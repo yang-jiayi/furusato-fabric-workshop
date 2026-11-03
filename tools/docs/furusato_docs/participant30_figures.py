@@ -91,10 +91,10 @@ FIGURES = {
                 'Municipality Instances tab: a table of municipality rows with eight columns, from MunicipalityId to PrefectureId.'),
     },
     'p30-07-relationships': {
-        "caption": ('Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されています（グラフの一部は画面外です）。24.6で配置済みなら既存の15関係を確認し、不足する関係だけを作成します。',
-                    'Ontology Home example. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, with part of the graph outside the viewport. If deployed in Chapter 24.6, check the existing fifteen relationships and create only those that are missing.'),
-        "alt": ('Ontology Home の Relationship グラフの表示例。参加者自身の15関係の存在・向き・列は別途確認する。',
-                'Illustrative Ontology Home relationship graph; separately verify the existence, direction and columns of your own fifteen relationships.'),
+        "caption": ('Home の Full ontology で fit view を選んだネイティブ画面。Visible は 10 of 10 entities | 15 of 15 relationships。表示件数は表示範囲や拡大率で変わります。各関係の存在・向き・両側のキーは別途読み取り確認してください。',
+                    'Native Home Full ontology view after selecting fit view. Visible reads 10 of 10 entities | 15 of 15 relationships. Counts vary with the viewport and zoom; separately inspect each relationship’s existence, direction and keys on both sides.'),
+        "alt": ('Home の Full ontology で fit view を選んだ画面。10 of 10 entities | 15 of 15 relationships と表示され、関係の存在・向き・両側のキーは別途確認する。',
+                'Home Full ontology after fit view, showing 10 of 10 entities | 15 of 15 relationships; verify each relationship’s existence, direction and keys on both sides separately.'),
     },
     'p30-09-copy-002': {
         "caption": ('Pipeline の実行の Copy data1 の Output。Succeeded で、rowsRead と rowsCopied がともに 5000（1ファイル分）',

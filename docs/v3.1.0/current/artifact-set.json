@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "e45efcee3d3031be427b7046d80f127bfe1cacc0",
+  "sourceCommit": "aa102168358156d65409c66660ba971c479586f8",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "cd1114a69c734bc1e26cf6b5cf02d3b6dfd0570a69ea6eb1dbc9e4229fb8ccf0",
+  "sourceTreeSha256": "e755d930c9d85ccb51e2b2b2f6e74c58af712a91a4fdd360d46fc4c27670b8b9",
   "candidateSourceSha256": "60f9fefeabb09f4045c4ef8e5ad56257c515e63a6f020540d7a260bb6249e506",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -64,11 +64,11 @@
     "docs/assets/current-diagrams/system-data-flow.svg": "9b66b6e30a5e212f339da99857010c43c7930b59f64d3eaa4369ce390fd5c5f8",
     "docs/assets/current-participant-captures/captures/14c905263756f76a5fedad91ce4b7e0e17fcfb069c8ca78e520011954cf2f3f4.png": "14c905263756f76a5fedad91ce4b7e0e17fcfb069c8ca78e520011954cf2f3f4",
     "docs/assets/current-participant-captures/captures/25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c.png": "25a723f51f24817cc18e50f11ab08a43df9305a72aff2696592fadc63c03f51c",
-    "docs/assets/current-participant-captures/captures/266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png": "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83",
     "docs/assets/current-participant-captures/captures/2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f.png": "2d6e7bb7ef037c895c47fb73133b215adb120666e10ebcb723b07db235e8917f",
     "docs/assets/current-participant-captures/captures/335a63411b2cac229c86ed9813c2e8cd7af7c530b375482342ed450e13f59858.png": "335a63411b2cac229c86ed9813c2e8cd7af7c530b375482342ed450e13f59858",
     "docs/assets/current-participant-captures/captures/3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35.png": "3c7ebbcc5ca970cefd0b7b599090101eb81fe8766b45b737bae255478f289a35",
     "docs/assets/current-participant-captures/captures/46e8485a0d4d2d3f412ae425fca636ec12589e361e1d2d8a64e323050ffbe767.png": "46e8485a0d4d2d3f412ae425fca636ec12589e361e1d2d8a64e323050ffbe767",
+    "docs/assets/current-participant-captures/captures/6530af1754ccbece89dfd4d353ed036dbd395c4da4961c906086812dac6fee64.png": "6530af1754ccbece89dfd4d353ed036dbd395c4da4961c906086812dac6fee64",
     "docs/assets/current-participant-captures/captures/7362dcbd83633336b836ae0fa607cb764e88884a234b52f0bd459b4f67d6918f.png": "7362dcbd83633336b836ae0fa607cb764e88884a234b52f0bd459b4f67d6918f",
     "docs/assets/current-participant-captures/captures/74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164.png": "74dc34e484cd6a31438b0c08905d7dee0dfe986e484a37750dd8c02d25c52164",
     "docs/assets/current-participant-captures/captures/7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de.png": "7669e3ec03552fb39cfc456bbd8b3ec0eac8f7ed04cf47ad652d5158ef59c3de",
@@ -82,7 +82,7 @@
     "docs/assets/current-participant-captures/captures/e1dcfa2ecfe6c2c3102dc7c6686d9b17189bd87d84bb91d1cb09d88a0f787161.png": "e1dcfa2ecfe6c2c3102dc7c6686d9b17189bd87d84bb91d1cb09d88a0f787161",
     "docs/assets/current-participant-captures/captures/e9de3d299d1ca31b05a9ab94cd150736523360cda5c0d17eee04dfc0e61f1820.png": "e9de3d299d1ca31b05a9ab94cd150736523360cda5c0d17eee04dfc0e61f1820",
     "docs/assets/current-participant-captures/captures/fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068.png": "fb77670b9bac49787bdc5e26fc40a0f0a99aba19c9df5ac7d62103df569f0068",
-    "docs/assets/current-participant-captures/manifest.json": "5ec8b3a6e57b33a33a2e48554df5a19d80cbbd82bc7511729344711e3fbeef52",
+    "docs/assets/current-participant-captures/manifest.json": "eb38f56a0af0d41d4e1c0efe2ccbb3ed1ec8d45b4977a73aea62597bab2bb2e8",
     "docs/assets/current-participant/activator-001-row-parameters-crop.png": "23620fa8ec92d732e23d9f2ad757c4df35236fb5e068338f64644b706f6b4fd6",
     "docs/assets/current-participant/activator-history-overview.png": "04bb5828ceafe002f01b4d72ed720082803398a0c57779cc275335a020747403",
     "docs/assets/current-participant/agent-published-kql-examples.png": "aaf6b71f8084a428478b576c0046b436cdd7f4c1e8285acea4ab341ec97bf539",
@@ -232,8 +232,8 @@
     "tools/docs/furusato_docs/participant30_deployment.py": "add7fa886018f97fc85b716c2203fcab6004d23837c5975085cd11f79781f25e",
     "tools/docs/furusato_docs/participant30_details.py": "2a2092370ce44640b5d053be2b7c4763313c99c55ee561bc7808929c25382040",
     "tools/docs/furusato_docs/participant30_evaluation.py": "b8565013a0ce73407eb240d4693d70cc462e107c97b5d8fef6fa222b78c8cf38",
-    "tools/docs/furusato_docs/participant30_figures.py": "4a225cc9206f81fba592729e8499e27d9fa4480065d875d603609e0fa09ce11b",
-    "tools/docs/furusato_docs/participant30_text.py": "cb9573310d5c7ced37b8676799bd565184e64feca3579901dcf092b3c5359599",
+    "tools/docs/furusato_docs/participant30_figures.py": "222a624e2e92bd602825d1fefb3243ba65f381b4c46e2d1ca38f7ab263c024bb",
+    "tools/docs/furusato_docs/participant30_text.py": "6188b64ef9415cc3df32787db8ea6243a5790480d385e412ebe55f3194c756d9",
     "tools/docs/furusato_docs/participant30_tuning.py": "b5456fe357005efc2733dccc0b313e3dd344d61ce0314a00cfd63318521b78a4",
     "tools/docs/furusato_docs/participant_current_tuning.py": "67515c390ceadd3f3b105482cbb08f2dc5cf68cb6cd7f5cf07c4fe969e30231d",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
@@ -277,7 +277,7 @@
     "tools/docs/tests/test_notebook_payload.py": "d074dbf1abbcc35a2f66b679462145286d0270f22b886ee015ccbc31d4e7ff44",
     "tools/docs/tests/test_ontology_v2_calibration.py": "25848a608a3a29b97e076312dcc64fe6e9a12c4ff3a9e535886e942d303cf4b5",
     "tools/docs/tests/test_ontology_v2_report.py": "a84f0c6478a31777c46aa3d3586e452411c0345bdf58f30404e2fba7f2f9eaa9",
-    "tools/docs/tests/test_participant30.py": "b170f88e81e9da1e9e7cec498f0ab8e0f24aa25726a5b1e4b6c125fa1bf8fd92",
+    "tools/docs/tests/test_participant30.py": "931cffc99882fa195630ef7c4133e4abffcd67f6eac98c897a66f6090eb1a2d4",
     "tools/docs/tests/test_participant30_details.py": "dd13f76a612af92c86ada3b8bcefd5e34de09d28ae6e7a41fcaf957003b512a8",
     "tools/docs/tests/test_participant_practice_boundaries.py": "f56da92e326e79ff587ce88d8b2f541a741ab4572033ea89fe2f1d37bef5e8dd",
     "tools/docs/tests/test_participant_self_service.py": "ef07fc24bed82c9a9d4d46768711df68d352ae0dbd09e7319f80229b4d3afc8f",
@@ -287,7 +287,7 @@
     "tools/docs/tests/test_preview30_content.py": "c91e20fc9f078517e214c747ac1bf0bea11978e76b4fff8e56e2255e37151ea8",
     "tools/docs/tests/test_preview30_evaluation100.py": "d6794449208f90fe4c03880c2861ad55014d0866b745861b2cc50f7493524788",
     "tools/docs/tests/test_preview30_evaluation_content.py": "c9e80c37d21a27dbe4d41a4cb77a10d83ced6c65f1159e965036ddc76275b81a",
-    "tools/docs/tests/test_preview30_public_evidence.py": "c176d0f0f6d356792f57e150c92fe78bda3c23cc291d2561352c10c7595b515f",
+    "tools/docs/tests/test_preview30_public_evidence.py": "93d19e254c8b340f908141ed3ed3305cc82a855148ed28d22d8909d99c720afe",
     "tools/docs/tests/test_preview30_release.py": "1f102863af625759378db6d169575ac2e8603941b91f7cbf8bed9ba6939fe770",
     "tools/docs/tests/test_preview30_reports.py": "ab0387a9532f6c743519294912ca21ef69bdfa1cadcf137f04f12ff5fe1d11c3",
     "tools/docs/tests/test_preview30_selected_reporting.py": "62dd4a1b9e059df876fd557ad223c76114913c6bf17f18ccde4cd04245a93b3f",
@@ -961,9 +961,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "e45efcee3d3031be427b7046d80f127bfe1cacc0",
+    "baseCommit": "aa102168358156d65409c66660ba971c479586f8",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "cd1114a69c734bc1e26cf6b5cf02d3b6dfd0570a69ea6eb1dbc9e4229fb8ccf0"
+    "sourceTreeSha256": "e755d930c9d85ccb51e2b2b2f6e74c58af712a91a4fdd360d46fc4c27670b8b9"
   }
 }

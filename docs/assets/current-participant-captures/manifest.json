@@ -1,6 +1,6 @@
 {
   "schemaVersion": "furusato-current-participant-captures/v1",
-  "reviewedAt": "2026-10-02T01:43:07.1239612Z",
+  "reviewedAt": "2026-11-04T00:00:00Z",
   "reviewer": "coordinator-release-review",
   "captures": [
     {
@@ -38,18 +38,18 @@
     {
       "actualUI": true,
       "caption": {
-        "en": "Actual Home with ten entities and fifteen relationships. The diagram and counts do not replace reconciliation of every direction, bridge and source key pair.",
-        "ja": "実Homeの10Entity・15Relationship。接続図と件数の観測であり、全関係の方向・bridge・実キー対照合を代替しません。"
+        "en": "Native Home Full ontology view after fit view. Visible reads 10 of 10 entities | 15 of 15 relationships; visible counts vary with the viewport and zoom. Separately inspect every relationship's existence, direction and keys on both sides.",
+        "ja": "Home の Full ontology で fit view を選んだネイティブ画面。Visible は 10 of 10 entities | 15 of 15 relationships。表示件数は表示範囲や拡大率で変わります。各 Relationship の存在・向き・両側のキーは別途読み取り確認してください。"
       },
-      "capturedAt": "2026-09-29T15:43:44.982569+00:00",
+      "capturedAt": "2026-11-03T20:09:45.607Z",
       "completionEvidence": false,
       "experience": "new",
-      "file": "captures/266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png",
+      "file": "captures/6530af1754ccbece89dfd4d353ed036dbd395c4da4961c906086812dac6fee64.png",
       "id": "p30-07-relationships",
-      "originalSha256": "b7cc414d0b6ab63e35305033db5fce01810010e994d85ebf4d592a75cc811700",
+      "originalSha256": "369d1834b2fbd3bafc8239cfa053c0404a6610fd93c2d2030aeb2cc4ef036677",
       "privacyReview": "accounts-urls-ids-paths-removed",
-      "reviewedAt": "2026-10-02T01:43:07.1239612Z",
-      "sha256": "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83"
+      "reviewedAt": "2026-11-04T00:00:00Z",
+      "sha256": "6530af1754ccbece89dfd4d353ed036dbd395c4da4961c906086812dac6fee64"
     },
     {
       "actualUI": true,

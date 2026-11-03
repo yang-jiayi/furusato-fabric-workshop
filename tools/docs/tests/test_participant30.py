@@ -458,7 +458,7 @@ class ParticipantEditionTests(unittest.TestCase):
         for ident, expected in {
             "p30-06-entities": ("Municipality Configure", "truncated data-source labels"),
             "p30-06-binding-properties": ("Municipality Bind data: Properties", "Source-column labels are truncated"),
-            "p30-07-relationships": ("Ontology Home", "Visible: 10 of 10 entities"),
+            "p30-07-relationships": ("Full ontology", "Visible reads 10 of 10 entities"),
             "p30-09-activation-detail-001": ("Subject and Type fields", "FileCreated"),
             "p30-12-metric-list-detail": ("Metrics panel", "count of 10"),
             "p30-12-metrics-expression-detail": ("Metric details", "Synonyms are unavailable"),
@@ -469,6 +469,34 @@ class ParticipantEditionTests(unittest.TestCase):
             self.assertNotIn("prove", english.lower())
             self.assertNotIn("証明", japanese)
         self.assertNotIn("参加者の配置完了を証明", figures.FIGURES["p30-07-relationships"]["caption"][0])
+
+    def test_chapter07_graph_visibility_uses_fit_view_without_inference_or_writes(self):
+        japanese, english = text.CHAPTERS[7]["steps"][5]["text"]
+        for value, missing_copy, no_write in (
+            (japanese, "定義が不足しているとは限りません", "関係を作り直したり Save したりしません"),
+            (english, "does not mean definitions are missing", "Do not recreate relationships or Save"),
+        ):
+            self.assertIn("10 of 10 entities | 15 of 15 relationships", value)
+            self.assertIn("fit view", value)
+            self.assertIn(missing_copy, value)
+            self.assertIn(no_write, value)
+        self.assertIn("四隅アイコン", japanese)
+        self.assertIn("four-corner icon below + and −", english)
+        self.assertIn("existence", english)
+        self.assertIn("direction", english)
+        self.assertIn("両側のキー列", japanese)
+        self.assertIn("keys on both sides", english)
+
+        caption_ja, caption_en = figures.FIGURES["p30-07-relationships"]["caption"]
+        self.assertIn("表示範囲や拡大率で変わります", caption_ja)
+        self.assertIn("Counts vary with the viewport and zoom", caption_en)
+        self.assertIn("両側のキー", caption_ja)
+        self.assertIn("keys on both sides", caption_en)
+        self.assertNotIn("44%", caption_ja + caption_en)
+        self.assertNotIn("67%", caption_ja + caption_en)
+        alt_ja, alt_en = figures.FIGURES["p30-07-relationships"]["alt"]
+        self.assertIn("fit view", alt_ja)
+        self.assertIn("after fit view", alt_en)
 
     def test_chapter6_binding_captures_are_current_native_assets_with_truthful_scope(self):
         manifest = participant30.participant_figures()

@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "914f8fe37abf66e784e9aab07dbffc3f47d9c2f5",
+  "sourceCommit": "d3d125764d22a0c129f9bfead5bdac1551bb5cbc",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "5485278715a20f92b476c8dae3ec8f2bee30dd2ad282b0555773f1758ec6fa62",
+  "sourceTreeSha256": "490d552fd47e0b3136a0b81ddc07584424fc502e1b0aa82e91042bc854056564",
   "candidateSourceSha256": "60f9fefeabb09f4045c4ef8e5ad56257c515e63a6f020540d7a260bb6249e506",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -261,7 +261,7 @@
     "tools/docs/package_preview30.py": "dd83ca4ad75435071b029301a2e792085e41e3ee77686ab6c62a09764ed47670",
     "tools/docs/repair_captures.py": "f56993069cc25f2b0d7907583ef0d7790a144ab9ab2e547c9f219fd9fa13db98",
     "tools/docs/requirements.txt": "e29434307ad53464abfeed88909428d81d775a716f65b76db5cd933f51f027b7",
-    "tools/docs/tests/test_ascii_parentheses.py": "f6dbb1e805e0463695723f440955fb0734879d7c6d1a3f3841c029a08aa986f9",
+    "tools/docs/tests/test_ascii_parentheses.py": "62d3b80bc7eec54712a84ee5c0d1d29bb01571b46e740e2a0ba1c06383c814bd",
     "tools/docs/tests/test_capture_policy.py": "3ddeda1c7cb793af10e5fc7f1bfef68e7cd714a74a1a4438696f3b8717b0d1aa",
     "tools/docs/tests/test_capture_quality.py": "e1fa7d40222c5cea497f39d0d2c164397ce3aec714931358a0b0d06f1746569d",
     "tools/docs/tests/test_current_delivery.py": "44271a998eabed567f6ec072c606d8fc502e56b2f725eefe40a7cd8b3eb46f44",
@@ -961,9 +961,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "914f8fe37abf66e784e9aab07dbffc3f47d9c2f5",
+    "baseCommit": "d3d125764d22a0c129f9bfead5bdac1551bb5cbc",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "5485278715a20f92b476c8dae3ec8f2bee30dd2ad282b0555773f1758ec6fa62"
+    "sourceTreeSha256": "490d552fd47e0b3136a0b81ddc07584424fc502e1b0aa82e91042bc854056564"
   }
 }

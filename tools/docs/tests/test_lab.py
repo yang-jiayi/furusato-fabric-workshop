@@ -131,6 +131,56 @@ class LabExportTests(unittest.TestCase):
         self.assertIn("Do not edit the UI field at this step", instructions)
         self.assertNotIn(prefix.replace('/','\\'),start+instructions)
 
+    def test_portable_definition_filenames_label_their_own_lab_code_blocks(self):
+        page = self.out / "17-fabric-data-agent-and-code-interpreter" / (
+            "12-17-12-review-instruction-selection-and-definition-diffs.md"
+        )
+        content = page.read_text(encoding="utf-8")
+        filenames = (
+            "kusto.json",
+            "lakehouse_tables.json",
+            "ontology.json",
+            "semantic_model.json",
+            "stage_config.json",
+        )
+        for filename in filenames:
+            caption = f"ポータブル ステージ テンプレート: definition/{filename}"
+            code_title = f"**JSON: definition/{filename}**"
+            with self.subTest(filename=filename):
+                caption_position = content.index(caption)
+                title_position = content.index(code_title, caption_position)
+                next_caption = min(
+                    (
+                        position
+                        for position in (
+                            content.find(
+                                f"ポータブル ステージ テンプレート: definition/{next_filename}",
+                                caption_position + len(caption),
+                            )
+                            for next_filename in filenames
+                        )
+                        if position >= 0
+                    ),
+                    default=len(content),
+                )
+                self.assertLess(caption_position, title_position)
+                self.assertLess(title_position, next_caption)
+                self.assertIn(
+                    f"Portable stage template: definition/{filename}",
+                    content,
+                )
+
+    def test_appendix_e_resources_and_icon_terms_are_separated_from_troubleshooting(self):
+        appendix = self.out / "appendix-e-troubleshooting-and-official-references"
+        troubleshooting = (appendix / "01-e-1-checks-and-fixes.md").read_text(encoding="utf-8")
+        references = (appendix / "02-e-2-microsoft-learn-references.md").read_text(encoding="utf-8")
+        credits = (appendix / "03-e-3-credits-and-icon-terms.md").read_text(encoding="utf-8")
+        self.assertNotIn("Microsoft Azure Public Service Icons", troubleshooting)
+        self.assertIn("Microsoft Learn の参考資料", references)
+        self.assertIn("learn.microsoft.com", references)
+        self.assertIn("クレジットとアイコン利用条件", credits)
+        self.assertIn("Microsoft Azure Public Service Icons", credits)
+
     def test_selection_contract_is_a_bilingual_source_ordered_field_list(self):
         ident = lab.SELECTION_CONTRACT_BLOCK_ID
         page = next(p for p in self.receipt["pagesCoverage"] if ident in p["sourceBlockIds"])
@@ -192,9 +242,9 @@ class LabExportTests(unittest.TestCase):
         self.assertIn(source_block, source_page)
 
         definition_paths = {
-            "ch-17-12:8": "definition/kusto.json",
-            "ch-17-12:9": "definition/lakehouse_tables.json",
-            "ch-17-12:11": "definition/semantic_model.json",
+            "ch-17-12:4": "definition/kusto.json",
+            "ch-17-12:6": "definition/lakehouse_tables.json",
+            "ch-17-12:10": "definition/semantic_model.json",
             "ch-17-12:12": "definition/stage_config.json",
         }
         for ident, path in definition_paths.items():

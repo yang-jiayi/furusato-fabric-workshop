@@ -33,6 +33,7 @@ import preview30_runtime as runtime
 import v3_artifacts
 
 PUBLICATION = current_publication(ROOT)
+MARKDOWN_LINK = re.compile(r"\[([^\]\r\n]+)\]\((https?://[^\s)]+)\)")
 HTML_NAME = PUBLICATION.html_name
 PACKAGE_NAME = PUBLICATION.package_name
 SOURCE_MANIFEST = 'SOURCE_ARTIFACT_SET.json'
@@ -304,11 +305,22 @@ def inspect_html(path, document, metadata):
                 raise ValueError('Missing section title: ' + section.ident)
         for block in section.blocks:
             for value in text_values(block.payload):
-                if normalized(value) and normalized(value) not in visible:
+                expected_visible = MARKDOWN_LINK.sub(r"\1", value)
+                if normalized(expected_visible) and normalized(expected_visible) not in visible:
                     # Alternate text is an image accessibility attribute.
                     alts = ' '.join(target.xpath('.//@aria-label | .//@alt'))
-                    if normalized(value) not in normalized(alts):
+                    if normalized(expected_visible) not in normalized(alts):
                         raise ValueError('Missing bilingual model text: ' + section.ident + ': ' + value[:90])
+                for match in MARKDOWN_LINK.finditer(value):
+                    expected_label, expected_url = match.groups()
+                    if not any(
+                        anchor.get('href') == expected_url
+                        and normalized(anchor.text_content()) == normalized(expected_label)
+                        for anchor in target.xpath('.//a')
+                    ):
+                        raise ValueError(
+                            'Missing rendered Markdown link: ' + section.ident + ': ' + expected_label
+                        )
                 values_checked += 1
             if block.kind == 'code':
                 expected = block['text'] if block.get('canonicalLiteral') else ascii_parentheses(block['text'])

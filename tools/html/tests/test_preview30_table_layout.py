@@ -253,6 +253,60 @@ class PreviewTableLayoutTests(unittest.TestCase):
                         region.evaluate("node=>node.clientWidth"),
                     )
 
+    def test_evaluation_reference_first_column_stays_readable_and_scrollable(self):
+        self.page.set_content("""<html data-lang="ja"><main>
+          <section id="evaluation-reference"><div class="table-wrap">
+          <p class="table-hint table-hint--top">横スクロールできる表</p>
+          <div class="table-scroll" tabindex="0" role="region">
+          <table class="cols-2 evaluation-reference"><caption>Scoring reference</caption>
+          <thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+          <tr><th scope="row">期待するソース・経路</th><td>Lakehouse と Ontology の参照経路。</td></tr>
+          </tbody></table></div></div></section></main></html>""")
+        self.page.add_style_tag(content=CSS.read_text(encoding="utf-8"))
+        for width in (1440, 390, 320):
+            with self.subTest(width=width):
+                self.page.set_viewport_size({"width": width, "height": 900})
+                first_column = self.page.locator("#evaluation-reference tbody th:first-child")
+                style = first_column.evaluate("node=>getComputedStyle(node)")
+                self.assertEqual("nowrap", style["whiteSpace"])
+                self.assertGreaterEqual(float(style["minWidth"].removesuffix("px")), 160)
+                region = self.page.locator("#evaluation-reference .table-scroll")
+                self.assertEqual("auto", region.evaluate(
+                    "node=>getComputedStyle(node).overflowX"))
+                if width < 700:
+                    self.assertGreater(
+                        region.evaluate("node=>node.scrollWidth"),
+                        region.evaluate("node=>node.clientWidth"),
+                    )
+                    self.assertLessEqual(
+                        self.page.evaluate(
+                            "()=>document.documentElement.scrollWidth"
+                        ),
+                        width,
+                    )
+
+    def test_double_dash_cli_options_do_not_wrap_internally(self):
+        self.page.set_content(
+            '<html data-lang="ja"><main><p><code class="cli-option">--check</code></p></main></html>'
+        )
+        self.page.add_style_tag(content=CSS.read_text(encoding="utf-8"))
+        for width in (1440, 390, 320):
+            with self.subTest(width=width):
+                self.page.set_viewport_size({"width": width, "height": 900})
+                option = self.page.locator("code.cli-option")
+                self.assertEqual("--check", option.inner_text())
+                self.assertEqual(
+                    "nowrap",
+                    option.evaluate("node=>getComputedStyle(node).whiteSpace"),
+                )
+                self.assertEqual(
+                    1,
+                    option.evaluate("""node=>{
+                      const range=document.createRange();range.selectNodeContents(node);
+                      return [...range.getClientRects()].filter(rect=>rect.width>0).length;
+                    }"""),
+                )
+
     def test_fragmentation_probe_detects_original_narrow_column_regression(self):
         self.page.add_style_tag(content="""
         #ch-17-7 table.selection-contract tr > :nth-child(3) {

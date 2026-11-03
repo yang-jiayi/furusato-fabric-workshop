@@ -53,7 +53,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
         self.assertEqual("current-experimental", manifest["profile"])
         self.assertEqual("experimental", manifest["status"])
         self.assertFalse(manifest["answerAccuracyAccepted"])
-        self.assertEqual(9_422, self.assets["global_units"])
+        self.assertEqual(9_994, self.assets["global_units"])
         self.assertEqual(0, self.assets["active_example_count"])
         self.assertEqual(0, manifest["definitionFewshotFiles"])
         self.assertEqual(5, len(self.assets["definition_files"]))
@@ -108,7 +108,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
             if block.kind == "code"
         )
         self.assertTrue(global_block.get("canonicalLiteral"))
-        self.assertEqual(9_422, len(global_code.encode("utf-16-le")) // 2)
+        self.assertEqual(9_994, len(global_code.encode("utf-16-le")) // 2)
         self.assertEqual(self.assets["global"], global_code)
         self.assertIn("You are the Furusato Workshop v3 Preview assistant.", global_code)
         global_reference = " ".join(
@@ -289,7 +289,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
             for value in (part if isinstance(part, tuple) else part.get("text", ()))
             if isinstance(value, str)
         )
-        self.assertIn("experimental profile", joined)
+        self.assertIn("portable profile", joined)
         self.assertNotIn("measured-contract-20261015", joined)
         self.assertNotIn("143 columns", joined)
         self.assertNotIn("nine KQL examples", joined)

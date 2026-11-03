@@ -16,7 +16,7 @@ from .assets import build_library, encode_screenshot, screenshot_size
 from .diagrams import load_map
 from .mirror import load_ui_strings
 from .model import Text
-from .render import RenderContext, esc, plain_bilingual, render_block
+from .render import ICONS, RenderContext, esc, plain_bilingual, render_block
 
 
 def register_reviewed_captures(assets, captures):
@@ -88,10 +88,17 @@ def render(
                 ident = f"prompt-{index}-{lang}"
                 prompt = (html.escape(block["text"].get(lang), quote=True) if block.get("canonicalLiteral")
                           else esc(block["text"].get(lang)))
+                label = "プロンプト" if lang == "ja" else "Prompt"
+                copy_label = ctx.ui["copy.label"][lang]
                 pieces.append(
-                    f'<div class="codeblock" data-l="{lang}" lang="{lang}">'
-                    f'<button type="button" data-copy-target="{ident}">{"コピー" if lang == "ja" else "Copy"}</button>'
-                    f'<pre><code id="{ident}">{prompt}</code></pre></div>'
+                    f'<div class="codeblock codeblock--prompt" data-l="{lang}" lang="{lang}">'
+                    '<div class="codeblock__bar">'
+                    f'<span class="codeblock__lang">{label}</span>'
+                    f'<button type="button" class="codeblock__copy" data-copy-target="{ident}" '
+                    f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"][lang])}">'
+                    f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(copy_label)}</span>'
+                    '</button></div>'
+                    f'<pre tabindex="0"><code id="{ident}">{prompt}</code></pre></div>'
                 )
             return "".join(pieces)
         return render_block(block, ctx, counter)

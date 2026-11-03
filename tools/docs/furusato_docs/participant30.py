@@ -542,11 +542,17 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
         for name in table_names:
             blocks.extend(tables.build(name))
         blocks.extend(callout(value) for value in spec.get("tips", ()))
-        if spec.get("links"):
+        if spec.get("links") and letter != "E":
             blocks.append(link_list(spec["links"]))
         add_section(section, "1", ({"A": ("期待値", "Expected values"), "B": ("パラメーター", "Parameters"),
                                     "C": ("使い方", "How to use this appendix"), "D": ("一覧", "List"),
                                     "E": ("確認と対処", "Checks and fixes")}[letter]), blocks)
+        if letter == "E" and spec.get("links"):
+            add_section(section, "2", ("Microsoft Learn の参考資料", "Microsoft Learn references"),
+                        [link_list(spec["links"])])
+        if letter == "E" and spec.get("credits"):
+            add_section(section, "3", ("クレジットとアイコン利用条件", "Credits and icon terms"),
+                        [paragraph(value) for value in spec["credits"]])
         if letter == "C" and "criteria" in spec.get("tables", ()):
             participant30_evaluation.append_rubric_sections(section, root, start=2)
     leftovers = []

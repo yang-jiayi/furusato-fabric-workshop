@@ -285,9 +285,9 @@ class LabWriter:
             return [(ref, f'{name}.instructions', source[name]['instructions'])
                     for name in ('kusto', 'lakehouse_tables', 'semantic_model')]
         definition_files = {
-            'ch-17-12:8': 'definition/kusto.json',
-            'ch-17-12:9': 'definition/lakehouse_tables.json',
-            'ch-17-12:11': 'definition/semantic_model.json',
+            'ch-17-12:4': 'definition/kusto.json',
+            'ch-17-12:6': 'definition/lakehouse_tables.json',
+            'ch-17-12:10': 'definition/semantic_model.json',
             'ch-17-12:12': 'definition/stage_config.json',
         }
         filename = definition_files.get(block_id)
@@ -300,7 +300,7 @@ class LabWriter:
     def render_readable_instruction_views(self, block, block_id, language):
         views = []
         for reference, field, value in self.readable_instruction_views(block, block_id):
-            if block_id == 'ch-17-12:11' and field == 'dataSourceInstructions':
+            if block_id == 'ch-17-12:10' and field == 'dataSourceInstructions':
                 views.append(
                     '注意: これは experimental definition の比較用 serialized reference です。'
                     'Data Agent がサポートする編集欄ではなく、有効な DAX 設定でもありません。'

@@ -111,7 +111,7 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
 
     def test_semantic_definition_readable_view_adds_boundary_without_rewriting_literal(self):
         section = self.sections["chapter-17-12"]
-        block = section.blocks[11]
+        block = section.blocks[10]
         self.assertEqual("code", block.kind)
         self.assertTrue(block.get("canonicalLiteral"))
         serialized = json.loads(block["text"])
@@ -121,8 +121,8 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
         )
 
         writer = lab.LabWriter(ROOT, ROOT / "unused-lab-output", None, None)
-        ja = writer.render_block(block, "ja", "ch-17-12:11")
-        en = writer.render_block(block, "en", "ch-17-12:11")
+        ja = writer.render_block(block, "ja", "ch-17-12:10")
+        en = writer.render_block(block, "en", "ch-17-12:10")
         for rendered, language in ((ja, "ja"), (en, "en")):
             self.assertIn(lab.readable_literal(serialized["dataSourceInstructions"]), rendered)
             self.assertIn(block["text"], rendered)

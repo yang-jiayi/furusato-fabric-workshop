@@ -26,7 +26,7 @@ def _paragraph(ja, en):
 
 
 def _code(value, label="text", *, canonical=False):
-    payload = {"text": value, "language": _text(label)}
+    payload = {"text": value, "language": label if isinstance(label, Text) else _text(label)}
     if canonical:
         payload["canonicalLiteral"] = True
     return Block("code", payload)
@@ -288,7 +288,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         _paragraph(
             "冒頭の `You are the Furusato Workshop v3 Preview assistant.` は、同梱設定に保存された役割ラベルです。Workshop の版を示すものではありません。設定本文は正確に使い、参加者向け版は本書と `WORKSHOP_VERSION` で確認してください。",
             "The opening `You are the Furusato Workshop v3 Preview assistant.` is the role label stored in the supplied configuration, not the Workshop edition. Use the instruction text exactly as supplied; identify the participant edition from this handbook and `WORKSHOP_VERSION`."),
-        _code(assets["global"], "Agent-wide instructions", canonical=True),
+        _code(assets["global"], _text("Agent 全体への指示", "Agent-wide instructions"), canonical=True),
     ])
     _append(chapter, 9, ("ソース指示・説明と Ontology context を確認する", "Review source instructions, descriptions and Ontology context"), [
         _paragraph(
@@ -344,13 +344,19 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "portable stage template は definition/ の5部品だけです。root・resource ID/name の token と、実際の path/type から解決する target token 以外は置き換えません。SQL の異なる列 path 間で native node ID が重複する場合があるため、UUID の一意性を前提にしません。schema、metadata、text、selection semantics の予期しない差分があれば helper は fail-closed で停止します。",
             "The portable stage template contains only the five parts under definition/. Replace only root/resource ID/name tokens and target tokens resolved from actual path/type. Native SQL node IDs can repeat across different column paths, so do not assume globally unique UUIDs. The helper fails closed on unexpected schema, metadata, text or selection-semantic differences."),
         *[
-            _paragraph(f"Portable stage template: definition/{path.name}",
-                       f"Portable stage template: definition/{path.name}")
+            block
             for path in assets["definition_files"]
-        ],
-        *[
-            _code(path.read_text(encoding="utf-8"), "JSON", canonical=True)
-            for path in assets["definition_files"]
+            for block in (
+                _paragraph(
+                    f"ポータブル ステージ テンプレート: definition/{path.name}",
+                    f"Portable stage template: definition/{path.name}",
+                ),
+                _code(
+                    path.read_text(encoding="utf-8"),
+                    _text(f"JSON: definition/{path.name}", f"JSON: definition/{path.name}"),
+                    canonical=True,
+                ),
+            )
         ],
     ])
     _append(chapter, 13, ("Draft へ一度だけ適用する", "Apply once to Draft"), [
@@ -387,7 +393,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
              "If the outcome after apply/publish is uncertain, preserve the intent and run read-only verify; never resend the write. If a new change is needed, do not reuse the spent intent. Follow a separate procedure after confirming ownership and the live definition."),
             ("現在の実験では、ファイルごとの時刻の12時間転記が誤ることがあります。fixture 001 の最終時刻は 11:54:30 UTC（現地表記 11:54:30 AM）で、23:54:30 ではありません。fixture 003 の開始時刻は 14:18:14 UTC（2:18:14 PM）で、02:18:14 ではありません。集計 join が誤って全体合計を各ファイルの合計として扱い、誤った「データなし」を返すこともあります。回答を独立に評価するときは、各 fixture の開始・終了時刻、UTC表示、期間と分母の定義、集計の粒度と各ファイルの合計が混同されていないことを確認します。",
              "Current experimental responses can transpose timestamps by 12 hours. Fixture 001 ends at 11:54:30 UTC (native 11:54:30 AM), not 23:54:30. Fixture 003 starts at 14:18:14 UTC (2:18:14 PM), not 02:18:14. A generated aggregate join can also mistake a grand total for per-file totals and return a false “no data.” In an independent answer review, check each fixture's start/end time, UTC labeling, period and denominator definitions, aggregation grain, and that per-file totals are not confused."),
-            ("高額寄付フラグの定義は寄付額が57,000円を超える場合（> 57,000円）であり、57,000円以上ではありません。回答がこの定義や、実際の measure にある KEEPFILTERS の説明を省くことがあります。支払方法ランキングでは filter が落ちる場合があります。回答が閾値の厳密な不等号、measure 所有の filter の適用、ランキング対象の filter を説明・適用しているかを独立に確認します。GQL・structured output・DAX の十分な実行根拠もありません。正確さを示すために指示へ答えを追加せず、実際の source/query/result と説明を照合し、未確認または誤りはそのまま記録します。",
+            ("高額寄附フラグの定義は寄付額が57,000円を超える場合（> 57,000円）であり、57,000円以上ではありません。回答がこの定義や、実際の measure にある KEEPFILTERS の説明を省くことがあります。支払方法ランキングでは filter が落ちる場合があります。回答が閾値の厳密な不等号、measure 所有の filter の適用、ランキング対象の filter を説明・適用しているかを独立に確認します。GQL・structured output・DAX の十分な実行根拠もありません。正確さを示すために指示へ答えを追加せず、実際の source/query/result と説明を照合し、未確認または誤りはそのまま記録します。",
              "The high-value flag means donation amount > JPY 57,000, not >= JPY 57,000. An answer may omit this definition or an explanation of the actual measure-owned KEEPFILTERS. A payment-method ranking can also drop its filter. Independently check the strict threshold predicate, whether the measure-owned filter is applied and explained, and whether the ranking's filter is retained. Sufficient GQL, structured-output and DAX execution evidence is also missing. Do not add answers to the instructions to make them seem correct; reconcile actual sources/queries/results and explanations, and record unknowns or errors as observed."),
             ("全ての回答を19章・付録Cで公開問題と条件により評価します。設定が一致しても、正確性や採用が示されたとは限りません。別の実環境におけるGraph model、GQL、時系列、mirroringは、それぞれ独立に前提と実行結果を確認します。",
              "Evaluate answers using the public questions and criteria in Chapter 19 and Appendix C. Matching configuration does not establish correctness or adoption. In any other environment, check Graph-model, GQL, time-series and mirroring prerequisites and execution results independently."),

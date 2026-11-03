@@ -16,10 +16,12 @@ import current_delivery as delivery
 from furusato_html.preview30 import render
 from furusato_docs import preview30_release as release
 from furusato_docs.current_publication import CurrentPublication, publication_for_model
+from furusato_docs import participant30_evaluation
 from furusato_docs.participant30_deployment import append_deployment_sections
 from furusato_docs.participant30_text import PARAMETER_NOTES
 from furusato_docs.lab import write_lab
 from furusato_html.model import Section, Text
+from furusato_html.render import rich
 
 
 class CurrentDeliveryTests(unittest.TestCase):
@@ -177,7 +179,6 @@ class CurrentDeliveryTests(unittest.TestCase):
                 self.assertEqual(1, len(hints))
                 self.assertIn('table-hint--top', hint.get('class', '').split())
                 self.assertLess(list(wrapper).index(hint), list(wrapper).index(region))
-                self.assertIn(table_class, table.get('class', '').split())
                 self.assertEqual('0', region.get('tabindex'))
                 self.assertEqual('region', region.get('role'))
                 hint_text = ''.join(hint.itertext())
@@ -197,6 +198,128 @@ class CurrentDeliveryTests(unittest.TestCase):
                     )[0]
                     self.assertEqual(source_description, description.text_content())
                     self.assertGreater(len(description.xpath(".//wbr")), 0)
+                self.assertIn(table_class, table.get('class', '').split())
+
+    def test_markdown_links_are_anchors_before_bare_url_autolinking(self):
+        rendered = rich(
+            "[Semantic model best practices](https://learn.microsoft.com/fabric/example) "
+            "and [Add data sources to a Data Agent](https://learn.microsoft.com/fabric/agent)"
+        )
+        self.assertIn(
+            '<a href="https://learn.microsoft.com/fabric/example" rel="noreferrer noopener">'
+            'Semantic model best practices</a>',
+            rendered,
+        )
+        self.assertIn(
+            '<a href="https://learn.microsoft.com/fabric/agent" rel="noreferrer noopener">'
+            'Add data sources to a Data Agent</a>',
+            rendered,
+        )
+        self.assertNotIn("](<a href", rendered)
+        self.assertNotRegex(rendered, r"\[[^\]]+\]\(https?://")
+
+    def test_current_guide_visual_repairs_are_visible_and_keep_rubric_source_frozen(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        visible = " ".join(tree.xpath("//text()[not(ancestor::code)]"))
+        self.assertNotIn("](<a href", visible)
+        self.assertNotRegex(visible, r"\[[^\]]+\]\(https?://")
+
+        tuning = tree.get_element_by_id("ch-17-12")
+        text = " ".join(tuning.itertext())
+        for filename in (
+            "definition/kusto.json",
+            "definition/lakehouse_tables.json",
+            "definition/ontology.json",
+            "definition/semantic_model.json",
+            "definition/stage_config.json",
+        ):
+            caption = f"ポータブル ステージ テンプレート: {filename}"
+            caption_position = text.index(caption)
+            next_caption = min(
+                (position for position in (
+                    text.find(f"ポータブル ステージ テンプレート: definition/{name}", caption_position + 1)
+                    for name in (
+                        "kusto.json", "lakehouse_tables.json", "ontology.json",
+                        "semantic_model.json", "stage_config.json",
+                    )
+                ) if position >= 0),
+                default=len(text),
+            )
+            label_node = tuning.xpath(
+                ".//p[contains(., $filename)]",
+                filename=filename,
+            )[0]
+            following_block = label_node.xpath(
+                "following::div[contains(concat(' ',normalize-space(@class),' '),' codeblock ')][1]"
+            )[0]
+            self.assertLess(caption_position, next_caption)
+            self.assertIn(filename, label_node.text_content())
+            self.assertIn(filename, following_block.text_content())
+            self.assertIn("JSON", following_block.text_content())
+        self.assertIn("ポータブル ステージ テンプレート", text)
+        global_section = tree.get_element_by_id("ch-17-8")
+        self.assertIn("Agent 全体への指示", global_section.text_content())
+        self.assertIn("高額寄附フラグ", tree.get_element_by_id("ch-17-16").text_content())
+        self.assertNotIn("高額寄付フラグ", tree.get_element_by_id("ch-17-16").text_content())
+
+        for prompt in tree.xpath("//div[contains(concat(' ',normalize-space(@class),' '),' codeblock--prompt ')]"):
+            bar = prompt.xpath("./div[contains(@class,'codeblock__bar')]")
+            self.assertEqual(1, len(bar))
+            expected_label = "プロンプト" if prompt.get("data-l") == "ja" else "Prompt"
+            self.assertIn(expected_label, bar[0].text_content())
+            self.assertEqual(1, len(bar[0].xpath(".//button[@data-copy-target]")))
+
+        for section_id, expected_heading in (
+            ("appendix-e-2", "Microsoft Learn の参考資料"),
+            ("appendix-e-3", "クレジットとアイコン利用条件"),
+        ):
+            section = tree.get_element_by_id(section_id)
+            self.assertIn(expected_heading, section.xpath("./h3")[0].text_content())
+        self.assertNotIn(
+            "Microsoft Azure Public Service Icons",
+            tree.get_element_by_id("appendix-e-1").text_content(),
+        )
+        self.assertIn(
+            "Microsoft Azure Public Service Icons",
+            tree.get_element_by_id("appendix-e-3").text_content(),
+        )
+        tables = tree.xpath(
+            "//table[.//th[@scope='row' and contains(normalize-space(.), 'B14.fact')]]"
+        )
+        self.assertEqual(1, len(tables))
+        japanese_criterion = tables[0].xpath(
+            ".//th[@scope='row' and contains(normalize-space(.), 'B14.fact')]/following-sibling::td[1]"
+        )[0].xpath(".//span[@data-l='ja']")[0].text_content()
+        self.assertIn("1: 452025", japanese_criterion)
+        self.assertIn("2: 272132", japanese_criterion)
+        for rank, municipality_id in (
+            (3, "012190"), (4, "442020"), (5, "462209"),
+        ):
+            self.assertIn(f"{rank}: {municipality_id}", japanese_criterion)
+        self.assertNotIn("1 452025", japanese_criterion)
+        suite = participant30_evaluation.public_suite(ROOT)
+        original = next(
+            condition["text"]
+            for case in suite["regression"]["cases"] if case["id"] == "B14"
+            for condition in case["conditions"] if condition["id"] == "B14.fact"
+        )
+        self.assertIn("1 452025", original)
+        self.assertNotIn("1: 452025", original)
+
+    def test_inline_cli_options_do_not_break_at_double_dash(self):
+        self.assertEqual('<code class="cli-option">--check</code>', rich("`--check`"))
+
+    def test_lab_client_resources_have_a_localized_heading(self):
+        model = delivery.load_model(ROOT)
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / "Lab"
+            write_lab(ROOT, output, model=model)
+            pages = [path.read_text(encoding="utf-8") for path in output.rglob("*.md")]
+        self.assertTrue(any("各クライアントの公式資料" in page for page in pages))
+        self.assertTrue(any("Official documentation for each client" in page for page in pages))
 
     def test_figure28_labels_the_current_distributed_attachment_in_html_and_lab(self):
         model = delivery.load_model(ROOT)

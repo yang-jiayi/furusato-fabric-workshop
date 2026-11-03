@@ -276,6 +276,12 @@ th { overflow-wrap: normal; word-break: normal; }
 .table-hint--top { margin-block: .35rem; }
 .canonical-condition-rubric { min-width: 60rem; }
 .canonical-condition-rubric tbody th { white-space: nowrap; overflow-wrap: normal; }
+table.evaluation-reference > thead > tr > th:first-child,
+table.evaluation-reference > tbody > tr > th:first-child {
+  width: 10rem;
+  min-width: 10rem;
+  white-space: nowrap;
+}
 table code { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 #ch-17-7 table.selection-contract {
   width: 120rem;
@@ -305,6 +311,7 @@ caption { caption-side: top; padding: .55rem 0; color: var(--muted); font-size: 
 .table-hint { margin: .35rem .1rem; color: var(--muted); font-size: .78rem; }
 
 code { font-family: Consolas, "Yu Gothic UI", monospace; font-size: .91em; overflow-wrap: anywhere; }
+code.cli-option { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
 .codeblock { overflow: hidden; margin: 1rem 0; border: 1px solid #d3dee3; border-radius: .8rem; background: #f1f5f7; }
 .codeblock > button { float: right; margin: .45rem; }
 .codeblock__bar { display: flex; align-items: center; justify-content: space-between; gap: .75rem; border-bottom: 1px solid #d3dee3; background: #e7eef1; padding: .4rem .7rem; }

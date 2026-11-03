@@ -12,6 +12,7 @@ import hashlib
 import importlib
 import io
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -694,17 +695,23 @@ def append_rubric_sections(parent, root: Path, start=2):
                 [("英語の説明", "English explanation"),
                  Text(DISPLAY_TRANSLATIONS["expected"][case["id"]],
                       DISPLAY_TRANSLATIONS["expected"][case["id"]])],
-            ] + ([("Query shape", case["query_shape"])] if "query_shape" in case else []),
-                ("採点用の参照。Agentの指示へ貼り付けません。", "Grading reference. Never paste into Agent instructions."), widths=(1.6, 5.0)),
+            ] + ([(("クエリの形", "Query shape"), case["query_shape"])] if "query_shape" in case else []),
+                ("採点用の参照。Agentの指示へ貼り付けません。", "Grading reference. Never paste into Agent instructions."),
+                widths=(1.6, 5.0), class_name="evaluation-reference"),
             text_table([("条件ID", "Condition ID"),
                         ("採点基準（原文・日本語）", "Scoring criterion (verbatim Japanese)"),
                         ("英語の説明", "English explanation")],
-                       [[condition["id"], Text(condition["text"], condition["text"]),
+                       [[condition["id"], Text(
+                           re.sub(r"(?<!\d)([1-5])\s+(?=\d{6}\s)", r"\1: ", condition["text"])
+                           if case["id"] == "B14" and condition["id"] == "B14.fact"
+                           else condition["text"],
+                           condition["text"],
+                       ),
                          Text(DISPLAY_TRANSLATIONS["conditions"][condition["id"]],
                               DISPLAY_TRANSLATIONS["conditions"][condition["id"]])]
                         for condition in case["conditions"]],
                        (f"{case['id']} の全{len(case['conditions'])}条件", f"All {len(case['conditions'])} criteria for {case['id']}"),
-                       widths=(1.3, 3.5, 4.2), class_name="canonical-condition-rubric"),
+                       widths=(1.3, 3.5, 4.2), class_name="canonical-condition-rubric evaluation-reference"),
         ]
         if "expected_values" in case:
             blocks.append(text_table([("参照キー", "Reference key"), ("値", "Value")],

@@ -35,6 +35,7 @@ ICONS = {
 }
 
 _CODE_SPAN = re.compile(r"`([^`]+)`")
+_MARKDOWN_LINK = re.compile(r"\[([^\]\r\n]+)\]\((https?://[^\s)]+)\)")
 _URL = re.compile(r"(https://[^\s、。（）()\]】]+)")
 
 #: Lines of code that still fit inside one A4 page at the print type size, and
@@ -80,16 +81,38 @@ def rich(text: str, *, verbatim: bool = False) -> str:
     """Render backtick code spans and bare URLs as HTML."""
     out: list[str] = []
     escape = (lambda value: html.escape(str(value), quote=True)) if verbatim else esc
+
+    def linked_text(value: str) -> str:
+        pieces: list[str] = []
+        cursor = 0
+        for match in _MARKDOWN_LINK.finditer(value):
+            plain = escape(value[cursor:match.start()])
+            pieces.append(_URL.sub(
+                lambda url: f'<a href="{url.group(1)}" rel="noreferrer noopener">{url.group(1)}</a>',
+                plain,
+            ))
+            pieces.append(
+                f'<a href="{escape(match.group(2))}" rel="noreferrer noopener">'
+                f'{escape(match.group(1))}</a>'
+            )
+            cursor = match.end()
+        tail = escape(value[cursor:])
+        pieces.append(_URL.sub(
+            lambda url: f'<a href="{url.group(1)}" rel="noreferrer noopener">{url.group(1)}</a>',
+            tail,
+        ))
+        return "".join(pieces)
+
     for index, segment in enumerate(str(text).split("`")):
         if index % 2 == 1:
-            out.append(f"<code>{escape(segment)}</code>")
+            class_attr = (
+                ' class="cli-option"'
+                if segment.startswith("--") and not any(char.isspace() for char in segment)
+                else ""
+            )
+            out.append(f"<code{class_attr}>{escape(segment)}</code>")
             continue
-        escaped = escape(segment)
-        escaped = _URL.sub(
-            lambda match: f'<a href="{match.group(1)}" rel="noreferrer noopener">{match.group(1)}</a>',
-            escaped,
-        )
-        out.append(escaped)
+        out.append(linked_text(segment))
     return "".join(out)
 
 

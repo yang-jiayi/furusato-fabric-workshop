@@ -233,7 +233,9 @@ class ParticipantEditionTests(unittest.TestCase):
             if block.kind == "table" and "Condition ID" in [cell.en for cell in block["headers"]]
         ]
         self.assertTrue(condition_tables)
-        self.assertTrue(all(block.get("tableClass") == "canonical-condition-rubric"
+        self.assertTrue(all(set(block.get("tableClass", "").split()) == {
+                                "canonical-condition-rubric", "evaluation-reference"
+                            }
                             for block in condition_tables))
 
     def test_evaluation_kit_points_to_current_lab_and_html_guide(self):

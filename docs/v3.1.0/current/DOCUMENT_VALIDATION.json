@@ -1,29 +1,29 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "45a1c5716fe192909127f0403318aff4d1f9a4b7d557a6b293651f8f795354ef",
+  "contentSha256": "e043f9264a86e9dcca1dfd0fd6aa79db92d445a173c0115a2ac5006ab4255b61",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
     "sections": 185,
-    "modelBlocks": 632,
-    "bilingualValuesChecked": 7842,
-    "literalCodeAndPromptsChecked": 102,
-    "figures": 34,
+    "modelBlocks": 646,
+    "bilingualValuesChecked": 8316,
+    "literalCodeAndPromptsChecked": 103,
+    "figures": 43,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "3b9ef3614d0a3096c23969ae1dca700ef59fba060376c91f08048819b53686ac"
+    "htmlSha256": "5dbcb3ca628536536d5e9f1cc9ce72408a09267594994af866883826bcb3245f"
   },
   "sourceRevision": {
-    "baseCommit": "db1c7a3d169696c44512fcb28d8c5b6a6bd293c7",
-    "workingTreeMatchesCommit": false,
+    "baseCommit": "4d59ce1fcdb2e4ec02d006d33225f57c528f8661",
+    "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "589fcc29e91a753c55d838e8d46901e7f8db3c6f085115c6372045cf72622e14"
+    "sourceTreeSha256": "06539ace84452dbc748a861a12ae1301fb6e9f4fd771fc9f1f2f8bb3cd1902e0"
   },
   "currentArtifactSet": {
-    "manifestSha256": "59ed155a1ba59eab77a401e3965e05f5668e39707ed8945f7ab57196c014cc7c",
-    "sourceCommit": "db1c7a3d169696c44512fcb28d8c5b6a6bd293c7",
-    "sourceTreeSha256": "589fcc29e91a753c55d838e8d46901e7f8db3c6f085115c6372045cf72622e14",
+    "manifestSha256": "3c3e80cc9063b6f5fd7e260fae0d704970acbc50c7d71c21babcc4fbd1415a2c",
+    "sourceCommit": "4d59ce1fcdb2e4ec02d006d33225f57c528f8661",
+    "sourceTreeSha256": "06539ace84452dbc748a861a12ae1301fb6e9f4fd771fc9f1f2f8bb3cd1902e0",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,30 +33,25 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "3b9ef3614d0a3096c23969ae1dca700ef59fba060376c91f08048819b53686ac",
+    "htmlSha256": "5dbcb3ca628536536d5e9f1cc9ce72408a09267594994af866883826bcb3245f",
     "checks": [
       "all29chaptersAndAppendices",
+      "noPrintOrPdfExport",
+      "ja.referenceTokensStayWholeWithHorizontalScroll",
       "ja.languagePersists",
       "ja.searchAndReset",
-      "ja.mobile390",
-      "ja.printPdf",
+      "ja.responsive320_390_768_1440",
+      "en.referenceTokensStayWholeWithHorizontalScroll",
       "en.languagePersists",
       "en.searchAndReset",
-      "en.mobile390",
-      "en.printPdf",
+      "en.responsive320_390_768_1440",
       "progressPersistsAndResets",
       "tocNavigation",
       "copyFeedback",
       "figureZoom",
-      "printButton",
       "noScriptErrors",
       "noExternalRequests"
-    ],
-    "printedPages": {
-      "ja": 225,
-      "en": 216
-    },
-    "allPrintedPagesVisuallyReviewed": false
+    ]
   },
   "liveFabricValidationClaimed": false
 }

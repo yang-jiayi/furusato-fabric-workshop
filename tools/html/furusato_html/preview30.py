@@ -128,6 +128,7 @@ def render(
     if delivery_mode != "html-lab":
         state = Text(notice["ja"], notice["en"])
         hero_status = f'<p class="hero__status" role="status">{plain_bilingual(state)}</p>'
+    hero_status_line = f" {hero_status}" if hero_status else ""
     public_metadata = {
         **metadata,
         "htmlFilename": profile.html_name,
@@ -184,7 +185,7 @@ def render(
  <p class="hero__lead">{plain_bilingual(Text(
      "合成データを使い、Lakehouse・Eventhouse・Ontology・Data Agentを順に構築して確かめるハンズオン教材です。",
      "Build and inspect a Microsoft Fabric solution with synthetic data, from Lakehouse and Eventhouse through Ontology and a Data Agent."))}</p>
- {hero_status}
+{hero_status_line}
  <div class="hero__actions">
   <a class="button-link" href="#contents">{plain_bilingual(Text("目次から読む", "Start with the contents"))}</a>
   {guide_link}

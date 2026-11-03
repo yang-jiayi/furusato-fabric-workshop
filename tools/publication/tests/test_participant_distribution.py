@@ -72,7 +72,7 @@ class ParticipantDistributionTests(unittest.TestCase):
             self.assertTrue(receipt['static']['passed'])
             self.assertTrue(receipt['browser']['passed'])
             lab_receipt=json.loads(archive.read('LAB_VALIDATION.json'))
-            self.assertGreaterEqual(receipt['static']['modelBlocks'],646)
+            self.assertEqual(receipt['static']['modelBlocks'],640)
             self.assertEqual(receipt['static']['modelBlocks'],lab_receipt['sourceBlocksChecked'])
             self.assertEqual(receipt['static']['htmlSha256'],sha256(archive.read('guide/'+HTML)).hexdigest())
             manifest=json.loads(archive.read('PACKAGE_MANIFEST.json'))

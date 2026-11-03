@@ -525,7 +525,7 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
         participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
     chapter17_spec = (current_tuning.current_chapter_spec() if current_tuning is not None
                       else text_source.CHAPTERS[17])
-    suffix = 17
+    suffix = 15 if current_profile else 17
     if chapter17_spec.get("checks"):
         add_section(chapters[17], str(suffix), SECTION_TITLES["checks"], [text_table(
             [("確認すること", "What to check"), ("うまくいかないとき", "If it does not work")],

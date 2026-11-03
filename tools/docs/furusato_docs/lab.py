@@ -129,7 +129,7 @@ def fence(value, language='text'):
     return f'{ticks}{language}\n{value}\n{ticks}\n'
 
 
-SELECTION_CONTRACT_BLOCK_ID = 'ch-17-7:1'
+SELECTION_CONTRACT_BLOCK_ID = 'ch-17-5:1'
 READABLE_CODE_LINE_LIMIT = 80
 
 
@@ -276,19 +276,19 @@ class LabWriter:
         return f'{PROFILE_REL.as_posix()}/{filename}'
 
     def readable_instruction_views(self, block, block_id):
-        if block_id == 'ch-17-8:1':
+        if block_id == 'ch-17-6:1':
             return [(self.profile_ref('global-instructions.txt'), 'global instructions',
                      block['text'])]
-        if block_id == 'ch-17-9:1':
+        if block_id == 'ch-17-7:1':
             source = json.loads(block['text'])
             ref = self.profile_ref('source-instructions.json')
             return [(ref, f'{name}.instructions', source[name]['instructions'])
                     for name in ('kusto', 'lakehouse_tables', 'semantic_model')]
         definition_files = {
-            'ch-17-12:4': 'definition/kusto.json',
-            'ch-17-12:6': 'definition/lakehouse_tables.json',
-            'ch-17-12:10': 'definition/semantic_model.json',
-            'ch-17-12:12': 'definition/stage_config.json',
+            'ch-17-10:4': 'definition/kusto.json',
+            'ch-17-10:6': 'definition/lakehouse_tables.json',
+            'ch-17-10:10': 'definition/semantic_model.json',
+            'ch-17-10:12': 'definition/stage_config.json',
         }
         filename = definition_files.get(block_id)
         if filename is None:
@@ -300,7 +300,7 @@ class LabWriter:
     def render_readable_instruction_views(self, block, block_id, language):
         views = []
         for reference, field, value in self.readable_instruction_views(block, block_id):
-            if block_id == 'ch-17-12:10' and field == 'dataSourceInstructions':
+            if block_id == 'ch-17-10:10' and field == 'dataSourceInstructions':
                 views.append(
                     '注意: これは experimental definition の比較用 serialized reference です。'
                     'Data Agent がサポートする編集欄ではなく、有効な DAX 設定でもありません。'

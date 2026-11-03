@@ -1,4 +1,4 @@
-# 17.17 完了の確認
+# 17.15 完了の確認
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -13,7 +13,7 @@
 <details>
 <summary>English</summary>
 
-## 17.17 Check your work
+## 17.15 Check your work
 
 **Completion checks for this chapter**
 

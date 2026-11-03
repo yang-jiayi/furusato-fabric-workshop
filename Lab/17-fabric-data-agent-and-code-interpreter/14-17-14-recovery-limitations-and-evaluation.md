@@ -1,4 +1,4 @@
-# 17.16 復旧・制約・評価
+# 17.14 復旧・制約・評価
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -10,7 +10,7 @@
 <details>
 <summary>English</summary>
 
-## 17.16 Recovery, limitations and evaluation
+## 17.14 Recovery, limitations and evaluation
 
 1. If the outcome after apply/publish is uncertain, preserve the intent and run read-only verify; never resend the write. If a new change is needed, do not reuse the spent intent. Follow a separate procedure after confirming ownership and the live definition.
 2. Current experimental responses can transpose timestamps by 12 hours. Fixture 001 ends at 11:54:30 UTC (native 11:54:30 AM), not 23:54:30. Fixture 003 starts at 14:18:14 UTC (2:18:14 PM), not 02:18:14. A generated aggregate join can also mistake a grand total for per-file totals and return a false “no data.” In an independent answer review, check each fixture's start/end time, UTC labeling, period and denominator definitions, aggregation grain, and that per-file totals are not confused.

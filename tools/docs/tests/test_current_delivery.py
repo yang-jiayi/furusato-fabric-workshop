@@ -120,6 +120,18 @@ class CurrentDeliveryTests(unittest.TestCase):
             with self.subTest(version=invalid),self.assertRaises(ValueError):
                 CurrentPublication(invalid)
 
+    def test_current_guide_chapter17_numbers_are_contiguous(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        section_ids = [
+            element.get('id')
+            for element in tree.xpath('//*[@id]')
+            if re.fullmatch(r'ch-17-\d+', element.get('id', ''))
+        ]
+        self.assertEqual([f'ch-17-{number}' for number in range(1, 17)], section_ids)
+
     def test_current_support_and_architecture_links_resolve(self):
         source_paths = (
             ROOT / 'docs/public-onboarding/README.md',
@@ -255,7 +267,7 @@ class CurrentDeliveryTests(unittest.TestCase):
                 self.assertIn('横スクロールできる表', hint_text)
                 self.assertIn('Horizontally scrollable table', hint_text)
         for ident, table_class in (
-            ('ch-17-7', 'selection-contract'),
+            ('ch-17-5', 'selection-contract'),
             ('appendix-b-1', 'notebook-parameters'),
         ):
             with self.subTest(section=ident):
@@ -279,7 +291,7 @@ class CurrentDeliveryTests(unittest.TestCase):
                 hint_text = ''.join(hint.itertext())
                 self.assertIn('横スクロールできる表', hint_text)
                 self.assertIn('Horizontally scrollable table', hint_text)
-                if ident == 'ch-17-7':
+                if ident == 'ch-17-5':
                     source_table = next(
                         block for block in delivery.load_model(ROOT)[0].tables
                         if block['caption'].en == 'Actual flat selection contract'
@@ -322,7 +334,7 @@ class CurrentDeliveryTests(unittest.TestCase):
         self.assertNotIn("](<a href", visible)
         self.assertNotRegex(visible, r"\[[^\]]+\]\(https?://")
 
-        tuning = tree.get_element_by_id("ch-17-12")
+        tuning = tree.get_element_by_id("ch-17-10")
         text = " ".join(tuning.itertext())
         for filename in (
             "definition/kusto.json",
@@ -355,10 +367,10 @@ class CurrentDeliveryTests(unittest.TestCase):
             self.assertIn(filename, following_block.text_content())
             self.assertIn("JSON", following_block.text_content())
         self.assertIn("ポータブル ステージ テンプレート", text)
-        global_section = tree.get_element_by_id("ch-17-8")
+        global_section = tree.get_element_by_id("ch-17-6")
         self.assertIn("Agent 全体への指示", global_section.text_content())
-        self.assertIn("高額寄附フラグ", tree.get_element_by_id("ch-17-16").text_content())
-        self.assertNotIn("高額寄付フラグ", tree.get_element_by_id("ch-17-16").text_content())
+        self.assertIn("高額寄附フラグ", tree.get_element_by_id("ch-17-14").text_content())
+        self.assertNotIn("高額寄付フラグ", tree.get_element_by_id("ch-17-14").text_content())
 
         for prompt in tree.xpath("//div[contains(concat(' ',normalize-space(@class),' '),' codeblock--prompt ')]"):
             bar = prompt.xpath("./div[contains(@class,'codeblock__bar')]")

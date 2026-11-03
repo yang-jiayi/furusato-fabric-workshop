@@ -231,13 +231,13 @@ def current_chapter_spec():
 
 
 def append_current_tuning_sections(chapter: Section, root: Path):
-    """Append current-profile instructions in the stable 17.5–17.16 slots."""
+    """Append current-profile instructions in the 17.3–17.14 slots."""
     if chapter.chapter != 17:
         raise ValueError("Current-profile instructions belong to Chapter 17")
     assets = _assets(root)
     profile_rel = PROFILE_REL.as_posix()
 
-    _append(chapter, 5, ("対象と準備", "Scope and prerequisites"), [
+    _append(chapter, 3, ("対象と準備", "Scope and prerequisites"), [
         _paragraph(
             "同梱の portable profile は、現在の公開版で確認した指示本文と170個の選択済みノードを保持し、配置先に必要なIDだけを置換します。参加者自身が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent で Draft と公開版を照合します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定します。別の Agent を作成せず、ソースの追加・選択範囲の拡大・Schema変更も行いません。この実験用プロファイルは回答精度の承認・保証を意味しません。",
             "The portable profile preserves the instruction text and 170 selected nodes verified in the current Published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema. This experimental profile is not accuracy acceptance or a guarantee."),
@@ -251,7 +251,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "共有環境の部分的な mirroring は、mirror の変更・再取り込み・時系列作業の前提を満たしません。Ontology の静的 SQL は独立したソース・言語・クエリ・結果として扱います。Graph model の存在・準備状態と実際の GQL は別途確認し、どちらも推定しません。",
             "Partial mirroring in the shared environment does not satisfy prerequisites for mirror changes, re-ingestion or time-series work. Treat static Ontology SQL as independent evidence for its own source, language, query and result. Verify Graph-model presence/readiness and actual GQL separately; infer neither."),
     ])
-    _append(chapter, 6, ("プロファイル資産と事前確認", "Profile assets and preflight"), [
+    _append(chapter, 4, ("プロファイル資産と事前確認", "Profile assets and preflight"), [
         _paragraph(
             f"同梱の `{profile_rel}` にある `profile-manifest.json`、`global-instructions.txt`、`source-instructions.json`、`selection-contract.json`、定義と portable stage template を確認します。manifest の SHA-256 と実ファイルを照合し、プロファイル名が `current-experimental` であることを確認します。`global-instructions.txt` は末尾を含めてそのまま使用し、Trimや編集をしません。",
             f"Inspect `profile-manifest.json`, `global-instructions.txt`, `source-instructions.json`, `selection-contract.json`, the definition and portable stage template under `{profile_rel}`. Compare manifest SHA-256 values with the files and confirm the profile name is `current-experimental`. Use `global-instructions.txt` exactly as stored, including its ending; do not trim or edit it."),
@@ -266,7 +266,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             f"この版の definition few-shot file は {assets['manifest']['definitionFewshotFiles']} 件、読み戻しで必要な active example は {assets['active_example_count']} 件です。9件の例を前提にせず、資産や実定義にない例を追加しません。Global 指示本文は実測 {assets['global_units']} UTF-16 単位で、上限 {INSTRUCTION_LIMIT} 単位以下です。実際に選択した別プロファイルの長さも測り、固定の長さを全候補へ当てはめません。",
             f"This profile has {assets['manifest']['definitionFewshotFiles']} definition few-shot files and requires {assets['active_example_count']} active examples on readback. Do not assume nine examples or add examples absent from the assets and live definition. The global instructions measure {assets['global_units']} UTF-16 units, within the {INSTRUCTION_LIMIT}-unit maximum. Measure any other selected profile's actual length instead of applying a fixed length to every candidate."),
     ])
-    _append(chapter, 7, ("現在の Agent と選択契約を読み取る", "Read the current agent and selection contract"), [
+    _append(chapter, 5, ("現在の Agent と選択契約を読み取る", "Read the current agent and selection contract"), [
         _paragraph(
             "既存 Agent の実定義から ID-only binding を解決し、`selection-contract.json` の path・type・is_selected と照合します。対象は資産ファイルに列挙された選択だけです。欠落・曖昧・予期しない差分があれば停止します。UI で親を再選択して子要素を増やしたり、存在しない ID を作ったりしません。",
             "Resolve ID-only bindings from the existing agent's live definition and compare them with path, type and is_selected in `selection-contract.json`. Only selections listed in the asset are in scope. Stop on missing, ambiguous or unexpected differences. Do not reselect parent items to expand children or invent IDs."),
@@ -281,7 +281,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             table_class="selection-contract",
         ),
     ])
-    _append(chapter, 8, ("全体指示を確認する", "Review the global instructions"), [
+    _append(chapter, 6, ("全体指示を確認する", "Review the global instructions"), [
         _paragraph(
             "次の全体指示は参照用の正確な全文です。この段階では画面上の欄を変更しません。`prepare` で対象・差分・readback を確認してから、許可された `apply` 手順だけで適用します。本文・末尾の空白・改行を編集せず、readback は元ファイルと照合します。",
             "The global instructions below are the exact reference text. Do not edit the UI field at this step. After reviewing the target, diffs and readbacks in `prepare`, apply changes only through the authorized `apply` procedure. Do not edit the text or its trailing whitespace/line endings; compare readback with the source file."),
@@ -290,10 +290,10 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "The opening `You are the Furusato Workshop v3 Preview assistant.` is the role label stored in the supplied configuration, not the Workshop edition. Use the instruction text exactly as supplied; identify the participant edition from this handbook and `WORKSHOP_VERSION`."),
         _code(assets["global"], _text("Agent 全体への指示", "Agent-wide instructions"), canonical=True),
     ])
-    _append(chapter, 9, ("ソース指示・説明と Ontology context を確認する", "Review source instructions, descriptions and Ontology context"), [
+    _append(chapter, 7, ("ソース指示・説明と Ontology context を確認する", "Review source instructions, descriptions and Ontology context"), [
         _paragraph(
-            "次の `source-instructions.json` はプロファイルの参照値です。この段階では画面上の指示・説明・Ontology context を変更しません。`prepare` で照合し、対象と差分を確認します。`semantic_model.instructions` と semantic model source の Description は実験用 serialized definition の比較参照に限り、Data Agent の対応する編集欄ではなく、DAX の有効な設定でもありません。UI に転記・編集せず、効果を推定しません。これは semantic model・table・column・measure のメタデータ Description とは別です。Agent 全体の Instructions は routing と response の指針であり、DAX 生成の設定ではありません。DAX は model metadata と Prep for AI の支援を参照します。Prep for AI の schema、AI instructions、verified answers も正確さや動作を保証しません。`apply` は対応欄だけの部分更新ではなく compiled Draft definition 全体を送信するため、変更対象・未変更対象を含む候補と現行 Draft 全体の差分を 17.12 で確認します。unsupported な semantic model source Instructions/Description が異なる、または不変を確認できない場合は `apply` せず停止してレビューを依頼します。本文を翻訳・短縮したり、他ソースへ移したり、Ontology 用 source instruction を作ったりしません。詳細は [Semantic model best practices](https://learn.microsoft.com/en-us/fabric/data-science/semantic-model-best-practices) と [Add data sources to a Data Agent](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-add-datasources) を参照します。",
-            "The `source-instructions.json` below contains profile reference values. Do not edit UI instructions, descriptions or Ontology context at this step; reconcile the target and diffs in `prepare`. `semantic_model.instructions` and the semantic-model source Description are serialized references for comparing this experimental definition only: Data Agent does not support them as editable source fields, and they are not effective DAX configuration. Do not paste or edit them in a UI field or infer an effect from them. This is distinct from supported descriptions on semantic-model, table, column and measure metadata. Agent-wide Instructions guide routing and responses; they do not configure DAX generation. DAX should rely on model metadata and Prep for AI. Prep for AI schema, AI instructions and verified answers are aids, not guarantees of accuracy or behavior. `apply` sends the entire compiled Draft definition, not a selective update of supported fields; review the full candidate against the current Draft in 17.12, including both changed and unchanged parts. If unsupported semantic-model-source Instructions/Description differ or cannot be confirmed unchanged, do not `apply`; stop and request review. Use the authorized apply procedure only after those checks pass. Do not translate, shorten or move text to another source, or invent an Ontology source instruction. See [Semantic model best practices](https://learn.microsoft.com/en-us/fabric/data-science/semantic-model-best-practices) and [Add data sources to a Data Agent](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-add-datasources)."),
+            "次の `source-instructions.json` はプロファイルの参照値です。この段階では画面上の指示・説明・Ontology context を変更しません。`prepare` で照合し、対象と差分を確認します。`semantic_model.instructions` と semantic model source の Description は実験用 serialized definition の比較参照に限り、Data Agent の対応する編集欄ではなく、DAX の有効な設定でもありません。UI に転記・編集せず、効果を推定しません。これは semantic model・table・column・measure のメタデータ Description とは別です。Agent 全体の Instructions は routing と response の指針であり、DAX 生成の設定ではありません。DAX は model metadata と Prep for AI の支援を参照します。Prep for AI の schema、AI instructions、verified answers も正確さや動作を保証しません。`apply` は対応欄だけの部分更新ではなく compiled Draft definition 全体を送信するため、変更対象・未変更対象を含む候補と現行 Draft 全体の差分を 17.10 で確認します。unsupported な semantic model source Instructions/Description が異なる、または不変を確認できない場合は `apply` せず停止してレビューを依頼します。本文を翻訳・短縮したり、他ソースへ移したり、Ontology 用 source instruction を作ったりしません。詳細は [Semantic model best practices](https://learn.microsoft.com/en-us/fabric/data-science/semantic-model-best-practices) と [Add data sources to a Data Agent](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-add-datasources) を参照します。",
+            "The `source-instructions.json` below contains profile reference values. Do not edit UI instructions, descriptions or Ontology context at this step; reconcile the target and diffs in `prepare`. `semantic_model.instructions` and the semantic-model source Description are serialized references for comparing this experimental definition only: Data Agent does not support them as editable source fields, and they are not effective DAX configuration. Do not paste or edit them in a UI field or infer an effect from them. This is distinct from supported descriptions on semantic-model, table, column and measure metadata. Agent-wide Instructions guide routing and responses; they do not configure DAX generation. DAX should rely on model metadata and Prep for AI. Prep for AI schema, AI instructions and verified answers are aids, not guarantees of accuracy or behavior. `apply` sends the entire compiled Draft definition, not a selective update of supported fields; review the full candidate against the current Draft in 17.10, including both changed and unchanged parts. If unsupported semantic-model-source Instructions/Description differ or cannot be confirmed unchanged, do not `apply`; stop and request review. Use the authorized apply procedure only after those checks pass. Do not translate, shorten or move text to another source, or invent an Ontology source instruction. See [Semantic model best practices](https://learn.microsoft.com/en-us/fabric/data-science/semantic-model-best-practices) and [Add data sources to a Data Agent](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-add-datasources)."),
         _code(json.dumps(assets["source_instructions"], ensure_ascii=False, indent=2), "JSON", canonical=True),
         _steps([
             ("UI と現在の definition の両方で、4つの論理ソースが同じ対象であることを読み取り確認します。通常の物理 datasource 表示数を、論理ソース数と取り違えません。この段階では変更せず、適用は確認後の apply 手順で行います。",
@@ -302,7 +302,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
              "Ontology selection does not prove a successful native Ontology query or GQL execution. Match and record actual source, language, query and results separately for SQL, KQL, DAX and GQL."),
         ]),
     ])
-    _append(chapter, 10, ("現行の Semantic 選択を確認する", "Verify current semantic selections"), [
+    _append(chapter, 8, ("現行の Semantic 選択を確認する", "Verify current semantic selections"), [
         _paragraph(
             "`selection-contract.json` は path/type/is_selected のフラットな契約です。表示された全項目を確認し、記載された選択値を変えません。現在の構成は実際に選択済みの SQL テーブル、KQL 集計、モデルテーブル、Ontology entity に限られます。ソース探索により項目を追加したり、契約外の候補を展開したりしません。",
             "`selection-contract.json` is a flat path/type/is_selected contract. Inspect every listed item and preserve its specified selection state. The current configuration is limited to the actually selected SQL tables, KQL summary, model tables and Ontology entities. Do not add items through source discovery or expand beyond the contract."),
@@ -310,7 +310,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "テーブル名や件数だけでなく各 path と type を実定義に照合します。IDを直接比較できない場合は現在の定義で binding を解決し、意味の差分が残れば停止します。選択状態の表示だけで、実際の問い合わせや回答品質を確認済みとは扱いません。",
             "Reconcile every path and type against the live definition, not only table names or counts. If IDs cannot be compared directly, resolve bindings from the current definition and stop if semantic differences remain. A visible selection does not verify actual queries or answer quality."),
     ])
-    _append(chapter, 11, ("適用候補を安全に準備する", "Prepare the candidate safely"), [
+    _append(chapter, 9, ("適用候補を安全に準備する", "Prepare the candidate safely"), [
         _paragraph(
             "`prepare` はリモートの変更を行わず、対象の既存 Agent を読み取り、ID-only binding を実定義と照合して、候補と private evidence を作成します。shared-field の実際の readback と complete-stage を確認し、予期しない意味差分があれば失敗として止まることを確認します。`prepare` の結果を見ずに `apply` へ進みません。",
             "`prepare` makes no remote changes. It reads the existing agent, resolves ID-only bindings against its live definition and writes the candidate and private evidence. Check actual shared-field readback and complete-stage; verify unexpected semantic drift causes a fail-closed stop. Do not proceed to `apply` without inspecting `prepare` output."),
@@ -333,7 +333,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "PowerShell",
         ),
     ])
-    _append(chapter, 12, ("指示・選択・定義の差分を確認する", "Review instruction, selection and definition diffs"), [
+    _append(chapter, 10, ("指示・選択・定義の差分を確認する", "Review instruction, selection and definition diffs"), [
         _paragraph(
             f"PrivateRoot 内の prepare receipt、candidate、definition/readback artifacts を確認し、manifest の全ファイルハッシュ、global の{assets['global_units']} UTF-16単位、各 source text/description、Ontology context、各 flat selection の path/type/is_selected、active few-shot file/example 数が資産に一致することを確かめます。semantic model source の instructions/description と semantic_model.json の dataSourceInstructions は、serialized definition の比較対象にすぎず、サポートされる編集欄や有効な DAX 設定とは扱いません。readback は文字列・定義の一致を示すだけで、実行時の効果を証明しません。readback では4つの論理ソースと3つの通常形式の物理 datasource record を区別し、native Ontology context を別に確認します。",
             f"Inspect the prepare receipt, candidate and definition/readback artifacts under PrivateRoot. Verify all manifest hashes, the {assets['global_units']}-UTF-16-unit global text, each source text/description, Ontology context, every flat selection path/type/is_selected and active few-shot file/example counts against the assets. The semantic-model source instructions/description and `dataSourceInstructions` in `semantic_model.json` are serialized definition comparison references only, not supported editable fields or effective DAX configuration. A matching readback verifies serialized text/definition only; it does not prove runtime effect. Distinguish the four logical sources from three standard-format physical datasource records, and verify the natively serialized Ontology context separately."),
@@ -359,22 +359,22 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             )
         ],
     ])
-    _append(chapter, 13, ("Draft へ一度だけ適用する", "Apply once to Draft"), [
+    _append(chapter, 11, ("Draft へ一度だけ適用する", "Apply once to Draft"), [
         _paragraph(
-            "apply は対応欄だけを選んで更新せず、candidate の compiled Draft definition 全体を送信します。直前の prepare で対象・差分・readback を確認し、17.12 の semantic model source Instructions/Description の不変条件を候補と現行 Draft の比較で確認できた場合に限り、同じ既存 Agent の Draft に一度だけ適用します。不一致または確認不能なら --apply を実行せず、停止してレビューを依頼します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。",
-            "Apply sends the candidate's entire compiled Draft definition; it does not select and update only supported fields. After reviewing the target, diffs and readbacks from prepare, apply once to the same existing agent only if the comparison in 17.12 confirms the semantic-model-source Instructions/Description are unchanged between the candidate and current Draft. If they differ or cannot be confirmed, do not run `--apply`; stop and request review. No write occurs without explicit `--apply`. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify."),
+            "apply は対応欄だけを選んで更新せず、candidate の compiled Draft definition 全体を送信します。直前の prepare で対象・差分・readback を確認し、17.10 の semantic model source Instructions/Description の不変条件を候補と現行 Draft の比較で確認できた場合に限り、同じ既存 Agent の Draft に一度だけ適用します。不一致または確認不能なら --apply を実行せず、停止してレビューを依頼します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。",
+            "Apply sends the candidate's entire compiled Draft definition; it does not select and update only supported fields. After reviewing the target, diffs and readbacks from prepare, apply once to the same existing agent only if the comparison in 17.10 confirms the semantic-model-source Instructions/Description are unchanged between the candidate and current Draft. If they differ or cannot be confirmed, do not run `--apply`; stop and request review. No write occurs without explicit `--apply`. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify."),
         _code(_profile_command("apply", "--apply"), "PowerShell"),
         _paragraph(
             "Draft の shared-field readback と complete-stage の結果を確認します。readback の文字列一致は、semantic model source の Instructions/Description がサポートされる、または DAX に作用することを意味しません。失敗や不一致がある場合は停止し、公開しません。既存の Agent、Schema、Selection を作成・拡張する回避策を試しません。",
             "Inspect shared-field readback and complete-stage results for Draft. A matching readback does not mean SemanticModel-source Instructions/Description are supported or affect DAX. Stop and do not publish on failure or mismatch. Do not work around the problem by creating or expanding agents, schema or selections."),
     ])
-    _append(chapter, 14, ("公開を一度だけ実施する", "Publish once"), [
+    _append(chapter, 12, ("公開を一度だけ実施する", "Publish once"), [
         _paragraph(
             "Draft が完全に一致し、全ての事前条件と readback が通った場合に限り、同じ既存 Agent の公開を一度だけ実行します。明示的な --apply が必要です。publish intent を再利用・削除せず、応答不明や timeout のときは再送しません。",
             "Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout."),
         _code(_profile_command("publish", "--apply"), "PowerShell"),
     ])
-    _append(chapter, 15, ("Draft と公開版を読み取り専用で検証する", "Verify Draft and publication read-only"), [
+    _append(chapter, 13, ("Draft と公開版を読み取り専用で検証する", "Verify Draft and publication read-only"), [
         _paragraph(
             "`verify` は read-only で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。`verify` の成功も、回答精度、Graph/GQL、時系列、mirror完全性を証明しません。",
             "`verify` is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness."),
@@ -387,7 +387,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "記録には自分の作業で得た実際の stage、状態、読み戻し、理由だけを残します。設定の readback と、実際に観測したSQL/KQL/DAX/GQL実行・結果・Agent回答を別にします。回答品質の採用・正確性・保証を主張しません。",
             "Record only the actual stage, status, readbacks and reasons from your own run. Keep configuration readback separate from observed SQL/KQL/DAX/GQL executions, results and Agent answers. Do not claim accepted, accurate or guaranteed answer quality."),
     ])
-    _append(chapter, 16, ("復旧・制約・評価", "Recovery, limitations and evaluation"), [
+    _append(chapter, 14, ("復旧・制約・評価", "Recovery, limitations and evaluation"), [
         _steps([
             ("apply/publish の後に結果が不明なら、書込みを再送せず、その intent を保持して verify を読み取り専用で実行します。新しい変更が必要と判明しても、使用済みintentを再利用しません。所有者と現在の定義を確認した別手順に従います。",
              "If the outcome after apply/publish is uncertain, preserve the intent and run read-only verify; never resend the write. If a new change is needed, do not reuse the spent intent. Follow a separate procedure after confirming ownership and the live definition."),

@@ -91,20 +91,20 @@ class CurrentProfileGuideTests(unittest.TestCase):
             self.assets["source_instructions"]["ontology"],
         )
 
-    def test_stable_chapter_sections_and_exact_profile_text(self):
+    def test_contiguous_chapter_sections_and_exact_profile_text(self):
         self.assertEqual(
-            [f"chapter-17-{index}" for index in range(5, 17)],
+            [f"chapter-17-{index}" for index in range(3, 15)],
             [section.ident for section in self.chapter.children],
         )
         sections = {section.ident: section for section in self.chapter.children}
         global_code = next(
             block["text"]
-            for block in sections["chapter-17-8"].blocks
+            for block in sections["chapter-17-6"].blocks
             if block.kind == "code"
         )
         global_block = next(
             block
-            for block in sections["chapter-17-8"].blocks
+            for block in sections["chapter-17-6"].blocks
             if block.kind == "code"
         )
         self.assertTrue(global_block.get("canonicalLiteral"))
@@ -113,7 +113,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
         self.assertIn("You are the Furusato Workshop v3 Preview assistant.", global_code)
         global_reference = " ".join(
             part
-            for block in sections["chapter-17-8"].blocks
+            for block in sections["chapter-17-6"].blocks
             if block.kind == "paragraph"
             for part in self._strings(block.payload)
         )
@@ -121,7 +121,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
         self.assertIn("not the Workshop edition", global_reference)
         source_block = next(
             block
-            for block in sections["chapter-17-9"].blocks
+            for block in sections["chapter-17-7"].blocks
             if block.kind == "code"
         )
         self.assertTrue(source_block.get("canonicalLiteral"))
@@ -133,7 +133,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
         self.assertEqual(self.assets["source_instructions"], json.loads(source_code))
         selection_table = next(
             block
-            for block in sections["chapter-17-7"].blocks
+            for block in sections["chapter-17-5"].blocks
             if block.kind == "table"
         )
         self.assertTrue(selection_table.get("canonicalLiteral"))
@@ -149,7 +149,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
         )
         template_codes = [
             block["text"]
-            for block in sections["chapter-17-12"].blocks
+            for block in sections["chapter-17-10"].blocks
             if block.kind == "code"
         ]
         self.assertEqual(
@@ -206,15 +206,15 @@ class CurrentProfileGuideTests(unittest.TestCase):
 
     def test_instruction_sections_are_reference_only_until_apply(self):
         sections = {section.ident: section for section in self.chapter.children}
-        self.assertIn("review the global instructions", sections["chapter-17-8"].title.en.lower())
-        self.assertIn("review source instructions", sections["chapter-17-9"].title.en.lower())
-        for ident in ("chapter-17-8", "chapter-17-9"):
+        self.assertIn("review the global instructions", sections["chapter-17-6"].title.en.lower())
+        self.assertIn("review source instructions", sections["chapter-17-7"].title.en.lower())
+        for ident in ("chapter-17-6", "chapter-17-7"):
             content = " ".join(
                 part
                 for block in sections[ident].blocks
                 if block.kind in {"paragraph", "list", "callout"}
                 for part in self._strings(block.payload)
-            ).lower()
+            ).lower().replace("`", "")
             self.assertTrue(
                 "do not edit the ui field at this step" in content
                 or "do not edit ui instructions" in content
@@ -246,6 +246,8 @@ class CurrentProfileGuideTests(unittest.TestCase):
             for part in self._strings(block.payload)
         )
         self.assertIn("experimental current profile", current_handoff_text)
+        self.assertIn("Chapter 17.3 onward", current_handoff_text)
+        self.assertIn("17.3以降", current_handoff_text)
         self.assertNotIn("six SQL views", current_handoff_text)
         self.assertNotIn("measured-contract-20261015", current_handoff_text)
 
@@ -289,7 +291,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
             for value in (part if isinstance(part, tuple) else part.get("text", ()))
             if isinstance(value, str)
         )
-        self.assertIn("portable profile", joined)
+        self.assertIn("four logical sources", joined)
         self.assertNotIn("measured-contract-20261015", joined)
         self.assertNotIn("143 columns", joined)
         self.assertNotIn("nine KQL examples", joined)

@@ -1,4 +1,4 @@
-# 17.12 指示・選択・定義の差分を確認する
+# 17.10 指示・選択・定義の差分を確認する
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -1787,7 +1787,7 @@ Answer composition and capability boundaries:<br>
 <details>
 <summary>English</summary>
 
-## 17.12 Review instruction, selection and definition diffs
+## 17.10 Review instruction, selection and definition diffs
 
 Inspect the prepare receipt, candidate and definition/readback artifacts under PrivateRoot. Verify all manifest hashes, the 9994-UTF-16-unit global text, each source text/description, Ontology context, every flat selection path/type/is_selected and active few-shot file/example counts against the assets. The semantic-model source instructions/description and `dataSourceInstructions` in `semantic_model.json` are serialized definition comparison references only, not supported editable fields or effective DAX configuration. A matching readback verifies serialized text/definition only; it does not prove runtime effect. Distinguish the four logical sources from three standard-format physical datasource records, and verify the natively serialized Ontology context separately.
 

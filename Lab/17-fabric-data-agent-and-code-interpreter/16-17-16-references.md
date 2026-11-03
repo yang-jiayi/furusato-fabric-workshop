@@ -1,4 +1,4 @@
-# 17.18 参考資料
+# 17.16 参考資料
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -8,7 +8,7 @@
 <details>
 <summary>English</summary>
 
-## 17.18 References
+## 17.16 References
 
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
 - https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent

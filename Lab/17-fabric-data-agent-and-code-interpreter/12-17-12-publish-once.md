@@ -1,4 +1,4 @@
-# 17.14 公開を一度だけ実施する
+# 17.12 公開を一度だけ実施する
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -18,7 +18,7 @@ Draft が完全に一致し、全ての事前条件と readback が通った場�
 <details>
 <summary>English</summary>
 
-## 17.14 Publish once
+## 17.12 Publish once
 
 Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout.
 

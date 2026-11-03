@@ -1,4 +1,4 @@
-# 17.8 全体指示を確認する
+# 17.6 全体指示を確認する
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -101,7 +101,7 @@ Answer composition and capability boundaries:
 <details>
 <summary>English</summary>
 
-## 17.8 Review the global instructions
+## 17.6 Review the global instructions
 
 The global instructions below are the exact reference text. Do not edit the UI field at this step. After reviewing the target, diffs and readbacks in `prepare`, apply changes only through the authorized `apply` procedure. Do not edit the text or its trailing whitespace/line endings; compare readback with the source file.
 

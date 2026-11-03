@@ -1,4 +1,4 @@
-# 17.15 Draft と公開版を読み取り専用で検証する
+# 17.13 Draft と公開版を読み取り専用で検証する
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -26,7 +26,7 @@
 <details>
 <summary>English</summary>
 
-## 17.15 Verify Draft and publication read-only
+## 17.13 Verify Draft and publication read-only
 
 `verify` is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness.
 

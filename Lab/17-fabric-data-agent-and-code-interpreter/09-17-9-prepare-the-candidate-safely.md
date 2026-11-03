@@ -1,4 +1,4 @@
-# 17.11 適用候補を安全に準備する
+# 17.9 適用候補を安全に準備する
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -31,7 +31,7 @@ $RoutingOrigin = "https://<observed-region>.analysis.windows.net"
 <details>
 <summary>English</summary>
 
-## 17.11 Prepare the candidate safely
+## 17.9 Prepare the candidate safely
 
 `prepare` makes no remote changes. It reads the existing agent, resolves ID-only bindings against its live definition and writes the candidate and private evidence. Check actual shared-field readback and complete-stage; verify unexpected semantic drift causes a fail-closed stop. Do not proceed to `apply` without inspecting `prepare` output.
 

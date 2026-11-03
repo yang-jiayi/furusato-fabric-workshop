@@ -43,7 +43,7 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
         }
 
     def test_source_reference_distinguishes_supported_metadata_and_agent_global_guidance(self):
-        section = self.sections["chapter-17-9"]
+        section = self.sections["chapter-17-7"]
         prose = self.prose(section)
         for language in ("ja", "en"):
             self.assertIn("semantic_model.instructions", prose[language])
@@ -62,8 +62,8 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
         self.assertIn("source fields", prose["en"])
         self.assertIn("メタデータ Description", prose["ja"])
         self.assertIn("metadata", prose["en"])
-        self.assertIn("17.12", prose["ja"])
-        self.assertIn("17.12", prose["en"])
+        self.assertIn("17.10", prose["ja"])
+        self.assertIn("17.10", prose["en"])
         self.assertIn("entire compiled Draft definition", prose["en"])
         self.assertIn("compiled Draft definition 全体", prose["ja"])
         self.assertIn("stop and request review", prose["en"])
@@ -72,8 +72,8 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
         self.assertNotIn("その他の値だけを", prose["ja"])
 
     def test_definition_diff_and_apply_readbacks_do_not_claim_semantic_field_effect(self):
-        diff_prose = self.prose(self.sections["chapter-17-12"])
-        apply_prose = self.prose(self.sections["chapter-17-13"])
+        diff_prose = self.prose(self.sections["chapter-17-10"])
+        apply_prose = self.prose(self.sections["chapter-17-11"])
         for language in ("ja", "en"):
             self.assertIn("serialized", diff_prose[language].lower())
             self.assertIn("dataSourceInstructions", diff_prose[language])
@@ -87,8 +87,8 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
                 self.assertIn("DAX に作用することを意味しません", apply_prose[language])
 
     def test_apply_scope_requires_unchanged_semantic_fields_or_stop_for_review(self):
-        diff_prose = self.prose(self.sections["chapter-17-12"])
-        apply_prose = self.prose(self.sections["chapter-17-13"])
+        diff_prose = self.prose(self.sections["chapter-17-10"])
+        apply_prose = self.prose(self.sections["chapter-17-11"])
         for language in ("ja", "en"):
             whole_definition = ("entire compiled Draft definition" if language == "en"
                                 else "compiled definition 全体")
@@ -110,7 +110,7 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
             self.assertIn(do_not_apply, apply_prose[language])
 
     def test_semantic_definition_readable_view_adds_boundary_without_rewriting_literal(self):
-        section = self.sections["chapter-17-12"]
+        section = self.sections["chapter-17-10"]
         block = section.blocks[10]
         self.assertEqual("code", block.kind)
         self.assertTrue(block.get("canonicalLiteral"))
@@ -121,8 +121,8 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
         )
 
         writer = lab.LabWriter(ROOT, ROOT / "unused-lab-output", None, None)
-        ja = writer.render_block(block, "ja", "ch-17-12:10")
-        en = writer.render_block(block, "en", "ch-17-12:10")
+        ja = writer.render_block(block, "ja", "ch-17-10:10")
+        en = writer.render_block(block, "en", "ch-17-10:10")
         for rendered, language in ((ja, "ja"), (en, "en")):
             self.assertIn(lab.readable_literal(serialized["dataSourceInstructions"]), rendered)
             self.assertIn(block["text"], rendered)

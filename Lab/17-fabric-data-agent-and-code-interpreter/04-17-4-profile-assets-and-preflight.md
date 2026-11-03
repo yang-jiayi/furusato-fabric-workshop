@@ -1,4 +1,4 @@
-# 17.6 プロファイル資産と事前確認
+# 17.4 プロファイル資産と事前確認
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -18,7 +18,7 @@
 <details>
 <summary>English</summary>
 
-## 17.6 Profile assets and preflight
+## 17.4 Profile assets and preflight
 
 Inspect `profile-manifest.json`, `global-instructions.txt`, `source-instructions.json`, `selection-contract.json`, the definition and portable stage template under `workshop/v3.0.0-preview/data-agent/profiles/current-experimental`. Compare manifest SHA-256 values with the files and confirm the profile name is `current-experimental`. Use `global-instructions.txt` exactly as stored, including its ending; do not trim or edit it.
 

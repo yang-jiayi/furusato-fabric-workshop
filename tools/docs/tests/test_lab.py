@@ -106,6 +106,23 @@ class LabExportTests(unittest.TestCase):
         self.assertIn("24.4–24.6", index)
         self.assertEqual(4, index.count("../docs/furusato-workshop-v3-1-0-complete.html"))
 
+    def test_chapter17_sections_are_contiguous_in_source_and_lab_toc(self):
+        chapter = next(section for section in self.model[0].sections if section.chapter == 17)
+        sections = [section for section in chapter.children if section.level == 2]
+        self.assertEqual([f"17.{number}" for number in range(1, 17)],
+                         [section.number for section in sections])
+
+        chapter_dir = self.out / "17-fabric-data-agent-and-code-interpreter"
+        pages = sorted(path.name for path in chapter_dir.glob("*.md") if path.name != "README.md")
+        self.assertEqual(16, len(pages))
+        self.assertEqual(list(range(1, 17)), [
+            int(re.match(r"\d+-17-(\d+)-", name).group(1)) for name in pages
+        ])
+        toc = (chapter_dir / "README.md").read_text(encoding="utf-8")
+        self.assertEqual(list(range(1, 17)), [
+            int(number) for number in re.findall(r"\[17\.(\d+) ", toc)
+        ])
+
     def test_repository_download_navigation_uses_matching_revision(self):
         repository_readme = (ROOT / "README.md").read_text(encoding="utf-8")
         downloads = (ROOT / "docs/README.md").read_text(encoding="utf-8")
@@ -124,8 +141,8 @@ class LabExportTests(unittest.TestCase):
     def test_profile_paths_are_platform_independent(self):
         chapter=self.out/'17-fabric-data-agent-and-code-interpreter'
         prefix='workshop/v3.0.0-preview/data-agent/profiles/current-experimental'
-        start_pages=list(chapter.glob('*-17-6-profile-assets-and-preflight.md'))
-        instruction_pages=list(chapter.glob('*-17-8-review-the-global-instructions.md'))
+        start_pages=list(chapter.glob('*-17-4-profile-assets-and-preflight.md'))
+        instruction_pages=list(chapter.glob('*-17-6-review-the-global-instructions.md'))
         self.assertEqual(1,len(start_pages))
         self.assertEqual(1,len(instruction_pages))
         start=start_pages[0].read_text(encoding='utf-8')
@@ -137,7 +154,7 @@ class LabExportTests(unittest.TestCase):
 
     def test_portable_definition_filenames_label_their_own_lab_code_blocks(self):
         chapter = self.out / "17-fabric-data-agent-and-code-interpreter"
-        pages = list(chapter.glob("*-17-12-review-instruction-selection-and-definition-diffs.md"))
+        pages = list(chapter.glob("*-17-10-review-instruction-selection-and-definition-diffs.md"))
         self.assertEqual(1, len(pages))
         page = pages[0]
         content = page.read_text(encoding="utf-8")
@@ -225,7 +242,7 @@ class LabExportTests(unittest.TestCase):
                    for i, b in enumerate(s.blocks)}
         profile = lab.PROFILE_REL.as_posix()
 
-        global_id = "ch-17-8:2"
+        global_id = "ch-17-6:2"
         global_text = pages[global_id]
         global_source = sources[global_id]["text"]
         self.assertIn("**Readable wrapped view — Agent-wide instructions**", global_text)
@@ -233,7 +250,7 @@ class LabExportTests(unittest.TestCase):
         self.assertIn(lab.readable_literal(global_source), global_text)
         self.assertIn(global_source, global_text)
 
-        source_id = "ch-17-9:1"
+        source_id = "ch-17-7:1"
         source_page = pages[source_id]
         source_block = sources[source_id]["text"]
         source_values = json.loads(source_block)
@@ -247,10 +264,10 @@ class LabExportTests(unittest.TestCase):
         self.assertIn(source_block, source_page)
 
         definition_paths = {
-            "ch-17-12:4": "definition/kusto.json",
-            "ch-17-12:6": "definition/lakehouse_tables.json",
-            "ch-17-12:10": "definition/semantic_model.json",
-            "ch-17-12:12": "definition/stage_config.json",
+            "ch-17-10:4": "definition/kusto.json",
+            "ch-17-10:6": "definition/lakehouse_tables.json",
+            "ch-17-10:10": "definition/semantic_model.json",
+            "ch-17-10:12": "definition/stage_config.json",
         }
         for ident, path in definition_paths.items():
             content = pages[ident]
@@ -262,10 +279,10 @@ class LabExportTests(unittest.TestCase):
             self.assertIn(lab.readable_literal(definition[key]), content)
             self.assertIn(source, content)
 
-        ontology_page = pages["ch-17-12:10"]
+        ontology_page = pages["ch-17-10:10"]
         self.assertNotIn(f"**Readable instruction view — `{profile}/definition/ontology.json`",
                          ontology_page)
-        self.assertIn(sources["ch-17-12:10"]["text"], ontology_page)
+        self.assertIn(sources["ch-17-10:10"]["text"], ontology_page)
 
         prompt_ids = [ident for ident, block in sources.items() if block.kind == "prompt"]
         self.assertTrue(prompt_ids)

@@ -1,4 +1,4 @@
-# 17.7 現在の Agent と選択契約を読み取る
+# 17.5 現在の Agent と選択契約を読み取る
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -1541,7 +1541,7 @@
 <details>
 <summary>English</summary>
 
-## 17.7 Read the current agent and selection contract
+## 17.5 Read the current agent and selection contract
 
 Resolve ID-only bindings from the existing agent's live definition and compare them with path, type and is_selected in `selection-contract.json`. Only selections listed in the asset are in scope. Stop on missing, ambiguous or unexpected differences. Do not reselect parent items to expand children or invent IDs.
 

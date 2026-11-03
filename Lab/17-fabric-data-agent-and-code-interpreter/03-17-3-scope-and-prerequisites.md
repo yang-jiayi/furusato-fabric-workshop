@@ -1,4 +1,4 @@
-# 17.5 対象と準備
+# 17.3 対象と準備
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -12,7 +12,7 @@
 <details>
 <summary>English</summary>
 
-## 17.5 Scope and prerequisites
+## 17.3 Scope and prerequisites
 
 The portable profile preserves the instruction text and 170 selected nodes verified in the current Published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema. This experimental profile is not accuracy acceptance or a guarantee.
 

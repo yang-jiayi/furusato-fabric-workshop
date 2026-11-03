@@ -1,4 +1,4 @@
-# 17.10 現行の Semantic 選択を確認する
+# 17.8 現行の Semantic 選択を確認する
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
@@ -9,7 +9,7 @@
 <details>
 <summary>English</summary>
 
-## 17.10 Verify current semantic selections
+## 17.8 Verify current semantic selections
 
 `selection-contract.json` is a flat path/type/is_selected contract. Inspect every listed item and preserve its specified selection state. The current configuration is limited to the actually selected SQL tables, KQL summary, model tables and Ontology entities. Do not add items through source discovery or expand beyond the contract.
 

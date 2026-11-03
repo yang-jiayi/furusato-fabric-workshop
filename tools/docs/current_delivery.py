@@ -466,12 +466,12 @@ def browser_check(path, out, executable=None):
                                 return rects.length === 1 && box.left >= 0
                                     && box.right <= innerWidth + 1;
                             });
-                            const dax = [...document.querySelectorAll('p code, li code')].find(node =>
-                                node.textContent.includes("COUNTROWS('寄附'")
+                            const dax = [...document.querySelectorAll('.codeblock--source > pre > code')]
+                                .find(node => node.textContent.includes("SUM('寄附'[寄附金額])")
                                 && node.getClientRects().length > 0);
                             if (!atomic || !dax || !dax.firstChild) return false;
                             const codeText = dax.firstChild;
-                            const token = "COUNTROWS('寄附')";
+                            const token = "SUM('寄附'[寄附金額])";
                             const start = codeText.textContent.indexOf(token);
                             if (start < 0) return false;
                             const range = document.createRange();

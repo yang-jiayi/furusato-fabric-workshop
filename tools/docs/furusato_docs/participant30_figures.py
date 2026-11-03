@@ -7,8 +7,8 @@ internal notes are not used.
 
 FIGURES = {
     'pc-04-workspace-type-current': {
-        'caption': ('Settings → Workspace type で割り当て済みの Fabric capacity とリージョンを確認する画面例です。図は F16・West US 2 の例で、F16 は最低要件ではありません。Capacity ID は伏せています。表示を確認するだけにし、Edit を押したり設定を変更したりしません。',
-                    'Preflight example for checking the assigned Fabric capacity and region under Settings → Workspace type. The figure shows F16 and West US 2; F16 is an example, not a minimum requirement. Capacity ID is redacted. Inspect only—do not select Edit or change settings.'),
+        'caption': ('Settings → Workspace type で、ワークスペースに割り当てられた Fabric capacity とリージョンを確認します。図は F16・West US 2 の例で、F16 は最低要件ではありません。Capacity ID は伏せています。表示を確認するだけにし、Edit を押したり設定を変更したりしません。',
+                    'Use Settings → Workspace type to check the Fabric capacity and region assigned to your workspace. This screenshot shows F16 and West US 2 as examples; F16 is not a minimum requirement. The Capacity ID is redacted. Inspect only—do not select Edit or change settings.'),
         'alt': ('Workspace type 設定の実画面。現在の種類は Fabric、SKU は F16、リージョンは West US 2、Capacity ID は redacted。Edit ボタンは操作しない。',
                 'Actual Workspace type settings showing Fabric, SKU F16, region West US 2 and a redacted Capacity ID. The Edit button is not to be used.'),
     },
@@ -248,12 +248,12 @@ FIGURES = {
     },
     'p30-15-attachment-grounding': {
         "caption": (
-            "添付回答の PDF ビューア画面例です。図には `business-requirements.pdf`、現行 ZIP には `attachments/business-requirements.txt` が表示され、演習では ZIP 内の TXT を選びます。日本語の回答は StaticSeed（静的データ）、RealtimeIncrement（品質処理済み増分）、Gold（Notebook 05 の品質処理後）を区別しますが、既存 Entity に AdministrativeArea と Municipality を挙げています。「既存項目を変更しない」という提案だけでは主 Ontology の保持を証明しません。実定義が10 Entity・15 Relationship と一致するかを照合し、不一致なら停止してください。SupplierProvidesGift はカタログ登録であり、実際の発送・履行の実績を示しません。",
-            "PDF-viewer example of an answer with an attachment. The figure shows `business-requirements.pdf`, while the current ZIP contains `attachments/business-requirements.txt`; select the supplied TXT for the exercise. The Japanese answer distinguishes static donations, Eventhouse observations and Notebook 05 quality-processed Gold, including StaticSeed as static data and RealtimeIncrement as quality-accepted increments. However, it lists AdministrativeArea and Municipality as existing entities and claims that existing entities, keys and bindings are unchanged. This does not establish preservation of the main ontology. Verify the claim against the actual ten-entity, fifteen-relationship definition, and stop on a mismatch. SupplierProvidesGift is catalog registration rather than fulfillment; the answer does not establish shipment.",
+            "添付資料を使ったエージェントの回答例です。画面には `business-requirements.pdf`、現行 ZIP には `attachments/business-requirements.txt` が表示され、演習では ZIP 内の TXT を選びます。日本語の回答は StaticSeed（静的データ）、RealtimeIncrement（品質処理済み増分）、Gold（Notebook 05 の品質処理後）を区別しますが、既存 Entity に AdministrativeArea と Municipality を挙げています。「既存項目を変更しない」という提案だけでは主 Ontology の保持を証明しません。実定義が10 Entity・15 Relationship と一致するかを照合し、不一致なら停止してください。SupplierProvidesGift はカタログ登録であり、実際の発送・履行の実績を示しません。",
+            "Attachment-based agent-answer example. The conversation shows `business-requirements.pdf`, while the current ZIP contains `attachments/business-requirements.txt`; select the supplied TXT for the exercise. The Japanese answer distinguishes static donations, Eventhouse observations and Notebook 05 quality-processed Gold, including StaticSeed as static data and RealtimeIncrement as quality-accepted increments. However, it lists AdministrativeArea and Municipality as existing entities and claims that existing entities, keys and bindings are unchanged. This does not establish preservation of the main ontology. Verify the claim against the actual ten-entity, fifteen-relationship definition, and stop on a mismatch. SupplierProvidesGift is catalog registration rather than fulfillment; the answer does not establish shipment.",
         ),
         "alt": (
-            "PDF ビューア画面には `business-requirements.pdf` と表示されていますが、現行 ZIP の添付は `attachments/business-requirements.txt` です。回答例は既存 Entity の列挙が主 Ontology と一致しません。",
-            "The PDF-viewer screen shows `business-requirements.pdf`; the current ZIP supplies `attachments/business-requirements.txt`. The answer example’s existing-entity list does not match the main ontology.",
+            "Plan/Act composer を含むエージェントの会話画面に `business-requirements.pdf` と表示されていますが、現行 ZIP の添付は `attachments/business-requirements.txt` です。回答例は既存 Entity の列挙が主 Ontology と一致しません。",
+            "Agent conversation with a Plan/Act composer, showing `business-requirements.pdf`; the current ZIP supplies `attachments/business-requirements.txt`. The answer example’s existing-entity list does not match the main ontology.",
         ),
     },
     'p30-15-attachment-response-bottom': {

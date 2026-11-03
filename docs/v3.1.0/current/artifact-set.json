@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "73bfc1eea7bd171ee6dc7bd0c9641ca8051d62a1",
+  "sourceCommit": "d45811a7e6adf3e800a139a087acf3f5e36c66fb",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "e40d2722b18c83c382b52caac4758a04940258c378e1e89613eb86beadfa28c0",
+  "sourceTreeSha256": "34e53b93801398f5f0070b6e02e908f94bc0a3dea1872b82874ea2e53561b5b5",
   "candidateSourceSha256": "60f9fefeabb09f4045c4ef8e5ad56257c515e63a6f020540d7a260bb6249e506",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -206,7 +206,7 @@
     "tools/docs/build_preview30_reports.py": "7d670c0b0f9cfa8c9b2bcef0650796f5cafc3f1a0f8757c36c13f09ad1bc832b",
     "tools/docs/check_preview30_acceptance.py": "2b228191e7a209307fa514e0f03745c29865ebc5411ad49563f54dc85d15fcb3",
     "tools/docs/compare_semantics.py": "37ccc0755319c1cab95d2eb3fdefdfe11e0149e5a2f247b21f8166fb1556e5d1",
-    "tools/docs/current_delivery.py": "e2fefb6d5e3d4d54ae5d0f7b378e3a2240151c06760fb28a592f4ee73686bc1e",
+    "tools/docs/current_delivery.py": "5c050b0d0cbef93d41cbabe63e4019c755278f4084fdf8fbc7027b875e5d155a",
     "tools/docs/export_preview30_evidence.py": "4aad9be13223058bf992bf6f4ace8ab50878b943f6e846765a8b6de7c6e6a6d0",
     "tools/docs/furusato_docs/__init__.py": "c9dc5e93b61af0938a1ff656c263d42b44c3a17e192c9d5e4d7b2b526b6701cb",
     "tools/docs/furusato_docs/capture_policy.py": "d031a51124722a8f443e944eb43e67bd6e5c31bfe14d7b6918fa14e5d38f572f",
@@ -230,8 +230,8 @@
     "tools/docs/furusato_docs/participant30_deployment.py": "add7fa886018f97fc85b716c2203fcab6004d23837c5975085cd11f79781f25e",
     "tools/docs/furusato_docs/participant30_details.py": "2a2092370ce44640b5d053be2b7c4763313c99c55ee561bc7808929c25382040",
     "tools/docs/furusato_docs/participant30_evaluation.py": "b8565013a0ce73407eb240d4693d70cc462e107c97b5d8fef6fa222b78c8cf38",
-    "tools/docs/furusato_docs/participant30_figures.py": "2778f8d969169a39dadb82d00ba1f478d69ad67785a0d9ef8adcc9f7110e0f2c",
-    "tools/docs/furusato_docs/participant30_text.py": "3c8bfa8a12f3d31cfe3b9e579b48721a56df05d763ebd3b5582b39142c0cf5ac",
+    "tools/docs/furusato_docs/participant30_figures.py": "e6eacfcbe26da9b44de5636bb33f5ee5dcaf2af902e02a9c4102f9933d1f6328",
+    "tools/docs/furusato_docs/participant30_text.py": "76126ea0a1d96badf8ded49744ac180dbc083a9c524e7888684638c47729ce7b",
     "tools/docs/furusato_docs/participant30_tuning.py": "b5456fe357005efc2733dccc0b313e3dd344d61ce0314a00cfd63318521b78a4",
     "tools/docs/furusato_docs/participant_current_tuning.py": "c4aafd86147620215ef0aaf3b49070fbc4838cd01636fafaad16797626a9feac",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
@@ -262,7 +262,7 @@
     "tools/docs/tests/test_ascii_parentheses.py": "f6dbb1e805e0463695723f440955fb0734879d7c6d1a3f3841c029a08aa986f9",
     "tools/docs/tests/test_capture_policy.py": "3ddeda1c7cb793af10e5fc7f1bfef68e7cd714a74a1a4438696f3b8717b0d1aa",
     "tools/docs/tests/test_capture_quality.py": "e1fa7d40222c5cea497f39d0d2c164397ce3aec714931358a0b0d06f1746569d",
-    "tools/docs/tests/test_current_delivery.py": "cdca15844bd07c541112eca4b0dc3e4989771eff82972121aa054619ce40802f",
+    "tools/docs/tests/test_current_delivery.py": "3e6c6356d6e7686215881493fa418aba516a72b8017c216e71a68b848f97ac69",
     "tools/docs/tests/test_current_profile_guide.py": "bdd0c15a3c96540350b321394e5129ba1de8c4bfaf8db037a919c8f3562262ba",
     "tools/docs/tests/test_current_validation_entries.py": "338f53a81f6130d72b6faabf0dd125d9d3a9a3b86cbfc19e5cbd86547f9630bf",
     "tools/docs/tests/test_data_agent_practice_gates.py": "b6295d8bd396d48ea59601886d1a107167283bd67b4421f4f1138e724508cbd5",
@@ -275,7 +275,7 @@
     "tools/docs/tests/test_notebook_payload.py": "d074dbf1abbcc35a2f66b679462145286d0270f22b886ee015ccbc31d4e7ff44",
     "tools/docs/tests/test_ontology_v2_calibration.py": "25848a608a3a29b97e076312dcc64fe6e9a12c4ff3a9e535886e942d303cf4b5",
     "tools/docs/tests/test_ontology_v2_report.py": "a84f0c6478a31777c46aa3d3586e452411c0345bdf58f30404e2fba7f2f9eaa9",
-    "tools/docs/tests/test_participant30.py": "93fa5ef4040099c759229c6b6faf7e5cc47d011d38ab30b143e2bf5ce38b4b11",
+    "tools/docs/tests/test_participant30.py": "10d19d60736c689631fa10695f92d946516541875c200832ea6e18e61d93498a",
     "tools/docs/tests/test_participant30_details.py": "4df20ed9d0a794f56361832100a81caa9c867faef3a2fb8c2a59af977e9e00ef",
     "tools/docs/tests/test_participant_practice_boundaries.py": "f56da92e326e79ff587ce88d8b2f541a741ab4572033ea89fe2f1d37bef5e8dd",
     "tools/docs/tests/test_participant_self_service.py": "ef07fc24bed82c9a9d4d46768711df68d352ae0dbd09e7319f80229b4d3afc8f",
@@ -959,9 +959,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "73bfc1eea7bd171ee6dc7bd0c9641ca8051d62a1",
+    "baseCommit": "d45811a7e6adf3e800a139a087acf3f5e36c66fb",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "e40d2722b18c83c382b52caac4758a04940258c378e1e89613eb86beadfa28c0"
+    "sourceTreeSha256": "34e53b93801398f5f0070b6e02e908f94bc0a3dea1872b82874ea2e53561b5b5"
   }
 }

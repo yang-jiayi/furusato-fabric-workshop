@@ -395,6 +395,31 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("are expectations, not measurements", english_steps)
         self.assertNotIn("currently verified read-only SQL catalog", english_steps)
 
+    def test_chapter12_measure_definitions_are_copyable_code_and_figure2_is_participant_facing(self):
+        definitions = (
+            "寄附総額 = SUM('寄附'[寄附金額])\n"
+            "寄附件数 = COUNTROWS('寄附')\n"
+            "平均寄附額 = DIVIDE([寄附総額], [寄附件数])"
+        )
+        chapter12_code = [
+            block["text"]
+            for section in self.document.walk()
+            if section.chapter == 12
+            for block in section.blocks
+            if block.kind == "code"
+        ]
+        self.assertIn(definitions, chapter12_code)
+        step_ja, step_en = text.CHAPTERS[12]["steps"][0]["text"]
+        self.assertNotIn("SUM('寄附'[寄附金額])", step_ja + step_en)
+        self.assertIn("definitions and formats of these measures", step_en)
+
+        caption_ja, caption_en = figures.FIGURES["pc-04-workspace-type-current"]["caption"]
+        self.assertIn("ワークスペースに割り当てられた", caption_ja)
+        self.assertIn("assigned to your workspace", caption_en)
+        for caption in (caption_ja, caption_en):
+            self.assertNotIn("requested workspace", caption.lower())
+            self.assertNotIn("captured in", caption.lower())
+
     def test_kql_overview_figure_distinguishes_rounded_ingestion_from_today(self):
         ident = "p30-08-kql-overview"
         caption_ja, caption_en = figures.FIGURES[ident]["caption"]

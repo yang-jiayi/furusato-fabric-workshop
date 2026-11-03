@@ -459,7 +459,14 @@ class CurrentDeliveryTests(unittest.TestCase):
             self.assertIn('attachments/business-requirements.txt', caption)
             self.assertIn('business-requirements.txt', alt)
             self.assertIn('ZIP', caption)
-            self.assertIn('PDF ビューア', caption)
+            self.assertIn('Attachment-based agent-answer example', caption)
+            self.assertIn('添付資料を使ったエージェントの回答例', caption)
+            self.assertIn('Agent conversation with a Plan/Act composer', alt)
+            self.assertIn('Plan/Act composer を含むエージェントの会話画面', alt)
+            self.assertNotIn('PDF-viewer', caption)
+            self.assertNotIn('PDF ビューア', caption)
+            self.assertNotIn('PDF-viewer', alt)
+            self.assertNotIn('PDF ビューア', alt)
 
             lab = root / 'Lab'
             write_lab(ROOT, lab, model=model)

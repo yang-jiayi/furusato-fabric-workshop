@@ -105,11 +105,14 @@ def rich(text: str, *, verbatim: bool = False) -> str:
 
     for index, segment in enumerate(str(text).split("`")):
         if index % 2 == 1:
-            class_attr = (
-                ' class="cli-option"'
-                if segment.startswith("--") and not any(char.isspace() for char in segment)
-                else ""
-            )
+            if segment.startswith("--") and not any(char.isspace() for char in segment):
+                class_attr = ' class="cli-option"'
+            elif segment.isascii() and len(segment) <= 24 and not any(
+                char.isspace() for char in segment
+            ):
+                class_attr = ' class="inline-token"'
+            else:
+                class_attr = ""
             out.append(f"<code{class_attr}>{escape(segment)}</code>")
             continue
         out.append(linked_text(segment))

@@ -200,7 +200,15 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
                 elif block.kind == "table":
                     tables.append(block)
                     block.payload["number"] = len(tables)
-            if section.level == 2 and section.number.endswith(".2") and (section.chapter or 0) >= 4:
+            is_steps_section = (
+                section.title.en.endswith(" Steps")
+                or section.title.ja.endswith(" 操作手順")
+            )
+            if (
+                section.level == 2
+                and is_steps_section
+                and (section.chapter or 0) >= 4
+            ):
                 section.checklist_id = section.ident
                 checklist.append((section.ident, section))
     from .participant30_details import number_figures

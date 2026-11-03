@@ -7,8 +7,8 @@ internal notes are not used.
 
 FIGURES = {
     'pc-04-workspace-type-current': {
-        'caption': ('2026-11-01 に対象ワークスペースで取得・確認した Settings → Workspace type の実画面。Fabric、F16、West US 2 を示す現在のUIでの事前確認の例です。F16 はこの例の容量であり、最低要件ではありません。Capacity ID は伏せています。配置後の成功証拠ではありません。参加者は表示を確認するだけで、Edit を押さず設定を変更しません。',
-                    'Actual Settings → Workspace type screen captured and reviewed in the requested workspace on 2026-11-01. This current-UI preflight example shows Fabric, F16 and West US 2. F16 is the example capacity, not a minimum requirement. Capacity ID is redacted. This is not post-deployment evidence. Participants only inspect the display; do not click Edit or change settings.'),
+        'caption': ('Settings → Workspace type で割り当て済みの Fabric capacity とリージョンを確認する画面例です。図は F16・West US 2 の例で、F16 は最低要件ではありません。Capacity ID は伏せています。表示を確認するだけにし、Edit を押したり設定を変更したりしません。',
+                    'Preflight example for checking the assigned Fabric capacity and region under Settings → Workspace type. The figure shows F16 and West US 2; F16 is an example, not a minimum requirement. Capacity ID is redacted. Inspect only—do not select Edit or change settings.'),
         'alt': ('Workspace type 設定の実画面。現在の種類は Fabric、SKU は F16、リージョンは West US 2、Capacity ID は redacted。Edit ボタンは操作しない。',
                 'Actual Workspace type settings showing Fabric, SKU F16, region West US 2 and a redacted Capacity ID. The Edit button is not to be used.'),
     },
@@ -133,9 +133,9 @@ FIGURES = {
                 'PL_Furusato_101 run view showing Copy data1 as Succeeded.'),
     },
     'p30-09-source-events': {
-        "caption": ('イベントソース画面の参考例。003までのイベントがある状態で、3 rows と表示され、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated、PutBlob です。手順5で001だけを置いた直後の期待画面ではありません。図に合わせて002・003を追加せず、自分の001の行を確認します。イベントの観測であり、Pipeline 完了や Delta への materialization を示しません。',
-                    'Illustrative event-source view with events through 003: the screen reads 3 rows, and the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. This is not the expected screen immediately after uploading only 001 in step 5. Do not upload 002 or 003 to match the image; check your own 001 row. This shows an event, not Pipeline completion or Delta materialization.'),
-        "alt": ('donation_events_003.csv の選択行と3件のイベント、FileCreated、PutBlob、content length と text/csv を示す実際のイベントソース画面。',
+        "caption": ('イベントソース画面の例です。003までのイベントがある状態で、画面には3 rows（3件）と表示され、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated（ファイル作成）、PutBlob（Blob への書き込み）です。content length はファイルサイズ、text/csv は CSV 形式を示します。これは手順5で001だけを置いた直後の期待状態ではありません。002・003を図に合わせて追加せず、自分の001行を確認します。イベントの表示だけでは Pipeline 完了や Delta への materialization を確認できません。',
+                    'Example event-source view with events through 003: the screen reads 3 rows, and the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. The content length is the file size; text/csv is the media type. This is not the expected screen immediately after uploading only 001 in step 5. Do not upload 002 or 003 to match the image; check your own 001 row. An event display alone does not verify Pipeline completion or Delta materialization.'),
+        "alt": ('donation_events_003.csv の選択行と3件のイベント、FileCreated（ファイル作成）、PutBlob（Blob への書き込み）、content length（ファイルサイズ）、text/csv（CSV形式）を示すイベントソース画面。',
                 'Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.'),
     },
     'p30-10-timeseries': {
@@ -163,28 +163,28 @@ FIGURES = {
                 'Lakehouse table ops.dq_rule_results: seven rule rows with Severity, ExpectedValue, ActualValue and Status; the values match.'),
     },
     'p30-11-gold-dq-detail': {
-        'caption': ('同じ保存済み表のヘッダーと7行すべての連続した切り抜きです。RunId と generation は伏せ字、RuleName と EvaluatedAtUtc は省略表示のままです。履歴の例であり、現在の Gold アクセス証拠ではありません。',
-                    'Contiguous crop of the same retained table header and all seven rows. RunId and generation remain redacted; RuleName and EvaluatedAtUtc remain ellipsized. This is a historical illustration, not current Gold-access evidence.'),
+        'caption': ('DQ 結果表はヘッダーと7行を表示します。RunId と generation は伏せ字、RuleName と EvaluatedAtUtc は省略表示です。例の実行結果なので、Gold の確認には自分の Notebook 05 の最新出力を使います。',
+                    'The DQ result table shows its header and all seven rows. RunId and generation are redacted; RuleName and EvaluatedAtUtc are ellipsized. This is an example run; use your own latest Notebook 05 output to check Gold.'),
         'alt': ('DQ 結果表のヘッダーと7行すべて。Severity、ExpectedValue、ActualValue、Status を含む表示列を保持し、伏せ字と省略表示もそのまま残す。',
                 'DQ result-table header and all seven rows, retaining the displayed Severity, ExpectedValue, ActualValue and Status columns, with redactions and ellipses unchanged.'),
     },
     'p30-11-gold-dq-left-detail': {
-        'caption': ('同じ7行とヘッダーの左側拡大。行番号、RunId、RuleName、Severity、ExpectedValue、ActualValueを保持します。次の右側とActualValue列が重なり、行の順序と高さは同じです。伏せ字と省略表示は復元していません。',
-                    'Enlarged left panel of the same seven rows and header: row indexes, RunId, RuleName, Severity, ExpectedValue and ActualValue. ActualValue overlaps the next right panel; row order and heights are unchanged. Redactions and ellipses are not recovered.'),
+        'caption': ('DQ 表の左側には、行番号、RunId、RuleName、Severity、ExpectedValue、ActualValue が表示されます。ActualValue 列は次の右側の図にも重なり、行の順序と高さは同じです。伏せ字と省略表示はそのままです。',
+                    'The left panel of the DQ table shows row indexes, RunId, RuleName, Severity, ExpectedValue and ActualValue. The ActualValue column also appears in the adjoining right panel; row order and heights match. Redactions and ellipses remain.'),
         'alt': ('DQ全7行の左側。行番号とRunIdからActualValueまでの表示列。元の全体表と同じ行順。',
                 'Left panel of all seven DQ rows, with row indexes and displayed columns from RunId through ActualValue, in the same order as the retained full grid.'),
     },
     'p30-11-gold-dq-right-detail': {
-        'caption': ('同じ7行とヘッダーの右側拡大。左側と重なるActualValue、Status、EvaluatedAtUtc、伏せ字の最終列を保持します。行順・高さとActualValueの重なりで左側に対応づけます。値は実行ごとに変わるため、自分の最新の結果を確認します。',
-                    'Enlarged right panel of the same seven rows and header: the overlapping ActualValue column, Status, EvaluatedAtUtc and redacted final column. Match rows to the left panel using unchanged order/heights and the ActualValue overlap. Values can change between runs; check your own latest output.'),
+        'caption': ('DQ 表の右側には、左側と重なる ActualValue、Status、EvaluatedAtUtc、伏せ字の最終列が表示されます。行順・高さと ActualValue の重なりで左右の図を対応づけます。値は実行ごとに変わるため、自分の最新結果を確認してください。',
+                    'The right panel of the DQ table shows ActualValue (overlapping the left panel), Status, EvaluatedAtUtc and a redacted final column. Match the panels by their shared ActualValue values and row order/heights. Values can change between runs; check your latest output.'),
         'alt': ('DQ全7行の右側。ActualValue列の重なり、Status、EvaluatedAtUtcと伏せ字の最終列。元の行順・高さを保持。',
                 'Right panel of all seven DQ rows: overlapping ActualValue, Status, EvaluatedAtUtc and the redacted final column, preserving original row order and heights.'),
     },
     'p30-11-schema-preview': {
-        "caption": ('gold.donations の列と先頭の行。DataSource で静的データと増分を区別し、IsHighValue は 57,000円を超える寄付で true',
-                    'gold.donations columns and first rows: DataSource separates static data from increments, and IsHighValue is true for donations over JPY 57,000.'),
-        "alt": ('Lakehouse の Explorer で gold.donations を選んだ画面。DonationId、金額、日時、支払方法、DataSource、IsHighValue、DonorId などの列の表',
-                'gold.donations in Lakehouse Explorer: a table with columns such as DonationId, amount, dates, payment method, DataSource, IsHighValue and DonorId.'),
+        "caption": ('Lakehouse Explorer で gold.donations のサンプル行を表示したプレビューです。最大1,000行が表示されても全件数・合計金額ではなく、SQL analytics endpoint の照会結果でもありません。',
+                    'Sample-row preview of gold.donations in Lakehouse Explorer. Even if up to 1,000 rows are displayed, this is not the full row count or total amount, and it is not a SQL analytics endpoint query result.'),
+        "alt": ('Lakehouse Explorer で gold.donations を選択し、DonationId、金額、日時、支払方法、DataSource、IsHighValue、DonorId などの列とサンプル行を表示したプレビュー',
+                'Lakehouse Explorer preview of gold.donations columns and sample rows, including DonationId, amount, dates, payment method, DataSource, IsHighValue and DonorId.'),
     },
     'p30-12-metric-list': {
         "caption": ('「寄附」の Configure 画面の Metrics 欄。Semantic model のメジャーが 10 metrics と表示される（図は一部）',
@@ -205,8 +205,8 @@ FIGURES = {
                 'Metric details for 受入増分寄附総額: a DAX expression filtering RealtimeIncrement, Applies to 寄附, and a description stating that only accepted increments quality-checked and deduplicated by Notebook 05 are included, separate from Eventhouse observations; the Synonyms field is also shown.'),
     },
     'p30-12-metrics-expression-detail': {
-        'caption': ('同じ保存済み画面から、式・Applies to・説明の見える範囲を連続して切り抜きました。Source は伏せ字、synonyms は未提供のままです。DAX のコピー可能な原文は本文に残します。',
-                    'Contiguous crop of the visible expression, Applies to and description from the same retained screenshot. Source remains redacted and synonyms unavailable. The copyable DAX source remains in the text.'),
+        'caption': ('Metric の式、Applies to、説明が見える範囲です。Source は伏せ字、synonyms は未提供です。コピーして使う DAX の原文は本文にも掲載しています。',
+                    'This view shows the Metric expression, Applies to and description. Source is redacted and synonyms are unavailable. The copyable DAX source is also included in the instructions.'),
         'alt': ('DAX 式、Applies to の寄附、説明文を含む Metric 詳細の見える範囲。Source の伏せ字と Synonyms unavailable の表示も保持。',
                 'Visible Metric details including the DAX expression, Applies to 寄附 and description, preserving the redacted Source and Synonyms unavailable message.'),
     },
@@ -247,10 +247,14 @@ FIGURES = {
                 'PaymentMethod Configure tab: no key; PaymentMethodName is Local, String, Unbound; the description is filled in.'),
     },
     'p30-15-attachment-grounding': {
-        "caption": ('添付あり（B）の回答の参考例。画面には business-requirements.pdf と表示されていますが、現在の配布物は attachments/business-requirements.txt です。添付操作では ZIP 内の .txt を選びます。回答は4つの資料から層の違いを説明していますが、既存 Entity として AdministrativeArea と Municipality を挙げており、この章の主 Ontology の定義を正しく保持した証拠ではありません。資料の読み取りと定義の正しさは別に確認し、10 Entity・15 Relationship と一致しない回答は不一致として停止します。',
-                    'Answer with attachments (B): the reference image displays business-requirements.pdf, but the current distribution supplies attachments/business-requirements.txt. Select the supplied .txt file from the ZIP when attaching files. The Japanese response uses all four files to distinguish static donations, Eventhouse observations and Notebook 05 quality-processed Gold, but lists AdministrativeArea and Municipality as existing entities. It does not establish preservation of the main ontology. Visible Japanese answer (translated summary; illustrative, not an accepted result): the files describe StaticSeed as static data, RealtimeIncrement as quality-accepted increments, and Gold as input-validated and deduplicated; they do not represent actual shipment or delivery, and SupplierProvidesGift is catalog registration rather than fulfillment. The answer says the layer connections and an actually fulfilling supplier are not represented in the inspected ontology, then proposes one keyless, unbound DonationQualityScope with a String DataLayer property and says existing entities, keys and bindings are unchanged. Check document grounding separately from definition fidelity; stop on assertions inconsistent with the ten-entity, fifteen-relationship baseline. It does not infer delivery or shipment.'),
-        "alt": ('参考画面には business-requirements.pdf と表示されていますが、現在の配布ファイルは business-requirements.txt です。ZIP の attachments から .txt を選びます。不一致の回答例は、4資料名、層の区別、不足点、DonationQualityScope の追加案を示しますが、既存 Entity に AdministrativeArea を挙げ、既存項目の保持は未確認です。',
-                'The reference image shows business-requirements.pdf, but the current distributed file is business-requirements.txt; select the .txt file from the ZIP attachments. Mismatched answer example: it names four files, distinguishes data layers, identifies missing links and proposes DonationQualityScope, but lists AdministrativeArea as existing. Its claim to preserve existing items is not verified.'),
+        "caption": (
+            "添付回答の PDF ビューア画面例です。図には `business-requirements.pdf`、現行 ZIP には `attachments/business-requirements.txt` が表示され、演習では ZIP 内の TXT を選びます。日本語の回答は StaticSeed（静的データ）、RealtimeIncrement（品質処理済み増分）、Gold（Notebook 05 の品質処理後）を区別しますが、既存 Entity に AdministrativeArea と Municipality を挙げています。「既存項目を変更しない」という提案だけでは主 Ontology の保持を証明しません。実定義が10 Entity・15 Relationship と一致するかを照合し、不一致なら停止してください。SupplierProvidesGift はカタログ登録であり、実際の発送・履行の実績を示しません。",
+            "PDF-viewer example of an answer with an attachment. The figure shows `business-requirements.pdf`, while the current ZIP contains `attachments/business-requirements.txt`; select the supplied TXT for the exercise. The Japanese answer distinguishes static donations, Eventhouse observations and Notebook 05 quality-processed Gold, including StaticSeed as static data and RealtimeIncrement as quality-accepted increments. However, it lists AdministrativeArea and Municipality as existing entities and claims that existing entities, keys and bindings are unchanged. This does not establish preservation of the main ontology. Verify the claim against the actual ten-entity, fifteen-relationship definition, and stop on a mismatch. SupplierProvidesGift is catalog registration rather than fulfillment; the answer does not establish shipment.",
+        ),
+        "alt": (
+            "PDF ビューア画面には `business-requirements.pdf` と表示されていますが、現行 ZIP の添付は `attachments/business-requirements.txt` です。回答例は既存 Entity の列挙が主 Ontology と一致しません。",
+            "The PDF-viewer screen shows `business-requirements.pdf`; the current ZIP supplies `attachments/business-requirements.txt`. The answer example’s existing-entity list does not match the main ontology.",
+        ),
     },
     'p30-15-attachment-response-bottom': {
         "caption": ('不一致を見つける回答例の末尾。Error 0・Warning 1 と表示されていますが、関係性が0件とも述べています。15 Relationship の主 Ontology に対する合格結果ではありません。AI の検証表示だけを信用せず、実際の定義と照合して停止します。Preview ontology ボタンがあっても適用しません。',
@@ -277,8 +281,8 @@ FIGURES = {
                 'Configure Graph Choose what to project screen showing the Use the entire Ontology toggle, entity checkboxes, Status and Source columns, and Continue button.'),
     },
     'p30-16-gql': {
-        "caption": ('全体を実体化した Graph で、Prefecture にフィルターを付けて Run query した結果。上部の図は自治体 → 都道府県の方向を示します。下部の全体グラフはラベルが密集し、一部は重なり・省略されているため、すべてのラベルの判読例ではありません。ノードの数字は ID とは限らないため、名称と ID は Table view で個別に確かめる',
-                    'Run query with a filter on Prefecture in a graph of the whole model. The upper diagram shows municipality → prefecture direction. Labels in the lower overview graph are dense, with some overlapping or ellipsized; it is not an example where every label is legible. Node numbers may not be IDs, so verify names and IDs individually in Table view.'),
+        "caption": ('全体 Graph の Explore graph で Prefecture（都道府県）を条件に Run query（クエリ実行）した画面例です。上部は Municipality（市区町村）から Prefecture への関係方向を示します。下部の全体表示はラベルが密集し、一部が重なったり省略されたりしています。ノード上の数字が ID とは限らないため、名称と ID は Table view（表形式）で照合してください。',
+                    'Example result from Run query with a Prefecture filter in the whole-model Explore graph. The upper diagram shows the municipality-to-prefecture direction. Labels in the lower overview are dense, with some overlapping or ellipsized. Verify names and IDs in Table view because node numbers are not necessarily IDs.'),
         "alt": ('Explore graph のクエリ画面。Municipality → Prefecture の図と、1つの都道府県に多数の自治体がつながる結果のグラフ',
                 'Explore graph query: a Municipality-to-Prefecture pattern; the result links many municipalities to one prefecture.'),
     },

@@ -3,7 +3,7 @@
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
 4. 3ファイルの確認が終わったら、24.7の stop-activator を1回実行し、実行中の Pipeline が無いことを確認します。停止済みなら状態を確認するだけにします。
-5. KQL の集計ビューの実測値を記録します。DonationEvents の全体は ObservationCount 15,000、ObservedAmountYen 253,886,000円で、最初の観測は 2026-08-01T00:02:47Z、最後は 2026-08-31T23:58:20Z です。この KQL 結果を OneLake Delta の完全性の証拠にしません。
+5. KQL の集計ビューの実測値を記録します。DonationEvents の全体は ObservationCount 15,000、ObservedAmountYen 253,886,000円で、最初の観測は `2026-08-01T00:02:47Z`、最後は `2026-08-31T23:58:20Z` です。この KQL 結果を OneLake Delta の完全性の証拠にしません。
 
 **KQL**
 
@@ -56,10 +56,10 @@ DonationEvents
 | order by UtcDay asc
 ```
 
-9. 現在供給されている共有ワークスペースの DonationEvents OneLake Delta active Parquet は、fixture 002 と 003 の和集合だけです。SourceFile・EventID・金額の多重度で照合した実測値は10,000件・168,788,000円です。3つの fixture 全体と比べると source 固有の5,000行が欠けており、001 と002に共通する100行があるため、欠落 EventID は4,900件です。これは部分エクスポートであり、全件バックフィルではありません。KQL の3ファイル計15,000行・253,886,000円とは別の実測結果です。ここでは読み取りと差分の記録だけを行い、書き込み、修復、retry、toggle、reset、replay、backfill は行いません。
-10. 以下の Ontology 操作は、参加者自身が所有するターゲットで、Delta が3つの fixture 全体と SourceFile・EventID・金額の多重度まで完全一致し、KQL と照合済みの場合だけ実施します。現在供給されている共有ワークスペースでは、部分 Delta が停止条件です。Ontology の binding や Property を追加・変更・保存せず、読み取りと差分記録だけにしてください。新規の参加者所有ターゲットでも、8章の安全確認と空の状態を確認してから進みます。
-11. 上記の全条件を満たす参加者所有ターゲットに限り、Ontology で Municipality を開き、Configure → Manage property bindings → Add binding and properties を選びます。EH_Furusato_&lt;PID&gt; の DonationEvents テーブルを追加します（ビューの DonationObservationSummaryForAgent は選びません）。共通列として DonationEvents の MunicipalityID と Municipality の MunicipalityId を対応させ、Save します。共有ワークスペースではこの書き込みを行いません。
-12. 同じく、全条件を満たす参加者所有ターゲットに限り、Entity type properties で IncomingDonationAmountYen に DonationEvents.DonationAmountYen を対応させます（既存 Property があればそれを選び、無い場合だけ作成）。型は Timeseries&lt;Integer&gt;、Timestamp column は DonatedAt（UTC）とし、別名 Property を作らず保存前後の一覧を比べます。現在の共有ワークスペースでは Property の追加・変更・保存をしません。
+9. 参照ターゲットの読み取り例では、DonationEvents の OneLake Delta active Parquet は入力CSV 002・003に対応する10,000行・168,788,000円でした。3ファイル全体との比較では source 固有の5,000行が不足し、001 と002に共通する100行を考慮した欠落 EventID は4,900件です。これは部分状態の観測例で、参加者の対象状態を示すものではありません。自分のターゲットで SourceFile・EventID・金額の多重度を照合し、差分や未確認があれば記録して停止します。KQL の参照結果である15,000行・253,886,000円とは別の結果です。承認なしに書き込み、修復、retry、toggle、reset、replay、backfill を行いません。
+10. 以下の Ontology 操作は、自分が所有し操作の承認を得た対象で、Delta が3つの配布 CSV 全体と SourceFile・EventID・金額の多重度まで完全一致し、KQL と照合済みの場合だけ実施します。部分的、未照合、または状態を確認できない場合は停止し、Ontology の binding や Property を追加・変更・保存せず、読み取りと差分記録だけにします。8章の安全確認も済ませてから進みます。
+11. 上記の全条件を満たす参加者所有ターゲットに限り、Ontology で Municipality を開きます。Configure に Manage property bindings が表示される場合はそれを開きます。表示されず Configure の toolbar に Bind data がある場合は Bind data を選びます。実際に表示される入口だけを使います。どちらの入口でも、EH_Furusato_&lt;PID&gt; の DonationEvents テーブル（ビューの DonationObservationSummaryForAgent は除く）を選び、DonationEvents の MunicipalityID と Municipality の MunicipalityId を対応させて Save します。どちらも表示されない場合、または追加画面で source table・key・columns を確認できない場合は、何も作成・保存せず停止して講師に確認します。
+12. 同じく、全条件を満たす対象に限り、Entity type properties で既存の IncomingDonationAmountYen に DonationEvents.DonationAmountYen を対応させます。既存 Property がない場合だけ作成し、型は Timeseries&lt;Integer&gt;、Timestamp column は DonatedAt（UTC）にします。別名 Property を作らず、保存前後の一覧を比べます。
 
 ![時系列 Property の definition 表。IncomingDonationAmountYen の型と Timestamp column DonatedAt の設定例。](../assets/p30-10-timeseries.png)
 
@@ -71,7 +71,7 @@ DonationEvents
 ## 10.2 Steps
 
 4. After verifying all three files, run stop-activator in 24.7 once and confirm that no Pipeline is running. If already stopped, only inspect its state.
-5. Record the observed KQL summary-view results. DonationEvents totals ObservationCount 15,000 and ObservedAmountYen JPY 253,886,000, with first observation 2026-08-01T00:02:47Z and last observation 2026-08-31T23:58:20Z. Do not use this KQL result as evidence of complete OneLake Delta contents.
+5. Record the observed KQL summary-view results. DonationEvents totals ObservationCount 15,000 and ObservedAmountYen JPY 253,886,000, with first observation `2026-08-01T00:02:47Z` and last observation `2026-08-31T23:58:20Z`. Do not use this KQL result as evidence of complete OneLake Delta contents.
 
 **KQL**
 
@@ -124,10 +124,10 @@ DonationEvents
 | order by UtcDay asc
 ```
 
-9. The DonationEvents OneLake Delta active Parquet in the currently supplied shared workspace is exactly the union of fixtures 002 and 003. Exact SourceFile/EventID/amount multiplicity reconciliation gives 10,000 records / JPY 168,788,000. Against all three fixtures, 5,000 source-specific rows are missing; because 001 and 002 share 100 rows, 4,900 distinct EventIDs are missing. This is a partial export, not a full backfill. It is a separate observed result from KQL's 15,000 rows / JPY 253,886,000 across all three files. Read and record the gap only; do not write, repair, retry, toggle, reset, replay or backfill.
-10. Perform the following ontology operations only on a participant-owned target whose Delta exactly reconciles to all three fixtures by SourceFile/EventID/amount multiplicity and has been reconciled with KQL. The partial Delta in the currently supplied shared workspace is a stop condition: do not add, change or save ontology bindings or properties there; read and record the gap only. On a new participant-owned target, also complete the Chapter 8 safety checks and confirm the empty state before proceeding.
-11. Only on a participant-owned target that meets all the conditions above, open Municipality in the ontology and select Configure → Manage property bindings → Add binding and properties. Add the DonationEvents table of EH_Furusato_&lt;PID&gt; (not DonationObservationSummaryForAgent), map DonationEvents.MunicipalityID to Municipality.MunicipalityId, and Save. Do not make this write in the shared workspace.
-12. Again, only on a participant-owned target meeting all conditions above, map DonationEvents.DonationAmountYen to IncomingDonationAmountYen under Entity type properties (select an existing property, creating it only if absent). Use Timeseries&lt;Integer&gt; with DonatedAt (UTC) as the timestamp column, avoid duplicate properties and compare the lists before and after saving. Do not add, change or save properties in the currently supplied shared workspace.
+9. In a read-only example from the reference target, DonationEvents OneLake Delta active Parquet contained 10,000 rows / JPY 168,788,000 corresponding to input CSVs 002 and 003. Compared with all three files, 5,000 source-specific rows were absent; accounting for 100 rows shared by 001 and 002, 4,900 distinct EventIDs were missing. This illustrates a partial state and does not describe the participant's target. Reconcile SourceFile/EventID/amount multiplicities in your own target; record any gap or uncertainty and stop. This is separate from the reference KQL result of 15,000 rows / JPY 253,886,000. Do not write, repair, retry, toggle, reset, replay or backfill without approval.
+10. Perform the following ontology operations only on a target you own and are authorized to modify, whose Delta exactly reconciles to all three supplied CSVs by SourceFile/EventID/amount multiplicity and has been reconciled with KQL. If it is partial, unreconciled or its state cannot be verified, stop; do not add, change or save ontology bindings or properties, and only read and record the gap. Complete the Chapter 8 safety checks first.
+11. Only on a participant-owned target that meets all the conditions above, open Municipality in the ontology. If Configure shows Manage property bindings, open it. If it is absent and the Configure toolbar shows Bind data, select Bind data instead. Use only an entry actually shown. From either entry, select the DonationEvents table in EH_Furusato_&lt;PID&gt; (not the DonationObservationSummaryForAgent view), map DonationEvents.MunicipalityID to Municipality.MunicipalityId, and Save. If neither control is shown, or the add screen does not let you verify the source table, key and columns, stop without creating or saving and ask the instructor.
+12. Again, only on a target meeting all conditions above, map DonationEvents.DonationAmountYen to the existing IncomingDonationAmountYen under Entity type properties. Create the property only if it is absent; use Timeseries&lt;Integer&gt; with DonatedAt (UTC) as the timestamp column. Avoid duplicate properties and compare the lists before and after saving.
 
 ![Time-series property definition table showing example type and Timestamp column DonatedAt for IncomingDonationAmountYen.](../assets/p30-10-timeseries.png)
 

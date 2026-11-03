@@ -8,7 +8,7 @@
 
 準備するもの・確認すること
 
-- 以下のアップロード手順は、参加者自身が所有する新規ターゲットで、安全確認が完了し、対象テーブルと Files/increment が空の場合だけ行います。現在供給されている共有ワークスペースでも、対象の DonationEvents に既存行がある場合や、対象 Lakehouse の Files/increment または OneLake Delta にデータがある場合は、その対象へ書き込まず10章の現状チェックへ進みます。共有ワークスペース内の別リソースにデータがあることだけでは停止しません。Pipeline（PL_Furusato_&lt;PID&gt;）と Activator（My activator_&lt;PID&gt;）は自分の配置を使います。Activator のルール TR_OneLake_FileCreated_IngestDonationEvents_001 は停止した状態です。
+- 以下のアップロード手順は、参加者自身が所有し操作の承認を得た新規ターゲットで、安全確認が完了し、対象の DonationEvents テーブルと Files/increment が空の場合だけ行います。対象の DonationEvents テーブル、Files/increment または OneLake Delta に既存データがある場合は書き込まず、10章の現状確認へ進みます。共有ワークスペース内の別リソースにデータがあることだけでは停止しません。自分の Pipeline（PL_Furusato_&lt;PID&gt;）と Activator（My activator_&lt;PID&gt;）を使い、ルール TR_OneLake_FileCreated_IngestDonationEvents_001 が停止していることを確認します。
 - Files/increment が空で、DonationEvents が0行であることを確認します（8章）。
 
 <details>
@@ -22,7 +22,7 @@ Check in this order: event → Activator activation → Pipeline run → Copy ro
 
 Before you start
 
-- Perform the uploads below only on a new target owned by the participant after safety checks pass and the target table and Files/increment are empty. Even in the currently supplied shared workspace, do not write to the target if its DonationEvents table already has rows, or if its Lakehouse Files/increment or OneLake Delta already contains data; go to the current-state check in Chapter 10. Data in unrelated resources elsewhere in the shared workspace alone is not a stop condition. Use your own Pipeline (PL_Furusato_&lt;PID&gt;) and Activator (My activator_&lt;PID&gt;). The Activator rule TR_OneLake_FileCreated_IngestDonationEvents_001 must be stopped.
+- Perform the uploads below only in a new target you own and are authorized to modify, after safety checks pass and its DonationEvents table and Files/increment are confirmed empty. If the target DonationEvents table, Files/increment or OneLake Delta already contains data, do not write; inspect the current state in Chapter 10. Data in unrelated resources elsewhere in the shared workspace alone is not a stop condition. Use your own Pipeline (PL_Furusato_&lt;PID&gt;) and Activator (My activator_&lt;PID&gt;), and confirm the TR_OneLake_FileCreated_IngestDonationEvents_001 rule is stopped.
 - Confirm that Files/increment is empty and that DonationEvents has zero rows (Chapter 8).
 
 </details>

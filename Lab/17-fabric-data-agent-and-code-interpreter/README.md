@@ -5,8 +5,8 @@
 17. Fabric Data Agent and Code Interpreter
 
 - [17.1 この章で行うこと](01-17-1-what-you-will-do.md)
-- [17.2 操作手順](02-17-2-steps.md)
-- [17.3 対象と準備](03-17-3-scope-and-prerequisites.md)
+- [17.2 対象と準備](02-17-2-scope-and-prerequisites.md)
+- [17.3 操作手順](03-17-3-steps.md)
 - [17.4 プロファイル資産と事前確認](04-17-4-profile-assets-and-preflight.md)
 - [17.5 現在の Agent と選択契約を読み取る](05-17-5-read-the-current-agent-and-selection-contract.md)
 - [17.6 全体指示を確認する](06-17-6-review-the-global-instructions.md)

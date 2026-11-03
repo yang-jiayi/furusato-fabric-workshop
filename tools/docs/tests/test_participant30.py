@@ -60,8 +60,12 @@ class ParticipantEditionTests(unittest.TestCase):
         for section in sections[:24]:
             numbers = [child.number for child in section.children]
             self.assertEqual([f"{section.chapter}.1", f"{section.chapter}.2"], numbers[:2])
-            steps = section.children[1]
+            steps = section.children[2] if section.chapter == 17 else section.children[1]
             self.assertEqual(section.chapter >= 4, steps.checklist_id is not None, section.number)
+            if section.chapter == 17:
+                self.assertIn("Scope and prerequisites", section.children[1].title.en)
+                self.assertIn("Steps", steps.title.en)
+                self.assertEqual("17.3", steps.number)
         self.assertNotIn("-legacy-", " ".join(s.ident for s in self.document.walk()))
 
     def test_no_working_records_or_history(self):
@@ -83,7 +87,11 @@ class ParticipantEditionTests(unittest.TestCase):
 
     def test_step_numbering_continues_around_figures(self):
         for section in self.document.walk():
-            if not section.number.endswith(".2") or section.level != 2 or not section.chapter:
+            is_steps = (
+                section.title.en.endswith(" Steps")
+                or section.title.ja.endswith(" 操作手順")
+            )
+            if not is_steps or section.level != 2 or not section.chapter:
                 continue
             expected = 1
             for block in section.blocks:
@@ -114,7 +122,7 @@ class ParticipantEditionTests(unittest.TestCase):
             "p30-12-metrics": "accepted-increment donation total",
             "pc-12-report-canvas": "The Japanese card labels mean total donations",
             "p30-15-noattachment-preview": "the available evidence does not establish what the data layer means",
-            "p30-15-attachment-grounding": "distinguish static donations, Eventhouse observations and Notebook 05 quality-processed Gold",
+            "p30-15-attachment-grounding": "The Japanese answer distinguishes static donations, Eventhouse observations and Notebook 05 quality-processed Gold",
             "p30-15-preview": "does not imply approval or delivery",
         }.items():
             with self.subTest(figure=ident):
@@ -128,10 +136,10 @@ class ParticipantEditionTests(unittest.TestCase):
         lab = (ROOT / "Lab" / "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol"
                / "03-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
         self.assertIn("business-requirements.pdf", lab)
-        self.assertIn("current distribution supplies attachments/business-requirements.txt", lab)
-        self.assertIn("Select the supplied .txt file from the ZIP when attaching files", lab)
-        self.assertIn("現在の配布物は attachments/business-requirements.txt", lab)
-        self.assertIn("ZIP の attachments から .txt を選びます", lab)
+        self.assertIn("current ZIP contains `attachments/business-requirements.txt`", lab)
+        self.assertIn("select the supplied TXT for the exercise", lab)
+        self.assertIn("現行 ZIP には `attachments/business-requirements.txt`", lab)
+        self.assertIn("ZIP 内の TXT を選びます", lab)
         self.assertNotIn("p30-15-attachments.png", lab)
         self.assertIn("does not establish preservation of the main ontology", lab)
 
@@ -142,7 +150,7 @@ class ParticipantEditionTests(unittest.TestCase):
                 "three entities and no relationships with a structural warning",
             ),
             "p30-15-attachment-grounding": (
-                "StaticSeed as static data, RealtimeIncrement as quality-accepted increments",
+                "StaticSeed as static data and RealtimeIncrement as quality-accepted increments",
                 "catalog registration rather than fulfillment",
             ),
             "p30-15-attachment-response-bottom": (
@@ -164,6 +172,7 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertNotIn("zero errors and one warning", no_attachment)
         attachment = figures.FIGURES["p30-15-attachment-grounding"]["caption"][1]
         self.assertIn("existing entities, keys and bindings are unchanged", attachment)
+        self.assertIn("This does not establish preservation of the main ontology", attachment)
         for below_frame_category in ("shared references", "inheritance", "property types", "relationships are unchanged"):
             self.assertNotIn(below_frame_category, attachment)
 
@@ -180,11 +189,14 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("three entities and no relationships with a structural warning", no_attachment_lab)
         self.assertNotIn("It reports 0 errors and 1 warning", no_attachment_lab)
         attachment_lab = (lab / "03-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
-        visible_answer = attachment_lab.split("Visible Japanese answer", 1)[1]
-        self.assertIn("existing entities, keys and bindings are unchanged", visible_answer)
-        self.assertIn("It does not establish preservation of the main ontology", attachment_lab)
+        self.assertIn("existing entities, keys and bindings are unchanged", attachment_lab)
+        self.assertIn("This does not establish preservation of the main ontology", attachment_lab)
+        english_caption = attachment_lab.split("<summary>English</summary>", 1)[1]
+        english_caption = english_caption.split(
+            "](../assets/p30-15-attachment-grounding.png)", 1
+        )[1]
         for below_frame_category in ("shared references", "inheritance", "property types", "relationships are unchanged"):
-            self.assertNotIn(below_frame_category, visible_answer)
+            self.assertNotIn(below_frame_category, english_caption)
 
     def test_appendix_e_wording_and_ontology_agent_link_are_clear_and_unique(self):
         appendix = text.APPENDICES["E"]
@@ -225,7 +237,8 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("共有ワークスペース内の別リソースにデータがあることだけでは停止しません", chapter9_preparation[0])
         self.assertIn("Data in unrelated resources elsewhere in the shared workspace alone is not a stop condition", chapter9_preparation[1])
         self.assertIn("対象の DonationEvents", chapter9_preparation[0])
-        self.assertIn("target if its DonationEvents table already has rows", chapter9_preparation[1])
+        self.assertIn("target DonationEvents table", chapter9_preparation[1])
+        self.assertIn("already contains data", chapter9_preparation[1])
 
     def test_scoring_condition_tables_have_a_scoped_screen_layout_class(self):
         condition_tables = [
@@ -322,10 +335,10 @@ class ParticipantEditionTests(unittest.TestCase):
         for value in (source_ja, source_en):
             self.assertIn(value, lab_content)
         self.assertIn("対象の DonationEvents", source_ja)
-        self.assertIn("対象 Lakehouse の Files/increment または OneLake Delta", source_ja)
+        self.assertIn("対象の DonationEvents テーブル、Files/increment または OneLake Delta", source_ja)
         self.assertIn("別リソースにデータがあることだけでは停止しません", source_ja)
-        self.assertIn("target if its DonationEvents table already has rows", source_en)
-        self.assertIn("its Lakehouse Files/increment or OneLake Delta", source_en)
+        self.assertIn("target DonationEvents table, Files/increment or OneLake Delta", source_en)
+        self.assertIn("already contains data", source_en)
         self.assertIn("Data in unrelated resources elsewhere", source_en)
 
     def test_notebook05_preview_figure_is_plan_only_and_crop_excludes_execution_header(self):
@@ -355,6 +368,32 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("apply", caption_en)
         self.assertIn("Gold updates", caption_en)
         self.assertIn("fresh 3.1 run", caption_en)
+
+    def test_gold_explorer_preview_is_not_sql_or_full_aggregation_evidence(self):
+        caption_ja, caption_en = figures.FIGURES["p30-11-schema-preview"]["caption"]
+        alt_ja, alt_en = figures.FIGURES["p30-11-schema-preview"]["alt"]
+        self.assertIn("Lakehouse Explorer", caption_ja)
+        self.assertIn("最大1,000行", caption_ja)
+        self.assertIn("全件数", caption_ja)
+        self.assertIn("SQL analytics endpoint", caption_ja)
+        self.assertIn("Lakehouse Explorer", caption_en)
+        self.assertIn("up to 1,000 rows", caption_en)
+        self.assertIn("not the full row count", caption_en)
+        self.assertIn("not a SQL analytics endpoint query result", caption_en)
+        self.assertIn("サンプル行", alt_ja)
+        self.assertIn("sample rows", alt_en)
+
+        steps = text.CHAPTERS[11]["steps"]
+        for language in (0, 1):
+            step_text = " ".join(step["text"][language] for step in steps)
+            self.assertIn("gold.donations", step_text)
+            self.assertIn("endpoint", step_text.lower())
+            self.assertIn("unverified" if language else "未確認", step_text)
+            self.assertIn("permissions" if language else "権限", step_text)
+        english_steps = " ".join(step["text"][1] for step in steps)
+        self.assertIn("run a SQL aggregation over the full table", english_steps)
+        self.assertIn("are expectations, not measurements", english_steps)
+        self.assertNotIn("currently verified read-only SQL catalog", english_steps)
 
     def test_kql_overview_figure_distinguishes_rounded_ingestion_from_today(self):
         ident = "p30-08-kql-overview"

@@ -452,7 +452,35 @@ def browser_check(path, out, executable=None):
                 for width in (320,390,768,1440):
                     page.set_viewport_size({'width':width,'height':844})
                     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                    if width in (320,390):
+                        assert page.evaluate("""() => {
+                            const tokens = [...document.querySelectorAll(
+                                'p code.inline-token, li code.inline-token')]
+                                .filter(node => node.getClientRects().length > 0);
+                            const atomic = tokens.length > 0 && tokens.every(node => {
+                                const range = document.createRange();
+                                range.selectNodeContents(node);
+                                const rects = [...range.getClientRects()]
+                                    .filter(rect => rect.width > 0);
+                                const box = node.getBoundingClientRect();
+                                return rects.length === 1 && box.left >= 0
+                                    && box.right <= innerWidth + 1;
+                            });
+                            const dax = [...document.querySelectorAll('p code, li code')].find(node =>
+                                node.textContent.includes("COUNTROWS('寄附'")
+                                && node.getClientRects().length > 0);
+                            if (!atomic || !dax || !dax.firstChild) return false;
+                            const codeText = dax.firstChild;
+                            const token = "COUNTROWS('寄附')";
+                            const start = codeText.textContent.indexOf(token);
+                            if (start < 0) return false;
+                            const range = document.createRange();
+                            range.setStart(codeText, start);
+                            range.setEnd(codeText, start + token.length);
+                            return range.getClientRects().length === 1;
+                        }""")
                 page.set_viewport_size({'width':390,'height':844})
+                checks.append(f'{lang}.shortInlineTokensStayWhole320_390')
                 assert page.evaluate("""() => {
                     const tables = [...document.querySelectorAll('table')];
                     return tables.length > 0 && tables.every(table => {

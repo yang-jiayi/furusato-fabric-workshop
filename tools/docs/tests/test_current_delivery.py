@@ -131,6 +131,12 @@ class CurrentDeliveryTests(unittest.TestCase):
             if re.fullmatch(r'ch-17-\d+', element.get('id', ''))
         ]
         self.assertEqual([f'ch-17-{number}' for number in range(1, 17)], section_ids)
+        section_text = {
+            ident: ' '.join(tree.xpath(f'//*[@id="{ident}"]')[0].itertext())
+            for ident in ('ch-17-2', 'ch-17-3')
+        }
+        self.assertIn('17.2 Scope and prerequisites', section_text['ch-17-2'])
+        self.assertIn('17.3 Steps', section_text['ch-17-3'])
 
     def test_current_support_and_architecture_links_resolve(self):
         source_paths = (
@@ -419,6 +425,17 @@ class CurrentDeliveryTests(unittest.TestCase):
     def test_inline_cli_options_do_not_break_at_double_dash(self):
         self.assertEqual('<code class="cli-option">--check</code>', rich("`--check`"))
 
+    def test_short_ascii_inline_tokens_get_bounded_no_wrap_class(self):
+        self.assertEqual(
+            '<code class="inline-token">452025-01</code>',
+            rich("`452025-01`"),
+        )
+        self.assertEqual('<code>寄附</code>', rich("`寄附`"))
+        self.assertEqual(
+            '<code>workshop/very/long-reference-token-1234567890</code>',
+            rich("`workshop/very/long-reference-token-1234567890`"),
+        )
+
     def test_lab_client_resources_have_a_localized_heading(self):
         model = delivery.load_model(ROOT)
         with tempfile.TemporaryDirectory() as temp:
@@ -442,6 +459,7 @@ class CurrentDeliveryTests(unittest.TestCase):
             self.assertIn('attachments/business-requirements.txt', caption)
             self.assertIn('business-requirements.txt', alt)
             self.assertIn('ZIP', caption)
+            self.assertIn('PDF ビューア', caption)
 
             lab = root / 'Lab'
             write_lab(ROOT, lab, model=model)
@@ -451,6 +469,36 @@ class CurrentDeliveryTests(unittest.TestCase):
             self.assertIn('business-requirements.pdf', text)
             self.assertIn('attachments/business-requirements.txt', text)
             self.assertIn('business-requirements.txt', text)
+
+    def test_figure2_is_a_participant_preflight_example(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+            caption = ''.join(
+                tree.get_element_by_id('figure-2').xpath('./figcaption//text()')
+            )
+            self.assertIn('F16', caption)
+            self.assertIn('最低要件ではありません', caption)
+            self.assertIn('Edit', caption)
+            self.assertNotIn('2026-11-01', caption)
+            self.assertNotIn('post-deployment evidence', caption)
+
+    def test_figure8_distinguishes_the_003_example_from_the_001_step(self):
+        model = delivery.load_model(ROOT)
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+            caption = ''.join(
+                tree.get_element_by_id('figure-8').xpath('./figcaption//text()')
+            )
+            for phrase in ('3 rows', 'donation_events_003.csv', '001だけを置いた直後'):
+                self.assertIn(phrase, caption)
+            self.assertIn('Microsoft.Fabric.OneLake.FileCreated', caption)
+            self.assertIn('ファイル作成', caption)
+            self.assertIn('PutBlob', caption)
+            self.assertIn('Blob への書き込み', caption)
 
     def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
         with tempfile.TemporaryDirectory() as temp:

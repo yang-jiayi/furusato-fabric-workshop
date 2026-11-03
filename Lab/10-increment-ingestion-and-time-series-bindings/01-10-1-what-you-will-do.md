@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-KQL の全体結果と OneLake Delta の現在の内容を別々に確認します。KQL の実測値は3ファイル計15,000観測ですが、現在供給されている共有ワークスペースの OneLake Delta は002と003だけの部分エクスポートです。時系列 Property の定義・バインド表示と、実行可能な native query の結果も別々の証拠として扱います。
+KQL の集計結果と対象 OneLake Delta の内容を別々に確認します。参照 KQL 結果は3ファイル計15,000観測ですが、それだけでは対象 Delta の完全性を示しません。時系列 Property の定義・binding 表示、native query の利用可否、実行した query と結果も個別に確認します。
 
 KQL の DonationEvents は15,000観測・253,886,000円、EventID は14,900件が一意で、重複行は100件です。これは OneLake Delta の内容や Notebook 05 の Gold とは別の母集団です。
 
@@ -15,7 +15,7 @@ KQL の DonationEvents は15,000観測・253,886,000円、EventID は14,900件�
 
 ## 10.1 What you will do
 
-Check the KQL totals and current OneLake Delta contents separately. KQL currently returns 15,000 observations across all three files, while the OneLake Delta in the currently supplied shared workspace is a partial export containing only 002 and 003. Treat the time-series property definition/binding display and an executable native query result as separate evidence.
+Check the KQL summary and the target OneLake Delta contents separately. The reference KQL result covers 15,000 observations across three files, but does not establish that the target Delta is complete. Separately check the time-series property definition/binding, native-query availability, and any executed query and result.
 
 KQL DonationEvents has 15,000 observations / JPY 253,886,000, with 14,900 unique EventIDs and 100 duplicate rows. This is separate from OneLake Delta contents and Notebook 05 Gold.
 

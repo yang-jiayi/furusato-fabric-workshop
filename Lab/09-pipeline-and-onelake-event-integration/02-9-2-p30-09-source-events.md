@@ -24,9 +24,9 @@
 5. Lakehouse の Files/increment に donation_events_001.csv を1回だけアップロードします。002 と 003 はまだ置きません。同じファイルを重ねて置いたり、空のファイルを作ってから書き込んだりしません。
 6. Activator でイベントソースの Live feed を開き、実際に確認できる /Files/increment/donation_events_001.csv の FileCreated 行を記録します。この行はイベント観測だけを示し、Pipeline の完了、KQL 取り込み、OneLake Delta の内容を証明しません。添付図は003までのイベントがある状態の参考例で、donation_events_003.csv の選択行と3 rows が表示されています。手順5で001だけを置いた直後の期待状態ではありません。図に合わせて002・003を追加せず、自分の001の行を確認します。001が見つからなければ未確認とし、再アップロードせずに停止します。
 
-![donation_events_003.csv の選択行と3件のイベント、FileCreated、PutBlob、content length と text/csv を示す実際のイベントソース画面。](../assets/p30-09-source-events.png)
+![donation_events_003.csv の選択行と3件のイベント、FileCreated（ファイル作成）、PutBlob（Blob への書き込み）、content length（ファイルサイズ）、text/csv（CSV形式）を示すイベントソース画面。](../assets/p30-09-source-events.png)
 
-イベントソース画面の参考例。003までのイベントがある状態で、3 rows と表示され、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated、PutBlob です。手順5で001だけを置いた直後の期待画面ではありません。図に合わせて002・003を追加せず、自分の001の行を確認します。イベントの観測であり、Pipeline 完了や Delta への materialization を示しません。
+イベントソース画面の例です。003までのイベントがある状態で、画面には3 rows（3件）と表示され、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated（ファイル作成）、PutBlob（Blob への書き込み）です。content length はファイルサイズ、text/csv は CSV 形式を示します。これは手順5で001だけを置いた直後の期待状態ではありません。002・003を図に合わせて追加せず、自分の001行を確認します。イベントの表示だけでは Pipeline 完了や Delta への materialization を確認できません。
 
 <details>
 <summary>English</summary>
@@ -57,6 +57,6 @@
 
 ![Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.](../assets/p30-09-source-events.png)
 
-Illustrative event-source view with events through 003: the screen reads 3 rows, and the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. This is not the expected screen immediately after uploading only 001 in step 5. Do not upload 002 or 003 to match the image; check your own 001 row. This shows an event, not Pipeline completion or Delta materialization.
+Example event-source view with events through 003: the screen reads 3 rows, and the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. The content length is the file size; text/csv is the media type. This is not the expected screen immediately after uploading only 001 in step 5. Do not upload 002 or 003 to match the image; check your own 001 row. An event display alone does not verify Pipeline completion or Delta materialization.
 
 </details>

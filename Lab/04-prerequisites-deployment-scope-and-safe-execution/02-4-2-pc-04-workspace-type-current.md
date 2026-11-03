@@ -8,7 +8,7 @@
 
 ![Workspace type 設定の実画面。現在の種類は Fabric、SKU は F16、リージョンは West US 2、Capacity ID は redacted。Edit ボタンは操作しない。](../assets/pc-04-workspace-type-current.png)
 
-2026-11-01 に対象ワークスペースで取得・確認した Settings → Workspace type の実画面。Fabric、F16、West US 2 を示す現在のUIでの事前確認の例です。F16 はこの例の容量であり、最低要件ではありません。Capacity ID は伏せています。配置後の成功証拠ではありません。参加者は表示を確認するだけで、Edit を押さず設定を変更しません。
+Settings → Workspace type で割り当て済みの Fabric capacity とリージョンを確認する画面例です。図は F16・West US 2 の例で、F16 は最低要件ではありません。Capacity ID は伏せています。表示を確認するだけにし、Edit を押したり設定を変更したりしません。
 
 <details>
 <summary>English</summary>
@@ -21,6 +21,6 @@
 
 ![Actual Workspace type settings showing Fabric, SKU F16, region West US 2 and a redacted Capacity ID. The Edit button is not to be used.](../assets/pc-04-workspace-type-current.png)
 
-Actual Settings → Workspace type screen captured and reviewed in the requested workspace on 2026-11-01. This current-UI preflight example shows Fabric, F16 and West US 2. F16 is the example capacity, not a minimum requirement. Capacity ID is redacted. This is not post-deployment evidence. Participants only inspect the display; do not click Edit or change settings.
+Preflight example for checking the assigned Fabric capacity and region under Settings → Workspace type. The figure shows F16 and West US 2; F16 is an example, not a minimum requirement. Capacity ID is redacted. Inspect only—do not select Edit or change settings.
 
 </details>

@@ -7,7 +7,9 @@ from __future__ import annotations
 
 import unittest
 from pathlib import Path
+import subprocess
 import sys
+import tempfile
 
 from playwright.sync_api import sync_playwright
 
@@ -32,7 +34,7 @@ FIXTURE = """
 <tr><th>PrefectureDonationFlow</th><td>PrefDonationFlowId</td><td>String</td>
 <td>ot_pref_donation_flow</td><td>5</td></tr>
 </tbody></table></div></div></section>
-<section id="ch-17-7"><div class="table-wrap">
+<section id="ch-17-5"><div class="table-wrap">
 <p class="table-hint table-hint--top">Horizontally scrollable table</p>
 <div class="table-scroll" tabindex="0" role="region" aria-label="Source selection">
 <table class="selection-contract"><caption>Actual flat selection contract</caption>
@@ -77,10 +79,13 @@ has changed, the run stops without applying changes.</td></tr></tbody>
 </main></html>
 """
 
-MEASURE = """() => {
+MEASURE = """(currentSelectionOnly=false) => {
   const problems=[];
-  for (const [section, columns] of [['#ch-17-7',[1,3,4,5]],['#appendix-b-1',[1,2]],
-                                    ['#appendix-c-25-canonical-evaluation',[1]]]) {
+  const targets=currentSelectionOnly
+    ? [['#ch-17-5',[1,3,4,5]]]
+    : [['#ch-17-5',[1,3,4,5]],['#appendix-b-1',[1,2]],
+       ['#appendix-c-25-canonical-evaluation',[1]]];
+  for (const [section, columns] of targets) {
     const table=document.querySelector(section+' table');
     for (const row of table.tBodies[0].rows) {
       for (const column of columns) {
@@ -115,11 +120,29 @@ class PreviewTableLayoutTests(unittest.TestCase):
     def setUpClass(cls):
         cls.driver = sync_playwright().start()
         cls.browser = cls.driver.chromium.launch()
+        cls.generated = tempfile.TemporaryDirectory(prefix="preview30-current-layout-")
+        output = Path(cls.generated.name) / "guide"
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "tools" / "docs" / "current_delivery.py"),
+                "build",
+                "--out",
+                str(output),
+            ],
+            cwd=ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        version = (ROOT / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip()
+        cls.current_guide = output / f"furusato-workshop-v{version.replace('.', '-')}-complete.html"
 
     @classmethod
     def tearDownClass(cls):
         cls.browser.close()
         cls.driver.stop()
+        cls.generated.cleanup()
 
     def setUp(self):
         self.page = self.browser.new_page()
@@ -160,13 +183,13 @@ class PreviewTableLayoutTests(unittest.TestCase):
                         "()=>document.documentElement.scrollWidth<=window.innerWidth"
                     ))
                     if width == 390:
-                        selection_table = self.page.locator("#ch-17-7 table")
+                        selection_table = self.page.locator("#ch-17-5 table")
                         self.assertAlmostEqual(
                             1920,
                             selection_table.bounding_box()["width"],
                             delta=1,
                         )
-                        prose = self.page.locator("#ch-17-7 tbody tr:first-child td:nth-child(6)")
+                        prose = self.page.locator("#ch-17-5 tbody tr:first-child td:nth-child(6)")
                         self.assertLessEqual(prose.bounding_box()["width"], 740)
                         self.assertEqual("normal", prose.evaluate(
                             "node=>getComputedStyle(node).whiteSpace"
@@ -177,7 +200,7 @@ class PreviewTableLayoutTests(unittest.TestCase):
                             .map(rect=>Math.round(rect.top))).size;
                         }"""), 1)
                         self.assertLess(
-                            self.page.locator("#ch-17-7 tbody tr").evaluate_all(
+                            self.page.locator("#ch-17-5 tbody tr").evaluate_all(
                                 "rows=>Math.max(...rows.map(row=>row.getBoundingClientRect().height))"
                             ),
                             180,
@@ -195,7 +218,7 @@ class PreviewTableLayoutTests(unittest.TestCase):
                             ),
                             150,
                         )
-                    for section in ("#ch-17-7", "#appendix-b-1", "#appendix-c-25-canonical-evaluation"):
+                    for section in ("#ch-17-5", "#appendix-b-1", "#appendix-c-25-canonical-evaluation"):
                         region = self.page.locator(section + " .table-scroll")
                         self.assertEqual("auto", region.evaluate(
                             "node=>getComputedStyle(node).overflowX"
@@ -208,7 +231,7 @@ class PreviewTableLayoutTests(unittest.TestCase):
                         region.evaluate("node=>{node.scrollLeft=0}")
 
     def test_long_reference_tables_keep_scroll_cues_before_the_table(self):
-        for section in ("#ch-17-7", "#appendix-b-1"):
+        for section in ("#ch-17-5", "#appendix-b-1"):
             with self.subTest(section=section):
                 wrapper = self.page.locator(section + " .table-wrap")
                 hint = wrapper.locator(".table-hint--top")
@@ -309,7 +332,7 @@ class PreviewTableLayoutTests(unittest.TestCase):
 
     def test_fragmentation_probe_detects_original_narrow_column_regression(self):
         self.page.add_style_tag(content="""
-        #ch-17-7 table.selection-contract tr > :nth-child(3) {
+        #ch-17-5 table.selection-contract tr > :nth-child(3) {
           width:2rem !important; white-space:normal !important; overflow-wrap:anywhere !important;
         }
         #appendix-b-1 table.notebook-parameters tr > :nth-child(1) {
@@ -317,8 +340,45 @@ class PreviewTableLayoutTests(unittest.TestCase):
         }
         """)
         problems = self.page.evaluate(MEASURE)
-        self.assertTrue(any(problem.startswith("#ch-17-7:wrap:3:") for problem in problems))
+        self.assertTrue(any(problem.startswith("#ch-17-5:wrap:3:") for problem in problems))
         self.assertTrue(any(problem.startswith("#appendix-b-1:wrap:1:") for problem in problems))
+
+    def test_current_generated_guide_keeps_selection_contract_columns_readable(self):
+        page = self.browser.new_page()
+        try:
+            page.goto(self.current_guide.resolve().as_uri(), wait_until="load")
+            page.wait_for_selector("html[data-ready='true']")
+            self.assertEqual(1, page.locator("table.selection-contract").count())
+            table = page.locator("table.selection-contract")
+            self.assertEqual(
+                "ch-17-5",
+                table.evaluate("node=>node.closest('[id^=\"ch-17-\"]').id"),
+            )
+            for language in ("ja", "en"):
+                page.locator("html").evaluate(
+                    "(node, lang) => node.setAttribute('data-lang', lang)", language
+                )
+                page.set_viewport_size({"width": 1440, "height": 900})
+                self.assertAlmostEqual(1920, table.bounding_box()["width"], delta=1)
+                self.assertEqual([], page.evaluate(MEASURE, True))
+                widths = table.locator("thead tr:first-child > *").evaluate_all(
+                    "cells=>cells.map(cell=>cell.getBoundingClientRect().width)"
+                )
+                for actual, expected in zip(widths, (144, 352, 224, 144, 320, 736)):
+                    self.assertAlmostEqual(expected, actual, delta=2)
+                page.set_viewport_size({"width": 390, "height": 844})
+                region = table.locator("xpath=ancestor::div[contains(@class,'table-scroll')]")
+                self.assertEqual("auto", region.evaluate("node=>getComputedStyle(node).overflowX"))
+                self.assertGreater(
+                    region.evaluate("node=>node.scrollWidth"),
+                    region.evaluate("node=>node.clientWidth"),
+                )
+                self.assertLessEqual(
+                    page.evaluate("()=>document.documentElement.scrollWidth"),
+                    390,
+                )
+        finally:
+            page.close()
 
     def test_toc_preserves_authored_number_without_another_list_marker(self):
         self.assertEqual("none", self.page.locator(".toc ol").evaluate(

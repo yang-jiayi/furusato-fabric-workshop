@@ -108,7 +108,7 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
 
-ここで初回配置は完了です。12〜13章の確認を終え、17.3以降で同じ Agent に実験用 current profile を適用・公開・読み戻します。設定の読み戻しは回答精度の採用を意味しません。配置とプロファイル適用の記録は別に保持します。
+ここで初回配置は完了です。12〜13章の確認を終え、17.2以降で対象と前提を確認してから、同じ Agent に実験用 current profile を適用・公開・読み戻します。設定の読み戻しは回答精度の採用を意味しません。配置とプロファイル適用の記録は別に保持します。
 
 <details>
 <summary>English</summary>
@@ -221,6 +221,6 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence before continuing." }
 ```
 
-The initial deployment is complete. Finish the Chapter 12–13 checks, then use Chapter 17.3 onward to apply, publish and read back the experimental current profile on the same agent. Configuration readback does not mean answer accuracy has been accepted. Keep deployment and profile-application records separate.
+The initial deployment is complete. Finish the Chapter 12–13 checks, then start at Chapter 17.2 to confirm scope and prerequisites before applying, publishing and reading back the experimental current profile on the same agent. Configuration readback does not mean answer accuracy has been accepted. Keep deployment and profile-application records separate.
 
 </details>

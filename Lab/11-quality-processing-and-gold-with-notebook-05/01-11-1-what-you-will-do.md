@@ -4,7 +4,7 @@
 
 Notebook 05 は、Lakehouse の静的テーブルと Files/increment の3つの CSV を読み、bronze・silver・gold・ops・quarantine の5つのスキーマに、品質処理済みのテーブルを作ります。Eventhouse は読みません。
 
-3つの増分 fixture がそろい、Notebook 05 の実行と出力を確認できた場合の想定では、重複100件を quarantine に分け、14,900件を受け入れます。Gold の「受け入れ」は Notebook 05 の品質チェックを通ったという意味で、人による承認や支払い・発送の完了を意味しません。実行結果の証拠がない場合は実績として記載しません。
+3つの増分 CSV がそろい、Notebook 05 の実行と出力を確認できた場合の想定では、重複100件を quarantine に分け、14,900件を受け入れます。Gold の「受け入れ」は Notebook 05 の品質チェックを通ったという意味で、人による承認や支払い・発送の完了を意味しません。実行結果を確認していない場合は実績として記載しません。
 
 準備するもの・確認すること
 
@@ -18,7 +18,7 @@ Notebook 05 は、Lakehouse の静的テーブルと Files/increment の3つの 
 
 Notebook 05 reads the static Lakehouse tables and the three CSV files in Files/increment, and creates quality-processed tables in five schemas: bronze, silver, gold, ops and quarantine. It does not read the Eventhouse.
 
-With all three increment fixtures present and a verified Notebook 05 run/output, the expected processing separates 100 duplicates into quarantine and accepts 14,900 records. In Gold, "accepted" means a row passed Notebook 05 quality checks, not human approval, payment or shipment. Do not describe the expected result as observed unless you have checked the actual run output.
+With all three increment CSVs present and a verified Notebook 05 run/output, the expected processing separates 100 duplicates into quarantine and accepts 14,900 records. In Gold, "accepted" means a row passed Notebook 05 quality checks, not human approval, payment or shipment. Do not describe the expected result as observed unless you checked the actual run output.
 
 Before you start
 

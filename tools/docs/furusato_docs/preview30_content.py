@@ -2129,7 +2129,11 @@ def build(
     checklist = []
     for root_section in roots:
         for s in root_section.walk():
-            if s.level == 2 and "-legacy-" not in s.ident and s.number.endswith(".2") and (s.chapter or 0) >= 4:
+            is_steps_section = (
+                s.title.en.endswith(" Steps")
+                or s.title.ja.endswith(" 操作手順")
+            )
+            if s.level == 2 and "-legacy-" not in s.ident and is_steps_section and (s.chapter or 0) >= 4:
                 s.checklist_id = s.ident
                 checklist.append((s.ident, s))
             for block in s.blocks:

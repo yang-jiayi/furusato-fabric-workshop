@@ -19,7 +19,7 @@ Notebook 05 の適用出力の参考例。ANALYTICS_MODE=applied、outputTables=
 ## 11.2 Steps
 
 3. Close any other sessions that write to the same Lakehouse, then set APPLY_CHANGES = True, CONFIRMED_PLAN_SHA256 = the copied value and EXCLUSIVE_APPLY_WINDOW_CONFIRMED = True, and run all cells again.
-4. Confirm that the Notebook05 apply/job succeeded and its output shows ANALYTICS_MODE=applied and "ANALYTICS_READY: Direct Lake and AI consumption tables are published." The success-screen figure proves only the Notebook05 job succeeded; it does not prove Gold counts/amounts or that the published tables are readable. The next steps distinguish the current SQL catalog from any available authorized verification method.
+4. Confirm that the Notebook05 apply/job succeeded and its output shows ANALYTICS_MODE=applied and "ANALYTICS_READY: Direct Lake and AI consumption tables are published." The success-screen figure proves only the Notebook05 job succeeded; it does not prove Gold counts/amounts or that the published tables are readable. The next steps check SQL endpoint access on your participant-owned target separately from the Explorer preview and Notebook output.
 
 ![Notebook cell output listing schemas, sourceTables=13, outputTables=29, ANALYTICS_MODE=applied and ANALYTICS_READY.](../assets/p30-11-executed-output.png)
 

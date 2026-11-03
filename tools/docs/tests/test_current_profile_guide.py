@@ -46,6 +46,22 @@ class CurrentProfileGuideTests(unittest.TestCase):
             Text("17. Agent", "17. Agent"),
             chapter=17,
         )
+        cls.chapter.children.extend([
+            Section(
+                "chapter-17-1",
+                2,
+                "17.1",
+                Text("17.1 この章で行うこと", "17.1 What you will do"),
+                chapter=17,
+            ),
+            Section(
+                "chapter-17-3",
+                2,
+                "17.3",
+                Text("17.3 操作手順", "17.3 Steps"),
+                chapter=17,
+            ),
+        ])
         cls.summary = append_current_tuning_sections(cls.chapter, ROOT)
 
     def test_assets_match_current_experimental_contract(self):
@@ -93,9 +109,13 @@ class CurrentProfileGuideTests(unittest.TestCase):
 
     def test_contiguous_chapter_sections_and_exact_profile_text(self):
         self.assertEqual(
-            [f"chapter-17-{index}" for index in range(3, 15)],
+            [f"chapter-17-{index}" for index in range(1, 15)],
             [section.ident for section in self.chapter.children],
         )
+        self.assertIn("Scope and prerequisites", self.chapter.children[1].title.en)
+        self.assertEqual("17.2", self.chapter.children[1].number)
+        self.assertEqual("17.3", self.chapter.children[2].number)
+        self.assertIn("Steps", self.chapter.children[2].title.en)
         sections = {section.ident: section for section in self.chapter.children}
         global_code = next(
             block["text"]
@@ -246,8 +266,8 @@ class CurrentProfileGuideTests(unittest.TestCase):
             for part in self._strings(block.payload)
         )
         self.assertIn("experimental current profile", current_handoff_text)
-        self.assertIn("Chapter 17.3 onward", current_handoff_text)
-        self.assertIn("17.3以降", current_handoff_text)
+        self.assertIn("start at Chapter 17.2", current_handoff_text)
+        self.assertIn("17.2以降", current_handoff_text)
         self.assertNotIn("six SQL views", current_handoff_text)
         self.assertNotIn("measured-contract-20261015", current_handoff_text)
 

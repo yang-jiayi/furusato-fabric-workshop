@@ -2,14 +2,14 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-この章の学習目標は、既存Agentの設定と実際の回答・実行経路の証拠を区別して検証することです。設定の一致は、回答精度の承認や保証を意味しません。
+この章の学習目標は、既存 Agent の設定と実際の回答・実行経路を区別して検証することです。設定の一致は回答精度の承認や保証を意味しません。
 
-4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontologyのcontextはsource instructionとは別で、Ontology-groundingがGQL実行を意味するわけではありません。実際のsource・query language・query・resultを対応させて確認します。
+4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontology context は source instruction とは別で、Ontology grounding は GQL 実行を意味しません。実際の source、query language、query、result を対応させて確認します。
 
 準備するもの・確認すること
 
-- 既存Agentとその4つの論理ソースを確認し、Workspace・フォルダー・Agentの各IDは自分の許可された環境から取得します。未作成の場合に別AgentやSchemaを作る手順ではありません。
-- 現在のlive definitionとselectionを読み取り、実際のsource definitionでID-only bindingを解決できることを確認します。共有環境のmirror・時系列作業には別の完全性確認が必要です。
+- 既存 Agent と4つの論理ソースを確認し、Workspace・フォルダー・Agent の各 ID は自分の許可された環境から取得します。別 Agent や Schema を作成する手順ではありません。
+- 現在の live definition と selection を読み取り、実際の source definition で ID-only binding を解決できることを確認します。対象の mirroring が部分的か完全性を確認できない場合は、関連する変更や時系列作業を行わず停止します。
 
 <details>
 <summary>English</summary>

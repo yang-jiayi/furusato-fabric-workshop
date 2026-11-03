@@ -105,8 +105,8 @@ def append_deployment_sections(chapter: Section, root: Path, *, current_profile=
         _stage("deploy-agent"),
         _stage("publish-agent"),
         _paragraph(
-            "ここで初回配置は完了です。12〜13章の確認を終え、17.3以降で同じ Agent に実験用 current profile を適用・公開・読み戻します。設定の読み戻しは回答精度の採用を意味しません。配置とプロファイル適用の記録は別に保持します。",
-            "The initial deployment is complete. Finish the Chapter 12–13 checks, then use Chapter 17.3 onward to apply, publish and read back the experimental current profile on the same agent. Configuration readback does not mean answer accuracy has been accepted. Keep deployment and profile-application records separate.",
+            "ここで初回配置は完了です。12〜13章の確認を終え、17.2以降で対象と前提を確認してから、同じ Agent に実験用 current profile を適用・公開・読み戻します。設定の読み戻しは回答精度の採用を意味しません。配置とプロファイル適用の記録は別に保持します。",
+            "The initial deployment is complete. Finish the Chapter 12–13 checks, then start at Chapter 17.2 to confirm scope and prerequisites before applying, publishing and reading back the experimental current profile on the same agent. Configuration readback does not mean answer accuracy has been accepted. Keep deployment and profile-application records separate.",
         ) if current_profile else _paragraph(
             "ここで初回配置は完了です。12〜13章の確認を終え、17.5から6つの SQL ビューと選択、9例の直接実行を確認して、17.16で measured-contract-20261015 を同じ Agent に適用・公開・読み戻します。配置の記録フォルダーと、17章のプロファイル適用記録フォルダーは別に保持します。",
             "The initial deployment is complete. Finish the Chapter 12–13 checks, then start at 17.5 to prepare six SQL views, selections and direct execution of nine examples. Use 17.16 to apply, publish and read back measured-contract-20261015 on the same agent. Retain separate record folders for resource deployment and Chapter 17 profile application.",

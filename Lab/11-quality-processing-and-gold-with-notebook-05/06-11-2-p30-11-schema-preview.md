@@ -2,21 +2,21 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-7. 現在の読み取り専用 SQL catalog では gold.donations が公開されていないため、この環境の SQL から Gold の行数・金額を確認できません。テーブルが別の許可された実行結果で実際に確認できる場合だけ、DataSource 別の値と集計条件を記録し、期待値と照合します。94,900件・1,596,157,000円等の fixture 期待値を、未確認の SQL 実測値や現在の成功結果として記載しません。
+7. 対象 endpoint から `gold.donations` を実際に読める場合だけ、全テーブルを対象にした SQL 集計を実行し、集計条件と DataSource 別の件数・金額を記録して3つの入力 CSV の期待値と照合します。3つすべてを処理した場合の 94,900件・1,596,157,000円は期待値であり、Explorer のプレビューや Notebook の成功表示から得た実測値ではありません。対象のテーブルが読めない場合は未確認のままとし、権限を追加したり共有ワークスペースを変更したりしません。
 
-![Lakehouse の Explorer で gold.donations を選んだ画面。DonationId、金額、日時、支払方法、DataSource、IsHighValue、DonorId などの列の表](../assets/p30-11-schema-preview.png)
+![Lakehouse Explorer で gold.donations を選択し、DonationId、金額、日時、支払方法、DataSource、IsHighValue、DonorId などの列とサンプル行を表示したプレビュー](../assets/p30-11-schema-preview.png)
 
-gold.donations の列と先頭の行。DataSource で静的データと増分を区別し、IsHighValue は 57,000円を超える寄付で true
+Lakehouse Explorer で gold.donations のサンプル行を表示したプレビューです。最大1,000行が表示されても全件数・合計金額ではなく、SQL analytics endpoint の照会結果でもありません。
 
 <details>
 <summary>English</summary>
 
 ## 11.2 Steps
 
-7. gold.donations is not exposed in the current read-only SQL catalog, so Gold row counts and amounts cannot be verified from SQL in this environment. Only if the table is actually available through another authorized run output, record its values by DataSource and aggregation scope, then compare them with expected values. Do not present fixture expectations such as 94,900 / JPY 1,596,157,000 as unverified SQL measurements or current successful results.
+7. Only if `gold.donations` is actually readable from the target endpoint, run a SQL aggregation over the full table, record its scope and counts/amounts by DataSource, and compare them with the expected values for the three input CSVs. The 94,900 rows / JPY 1,596,157,000 expected after processing all three files are expectations, not measurements from the Explorer preview or a Notebook success indicator. If the target table is not readable, leave the result unverified; do not grant permissions or change the shared workspace.
 
-![gold.donations in Lakehouse Explorer: a table with columns such as DonationId, amount, dates, payment method, DataSource, IsHighValue and DonorId.](../assets/p30-11-schema-preview.png)
+![Lakehouse Explorer preview of gold.donations columns and sample rows, including DonationId, amount, dates, payment method, DataSource, IsHighValue and DonorId.](../assets/p30-11-schema-preview.png)
 
-gold.donations columns and first rows: DataSource separates static data from increments, and IsHighValue is true for donations over JPY 57,000.
+Sample-row preview of gold.donations in Lakehouse Explorer. Even if up to 1,000 rows are displayed, this is not the full row count or total amount, and it is not a SQL analytics endpoint query result.
 
 </details>

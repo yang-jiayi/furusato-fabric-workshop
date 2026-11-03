@@ -1,7 +1,7 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "f939120173c4532befcb864b1b2ba8ce91b434f4d6b40ca3ff92de409dc39cd3",
+  "contentSha256": "ae34227fbcff5e329df14d8e09041a8859f4004f466f95a9d55a20ad18a3979b",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
@@ -12,18 +12,18 @@
     "figures": 37,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "02fa7e5b95663d1b99a41e1cc34b5e6b33b367b943381ae91eba4c776cf638c0"
+    "htmlSha256": "3e8928e5680d4e78be0f86fa6e77d9b5e2f8153c77d0884ae49454b48a77babd"
   },
   "sourceRevision": {
-    "baseCommit": "a01de856c591e179e8dee7289b0f841c3c02ca6d",
+    "baseCommit": "73bfc1eea7bd171ee6dc7bd0c9641ca8051d62a1",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "a1452f8cceb15cf4ef1baa34303d7c3f800023a4d0005f24cda91417ab01d920"
+    "sourceTreeSha256": "e40d2722b18c83c382b52caac4758a04940258c378e1e89613eb86beadfa28c0"
   },
   "currentArtifactSet": {
-    "manifestSha256": "b7f091a2f85e8b7011d647712c0cf7eae9cd37972d9ead4b57626620aafaf4de",
-    "sourceCommit": "a01de856c591e179e8dee7289b0f841c3c02ca6d",
-    "sourceTreeSha256": "a1452f8cceb15cf4ef1baa34303d7c3f800023a4d0005f24cda91417ab01d920",
+    "manifestSha256": "65dd6845666f7acfcb4079c37903866857fa7c3d0293e696f783f6215ccd5a58",
+    "sourceCommit": "73bfc1eea7bd171ee6dc7bd0c9641ca8051d62a1",
+    "sourceTreeSha256": "e40d2722b18c83c382b52caac4758a04940258c378e1e89613eb86beadfa28c0",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,15 +33,17 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "02fa7e5b95663d1b99a41e1cc34b5e6b33b367b943381ae91eba4c776cf638c0",
+    "htmlSha256": "3e8928e5680d4e78be0f86fa6e77d9b5e2f8153c77d0884ae49454b48a77babd",
     "checks": [
       "all29chaptersAndAppendices",
       "noPrintOrPdfExport",
+      "ja.shortInlineTokensStayWhole320_390",
       "ja.everyOverflowingTableHasCueBeforeScroller390",
       "ja.referenceTokensStayWholeWithHorizontalScroll",
       "ja.languagePersists",
       "ja.searchAndReset",
       "ja.responsive320_390_768_1440",
+      "en.shortInlineTokensStayWhole320_390",
       "en.everyOverflowingTableHasCueBeforeScroller390",
       "en.referenceTokensStayWholeWithHorizontalScroll",
       "en.languagePersists",

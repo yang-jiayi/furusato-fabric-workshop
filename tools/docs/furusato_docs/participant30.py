@@ -505,7 +505,8 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
             intro.append(bullet_list(spec["before"]))
         add_section(section, "1", SECTION_TITLES["intro"], intro)
         steps = step_blocks(spec["steps"], figures) + [callout(value) for value in spec.get("tips", ())]
-        add_section(section, "2", SECTION_TITLES["steps"], steps)
+        steps_number = "3" if current_profile and number == 17 else "2"
+        add_section(section, steps_number, SECTION_TITLES["steps"], steps)
         suffix = 3
         if spec.get("checks") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["checks"], [text_table(

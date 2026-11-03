@@ -47,7 +47,7 @@ def _profile_command(action, *extra):
     return " `\n".join(lines)
 
 
-def _append(chapter: Section, suffix: int, title, blocks):
+def _append(chapter: Section, suffix: int, title, blocks, *, insert_at=None):
     number = f"{chapter.number}.{suffix}"
     section = Section(
         ident=f"{chapter.ident}-{suffix}",
@@ -60,7 +60,10 @@ def _append(chapter: Section, suffix: int, title, blocks):
     )
     if any(child.ident == section.ident for child in chapter.children):
         raise ValueError("Duplicate current-profile section: " + section.ident)
-    chapter.children.append(section)
+    if insert_at is None:
+        chapter.children.append(section)
+    else:
+        chapter.children.insert(insert_at, section)
 
 
 def _selected_rows(contract):
@@ -171,40 +174,40 @@ def current_chapter_spec():
     return {
         "intro": [
             (
-                "この章の学習目標は、既存Agentの設定と実際の回答・実行経路の証拠を区別して検証することです。設定の一致は、回答精度の承認や保証を意味しません。",
+                "この章の学習目標は、既存 Agent の設定と実際の回答・実行経路を区別して検証することです。設定の一致は回答精度の承認や保証を意味しません。",
                 "The learning goal is to verify the existing Agent's configuration while distinguishing it from evidence of actual answers and execution paths. Configuration parity does not approve or guarantee answer accuracy.",
             ),
             (
-                "4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontologyのcontextはsource instructionとは別で、Ontology-groundingがGQL実行を意味するわけではありません。実際のsource・query language・query・resultを対応させて確認します。",
+                "4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontology context は source instruction とは別で、Ontology grounding は GQL 実行を意味しません。実際の source、query language、query、result を対応させて確認します。",
                 "Distinguish the four logical sources: Lakehouse, KQL Database, semantic model and Ontology. Ontology context is separate from source instructions, and ontology grounding does not imply GQL execution. Match the actual source, query language, query and result.",
             ),
         ],
         "before": [
             (
-                "既存Agentとその4つの論理ソースを確認し、Workspace・フォルダー・Agentの各IDは自分の許可された環境から取得します。未作成の場合に別AgentやSchemaを作る手順ではありません。",
+                "既存 Agent と4つの論理ソースを確認し、Workspace・フォルダー・Agent の各 ID は自分の許可された環境から取得します。別 Agent や Schema を作成する手順ではありません。",
                 "Confirm the existing agent and its four logical sources. Obtain workspace, folder and agent IDs from your authorized environment. This procedure does not create another agent or schema if one is missing.",
             ),
             (
-                "現在のlive definitionとselectionを読み取り、実際のsource definitionでID-only bindingを解決できることを確認します。共有環境のmirror・時系列作業には別の完全性確認が必要です。",
+                "現在の live definition と selection を読み取り、実際の source definition で ID-only binding を解決できることを確認します。対象の mirroring が部分的か完全性を確認できない場合は、関連する変更や時系列作業を行わず停止します。",
                 "Read the live definition and selections, and confirm ID-only bindings can be resolved against actual source definitions. Mirroring and time-series work in the shared environment require separate completeness checks.",
             ),
         ],
         "steps": [
             {
                 "text": (
-                    "Add data / Sourcesで既存のLakehouse、KQL Database、Semantic model、主Ontologyを確認します。論理ソース4つと物理datasourceレコード数を取り違えず、ソースを追加しません。",
+                    "Add data / Sources で既存の Lakehouse、KQL Database、Semantic model、主 Ontology を確認します。4つの論理ソースと物理 datasource レコード数を取り違えず、ソースを追加しません。",
                     "In Add data / Sources, confirm the existing Lakehouse, KQL Database, semantic model and main Ontology. Do not confuse four logical sources with physical datasource record count, and do not add sources.",
                 )
             },
             {
                 "text": (
-                    "Data AgentのToolsでCode Interpreterの状態を記録します。この章のprofile適用を回避するため、別のAgentやToolを作成しません。",
+                    "Data Agent の Tools で Code Interpreter の状態を記録します。この章の profile 適用を回避するため、別の Agent や Tool を作成しません。",
                     "Record the Code Interpreter state under Data Agent Tools. Do not create another agent or tool as a workaround for applying this profile.",
                 )
             },
             {
                 "text": (
-                    "既存definition、source selections、Ontology context、各stageを先に読み取ります。期待するselectionとの意味差分、schema drift、native type drift、曖昧なbindingを見つけたら停止します。",
+                    "既存 definition、source selections、Ontology context、各 stage を先に読み取ります。期待する selection との意味差分、schema drift、native type drift、曖昧な binding を見つけたら停止します。",
                     "Read the existing definition, source selections, Ontology context and stages first. Stop on semantic differences from the expected selections, schema drift, native type drift or ambiguous bindings.",
                 )
             },
@@ -231,16 +234,16 @@ def current_chapter_spec():
 
 
 def append_current_tuning_sections(chapter: Section, root: Path):
-    """Append current-profile instructions in the 17.3–17.14 slots."""
+    """Insert prerequisites and append current-profile instructions in 17.2–17.14."""
     if chapter.chapter != 17:
         raise ValueError("Current-profile instructions belong to Chapter 17")
     assets = _assets(root)
     profile_rel = PROFILE_REL.as_posix()
 
-    _append(chapter, 3, ("対象と準備", "Scope and prerequisites"), [
+    _append(chapter, 2, ("対象と準備", "Scope and prerequisites"), [
         _paragraph(
-            "同梱の portable profile は、現在の公開版で確認した指示本文と170個の選択済みノードを保持し、配置先に必要なIDだけを置換します。参加者自身が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent で Draft と公開版を照合します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定します。別の Agent を作成せず、ソースの追加・選択範囲の拡大・Schema変更も行いません。この実験用プロファイルは回答精度の承認・保証を意味しません。",
-            "The portable profile preserves the instruction text and 170 selected nodes verified in the current Published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema. This experimental profile is not accuracy acceptance or a guarantee."),
+            "同梱の portable profile は、現行の公開設定で確認した指示本文と170個の選択済みノードを保持し、配置先に必要な ID だけを置換します。自分が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent で Draft と Published を照合します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定してください。別の Agent を作成せず、source を追加したり selection や schema を広げたりしません。",
+            "The portable profile preserves the instruction text and 170 selected nodes verified in the current published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema."),
         _steps([
             ("4章のアクセス・容量・権限の確認を済ませます。対象 Agent が既にあり、自分の担当する4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を含むことを確認します。既存の公開版がある場合は、変更前の状態を PrivateRoot に保存できる手順を確認してから進みます。",
              "Complete the access, capacity and permission checks in Chapter 4. Confirm the existing agent has the four assigned logical sources: Lakehouse, KQL Database, semantic model and Ontology. If a published version exists, first confirm that the procedure can preserve its pre-change state under PrivateRoot."),
@@ -248,9 +251,9 @@ def append_current_tuning_sections(chapter: Section, root: Path):
              "Read the current source definition and record actual IDs and selection state. Stop and consult the instructor if ID-only bindings cannot be resolved against the live definition or an unexpected semantic difference appears; do not guess or expand selections."),
         ]),
         _paragraph(
-            "共有環境の部分的な mirroring は、mirror の変更・再取り込み・時系列作業の前提を満たしません。Ontology の静的 SQL は独立したソース・言語・クエリ・結果として扱います。Graph model の存在・準備状態と実際の GQL は別途確認し、どちらも推定しません。",
-            "Partial mirroring in the shared environment does not satisfy prerequisites for mirror changes, re-ingestion or time-series work. Treat static Ontology SQL as independent evidence for its own source, language, query and result. Verify Graph-model presence/readiness and actual GQL separately; infer neither."),
-    ])
+            "対象の OneLake mirroring が部分的か、完全性を確認できない場合は、mirror の変更・再取り込み・時系列作業を行わず停止します。Ontology の静的 SQL は独立した source・言語・query・result として扱います。Graph model の存在・準備状態と実際の GQL は別途確認し、どちらも推定しません。",
+            "If OneLake mirroring on the target is partial or cannot be verified as complete, stop without changing the mirror, re-ingesting data or starting time-series work. Treat static Ontology SQL as a separate source, language, query and result. Verify Graph-model presence/readiness and actual GQL separately; infer neither."),
+    ], insert_at=1)
     _append(chapter, 4, ("プロファイル資産と事前確認", "Profile assets and preflight"), [
         _paragraph(
             f"同梱の `{profile_rel}` にある `profile-manifest.json`、`global-instructions.txt`、`source-instructions.json`、`selection-contract.json`、定義と portable stage template を確認します。manifest の SHA-256 と実ファイルを照合し、プロファイル名が `current-experimental` であることを確認します。`global-instructions.txt` は末尾を含めてそのまま使用し、Trimや編集をしません。",

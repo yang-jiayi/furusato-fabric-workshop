@@ -4,8 +4,6 @@
 
 よくある症状と、確認すること・対処を示します。設定や権限を自分で変更せず、解決しない場合は講師に伝えてください。
 
-図の Microsoft Azure Public Service Icons V24（2026年7月）は Microsoft Corporation に帰属します。明示的な許可がない限り、建築図・教材・ドキュメントの目的に限って複製・配布・表示できます。図では製品名をアイコンの近くに置き、Azure 内での表示に沿って使います。切り抜き、反転、回転、変形、および自社製品・サービスを表すための使用は禁止です。これらのアイコンにリポジトリの MIT ライセンスは適用されず、Microsoft の後援・推奨を意味しません。Microsoft Fabric のアイコンは MIT ライセンスの `@fabric-msft/svg-icons` 8.2.0 を使用し、Microsoft Entra のアイコンは公式の利用条件に従って図・教材・ドキュメントに限り使用します。
-
 **うまくいかないときの確認**
 
 | 症状 | 確認と対処 |
@@ -33,41 +31,12 @@
 | Data Agent の SQL の例が Invalid と表示される | 実際の質問で SQL が実行できるかを確認します。表示を変えるために例を書き換えず、講師に伝えます。 |
 | クリーンアップで Eventhouse を削除できない | 繰り返し削除せず、講師に伝えます。削除済みの別のアイテムが参照している場合があります。 |
 
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/overview
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-entity-types
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-bind-data
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-relationship-types
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-add-metadata
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-rules
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-metrics
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-generate-from-semantic-models
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-namespaces
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-inheritance
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-reuse-properties
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export
-- https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent
-- https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources
-- https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview
-- https://learn.microsoft.com/en-us/fabric/data-engineering/how-to-use-notebook
-- https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse
-- https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction
-- https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs
-- https://learn.microsoft.com/azure/architecture/icons/
-- https://learn.microsoft.com/fabric/fundamentals/icons
-- https://learn.microsoft.com/entra/architecture/architecture-icons
-
 <details>
 <summary>English</summary>
 
 ## E.1 Checks and fixes
 
 Common symptoms, with what to check and how to fix them. Do not change settings or permissions yourself; if a problem is not solved, tell the instructor.
-
-The Microsoft Azure Public Service Icons V24 (July 2026) in the diagrams are © Microsoft Corporation. Unless Microsoft grants explicit permission, they may be copied, distributed and displayed only for architecture diagrams, training materials or documentation. Keep product names close to icons in diagrams and show the icons as they appear within Azure. Do not crop, flip, rotate or distort them, or use them to represent your own product or service. The repository's MIT license does not relicense these icons, and no Microsoft sponsorship or endorsement is implied. Microsoft Fabric icons use `@fabric-msft/svg-icons` 8.2.0 under its MIT license; Microsoft Entra icons are used only in diagrams, training materials and documentation under their official terms.
 
 **Troubleshooting**
 
@@ -95,32 +64,5 @@ The Microsoft Azure Public Service Icons V24 (July 2026) in the diagrams are © 
 | A saved version does not appear in Version history (it still shows No versions yet) | Do not repeat the save; skip the Restore exercise and tell the instructor. |
 | SQL examples in the Data Agent show Invalid | Check whether SQL runs for actual questions. Do not rewrite the examples to change the status; tell the instructor. |
 | The Eventhouse cannot be deleted during cleanup | Do not keep retrying; tell the instructor. Another deleted item may still refer to it. |
-
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/overview
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-entity-types
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-bind-data
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-create-relationship-types
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-add-metadata
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-rules
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-metrics
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-generate-from-semantic-models
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-namespaces
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-inheritance
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-reuse-properties
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-agent
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-mcp-server
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-version-history
-- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-import-export
-- https://learn.microsoft.com/en-us/fabric/data-science/concept-data-agent
-- https://learn.microsoft.com/en-us/fabric/data-science/data-agent-ontology-sources
-- https://learn.microsoft.com/en-us/fabric/data-engineering/lakehouse-overview
-- https://learn.microsoft.com/en-us/fabric/data-engineering/how-to-use-notebook
-- https://learn.microsoft.com/en-us/fabric/real-time-intelligence/eventhouse
-- https://learn.microsoft.com/en-us/fabric/real-time-intelligence/data-activator/activator-introduction
-- https://learn.microsoft.com/en-us/fabric/data-factory/pipeline-runs
-- https://learn.microsoft.com/azure/architecture/icons/
-- https://learn.microsoft.com/fabric/fundamentals/icons
-- https://learn.microsoft.com/entra/architecture/architecture-icons
 
 </details>

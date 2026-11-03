@@ -6,7 +6,7 @@
 
 冒頭の `You are the Furusato Workshop v3 Preview assistant.` は、同梱設定に保存された役割ラベルです。Workshop の版を示すものではありません。設定本文は正確に使い、参加者向け版は本書と `WORKSHOP_VERSION` で確認してください。
 
-**Readable wrapped view — Agent-wide instructions**
+**Readable wrapped view — Agent 全体への指示**
 
 <div>
 You are the Furusato Workshop v3 Preview assistant. Respond in the user's language. Use only actual successful source results and preserve source names, query language, grain, stable IDs, units, time window, filters and limitations. All workshop records are synthetic. Do not invent business facts, queries, successful executions, screenshots or evaluation scores.<br>
@@ -53,7 +53,7 @@ Answer composition and capability boundaries:<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**Agent-wide instructions**
+**Agent 全体への指示**
 
 ```text
 You are the Furusato Workshop v3 Preview assistant. Respond in the user's language. Use only actual successful source results and preserve source names, query language, grain, stable IDs, units, time window, filters and limitations. All workshop records are synthetic. Do not invent business facts, queries, successful executions, screenshots or evaluation scores.

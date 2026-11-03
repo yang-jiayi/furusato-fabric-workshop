@@ -8,15 +8,7 @@ shared-field readbacks と complete-stage が全て一致し、停止条件が�
 
 portable stage template は definition/ の5部品だけです。root・resource ID/name の token と、実際の path/type から解決する target token 以外は置き換えません。SQL の異なる列 path 間で native node ID が重複する場合があるため、UUID の一意性を前提にしません。schema、metadata、text、selection semantics の予期しない差分があれば helper は fail-closed で停止します。
 
-Portable stage template: definition/kusto.json
-
-Portable stage template: definition/lakehouse_tables.json
-
-Portable stage template: definition/ontology.json
-
-Portable stage template: definition/semantic_model.json
-
-Portable stage template: definition/stage_config.json
+ポータブル ステージ テンプレート: definition/kusto.json
 
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/kusto.json` (`dataSourceInstructions`)**
 
@@ -76,7 +68,7 @@ RESULT FIDELITY AND SCOPE<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/kusto.json**
 
 ```json
 {
@@ -202,6 +194,8 @@ RESULT FIDELITY AND SCOPE<br>
 
 ```
 
+ポータブル ステージ テンプレート: definition/lakehouse_tables.json
+
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/lakehouse_tables.json` (`dataSourceInstructions`)**
 
 <div>
@@ -244,7 +238,7 @@ FILTERED QUERY AND ANSWER FIDELITY<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/lakehouse_tables.json**
 
 ```json
 {
@@ -1180,7 +1174,9 @@ FILTERED QUERY AND ANSWER FIDELITY<br>
 
 ```
 
-**JSON**
+ポータブル ステージ テンプレート: definition/ontology.json
+
+**JSON: definition/ontology.json**
 
 ```json
 {
@@ -1285,6 +1281,8 @@ FILTERED QUERY AND ANSWER FIDELITY<br>
 }
 
 ```
+
+ポータブル ステージ テンプレート: definition/semantic_model.json
 
 注意: これは experimental definition の比較用 serialized reference です。Data Agent がサポートする編集欄ではなく、有効な DAX 設定でもありません。UI に転記せず、効果を推定しないでください。
 
@@ -1332,7 +1330,7 @@ Use these expressions/descriptions for definition questions; execute queries for
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/semantic_model.json**
 
 ```json
 {
@@ -1723,6 +1721,8 @@ Use these expressions/descriptions for definition questions; execute queries for
 
 ```
 
+ポータブル ステージ テンプレート: definition/stage_config.json
+
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/stage_config.json` (`aiInstructions`)**
 
 <div>
@@ -1770,7 +1770,7 @@ Answer composition and capability boundaries:<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/stage_config.json**
 
 ```json
 {
@@ -1796,14 +1796,6 @@ Continue only when all shared-field readbacks and complete-stage checks match an
 The portable stage template contains only the five parts under definition/. Replace only root/resource ID/name tokens and target tokens resolved from actual path/type. Native SQL node IDs can repeat across different column paths, so do not assume globally unique UUIDs. The helper fails closed on unexpected schema, metadata, text or selection-semantic differences.
 
 Portable stage template: definition/kusto.json
-
-Portable stage template: definition/lakehouse_tables.json
-
-Portable stage template: definition/ontology.json
-
-Portable stage template: definition/semantic_model.json
-
-Portable stage template: definition/stage_config.json
 
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/kusto.json` (`dataSourceInstructions`)**
 
@@ -1863,7 +1855,7 @@ RESULT FIDELITY AND SCOPE<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/kusto.json**
 
 ```json
 {
@@ -1989,6 +1981,8 @@ RESULT FIDELITY AND SCOPE<br>
 
 ```
 
+Portable stage template: definition/lakehouse_tables.json
+
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/lakehouse_tables.json` (`dataSourceInstructions`)**
 
 <div>
@@ -2031,7 +2025,7 @@ FILTERED QUERY AND ANSWER FIDELITY<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/lakehouse_tables.json**
 
 ```json
 {
@@ -2967,7 +2961,9 @@ FILTERED QUERY AND ANSWER FIDELITY<br>
 
 ```
 
-**JSON**
+Portable stage template: definition/ontology.json
+
+**JSON: definition/ontology.json**
 
 ```json
 {
@@ -3073,6 +3069,8 @@ FILTERED QUERY AND ANSWER FIDELITY<br>
 
 ```
 
+Portable stage template: definition/semantic_model.json
+
 Note: this is a serialized reference for comparing the experimental definition. It is not a Data Agent-supported editable field or effective DAX configuration. Do not paste it into a UI field or infer an effect from it.
 
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/semantic_model.json` (`dataSourceInstructions`)**
@@ -3119,7 +3117,7 @@ Use these expressions/descriptions for definition questions; execute queries for
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/semantic_model.json**
 
 ```json
 {
@@ -3510,6 +3508,8 @@ Use these expressions/descriptions for definition questions; execute queries for
 
 ```
 
+Portable stage template: definition/stage_config.json
+
 **Readable instruction view — `workshop/v3.0.0-preview/data-agent/profiles/current-experimental/definition/stage_config.json` (`aiInstructions`)**
 
 <div>
@@ -3557,7 +3557,7 @@ Answer composition and capability boundaries:<br>
 
 **Verbatim source follows; copy from the canonical block.**
 
-**JSON**
+**JSON: definition/stage_config.json**
 
 ```json
 {

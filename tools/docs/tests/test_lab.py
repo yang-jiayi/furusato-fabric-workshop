@@ -19,7 +19,7 @@ class LabExportTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.model = lab.load_model(ROOT)
-        cls.temporary = tempfile.TemporaryDirectory(prefix="furusato-lab-test-", dir=ROOT)
+        cls.temporary = tempfile.TemporaryDirectory(prefix="lab-", dir=ROOT)
         cls.addClassCleanup(cls.temporary.cleanup)
         cls.out = Path(cls.temporary.name) / "Lab"
         cls.receipt = lab.write_lab(ROOT, cls.out, model=cls.model)
@@ -76,6 +76,20 @@ class LabExportTests(unittest.TestCase):
         self.assertIn(target, rendered)
         self.assertNotIn("&lt;-MunicipalityInPrefecture-", rendered)
         self.assertNotIn("-&gt; Prefecture`", rendered)
+
+    def test_chapter06_expected_property_mapping_is_present_in_lab(self):
+        chapter = next(self.out.glob("06-*"))
+        page = next(
+            path for path in chapter.glob("*.md")
+            if "Expected static-property mappings" in path.read_text(encoding="utf-8")
+        )
+        content = page.read_text(encoding="utf-8")
+        for expected in (
+            "ontology-full-definition-template.json", "MunicipalityId",
+            "ot_municipality", "String", "Relationship-key columns are not included",
+            "time-series property covered in Chapter 10",
+        ):
+            self.assertIn(expected, content)
 
     def mutate(self, path, replacement):
         original = path.read_bytes()

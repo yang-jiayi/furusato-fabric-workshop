@@ -53,7 +53,39 @@ class ParticipantEditionTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.document, _, _, _, cls.evidence, cls.metadata = current_delivery.load_model(ROOT)
+        cls.document, cls.context, cls.facts, cls.carrier, cls.evidence, cls.metadata = current_delivery.load_model(ROOT)
+
+    def test_chapter06_expected_property_mapping_covers_canonical_static_contract(self):
+        table, = participant30.Tables(ROOT, self.context, self.facts, None).build("entity-properties")
+        expected = []
+        for entity in self.context.entities:
+            columns = {property_name: source_column
+                       for source_column, property_name in entity.static_binding.column_map}
+            for prop in entity.properties:
+                expected.append((
+                    entity.name, entity.static_binding.source_table, prop.name,
+                    columns[prop.name],
+                    {"BigInt": "Integer", "DateTime": "DateTime", "String": "String"}[prop.value_type],
+                ))
+        actual = [tuple(cell.en.strip("`") for cell in row) for row in table["rows"]]
+        self.assertEqual(72, len(actual))
+        self.assertEqual(expected, actual)
+        self.assertIn("Expected static-property mappings", table["caption"].en)
+        self.assertIn("ontology-full-definition-template.json", table["caption"].en)
+
+        chapter = next(section for section in self.document.sections if section.chapter == 6)
+        chapter_tables = [block for section in chapter.walk() for block in section.blocks
+                          if block.kind == "table"]
+        self.assertTrue(any(block["caption"].en == table["caption"].en for block in chapter_tables))
+        step_text = text.CHAPTERS[6]["steps"][2]["text"][1]
+        self.assertIn("not a readout of the actual configuration", step_text)
+        self.assertIn("Relationship-key columns are not included", step_text)
+        self.assertIn("time-series property covered in Chapter 10", step_text)
+        self.assertIn("make no changes and ask the instructor", step_text)
+        municipality_key = next(
+            row for row in actual if row[:3] == ("Municipality", "ot_municipality", "MunicipalityId")
+        )
+        self.assertEqual("String", municipality_key[-1])
 
     def test_shape_and_checklists(self):
         sections = self.document.sections
@@ -362,6 +394,13 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("図の PLAN_SHA256", caption_ja)
         self.assertIn("value freshly printed by your own preview", caption_en)
         self.assertIn("Do not reuse the illustrated PLAN_SHA256", caption_en)
+        self.assertIn("プレビュー出力と適用後出力は別々の表示例", caption_ja)
+        self.assertIn(
+            "The preview and applied-output images are separate examples",
+            caption_en,
+        )
+        self.assertNotIn("図14と図15", caption_ja)
+        self.assertNotIn("Figures 14 and 15", caption_en)
         for caption in (caption_ja, caption_en):
             self.assertIn("13", caption)
             self.assertIn("29", caption)

@@ -320,6 +320,38 @@ class Tables:
              ("静的 Property の数", "Static properties")],
             rows, ("作成する10個の Entity type", "The ten entity types to create"))]
 
+    def entity_properties(self):
+        kinds = {"BigInt": "Integer", "DateTime": "DateTime", "String": "String"}
+        rows = []
+        for entity in self.context.entities:
+            binding = entity.static_binding
+            if binding is None:
+                raise ValueError(f"Static binding is missing for {entity.name}")
+            columns_by_property = {}
+            for source_column, property_name in binding.column_map:
+                if property_name in columns_by_property:
+                    raise ValueError(f"Duplicate static property mapping: {entity.name}.{property_name}")
+                columns_by_property[property_name] = source_column
+            if set(columns_by_property) != {prop.name for prop in entity.properties}:
+                raise ValueError(f"Static property mapping is incomplete for {entity.name}")
+            for prop in entity.properties:
+                try:
+                    value_type = kinds[prop.value_type]
+                except KeyError as error:
+                    raise ValueError(f"Unsupported property type for {entity.name}.{prop.name}") from error
+                rows.append([
+                    f"`{entity.name}`", f"`{binding.source_table}`", f"`{prop.name}`",
+                    f"`{columns_by_property[prop.name]}`", f"`{value_type}`",
+                ])
+        return [text_table(
+            [("Entity type", "Entity type"), ("ソーステーブル", "Source table"),
+             ("Property", "Property"), ("ソース列", "Source column"),
+             ("Property の型", "Property type")],
+            rows,
+            ("配布する ontology-full-definition-template.json から生成した静的 Property の期待マッピング。実際の Bind data 画面は別途確認します。",
+             "Expected static-property mappings generated from the distributed ontology-full-definition-template.json. Verify the actual Bind data screen separately."),
+        )]
+
     def relationships(self):
         rows = [[r.name, f"{r.origin} → {r.target}", r.mapping_table, f"{r.origin_key_column} / {r.target_key_column}"]
                 for r in self.context.relationships]

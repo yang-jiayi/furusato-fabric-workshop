@@ -479,14 +479,16 @@ class CurrentDeliveryTests(unittest.TestCase):
         self.assertTrue(any("各クライアントの公式資料" in page for page in pages))
         self.assertTrue(any("Official documentation for each client" in page for page in pages))
 
-    def test_figure28_labels_the_current_distributed_attachment_in_html_and_lab(self):
+    def test_attachment_grounding_figure_labels_the_current_distributed_attachment_in_html_and_lab(self):
         model = delivery.load_model(ROOT)
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             output = root / 'guide'
             delivery.build(ROOT, output)
             tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
-            figure = tree.get_element_by_id('figure-28')
+            figure, = tree.xpath(
+                '//figure[.//img[contains(@alt, "Agent conversation with a Plan/Act composer")]]'
+            )
             caption = ''.join(figure.xpath('./figcaption//text()'))
             alt = figure.xpath('.//img/@alt')[0]
             self.assertIn('business-requirements.pdf', caption)

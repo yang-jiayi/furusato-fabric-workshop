@@ -504,8 +504,10 @@ def browser_check(path, out, executable=None):
                     });
                 }""")
                 for selector in ('#ch-6-4 .table-scroll', '#ch-12-4 .table-scroll'):
-                    region = page.locator(selector)
-                    assert region.evaluate('node => node.scrollWidth > node.clientWidth')
+                    regions = page.locator(selector)
+                    assert regions.evaluate_all(
+                        'nodes => nodes.length > 0 && nodes.some(node => node.scrollWidth > node.clientWidth)'
+                    )
                 code_check = page.evaluate("""() => {
                     const blocks = [...document.querySelectorAll(
                         '#ch-9-2 .codeblock--source pre, #ch-10-2 .codeblock--source pre')];

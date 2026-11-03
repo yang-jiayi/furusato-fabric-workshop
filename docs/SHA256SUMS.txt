@@ -1,2 +1,2 @@
-31c06270d3bb80f3e2cc6aa28405158d8793235d659e1bad4d2e149e686f4d1f  Furusato_Workshop_v3.1.0_current.zip
-3627fdbd64c29f7c2eac140bfe4888d10b328e79ee6c25e2face9ff3ed76cbaa  furusato-workshop-v3-1-0-complete.html
+63d61ea6d0190d78e52a2cec6d68ab4df1d539e54f13170617e7d83614297b62  Furusato_Workshop_v3.1.0_current.zip
+9654ad32b7ec61fa21ac82125bd7e369e35790a83b9dcc0ef591da621d4ea684  furusato-workshop-v3-1-0-complete.html

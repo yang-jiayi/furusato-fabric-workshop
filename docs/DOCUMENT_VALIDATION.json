@@ -1,29 +1,29 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "382442b8edb198bc504d1fff8fe7a9ae8c3e22e1c53a951e599ae33531238452",
+  "contentSha256": "251ce5d022137c796e7afdfcadeb4a16ad17be77e250ab42d5d5947e806b0219",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
     "sections": 187,
-    "modelBlocks": 641,
-    "bilingualValuesChecked": 8296,
+    "modelBlocks": 642,
+    "bilingualValuesChecked": 9028,
     "literalCodeAndPromptsChecked": 104,
     "figures": 38,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "3627fdbd64c29f7c2eac140bfe4888d10b328e79ee6c25e2face9ff3ed76cbaa"
+    "htmlSha256": "9654ad32b7ec61fa21ac82125bd7e369e35790a83b9dcc0ef591da621d4ea684"
   },
   "sourceRevision": {
-    "baseCommit": "a02316399d6a8468cf518a833c565dfc663a3419",
+    "baseCommit": "e45efcee3d3031be427b7046d80f127bfe1cacc0",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "dad28dc9a96b802e48cdfd3cb195961967f3185dccfc81d925684d97d0e73a7d"
+    "sourceTreeSha256": "cd1114a69c734bc1e26cf6b5cf02d3b6dfd0570a69ea6eb1dbc9e4229fb8ccf0"
   },
   "currentArtifactSet": {
-    "manifestSha256": "13dc68fb4f92736f8fba3a3e6f103d290f7fc66014e8942e54e7b17ec33360b9",
-    "sourceCommit": "a02316399d6a8468cf518a833c565dfc663a3419",
-    "sourceTreeSha256": "dad28dc9a96b802e48cdfd3cb195961967f3185dccfc81d925684d97d0e73a7d",
+    "manifestSha256": "12f11e3e2eaa4f94c5638597546aaf35e575fa5cfe86b835056594f148dd89c9",
+    "sourceCommit": "e45efcee3d3031be427b7046d80f127bfe1cacc0",
+    "sourceTreeSha256": "cd1114a69c734bc1e26cf6b5cf02d3b6dfd0570a69ea6eb1dbc9e4229fb8ccf0",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "3627fdbd64c29f7c2eac140bfe4888d10b328e79ee6c25e2face9ff3ed76cbaa",
+    "htmlSha256": "9654ad32b7ec61fa21ac82125bd7e369e35790a83b9dcc0ef591da621d4ea684",
     "checks": [
       "all29chaptersAndAppendices",
       "noPrintOrPdfExport",

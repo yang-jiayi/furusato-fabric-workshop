@@ -24,7 +24,14 @@ NAME = "current-experimental"
 KINDS = {"lakehouse_tables", "kusto", "semantic_model", "ontology"}
 TYPES = {"lakehouse_tables": "Lakehouse", "kusto": "KQLDatabase",
          "semantic_model": "SemanticModel", "ontology": "Ontology"}
+PUBLISHED_BASELINE_CANONICAL_SHA256 = "8f0aad0a260aac44063fda5d5abee04ac3f4dcc9051164792b03f7bde899d990"
+PUBLISHED_MODEL_CANONICAL_SHA256 = "8803a08b804557218d42e4a02f95af31eebbacf834c6d3fc12d0ec01f9efd8fc"
 require = safety.require
+
+
+def instruction_units(value):
+    require(isinstance(value, str) and value, "Instructions must be nonempty text.")
+    return len(value.encode("utf-16-le")) // 2
 
 
 def load_profile(profile=PROFILE):
@@ -34,18 +41,30 @@ def load_profile(profile=PROFILE):
     require(manifest.get("schemaVersion") == 1 and manifest.get("profile") == NAME
             and manifest.get("status") == "experimental" and manifest.get("answerAccuracyAccepted") is False
             and set(manifest.get("sha256", {})) == expected, "Unknown or incomplete experimental profile.")
+    require(manifest.get("sourcePublishedCanonicalSha256") == PUBLISHED_BASELINE_CANONICAL_SHA256
+            and manifest.get("sourceSemanticModelCanonicalSha256") == PUBLISHED_MODEL_CANONICAL_SHA256
+            and "sourceCandidateCanonicalSha256" not in manifest,
+            "Portable profile must bind the current Published Agent and SemanticModel, not a tuning candidate.")
     for path, digest in manifest["sha256"].items():
         require(hashlib.sha256((profile / path).read_bytes()).hexdigest() == digest,
                 "Profile input changed: " + path)
     stage = json.loads((profile / "definition/stage_config.json").read_bytes())
     raw = (profile / "global-instructions.txt").read_bytes()
-    require(raw.decode("utf-8") == stage["aiInstructions"]
-            and len(raw.decode("utf-8").encode("utf-16-le")) // 2 == manifest["instructionUtf16Units"] == 9422
-            and manifest["instructionLimitUtf16Units"] == 10000, "Exact global instructions changed.")
+    global_instructions = raw.decode("utf-8")
+    instruction_limit = manifest.get("instructionLimitUtf16Units")
+    global_units = instruction_units(global_instructions)
+    require(raw == stage["aiInstructions"].encode("utf-8")
+            and global_units == manifest["instructionUtf16Units"]
+            and isinstance(instruction_limit, int) and global_units <= instruction_limit == 10000,
+            "Exact global instructions or UTF-16 limit changed.")
     templates = {kind: json.loads((profile / ("definition/" + kind + ".json")).read_bytes()) for kind in KINDS}
     selections = json.loads((profile / "selection-contract.json").read_bytes())
     instructions = json.loads((profile / "source-instructions.json").read_bytes())
     for kind, source in templates.items():
+        source_instructions = source.get("dataSourceInstructions")
+        if source_instructions is not None:
+            require(instruction_units(source_instructions) <= instruction_limit,
+                    "Source instructions exceed the UTF-16 limit: " + kind)
         require(selections[kind] == [{"path": list(path), **{
             key: value for key, value in node.items() if key not in {"id", "children"}
         }} for path, node in native.walk(source["elements"])], "Selection documentation differs from template.")
@@ -83,6 +102,11 @@ def compile_draft(definition, workspace, *, profile=PROFILE):
     original_stage = docs[prefix + "stage_config.json"]
     require(set(original_stage) == set(stage) and original_stage["$schema"] == stage["$schema"],
             "Unknown stage configuration schema.")
+    existing_stage = copy.deepcopy(original_stage)
+    expected_stage = copy.deepcopy(stage)
+    expected_stage["aiInstructions"] = existing_stage["aiInstructions"]
+    require(existing_stage == expected_stage,
+            "Non-instruction stage fields differ from the current Published baseline.")
     require(len({value.get("artifactId") for _, value in sources.values()}) == 4,
             "Four distinct actual source identities are required.")
     identities = {"{{workspace:id}}": workspace}
@@ -108,6 +132,9 @@ def compile_draft(definition, workspace, *, profile=PROFILE):
                     and isinstance(actual.get("id"), str) and bool(actual["id"]),
                     "Native node shape/type/identity drift; inspect current metadata.")
             identities[node_token(kind, key[0])] = actual["id"]
+    for kind, (_, source) in sources.items():
+        require(substitute(templates[kind], identities) == source,
+                "Complete source fields or selected elements differ from the current Published baseline.")
     replacements = {prefix + "stage_config.json": stage}
     for kind, (path, _) in sources.items():
         replacements[path] = substitute(templates[kind], identities)
@@ -115,7 +142,7 @@ def compile_draft(definition, workspace, *, profile=PROFILE):
     candidate = {"parts": [inline_part(part["path"], replacements[part["path"]])
                            if part["path"] in replacements else copy.deepcopy(part) for part in parts]}
     receipt = {"profile": NAME, "status": "experimental", "answerAccuracyAccepted": False,
-               "identitySubstitutionOnly": True, "instructionUtf16Units": 9422,
+               "identitySubstitutionOnly": True, "instructionUtf16Units": manifest["instructionUtf16Units"],
                "profileManifestSha256": hashlib.sha256((profile / "profile-manifest.json").read_bytes()).hexdigest(),
                "counts": manifest["counts"], "candidateSha256": native.digest(candidate)}
     return candidate, receipt
@@ -163,8 +190,9 @@ def verify(client, root, candidate, folder, stage):
                 "Public instructions/description differ from the full definition.")
         examples = client.pages(base + "/datasources/" + source["id"] + "/fewshots")
         require(examples == [], "Unexpected active examples; configuration is not the exact experimental snapshot.")
+    manifest, _, _ = load_profile()
     result = {"status": stage + "-matches", "profile": NAME, "experimental": True,
-              "instructionUtf16Units": 9422, "logicalSources": 4,
+              "instructionUtf16Units": manifest["instructionUtf16Units"], "logicalSources": 4,
               "completeStageReadbackVerified": True, "sourceAvailabilityVerified": False,
               "answerAccuracyAccepted": False}
     safety.save(root, "verification-" + stage + "-" + uuid4().hex + ".json", result)

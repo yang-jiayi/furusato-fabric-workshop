@@ -72,7 +72,56 @@ V3_FACT_DESCRIPTIONS = (
 )
 
 
-def build() -> dict:
+def _alignment_version(path: Path) -> str:
+    text = path.read_text(encoding="utf-8").strip()
+    if path.suffix.lower() == ".json":
+        value = json.loads(text)
+        if not isinstance(value, dict) or not isinstance(value.get("workshopVersion"), str):
+            raise ValueError("Alignment source must contain a workshopVersion string.")
+        return value["workshopVersion"]
+    return text
+
+
+def build_preview_contract(baseline: dict, *, contract_path: Path | None = None,
+                           align_preview_contract_from: Path | None = None) -> dict:
+    contract_path = contract_path or PREVIEW / "provisioning" / "preview-contract.json"
+    if contract_path.is_file():
+        existing = load(contract_path)
+        if not isinstance(existing, dict) or existing.get("edition") != "v3.0.0-preview":
+            raise ValueError("Existing preview contract has an unexpected runtime edition.")
+        if existing.get("workshopVersion") != WORKSHOP_VERSION:
+            if align_preview_contract_from is None:
+                raise ValueError(
+                    "Existing preview contract workshopVersion is stale; "
+                    "supply --align-preview-contract-from with the canonical version source."
+                )
+            aligned_version = _alignment_version(align_preview_contract_from)
+            if aligned_version != WORKSHOP_VERSION:
+                raise ValueError(
+                    "Preview contract alignment source does not match WORKSHOP_VERSION."
+                )
+    elif align_preview_contract_from is not None:
+        aligned_version = _alignment_version(align_preview_contract_from)
+        if aligned_version != WORKSHOP_VERSION:
+            raise ValueError(
+                "Preview contract alignment source does not match WORKSHOP_VERSION."
+            )
+
+    return {
+        "edition": "v3.0.0-preview", "workshopVersion": WORKSHOP_VERSION, "baselineEdition": "2.7.0",
+        "baselineTreeSha256": baseline["treeSha256"],
+        "dataContract": {k: v for k, v in baseline.items() if k not in {"files", "treeSha256"}},
+        "generation2": True, "legacyFallback": False,
+        "ontologyContract": "../ontology/generation2-contract.json",
+        "environmentParameterRequired": ["dev", "test", "prod"],
+        "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
+        "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
+        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261015",
+        "attachmentsOwner": "documents-workstream",
+    }
+
+
+def build(*, align_preview_contract_from: Path | None = None) -> dict:
     baseline = immutable_baseline()
     # No recursive destination delete/copy: attachments is another workstream's.
     for folder in ("data", "kql", "powerbi"):
@@ -211,18 +260,8 @@ def build() -> dict:
     for path, content in agent_files.items():
         save(PREVIEW / "data-agent/definition" / path, content)
     save(PREVIEW / "data-agent/candidate-contract.json", agent_contract)
-    save(PREVIEW / "provisioning" / "preview-contract.json", {
-        "edition": "v3.0.0-preview", "workshopVersion": WORKSHOP_VERSION, "baselineEdition": "2.7.0",
-        "baselineTreeSha256": baseline["treeSha256"],
-        "dataContract": {k: v for k, v in baseline.items() if k not in {"files", "treeSha256"}},
-        "generation2": True, "legacyFallback": False,
-        "ontologyContract": "../ontology/generation2-contract.json",
-        "environmentParameterRequired": ["dev", "test", "prod"],
-        "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
-        "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
-        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261015",
-        "attachmentsOwner": "documents-workstream",
-    })
+    save(PREVIEW / "provisioning" / "preview-contract.json",
+         build_preview_contract(baseline, align_preview_contract_from=align_preview_contract_from))
     from preview30_notebooks import build_notebooks
     notebook_manifest = build_notebooks()
     save(PREVIEW / "provisioning/notebook-bundle-manifest.json", notebook_manifest)
@@ -240,7 +279,12 @@ if __name__ == "__main__":
                        help="Build only the opt-in static companion TMDL and contract.")
     group.add_argument("--agent-compat-only", action="store_true",
                        help="Build only the explicit generation1 consumer-bridge inputs.")
+    parser.add_argument("--align-preview-contract-from", type=Path,
+                        help="Explicitly align a stale preview contract using WORKSHOP_VERSION or a contract JSON.")
     args = parser.parse_args()
+    if args.align_preview_contract_from and (args.relationships_only or args.agent_compat_only):
+        parser.error("--align-preview-contract-from applies only to a full preview build.")
     action = build_relationships if args.relationships_only else build_agent_compatibility if args.agent_compat_only else build
-    print(json.dumps(action(),
+    result = build(align_preview_contract_from=args.align_preview_contract_from) if action is build else action()
+    print(json.dumps(result,
                      ensure_ascii=False, indent=2))

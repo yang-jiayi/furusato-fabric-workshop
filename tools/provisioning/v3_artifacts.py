@@ -96,7 +96,32 @@ def verify_bundle(notebook):
     if not required.issubset(files):
         raise ValueError("The sealed package lacks current correction-profile inputs.")
     return {"fileCount": len(files), "payloadSha256": sha(compressed),
+            "compressedBytes": len(compressed),
             "currentCorrectionProfilesIncluded": True}
+
+
+def verify_preview_contract(contract):
+    if (not isinstance(contract, dict)
+            or contract.get("edition") != rt.EDITION
+            or contract.get("workshopVersion") != rt.WORKSHOP_VERSION):
+        raise ValueError("Preview contract runtime edition and workshop version are inconsistent.")
+    return True
+
+
+def verify_notebook_bundle_manifest(manifest, notebooks):
+    if not isinstance(manifest, dict):
+        raise ValueError("Notebook bundle manifest must be an object.")
+    for number in ("02", "03", "04"):
+        expected = notebooks.get(number)
+        actual = manifest.get(number)
+        if not isinstance(expected, dict) or not isinstance(actual, dict):
+            raise ValueError("Notebook bundle manifest is missing Notebook " + number + ".")
+        bundle = expected["bundle"]
+        if (actual.get("path") != expected.get("bundlePath", expected["path"])
+                or actual.get("payloadSha256") != bundle["payloadSha256"]
+                or actual.get("compressedBytes") != bundle["compressedBytes"]):
+            raise ValueError("Notebook bundle manifest differs from embedded payload " + number + ".")
+    return True
 
 
 def snapshot():
@@ -126,7 +151,11 @@ def snapshot():
         notebooks[number] = {"path": path.relative_to(rt.REPO).as_posix(), "sha256": sha(path.read_bytes()),
                              "workshopVersion": rt.WORKSHOP_VERSION}
         if number in {"02", "03", "04"}:
+            notebooks[number]["bundlePath"] = path.relative_to(rt.PREVIEW).as_posix()
             notebooks[number]["bundle"] = verify_bundle(value)
+    verify_preview_contract(rt.load(rt.PREVIEW / "provisioning/preview-contract.json"))
+    verify_notebook_bundle_manifest(
+        rt.load(rt.PREVIEW / "provisioning/notebook-bundle-manifest.json"), notebooks)
     paths = {rt.REPO / name for name in rt.RUNTIME_INPUT_FILES}
     paths.update({Path(__file__), rt.REPO / "tools/provisioning/build_preview30.py",
                   rt.REPO / "tools/provisioning/preview30_notebooks.py",

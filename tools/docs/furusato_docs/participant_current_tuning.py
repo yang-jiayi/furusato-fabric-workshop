@@ -14,7 +14,7 @@ from furusato_html.model import Block, Section, Text
 PROFILE = "current-experimental"
 PROFILE_REL = Path("workshop/v3.0.0-preview/data-agent/profiles") / PROFILE
 INSTRUCTION_LIMIT = 10_000
-TESTED_GLOBAL_UNITS = 9_422
+TESTED_GLOBAL_UNITS = 9_994
 
 
 def _text(ja, en=None):
@@ -144,6 +144,8 @@ def _assets(root: Path):
     global_units = len(global_instructions.encode("utf-16-le")) // 2
     if global_units != TESTED_GLOBAL_UNITS:
         raise ValueError(f"Expected the exact tested global text ({TESTED_GLOBAL_UNITS} UTF-16 units), got {global_units}")
+    if global_units != manifest.get("instructionUtf16Units") or manifest.get("instructionLimitUtf16Units") != INSTRUCTION_LIMIT:
+        raise ValueError("Current profile instruction length or UTF-16 limit differs from its manifest.")
     source_instructions = json.loads((profile / "source-instructions.json").read_bytes().decode("utf-8"))
     selection_contract = json.loads((profile / "selection-contract.json").read_bytes().decode("utf-8"))
     definition_files = sorted((profile / "definition").glob("*.json"), key=lambda path: path.name)
@@ -169,8 +171,8 @@ def current_chapter_spec():
     return {
         "intro": [
             (
-                "この章では、自分が利用を許可された環境の既存Gen2 Data Agentに、実測・照合済みの実験プロファイルを適用し、Draftと公開版を読み戻します。設定の一致は、回答精度や採用を意味しません。",
-                "Apply the measured and reconciled experimental profile to an existing Gen2 Data Agent in an environment you are authorized to use, then read back Draft and Published. Configuration equality does not establish accuracy or adoption.",
+                "同梱の portable profile は、現在の公開版で確認した指示本文と170個の選択済みノードを保持し、配置先に必要なIDだけを置換します。既存の Gen2 Data Agent で Draft と公開版を照合します。設定の一致は、回答精度の承認を意味しません。",
+                "The portable profile preserves the instruction text and 170 selected nodes verified in the current Published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on the existing Gen2 Data Agent. Configuration parity is not accuracy acceptance.",
             ),
             (
                 "4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontologyのcontextはsource instructionとは別で、Ontology-groundingがGQL実行を意味するわけではありません。実際のsource・query language・query・resultを対応させて確認します。",
@@ -237,8 +239,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
 
     _append(chapter, 5, ("対象と準備", "Scope and prerequisites"), [
         _paragraph(
-            "この実験プロファイルを、参加者自身が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent に適用し、Draft と公開版を確認します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定します。別の Agent を作成せず、ソースの追加・選択範囲の拡大・Schema変更も行いません。このプロファイルは実験用で、回答精度の採用・保証を意味しません。",
-            "Apply this experimental profile to an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use, then inspect Draft and the published version. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema. This profile is experimental; it is not an accepted or guaranteed accuracy result."),
+            "同梱の portable profile は、現在の公開版で確認した指示本文と170個の選択済みノードを保持し、配置先に必要なIDだけを置換します。参加者自身が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent で Draft と公開版を照合します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定します。別の Agent を作成せず、ソースの追加・選択範囲の拡大・Schema変更も行いません。この実験用プロファイルは回答精度の承認・保証を意味しません。",
+            "The portable profile preserves the instruction text and 170 selected nodes verified in the current Published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema. This experimental profile is not accuracy acceptance or a guarantee."),
         _steps([
             ("4章のアクセス・容量・権限の確認を済ませます。対象 Agent が既にあり、自分の担当する4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を含むことを確認します。既存の公開版がある場合は、変更前の状態を PrivateRoot に保存できる手順を確認してから進みます。",
              "Complete the access, capacity and permission checks in Chapter 4. Confirm the existing agent has the four assigned logical sources: Lakehouse, KQL Database, semantic model and Ontology. If a published version exists, first confirm that the procedure can preserve its pre-change state under PrivateRoot."),
@@ -276,7 +278,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "実際の flat selection contract",
             "Actual flat selection contract",
             canonical=True,
-            table_class="selection-contract scroll-hint-top",
+            table_class="selection-contract",
         ),
     ])
     _append(chapter, 8, ("全体指示を確認する", "Review the global instructions"), [

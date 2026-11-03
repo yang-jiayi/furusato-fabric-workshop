@@ -18,6 +18,7 @@ from furusato_docs import preview30_release as release
 from furusato_docs.current_publication import CurrentPublication, publication_for_model
 from furusato_docs.participant30_deployment import append_deployment_sections
 from furusato_docs.participant30_text import PARAMETER_NOTES
+from furusato_docs.lab import write_lab
 from furusato_html.model import Section, Text
 
 
@@ -130,11 +131,32 @@ class CurrentDeliveryTests(unittest.TestCase):
         self.assertIn('Do not crop, flip, rotate or distort them', html)
         self.assertIn('https://learn.microsoft.com/azure/architecture/icons/', html)
 
-    def test_long_reference_tables_show_horizontal_scroll_cues_before_content(self):
+    def test_every_table_has_one_horizontal_scroll_cue_before_its_scroller(self):
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / 'guide'
             delivery.build(ROOT, output)
             tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+        tables = tree.xpath(".//table")
+        wrappers = tree.xpath(
+            ".//div[contains(concat(' ', normalize-space(@class), ' '), ' table-wrap ')]"
+        )
+        self.assertEqual(len(tables), len(wrappers))
+        for wrapper in wrappers:
+            hints = wrapper.xpath(
+                ".//p[contains(concat(' ', normalize-space(@class), ' '), ' table-hint ')]"
+            )
+            regions = wrapper.xpath(
+                ".//div[contains(concat(' ', normalize-space(@class), ' '), ' table-scroll ')]"
+            )
+            caption = wrapper.xpath(".//caption")[0].text_content()
+            with self.subTest(table=caption):
+                self.assertEqual(1, len(hints))
+                self.assertEqual(1, len(regions))
+                self.assertIn('table-hint--top', hints[0].get('class', '').split())
+                self.assertLess(list(wrapper).index(hints[0]), list(wrapper).index(regions[0]))
+                hint_text = ''.join(hints[0].itertext())
+                self.assertIn('横スクロールできる表', hint_text)
+                self.assertIn('Horizontally scrollable table', hint_text)
         for ident, table_class in (
             ('ch-17-7', 'selection-contract'),
             ('appendix-b-1', 'notebook-parameters'),
@@ -175,6 +197,30 @@ class CurrentDeliveryTests(unittest.TestCase):
                     )[0]
                     self.assertEqual(source_description, description.text_content())
                     self.assertGreater(len(description.xpath(".//wbr")), 0)
+
+    def test_figure28_labels_the_current_distributed_attachment_in_html_and_lab(self):
+        model = delivery.load_model(ROOT)
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            output = root / 'guide'
+            delivery.build(ROOT, output)
+            tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
+            figure = tree.get_element_by_id('figure-28')
+            caption = ''.join(figure.xpath('./figcaption//text()'))
+            alt = figure.xpath('.//img/@alt')[0]
+            self.assertIn('business-requirements.pdf', caption)
+            self.assertIn('attachments/business-requirements.txt', caption)
+            self.assertIn('business-requirements.txt', alt)
+            self.assertIn('ZIP', caption)
+
+            lab = root / 'Lab'
+            write_lab(ROOT, lab, model=model)
+            pages = list(lab.rglob('*p30-15-attachment-grounding*.md'))
+            self.assertEqual(1, len(pages))
+            text = pages[0].read_text(encoding='utf-8')
+            self.assertIn('business-requirements.pdf', text)
+            self.assertIn('attachments/business-requirements.txt', text)
+            self.assertIn('business-requirements.txt', text)
 
     def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
         with tempfile.TemporaryDirectory() as temp:

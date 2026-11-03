@@ -1,24 +1,24 @@
 {
   "02": {
     "path": "notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb",
-    "payloadSha256": "c1c3bbd4eb9cec8c2563744cf58c1a86f301c9e630141c37396140d21c474fb2",
-    "compressedBytes": 725094,
+    "payloadSha256": "17d9df68ce350631f50d579fec2b037d1f93adb66cddeceeb5c3c6382da9f232",
+    "compressedBytes": 725934,
     "maximumCodeCellBytes": 360027,
     "defaultAction": "preview-metadata",
     "cloudTested": false
   },
   "03": {
     "path": "notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb",
-    "payloadSha256": "c1c3bbd4eb9cec8c2563744cf58c1a86f301c9e630141c37396140d21c474fb2",
-    "compressedBytes": 725094,
+    "payloadSha256": "17d9df68ce350631f50d579fec2b037d1f93adb66cddeceeb5c3c6382da9f232",
+    "compressedBytes": 725934,
     "maximumCodeCellBytes": 360027,
     "defaultAction": "deploy-core",
     "cloudTested": false
   },
   "04": {
     "path": "notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
-    "payloadSha256": "0515663a008cb593bc622f57e7f89895325f6b1fb007fb5c2bad79042290a0a4",
-    "compressedBytes": 3606909,
+    "payloadSha256": "cd5352ff78315f9e9ec6974a1b8c2e3cce64a1ed82662a66c50c83c135d89b1f",
+    "compressedBytes": 3607742,
     "maximumCodeCellBytes": 360027,
     "defaultAction": "preflight",
     "cloudTested": false

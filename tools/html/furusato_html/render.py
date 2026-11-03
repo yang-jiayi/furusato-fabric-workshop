@@ -276,12 +276,7 @@ def render_table(block: Block, ctx: RenderContext) -> str:
     table_class = f'cols-{len(block["headers"])}'
     if block.get("tableClass"):
         table_class += " " + esc(block["tableClass"])
-    top_hint = (
-        f'<p class="table-hint table-hint--top">{hint}</p>'
-        if "scroll-hint-top" in str(block.get("tableClass", "")).split()
-        else ""
-    )
-    bottom_hint = "" if top_hint else f'<p class="table-hint">{hint}</p>'
+    top_hint = f'<p class="table-hint table-hint--top">{hint}</p>'
     return (
         '<div class="table-wrap" data-search-block>'
         f'{top_hint}'
@@ -292,7 +287,6 @@ def render_table(block: Block, ctx: RenderContext) -> str:
         f"<thead><tr>{head}</tr></thead>"
         f"<tbody>{''.join(body_rows)}</tbody>"
         "</table></div>"
-        f'{bottom_hint}'
         "</div>"
     )
 

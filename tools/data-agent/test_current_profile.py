@@ -1,5 +1,6 @@
 """Offline identity binding and single-write/readback tests; never authenticate."""
 import copy
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -49,15 +50,68 @@ class CurrentProfileTests(unittest.TestCase):
         self.candidate, self.receipt = current.compile_draft(self.definition, WORKSPACE)
 
     def test_exact_global_and_four_logical_sources(self):
+        manifest, stage, templates = current.load_profile()
         docs, sources, serialization = current.native.stage_sources(self.candidate, "draft")
         self.assertEqual(serialization, "native-ontology-context")
         self.assertEqual(len(sources), 4)
         text = docs["Files/Config/draft/stage_config.json"]["aiInstructions"]
         self.assertEqual(text.encode(), (current.PROFILE / "global-instructions.txt").read_bytes())
-        self.assertEqual(len(text.encode("utf-16-le")) // 2, 9422)
+        self.assertEqual(len(text.encode("utf-16-le")) // 2, 9994)
+        self.assertEqual(len(text.encode("utf-16-le")) // 2, manifest["instructionUtf16Units"])
         self.assertFalse(self.receipt["answerAccuracyAccepted"])
         self.assertEqual(self.receipt["counts"]["lakehouse_tables"]["lakehouse_tables.table"], 11)
         self.assertEqual(self.receipt["counts"]["lakehouse_tables"]["lakehouse_tables.column"], 88)
+        expected = {
+            "kusto": "827c9b8f4271c67ac4f503b642cbfb9aaaa4b329b00889169d93500654a77596",
+            "lakehouse_tables": "4b69a02bd33dd33c5a8890d49ee6473997a0d57f6a3f416a9d745b0fa759e338",
+            "semantic_model": "aae23783d24b0f518482681cde6012e1a82c24bf13278611e84b436015d3041e",
+        }
+        self.assertEqual(manifest["sourcePublishedCanonicalSha256"],
+                         current.PUBLISHED_BASELINE_CANONICAL_SHA256)
+        self.assertEqual(manifest["sourceSemanticModelCanonicalSha256"],
+                         current.PUBLISHED_MODEL_CANONICAL_SHA256)
+        self.assertNotIn("sourceCandidateCanonicalSha256", manifest)
+        for kind, expected_sha in expected.items():
+            instruction = templates[kind]["dataSourceInstructions"]
+            self.assertEqual(hashlib.sha256(instruction.encode("utf-8")).hexdigest(), expected_sha)
+            self.assertLessEqual(current.instruction_units(instruction), manifest["instructionLimitUtf16Units"])
+            self.assertEqual(sources[kind][1]["dataSourceInstructions"], instruction)
+        selected_nodes = sum(
+            1 for source in templates.values()
+            for _, node in current.native.walk(source["elements"])
+            if node.get("is_selected") is True
+        )
+        self.assertEqual(selected_nodes, 170)
+        ontology_names = {
+            node["display_name"] for _, node in current.native.walk(templates["ontology"]["elements"])
+        }
+        authored_names = set(templates["ontology"]["entitiesWithUserAuthoredDescriptions"])
+        self.assertTrue(authored_names)
+        self.assertTrue(authored_names.issubset(ontology_names))
+        self.assertEqual(
+            {
+                node["display_name"] for _, node in current.native.walk(templates["semantic_model"]["elements"])
+                if node.get("type") == "semantic_model.measure"
+            },
+            {
+                "寄附総額", "寄附件数", "静的寄附総額", "静的寄附件数",
+                "受入増分寄附総額", "受入増分寄附件数", "平均寄附額",
+                "寄附総額 前年同期間", "自治体別シェア (%)", "高額寄附件数",
+            },
+        )
+
+    def test_instruction_limit_counts_utf16_units_exactly(self):
+        self.assertEqual(current.instruction_units("a" * 9994), 9994)
+        self.assertEqual(current.instruction_units("\U0001f600" * 5000), 10000)
+        self.assertEqual(current.instruction_units("a" * 10001), 10001)
+        _, _, templates = current.load_profile()
+        manifest = json.loads((current.PROFILE / "profile-manifest.json").read_bytes())
+        self.assertTrue(all(
+            current.instruction_units(source["dataSourceInstructions"])
+            <= manifest["instructionLimitUtf16Units"]
+            for kind, source in templates.items()
+            if source.get("dataSourceInstructions") is not None
+        ))
 
     def test_target_identity_nodes_and_published_shared_parts_are_preserved(self):
         before, after = decoded_parts(self.definition), decoded_parts(self.candidate)
@@ -73,18 +127,30 @@ class CurrentProfileTests(unittest.TestCase):
                              [node["id"] for _, node in current.native.walk(initial[kind][1]["elements"])])
         self.assertNotIn("{{node:", json.dumps(after))
         self.assertNotIn("dataSourceInstructions", actual["ontology"][1])
+        self.assertEqual(
+            actual["ontology"][1]["entitiesWithUserAuthoredDescriptions"],
+            initial["ontology"][1]["entitiesWithUserAuthoredDescriptions"],
+        )
 
     def test_unknown_selection_and_schema_drift_stop(self):
         _, sources, _ = current.native.stage_sources(self.definition, "draft")
         path = sources["lakehouse_tables"][0]
         for mutation in (
             lambda value: value["elements"].clear(),
+            lambda value: value["elements"][0].update(is_selected=False),
             lambda value: value.update(metadata={"unknown": True}),
             lambda value: value["elements"][0].update(newServiceField=True),
             lambda value: value.update(workspaceId=AGENT),
+            lambda value: value.update(dataSourceInstructions=value["dataSourceInstructions"] + " drift"),
+            lambda value: value.update(userDescription=value["userDescription"] + " drift"),
         ):
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 current.compile_draft(changed(self.definition, path, mutation), WORKSPACE)
+        stage_path = "Files/Config/draft/stage_config.json"
+        def change_shared_stage(value):
+            value["experimental"]["codeInterpreterEnabled"] = not value["experimental"]["codeInterpreterEnabled"]
+        with self.assertRaisesRegex(ValueError, "Non-instruction stage fields"):
+            current.compile_draft(changed(self.definition, stage_path, change_shared_stage), WORKSPACE)
         extra = copy.deepcopy(self.definition)
         extra["parts"].append(inline_part("Files/Config/draft/unreviewed/fewshots.json", {"fewShots": []}))
         with self.assertRaisesRegex(ValueError, "Unexpected Draft"):

@@ -441,6 +441,18 @@ def browser_check(path, out, executable=None):
                     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
                 page.set_viewport_size({'width':390,'height':844})
                 assert page.evaluate("""() => {
+                    const tables = [...document.querySelectorAll('table')];
+                    return tables.length > 0 && tables.every(table => {
+                        const wrap = table.closest('.table-wrap');
+                        const hint = wrap && wrap.querySelector('.table-hint--top');
+                        const region = wrap && wrap.querySelector('.table-scroll');
+                        return hint && region
+                            && (hint.compareDocumentPosition(region) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
+                            && region.scrollWidth > region.clientWidth;
+                    });
+                }""")
+                checks.append(f'{lang}.everyOverflowingTableHasCueBeforeScroller390')
+                assert page.evaluate("""() => {
                     const tokens = [...document.querySelectorAll('table code')]
                         .filter(node => node.getClientRects().length);
                     return tokens.every(node => {

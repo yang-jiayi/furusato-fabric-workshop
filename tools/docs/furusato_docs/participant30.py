@@ -450,7 +450,7 @@ class Tables:
                              pair(meaning) if meaning else Text("—", "—")])
         return [text_table(["Notebook", ("パラメーター", "Parameter"), ("既定値", "Default"), ("意味", "Meaning")],
                            rows, ("Notebook のパラメーター", "Notebook parameters"),
-                           class_name="notebook-parameters scroll-hint-top")]
+                           class_name="notebook-parameters")]
 
     def questions(self):
         rows = [[str(q.number), q.test_id, Text(q.question, q.question), str(len(q.evidence) + len(q.pass_criteria))]

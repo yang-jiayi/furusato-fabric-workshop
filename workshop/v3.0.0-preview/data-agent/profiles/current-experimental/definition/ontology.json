@@ -86,15 +86,15 @@
     }
   ],
   "entitiesWithUserAuthoredDescriptions": [
-    "{{node:ontology:Prefecture}}",
-    "{{node:ontology:Municipality}}",
-    "{{node:ontology:Donor}}",
-    "{{node:ontology:GiftCategory}}",
-    "{{node:ontology:Gift}}",
-    "{{node:ontology:Supplier}}",
-    "{{node:ontology:Donation}}",
-    "{{node:ontology:MunicipalityCategoryMetric}}",
-    "{{node:ontology:PrefectureCategoryMetric}}",
-    "{{node:ontology:PrefectureDonationFlow}}"
+    "Prefecture",
+    "Municipality",
+    "Donor",
+    "GiftCategory",
+    "Gift",
+    "Supplier",
+    "Donation",
+    "MunicipalityCategoryMetric",
+    "PrefectureCategoryMetric",
+    "PrefectureDonationFlow"
   ]
 }

@@ -47,7 +47,7 @@ ROW(
 
 ![Metrics パネルの全可視範囲。10 metrics の件数、表示されている名前・Source・Result type・Description を保持し、伏せ字を含む。](../assets/p30-12-metric-list-detail.png)
 
-同じ保存済み画面の Metrics パネル全体の連続した切り抜き。10件の表示数と見える行を保持しますが、非表示の行は補わず、省略表示と伏せ字もそのまま残します。
+「寄附」の Metrics パネル。10件の表示数と、画面に表示された Metric 名・Source・Result type・Description が見えます。
 
 <details>
 <summary>English</summary>
@@ -99,6 +99,6 @@ Metrics section of the 寄附 entity: the semantic model's measures are listed a
 
 ![Full visible Metrics panel retaining the 10-metric count and displayed names, Source, Result type and Description, including redactions.](../assets/p30-12-metric-list-detail.png)
 
-Contiguous crop of the complete visible Metrics panel from the same retained screenshot. It preserves the 10-item count and visible rows; hidden rows are not supplied, and ellipses and redactions remain unchanged.
+Metrics panel for 寄附, showing a count of 10 and the Metric names, Source, Result type and Description visible on screen.
 
 </details>

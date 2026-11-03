@@ -112,6 +112,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
             [f"chapter-17-{index}" for index in range(1, 15)],
             [section.ident for section in self.chapter.children],
         )
+        self.assertEqual(1, len(current_chapter_spec()["intro"]))
         self.assertIn("Scope and prerequisites", self.chapter.children[1].title.en)
         self.assertEqual("17.2", self.chapter.children[1].number)
         self.assertEqual("17.3", self.chapter.children[2].number)
@@ -177,6 +178,18 @@ class CurrentProfileGuideTests(unittest.TestCase):
             template_codes,
         )
         self.assertEqual(0, self.summary["kqlFewshotCount"])
+        preflight = " ".join(
+            part
+            for block in sections["chapter-17-4"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("definition few-shot file は 0 件", preflight)
+        self.assertIn("0 active examples", preflight)
+        self.assertNotIn("Do not assume nine examples", preflight)
+        self.assertNotIn("この版の", preflight)
+        self.assertIn("`profile-manifest.json`", preflight)
+        intro = current_chapter_spec()["intro"][0]
+        self.assertNotIn("four logical sources", intro[1])
 
     def test_cli_and_durable_limitations_are_documented(self):
         def strings(value):
@@ -210,15 +223,19 @@ class CurrentProfileGuideTests(unittest.TestCase):
             "--stage published",
         ):
             self.assertIn(flag, content)
+        self.assertIn("全ての Git checkout の外", content)
+        self.assertIn("SQL・KQL・DAX・GQL は実際の source", content)
         self.assertIn("11:54:30 UTC", content)
         self.assertIn("14:18:14 UTC", content)
         self.assertIn("11:54:30 AM", content)
-        self.assertIn("23:54:30", content)
         self.assertIn("2:18:14 PM", content)
-        self.assertIn("02:18:14", content)
+        self.assertNotIn("23:54:30", content)
+        self.assertNotIn("02:18:14", content)
         self.assertIn("> 57,000", content)
         self.assertIn("KEEPFILTERS", content)
-        self.assertIn("false “no data.”", content)
+        self.assertIn("define the period, denominator and grouping", content)
+        self.assertNotIn("current experimental responses", content.lower())
+        self.assertNotIn("fixture", content.lower())
         self.assertNotIn("51-slot", content)
         self.assertNotIn("296-condition", content)
         self.assertNotIn("127", content)

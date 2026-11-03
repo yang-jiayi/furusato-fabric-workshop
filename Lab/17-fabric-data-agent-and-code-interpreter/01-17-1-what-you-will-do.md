@@ -2,9 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-この章の学習目標は、既存 Agent の設定と実際の回答・実行経路を区別して検証することです。設定の一致は回答精度の承認や保証を意味しません。
-
-4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontology context は source instruction とは別で、Ontology grounding は GQL 実行を意味しません。実際の source、query language、query、result を対応させて確認します。
+この章では既存 Data Agent の設定を確認し、回答品質を評価する際の限界を整理します。設定の一致だけで回答精度が承認・保証されるわけではありません。
 
 準備するもの・確認すること
 
@@ -16,9 +14,7 @@
 
 ## 17.1 What you will do
 
-The learning goal is to verify the existing Agent's configuration while distinguishing it from evidence of actual answers and execution paths. Configuration parity does not approve or guarantee answer accuracy.
-
-Distinguish the four logical sources: Lakehouse, KQL Database, semantic model and Ontology. Ontology context is separate from source instructions, and ontology grounding does not imply GQL execution. Match the actual source, query language, query and result.
+Review the existing Data Agent configuration and the limits of answer-quality evaluation. Configuration parity alone does not approve or guarantee answer accuracy.
 
 Before you start
 

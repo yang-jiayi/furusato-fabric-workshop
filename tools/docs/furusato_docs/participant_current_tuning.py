@@ -174,12 +174,8 @@ def current_chapter_spec():
     return {
         "intro": [
             (
-                "この章の学習目標は、既存 Agent の設定と実際の回答・実行経路を区別して検証することです。設定の一致は回答精度の承認や保証を意味しません。",
-                "The learning goal is to verify the existing Agent's configuration while distinguishing it from evidence of actual answers and execution paths. Configuration parity does not approve or guarantee answer accuracy.",
-            ),
-            (
-                "4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を区別します。Ontology context は source instruction とは別で、Ontology grounding は GQL 実行を意味しません。実際の source、query language、query、result を対応させて確認します。",
-                "Distinguish the four logical sources: Lakehouse, KQL Database, semantic model and Ontology. Ontology context is separate from source instructions, and ontology grounding does not imply GQL execution. Match the actual source, query language, query and result.",
+                "この章では既存 Data Agent の設定を確認し、回答品質を評価する際の限界を整理します。設定の一致だけで回答精度が承認・保証されるわけではありません。",
+                "Review the existing Data Agent configuration and the limits of answer-quality evaluation. Configuration parity alone does not approve or guarantee answer accuracy.",
             ),
         ],
         "before": [
@@ -266,8 +262,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "Manifest selection inventory",
         ),
         _paragraph(
-            f"この版の definition few-shot file は {assets['manifest']['definitionFewshotFiles']} 件、読み戻しで必要な active example は {assets['active_example_count']} 件です。9件の例を前提にせず、資産や実定義にない例を追加しません。Global 指示本文は実測 {assets['global_units']} UTF-16 単位で、上限 {INSTRUCTION_LIMIT} 単位以下です。実際に選択した別プロファイルの長さも測り、固定の長さを全候補へ当てはめません。",
-            f"This profile has {assets['manifest']['definitionFewshotFiles']} definition few-shot files and requires {assets['active_example_count']} active examples on readback. Do not assume nine examples or add examples absent from the assets and live definition. The global instructions measure {assets['global_units']} UTF-16 units, within the {INSTRUCTION_LIMIT}-unit maximum. Measure any other selected profile's actual length instead of applying a fixed length to every candidate."),
+            f"definition few-shot file は {assets['manifest']['definitionFewshotFiles']} 件、実定義の active example は {assets['active_example_count']} 件です。Global instructions は実測 {assets['global_units']} UTF-16 単位で、上限 {INSTRUCTION_LIMIT} 単位以下です。",
+            f"The definition contains {assets['manifest']['definitionFewshotFiles']} definition few-shot files and {assets['active_example_count']} active examples. The global instructions measure {assets['global_units']} UTF-16 units, within the {INSTRUCTION_LIMIT}-unit maximum."),
     ])
     _append(chapter, 5, ("現在の Agent と選択契約を読み取る", "Read the current agent and selection contract"), [
         _paragraph(
@@ -301,8 +297,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         _steps([
             ("UI と現在の definition の両方で、4つの論理ソースが同じ対象であることを読み取り確認します。通常の物理 datasource 表示数を、論理ソース数と取り違えません。この段階では変更せず、適用は確認後の apply 手順で行います。",
              "Read-only confirm in both the UI and current definition that the same four logical sources are present. Do not confuse the displayed physical datasource count with the logical source count. Make no changes at this step; apply only through the apply procedure after review."),
-            ("Ontology を選択できることは、Ontology の native query や GQL の実行成功を意味しません。SQL・KQL・DAX・GQLは実際のsource/language/query/resultsを照合して別々に記録します。",
-             "Ontology selection does not prove a successful native Ontology query or GQL execution. Match and record actual source, language, query and results separately for SQL, KQL, DAX and GQL."),
+            ("Ontology を選択できることは、Ontology の native query や GQL の実行成功を意味しません。SQL・KQL・DAX・GQL は実際の source、language、query、result を照合して別々に記録します。",
+             "Ontology selection does not prove a successful native Ontology query or GQL execution. Match and record the actual source, language, query and result separately for SQL, KQL, DAX and GQL."),
         ]),
     ])
     _append(chapter, 8, ("現行の Semantic 選択を確認する", "Verify current semantic selections"), [
@@ -310,7 +306,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "`selection-contract.json` は path/type/is_selected のフラットな契約です。表示された全項目を確認し、記載された選択値を変えません。現在の構成は実際に選択済みの SQL テーブル、KQL 集計、モデルテーブル、Ontology entity に限られます。ソース探索により項目を追加したり、契約外の候補を展開したりしません。",
             "`selection-contract.json` is a flat path/type/is_selected contract. Inspect every listed item and preserve its specified selection state. The current configuration is limited to the actually selected SQL tables, KQL summary, model tables and Ontology entities. Do not add items through source discovery or expand beyond the contract."),
         _paragraph(
-            "テーブル名や件数だけでなく各 path と type を実定義に照合します。IDを直接比較できない場合は現在の定義で binding を解決し、意味の差分が残れば停止します。選択状態の表示だけで、実際の問い合わせや回答品質を確認済みとは扱いません。",
+            "テーブル名や件数だけでなく各 path と type を実定義に照合します。ID を直接比較できない場合は現在の定義で binding を解決し、意味の差分が残れば停止します。選択状態の表示だけで、実際の問い合わせや回答品質を確認済みとは扱いません。",
             "Reconcile every path and type against the live definition, not only table names or counts. If IDs cannot be compared directly, resolve bindings from the current definition and stop if semantic differences remain. A visible selection does not verify actual queries or answer quality."),
     ])
     _append(chapter, 9, ("適用候補を安全に準備する", "Prepare the candidate safely"), [
@@ -318,7 +314,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "`prepare` はリモートの変更を行わず、対象の既存 Agent を読み取り、ID-only binding を実定義と照合して、候補と private evidence を作成します。shared-field の実際の readback と complete-stage を確認し、予期しない意味差分があれば失敗として止まることを確認します。`prepare` の結果を見ずに `apply` へ進みません。",
             "`prepare` makes no remote changes. It reads the existing agent, resolves ID-only bindings against its live definition and writes the candidate and private evidence. Check actual shared-field readback and complete-stage; verify unexpected semantic drift causes a fail-closed stop. Do not proceed to `apply` without inspecting `prepare` output."),
         _steps([
-            ("WorkspaceId・FolderId・AgentId は実際の許可済み環境から取得したGUIDを使います。PrivateRoot は絶対パスで指定し、全てのGit checkoutの外に置きます。RoutingOrigin は対象から観測した HTTPS regional analysis.windows.net のoriginだけを指定し、地域名やホストを推測しません。",
+            ("WorkspaceId・FolderId・AgentId は実際の許可済み環境から取得した GUID を使います。PrivateRoot は絶対パスで指定し、全ての Git checkout の外に置きます。RoutingOrigin は対象から観測した HTTPS regional analysis.windows.net の origin だけを指定し、地域名やホストを推測しません。",
              "Use actual GUIDs for WorkspaceId, FolderId and AgentId from the authorized environment. Set PrivateRoot to an absolute path outside every Git checkout. RoutingOrigin must be the observed HTTPS regional analysis.windows.net origin for the target; never guess its region or host."),
             ("値は共有資料でなく、作業中の PowerShell 変数だけに設定します。PrivateRoot は新規で一意にし、既存の intent や記録を再利用・削除しません。prepare を実行し、出力された対象と候補を確認します。",
              "Set these values only in local PowerShell variables, not shared documents. Use a new unique PrivateRoot; do not reuse or delete existing intents or records. Run prepare and inspect the reported target and candidate."),
@@ -394,8 +390,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         _steps([
             ("apply/publish の後に結果が不明なら、書込みを再送せず、その intent を保持して verify を読み取り専用で実行します。新しい変更が必要と判明しても、使用済みintentを再利用しません。所有者と現在の定義を確認した別手順に従います。",
              "If the outcome after apply/publish is uncertain, preserve the intent and run read-only verify; never resend the write. If a new change is needed, do not reuse the spent intent. Follow a separate procedure after confirming ownership and the live definition."),
-            ("現在の実験では、ファイルごとの時刻の12時間転記が誤ることがあります。fixture 001 の最終時刻は 11:54:30 UTC（現地表記 11:54:30 AM）で、23:54:30 ではありません。fixture 003 の開始時刻は 14:18:14 UTC（2:18:14 PM）で、02:18:14 ではありません。集計 join が誤って全体合計を各ファイルの合計として扱い、誤った「データなし」を返すこともあります。回答を独立に評価するときは、各 fixture の開始・終了時刻、UTC表示、期間と分母の定義、集計の粒度と各ファイルの合計が混同されていないことを確認します。",
-             "Current experimental responses can transpose timestamps by 12 hours. Fixture 001 ends at 11:54:30 UTC (native 11:54:30 AM), not 23:54:30. Fixture 003 starts at 14:18:14 UTC (2:18:14 PM), not 02:18:14. A generated aggregate join can also mistake a grand total for per-file totals and return a false “no data.” In an independent answer review, check each fixture's start/end time, UTC labeling, period and denominator definitions, aggregation grain, and that per-file totals are not confused."),
+            ("CSVごとの時刻を確認するときは、UTC の日付と時刻を読み取ります。001 の最終時刻は 11:54:30 UTC（11:54:30 AM）、003 の開始時刻は 14:18:14 UTC（2:18:14 PM）です。集計を確認するときは、期間・分母・集計単位を明確にし、全体合計をファイルごとの合計として扱わないようにします。",
+             "When checking times for each CSV, read the UTC date and time: 001 ends at 11:54:30 UTC, and 003 starts at 14:18:14 UTC. For aggregations, define the period, denominator and grouping, and do not treat a grand total as a per-file total."),
             ("高額寄附フラグの定義は寄付額が57,000円を超える場合（> 57,000円）であり、57,000円以上ではありません。回答がこの定義や、実際の measure にある KEEPFILTERS の説明を省くことがあります。支払方法ランキングでは filter が落ちる場合があります。回答が閾値の厳密な不等号、measure 所有の filter の適用、ランキング対象の filter を説明・適用しているかを独立に確認します。GQL・structured output・DAX の十分な実行根拠もありません。正確さを示すために指示へ答えを追加せず、実際の source/query/result と説明を照合し、未確認または誤りはそのまま記録します。",
              "The high-value flag means donation amount > JPY 57,000, not >= JPY 57,000. An answer may omit this definition or an explanation of the actual measure-owned KEEPFILTERS. A payment-method ranking can also drop its filter. Independently check the strict threshold predicate, whether the measure-owned filter is applied and explained, and whether the ranking's filter is retained. Sufficient GQL, structured-output and DAX execution evidence is also missing. Do not add answers to the instructions to make them seem correct; reconcile actual sources/queries/results and explanations, and record unknowns or errors as observed."),
             ("全ての回答を19章・付録Cで公開問題と条件により評価します。設定が一致しても、正確性や採用が示されたとは限りません。別の実環境におけるGraph model、GQL、時系列、mirroringは、それぞれ独立に前提と実行結果を確認します。",

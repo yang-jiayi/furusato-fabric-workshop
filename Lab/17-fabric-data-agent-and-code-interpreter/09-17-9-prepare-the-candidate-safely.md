@@ -4,7 +4,7 @@
 
 `prepare` はリモートの変更を行わず、対象の既存 Agent を読み取り、ID-only binding を実定義と照合して、候補と private evidence を作成します。shared-field の実際の readback と complete-stage を確認し、予期しない意味差分があれば失敗として止まることを確認します。`prepare` の結果を見ずに `apply` へ進みません。
 
-1. WorkspaceId・FolderId・AgentId は実際の許可済み環境から取得したGUIDを使います。PrivateRoot は絶対パスで指定し、全てのGit checkoutの外に置きます。RoutingOrigin は対象から観測した HTTPS regional analysis.windows.net のoriginだけを指定し、地域名やホストを推測しません。
+1. WorkspaceId・FolderId・AgentId は実際の許可済み環境から取得した GUID を使います。PrivateRoot は絶対パスで指定し、全ての Git checkout の外に置きます。RoutingOrigin は対象から観測した HTTPS regional analysis.windows.net の origin だけを指定し、地域名やホストを推測しません。
 2. 値は共有資料でなく、作業中の PowerShell 変数だけに設定します。PrivateRoot は新規で一意にし、既存の intent や記録を再利用・削除しません。prepare を実行し、出力された対象と候補を確認します。
 
 **PowerShell**

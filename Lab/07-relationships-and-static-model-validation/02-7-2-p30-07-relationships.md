@@ -11,7 +11,7 @@
 
 ![Ontology Home の Relationship グラフの表示例。参加者自身の15関係の存在・向き・列は別途確認する。](../assets/p30-07-relationships.png)
 
-Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されていますが、図の一部は表示範囲外です。参加者の配置完了を証明する図ではありません。24.6で配置済みなら既存の15関係を読み取り確認し、不完全な対象で不足する関係だけを作成します。
+Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されています（グラフの一部は画面外です）。24.6で配置済みなら既存の15関係を確認し、不足する関係だけを作成します。
 
 <details>
 <summary>English</summary>
@@ -27,6 +27,6 @@ Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 rel
 
 ![Illustrative Ontology Home relationship graph; separately verify the existence, direction and columns of your own fifteen relationships.](../assets/p30-07-relationships.png)
 
-Illustrative Ontology Home viewport. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, while part of the graph is outside the viewport. This does not prove your deployment is complete. If already deployed in 24.6, inspect the existing fifteen relationships; create only missing relationships in an incomplete target.
+Ontology Home example. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, with part of the graph outside the viewport. If deployed in Chapter 24.6, check the existing fifteen relationships and create only those that are missing.
 
 </details>

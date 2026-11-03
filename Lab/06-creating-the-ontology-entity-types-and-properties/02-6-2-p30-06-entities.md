@@ -11,7 +11,7 @@
 
 ![Municipality の Properties 表。キー MunicipalityId、Local の各 Property の型と Data source（ot_municipality）、時系列 Property は Unbound](../assets/p30-06-entities.png)
 
-Municipality の Configure 画面例。キーは MunicipalityId、静的 Property は ot_municipality にバインド済みで、時系列 Property は10章まで Unbound。この図は値の確認例で、現在表示される入口を保証するものではありません。
+Municipality の Configure 画面例。キーは MunicipalityId、静的 Property は ot_municipality にバインドされ、時系列 Property は10章で設定するまで Unbound です。自分の画面で表示される binding の入口を使います。
 
 <details>
 <summary>English</summary>
@@ -27,6 +27,6 @@ Municipality の Configure 画面例。キーは MunicipalityId、静的 Propert
 
 ![Municipality Properties table: key MunicipalityId, Local properties with their types bound to ot_municipality, and an Unbound time-series property.](../assets/p30-06-entities.png)
 
-Illustrative Municipality Configure page: MunicipalityId is the key, static properties are bound to ot_municipality, and the time-series property stays Unbound until Chapter 10. This image illustrates values to verify; it does not guarantee which entry controls are currently shown.
+Municipality Configure example: MunicipalityId is the key, static properties are bound to ot_municipality, and the time-series property stays Unbound until Chapter 10. Use the binding entry shown in your own view.
 
 </details>

@@ -168,7 +168,7 @@ Use these expressions/descriptions for definition questions; execute queries for
 ```
 
 1. UI と現在の definition の両方で、4つの論理ソースが同じ対象であることを読み取り確認します。通常の物理 datasource 表示数を、論理ソース数と取り違えません。この段階では変更せず、適用は確認後の apply 手順で行います。
-2. Ontology を選択できることは、Ontology の native query や GQL の実行成功を意味しません。SQL・KQL・DAX・GQLは実際のsource/language/query/resultsを照合して別々に記録します。
+2. Ontology を選択できることは、Ontology の native query や GQL の実行成功を意味しません。SQL・KQL・DAX・GQL は実際の source、language、query、result を照合して別々に記録します。
 
 <details>
 <summary>English</summary>
@@ -341,6 +341,6 @@ Use these expressions/descriptions for definition questions; execute queries for
 ```
 
 1. Read-only confirm in both the UI and current definition that the same four logical sources are present. Do not confuse the displayed physical datasource count with the logical source count. Make no changes at this step; apply only through the apply procedure after review.
-2. Ontology selection does not prove a successful native Ontology query or GQL execution. Match and record actual source, language, query and results separately for SQL, KQL, DAX and GQL.
+2. Ontology selection does not prove a successful native Ontology query or GQL execution. Match and record the actual source, language, query and result separately for SQL, KQL, DAX and GQL.
 
 </details>

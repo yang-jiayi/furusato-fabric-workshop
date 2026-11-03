@@ -13,7 +13,7 @@
 | Semantic model | 5 | 31 | 10 |
 | Ontology | 10 | — | — |
 
-この版の definition few-shot file は 0 件、読み戻しで必要な active example は 0 件です。9件の例を前提にせず、資産や実定義にない例を追加しません。Global 指示本文は実測 9994 UTF-16 単位で、上限 10000 単位以下です。実際に選択した別プロファイルの長さも測り、固定の長さを全候補へ当てはめません。
+definition few-shot file は 0 件、実定義の active example は 0 件です。Global instructions は実測 9994 UTF-16 単位で、上限 10000 単位以下です。
 
 <details>
 <summary>English</summary>
@@ -31,6 +31,6 @@ Inspect `profile-manifest.json`, `global-instructions.txt`, `source-instructions
 | Semantic model | 5 | 31 | 10 |
 | Ontology | 10 | — | — |
 
-This profile has 0 definition few-shot files and requires 0 active examples on readback. Do not assume nine examples or add examples absent from the assets and live definition. The global instructions measure 9994 UTF-16 units, within the 10000-unit maximum. Measure any other selected profile's actual length instead of applying a fixed length to every candidate.
+The definition contains 0 definition few-shot files and 0 active examples. The global instructions measure 9994 UTF-16 units, within the 10000-unit maximum.
 
 </details>

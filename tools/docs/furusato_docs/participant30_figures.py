@@ -73,8 +73,8 @@ FIGURES = {
                 'Conceptual paths from eight CSV files to Lakehouse, three increment files through OneLake event, Activator and Pipeline to Eventhouse, and static tables plus increment files through Notebook 05 to Gold and Semantic model; also Ontology, Graph, Data Agent and MCP.'),
     },
     'p30-06-entities': {
-        "caption": ('Municipality の Configure 画面例。キーは MunicipalityId、静的 Property は ot_municipality にバインド済みで、時系列 Property は10章まで Unbound。この図は値の確認例で、現在表示される入口を保証するものではありません。',
-                    'Illustrative Municipality Configure page: MunicipalityId is the key, static properties are bound to ot_municipality, and the time-series property stays Unbound until Chapter 10. This image illustrates values to verify; it does not guarantee which entry controls are currently shown.'),
+        "caption": ('Municipality の Configure 画面例。キーは MunicipalityId、静的 Property は ot_municipality にバインドされ、時系列 Property は10章で設定するまで Unbound です。自分の画面で表示される binding の入口を使います。',
+                    'Municipality Configure example: MunicipalityId is the key, static properties are bound to ot_municipality, and the time-series property stays Unbound until Chapter 10. Use the binding entry shown in your own view.'),
         "alt": ('Municipality の Properties 表。キー MunicipalityId、Local の各 Property の型と Data source（ot_municipality）、時系列 Property は Unbound',
                 'Municipality Properties table: key MunicipalityId, Local properties with their types bound to ot_municipality, and an Unbound time-series property.'),
     },
@@ -85,8 +85,8 @@ FIGURES = {
                 'Municipality Instances tab: a table of municipality rows with eight columns, from MunicipalityId to PrefectureId.'),
     },
     'p30-07-relationships': {
-        "caption": ('Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されていますが、図の一部は表示範囲外です。参加者の配置完了を証明する図ではありません。24.6で配置済みなら既存の15関係を読み取り確認し、不完全な対象で不足する関係だけを作成します。',
-                    'Illustrative Ontology Home viewport. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, while part of the graph is outside the viewport. This does not prove your deployment is complete. If already deployed in 24.6, inspect the existing fifteen relationships; create only missing relationships in an incomplete target.'),
+        "caption": ('Ontology Home の表示例。下部に Visible: 10 of 10 entities | 15 of 15 relationships と表示されています（グラフの一部は画面外です）。24.6で配置済みなら既存の15関係を確認し、不足する関係だけを作成します。',
+                    'Ontology Home example. The status reads Visible: 10 of 10 entities | 15 of 15 relationships, with part of the graph outside the viewport. If deployed in Chapter 24.6, check the existing fifteen relationships and create only those that are missing.'),
         "alt": ('Ontology Home の Relationship グラフの表示例。参加者自身の15関係の存在・向き・列は別途確認する。',
                 'Illustrative Ontology Home relationship graph; separately verify the existence, direction and columns of your own fifteen relationships.'),
     },
@@ -121,8 +121,8 @@ FIGURES = {
                 'Activator History overview with the Running rule, Last 24 hours selector, six complete KPIs and the UTC Activation count chart. The target Activation details row is not included.'),
     },
     'p30-09-activation-detail-001': {
-        "caption": ('実際の001 activation 行から Subject と Type 欄を示す説明用の抜粋です。図の外に時刻や全処理チェーンの証明はありません。各自の環境で自分の001行を確認してください。',
-                    'Illustrative excerpt of the Subject and Type fields from an actual 001 activation row. The image does not show the event time or prove the full processing chain. Verify your own 001 row in your environment.'),
+        "caption": ('001 の activation 行に表示される Subject と Type 欄。Subject は /Files/increment/donation_events_001.csv、Type は Microsoft.Fabric.OneLake.FileCreated です。',
+                    'Subject and Type fields shown for the 001 activation row: /Files/increment/donation_events_001.csv and Microsoft.Fabric.OneLake.FileCreated.'),
         "alt": ('Subject /Files/increment/donation_events_001.csv と Type Microsoft.Fabric.OneLake.FileCreated の表示部分。',
                 'Visible Subject /Files/increment/donation_events_001.csv and Type Microsoft.Fabric.OneLake.FileCreated fields.'),
     },
@@ -133,8 +133,8 @@ FIGURES = {
                 'PL_Furusato_101 run view showing Copy data1 as Succeeded.'),
     },
     'p30-09-source-events': {
-        "caption": ('イベントソース画面の例です。003までのイベントがある状態で、画面には3 rows（3件）と表示され、選択行は donation_events_003.csv、Microsoft.Fabric.OneLake.FileCreated（ファイル作成）、PutBlob（Blob への書き込み）です。content length はファイルサイズ、text/csv は CSV 形式を示します。これは手順5で001だけを置いた直後の期待状態ではありません。002・003を図に合わせて追加せず、自分の001行を確認します。イベントの表示だけでは Pipeline 完了や Delta への materialization を確認できません。',
-                    'Example event-source view with events through 003: the screen reads 3 rows, and the selected row is donation_events_003.csv with Microsoft.Fabric.OneLake.FileCreated and PutBlob. The content length is the file size; text/csv is the media type. This is not the expected screen immediately after uploading only 001 in step 5. Do not upload 002 or 003 to match the image; check your own 001 row. An event display alone does not verify Pipeline completion or Delta materialization.'),
+        "caption": ('イベントソース画面の例。3件の行が表示され、donation_events_003.csv の行が選択されています。Subject はファイルのパス、Microsoft.Fabric.OneLake.FileCreated はイベントの種類、PutBlob は Blob への書き込み、content length はファイルサイズ、text/csv は形式を示します。手順では、自分が確認するファイルの行を開きます。',
+                    'Event-source example with three rows and donation_events_003.csv selected. Subject shows the file path; Microsoft.Fabric.OneLake.FileCreated is the event type; PutBlob is the Blob write operation; content length is the file size; and text/csv is the format. In the steps, open the row for the file you are checking.'),
         "alt": ('donation_events_003.csv の選択行と3件のイベント、FileCreated（ファイル作成）、PutBlob（Blob への書き込み）、content length（ファイルサイズ）、text/csv（CSV形式）を示すイベントソース画面。',
                 'Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.'),
     },
@@ -145,14 +145,14 @@ FIGURES = {
                 'Time-series property definition table showing example type and Timestamp column DonatedAt for IncomingDonationAmountYen.'),
     },
     'p30-11-executed-output': {
-        "caption": ('Notebook 05 の適用出力の参考例。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY を確認する箇所を示します。自分の最新ジョブと出力で確認してください。この図は自分の実行の成功や Gold 件数を証明しません。',
-                    'Illustrative Notebook 05 apply output showing where to check ANALYTICS_MODE=applied, outputTables=29 and ANALYTICS_READY. Verify your own latest job and output; this image does not establish your execution success or Gold counts.'),
+        "caption": ('Notebook 05 の適用出力例。ANALYTICS_MODE=applied、outputTables=29、ANALYTICS_READY が表示されています。自分の実行では、最新のジョブと出力を確認します。',
+                    'Notebook 05 apply-output example showing ANALYTICS_MODE=applied, outputTables=29 and ANALYTICS_READY. For your run, check the latest job and its output.'),
         "alt": ('Notebook のセルの出力。schemas、sourceTables=13、outputTables=29、ANALYTICS_MODE=applied、ANALYTICS_READY の行が並ぶ',
                 'Notebook cell output listing schemas, sourceTables=13, outputTables=29, ANALYTICS_MODE=applied and ANALYTICS_READY.'),
     },
     'p30-11-executed-output-detail': {
-        'caption': ('同じ参考例の APPLY_REQUESTED から ANALYTICS_READY までの連続した出力部分の拡大。generation は伏せられています。自分のジョブと出力を別に確認し、この図を自分の成功や Gold 件数の証拠として扱いません。',
-                    'Enlarged contiguous APPLY_REQUESTED-through-ANALYTICS_READY output from the same example, with generation redacted. Independently check your own job and output; do not treat this image as evidence of your success or Gold counts.'),
+        'caption': ('APPLY_REQUESTED から ANALYTICS_READY までの Notebook 05 出力例。generation は伏せられています。',
+                    'Notebook 05 output example from APPLY_REQUESTED through ANALYTICS_READY; generation is redacted.'),
         'alt': ('applied 出力の参考例。PLAN_SHA256、sourceTables、outputTables、generation の伏せ字と ANALYTICS_READY を含む。',
                 'Illustrative applied-output block, including PLAN_SHA256, sourceTables, outputTables, the redacted generation and ANALYTICS_READY.'),
     },
@@ -193,8 +193,8 @@ FIGURES = {
                 'Metrics table of the 寄附 entity: 10 metrics with Metric name, Source, Result type and Description columns.'),
     },
     'p30-12-metric-list-detail': {
-        'caption': ('同じ保存済み画面の Metrics パネル全体の連続した切り抜き。10件の表示数と見える行を保持しますが、非表示の行は補わず、省略表示と伏せ字もそのまま残します。',
-                    'Contiguous crop of the complete visible Metrics panel from the same retained screenshot. It preserves the 10-item count and visible rows; hidden rows are not supplied, and ellipses and redactions remain unchanged.'),
+        'caption': ('「寄附」の Metrics パネル。10件の表示数と、画面に表示された Metric 名・Source・Result type・Description が見えます。',
+                    'Metrics panel for 寄附, showing a count of 10 and the Metric names, Source, Result type and Description visible on screen.'),
         'alt': ('Metrics パネルの全可視範囲。10 metrics の件数、表示されている名前・Source・Result type・Description を保持し、伏せ字を含む。',
                 'Full visible Metrics panel retaining the 10-metric count and displayed names, Source, Result type and Description, including redactions.'),
     },
@@ -205,8 +205,8 @@ FIGURES = {
                 'Metric details for 受入増分寄附総額: a DAX expression filtering RealtimeIncrement, Applies to 寄附, and a description stating that only accepted increments quality-checked and deduplicated by Notebook 05 are included, separate from Eventhouse observations; the Synonyms field is also shown.'),
     },
     'p30-12-metrics-expression-detail': {
-        'caption': ('Metric の式、Applies to、説明が見える範囲です。Source は伏せ字、synonyms は未提供です。コピーして使う DAX の原文は本文にも掲載しています。',
-                    'This view shows the Metric expression, Applies to and description. Source is redacted and synonyms are unavailable. The copyable DAX source is also included in the instructions.'),
+        'caption': ('Metric の詳細画面。式、Applies to、説明が表示され、Source は伏せ字、Synonyms は未提供です。DAX は本文の式を使います。',
+                    'Metric details showing the expression, Applies to and description; Source is redacted and Synonyms are unavailable. Use the DAX expression in the instructions.'),
         'alt': ('DAX 式、Applies to の寄附、説明文を含む Metric 詳細の見える範囲。Source の伏せ字と Synonyms unavailable の表示も保持。',
                 'Visible Metric details including the DAX expression, Applies to 寄附 and description, preserving the redacted Source and Synonyms unavailable message.'),
     },
@@ -248,12 +248,12 @@ FIGURES = {
     },
     'p30-15-attachment-grounding': {
         "caption": (
-            "添付資料を使ったエージェントの回答例です。画面には `business-requirements.pdf`、現行 ZIP には `attachments/business-requirements.txt` が表示され、演習では ZIP 内の TXT を選びます。日本語の回答は StaticSeed（静的データ）、RealtimeIncrement（品質処理済み増分）、Gold（Notebook 05 の品質処理後）を区別しますが、既存 Entity に AdministrativeArea と Municipality を挙げています。「既存項目を変更しない」という提案だけでは主 Ontology の保持を証明しません。実定義が10 Entity・15 Relationship と一致するかを照合し、不一致なら停止してください。SupplierProvidesGift はカタログ登録であり、実際の発送・履行の実績を示しません。",
-            "Attachment-based agent-answer example. The conversation shows `business-requirements.pdf`, while the current ZIP contains `attachments/business-requirements.txt`; select the supplied TXT for the exercise. The Japanese answer distinguishes static donations, Eventhouse observations and Notebook 05 quality-processed Gold, including StaticSeed as static data and RealtimeIncrement as quality-accepted increments. However, it lists AdministrativeArea and Municipality as existing entities and claims that existing entities, keys and bindings are unchanged. This does not establish preservation of the main ontology. Verify the claim against the actual ten-entity, fifteen-relationship definition, and stop on a mismatch. SupplierProvidesGift is catalog registration rather than fulfillment; the answer does not establish shipment.",
+            "添付資料を使ったエージェントの回答例です。画面に表示されたファイル名は `business-requirements.pdf` です。演習では配布された `attachments/business-requirements.txt` を選びます。日本語の回答は StaticSeed（静的データ）、RealtimeIncrement（品質処理済み増分）、Gold（Notebook 05 の品質処理後）を区別しますが、既存 Entity に AdministrativeArea と Municipality を挙げています。「既存項目を変更しない」という提案だけでは主 Ontology の保持を証明しません。実定義が10 Entity・15 Relationship と一致するかを照合し、不一致なら停止してください。SupplierProvidesGift はカタログ登録であり、実際の発送・履行の実績を示しません。",
+            "Attachment-based agent-answer example. The displayed filename is `business-requirements.pdf`; use the distributed `attachments/business-requirements.txt` for the exercise. The Japanese answer distinguishes static donations, Eventhouse observations and Notebook 05 quality-processed Gold, including StaticSeed as static data and RealtimeIncrement as quality-accepted increments. However, it lists AdministrativeArea and Municipality as existing entities and claims that existing entities, keys and bindings are unchanged. This does not establish preservation of the main ontology. Verify the claim against the actual ten-entity, fifteen-relationship definition, and stop on a mismatch. SupplierProvidesGift is catalog registration rather than fulfillment; the answer does not establish shipment.",
         ),
         "alt": (
-            "Plan/Act composer を含むエージェントの会話画面に `business-requirements.pdf` と表示されていますが、現行 ZIP の添付は `attachments/business-requirements.txt` です。回答例は既存 Entity の列挙が主 Ontology と一致しません。",
-            "Agent conversation with a Plan/Act composer, showing `business-requirements.pdf`; the current ZIP supplies `attachments/business-requirements.txt`. The answer example’s existing-entity list does not match the main ontology.",
+            "Plan/Act composer を含むエージェントの会話画面。表示された添付ファイル名は `business-requirements.pdf` です。",
+            "Agent conversation with a Plan/Act composer; the displayed attachment filename is `business-requirements.pdf`.",
         ),
     },
     'p30-15-attachment-response-bottom': {

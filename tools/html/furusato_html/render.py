@@ -107,7 +107,7 @@ def rich(text: str, *, verbatim: bool = False) -> str:
         if index % 2 == 1:
             if segment.startswith("--") and not any(char.isspace() for char in segment):
                 class_attr = ' class="cli-option"'
-            elif segment.isascii() and len(segment) <= 24 and not any(
+            elif len(segment) <= 24 and not any(
                 char.isspace() for char in segment
             ):
                 class_attr = ' class="inline-token"'

@@ -136,10 +136,12 @@ class ParticipantEditionTests(unittest.TestCase):
         lab = (ROOT / "Lab" / "15-design-improve-and-query-with-ontology-copilot-the-built-in-ontol"
                / "03-15-2-p30-15-attachment-grounding.md").read_text(encoding="utf-8")
         self.assertIn("business-requirements.pdf", lab)
-        self.assertIn("current ZIP contains `attachments/business-requirements.txt`", lab)
-        self.assertIn("select the supplied TXT for the exercise", lab)
-        self.assertIn("現行 ZIP には `attachments/business-requirements.txt`", lab)
-        self.assertIn("ZIP 内の TXT を選びます", lab)
+        self.assertIn("The displayed filename is `business-requirements.pdf`", lab)
+        self.assertIn("use the distributed `attachments/business-requirements.txt`", lab)
+        self.assertIn("画面に表示されたファイル名は `business-requirements.pdf`", lab)
+        self.assertIn("配布された `attachments/business-requirements.txt` を選びます", lab)
+        self.assertNotIn("current ZIP", lab)
+        self.assertNotIn("現行 ZIP", lab)
         self.assertNotIn("p30-15-attachments.png", lab)
         self.assertIn("does not establish preservation of the main ontology", lab)
 
@@ -315,10 +317,10 @@ class ParticipantEditionTests(unittest.TestCase):
             "p30-09-activation-detail-001"
         ]["limitations"])
         caption_ja, caption_en = figures.FIGURES["p30-09-activation-detail-001"]["caption"]
-        self.assertIn("実際の001 activation 行", caption_ja)
-        self.assertIn("図の外に時刻や全処理チェーンの証明はありません", caption_ja)
-        self.assertIn("actual 001 activation row", caption_en)
-        self.assertIn("does not show the event time or prove the full processing chain", caption_en)
+        self.assertIn("/Files/increment/donation_events_001.csv", caption_ja)
+        self.assertIn("Microsoft.Fabric.OneLake.FileCreated", caption_ja)
+        self.assertIn("Subject and Type fields", caption_en)
+        self.assertNotIn("prove", caption_en)
         for internal_detail in ("2026-11-02", "UUID", "three", "left-hand", "receipt", "participant-102"):
             self.assertNotIn(internal_detail, caption_en)
         lesson = (ROOT / "Lab" / "09-pipeline-and-onelake-event-integration"
@@ -394,6 +396,37 @@ class ParticipantEditionTests(unittest.TestCase):
         self.assertIn("run a SQL aggregation over the full table", english_steps)
         self.assertIn("are expectations, not measurements", english_steps)
         self.assertNotIn("currently verified read-only SQL catalog", english_steps)
+
+    def test_chapter11_uses_participant_steps_and_keeps_unavailable_results_unverified(self):
+        steps = text.CHAPTERS[11]["steps"]
+        japanese = " ".join(step["text"][0] for step in steps)
+        english = " ".join(step["text"][1] for step in steps)
+        for content in (japanese, english):
+            self.assertNotIn("SQL catalog", content)
+            self.assertNotIn("current run output", content)
+        self.assertIn("Notebook 05 の実行結果から ops.dq_rule_results を読める場合", japanese)
+        self.assertIn("テーブルが見つからない", japanese)
+        self.assertIn("If ops.dq_rule_results is available in the Notebook 05 run output", english)
+        self.assertIn("If the table is missing", english)
+        self.assertIn("権限を変更せず", japanese)
+        self.assertIn("do not change permissions", english)
+        self.assertIn("94,900件・1,596,157,000円は期待値", japanese)
+        self.assertIn("are expectations, not measurements", english)
+
+    def test_reviewed_captions_describe_the_display_without_internal_disclaimers(self):
+        for ident, expected in {
+            "p30-06-entities": ("Municipality Configure", "MunicipalityId"),
+            "p30-07-relationships": ("Ontology Home", "Visible: 10 of 10 entities"),
+            "p30-09-activation-detail-001": ("Subject and Type fields", "FileCreated"),
+            "p30-12-metric-list-detail": ("Metrics panel", "count of 10"),
+            "p30-12-metrics-expression-detail": ("Metric details", "Synonyms are unavailable"),
+        }.items():
+            japanese, english = figures.FIGURES[ident]["caption"]
+            self.assertIn(expected[0], english)
+            self.assertIn(expected[1], english)
+            self.assertNotIn("prove", english.lower())
+            self.assertNotIn("証明", japanese)
+        self.assertNotIn("参加者の配置完了を証明", figures.FIGURES["p30-07-relationships"]["caption"][0])
 
     def test_chapter12_measure_definitions_are_copyable_code_and_figure2_is_participant_facing(self):
         definitions = (

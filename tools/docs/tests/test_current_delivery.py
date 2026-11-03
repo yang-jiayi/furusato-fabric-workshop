@@ -19,6 +19,7 @@ from furusato_html.preview30 import render
 from furusato_docs import preview30_release as release
 from furusato_docs.current_publication import CurrentPublication, publication_for_model
 from furusato_docs import participant30_evaluation
+from furusato_docs import participant30_figures as figure_source
 from furusato_docs.participant30_deployment import append_deployment_sections
 from furusato_docs.participant30_text import PARAMETER_NOTES
 from furusato_docs.lab import write_lab
@@ -425,16 +426,41 @@ class CurrentDeliveryTests(unittest.TestCase):
     def test_inline_cli_options_do_not_break_at_double_dash(self):
         self.assertEqual('<code class="cli-option">--check</code>', rich("`--check`"))
 
-    def test_short_ascii_inline_tokens_get_bounded_no_wrap_class(self):
+    def test_short_inline_tokens_get_bounded_no_wrap_class(self):
         self.assertEqual(
             '<code class="inline-token">452025-01</code>',
             rich("`452025-01`"),
         )
-        self.assertEqual('<code>寄附</code>', rich("`寄附`"))
+        self.assertEqual(
+            '<code class="inline-token">寄附</code>',
+            rich("`寄附`"),
+        )
+        self.assertEqual(
+            '<code class="inline-token">COUNTROWS(&#x27;寄附&#x27;)</code>',
+            rich("`COUNTROWS('寄附')`"),
+        )
         self.assertEqual(
             '<code>workshop/very/long-reference-token-1234567890</code>',
             rich("`workshop/very/long-reference-token-1234567890`"),
         )
+
+    def test_reviewed_identifiers_remain_atomic_inline_tokens(self):
+        for token in (
+            "452025-01",
+            "2026-08-31T23:58:20Z",
+            "apply-metadata",
+            "COUNTROWS('寄附')",
+            "data-dictionary.txt",
+            "profile-manifest.json",
+        ):
+            with self.subTest(token=token):
+                self.assertEqual(
+                    f'<code class="inline-token">{token.replace(chr(39), "&#x27;")}</code>',
+                    rich(f"`{token}`"),
+                )
+        css = (ROOT / "tools/html/assets/preview30.css").read_text(encoding="utf-8")
+        self.assertIn("p code.inline-token, li code.inline-token", css)
+        self.assertIn("white-space: nowrap", css)
 
     def test_lab_client_resources_have_a_localized_heading(self):
         model = delivery.load_model(ROOT)
@@ -457,11 +483,14 @@ class CurrentDeliveryTests(unittest.TestCase):
             alt = figure.xpath('.//img/@alt')[0]
             self.assertIn('business-requirements.pdf', caption)
             self.assertIn('attachments/business-requirements.txt', caption)
-            self.assertIn('business-requirements.txt', alt)
-            self.assertIn('ZIP', caption)
+            self.assertIn('business-requirements.pdf', alt)
+            self.assertNotIn('current ZIP', caption)
+            self.assertNotIn('current ZIP', alt)
+            self.assertIn('use the distributed', caption)
             self.assertIn('Attachment-based agent-answer example', caption)
             self.assertIn('添付資料を使ったエージェントの回答例', caption)
             self.assertIn('Agent conversation with a Plan/Act composer', alt)
+            self.assertTrue(figure_source.FIGURES['p30-16-gql']['caption'][0].endswith('。'))
             self.assertIn('Plan/Act composer を含むエージェントの会話画面', alt)
             self.assertNotIn('PDF-viewer', caption)
             self.assertNotIn('PDF ビューア', caption)
@@ -491,7 +520,7 @@ class CurrentDeliveryTests(unittest.TestCase):
             self.assertNotIn('2026-11-01', caption)
             self.assertNotIn('post-deployment evidence', caption)
 
-    def test_figure8_distinguishes_the_003_example_from_the_001_step(self):
+    def test_figure8_describes_the_visible_003_example_and_001_action(self):
         model = delivery.load_model(ROOT)
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / 'guide'
@@ -500,12 +529,11 @@ class CurrentDeliveryTests(unittest.TestCase):
             caption = ''.join(
                 tree.get_element_by_id('figure-8').xpath('./figcaption//text()')
             )
-            for phrase in ('3 rows', 'donation_events_003.csv', '001だけを置いた直後'):
+            for phrase in ('3件の行', 'donation_events_003.csv', '自分が確認するファイルの行'):
                 self.assertIn(phrase, caption)
             self.assertIn('Microsoft.Fabric.OneLake.FileCreated', caption)
-            self.assertIn('ファイル作成', caption)
             self.assertIn('PutBlob', caption)
-            self.assertIn('Blob への書き込み', caption)
+            self.assertNotIn('期待状態ではありません', caption)
 
     def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
         with tempfile.TemporaryDirectory() as temp:

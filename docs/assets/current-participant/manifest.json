@@ -61,7 +61,7 @@
     {
       "id": "p30-09-source-events",
       "file": "p30-09-source-events.png",
-      "sha256": "6fc2608f90bbfb7187cefe852322e2426f5ecc296984e660b2bb4303999949b4",
+      "sha256": "1966bec2fe7e2d0f3c259ce0e4c3a48abf9bde24ea8bd526a8405d3503143ba1",
       "source": "native-fabric-event-source-003-ui",
       "actualUI": true,
       "capturedOn": "2026-11-01",
@@ -69,7 +69,12 @@
       "width": 1200,
       "height": 940,
       "redactions": ["Account and navigation chrome"],
-      "evidenceScope": "Three visible source-event rows; selected donation_events_003.csv event fields only. Does not prove Pipeline completion or Delta materialization."
+      "pixelEdits": ["Participant annotation headings translated to Japanese; editorial footer removed. Event table pixels unchanged."],
+      "annotations": {
+        "language": "ja",
+        "labels": ["件数・時刻・イベント ID", "Subject・イベント種別・API", "ファイルサイズ・形式"]
+      },
+      "evidenceScope": "Three visible source-event rows with donation_events_003.csv selected; Subject, event type, API, file size and content type are visible."
     },
     {
       "id": "p30-09-pipeline-003-succeeded",

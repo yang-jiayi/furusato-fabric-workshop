@@ -10,7 +10,7 @@
 
 ![Subject /Files/increment/donation_events_001.csv と Type Microsoft.Fabric.OneLake.FileCreated の表示部分。](../assets/p30-09-activation-detail-001.png)
 
-実際の001 activation 行から Subject と Type 欄を示す説明用の抜粋です。図の外に時刻や全処理チェーンの証明はありません。各自の環境で自分の001行を確認してください。
+001 の activation 行に表示される Subject と Type 欄。Subject は /Files/increment/donation_events_001.csv、Type は Microsoft.Fabric.OneLake.FileCreated です。
 
 <details>
 <summary>English</summary>
@@ -25,6 +25,6 @@ Rule History overview showing six KPIs, the Time selector and the UTC Activation
 
 ![Visible Subject /Files/increment/donation_events_001.csv and Type Microsoft.Fabric.OneLake.FileCreated fields.](../assets/p30-09-activation-detail-001.png)
 
-Illustrative excerpt of the Subject and Type fields from an actual 001 activation row. The image does not show the event time or prove the full processing chain. Verify your own 001 row in your environment.
+Subject and Type fields shown for the 001 activation row: /Files/increment/donation_events_001.csv and Microsoft.Fabric.OneLake.FileCreated.
 
 </details>

@@ -51,25 +51,37 @@ class ParticipantDetailSourceTests(unittest.TestCase):
         observation = next(step["text"][0] for step in steps
                            if "p30-09-source-events" in step.get("figures", []))
         caption = figures.FIGURES["p30-09-source-events"]["caption"][0]
-        for value in (observation, caption):
-            self.assertIn("003までのイベント", value)
-            self.assertIn("3 rows", value)
-            self.assertIn("手順5で001だけ", value)
-            self.assertIn("図に合わせて002・003を追加せず", value)
-            self.assertIn("自分の001の行", value)
+        self.assertIn("3件の行", caption)
+        self.assertIn("donation_events_003.csv", caption)
+        self.assertIn("自分が確認するファイルの行", caption)
+        self.assertIn("001.csv の FileCreated 行", observation)
+        self.assertIn("donation_events_003.csv を選択した画面例", observation)
+        self.assertIn("自分の001の行", observation)
         self.assertIn("再アップロードせずに停止", observation)
         self.assertNotIn("最大3行", observation)
         observation_en = next(step["text"][1] for step in steps
                               if "p30-09-source-events" in step.get("figures", []))
         caption_en = figures.FIGURES["p30-09-source-events"]["caption"][1]
-        for value in (observation_en, caption_en):
-            self.assertIn("events through 003", value)
-            self.assertIn("3 rows", value)
-            self.assertIn("only 001 in step 5", value)
-            self.assertIn("Do not upload 002 or 003 to match the image", value)
-            self.assertIn("check your own 001 row", value)
+        self.assertIn("three rows", caption_en)
+        self.assertIn("donation_events_003.csv selected", caption_en)
+        self.assertIn("the file you are checking", caption_en)
+        self.assertIn("FileCreated row for /Files/increment/donation_events_001.csv", observation_en)
+        self.assertIn("three rows with donation_events_003.csv selected", observation_en)
+        self.assertIn("your own 001 row", observation_en)
         self.assertIn("stop without re-uploading", observation_en)
         self.assertNotIn("may show up to", observation_en)
+        manifest = json.loads(
+            (ROOT / "docs/assets/current-participant/manifest.json").read_text(encoding="utf-8")
+        )
+        entry = next(item for item in manifest["figures"] if item["id"] == "p30-09-source-events")
+        self.assertEqual(
+            ["件数・時刻・イベント ID", "Subject・イベント種別・API", "ファイルサイズ・形式"],
+            entry["annotations"]["labels"],
+        )
+        self.assertIn("editorial footer removed", entry["pixelEdits"][0])
+        self.assertIn("Event table pixels unchanged", entry["pixelEdits"][0])
+        with Image.open(figure_path("p30-09-source-events")) as image:
+            self.assertEqual((1200, 940), image.size)
 
     def test_existing_relationships_are_inspect_only_in_both_languages(self):
         chapter = participant_text.CHAPTERS[7]
@@ -93,13 +105,28 @@ class ParticipantDetailSourceTests(unittest.TestCase):
     def test_apply_output_is_an_illustration_not_a_participant_run_claim(self):
         for ident in ("p30-11-executed-output", "p30-11-executed-output-detail"):
             spec = figures.FIGURES[ident]
-            self.assertIn("参考例", spec["caption"][0])
-            self.assertIn("example" if ident.endswith("detail") else "Illustrative",
-                          spec["caption"][1])
-            self.assertIn("own", spec["caption"][1])
-            self.assertIn("Gold counts", spec["caption"][1])
+            self.assertIn("出力例", spec["caption"][0])
+            self.assertIn("example", spec["caption"][1])
             for history in ("retained screenshot", "fresh run", "historical", "既存", "保存済み"):
                 self.assertNotIn(history, str(spec))
+        applied = figures.FIGURES["p30-11-executed-output"]["caption"]
+        self.assertIn("自分の実行では、最新のジョブと出力を確認", applied[0])
+        self.assertIn("For your run, check the latest job and its output", applied[1])
+        gold = figures.FIGURES["p30-11-gold"]["caption"]
+        self.assertIn("自分の Notebook 05 の最新実行ジョブと出力", gold[0])
+        self.assertIn("check their own latest Notebook 05 job and output", gold[1])
+        monitor = figures.FIGURES["p30-11-notebook05-monitor-success"]["caption"]
+        self.assertIn("Gold の件数・金額・generation 整合性", monitor[0])
+        self.assertIn("OneLake の独立検証", monitor[0])
+        self.assertIn("proves only the notebook run completed", monitor[1])
+        self.assertIn("verify Gold counts, amounts and generation consistency independently", monitor[1])
+        preview = figures.FIGURES["p30-11-schema-preview"]["caption"]
+        for value in preview:
+            self.assertIn("gold.donations", value)
+            self.assertIn("1,000", value)
+        self.assertIn("全件数・合計金額ではなく", preview[0])
+        self.assertIn("not the full row count or total amount", preview[1])
+        self.assertIn("SQL analytics endpoint", preview[1])
 
     def test_proposal_crop_does_not_claim_a_mode_and_procedure_rechecks_plan(self):
         spec = details.DETAILS["p30-15-noattachment-preview"]
@@ -151,12 +178,19 @@ class ParticipantDetailSourceTests(unittest.TestCase):
         for ident in ("p30-15-attachment-grounding", "p30-15-attachment-response-bottom",
                       "p30-15-preview"):
             self.assertIn("fifteen", figures.FIGURES[ident]["caption"][1])
-            self.assertIn("不一致", figures.FIGURES[ident]["alt"][0])
-            self.assertIn("mismatched", figures.FIGURES[ident]["alt"][1].lower())
-        self.assertIn("not verified", figures.FIGURES[
-            "p30-15-attachment-grounding"]["alt"][1])
-        self.assertIn("stop on assertions inconsistent", figures.FIGURES[
-            "p30-15-attachment-grounding"]["caption"][1])
+            if ident == "p30-15-attachment-grounding":
+                self.assertIn(
+                    "This does not establish preservation of the main ontology",
+                    figures.FIGURES[ident]["caption"][1],
+                )
+                self.assertIn("stop on a mismatch", figures.FIGURES[ident]["caption"][1])
+                self.assertIn("displayed attachment filename", figures.FIGURES[ident]["alt"][1])
+            else:
+                self.assertTrue(
+                    "不一致" in figures.FIGURES[ident]["alt"][0]
+                    or "一致しません" in figures.FIGURES[ident]["alt"][0]
+                )
+                self.assertIn("mismatched", figures.FIGURES[ident]["alt"][1].lower())
         self.assertIn("not a passing result", figures.FIGURES[
             "p30-15-attachment-response-bottom"]["caption"][1])
         self.assertIn("not a passing example", figures.FIGURES[
@@ -165,11 +199,10 @@ class ParticipantDetailSourceTests(unittest.TestCase):
             "p30-15-preview"]["caption"][0])
         self.assertIn("feedback notification overlaps the upper part of the answer pane",
                       figures.FIGURES["p30-15-preview"]["caption"][1])
-        self.assertIn("一部は重なり・省略", figures.FIGURES["p30-16-gql"]["caption"][0])
+        self.assertIn("一部が重なったり省略されたり", figures.FIGURES["p30-16-gql"]["caption"][0])
         self.assertIn("some overlapping or ellipsized", figures.FIGURES["p30-16-gql"]["caption"][1])
-        self.assertIn("Table view で個別に確かめる", figures.FIGURES["p30-16-gql"]["caption"][0])
-        self.assertIn("verify names and IDs individually in Table view",
-                      figures.FIGURES["p30-16-gql"]["caption"][1])
+        self.assertIn("Table view（表形式）で照合してください", figures.FIGURES["p30-16-gql"]["caption"][0])
+        self.assertIn("Verify names and IDs in Table view", figures.FIGURES["p30-16-gql"]["caption"][1])
 
     def test_authentic_detail_recipes_are_exact_contiguous_pixel_crops(self):
         for ident, spec in details.DETAILS.items():
@@ -203,10 +236,8 @@ class ParticipantDetailSourceTests(unittest.TestCase):
         with Image.open(source) as image:
             self.assertEqual((0, 0, 0), image.convert("RGB").getpixel((1123, 530)))
             self.assertLess(spec["crop"][2], 1123)
-        self.assertEqual(
-            details.crop_png(ident),
-            (ROOT / "Lab" / "assets" / "p30-09-copy-002-output-detail.png").read_bytes(),
-        )
+        self.assertIn(ident, details.SUPPRESSED_PARTICIPANT_DETAILS)
+        self.assertFalse((ROOT / "Lab" / "assets" / "p30-09-copy-002-output-detail.png").exists())
 
     def test_activation001_crop_has_exact_retained_source_provenance(self):
         ident = "p30-09-activation-detail-001"
@@ -387,8 +418,11 @@ class ParticipantDetailSourceTests(unittest.TestCase):
         primary = details.DETAILS['pc-05-notebook01-ready']
         self.assertTrue(primary['primary'])
         self.assertLess(primary['crop'][3], 283)
-        left, right = [details.DETAILS[key]['crop'] for key in
-                       details.DETAILS_BY_PARENT['pc-05-notebook01-ready']]
+        left_key = 'pc-05-notebook01-ready-detail'
+        right_key = 'pc-05-notebook01-ready-detail-continuation'
+        self.assertIn(left_key, details.SUPPRESSED_PARTICIPANT_DETAILS)
+        self.assertIn(right_key, details.SUPPRESSED_PARTICIPANT_DETAILS)
+        left, right = [details.DETAILS[key]['crop'] for key in (left_key, right_key)]
         self.assertEqual(100, left[2] - right[0])
         self.assertEqual((left[1], left[3]), (right[1], right[3]))
         self.assertEqual((338, 378), (left[1], left[3]))
@@ -397,7 +431,7 @@ class ParticipantDetailSourceTests(unittest.TestCase):
                 excluded = source.crop(bounds).convert('RGB')
                 self.assertIsNone(ImageChops.difference(
                     excluded, Image.new('RGB', excluded.size, 'white')).getbbox())
-        for ident in ('pc-05-notebook01-ready', *details.DETAILS_BY_PARENT['pc-05-notebook01-ready']):
+        for ident in ('pc-05-notebook01-ready', left_key, right_key):
             text = str(figures.FIGURES[ident])
             for legacy in ('v3.0.0', 'participant=031', 'generation=1'):
                 self.assertNotIn(legacy, text)
@@ -439,7 +473,7 @@ class ParticipantDetailSourceTests(unittest.TestCase):
     def test_current_guide_contains_only_the_currently_reviewed_figure_set(self):
         current = lab.load_model(ROOT)
         labels = {block['source_key']: block['number'] for block in current[0].figures}
-        self.assertEqual(43, current[-1]['counts']['figures'])
+        self.assertEqual(37, current[-1]['counts']['figures'])
         self.assertNotIn('p30-17-ci-sql-output', labels)
         self.assertNotIn('p30-22-import', labels)
         self.assertEqual(33, labels['p30-16-gql'])
@@ -482,8 +516,8 @@ class ParticipantDetailSourceTests(unittest.TestCase):
             for ident, field in (
                     ('pc-01-architecture-en', 'language'),
                     ('pc-01-architecture-ja', 'sourceSha256'),
-                    ('pc-05-notebook01-ready-detail', 'cropBox'),
-                    ('pc-05-notebook01-ready-detail', 'sourceSha256')):
+                    ('p30-12-metric-list-detail', 'cropBox'),
+                    ('p30-12-metric-list-detail', 'sourceSha256')):
                 mutated = copy.deepcopy(writer.assets)
                 mutated[ident][field] = 'invalid'
                 with self.subTest(asset=ident, field=field), self.assertRaises((ValueError, KeyError)):

@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "4d59ce1fcdb2e4ec02d006d33225f57c528f8661",
+  "sourceCommit": "20a933c20f448387b0067916b52f5e9f97d891fb",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "06539ace84452dbc748a861a12ae1301fb6e9f4fd771fc9f1f2f8bb3cd1902e0",
+  "sourceTreeSha256": "ef369757be983061c074ad7ba0e0cd7173130d96bf6a8604dde216a2022f6a11",
   "candidateSourceSha256": "7ae12a2cca31589d23a03b108c963dc6087216876094511dfb61e1d0f30798ea",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -340,7 +340,7 @@
     "tools/html/furusato_html/mirror.py": "20430bb3b3dbe8dc7764d065eb65cc077186779dd75f0bdde44ef13aea63bbb7",
     "tools/html/furusato_html/model.py": "845fbc8157f844e798bf36157ec0253d1bd0fe7bdd23417679e24b41adf84d06",
     "tools/html/furusato_html/page.py": "252d2b573178f86117baae00696400c08d85d12d13fe50010bef01f504973696",
-    "tools/html/furusato_html/preview30.py": "70c9ede3d7a8e0db929c53150a9e93905a8606cc40d72bd2d2600fa4c1400baf",
+    "tools/html/furusato_html/preview30.py": "3a03a78acc6c6fb8079c44c71c2e31be44f602d2c8e34ee080501bcc3c468bd4",
     "tools/html/furusato_html/render.py": "94dbffc44ecf740bc54cd043e1e3c448318e8e3aa238ab562a0a19d22313e628",
     "tools/html/requirements.txt": "2b3360f794843940efd5d56a22adcef99ab71cc0efc4e8dc709f10f3631d4d89",
     "tools/html/sync_i18n.py": "3ed237d1b639b045da0c8d1eca87fc38afc1c0fa4b2624edcd069efab00e9a5d",
@@ -953,9 +953,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "4d59ce1fcdb2e4ec02d006d33225f57c528f8661",
+    "baseCommit": "20a933c20f448387b0067916b52f5e9f97d891fb",
     "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "06539ace84452dbc748a861a12ae1301fb6e9f4fd771fc9f1f2f8bb3cd1902e0"
+    "sourceTreeSha256": "ef369757be983061c074ad7ba0e0cd7173130d96bf6a8604dde216a2022f6a11"
   }
 }

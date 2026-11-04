@@ -34,6 +34,21 @@ and authentication outside Git.
 
 ## 手順 / Steps
 
+`configurationLayer` に Agent-routing-formatting または model-prep を記録します。
+モデルを変える場合は baseline/finalModelDefinitionFile、
+baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に
+別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。
+
+Record Agent-routing-formatting or model-prep as `configurationLayer`. For model
+changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile
+and applicationApprovalFile / rollbackApprovalFile to separately frozen private
+records. A blank template is not authorization to change anything.
+
+モデル変更後は12.7の LSDL 同期・Direct Lake 索引と pane の開き直しを確認してから
+評価を登録します。同期状態未確認は「適用済み」の根拠になりません。
+After a model change, verify the LSDL sync, Direct Lake indexing and reopened pane
+in 12.7 before registering evaluation. Unverified sync is not proof of effective application.
+
 1. フォルダーを Git 外へコピーします。各 template を複製し、ファイル名の
    `-template` を外します。用紙には実測値を記入し、元の空用紙は保持します。
 2. 完全評価は T01–T10 を3周（毎回別の会話）、続いて B01–B19 を1周です。
@@ -43,7 +58,7 @@ and authentication outside Git.
    空用紙から他の予定行を開始前に除きます。途中で短縮しません。
 3. 現在の公開済み設定を baseline として保存し、データ、ソース、選択列、例、
    スキーマ、メジャー、公開版、実行方法、タイムアウトを記録します。
-   今回の採用済み構成を初めて適用した後の確認は「再現確認」です。
+   同梱の構成は実験用・回答品質未承認です。初回の確認は「再現確認」です。
    過去のbaselineに戻す必要はなく、同じ構成を2回測って「改善」と呼びません。
 4. 1枠ごとに Clear chat / 新しい会話で、questions.csv の質問セルだけを1回送信。
    600秒まで待ち、タイムアウト・送信不明・フィルタ停止もその枠で記録します。
@@ -54,9 +69,14 @@ and authentication outside Git.
    により適用外となる3条件だけです。T10 のサービスブロックは7条件ともFAIL。
    内容と実行の根拠は別々に判定します。HTTP200、完成した文章、提示したクエリだけで
    実行成功とはしません。クエリや結果が見えなければ実行根拠をUNCLEARにします。
-6. 失敗をソース・期間・粒度・意味・実行に分類し、1つの原因に対する指示変更を
-   決めます。変更前後の全文を保存し、Draftの対象指示欄だけを変更してSave、Publish、
-   公開版を開き直して確認します。Global指示欄の上限は10,000 UTF-16単位です。
+6. 失敗をソース・期間・粒度・意味・実行に分類し、変更する層を事前登録します。
+   Agent共通の振り分け・応答形式だけなら、変更前後の全文を保存し、許可された
+   Draftの対象欄を変更してSave、Publish、公開版を開き直して確認します。
+   モデルのDAX・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側
+   Prep for AIで扱います。別のモデル・ソース候補、変更前定義とnative設定、
+   適用・復元の許可を固定し、native Apply後に開き直して読み戻します。
+   指示だけの既存49枠planやwrite gateはモデル変更に再利用しません。
+   Global指示欄の上限は10,000 UTF-16単位です。
    選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は
    対象の文を置き換えます。固定profile用helperは独自候補を
    配布設定へ戻すか一致確認に失敗するため、候補の適用・認定に使いません。同じ全49枠を
@@ -68,8 +88,10 @@ and authentication outside Git.
    改善・退行・不明から新たな根拠が得られた条件をすべて報告します。
 8. 登録した採用条件を満たす場合だけ新しい変更を採用します。推奨の初期条件は、
    FAIL→PASSが1件以上、PASS→FAILが0件、実行根拠と事実の正しさが悪化しないことです。
-   満たさなければ候補を採用せず、今回のbaselineの全文を同じDraft欄へ戻して
-   Save、Publish、公開版の確認をします。固定helperで戻すのは、baselineが配布profileと
+   満たさなければ候補を採用しません。Agent指示だけの変更なら、今回のbaselineの
+   全文を同じDraft欄へ戻してSave、Publish、公開版を確認します。モデル変更は
+   別途承認した復元手順で保存済み定義・native設定を戻し、読み戻します。
+   固定helperで戻すのは、baselineが配布profileと
    同一と確認済みの場合だけです。
    採用条件を結果を見てから緩めません。次の案は別の版として登録します。
 
@@ -80,8 +102,9 @@ and authentication outside Git.
    preregister practice-10, 10 slots and 84 conditions, and retain only original /
    repeat=1 rows before beginning. Do not shorten a campaign after seeing results.
 3. Save the current publication as baseline. Freeze data, source IDs, selections,
-   examples, schema, measures, interface and timeout. Verifying the already adopted
-   configuration is reproduction testing; two runs of unchanged instructions do
+   examples, schema, measures, interface and timeout. The supplied configuration is
+   experimental and answer quality is unaccepted. Initial verification is reproduction
+   testing; two runs of unchanged instructions do
    not establish an improvement. Restoring a historical baseline is unnecessary.
 4. Start a fresh chat for every slot and send only its question once. Wait up to
    600 seconds; retain timeouts, uncertain submissions and content blocks. Preserve
@@ -92,9 +115,14 @@ and authentication outside Git.
    by a valid clarification branch. A service block on T10 is seven FAILs. Score
    content and actual execution separately; HTTP200, prose or displayed query
    text alone is not execution proof. Missing execution details are UNCLEAR.
-6. Classify source, time, grain, meaning or execution failures. Propose one scoped
-   instruction change and save both complete texts. Edit only the intended Draft
-   field, Save, Publish, reopen and inspect the publication. The global instruction
+6. Classify source, time, grain, meaning or execution failures and preregister the
+   configuration layer. For Agent-wide routing/formatting only, preserve both texts,
+   edit the authorized Draft field, Save, Publish, reopen and inspect the publication.
+   For model DAX/filter semantics, use metadata, AI schema and model-level Prep for AI
+   in 12.6–12.7. Bind a separate model/source candidate, baseline definitions/native
+   settings and application/rollback approvals; use native Apply, reopen and read back.
+   Never reuse an instruction-only 49-slot plan or write gate for a changed model.
+   The global instruction
    field supports up to 10,000 UTF-16 units. Measure the selected profile's actual
    length and confirm it is within the limit; replace wording if it exceeds the limit.
    Do not use the fixed-profile helper to apply or certify
@@ -107,8 +135,10 @@ and authentication outside Git.
    UNCLEAR, every gain, regression and unknown-to-pass transition.
 8. Adopt a new candidate only if the preregistered rule holds. Suggested defaults:
    at least one FAIL→PASS, no PASS→FAIL and no deterioration in query execution records
-   or factual correctness. Otherwise restore this baseline's full text in the same
-   Draft fields, Save, Publish and inspect the publication. Use the fixed helper for
+   or factual correctness. Otherwise do not adopt the candidate. For Agent-instruction-only
+   changes, restore this baseline's full text in the same Draft fields, Save, Publish
+   and inspect the publication. Model changes require a separately approved rollback
+   of saved definitions/native settings and readback. Use the fixed helper for
    restoration only if that baseline is confirmed identical to its distributed
    profile. Do not relax the rule after observing outcomes.
 

@@ -86,6 +86,15 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
             else:
                 self.assertIn("DAX に作用することを意味しません", apply_prose[language])
 
+    def test_global_reference_routes_model_rules_to_native_prep(self):
+        prose = self.prose(self.sections["chapter-17-6"])
+        for language in ("ja", "en"):
+            self.assertIn("12.6", prose[language])
+            self.assertIn("12.7", prose[language])
+            self.assertIn("DAX", prose[language])
+        self.assertIn("not passed", prose["en"])
+        self.assertIn("do not partially rewrite", prose["en"])
+
     def test_apply_scope_requires_unchanged_semantic_fields_or_stop_for_review(self):
         diff_prose = self.prose(self.sections["chapter-17-10"])
         apply_prose = self.prose(self.sections["chapter-17-11"])

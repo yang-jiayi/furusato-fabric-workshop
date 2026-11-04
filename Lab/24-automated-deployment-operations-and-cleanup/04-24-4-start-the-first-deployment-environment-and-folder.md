@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-初めて参加する場合は4章の確認後に、この節から始めます。24.4〜24.6で自分の作業フォルダーへ基盤を作り、5〜8章で作成済みの内容を確認します。24.7と9〜10章で3ファイルを取り込み、11章で Notebook 05 を実行し、24.8で Semantic model と Data Agent を作ります。12〜13章で意味とモデルを確認し、17章で今回の調整済み設定を適用して、19章で評価します。
+初めて参加する場合は4章の確認後に、この節から始めます。24.4〜24.6で自分の作業フォルダーへ基盤を作り、5〜8章で作成済みの内容を確認します。24.7と9〜10章で3ファイルを取り込み、11章で Notebook 05 を実行し、24.8で Semantic model と Data Agent を作ります。12〜13章で意味とモデルを確認し、17章で実験用・回答品質未承認の設定を確認・適用して、19章で評価します。
 
 管理者から利用可能な Fabric ワークスペース、容量と必要な機能、読み取り・作成・編集の権限を用意してもらいます。これは組織のアクセス設定です。Pipeline、Activator、Semantic model を講師に作ってもらう必要はなく、以下のコマンドで自分の範囲へ配置します。ワークスペースの権限で許可された空の作業フォルダーと、他の参加者と重ならない001〜999の参加者IDを使います。容量の一覧を読めないなどの権限エラーは、権限を管理者に確認してから再開します。
 
@@ -135,7 +135,7 @@ Write-Host ("API displayName UTF-16 code units: " + (($WorkspaceName.ToCharArray
 
 ## 24.4 Start the first deployment: environment and folder
 
-For your first workshop, start here after the checks in Chapter 4. Create the core resources in your folder with 24.4–24.6, inspect them in Chapters 5–8, ingest the three files with 24.7 and Chapters 9–10, run Notebook 05 in Chapter 11, then create the semantic model and Data Agent in 24.8. Inspect meaning and models in Chapters 12–13, apply the adopted configuration in Chapter 17 and evaluate in Chapter 19.
+For your first workshop, start here after the checks in Chapter 4. Create the core resources in your folder with 24.4–24.6, inspect them in Chapters 5–8, ingest the three files with 24.7 and Chapters 9–10, run Notebook 05 in Chapter 11, then create the semantic model and Data Agent in 24.8. Inspect meaning and models in Chapters 12–13, review/apply the experimental configuration with unaccepted answer quality in Chapter 17 and evaluate in Chapter 19.
 
 Your administrator must provide an available Fabric workspace, capacity, required features and permission to read, create and edit resources. These are organizational access prerequisites. You do not need an instructor to create the Pipeline, Activator or semantic model; the commands below deploy them in your scope. Use an authorized empty folder and a participant ID from 001 to 999 that is distinct from other participants. If access fails, including capacity-list access, resolve it with the administrator before continuing.
 

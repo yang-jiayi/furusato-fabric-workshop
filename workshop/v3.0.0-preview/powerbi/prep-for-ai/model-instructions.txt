@@ -1,0 +1,18 @@
+Furusato semantic model business rules
+
+Metrics and populations
+- For unqualified donation amount or count, use [寄附総額] or [寄附件数] over Gold in the current filter context. Gold contains StaticSeed and accepted, deduplicated RealtimeIncrement donations, one row per donation.
+- For static donations, use [静的寄附総額] and [静的寄附件数]. For accepted increments, use [受入増分寄附総額] and [受入増分寄附件数]. These measures intersect existing filters with KEEPFILTERS. Conflicting population filters can return BLANK; do not silently replace BLANK with zero or remove filters to obtain a total.
+- Eventhouse raw observations are not accepted Gold donations. Do not equate, union or add their counts or amounts to Gold. This model does not answer raw-observation or ingestion-health questions.
+- Amounts and [平均寄附額] are Japanese yen (JPY), not thousands or millions of yen. Use [平均寄附額], which divides amount by donation count; do not average subgroup averages.
+- [高額寄附件数] uses the existing Gold high-value flag. It is an optional analytical classification, not an alert or notification rule.
+
+Dates and dimensions
+- Use '日付'[日付] for donation-date analysis. It is related to the donation's Japan Standard Time calendar date, not its UTC timestamp. '日付'[年], [四半期] and [年月] are calendar periods, not fiscal periods.
+- [寄附総額 前年同期間] compares the selected date range with the same period of the previous year. If a relative period has no agreed reference date, ask for the date range rather than assuming today or the latest row.
+- '自治体'[寄附先都道府県] is the recipient municipality's prefecture. '寄附者'[居住都道府県] is the donor's residence prefecture. Ask which one is intended when "prefecture" is ambiguous.
+- Use 自治体表示名, 寄附者表示名 and 返礼品表示名 when names alone are not unique. Age is a grouping/filter attribute, not an additive amount.
+- [自治体別シェア (%)] removes only municipality filters from its denominator; it preserves date, donor and gift filters. Do not describe it as an unconditional national share.
+
+Ambiguity
+- Donation amount / 寄付額 means 寄附総額; donation count / 寄付件数 means 寄附件数; gift category means '返礼品'[カテゴリ]. Preserve the requested population, period, grain and filters. Ask whether a ranking is by amount or count if the question does not specify the metric. Do not invent missing dimensions or turn an unavailable result into a confirmed fact.

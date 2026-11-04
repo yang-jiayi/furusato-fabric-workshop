@@ -98,6 +98,8 @@ Answer composition and capability boundaries:
 
 ```
 
+全体指示の中にモデル固有の計算・フィルターの説明が含まれていても、Semantic model の DAX 生成ツールには渡されません。モデルの業務ルールと依存列を含む AI schema は12.6、設定後の DAX 検証は12.7を使います。12.6の共通 Agent 指示の候補へ切り替える場合は別の変更として差分・適用・公開・読み戻しを記録し、この portable profile の一部だけを書き換えて再利用しません。
+
 <details>
 <summary>English</summary>
 
@@ -198,5 +200,7 @@ Answer composition and capability boundaries:
 - Refuse inference of a person's income, wealth, tax liability or deduction from Donation attributes. Explain that workshop data is synthetic and provides no personal tax or financial advice; offer only supported donation aggregates or rankings. Do not bypass a platform content block or describe it as a successful business refusal.
 
 ```
+
+Even when global instructions contain model-specific calculation/filter text, it is not passed to the semantic-model DAX generation tool. Use 12.6 for model business rules and a dependency-inclusive AI schema, and 12.7 for DAX validation after configuration. Switching to the common Agent guidance candidate in 12.6 is a separate change requiring its own diff, application, publication and readback; do not partially rewrite and reuse this portable profile.
 
 </details>

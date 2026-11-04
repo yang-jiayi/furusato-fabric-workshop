@@ -2,6 +2,8 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
+configurationLayer に Agent-routing-formatting または model-prep を記録します。モデル変更では baseline/finalModelDefinitionFile、baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。
+
 1. registration.json に日時、実施者、baseline/finalの設定名、仮説、変更する指示欄だけを記入します。完全評価の初期値は49枠・290条件・600秒です。基本演習なら開始前にpractice-10、10、84へ変更し、用紙からoriginal / repeat=1以外の予定行を外します。
 2. 第17章で確認した公開版の指示、ソースID、選択テーブル・列、例、Ontology、スキーマ、メジャーを保存し、registrationに保存先と公開定義のSHA-256を記入します。モデル名や容量が表示される場合も記録し、見えない値を推測しません。
 3. データ配布版のSHA-256と、付録Aの件数・金額を実環境で確認した記録を保存します。同じCSVでも二重取り込みなら同じデータではありません。評価中はデータ更新、指示編集、モデル変更を止めます。変化した場合は比較不能と記録して新しい評価を登録します。
@@ -60,6 +62,8 @@ python -c "import hashlib,pathlib,sys; print(hashlib.sha256(pathlib.Path(sys.arg
 <summary>English</summary>
 
 ## 19.6 Freeze the registration before starting
+
+Record Agent-routing-formatting or model-prep as configurationLayer. For model changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile and applicationApprovalFile / rollbackApprovalFile to separately frozen private records. A blank template is not authorization to change anything.
 
 1. Fill in registration.json with date, reviewer, phase configuration labels, hypothesis and permitted instruction fields. Defaults are 49 slots, 290 conditions and 600 seconds. For practice, change to practice-10, 10 and 84 and remove other planned rows before beginning.
 2. Save the published instructions, source IDs, table/column selections, examples, ontology, schema and measures verified in Chapter 17. Record private file locations and the published-definition SHA-256. Record visible model/capacity information without guessing unavailable values.

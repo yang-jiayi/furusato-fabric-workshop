@@ -148,6 +148,7 @@ def build(*, align_preview_contract_from: Path | None = None) -> dict:
         fact = fact.replace(old, new)
     measure_text = ""
     for name, dax, fmt, text in native_metrics:
+        text += " KEEPFILTERS は同じ列の既存条件との共通部分を取り、条件が矛盾する場合の BLANK を0に読み替えません。"
         measure_text += (f"\t/// {text}\n\tmeasure {name} = {dax}\n"
                          f"\t\tformatString: {fmt}\n\t\tdisplayFolder: Metrics検証\n\n")
     insertion = fact.index("\n\t///")
@@ -158,6 +159,12 @@ def build(*, align_preview_contract_from: Path | None = None) -> dict:
     if fact.count(amount) != 1:
         raise ValueError("Expected exactly one inherited amount visibility declaration")
     fact = fact.replace(amount, "\tcolumn 寄附金額\n\t\tdataType: int64\n")
+    # Business totals use explicit measures; the visible amount remains a filter.
+    amount_summary = "\t\tsummarizeBy: sum\n\t\tsourceColumn: DonationAmountYen"
+    if fact.count(amount_summary) != 1:
+        raise ValueError("Expected exactly one inherited amount summarization")
+    fact = fact.replace(amount_summary,
+                        "\t\tsummarizeBy: none\n\t\tsourceColumn: DonationAmountYen")
     write(fact_path, fact.encode("utf-8"))
     save(PREVIEW / "powerbi" / "native-metrics-contract.json", {
         "source": "Furusato_Analytics.SemanticModel",

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "furusato-semantic-ai/v1",
+  "model": "Furusato_Analytics.SemanticModel",
+  "status": "offline-candidate-requires-native-apply-and-evaluation",
+  "application": "Power BI semantic model > Prep data for AI > Simplify data schema / Add AI instructions > Apply",
+  "nativeConfigurationIncludedInDefinition": false,
+  "instructionsFile": "model-instructions.txt",
+  "agentGuidanceFile": "agent-instructions.txt",
+  "characterLimit": 10000,
+  "schemaIsAuthorizationBoundary": false,
+  "tables": {
+    "寄附": {
+      "columns": ["寄附金額", "決済方法", "データソース"],
+      "dependencyColumns": ["寄附ID", "寄附日", "高額寄附フラグ", "寄附者ID", "自治体ID", "返礼品ID"],
+      "measures": ["寄附総額", "寄附件数", "平均寄附額", "寄附総額 前年同期間", "自治体別シェア (%)", "高額寄附件数", "静的寄附総額", "静的寄附件数", "受入増分寄附総額", "受入増分寄附件数"]
+    },
+    "寄附者": {
+      "columns": ["寄附者名", "寄附者表示名", "年齢", "職業", "居住都道府県"],
+      "dependencyColumns": ["寄附者ID"],
+      "measures": []
+    },
+    "自治体": {
+      "columns": ["自治体名", "自治体表示名", "寄附先都道府県"],
+      "dependencyColumns": ["自治体ID"],
+      "measures": []
+    },
+    "返礼品": {
+      "columns": ["返礼品名", "返礼品表示名", "カテゴリ"],
+      "dependencyColumns": ["返礼品ID"],
+      "measures": []
+    },
+    "日付": {
+      "columns": ["日付", "年", "四半期", "月", "年月"],
+      "dependencyColumns": ["月番号"],
+      "measures": []
+    }
+  },
+  "excludedColumns": {
+    "寄附": ["寄附日時 UTC"],
+    "日付": ["日付キー"]
+  },
+  "agentSelectedTables": ["寄附", "寄附者", "自治体", "返礼品", "日付"],
+  "verifiedAnswers": {
+    "status": "optional-not-configured",
+    "requires": ["existing report bound to the same model", "authoring permission and Copilot-enabled workspace", "visible visual fields", "reviewed visual/page/report filters"],
+    "candidateVisual": "definition/pages/8c8fb549f9e148b18cb1/visuals/0daf60d7fb05c1c625e2/visual.json",
+    "triggerQuestions": [
+      "年月別の寄附総額と前年同期間の寄附総額を比較してください。",
+      "月別の寄附総額は前年の同じ期間と比べてどうですか。",
+      "寄附総額と前年同期間の寄附総額の月別推移を見せてください。",
+      "Compare monthly donation amounts with the same period last year.",
+      "How do donation amounts by year and month compare with the prior-year period?",
+      "Show donation amount and prior-year donation amount trends by year and month."
+    ],
+    "maximumFlexibleFilters": 3
+  },
+  "references": [
+    "https://learn.microsoft.com/en-us/fabric/data-science/semantic-model-best-practices",
+    "https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai-instructions",
+    "https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai-data-schema",
+    "https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai-verified-answers"
+  ]
+}

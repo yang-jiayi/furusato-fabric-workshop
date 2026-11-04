@@ -2,6 +2,8 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
+変更する層を先に選びます。Agent共通の振り分け・応答形式は、以下のDraft指示のみの手順です。モデル固有のDAX・計算・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側Prep for AIで扱い、Agent指示で代用しません。モデル変更は別の候補としてソース・定義・native設定の変更前後、適用と復元の許可を固定し、native Apply・開き直し・読み戻し後に新しい評価を登録します。指示だけの既存49枠plan・write gateを再利用しません。下記のDraftへの復元はモデルの復元にはなりません。
+
 1. baseline全体の失敗をソース、期間、粒度、意味、実行に分類します。1つの仮説を決め、変更前後の指示全文と理由を保存します。Global指示欄の上限は10,000 UTF-16単位です。選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は既存の文を必要な範囲で置き換えます。第17章の長さ確認を行い、保存エラーを無視しません。製品のSchemaUnavailableや認証エラーを、答えを暗記させる指示で回避しません。
 2. 自分の候補はData AgentのDraft画面で対象の指示欄だけを変更し、Save、Publish、画面を開き直して公開版を確認します。変更後の全文と設定名・ハッシュを保存し、ソースなど他の欄が変わっていないことを確認します。第17章の固定profile用helperを再実行すると、今回の候補を配布設定へ戻す、または一致確認に失敗するため、独自候補の適用・認定には使いません。
 3. データ、ソース選択、例、メジャー、実行方法、質問、条件を同じに保ち、finalの全49枠を実施します。限定的な事前確認をした場合は正式枠とは別に記録し、全体の代用にしません。
@@ -17,6 +19,8 @@
 <summary>English</summary>
 
 ## 19.8 Compare one revision and decide whether to adopt it
+
+Choose the layer first. The Draft-instruction-only procedure below applies to common Agent routing/response formatting. Model-specific DAX/calculation/filter semantics belong in metadata, AI schema and model-level Prep for AI in 12.6–12.7, not Agent instructions. Treat a model change as a separate candidate: bind before/after source, definitions and native settings plus application/rollback approvals, use native Apply, reopen/read back, then register a fresh evaluation. Never reuse an instruction-only 49-slot plan or write gate. Restoring Draft text below does not restore a model.
 
 1. Classify baseline failures by source, time, grain, meaning and execution. Save the full before/after instruction text and one hypothesis. The global instruction field supports up to 10,000 UTF-16 units. Measure the selected profile's actual length and confirm it is within the limit; replace existing wording if it exceeds the limit. Check length as in Chapter 17 and never ignore a save error. Do not bypass SchemaUnavailable or authentication errors by teaching memorized answers.
 2. For your own candidate, edit only the intended instruction field in the Agent Draft UI, Save, Publish, then reopen and inspect the publication. Save its complete text, configuration label and hash, and confirm other fields stayed fixed. Do not use the Chapter 17 fixed-profile helper to apply or certify a custom candidate: it restores the distributed profile or reports a mismatch.

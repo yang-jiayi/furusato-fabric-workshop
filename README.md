@@ -15,6 +15,10 @@
 
 本教材は24章・5付録で構成されています。HTML教科書を参加者向けの主教材とし、番号付きの各手順へGitHub上から移動するにはLabを使います。どちらも日本語と英語に対応しています。
 
+第12章では、明示メジャー・依存列を含む AI schema と、モデル側の Prep for AI の設定・確認を行います。モデル用本文と共通の Agent 指示は [版管理された設定候補](workshop/v3.0.0-preview/powerbi/prep-for-ai/schema.json)で分離しています。これらのファイルを配布・配置するだけでは native 設定は有効になりません。許可された環境で Apply・読み戻し・生成 DAX の検証を行い、未適用と未評価を区別してください。
+
+設定後は Copilot pane を開き直し、LSDL 同期・Direct Lake 索引の反映を確認してから評価します。Git/pipeline での tooling 変更には別途許可された service refresh が必要で、Direct Lake/DirectQuery の同期は1日1回です。Verified answers は native authoring の任意候補で CI/CD 非対応、Fabric IQ 有効時は返されません。未確認の状態を適用済み・合格とは扱いません。
+
 ## 前提条件と根拠
 
 利用が許可されたFabricワークスペースとフォルダー、稼働中の容量、必要な権限を用意します。機能の利用可否はテナント、リージョン、容量によって異なる場合があります。設定だけではクエリの実行、機能の準備完了、AI回答の正しさは確認できないため、実行結果と読み戻しを別々に確認してください。
@@ -36,6 +40,10 @@ Download the **[HTML textbook](docs/furusato-workshop-v3-1-0-complete.html?raw=t
 Follow [Chapter 4](Lab/04-prerequisites-deployment-scope-and-safe-execution/README.md) for prerequisites and scope, [Chapter 24](Lab/24-automated-deployment-operations-and-cleanup/README.md) and Chapters 5–13 for deployment and data/model checks, [Chapter 17](Lab/17-fabric-data-agent-and-code-interpreter/README.md) to configure the Agent, confirm Code Interpreter on that same agent and read back the published setup, and [Chapter 19](Lab/19-evaluate-and-improve-ai-answer-quality/README.md) plus [Appendix C](Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/README.md) for answer evaluation.
 
 The course has 24 chapters and five appendices. Use the HTML as the primary participant manual and the Lab for direct GitHub navigation to each numbered step. The participant ZIP contains HTML, Lab, runtime assets and plain-text reference attachments; it contains no Word or PDF manuals or exports. The business requirements attachment is plain text, and the upstream icon usage terms are retained in the [source notice](docs/assets/architecture/upstream/NOTICE.txt).
+
+Chapter 12 covers explicit measures, dependency-inclusive AI schema and model-level Prep for AI setup/verification. The [versioned configuration candidate](workshop/v3.0.0-preview/powerbi/prep-for-ai/schema.json) separates model business rules from common Agent guidance. Shipping or deploying these files does not activate native configuration. Apply only in an authorized environment, reopen/read back the settings and validate generated DAX; distinguish not applied from not evaluated.
+
+Reopen the Copilot pane and verify LSDL sync/Direct Lake indexing before evaluation. Git/pipeline tooling edits require a separately authorized service refresh; Direct Lake/DirectQuery sync only once a day. Verified answers are optional native-authoring candidates with no CI/CD support and are not returned when Fabric IQ is enabled. Do not label unverified settings as applied or passing.
 
 Use an authorized Fabric workspace and folder with active capacity and the required permissions. Feature availability may vary by tenant, region and capacity. Configuration is not proof of execution, feature readiness or answer correctness. All workshop data is synthetic. Static donations, operational observations and quality-processed Gold have different populations and grains and must remain distinct. Verify actual sources, queries and results; no evaluation score or answer-quality guarantee is made.
 

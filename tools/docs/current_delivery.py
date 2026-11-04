@@ -61,7 +61,11 @@ PARTICIPANT_VALIDATION_FILES = {
 }
 DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg'}
 PRIVATE_NAMES = {'storage-state.json','cookies.json','credentials.json','msal_token_cache.json','msal_token_cache.bin'}
-MAINTAINER_ONLY_DOCS = {'tools/docs/README.md'}
+MAINTAINER_ONLY_DOCS = {
+    'tools/docs/README.md',
+    'tools/data-agent/README.md',
+    'workshop/v3.0.0-preview/README-runtime.md',
+}
 CURRENT_ASSET_PREFIXES = (
     'docs/assets/current-participant/',
     'docs/assets/current-participant-captures/',

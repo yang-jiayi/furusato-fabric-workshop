@@ -74,7 +74,7 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 
 12章で同じモデルの10メジャーとフィルターを確認できます。Metrics の追加や時系列の状態は主 Ontology のネイティブ機能として別に確認し、未対応の場合もモデル自体の DAX 実行と区別して記録します。
 
-同じフォルダーに Data Agent を1件作り、初期構成を公開します。Lakehouse、KQL Database、主 Ontology、Semantic model と Code Interpreter の配置を読み戻します。初期公開の完了は、今回の調整済みプロファイルの適用や回答品質の合格ではありません。
+同じフォルダーに Data Agent を1件作り、初期構成を公開します。Lakehouse、KQL Database、主 Ontology、Semantic model と Code Interpreter の配置を読み戻します。初期公開の完了は、実験用プロファイルの適用や回答品質の合格ではありません。
 
 **Readable wrapped view — PowerShell**
 
@@ -187,7 +187,7 @@ if ($LASTEXITCODE -ne 0) { throw "Stage stopped; inspect the saved evidence befo
 
 Chapter 12 lets you inspect this same model's ten measures and filters. Check Metrics and time-series state as separate native capabilities of the main ontology, distinguishing unsupported cases from actual model DAX execution.
 
-Create one Data Agent in the same folder and publish its initial configuration. Read back the Lakehouse, KQL database, main ontology, semantic model and Code Interpreter configuration. Initial publication does not establish application of the adopted tuned profile or passing answer quality.
+Create one Data Agent in the same folder and publish its initial configuration. Read back the Lakehouse, KQL database, main ontology, semantic model and Code Interpreter configuration. Initial publication does not establish application of the experimental profile or passing answer quality.
 
 **Readable wrapped view — PowerShell**
 

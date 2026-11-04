@@ -12,3 +12,5 @@
 - [12.3 完了の確認](06-12-3-check-your-work.md)
 - [12.4 参照表](07-12-4-reference-tables.md)
 - [12.5 参考資料](08-12-5-references.md)
+- [12.6 モデルを Prep for AI で準備する](09-12-6-prepare-the-model-for-ai.md)
+- [12.7 AI 設定の確認と任意の Verified answers](10-12-7-verify-ai-preparation-and-optional-verified-answers.md)

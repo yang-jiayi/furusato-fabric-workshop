@@ -354,6 +354,13 @@ def _registration(suite):
         "baselineProfileLabel": "",
         "finalProfileLabel": "",
         "instructionChangeHypothesis": "",
+        "configurationLayer": "",
+        "baselineModelDefinitionFile": "",
+        "finalModelDefinitionFile": "",
+        "baselineNativePrepRecordFile": "",
+        "finalNativePrepRecordFile": "",
+        "applicationApprovalFile": "",
+        "rollbackApprovalFile": "",
         "permittedChangedFields": [],
         "sourceSelectionRecordFile": "",
         "selectedTablesAndColumnsRecordFile": "",
@@ -415,6 +422,21 @@ and authentication outside Git.
 
 ## 手順 / Steps
 
+`configurationLayer` に Agent-routing-formatting または model-prep を記録します。
+モデルを変える場合は baseline/finalModelDefinitionFile、
+baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に
+別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。
+
+Record Agent-routing-formatting or model-prep as `configurationLayer`. For model
+changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile
+and applicationApprovalFile / rollbackApprovalFile to separately frozen private
+records. A blank template is not authorization to change anything.
+
+モデル変更後は12.7の LSDL 同期・Direct Lake 索引と pane の開き直しを確認してから
+評価を登録します。同期状態未確認は「適用済み」の根拠になりません。
+After a model change, verify the LSDL sync, Direct Lake indexing and reopened pane
+in 12.7 before registering evaluation. Unverified sync is not proof of effective application.
+
 1. フォルダーを Git 外へコピーします。各 template を複製し、ファイル名の
    `-template` を外します。用紙には実測値を記入し、元の空用紙は保持します。
 2. 完全評価は T01–T10 を3周（毎回別の会話）、続いて B01–B19 を1周です。
@@ -424,7 +446,7 @@ and authentication outside Git.
    空用紙から他の予定行を開始前に除きます。途中で短縮しません。
 3. 現在の公開済み設定を baseline として保存し、データ、ソース、選択列、例、
    スキーマ、メジャー、公開版、実行方法、タイムアウトを記録します。
-   今回の採用済み構成を初めて適用した後の確認は「再現確認」です。
+   同梱の構成は実験用・回答品質未承認です。初回の確認は「再現確認」です。
    過去のbaselineに戻す必要はなく、同じ構成を2回測って「改善」と呼びません。
 4. 1枠ごとに Clear chat / 新しい会話で、questions.csv の質問セルだけを1回送信。
    600秒まで待ち、タイムアウト・送信不明・フィルタ停止もその枠で記録します。
@@ -435,9 +457,14 @@ and authentication outside Git.
    により適用外となる3条件だけです。T10 のサービスブロックは7条件ともFAIL。
    内容と実行の根拠は別々に判定します。HTTP200、完成した文章、提示したクエリだけで
    実行成功とはしません。クエリや結果が見えなければ実行根拠をUNCLEARにします。
-6. 失敗をソース・期間・粒度・意味・実行に分類し、1つの原因に対する指示変更を
-   決めます。変更前後の全文を保存し、Draftの対象指示欄だけを変更してSave、Publish、
-   公開版を開き直して確認します。Global指示欄の上限は10,000 UTF-16単位です。
+6. 失敗をソース・期間・粒度・意味・実行に分類し、変更する層を事前登録します。
+   Agent共通の振り分け・応答形式だけなら、変更前後の全文を保存し、許可された
+   Draftの対象欄を変更してSave、Publish、公開版を開き直して確認します。
+   モデルのDAX・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側
+   Prep for AIで扱います。別のモデル・ソース候補、変更前定義とnative設定、
+   適用・復元の許可を固定し、native Apply後に開き直して読み戻します。
+   指示だけの既存49枠planやwrite gateはモデル変更に再利用しません。
+   Global指示欄の上限は10,000 UTF-16単位です。
    選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は
    対象の文を置き換えます。固定profile用helperは独自候補を
    配布設定へ戻すか一致確認に失敗するため、候補の適用・認定に使いません。同じ全49枠を
@@ -449,8 +476,10 @@ and authentication outside Git.
    改善・退行・不明から新たな根拠が得られた条件をすべて報告します。
 8. 登録した採用条件を満たす場合だけ新しい変更を採用します。推奨の初期条件は、
    FAIL→PASSが1件以上、PASS→FAILが0件、実行根拠と事実の正しさが悪化しないことです。
-   満たさなければ候補を採用せず、今回のbaselineの全文を同じDraft欄へ戻して
-   Save、Publish、公開版の確認をします。固定helperで戻すのは、baselineが配布profileと
+   満たさなければ候補を採用しません。Agent指示だけの変更なら、今回のbaselineの
+   全文を同じDraft欄へ戻してSave、Publish、公開版を確認します。モデル変更は
+   別途承認した復元手順で保存済み定義・native設定を戻し、読み戻します。
+   固定helperで戻すのは、baselineが配布profileと
    同一と確認済みの場合だけです。
    採用条件を結果を見てから緩めません。次の案は別の版として登録します。
 
@@ -461,8 +490,9 @@ and authentication outside Git.
    preregister practice-10, 10 slots and 84 conditions, and retain only original /
    repeat=1 rows before beginning. Do not shorten a campaign after seeing results.
 3. Save the current publication as baseline. Freeze data, source IDs, selections,
-   examples, schema, measures, interface and timeout. Verifying the already adopted
-   configuration is reproduction testing; two runs of unchanged instructions do
+   examples, schema, measures, interface and timeout. The supplied configuration is
+   experimental and answer quality is unaccepted. Initial verification is reproduction
+   testing; two runs of unchanged instructions do
    not establish an improvement. Restoring a historical baseline is unnecessary.
 4. Start a fresh chat for every slot and send only its question once. Wait up to
    600 seconds; retain timeouts, uncertain submissions and content blocks. Preserve
@@ -473,9 +503,14 @@ and authentication outside Git.
    by a valid clarification branch. A service block on T10 is seven FAILs. Score
    content and actual execution separately; HTTP200, prose or displayed query
    text alone is not execution proof. Missing execution details are UNCLEAR.
-6. Classify source, time, grain, meaning or execution failures. Propose one scoped
-   instruction change and save both complete texts. Edit only the intended Draft
-   field, Save, Publish, reopen and inspect the publication. The global instruction
+6. Classify source, time, grain, meaning or execution failures and preregister the
+   configuration layer. For Agent-wide routing/formatting only, preserve both texts,
+   edit the authorized Draft field, Save, Publish, reopen and inspect the publication.
+   For model DAX/filter semantics, use metadata, AI schema and model-level Prep for AI
+   in 12.6–12.7. Bind a separate model/source candidate, baseline definitions/native
+   settings and application/rollback approvals; use native Apply, reopen and read back.
+   Never reuse an instruction-only 49-slot plan or write gate for a changed model.
+   The global instruction
    field supports up to 10,000 UTF-16 units. Measure the selected profile's actual
    length and confirm it is within the limit; replace wording if it exceeds the limit.
    Do not use the fixed-profile helper to apply or certify
@@ -488,8 +523,10 @@ and authentication outside Git.
    UNCLEAR, every gain, regression and unknown-to-pass transition.
 8. Adopt a new candidate only if the preregistered rule holds. Suggested defaults:
    at least one FAIL→PASS, no PASS→FAIL and no deterioration in query execution records
-   or factual correctness. Otherwise restore this baseline's full text in the same
-   Draft fields, Save, Publish and inspect the publication. Use the fixed helper for
+   or factual correctness. Otherwise do not adopt the candidate. For Agent-instruction-only
+   changes, restore this baseline's full text in the same Draft fields, Save, Publish
+   and inspect the publication. Model changes require a separately approved rollback
+   of saved definitions/native settings and readback. Use the fixed helper for
    restoration only if that baseline is confirmed identical to its distributed
    profile. Do not relax the rule after observing outcomes.
 
@@ -606,16 +643,19 @@ def append_chapter_sections(parent, root: Path):
                 "After extracting the distribution ZIP, the evaluation kit is in source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, open workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. For the procedure, scoring and comparison, use Lab/19-evaluate-and-improve-ai-answer-quality/ and Chapter 19 and Appendix C in docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html from a Git checkout; after ZIP extraction, use Lab/19-evaluate-and-improve-ai-answer-quality/ and guide/furusato-workshop-v3-1-0-complete.html from the ZIP root. The Appendix C Lab is Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.")),
             text_table([("選択", "Choice"), ("1段階の実施範囲", "Scope per phase"), ("用途", "Use")], [
                 [("基本演習", "Practice"), "T01–T10 × 1 = 10 / 84", ("操作と採点を学ぶ。全体の改善を断定しない。", "Learn the process; do not infer full-suite improvement.")],
-                [("公開問題の完全評価", "Full public evaluation"), "T01–T10 × 3 + B01–B19 × 1 = 49 / 290", ("今回の採用済み構成の再現確認と、次の修正の前後比較。", "Verify the adopted configuration and compare subsequent revisions.")],
+                [("公開問題の完全評価", "Full public evaluation"), "T01–T10 × 3 + B01–B19 × 1 = 49 / 290", ("実験用・未承認構成の確認と、次の修正の前後比較。", "Verify the experimental, unaccepted configuration and compare subsequent revisions.")],
             ], ("質問枠 / 条件数（1段階）", "Question slots / conditions per phase"), widths=(1.2, 2.7, 2.7)),
             paragraph((
-                "今回の設定を初めて適用した後は、まず再現確認として測定します。次の変更を試す場合は、その現在の公開版をbaselineとして保存し、変更後をfinalとして測ります。過去の未調整設定へ戻す必要はありません。同じ構成を2回測った差を指示変更の効果と呼びません。",
-                "After first applying the adopted configuration, measure it as reproduction testing. For a subsequent change, save the current publication as baseline and measure the changed publication as final. Restoring a historical untuned configuration is unnecessary. Differences between unchanged configurations do not establish an instruction-change effect.")),
+                "同梱の構成は実験用・回答品質未承認です。初めて適用した後は、まず再現確認として測定します。次の変更を試す場合は、その現在の公開版をbaselineとして保存し、変更後をfinalとして測ります。過去の未調整設定へ戻す必要はありません。同じ構成を2回測った差を指示変更の効果と呼びません。",
+                "The supplied configuration is experimental and answer quality is unaccepted. After first applying it, measure it as reproduction testing. For a subsequent change, save the current publication as baseline and measure the changed publication as final. Restoring a historical untuned configuration is unnecessary. Differences between unchanged configurations do not establish an instruction-change effect.")),
             paragraph((
                 "完全評価のslots.csvは前後合計98行、conditions.csvは580行、paired.csvは290行です。行はbaseline/finalが交互に並ぶため、最初にphase=baselineでフィルターし、候補を公開してからphase=finalへ切り替えます。フィルターした行を削除しません。最初の再現確認だけならbaselineを実施し、finalは未実施の予定として残します。改善を報告するときは両段階を完了します。",
                 "The full templates contain 98 slot rows, 580 condition rows and 290 paired rows. Baseline/final rows are interleaved: first filter phase=baseline, then switch to phase=final after publishing the candidate. Do not delete filtered rows. For initial reproduction testing, run baseline and retain final as planned but unrun; an improvement comparison requires both phases.")),
         ]),
         (("開始前に記録を固定する", "Freeze the registration before starting"), [
+            paragraph((
+                "configurationLayer に Agent-routing-formatting または model-prep を記録します。モデル変更では baseline/finalModelDefinitionFile、baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。",
+                "Record Agent-routing-formatting or model-prep as configurationLayer. For model changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile and applicationApprovalFile / rollbackApprovalFile to separately frozen private records. A blank template is not authorization to change anything.")),
             bullet_list([
                 ("registration.json に日時、実施者、baseline/finalの設定名、仮説、変更する指示欄だけを記入します。完全評価の初期値は49枠・290条件・600秒です。基本演習なら開始前にpractice-10、10、84へ変更し、用紙からoriginal / repeat=1以外の予定行を外します。", "Fill in registration.json with date, reviewer, phase configuration labels, hypothesis and permitted instruction fields. Defaults are 49 slots, 290 conditions and 600 seconds. For practice, change to practice-10, 10 and 84 and remove other planned rows before beginning."),
                 ("第17章で確認した公開版の指示、ソースID、選択テーブル・列、例、Ontology、スキーマ、メジャーを保存し、registrationに保存先と公開定義のSHA-256を記入します。モデル名や容量が表示される場合も記録し、見えない値を推測しません。", "Save the published instructions, source IDs, table/column selections, examples, ontology, schema and measures verified in Chapter 17. Record private file locations and the published-definition SHA-256. Record visible model/capacity information without guessing unavailable values."),
@@ -664,6 +704,9 @@ def append_chapter_sections(parent, root: Path):
                 "Some frozen criteria describe EventID absence more broadly than the physical schema: the ordinary observation view lacks it, while quality-processing bronze/silver/quarantine tables contain it. Retain the original criterion, record the discrepancy and keep unmet criteria FAIL. Do not substitute a quality-processing population for an ordinary observation question. Record additional factual errors outside the fixed criteria in extra_factual_errors.")),
         ]),
         (("1つの修正を比較し、採用を判断する", "Compare one revision and decide whether to adopt it"), [
+            paragraph((
+                "変更する層を先に選びます。Agent共通の振り分け・応答形式は、以下のDraft指示のみの手順です。モデル固有のDAX・計算・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側Prep for AIで扱い、Agent指示で代用しません。モデル変更は別の候補としてソース・定義・native設定の変更前後、適用と復元の許可を固定し、native Apply・開き直し・読み戻し後に新しい評価を登録します。指示だけの既存49枠plan・write gateを再利用しません。下記のDraftへの復元はモデルの復元にはなりません。",
+                "Choose the layer first. The Draft-instruction-only procedure below applies to common Agent routing/response formatting. Model-specific DAX/calculation/filter semantics belong in metadata, AI schema and model-level Prep for AI in 12.6–12.7, not Agent instructions. Treat a model change as a separate candidate: bind before/after source, definitions and native settings plus application/rollback approvals, use native Apply, reopen/read back, then register a fresh evaluation. Never reuse an instruction-only 49-slot plan or write gate. Restoring Draft text below does not restore a model.")),
             bullet_list([
                 ("baseline全体の失敗をソース、期間、粒度、意味、実行に分類します。1つの仮説を決め、変更前後の指示全文と理由を保存します。Global指示欄の上限は10,000 UTF-16単位です。選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は既存の文を必要な範囲で置き換えます。第17章の長さ確認を行い、保存エラーを無視しません。製品のSchemaUnavailableや認証エラーを、答えを暗記させる指示で回避しません。", "Classify baseline failures by source, time, grain, meaning and execution. Save the full before/after instruction text and one hypothesis. The global instruction field supports up to 10,000 UTF-16 units. Measure the selected profile's actual length and confirm it is within the limit; replace existing wording if it exceeds the limit. Check length as in Chapter 17 and never ignore a save error. Do not bypass SchemaUnavailable or authentication errors by teaching memorized answers."),
                 ("自分の候補はData AgentのDraft画面で対象の指示欄だけを変更し、Save、Publish、画面を開き直して公開版を確認します。変更後の全文と設定名・ハッシュを保存し、ソースなど他の欄が変わっていないことを確認します。第17章の固定profile用helperを再実行すると、今回の候補を配布設定へ戻す、または一致確認に失敗するため、独自候補の適用・認定には使いません。", "For your own candidate, edit only the intended instruction field in the Agent Draft UI, Save, Publish, then reopen and inspect the publication. Save its complete text, configuration label and hash, and confirm other fields stayed fixed. Do not use the Chapter 17 fixed-profile helper to apply or certify a custom candidate: it restores the distributed profile or reports a mismatch."),

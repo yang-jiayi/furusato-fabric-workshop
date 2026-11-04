@@ -288,6 +288,9 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "冒頭の `You are the Furusato Workshop v3 Preview assistant.` は、同梱設定に保存された役割ラベルです。Workshop の版を示すものではありません。設定本文は正確に使い、参加者向け版は本書と `WORKSHOP_VERSION` で確認してください。",
             "The opening `You are the Furusato Workshop v3 Preview assistant.` is the role label stored in the supplied configuration, not the Workshop edition. Use the instruction text exactly as supplied; identify the participant edition from this handbook and `WORKSHOP_VERSION`."),
         _code(assets["global"], _text("Agent 全体への指示", "Agent-wide instructions"), canonical=True),
+        _paragraph(
+            "全体指示の中にモデル固有の計算・フィルターの説明が含まれていても、Semantic model の DAX 生成ツールには渡されません。モデルの業務ルールと依存列を含む AI schema は12.6、設定後の DAX 検証は12.7を使います。12.6の共通 Agent 指示の候補へ切り替える場合は別の変更として差分・適用・公開・読み戻しを記録し、この portable profile の一部だけを書き換えて再利用しません。",
+            "Even when global instructions contain model-specific calculation/filter text, it is not passed to the semantic-model DAX generation tool. Use 12.6 for model business rules and a dependency-inclusive AI schema, and 12.7 for DAX validation after configuration. Switching to the common Agent guidance candidate in 12.6 is a separate change requiring its own diff, application, publication and readback; do not partially rewrite and reuse this portable profile."),
     ])
     _append(chapter, 7, ("ソース指示・説明と Ontology context を確認する", "Review source instructions, descriptions and Ontology context"), [
         _paragraph(

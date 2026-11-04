@@ -291,7 +291,7 @@ def inspect_html(pair, document, metadata, report, *, release_profile=release.PR
     actual_title = "".join(inspection.title_parts)
     report_check(report, "html.documentTitle", inspection.document_title_count == 1 and actual_title == profile.title,
                  f"{inspection.document_title_count} document head title(s): {actual_title!r}")
-    report_check(report, "html.exactWordLink", local == [profile.word_name], str(local))
+    report_check(report, "html.noLocalLinks", not local, str(local))
     report_check(report, "html.wordExists", (pair / profile.word_name).is_file())
     report_check(report, "html.actualWordDigest", provenance["wordSha256"] == hashlib.sha256((pair / profile.word_name).read_bytes()).hexdigest())
     report_check(report, "html.profileFilenames", provenance.get("wordFilename") == profile.word_name and provenance.get("htmlFilename") == profile.html_name)

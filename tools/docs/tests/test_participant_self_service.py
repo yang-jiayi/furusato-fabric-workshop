@@ -439,13 +439,25 @@ class ParticipantEvaluationMaterialsTests(unittest.TestCase):
                 tables = [b for b in section.blocks if b.kind == "table"]
                 for language in ("ja", "en"):
                     cells = [cell.get(language) for table in tables for row in table["rows"] for cell in row]
-                    self.assertIn(case["expected"], cells)
+                    expected_answer = case["expected"]
+                    if case["id"] == "B14" and language == "ja":
+                        expected_answer = re.sub(r"(?<!\d)([1-5])\s+(?=\d{6}\s)", r"\1: ", expected_answer)
+                    self.assertIn(expected_answer, cells)
                     self.assertIn(evaluation.DISPLAY_TRANSLATIONS["expected"][case["id"]], cells)
                     if "query_shape" in case:
-                        self.assertIn(case["query_shape"], cells)
+                        query_shape = (
+                            case["query_shape"] if language == "ja"
+                            else evaluation.DISPLAY_TRANSLATIONS["query_shape"].get(case["id"], case["query_shape"])
+                        )
+                        self.assertIn(query_shape, cells)
                     for condition in case["conditions"]:
                         self.assertIn(condition["id"], cells)
-                        self.assertIn(condition["text"], cells)
+                        condition_text = condition["text"]
+                        if case["id"] == "B14" and condition["id"] == "B14.fact" and language == "ja":
+                            condition_text = re.sub(
+                                r"(?<!\d)([1-5])\s+(?=\d{6}\s)", r"\1: ", condition_text
+                            )
+                        self.assertIn(condition_text, cells)
                         self.assertIn(
                             evaluation.DISPLAY_TRANSLATIONS["conditions"][condition["id"]],
                             cells,

@@ -9,7 +9,7 @@
 ## 進め方
 
 1. [第4章](Lab/04-prerequisites-deployment-scope-and-safe-execution/README.md)で前提条件と安全なデプロイ範囲を確認します。
-2. 第24章と第5〜13章に沿って対象リソースをデプロイまたは確認します。既存リソースを重複作成したり、処理済み入力を再処理したりしません。
+2. [第24章](Lab/24-automated-deployment-operations-and-cleanup/README.md)と第5〜13章に沿って対象リソースをデプロイまたは確認します。既存リソースを重複作成したり、処理済み入力を再処理したりしません。
 3. [第17章](Lab/17-fabric-data-agent-and-code-interpreter/README.md)でモデルとData Agentを構成し、同じAgentのCode Interpreterを確認して、公開内容を読み戻します。
 4. [第19章](Lab/19-evaluate-and-improve-ai-answer-quality/README.md)と[付録C](Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/README.md)の固定質問・根拠要件で回答を評価します。
 
@@ -33,7 +33,7 @@ Download the **[HTML textbook](docs/furusato-workshop-v3-1-0-complete.html?raw=t
 
 ![Furusato Workshop architecture](Lab/assets/pc-01-architecture-en.svg)
 
-Follow [Chapter 4](Lab/04-prerequisites-deployment-scope-and-safe-execution/README.md) for prerequisites and scope, Chapters 24 and 5–13 for deployment and data/model checks, [Chapter 17](Lab/17-fabric-data-agent-and-code-interpreter/README.md) to configure the Agent, confirm Code Interpreter on that same agent and read back the published setup, and [Chapter 19](Lab/19-evaluate-and-improve-ai-answer-quality/README.md) plus [Appendix C](Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/README.md) for answer evaluation.
+Follow [Chapter 4](Lab/04-prerequisites-deployment-scope-and-safe-execution/README.md) for prerequisites and scope, [Chapter 24](Lab/24-automated-deployment-operations-and-cleanup/README.md) and Chapters 5–13 for deployment and data/model checks, [Chapter 17](Lab/17-fabric-data-agent-and-code-interpreter/README.md) to configure the Agent, confirm Code Interpreter on that same agent and read back the published setup, and [Chapter 19](Lab/19-evaluate-and-improve-ai-answer-quality/README.md) plus [Appendix C](Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/README.md) for answer evaluation.
 
 The course has 24 chapters and five appendices. Use the HTML as the primary participant manual and the Lab for direct GitHub navigation to each numbered step. The participant ZIP contains HTML, Lab, runtime assets and plain-text reference attachments; it contains no Word or PDF manuals or exports. The business requirements attachment is plain text, and the upstream icon usage terms are retained in the [source notice](docs/assets/architecture/upstream/NOTICE.txt).
 

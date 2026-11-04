@@ -5,13 +5,12 @@ import hashlib
 from pathlib import Path
 import unittest
 
-import current_profile
 import decomposition_candidate as candidate
 import quality_candidate
 from evaluate_native import definition_digest
 from measured_contract_profile import stage_sources
 from source_grounded_profile import inline_part
-from test_current_profile import fixture
+from candidate_source_fixtures import agent_fixture
 
 
 def fixtures():
@@ -21,11 +20,7 @@ def fixtures():
          "payload": base64.b64encode(path.read_bytes()).decode("ascii")}
         for path in sorted((root / "definition/tables").glob("*.tmdl"))
     ]}
-    _, stage, _ = current_profile.load_profile()
-    initial = {"parts": [
-        inline_part(part["path"], stage) if part["path"].endswith("/stage_config.json") else part
-        for part in fixture()["parts"]
-    ]}
+    initial = agent_fixture()
     reviewed, _ = quality_candidate.compile_candidate(initial, model)
     draft = {part["path"]: part for part in reviewed["parts"] if "/draft/" in part["path"]}
     for part in reviewed["parts"]:

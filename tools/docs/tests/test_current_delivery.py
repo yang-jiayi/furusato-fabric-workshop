@@ -530,14 +530,14 @@ class CurrentDeliveryTests(unittest.TestCase):
             self.assertNotIn('2026-11-01', caption)
             self.assertNotIn('post-deployment evidence', caption)
 
-    def test_figure8_describes_the_visible_003_example_and_001_action(self):
+    def test_figure9_describes_the_visible_003_example_and_001_action(self):
         model = delivery.load_model(ROOT)
         with tempfile.TemporaryDirectory() as temp:
             output = Path(temp) / 'guide'
             delivery.build(ROOT, output)
             tree = html_parser.fromstring((output / delivery.HTML_NAME).read_bytes())
             caption = ''.join(
-                tree.get_element_by_id('figure-8').xpath('./figcaption//text()')
+                tree.get_element_by_id('figure-9').xpath('./figcaption//text()')
             )
             for phrase in ('3件の行', 'donation_events_003.csv', '自分が確認するファイルの行'):
                 self.assertIn(phrase, caption)

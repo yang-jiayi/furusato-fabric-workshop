@@ -583,6 +583,18 @@ class ReleaseProfileTests(unittest.TestCase):
                 report = self.inspect_html(original.replace(old, new), metadata, release.V300)
                 self.assertIn(expected, [finding.check for finding in report.failures])
 
+    def test_validator_rejects_local_document_and_unrelated_relative_links(self):
+        profile = release.V300
+        metadata = self.metadata(profile)
+        original = self.minimal_html(metadata, profile)
+        for href in (profile.word_name, "guide.pdf", "relative-resource.html"):
+            with self.subTest(href=href):
+                injected = original.replace(
+                    "</body>", f'<a href="{href}">unexpected local link</a></body>'
+                )
+                report = self.inspect_html(injected, metadata, profile)
+                self.assertIn("html.noLocalLinks", [finding.check for finding in report.failures])
+
     def test_renderers_reject_metadata_for_the_other_profile(self):
         metadata = self.metadata()
         with self.assertRaisesRegex(ValueError, "explicit release profile"):

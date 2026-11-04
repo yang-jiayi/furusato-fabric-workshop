@@ -4,18 +4,14 @@ import base64
 from pathlib import Path
 import unittest
 
-import current_profile
 import quality_candidate as candidate
 from measured_contract_profile import stage_sources
 from source_grounded_profile import decoded_parts, inline_part
-from test_current_profile import fixture
+from candidate_source_fixtures import agent_fixture
 
 
 def baseline():
-    actual = fixture()
-    _, stage, _ = current_profile.load_profile()
-    return {"parts": [inline_part(p["path"], stage) if p["path"].endswith("/stage_config.json")
-                      else p for p in actual["parts"]]}
+    return agent_fixture()
 
 def model_fixture():
     root = Path(__file__).resolve().parents[3] / "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.SemanticModel"

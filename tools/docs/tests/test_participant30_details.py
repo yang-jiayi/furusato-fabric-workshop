@@ -489,8 +489,11 @@ class ParticipantDetailSourceTests(unittest.TestCase):
             keys = lambda values: [next((b['source_key'] for _, b in group if b.kind == 'figure'), None)
                                    for group in values]
             self.assertEqual(keys(original_groups), keys(groups), section.ident)
-        with tempfile.TemporaryDirectory(dir=ROOT / '.private-diagnostic') as directory:
-            writer = lab.LabWriter(ROOT, Path(directory), model[1], model[4])
+        with tempfile.TemporaryDirectory(prefix='furusato-lab-test-') as directory:
+            output = Path(directory).resolve()
+            with self.assertRaises(ValueError):
+                output.relative_to(ROOT.resolve())
+            writer = lab.LabWriter(ROOT, output, model[1], model[4])
             architecture = next(b for b in model[0].figures if b['number'] == 1)
             ja = writer.render_block(architecture, 'ja', 'vector-test')
             en = writer.render_block(architecture, 'en', 'vector-test')
@@ -501,7 +504,7 @@ class ParticipantDetailSourceTests(unittest.TestCase):
                 asset = writer.assets['pc-01-architecture-' + language]
                 self.assertEqual(language, asset['language'])
                 self.assertEqual(details.ARCHITECTURE_SHA256, asset['sourceSha256'])
-                self.assertEqual(artwork.encode('utf-8'), (Path(directory) / asset['file']).read_bytes())
+                self.assertEqual(artwork.encode('utf-8'), (output / asset['file']).read_bytes())
             for block in model[0].figures:
                 if block['source_key'] not in details.DETAILS:
                     continue
@@ -511,8 +514,8 @@ class ParticipantDetailSourceTests(unittest.TestCase):
                 self.assertEqual(list(recipe['crop']), asset['cropBox'])
                 self.assertEqual(recipe['sha256'], asset['sourceSha256'])
                 self.assertEqual(details.crop_png(block['source_key']),
-                                 (Path(directory) / asset['file']).read_bytes())
-            lab.validate_lab_assets(ROOT, Path(directory), writer.assets)
+                                 (output / asset['file']).read_bytes())
+            lab.validate_lab_assets(ROOT, output, writer.assets)
             for ident, field in (
                     ('pc-01-architecture-en', 'language'),
                     ('pc-01-architecture-ja', 'sourceSha256'),

@@ -98,7 +98,7 @@ Answer composition and capability boundaries:
 
 ```
 
-全体指示の中にモデル固有の計算・フィルターの説明が含まれていても、Semantic model の DAX 生成ツールには渡されません。モデルの業務ルールと依存列を含む AI schema は12.6、設定後の DAX 検証は12.7を使います。12.6の共通 Agent 指示の候補へ切り替える場合は別の変更として差分・適用・公開・読み戻しを記録し、この portable profile の一部だけを書き換えて再利用しません。
+全体指示の中にモデル固有の計算・フィルターの説明が含まれていても、Semantic model の DAX 生成ツールには渡されません。モデルの業務ルールと依存列を含む AI schema は12.6、設定後の DAX 検証は12.7を使います。12.6の共通 Agent 指示の候補へ切り替える場合は別の変更として差分・適用・公開・読み戻しを記録し、この portable profile の一部だけを書き換えて再利用しません。17.9〜17.13の current_profile.py は同梱 profile の全体指示を使い、12.6の別候補を読み込みません。この profile を適用すると、既存の別の共通指示を置き換えます。12.6の候補を使用・保持する場合は17.9以降の profile 適用経路へ進まず、担当者と別の変更手順・許可・評価を確認します。モデルの Prep 設定だけでは、この切替は行われません。
 
 <details>
 <summary>English</summary>
@@ -201,6 +201,6 @@ Answer composition and capability boundaries:
 
 ```
 
-Even when global instructions contain model-specific calculation/filter text, it is not passed to the semantic-model DAX generation tool. Use 12.6 for model business rules and a dependency-inclusive AI schema, and 12.7 for DAX validation after configuration. Switching to the common Agent guidance candidate in 12.6 is a separate change requiring its own diff, application, publication and readback; do not partially rewrite and reuse this portable profile.
+Even when global instructions contain model-specific calculation/filter text, it is not passed to the semantic-model DAX generation tool. Use 12.6 for model business rules and a dependency-inclusive AI schema, and 12.7 for DAX validation after configuration. Switching to the common Agent guidance candidate in 12.6 is a separate change requiring its own diff, application, publication and readback; do not partially rewrite and reuse this portable profile. current_profile.py in 17.9-17.13 uses the supplied profile's global instructions, not the separate text in 12.6. Applying that profile replaces other existing common guidance. To use or retain the 12.6 candidate, stop before the profile-application lane in 17.9 and confirm a separate change procedure, authorization and evaluation with the owner. Model Prep configuration alone does not switch Agent guidance.
 
 </details>

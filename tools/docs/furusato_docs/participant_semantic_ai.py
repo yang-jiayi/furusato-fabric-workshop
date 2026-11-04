@@ -58,8 +58,8 @@ def append_sections(chapter, root, *, figures=None):
         Block("code", {"text": instructions, "language": Text("モデル用 AI instructions", "Model AI instructions"),
                        "canonicalLiteral": True}),
         paragraph((
-            "Agent 共通指示を変更する場合だけ、担当者が次の別候補を既存のソース設定・安全条件と照合し、差分、適用、公開、読み戻しを別に記録します。モデルの計算指示を Agent 側へ移しません。本文を示すことは現行 Agent への適用・公開済みという意味ではありません。",
-            "Only when changing common Agent guidance, have the owner review this separate candidate against existing source settings and safeguards, then separately record the diff, application, publication and readback. Do not move model calculation instructions into the Agent. Showing this text does not mean it is applied or published on the current Agent.")),
+            "Agent 共通指示を変更する場合だけ、担当者が次の別候補を既存のソース設定・安全条件と照合し、差分、適用、公開、読み戻しを別に記録します。明示された母集団・ソース・期間を優先し、指定のない通常の Workshop 概要・静的ランキングは Lakehouse の2025年の静的データ、Gold・受入増分・モデルメジャーの明示要求は直接 Semantic model、年を省略した8月の観測は KQL の2026年8月 UTC を使います。振り分け後にも寄附先と居住地などの曖昧さが残れば確認します。モデル用本文とソース固有のクエリ手順は変更せず、モデルの計算指示を Agent 側へ移しません。本文を示すことは適用・公開済みや回答精度の改善を意味しません。",
+            "Only when changing common Agent guidance, have the owner review this separate candidate against existing source settings and safeguards, then separately record the diff, application, publication and readback. Explicit population/source/period wins. Otherwise ordinary workshop overviews and static rankings use the Lakehouse static 2025 dataset; explicit Gold/accepted-increment/model-measure requests use the direct semantic model; August observations without a year use KQL's August 2026 UTC context. Clarify remaining ambiguity such as recipient versus residence after routing. Preserve model text and source-owned query recipes; do not move model calculation instructions into the Agent. Showing this text proves neither application/publication nor improved answer quality.")),
         Block("code", {"text": agent, "language": Text("Agent 共通指示の候補", "Common Agent guidance candidate"),
                        "canonicalLiteral": True}),
     ])

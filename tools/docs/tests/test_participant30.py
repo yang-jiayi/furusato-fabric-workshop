@@ -31,6 +31,21 @@ def texts(document):
 
 
 class ParticipantEditionTests(unittest.TestCase):
+    def test_chapter08_mapping_inspection_is_passive_or_stops(self):
+        steps = text.CHAPTERS[8]["steps"]
+        for language, required in (
+            (0, ("受動的な詳細表示ではありません", "自動実行", "講師が確認した保存済み定義",
+                 "停止して講師に確認", "SourceFile が10、PublishedAtUtc が11")),
+            (1, ("not a passive details view", "execute it automatically",
+                 "instructor-verified persisted definition", "stop and ask the instructor",
+                 "SourceFile is 10 and PublishedAtUtc is 11")),
+        ):
+            for term in required:
+                self.assertIn(term, steps[5]["text"][language])
+        self.assertIn("already provisioned target", steps[4]["text"][1])
+        self.assertIn("overwrite/clear", steps[4]["text"][1])
+        self.assertIn("authorized new manual-construction", steps[4]["text"][1])
+
     def test_current_package_paths_are_explained_without_renaming_working_assets(self):
         setup = " ".join(value for pair in text.CHAPTERS[4]["before"] for value in pair)
         self.assertIn("source/WORKSHOP_VERSION", setup)

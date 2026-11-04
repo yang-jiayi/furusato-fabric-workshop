@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "191bc6b12e0f8bb9571a21e6522e0cc14ca99e64",
+  "sourceCommit": "37e4e50fbbba07ba6f6901d02eb97d33475327b0",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "4806c7f057c37e51aab25ab91c4f44ba1a355fd0ffee48bcb627cd7e1e844df3",
+  "sourceTreeSha256": "190c9af6490aa09fd7fb2ed70147fb31a7078ef2d5438e03aca3c1a5e3e49c90",
   "candidateSourceSha256": "858697b9701ed4df90ec85271cfdd3a4046ca456b0b7b01318b6cb0b7120d7db",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -244,11 +244,11 @@
     "tools/docs/furusato_docs/participant30_details.py": "2a2092370ce44640b5d053be2b7c4763313c99c55ee561bc7808929c25382040",
     "tools/docs/furusato_docs/participant30_evaluation.py": "7ac1435b54357792ee4c715c9ce75878981acac8eb26f24381dabf5a6198561c",
     "tools/docs/furusato_docs/participant30_figures.py": "fb294bac54931c37245f03be5d0c408504d34575f051bbc130c755f4ee066b43",
-    "tools/docs/furusato_docs/participant30_text.py": "009b5d020d16274439f43c9f99e2d72311cc0a248b3d09be2c25b5ada17dc2c9",
+    "tools/docs/furusato_docs/participant30_text.py": "82c2847df8fe2fb1a89f8adefddfc8c9d1fd9610115d450ed8d49b2f6c9a08a9",
     "tools/docs/furusato_docs/participant30_tuning.py": "b5456fe357005efc2733dccc0b313e3dd344d61ce0314a00cfd63318521b78a4",
-    "tools/docs/furusato_docs/participant_current_tuning.py": "5c9005159feb8ec4d1d668585c092ea2a528ef114a3a98c85e58cfe7b6020bd5",
+    "tools/docs/furusato_docs/participant_current_tuning.py": "1dd7dcc5d0509770f0699e1b8d6e21c8e5c73c19baaa7ce8a65c9e0c5acb2f7a",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
-    "tools/docs/furusato_docs/participant_semantic_ai.py": "6620af494c58d847d2ce94ff7969062675ad51fa492d8d07458945f240bb30d6",
+    "tools/docs/furusato_docs/participant_semantic_ai.py": "60ef474212879c2636cbfb0632a14ff0209f93460031231645a89405725722d0",
     "tools/docs/furusato_docs/participant_word.py": "a530d0b14223209049fd7c5913ea3ad6f99fa9e4d03343514113c8aec5afadfc",
     "tools/docs/furusato_docs/preview30_acceptance.py": "664350aac41c530f75978562676f87998f0c5b25a0113eebacc3712edd01a88c",
     "tools/docs/furusato_docs/preview30_content.py": "66f051dddd2ebb0ad66a6cd026c6a6c52c64ae4d06d4cbc339d64c468889c155",
@@ -289,7 +289,7 @@
     "tools/docs/tests/test_notebook_payload.py": "d074dbf1abbcc35a2f66b679462145286d0270f22b886ee015ccbc31d4e7ff44",
     "tools/docs/tests/test_ontology_v2_calibration.py": "25848a608a3a29b97e076312dcc64fe6e9a12c4ff3a9e535886e942d303cf4b5",
     "tools/docs/tests/test_ontology_v2_report.py": "a84f0c6478a31777c46aa3d3586e452411c0345bdf58f30404e2fba7f2f9eaa9",
-    "tools/docs/tests/test_participant30.py": "ed1602b20d2696eeaf0cbe74d6e0c65bd2d2c2d3517c1b258771e291cfa21e07",
+    "tools/docs/tests/test_participant30.py": "3c17e89f97c85926b71820f64001843e2cc55d4d3d21330d878399d65507850d",
     "tools/docs/tests/test_participant30_details.py": "abcc44c5e9b81d8d25cf80680d3e335b2bcbe0ebdf46c5b744562bb873e44362",
     "tools/docs/tests/test_participant_practice_boundaries.py": "f56da92e326e79ff587ce88d8b2f541a741ab4572033ea89fe2f1d37bef5e8dd",
     "tools/docs/tests/test_participant_self_service.py": "c6bc7fddb14c8ddc5578f6ca2b43a18b91286c16e768e7cec611a825b546e9f8",
@@ -306,7 +306,7 @@
     "tools/docs/tests/test_preview_material_gates.py": "66eb579577867bc1a3884a278861a587df14e4cbb6389f0fc7f785d7429cfdd7",
     "tools/docs/tests/test_public_document_mode.py": "cc64d9009b2669d2cefa27519ea68b2612f996c8c5e88fe9de442c7dfa9f8d88",
     "tools/docs/tests/test_quality_iteration_content.py": "36acbb5409c614619d9545bfd58079f4b07470bf3beb9defb1434990763fd780",
-    "tools/docs/tests/test_semantic_ai_guidance.py": "b458e9965fa7f1b00fb0a4b1455394ea89a965aba3aa677404d5d51c16711770",
+    "tools/docs/tests/test_semantic_ai_guidance.py": "181c4f7ee3ceb0ab7833698509262b6daf3d4de1c93052d8193b899f306f7f4e",
     "tools/docs/tests/test_semantic_instruction_boundaries.py": "4110b931858bffdf92e0437d93ebf7193685e083ebe15a9e3367a3ac243d9ff6",
     "tools/docs/tests/test_source_host_boundaries.py": "6d33d3013d0db5b7a15f6b423a90be96bde462c9396a2ccc40df8bc9d392ed6d",
     "tools/docs/tests/test_unified_guide_content.py": "dc16e1dd1f43e6bc74424a2fc52708a6513ecf4cc07fe2124f34b3ae957a7a90",
@@ -751,7 +751,7 @@
     "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.SemanticModel/definition/tables/返礼品.tmdl": "90960185990d0ee35b8a1028ccdd74a3690fafefcc78c60fd5e915a9a4bba506",
     "workshop/v3.0.0-preview/powerbi/Furusato_Analytics.pbip": "16dcb478fbbf4ae69281131f0b5c74a357dd38d2fc846227cf4ba5c2c74b27ca",
     "workshop/v3.0.0-preview/powerbi/native-metrics-contract.json": "323e917207c6859a7cbe72f648eaac691fc0a89f7c59046f12fcfc1de8e5c037",
-    "workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt": "ebcb7ee3a6fcaa52e921a47503f4529d11f4226eb0c4962f1b6a7b8e95da1f82",
+    "workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt": "ac43d7e55a760370e3043b026df7c6621d9a5b17ecd1d75ab73ca8d394024e9b",
     "workshop/v3.0.0-preview/powerbi/prep-for-ai/model-instructions.txt": "b92abc6a388cea20bfaff015513f2ad6f7054f33492ddda8cabf06b1dfe9ad59",
     "workshop/v3.0.0-preview/powerbi/prep-for-ai/schema.json": "bc6a50d8389509c90d0b93f672c492ba4a50ad92a2774141bc01442bb458e33d",
     "workshop/v3.0.0-preview/provisioning/baseline-hashes.json": "fba9170668efd66ebf7b9bfad6f75fdfca86d33e0646a3cd90207c6dd27387bf",
@@ -977,9 +977,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "191bc6b12e0f8bb9571a21e6522e0cc14ca99e64",
+    "baseCommit": "37e4e50fbbba07ba6f6901d02eb97d33475327b0",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "4806c7f057c37e51aab25ab91c4f44ba1a355fd0ffee48bcb627cd7e1e844df3"
+    "sourceTreeSha256": "190c9af6490aa09fd7fb2ed70147fb31a7078ef2d5438e03aca3c1a5e3e49c90"
   }
 }

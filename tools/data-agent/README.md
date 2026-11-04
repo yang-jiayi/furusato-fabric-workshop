@@ -25,6 +25,25 @@ answer quality. Preserve the baseline and compare a separately registered fresh 
 
 ### Separate result-fidelity candidate (unmeasured)
 
+The separate common-routing candidate
+[`powerbi/prep-for-ai/agent-instructions.txt`](../../workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt)
+resolves explicit population/source/period before workshop defaults and before
+clarification: ordinary workshop overview/static ranking uses the complete static
+2025 Lakehouse snapshot; explicit Gold/accepted/measure scope uses the direct
+semantic model; operational August without a year uses August 2026 UTC.
+Static popularity returns count and amount leaders; recipient-versus-residence
+and genuinely unresolved periods still require clarification. Source-owned query
+recipes and model Prep remain unchanged. The common text preserves requested
+fields/IDs, requires raw aggregates before the EventID limitation, forbids even
+repeating an unsupported cross-population sum, and retains actual execution and
+platform-block boundaries. This is an offline, unmeasured routing/composition
+candidate, not a frozen-profile replacement, apply controller or live result.
+It cannot establish Graph/GQL readiness, supply missing execution evidence or
+turn a native content block into a successful business refusal. Review a new
+complete definition delta and obtain separate application/publication/evaluation
+authorization; do not reuse a consumed campaign or apply the profile to change
+only this common text.
+
 `quality_candidate.compile_candidate(definition, model_definition)` is an offline-only follow-up
 experiment, not a replacement for the measured/current profile. It starts from a
 complete native Published definition, clones that stage to Draft, and changes only

@@ -19,6 +19,8 @@
 
 設定後は Copilot pane を開き直し、LSDL 同期・Direct Lake 索引の反映を確認してから評価します。Git/pipeline での tooling 変更には別途許可された service refresh が必要で、Direct Lake/DirectQuery の同期は1日1回です。Verified answers は native authoring の任意候補で CI/CD 非対応、Fabric IQ 有効時は返されません。未確認の状態を適用済み・合格とは扱いません。
 
+第12.6節の共通 Agent 指示候補は、明示された母集団・ソース・期間を優先します。指定のない通常の Workshop 概要・静的ランキングは Lakehouse の静的2025スナップショットを使い、人気は件数・金額の両方を示します。明示的な Gold・受入増分・モデルメジャーの分析は直接 Semantic model、年を省略した8月の運用観測は KQL の2026年8月 UTC が対象です。寄附先と居住地などの曖昧さは確認し、異なる母集団を合算しません。この候補への切替は、既存 profile の適用とは別の承認・差分確認・公開・読み戻し・評価を要し、モデル用本文とソース固有の手順は変更しません。
+
 ## 前提条件と根拠
 
 利用が許可されたFabricワークスペースとフォルダー、稼働中の容量、必要な権限を用意します。機能の利用可否はテナント、リージョン、容量によって異なる場合があります。設定だけではクエリの実行、機能の準備完了、AI回答の正しさは確認できないため、実行結果と読み戻しを別々に確認してください。
@@ -44,6 +46,8 @@ The course has 24 chapters and five appendices. Use the HTML as the primary part
 Chapter 12 covers explicit measures, dependency-inclusive AI schema and model-level Prep for AI setup/verification. The [versioned configuration candidate](workshop/v3.0.0-preview/powerbi/prep-for-ai/schema.json) separates model business rules from common Agent guidance. Shipping or deploying these files does not activate native configuration. Apply only in an authorized environment, reopen/read back the settings and validate generated DAX; distinguish not applied from not evaluated.
 
 Reopen the Copilot pane and verify LSDL sync/Direct Lake indexing before evaluation. Git/pipeline tooling edits require a separately authorized service refresh; Direct Lake/DirectQuery sync only once a day. Verified answers are optional native-authoring candidates with no CI/CD support and are not returned when Fabric IQ is enabled. Do not label unverified settings as applied or passing.
+
+The separate common Agent guidance candidate in 12.6 prioritizes explicit population, source and period. Otherwise ordinary workshop overviews and static rankings use the Lakehouse static 2025 snapshot, with both count and amount for popularity. Explicit Gold/accepted-increment/model-measure analysis uses the direct semantic model; August operational observations without a year use KQL's August 2026 UTC context. Clarify recipient-versus-residence ambiguity and never add incompatible populations. Switching to this candidate requires separate authorization, diff review, publication, readback and evaluation rather than applying the existing profile; model text and source-owned recipes remain unchanged.
 
 Use an authorized Fabric workspace and folder with active capacity and the required permissions. Feature availability may vary by tenant, region and capacity. Configuration is not proof of execution, feature readiness or answer correctness. All workshop data is synthetic. Static donations, operational observations and quality-processed Gold have different populations and grains and must remain distinct. Verify actual sources, queries and results; no evaluation score or answer-quality guarantee is made.
 

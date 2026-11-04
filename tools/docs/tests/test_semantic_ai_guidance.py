@@ -11,6 +11,42 @@ from furusato_html.model import Section, Text
 
 
 class SemanticAIGuidanceTests(unittest.TestCase):
+    def test_common_routing_precedence_and_legitimate_clarification(self):
+        guidance = (ROOT / PAYLOAD / "agent-instructions.txt").read_text("utf-8")
+        for term in (
+            "Explicit user population, source and period take precedence",
+            "complete static 2025 snapshot", "one Donation per row",
+            "dataset label, not an added date filter",
+            "both count and amount leaders", "do not ask which metric",
+            "explicitly requested Gold", "unchanged model-level Prep for AI",
+            "not before source routing", "documented August 2026 source window",
+            "label the year and UTC", "static-clause year does not set",
+            "Preserve an explicitly requested different period",
+            "recipient versus resident", "relative period without a reference date",
+        ):
+            self.assertIn(term, guidance)
+        self.assertLess(guidance.index("Explicit user population"),
+                        guidance.index("Ask a concise clarification"))
+
+    def test_common_composition_preserves_source_rules_and_failure_boundaries(self):
+        guidance = (ROOT / PAYLOAD / "agent-instructions.txt").read_text("utf-8")
+        for term in (
+            "existing source-owned recipe", "raw aggregate before",
+            "EventID limit", "never invent unique counts, surrogate identities",
+            "Never calculate, display or repeat an unsupported cross-population sum",
+            "even to refute", "Retain every requested field",
+            "actual stable ID/name pair", "file/run fields and UTC timestamps",
+            "executed GQL with returned results", "join-planning metadata and SQL do not",
+            "missing required evidence as success", "Income, wealth, tax liability",
+            "Never bypass a platform content block",
+            "blocked response as a successful business refusal",
+        ):
+            self.assertIn(term, guidance)
+        self.assertLess(len(guidance), 10_000)
+        self.assertNotIn("\r", guidance)
+        import re
+        self.assertEqual(["2025", "2026"], re.findall(r"\d+", guidance))
+
     def test_native_navigation_figures_and_persistence_boundary(self):
         from furusato_docs.participant30 import FigureFactory, figure_path
         from PIL import Image

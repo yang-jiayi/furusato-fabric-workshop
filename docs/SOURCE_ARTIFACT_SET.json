@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "0da66e3403abd7a770fe40baf9de7e18a526a2c4",
+  "sourceCommit": "2508b2021f6b1379292eb68ec3b4e4f68b8da350",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,8 +21,8 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "b91bc73d69e2fb843d1e5e8bdebe0c56c3dc66ffe036f6cb1561e1f68e18e23f",
-  "candidateSourceSha256": "60f9fefeabb09f4045c4ef8e5ad56257c515e63a6f020540d7a260bb6249e506",
+  "sourceTreeSha256": "727bd5d3c9d1015151d5e2cc1eb0b287b5e0a12bb7e64a29d6e9e9383b7baea9",
+  "candidateSourceSha256": "adcd982d7aad9888f1d16a950bd022c6f6049e968cabf7a42a38c3b59354f476",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
     "WORKSHOP_VERSION": "5e33023692f9444ef9f77fcd732c57f3015cee605f326e5bf57502a67a2b77ce",
@@ -120,7 +120,7 @@
     "tools/data-agent/evaluate_native.py": "52d80309582a5c8b70cc72011a483fea70af1f338bad5ec77e4d297f7c5c8a26",
     "tools/data-agent/fresh_grounded_profile.py": "9728561823191f6316f020a0637317e493d90a7583942f11ce5b74c0bc6ce07b",
     "tools/data-agent/mcp_grading.py": "fa7987990e47a6166f4e6f58ad0a502686538f8d153a8c6abd423972c1f2e24a",
-    "tools/data-agent/measured_contract_profile.py": "7ccb1fa8ed1260e2569f4509db44acf31d7ded15cd318d1d071f948cb9a20048",
+    "tools/data-agent/measured_contract_profile.py": "fa6b9e02493e990dfcfeb886cdeb7f4430f218003081b350fb3423b756d908fb",
     "tools/data-agent/native_evaluation.py": "0e35e33b13e8731672c079c9ee44ac5656ac317d1be72fc422876a4299663ec2",
     "tools/data-agent/native_mcp.py": "47c2a6a40ba0accf441cdb12168fe4e6832c724f110e45d052a6fb993f29e7c0",
     "tools/data-agent/native_responses_http.py": "50abaaf54e5b43b975735e5e2e3b908b7f1a67c846e98b0ca342ad8648479b79",
@@ -129,7 +129,7 @@
     "tools/data-agent/operational-functions/AgentObservationLeaders.kql": "4c6f2da84dfd7ddb377402a0ec48c3bfa69c28cfc545bb7fcf21211cb7eaea17",
     "tools/data-agent/operational-functions/AgentRawObservationTotals.kql": "7c20841873764424fe3970469a9e15e3dc128bf78f03b727f9a4f3bb2a2e2dd5",
     "tools/data-agent/participant-profile-README.md": "a594cd66cb5906a6c7881e333996216dce750cb1012f2e2893a02867971f023f",
-    "tools/data-agent/participant_profile.py": "32236224216ae47db2f54ddef13abc81a82648b4462e36f9a1a0694067c85ecd",
+    "tools/data-agent/participant_profile.py": "470e72f803bb5436c6da2d7d2fd4486ec24235e4c1418594f84170c587b7bb95",
     "tools/data-agent/path_ontology.py": "544c592420f406255660d99d357007cd71083b861ca5089924cbe35c25ce38cc",
     "tools/data-agent/preflight_mcp.py": "d403b4b39ba0526901027988fbc563d3c2e28341c78b5f88dcdbcfaf27f9fc01",
     "tools/data-agent/quality_candidate.py": "5b37bf4f2267fdbb01a266ef78a392647169cf4eb8ac9eabe7cbcc6df1b811e2",
@@ -171,7 +171,7 @@
     "tools/data-agent/tests/test_dependency_candidate.py": "723e76ddbb70ea622ffe3c39d8c0d8bd9babcd9a790ca85b1523021329894815",
     "tools/data-agent/tests/test_fresh_grounded_profile.py": "12505c3602cab39307e1620f9cde0271b4bd848b12f2e2832a3ea1fa76185006",
     "tools/data-agent/tests/test_measured_contract_gen2.py": "e308d610c05f08d554fc0af432b5346dcdc1785166d259920a115f6bc557dff0",
-    "tools/data-agent/tests/test_measured_contract_profile.py": "46914516578240dee270666b256c502263188d30990b152525078cd7a07caf9d",
+    "tools/data-agent/tests/test_measured_contract_profile.py": "9c0183fb537de417cd1f243a13d6dec209e42a4f3fc338cf8783e7d744705cd0",
     "tools/data-agent/tests/test_measured_contract_versions.py": "7083a46b7ac62e42f9e3208b5d50e029e7bb7aaa65872d33eef8242b0c14f609",
     "tools/data-agent/tests/test_native_dialogue.py": "fa67bc85db2fae71cf386bffb139de4997f82b1742fa2c9f45fc8a5562e72d5f",
     "tools/data-agent/tests/test_native_evaluation.py": "153ba7c65cbbd39d07363cf7f74a27fc664d3ac6effa196af045d28a79056656",
@@ -179,8 +179,9 @@
     "tools/data-agent/tests/test_native_responses_http.py": "1589bb95f660796013f94431a67f5fdd3ba513de29b9b64c5aea197eb0d98ebb",
     "tools/data-agent/tests/test_native_runner.py": "f9d9da5e4aac8fa2bd52e8b72013db9195c78d81ad23a5ec78de3a6a8fadcc0c",
     "tools/data-agent/tests/test_operational_functions.py": "81f8bcc2fd3462d6b78e718394954586d2dd6eecee46477236e7c162d69f475b",
-    "tools/data-agent/tests/test_participant_profile.py": "58018dd3df0d05a880b3f47a634b8d99bb34f53a23c10c1be71e966592f5d6e7",
+    "tools/data-agent/tests/test_participant_profile.py": "8309ea2e792e0223bd625465c3163cfed44cb96198c4c9b889ef767e168d2122",
     "tools/data-agent/tests/test_path_ontology.py": "c2ef453886ed45dad518adec44c2f8881f0c6607e2e62247de2dcc2fd940fd98",
+    "tools/data-agent/tests/test_private_output.py": "d7e459aad8a1efbf4162aaa2b4dda1e071a4dfa4dd07be67dbfb236fc0fab7fd",
     "tools/data-agent/tests/test_quality_candidate.py": "bac5f389c62fbd590aea00d6dd516dd17b380e3174a2270d693541ccc8155110",
     "tools/data-agent/tests/test_reference_models.py": "77b203d6f21a8154c7437a32810ad3fc4558d526995138a0e65fe06d555cf4b8",
     "tools/data-agent/tests/test_regression_suite.py": "d69261473da56d8725eb2c83145d2f2e1673fe2d9d3337fdc605dc7102cf2e3b",
@@ -642,9 +643,9 @@
     "workshop/v3.0.0-preview/edition.json": "aa78064715e87f6a2abd5a3192280a59b9ab2df293a4c25017f859546ca70ea7",
     "workshop/v3.0.0-preview/kql/Furusato_Eventhouse_Setup_v2.7.0.kql": "598ac20f014218a811ac59a5ec3bb5455cc4ae4e6755b73371e82a9304535560",
     "workshop/v3.0.0-preview/notebooks/Notebook_01_Furusato_Prepare_Ontology_Data.ipynb": "a52f6e0575242f67efcc1709bc7bb8f4c9f269e112e0aa8140576f391ea73ed0",
-    "workshop/v3.0.0-preview/notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb": "99213d1399f311709a03010df5812588a3dd44a6a104aaf4b1e86bd341526761",
-    "workshop/v3.0.0-preview/notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb": "ac4855f79097d698ef3f8a791857e0d781e3f12e2fd3d7ea0817fc09ecf00ea3",
-    "workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb": "f5731ad659d453cc4a57ea731a9ae75d11f49f1289d06ca9b75bd63741187290",
+    "workshop/v3.0.0-preview/notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb": "0883659ac6486a24814f9194b882a61d50a05af9ffc665cd0cf3178a7eafa70e",
+    "workshop/v3.0.0-preview/notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb": "ce1edf4cb7365eaa1a7c478ea43852d6159949e4ae60e641cb8865da16779a66",
+    "workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb": "bb09b18ae1a763580ecf537e881358584ceebd55927d9d6c2ebd6d48d024107e",
     "workshop/v3.0.0-preview/notebooks/Notebook_05_Furusato_Analytics_Quality_and_BI.ipynb": "689834cc5186e818d9c1e4eba7606ac0c8f52fc369c2f33be14ebfa3545e3e2e",
     "workshop/v3.0.0-preview/ontology/agent-compat/contract.json": "f01478b24fe13ad42240919236d38480727c20d0bea201544a0adb021204e9c9",
     "workshop/v3.0.0-preview/ontology/agent-compat/definition-template.json": "db37892c6f827da0cab6fc82ee7542e0067355ed2106c3f52d7836ffc21d8da4",
@@ -747,7 +748,7 @@
     "workshop/v3.0.0-preview/powerbi/native-metrics-contract.json": "323e917207c6859a7cbe72f648eaac691fc0a89f7c59046f12fcfc1de8e5c037",
     "workshop/v3.0.0-preview/provisioning/baseline-hashes.json": "fba9170668efd66ebf7b9bfad6f75fdfca86d33e0646a3cd90207c6dd27387bf",
     "workshop/v3.0.0-preview/provisioning/gold-contract.json": "75c3109d34dd798538023da46cbf9ab9596e53020810c90e0a79c3579ae26844",
-    "workshop/v3.0.0-preview/provisioning/notebook-bundle-manifest.json": "54467bd04bb4f6ed9935847631cd05f58982b975348c77f3e1369a0831a4a241",
+    "workshop/v3.0.0-preview/provisioning/notebook-bundle-manifest.json": "b4d1f4df50a1bd5d325b0ac2116949791e4994e9d69f7261d815692c68d63411",
     "workshop/v3.0.0-preview/provisioning/preview-contract.json": "cbfac6098f3a06471b54268121ae78807a88b40acf5c9fe62a405387e1a65ba8",
     "workshop/v3.0.0-preview/provisioning/scope.example.json": "ed87249f8bf65876c7c61fa2d073fe344d861d2fffae173d20f38d77613a1cec"
   },
@@ -759,37 +760,37 @@
     },
     "02": {
       "path": "workshop/v3.0.0-preview/notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb",
-      "sha256": "99213d1399f311709a03010df5812588a3dd44a6a104aaf4b1e86bd341526761",
+      "sha256": "0883659ac6486a24814f9194b882a61d50a05af9ffc665cd0cf3178a7eafa70e",
       "workshopVersion": "3.1.0",
       "bundlePath": "notebooks/Notebook_02_Furusato_Apply_Ontology_Metadata.ipynb",
       "bundle": {
         "fileCount": 179,
-        "payloadSha256": "17d9df68ce350631f50d579fec2b037d1f93adb66cddeceeb5c3c6382da9f232",
-        "compressedBytes": 725934,
+        "payloadSha256": "b252ed6962dc36ef9edf239c5aed121ddbca9e8b8ab5db88f3054119050a1822",
+        "compressedBytes": 728492,
         "currentCorrectionProfilesIncluded": true
       }
     },
     "03": {
       "path": "workshop/v3.0.0-preview/notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb",
-      "sha256": "ac4855f79097d698ef3f8a791857e0d781e3f12e2fd3d7ea0817fc09ecf00ea3",
+      "sha256": "ce1edf4cb7365eaa1a7c478ea43852d6159949e4ae60e641cb8865da16779a66",
       "workshopVersion": "3.1.0",
       "bundlePath": "notebooks/Notebook_03_Furusato_Create_Complete_Ontology.ipynb",
       "bundle": {
         "fileCount": 179,
-        "payloadSha256": "17d9df68ce350631f50d579fec2b037d1f93adb66cddeceeb5c3c6382da9f232",
-        "compressedBytes": 725934,
+        "payloadSha256": "b252ed6962dc36ef9edf239c5aed121ddbca9e8b8ab5db88f3054119050a1822",
+        "compressedBytes": 728492,
         "currentCorrectionProfilesIncluded": true
       }
     },
     "04": {
       "path": "workshop/v3.0.0-preview/notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
-      "sha256": "f5731ad659d453cc4a57ea731a9ae75d11f49f1289d06ca9b75bd63741187290",
+      "sha256": "bb09b18ae1a763580ecf537e881358584ceebd55927d9d6c2ebd6d48d024107e",
       "workshopVersion": "3.1.0",
       "bundlePath": "notebooks/Notebook_04_Furusato_Provision_Complete_Workshop.ipynb",
       "bundle": {
         "fileCount": 194,
-        "payloadSha256": "cd5352ff78315f9e9ec6974a1b8c2e3cce64a1ed82662a66c50c83c135d89b1f",
-        "compressedBytes": 3607742,
+        "payloadSha256": "ad63c0c7fd618f57058588540c53ad3bbce583eb64364e1dd429544664b1bead",
+        "compressedBytes": 3610001,
         "currentCorrectionProfilesIncluded": true
       }
     },
@@ -968,9 +969,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "0da66e3403abd7a770fe40baf9de7e18a526a2c4",
+    "baseCommit": "2508b2021f6b1379292eb68ec3b4e4f68b8da350",
     "workingTreeMatchesCommit": true,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "b91bc73d69e2fb843d1e5e8bdebe0c56c3dc66ffe036f6cb1561e1f68e18e23f"
+    "sourceTreeSha256": "727bd5d3c9d1015151d5e2cc1eb0b287b5e0a12bb7e64a29d6e9e9383b7baea9"
   }
 }

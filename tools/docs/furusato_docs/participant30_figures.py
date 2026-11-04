@@ -6,6 +6,30 @@ internal notes are not used.
 """
 
 FIGURES = {
+    'pc-12-prep-navigation': {
+        'caption': ('Editing モードの Home > Copilot ドロップダウンから Prep data for AI を開きます。狭いリボンでは送りボタンで Copilot を表示します。実画面の上部を切り抜いた操作例です。',
+                    'In Editing mode, open Home > Copilot dropdown > Prep data for AI. Use the ribbon paddle to bring Copilot into view on a narrow ribbon. This navigation example is a top crop of the actual UI.'),
+        'alt': ('Editing と Home が表示され、Copilot メニュー内に Prep data for AI がある実画面。',
+                'Actual UI with Editing and Home visible and Prep data for AI inside the Copilot menu.'),
+    },
+    'pc-12-prep-donation-schema': {
+        'caption': ('Simplify the data schema の寄附テーブルの保存後表示例。表示中の依存列も選択され、寄附日時 UTC は未選択です。下の項目はスクロールして照合します。Back は開始画面へ戻る操作、Apply が無効なのはこの表示に未保存の変更がない状態です。回答精度の証拠ではありません。',
+                    'Saved donation-table example in Simplify the data schema. Visible dependency fields are selected and 寄附日時 UTC is unselected; scroll to compare the remaining fields. Back returns to the landing screen. Disabled Apply indicates no unsaved change in this view, not evidence of answer quality.'),
+        'alt': ('寄附の列・メジャーのチェック一覧。寄附IDなどの非表示依存列は選択され、寄附日時 UTC は未選択。Back、無効な Apply、Close が表示される。',
+                'Donation fields/measures checklist: hidden dependencies such as 寄附ID selected, 寄附日時 UTC unselected; Back, disabled Apply and Close visible.'),
+    },
+    'pc-12-prep-date-schema': {
+        'caption': ('日付テーブルの保存後表示例。月番号を含む6項目が選択され、日付キーは未選択です。他テーブルも表の契約と項目名で照合します。件数やチェック記号だけでは全スキーマの一致を証明できません。',
+                    'Saved date-table example: six fields including 月番号 are selected; 日付キー is unselected. Compare the other tables by field name against the contract too. Counts or checkmarks alone do not prove the entire schema matches.'),
+        'alt': ('日付テーブルの四半期・年・年月・日付・月・月番号は選択、日付キーは未選択の実画面。',
+                'Actual date schema with 四半期, 年, 年月, 日付, 月 and 月番号 selected, and 日付キー unselected.'),
+    },
+    'pc-12-prep-model-instructions': {
+        'caption': ('Add AI instructions の保存後表示例。本文の先頭と2310/10000 characters が見えます。全文は下の原文とスクロールして照合します。この図だけでは全文一致・AIへの反映・回答品質は証明できません。',
+                    'Saved Add AI instructions example showing the opening text and 2310/10000 characters. Scroll and compare the complete text with the exact source below. This image alone proves neither full-text equality, effective AI serving nor answer quality.'),
+        'alt': ('モデル用 AI instructions のスクロール欄。Furusato semantic model business rules の先頭と2310/10000 characters が表示される。',
+                'Scrollable model AI instructions area showing the opening Furusato semantic model business rules and 2310/10000 characters.'),
+    },
     'pc-04-workspace-type-current': {
         'caption': ('Settings → Workspace type で、ワークスペースに割り当てられた Fabric capacity とリージョンを確認します。図は F16・West US 2 の例で、F16 は最低要件ではありません。Capacity ID は伏せています。表示を確認するだけにし、Edit を押したり設定を変更したりしません。',
                     'Use Settings → Workspace type to check the Fabric capacity and region assigned to your workspace. This screenshot shows F16 and West US 2 as examples; F16 is not a minimum requirement. The Capacity ID is redacted. Inspect only—do not select Edit or change settings.'),

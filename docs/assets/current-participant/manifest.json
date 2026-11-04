@@ -3,6 +3,48 @@
   "purpose": "Participant guide figures; separate from the historical evidence projection.",
   "figures": [
     {
+      "id": "pc-12-prep-navigation",
+      "file": "prep-navigation.png",
+      "sha256": "ce5cdc693536270cbc1be54905ddb843033d3324609022fd48a4d07594bf6e5a",
+      "source": "native-semantic-model-home-copilot-menu",
+      "actualUI": true,
+      "originalSha256": "6356dd82f283740b395341e0829381bf9cbd0827d1db0045fc469d1f7a830000",
+      "crop": [0, 0, 1195, 880],
+      "width": 1195,
+      "height": 880,
+      "evidenceScope": "Actual navigation example, source pixels only. Not effective AI serving or answer-quality evidence."
+    },
+    {
+      "id": "pc-12-prep-donation-schema",
+      "file": "prep-donation-schema.png",
+      "sha256": "b14c2eab22301a1ca387446e22e3914db64a2ade460ad49904905ea5757f85ea",
+      "source": "native-prep-saved-donation-schema",
+      "actualUI": true,
+      "width": 1300,
+      "height": 1782,
+      "evidenceScope": "Actual saved-state visible subset only. Full schema comparison and serving/evaluation are separate."
+    },
+    {
+      "id": "pc-12-prep-date-schema",
+      "file": "prep-date-schema.png",
+      "sha256": "261821ebbdaf589625880cfd5984f1a514b8b2bc0db7c1f5ae926f62459b3d90",
+      "source": "native-prep-saved-date-schema",
+      "actualUI": true,
+      "width": 1300,
+      "height": 1782,
+      "evidenceScope": "Actual saved-state visible subset only; not full schema or answer-quality evidence."
+    },
+    {
+      "id": "pc-12-prep-model-instructions",
+      "file": "prep-model-instructions.png",
+      "sha256": "ea29e4c4555846878a78d605fce50a262cdfbed364ee71b7eb8c568a36d43bfa",
+      "source": "native-prep-saved-model-instructions",
+      "actualUI": true,
+      "width": 1300,
+      "height": 1782,
+      "evidenceScope": "Actual saved-state opening text and character counter. Full-text equality, effective serving and answer quality require separate verification."
+    },
+    {
       "id": "pc-04-workspace-type-current",
       "file": "workspace-type-current.png",
       "sha256": "4bb62bcdc2c38884089fab03769b52818b3e3832f3fedd6a67c4a546a8a70e60",

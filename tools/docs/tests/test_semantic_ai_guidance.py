@@ -11,6 +11,31 @@ from furusato_html.model import Section, Text
 
 
 class SemanticAIGuidanceTests(unittest.TestCase):
+    def test_native_navigation_figures_and_persistence_boundary(self):
+        from furusato_docs.participant30 import FigureFactory, figure_path
+        from PIL import Image
+        chapter = Section("ch-12", 1, "12", Text("12", "12"), chapter=12)
+        append_sections(chapter, ROOT, figures=FigureFactory(None, {}))
+        figures = [b for b in chapter.children[0].blocks if b.kind == "figure"]
+        self.assertEqual([b["source_key"] for b in figures], [
+            "pc-12-prep-navigation", "pc-12-prep-donation-schema",
+            "pc-12-prep-date-schema", "pc-12-prep-model-instructions"])
+        for figure in figures:
+            path = figure_path(figure["source_key"])
+            with Image.open(path) as image:
+                self.assertGreater(image.width, 1000)
+            self.assertTrue(figure["caption"].ja)
+            self.assertTrue(figure["caption"].en)
+            self.assertTrue(figure["alt"].ja)
+            self.assertTrue(figure["alt"].en)
+        prose = "\n".join(
+            t.en for b in chapter.children[0].blocks
+            for t in ([b["text"]] if b.kind == "paragraph" else b["items"] if b.kind == "list" else []))
+        for term in ("Home > Copilot dropdown > Prep data for AI", "right paddle",
+                     "use Back", "do not select a consent box that disables it",
+                     "not proof of effective AI serving", "39 selected fields out of 41"):
+            self.assertIn(term, prose)
+
     def test_evaluation_layer_split_and_current_only_distribution(self):
         from furusato_docs import participant30_evaluation as evaluation
         import current_delivery

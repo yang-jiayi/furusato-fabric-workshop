@@ -1,17 +1,12 @@
-# 12.6 モデルを Prep for AI で準備する
+# 12.6 モデルを Prep for AI で準備する（4）
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-DAX 生成は Semantic model の metadata と Prep for AI を参照し、Agent 全体の Instructions に書いたモデル固有の計算・フィルター指示を参照しません。既存の日本語名、5テーブルの単方向スター型関係、10個の明示メジャーを使います。寄附金額は明示メジャーで集計し、数値キー・年齢・年・月番号は合計しません。追加の Agent、モデル、MCP、ライブラリの導入は不要です。
+![モデル用 AI instructions のスクロール欄。Furusato semantic model business rules の先頭と2310/10000 characters が表示される。](../assets/pc-12-prep-model-instructions.png)
 
-`workshop/v3.0.0-preview/powerbi/prep-for-ai/schema.json` は版管理された選択契約です。`model-instructions.txt` はモデル用の本文、`agent-instructions.txt` は共通の応答形式・ソース振り分け用の別候補です。ファイルの同梱、Notebook の配置、SDK の実行だけでは Prep for AI は有効になりません。この教材の自動配置はこれらを native 設定として適用せず、以下の許可された手動設定と確認が必要です。既存 Agent の frozen profile 適用手順と、この候補を混在させません。
+Add AI instructions の保存後表示例。本文の先頭と2310/10000 characters が見えます。全文は下の原文とスクロールして照合します。この図だけでは全文一致・AIへの反映・回答品質は証明できません。
 
-AI instructions と AI data schema は LSDL に保存されます。公式の Copilot/ 定義スキーマと REST の定義例、Git・deployment pipeline 経由の編集に関する説明はありますが、この教材では定義経由の適用・読み戻しを検証していません。非対応と断定もせず、以下の native UI を確認済みの参加者経路とします。schema.json は公式 Copilot/ part そのものではありません。
-
-1. 自分のモデルで変更が許可されていること、モデルの編集権限と組織の Copilot 利用条件を確認します。同じ Semantic model を Power BI service で開きます。Viewing mode の「changes will not be saved」表示中は編集・保存できず、Prep data for AI が無効でも機能の不存在や Q&amp;A の無効を意味しません。担当者が許可された編集モードを確認してからリボンの Prep data for AI を選択します。タブが無効なら、現在の前提であるモデルの Q&amp;A の有効状態を担当者と確認します。組織・テナント設定を勝手に変更しません。Q&amp;A 廃止後の代替設定は推測せず、公式ガイドの最新条件を確認します。
-2. Simplify data schema で下表の業務列・メジャーに加え、依存列も確認・選択します。依存列には明示メジャー、関係、月の並べ替えに必要な非表示列を含みます。表示設定を一括変更したり、依存列を除いたりしません。寄附日時 UTC と日付キーは今回の優先スキーマから除外します。Apply で保存し、開き直して選択を確認します。
-3. Add AI instructions に下の本文をそのまま貼り付け、Apply で保存し、開き直して照合します。10,000文字以内のモデル用本文です。Agent の Instructions や semantic-model source の非対応 Instructions/Description 欄には貼り付けません。画面が利用できなければ「native 設定未適用」と記録して停止します。
-4. Data Agent の直接 Semantic model ソースで、同じ5テーブルと必要な列・メジャーの選択を照合します。現在の選択と異なる場合は差分をレビューし、許可なく拡張・上書きしません。AI schema は優先順位付けであって、認可境界でも全クエリの制限でもありません。RLS・OLS・権限は別途有効なまま維持します。
+図は実際の保存後の画面を使った操作例です。寄附・日付の図は表示中の一部の項目、本文の図はスクロール領域の一部を示します。全項目・本文全文の照合は自分の環境で行ってください。Apply が無効なことだけで保存内容の一致を判断せず、設定の保存を AI への反映や回答精度の合格と同一視しません。12.7と19章の検証を別に行います。
 
 **Prep for AI の選択契約**
 
@@ -106,16 +101,11 @@ Use tables for comparisons and keep explanations concise. JPY means Japanese yen
 
 ## 12.6 Prepare the model for AI
 
-DAX generation uses semantic-model metadata and Prep for AI, not model-specific calculation/filter rules in Agent-wide Instructions. Use the existing Japanese names, five-table single-direction star schema and ten explicit measures. Aggregate donation amounts with explicit measures; do not sum numeric keys, age, year or month number. No additional agent, model, MCP server or library installation is needed.
+![Scrollable model AI instructions area showing the opening Furusato semantic model business rules and 2310/10000 characters.](../assets/pc-12-prep-model-instructions.png)
 
-`workshop/v3.0.0-preview/powerbi/prep-for-ai/schema.json` is the versioned selection contract. `model-instructions.txt` contains model-level guidance; `agent-instructions.txt` is a separate candidate for common response formatting and source routing. Shipping files, deploying notebooks or running the SDK does not activate Prep for AI. Automated deployment does not apply these as native settings; authorized manual setup and verification below are required. Do not mix this candidate with the existing Agent's frozen-profile apply procedure.
+Saved Add AI instructions example showing the opening text and 2310/10000 characters. Scroll and compare the complete text with the exact source below. This image alone proves neither full-text equality, effective AI serving nor answer quality.
 
-AI instructions and AI data schemas are saved to the LSDL. Official Copilot/ definition schemas, a REST definition example and guidance on edits through Git/deployment pipelines exist, but definition-based application/readback is unvalidated here, not declared unsupported. Use the native UI below as the proven participant route. schema.json is not itself an official Copilot/ definition part.
-
-1. Confirm authorization to change your model, model authoring permission and organizational Copilot prerequisites. Open that same semantic model in the Power BI service. A Viewing mode banner saying changes will not be saved means edits cannot be saved; a disabled Prep data for AI control in that mode proves neither feature absence nor disabled Q&amp;A. Have the owner confirm authorized editing mode, then select Prep data for AI on the ribbon. If tabs are disabled, check the current model Q&amp;A prerequisite with the owner. Do not change organization/tenant settings without authorization. Consult current official guidance rather than guessing the replacement configuration after Q&amp;A retirement.
-2. In Simplify data schema, review/select the business columns and measures below together with their dependency columns. Dependencies include hidden fields needed by explicit measures, relationships and month sorting. Do not bulk-unhide fields or omit dependencies. Exclude 寄附日時 UTC and 日付キー from this prioritized schema. Select Apply, reopen and verify the saved selections.
-3. Paste the exact text below into Add AI instructions, select Apply, reopen and compare it. This model-level text is below the 10,000-character limit. Do not paste it into Agent Instructions or unsupported semantic-model-source Instructions/Description fields. If the surface is unavailable, record native configuration as not applied and stop.
-4. Reconcile the same five tables and required column/measure selections in the Agent's direct semantic-model source. Review differences from current selections; do not expand or overwrite them without authorization. The AI schema is prioritization, not an authorization boundary or a restriction on every query. Preserve RLS, OLS and permissions independently.
+These actual saved-state screenshots are navigation examples. The donation/date views show only the visible subset of fields; the instructions view shows part of a scrollable text area. Compare every field and the complete text in your own environment. A disabled Apply button alone does not establish equality. Configuration persistence is not proof of effective AI serving or passing answer quality; perform the separate checks in 12.7 and Chapter 19.
 
 **Prep for AI selection contract**
 

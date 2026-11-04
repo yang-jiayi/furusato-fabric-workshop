@@ -554,7 +554,7 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
             add_section(section, str(suffix), SECTION_TITLES["links"], [link_list(spec["links"])])
     if current_profile:
         from . import participant_semantic_ai
-        participant_semantic_ai.append_sections(chapters[12], root)
+        participant_semantic_ai.append_sections(chapters[12], root, figures=figures)
         current_tuning.append_current_tuning_sections(chapters[17], root)
     else:
         participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)

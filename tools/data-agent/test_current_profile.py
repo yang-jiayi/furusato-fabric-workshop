@@ -2,7 +2,9 @@
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
@@ -45,6 +47,136 @@ def changed(definition, path, callback):
 
 
 class CurrentProfileTests(unittest.TestCase):
+    def test_common_guidance_rejects_direct_link_and_linked_ancestor(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            real = root / "real"
+            real.mkdir()
+            regular = real / "common.txt"
+            regular.write_bytes(b"Explicit routing\n")
+            self.assertEqual(current.guidance_binding(regular)["text"], "Explicit routing\n")
+            direct = root / "direct.txt"
+            direct.symlink_to(regular)
+            try:
+                with self.assertRaisesRegex(ValueError, "links or reparse"):
+                    current.guidance_binding(direct)
+            finally:
+                direct.unlink()
+            alias = root / "alias"
+            if os.name == "nt":
+                subprocess.run([os.environ["ComSpec"], "/c", "mklink", "/J", str(alias), str(real)],
+                               check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            else:
+                alias.symlink_to(real, target_is_directory=True)
+            try:
+                with self.assertRaisesRegex(ValueError, "links or reparse"):
+                    current.guidance_binding(alias / "common.txt")
+            finally:
+                if os.name == "nt":
+                    alias.rmdir()
+                else:
+                    alias.unlink()
+            self.assertEqual(regular.read_bytes(), b"Explicit routing\n")
+
+    def test_common_only_preserves_every_other_raw_part_and_default(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "common.txt"
+            path.write_bytes(b"Explicit routing\r\n")
+            binding = current.guidance_binding(path)
+            self.assertEqual(binding["text"], "Explicit routing\n")
+            candidate, receipt = current.compile_prepared(fixture(), WORKSPACE, binding)
+            self.assertFalse(receipt["identitySubstitutionOnly"])
+            for old, new in zip(fixture()["parts"], candidate["parts"]):
+                if old["path"] != "Files/Config/draft/stage_config.json":
+                    self.assertEqual(old, new)
+            self.assertEqual(decoded_parts(candidate)["Files/Config/draft/stage_config.json"]["aiInstructions"],
+                             "Explicit routing\n")
+            self.assertEqual(current.compile_prepared(fixture(), WORKSPACE),
+                             current.compile_draft(fixture(), WORKSPACE))
+
+    def test_common_binding_file_and_candidate_tampering_and_scope_stop(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "evidence"
+            root.mkdir()
+            path = Path(temp) / "common.txt"
+            path.write_bytes(b"Explicit routing\n")
+            client = Mock(workspace=WORKSPACE, agent=AGENT, origin="https://example.analysis.windows.net")
+            with patch.object(current, "gather", return_value={"definition": fixture()}):
+                current.prepare(client, root, FOLDER, path)
+            current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            with self.assertRaisesRegex(ValueError, "scope/profile"):
+                current.prepared(root, WORKSPACE, AGENT, WORKSPACE)
+            original = (root / "candidate.json").read_bytes()
+            value = json.loads(original)
+            value["parts"].pop()
+            (root / "candidate.json").write_text(json.dumps(value))
+            with self.assertRaises(ValueError):
+                current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            (root / "candidate.json").write_bytes(original)
+            path.write_bytes(b"Changed\n")
+            with self.assertRaisesRegex(ValueError, "file changed"):
+                current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            client.request.assert_not_called()
+
+    def test_common_limit_and_invalid_encoding_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "common.txt"
+            for raw in (b"", b"\xef\xbb\xbftext", b"a\rb", ("\U0001f600" * 5001).encode()):
+                path.write_bytes(raw)
+                with self.subTest(raw=raw[:12]), self.assertRaises(ValueError):
+                    current.guidance_binding(path)
+
+    def test_common_apply_once_concurrency_and_readback_drift(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "common.txt"
+            path.write_bytes(b"Explicit routing\n")
+            binding = current.guidance_binding(path)
+            definition = fixture()
+            candidate, _ = current.compile_prepared(definition, WORKSPACE, binding)
+            inputs = {"definition": definition, "commonGuidance": binding}
+            client = Mock(workspace=WORKSPACE)
+            client.base = "https://example.invalid"
+            client.definition.return_value = candidate
+            with patch.object(current, "gather", return_value={"definition": definition}), \
+                    patch.object(current, "verify", return_value={"status": "draft-matches"}):
+                current.apply(client, root, FOLDER, inputs, candidate)
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.apply(client, root, FOLDER, inputs, candidate)
+            self.assertEqual(client.request.call_count, 1)
+            with self.assertRaises(ValueError):
+                current.compare_stage(definition, candidate, "draft")
+            with tempfile.TemporaryDirectory() as other, \
+                    patch.object(current, "gather", return_value={"definition": candidate}):
+                with self.assertRaisesRegex(ValueError, "changed since prepare"):
+                    current.apply(client, Path(other), FOLDER, inputs, candidate)
+            self.assertEqual(client.request.call_count, 1)
+
+    def test_common_publish_file_drift_and_uncertain_submission_never_retry(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "common.txt"
+            path.write_bytes(b"Explicit routing\n")
+            binding = current.guidance_binding(path)
+            definition = fixture()
+            candidate, _ = current.compile_prepared(definition, WORKSPACE, binding)
+            inputs = {"definition": definition, "commonGuidance": binding}
+            client = Mock(workspace=WORKSPACE)
+            client.base = "https://example.invalid"
+            client.definition.return_value = candidate
+            path.write_bytes(b"Changed\n")
+            with self.assertRaisesRegex(ValueError, "file changed"):
+                current.publish(client, root, FOLDER, inputs, candidate)
+            client.request.assert_not_called()
+            path.write_bytes(b"Explicit routing\n")
+            client.completed.side_effect = ValueError("uncertain")
+            with patch.object(current, "verify", return_value={"status": "draft-matches"}):
+                with self.assertRaisesRegex(ValueError, "uncertain"):
+                    current.publish(client, root, FOLDER, inputs, candidate)
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.publish(client, root, FOLDER, inputs, candidate)
+            self.assertEqual(client.request.call_count, 1)
+
     def setUp(self):
         self.definition = fixture()
         self.candidate, self.receipt = current.compile_draft(self.definition, WORKSPACE)

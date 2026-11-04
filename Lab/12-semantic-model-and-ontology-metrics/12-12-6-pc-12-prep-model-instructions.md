@@ -68,9 +68,9 @@ Ambiguity
 
 ```
 
-Agent 共通指示を変更する場合だけ、担当者が次の別候補を既存のソース設定・安全条件と照合し、差分、適用、公開、読み戻しを別に記録します。明示された母集団・ソース・期間を優先し、指定のない通常の Workshop 概要・静的ランキングは Lakehouse の2025年の静的データ、Gold・受入増分・モデルメジャーの明示要求は直接 Semantic model、年を省略した8月の観測は KQL の2026年8月 UTC を使います。振り分け後にも寄附先と居住地などの曖昧さが残れば確認します。モデル用本文とソース固有のクエリ手順は変更せず、モデルの計算指示を Agent 側へ移しません。本文を示すことは適用・公開済みや回答精度の改善を意味しません。
+次の現行 Agent 共通指示はLFで3,394 UTF-16単位、SHA256 は `7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26` です。同じ本文の Draft と Published の設定読み戻しは確認済みで、回答品質の測定は未実施です。自分の環境では17.9〜17.13に沿って対象・ソース設定・安全条件、差分、適用、公開、読み戻しを確認します。明示された母集団・ソース・期間を優先し、指定のない通常の Workshop 概要・静的ランキングは Lakehouse の2025年の静的データ、Gold・受入増分・モデルメジャーの明示要求は直接 Semantic model、年を省略した8月の観測は KQL の2026年8月 UTC を使います。振り分け後にも寄附先と居住地などの曖昧さが残れば確認します。モデル用本文とソース固有のクエリ手順は変更せず、モデルの計算指示を Agent 側へ移しません。公開設定の確認は、モデルPrep・ソース準備完了・実効的なAI反映・回答精度の証明ではありません。
 
-**Readable wrapped view — Agent 共通指示の候補**
+**Readable wrapped view — 現行 Agent 共通指示**
 
 <div>
 You assist participants in the Furusato Workshop using its connected sources.<br>
@@ -88,7 +88,7 @@ Use tables for comparisons and keep explanations concise. JPY means Japanese yen
 
 **Verbatim source follows; copy from the canonical block.**
 
-**Agent 共通指示の候補**
+**現行 Agent 共通指示**
 
 ```text
 You assist participants in the Furusato Workshop using its connected sources.
@@ -175,9 +175,9 @@ Ambiguity
 
 ```
 
-Only when changing common Agent guidance, have the owner review this separate candidate against existing source settings and safeguards, then separately record the diff, application, publication and readback. Explicit population/source/period wins. Otherwise ordinary workshop overviews and static rankings use the Lakehouse static 2025 dataset; explicit Gold/accepted-increment/model-measure requests use the direct semantic model; August observations without a year use KQL's August 2026 UTC context. Clarify remaining ambiguity such as recipient versus residence after routing. Preserve model text and source-owned query recipes; do not move model calculation instructions into the Agent. Showing this text proves neither application/publication nor improved answer quality.
+The current common Agent guidance below has3,394 UTF-16 units with LF line endings and SHA256 `7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26`. Draft and Published configuration readbacks of this text have been verified; answer-quality measurement is pending. In your own environment follow17.9-17.13 to check the target, source settings, safeguards, diff, application, publication and readback. Explicit population/source/period wins. Otherwise ordinary workshop overviews and static rankings use the Lakehouse static 2025 dataset; explicit Gold/accepted-increment/model-measure requests use the direct semantic model; August observations without a year use KQL's August 2026 UTC context. Clarify remaining ambiguity such as recipient versus residence after routing. Preserve model text and source-owned query recipes; do not move model calculation instructions into the Agent. Published configuration verification does not establish model Prep, source readiness, effective AI serving or answer accuracy.
 
-**Readable wrapped view — Common Agent guidance candidate**
+**Readable wrapped view — Current common Agent guidance**
 
 <div>
 You assist participants in the Furusato Workshop using its connected sources.<br>
@@ -195,7 +195,7 @@ Use tables for comparisons and keep explanations concise. JPY means Japanese yen
 
 **Verbatim source follows; copy from the canonical block.**
 
-**Common Agent guidance candidate**
+**Current common Agent guidance**
 
 ```text
 You assist participants in the Furusato Workshop using its connected sources.

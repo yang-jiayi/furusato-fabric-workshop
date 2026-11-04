@@ -1,17 +1,21 @@
-# Current measured Data Agent profile
+# Data Agent tooling and current participant path
 
-現行Workshopでは [measured-contract-20261015](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
-を使います。4 個の論理的な接続先と Ontology 1 件を維持し、実在する native 要素・独立 SQL metadata・公開 model の
-10メジャー定義を照合してDraftを生成する可搬compilerです。作成だけではサービスへ公開しません。
+現行Workshopの参加者経路は `current_profile.py prepare` の `--common-guidance workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`
+で現行共通指示を固定し、同じ PrivateRoot の候補で apply・publish・verify を行います。
+`current-experimental` profile はソース・選択・定義の不変な必須比較入力であり、編集しません。
 参加者向けの手順と評価方法は、現行の[第17章](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md)、
 [第19章](../../Lab/19-evaluate-and-improve-ai-answer-quality/README.md)、
 [日英HTML手順書](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true)を参照してください。
 回答品質の判定には実際のソース、問い合わせ、結果を使用し、構成の再現だけで精度を受入済みにしません。
 
-Use The current measured profile linked above compiles locally from observed metadata,
-keeps one Ontology and all four logical source identities, and checks the actual
-ten model measures. Publication/readback and fresh answer validation are separate
-operator steps; configuration generation is not an answer-accuracy result.
+The current participant path binds the common guidance through
+`current_profile.py prepare --common-guidance workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`
+and retains the same PrivateRoot candidate for apply, publish and verify.
+The immutable `current-experimental` profile remains required comparison input
+for source settings, selections and definitions. Do not edit it. The separate
+[measured-profile compiler](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
+is not this participant procedure. Configuration generation is not an
+answer-accuracy result.
 
 The bootstrap [`global-instructions.txt`](../../workshop/v3.0.0-preview/data-agent/global-instructions.txt)
 also keeps source-specific period defaults, raw/static population boundaries,
@@ -23,9 +27,9 @@ measured profile or create its SQL views merely to change a global instruction.
 Source edits and generated bundles are candidates, not proof of deployment or
 answer quality. Preserve the baseline and compare a separately registered fresh run.
 
-### Separate result-fidelity candidate (unmeasured)
+### Current common guidance: published configuration verified; quality measurement pending
 
-The separate common-routing candidate
+The current common-routing text
 [`powerbi/prep-for-ai/agent-instructions.txt`](../../workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt)
 resolves explicit population/source/period before workshop defaults and before
 clarification: ordinary workshop overview/static ranking uses the complete static
@@ -36,13 +40,18 @@ and genuinely unresolved periods still require clarification. Source-owned query
 recipes and model Prep remain unchanged. The common text preserves requested
 fields/IDs, requires raw aggregates before the EventID limitation, forbids even
 repeating an unsupported cross-population sum, and retains actual execution and
-platform-block boundaries. This is an offline, unmeasured routing/composition
-candidate, not a frozen-profile replacement, apply controller or live result.
-It cannot establish Graph/GQL readiness, supply missing execution evidence or
-turn a native content block into a successful business refusal. Review a new
-complete definition delta and obtain separate application/publication/evaluation
-authorization; do not reuse a consumed campaign or apply the profile to change
-only this common text.
+platform-block boundaries. Its LF-normalized text measures 3,394 UTF-16 units,
+SHA256 `7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26`.
+Draft and Published configuration readbacks have been verified; answer-quality
+measurement is pending, not accepted or improved. The participant prepare
+command binds the file path, rawSha256, LF-normalized lfSha256, text and units.
+Review the complete definition delta, unchanged semantic-model-source
+Instructions/Description, baseline/source reconciliation and all readback stops.
+Configuration verification does not establish model Prep, source readiness,
+effective AI serving, answer accuracy, Graph/GQL readiness or Metrics availability.
+It cannot supply missing execution evidence or turn a native content block into
+a successful business refusal. Use authorized target-specific preparation and
+publication; never reuse a consumed intent or evaluation campaign.
 
 `quality_candidate.compile_candidate(definition, model_definition)` is an offline-only follow-up
 experiment, not a replacement for the measured/current profile. It starts from a

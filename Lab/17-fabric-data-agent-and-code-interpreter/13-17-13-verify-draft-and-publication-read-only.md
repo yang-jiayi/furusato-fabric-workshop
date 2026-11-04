@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-`verify` は read-only で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。`verify` の成功も、回答精度、Graph/GQL、時系列、mirror完全性を証明しません。
+`verify` は17.9と同じ PrivateRoot と固定された共通指示の候補を使う read-only 操作で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。`verify` の成功も、モデルPrep・ソース準備完了・実効的なAI反映・回答精度、Graph/GQL、Metricsの利用可能性、時系列、mirror完全性を証明しません。
 
 **PowerShell**
 
@@ -28,7 +28,7 @@
 
 ## 17.13 Verify Draft and publication read-only
 
-`verify` is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness.
+`verify` uses the same PrivateRoot and bound common-guidance candidate from17.9, is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish model Prep, source readiness, effective AI serving, answer accuracy, Graph/GQL, Metrics availability, time-series support or mirror completeness.
 
 **PowerShell**
 

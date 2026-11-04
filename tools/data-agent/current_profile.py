@@ -157,6 +157,41 @@ def compare_stage(actual, candidate, stage):
     require(shared(current) == shared(wanted), "Complete shared runtime configuration changed.")
 
 
+def guidance_binding(path):
+    path = Path(path)
+    native.reject_links(path.absolute())
+    require(path.is_file() and not path.is_symlink(), "Common guidance must be a regular file.")
+    path = path.resolve(strict=True)
+    raw = path.read_bytes()
+    text = raw.decode("utf-8")
+    require(not text.startswith("\ufeff"), "Common guidance must be UTF-8 without BOM.")
+    text = text.replace("\r\n", "\n")
+    require("\r" not in text and instruction_units(text) <= 10000,
+            "Common guidance must use LF/CRLF and fit the UTF-16 limit.")
+    return {"path": str(path), "rawSha256": hashlib.sha256(raw).hexdigest(),
+            "lfSha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+            "instructionUtf16Units": instruction_units(text), "text": text}
+
+
+def compile_prepared(definition, workspace, binding=None):
+    candidate, receipt = compile_draft(definition, workspace)
+    if binding is None:
+        return candidate, receipt
+    require(guidance_binding(binding["path"]) == binding,
+            "Common guidance file changed; use a new preparation.")
+    path = "Files/Config/draft/stage_config.json"
+    original = decoded_parts(definition)[path]
+    original["aiInstructions"] = binding["text"]
+    parts = definition.get("definition", definition)["parts"]
+    candidate = {"parts": [inline_part(path, original) if part["path"] == path
+                           else copy.deepcopy(part) for part in parts]}
+    receipt.update(identitySubstitutionOnly=False, commonGuidance=binding,
+                   instructionUtf16Units=binding["instructionUtf16Units"],
+                   candidateSha256=native.digest(candidate),
+                   preservation="Only Draft stage JSON is reserialized; every other original part is byte-preserved.")
+    return candidate, receipt
+
+
 def gather(client, folder, *, stage="draft"):
     folder_item = client.get("folders/" + folder)
     require(folder_item.get("id") == folder, "The explicit target folder was not resolved.")
@@ -191,17 +226,21 @@ def verify(client, root, candidate, folder, stage):
         examples = client.pages(base + "/datasources/" + source["id"] + "/fewshots")
         require(examples == [], "Unexpected active examples; configuration is not the exact experimental snapshot.")
     manifest, _, _ = load_profile()
+    actual_text = decoded_parts(candidate)["Files/Config/draft/stage_config.json"]["aiInstructions"]
     result = {"status": stage + "-matches", "profile": NAME, "experimental": True,
-              "instructionUtf16Units": manifest["instructionUtf16Units"], "logicalSources": 4,
+              "instructionUtf16Units": instruction_units(actual_text), "logicalSources": 4,
               "completeStageReadbackVerified": True, "sourceAvailabilityVerified": False,
               "answerAccuracyAccepted": False}
     safety.save(root, "verification-" + stage + "-" + uuid4().hex + ".json", result)
     return result
 
 
-def prepare(client, root, folder):
+def prepare(client, root, folder, common_guidance=None):
     inputs = gather(client, folder)
-    candidate, receipt = compile_draft(inputs["definition"], client.workspace)
+    binding = guidance_binding(common_guidance) if common_guidance is not None else None
+    if binding is not None:
+        inputs["commonGuidance"] = binding
+    candidate, receipt = compile_prepared(inputs["definition"], client.workspace, binding)
     safety.save(root, "inputs.json", inputs)
     safety.save(root, "candidate.json", candidate)
     safety.save(root, "compile-receipt.json", receipt)
@@ -209,7 +248,8 @@ def prepare(client, root, folder):
         "workspaceId": client.workspace, "agentId": client.agent, "folderId": folder,
         "routingOrigin": client.origin, "profile": NAME,
         "inputsSha256": native.digest(inputs), "candidateSha256": native.digest(candidate),
-        "profileManifestSha256": receipt["profileManifestSha256"]})
+        "profileManifestSha256": receipt["profileManifestSha256"],
+        **({"commonGuidance": binding} if binding is not None else {})})
     return {"status": "prepared", "cloudWrites": 0, "experimental": True, "answerAccuracyAccepted": False}
 
 
@@ -218,7 +258,9 @@ def prepared(root, workspace, agent, folder):
                                     ("prepared.json", "inputs.json", "candidate.json")]
     require((manifest.get("workspaceId"), manifest.get("agentId"), manifest.get("folderId"), manifest.get("profile"))
             == (workspace, agent, folder, NAME), "Prepared scope/profile differs.")
-    rebuilt, receipt = compile_draft(inputs["definition"], workspace)
+    binding = manifest.get("commonGuidance")
+    require(inputs.get("commonGuidance") == binding, "Prepared common guidance binding differs.")
+    rebuilt, receipt = compile_prepared(inputs["definition"], workspace, binding)
     require(native.digest(inputs) == manifest["inputsSha256"]
             and native.digest(candidate) == manifest["candidateSha256"]
             and rebuilt == candidate and receipt["profileManifestSha256"] == manifest["profileManifestSha256"],
@@ -229,8 +271,10 @@ def prepared(root, workspace, agent, folder):
 def apply(client, root, folder, inputs, candidate):
     require(not (root / "apply-intent.json").exists(), "Apply intent exists; reconcile with verify, never replay.")
     fresh = gather(client, folder)
-    require(fresh == inputs, "Source bindings/metadata or Agent changed since prepare; no overwrite was issued.")
-    rebuilt, _ = compile_draft(fresh["definition"], client.workspace)
+    binding = inputs.get("commonGuidance")
+    expected_inputs = {key: value for key, value in inputs.items() if key != "commonGuidance"}
+    require(fresh == expected_inputs, "Source bindings/metadata or Agent changed since prepare; no overwrite was issued.")
+    rebuilt, _ = compile_prepared(fresh["definition"], client.workspace, binding)
     require(rebuilt == candidate, "Candidate changed since prepare.")
     safety.save(root, "apply-backup.json", fresh)
     safety.save(root, "apply-intent.json", {"operation": "updateDefinition",
@@ -246,6 +290,9 @@ def apply(client, root, folder, inputs, candidate):
 
 def publish(client, root, folder, inputs, candidate):
     require(not (root / "publish-intent.json").exists(), "Publish intent exists; reconcile with verify, never replay.")
+    if inputs.get("commonGuidance") is not None:
+        rebuilt, _ = compile_prepared(inputs["definition"], client.workspace, inputs["commonGuidance"])
+        require(rebuilt == candidate, "Candidate changed since prepare.")
     verify(client, root, candidate, folder, "draft")
     latest = client.definition("dataAgents", client.agent)
     compare_stage(latest, candidate, "draft")
@@ -269,12 +316,16 @@ def main(argv=None):
     parser.add_argument("--routing-origin", help="Observed regional analysis.windows.net origin; prepare only.")
     parser.add_argument("--stage", choices=("draft", "published"), default="published")
     parser.add_argument("--apply", action="store_true")
+    parser.add_argument("--common-guidance", type=Path,
+                        help="Prepare only: explicit optional common-only candidate; never changes the default profile.")
     args = parser.parse_args(argv)
     client = None
     try:
         workspace, agent, folder = map(safety.guid, (args.workspace_id, args.agent_id, args.folder_id))
         require(args.apply == (args.phase in {"apply", "publish"}),
                 "Only apply/publish require --apply; prepare/verify must remain read-only.")
+        require(args.common_guidance is None or args.phase == "prepare",
+                "--common-guidance is prepare-only; later phases use the bound file.")
         root = safety.private_root(args.private_root, create=args.phase == "prepare")
         if args.phase == "prepare":
             origin = safety.routing_origin(args.routing_origin or "")
@@ -284,7 +335,7 @@ def main(argv=None):
             origin = manifest["routingOrigin"]
         client = safety.Client(workspace, agent, origin, root)
         if args.phase == "prepare":
-            result = prepare(client, root, folder)
+            result = prepare(client, root, folder, args.common_guidance)
         elif args.phase == "apply":
             result = apply(client, root, folder, inputs, candidate)
         elif args.phase == "publish":

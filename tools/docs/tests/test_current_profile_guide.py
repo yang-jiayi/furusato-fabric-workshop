@@ -1,3 +1,4 @@
+import hashlib
 import json
 import sys
 import unittest
@@ -7,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
 
 from furusato_docs.participant_current_tuning import (  # noqa: E402
+    COMMON_GUIDANCE_REL,
     _assets,
     _profile_command,
     append_current_tuning_sections,
@@ -107,7 +109,7 @@ class CurrentProfileGuideTests(unittest.TestCase):
             self.assets["source_instructions"]["ontology"],
         )
 
-    def test_contiguous_chapter_sections_and_exact_profile_text(self):
+    def test_contiguous_chapter_sections_and_exact_current_common_text(self):
         self.assertEqual(
             [f"chapter-17-{index}" for index in range(1, 15)],
             [section.ident for section in self.chapter.children],
@@ -129,17 +131,26 @@ class CurrentProfileGuideTests(unittest.TestCase):
             if block.kind == "code"
         )
         self.assertTrue(global_block.get("canonicalLiteral"))
-        self.assertEqual(9_994, len(global_code.encode("utf-16-le")) // 2)
-        self.assertEqual(self.assets["global"], global_code)
-        self.assertIn("You are the Furusato Workshop v3 Preview assistant.", global_code)
+        self.assertIs(global_block, sections["chapter-17-6"].blocks[2])
+        self.assertEqual(3_394, len(global_code.encode("utf-16-le")) // 2)
+        common = (ROOT / COMMON_GUIDANCE_REL).read_bytes().decode("utf-8").replace("\r\n", "\n")
+        self.assertEqual(common, global_code)
+        self.assertEqual(
+            "7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26",
+            hashlib.sha256(global_code.encode("utf-8")).hexdigest(),
+        )
+        self.assertNotEqual(self.assets["global"], global_code)
+        self.assertEqual(3_394, self.summary["globalUtf16Units"])
         global_reference = " ".join(
             part
             for block in sections["chapter-17-6"].blocks
             if block.kind == "paragraph"
             for part in self._strings(block.payload)
         )
-        self.assertIn("Workshop の版を示すものではありません", global_reference)
-        self.assertIn("not the Workshop edition", global_reference)
+        self.assertIn("設定読み戻しは確認済み", global_reference)
+        self.assertIn("configuration readbacks of this text have been verified", global_reference)
+        self.assertIn("回答品質の測定は未実施", global_reference)
+        self.assertIn("answer-quality measurement is pending", global_reference)
         source_block = next(
             block
             for block in sections["chapter-17-7"].blocks
@@ -190,6 +201,28 @@ class CurrentProfileGuideTests(unittest.TestCase):
         self.assertIn("`profile-manifest.json`", preflight)
         intro = current_chapter_spec()["intro"][0]
         self.assertNotIn("four logical sources", intro[1])
+
+    def test_actual_prepare_command_binds_current_common_guidance_and_later_commands_keep_scope(self):
+        sections = {section.ident: section for section in self.chapter.children}
+        commands = [block["text"] for block in sections["chapter-17-9"].blocks
+                    if block.kind == "code" and "current_profile.py prepare" in block["text"]]
+        self.assertEqual(1, len(commands))
+        expected = _profile_command(
+            "prepare", "--routing-origin $RoutingOrigin",
+            "--common-guidance workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt",
+        )
+        self.assertEqual(expected, commands[0])
+        self.assertEqual(1, commands[0].count("--common-guidance "))
+        self.assertTrue(all(line.endswith(" `") for line in commands[0].splitlines()[:-1]))
+        for suffix, expected_commands in (
+            (11, [_profile_command("apply", "--apply")]),
+            (12, [_profile_command("publish", "--apply")]),
+            (13, [_profile_command("verify", "--stage draft") + "\n"
+                  + _profile_command("verify", "--stage published")]),
+        ):
+            codes = [block["text"] for block in sections[f"chapter-17-{suffix}"].blocks
+                     if block.kind == "code"]
+            self.assertEqual(expected_commands, codes)
 
     def test_cli_and_durable_limitations_are_documented(self):
         def strings(value):

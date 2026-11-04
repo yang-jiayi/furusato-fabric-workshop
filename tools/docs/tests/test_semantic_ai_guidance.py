@@ -11,6 +11,37 @@ from furusato_html.model import Section, Text
 
 
 class SemanticAIGuidanceTests(unittest.TestCase):
+    def test_current_common_publication_status_matches_chapter_17_and_readme_bilingually(self):
+        from furusato_docs.participant_current_tuning import append_current_tuning_sections
+        semantic = Section("ch-12", 1, "12", Text("12", "12"), chapter=12)
+        agent = Section("ch-17", 1, "17", Text("17", "17"), chapter=17)
+        append_sections(semantic, ROOT)
+        append_current_tuning_sections(agent, ROOT)
+        common = [b["text"] for b in semantic.children[0].blocks if b.kind == "code"][-1]
+        current = next(s for s in agent.children if s.number == "17.6")
+        self.assertEqual(common, current.blocks[2]["text"])
+        import hashlib
+        self.assertEqual(3_394, len(common.encode("utf-16-le")) // 2)
+        sha = "7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26"
+        self.assertEqual(sha, hashlib.sha256(common.encode("utf-8")).hexdigest())
+        readme = (ROOT / "README.md").read_text("utf-8")
+        for language, verified, pending in (
+            ("ja", "設定読み戻しは確認済み", "回答品質の測定は未実施"),
+            ("en", "configuration readbacks of this text have been verified",
+             "answer-quality measurement is pending"),
+        ):
+            prose = "\n".join(b["text"].get(language) for b in semantic.children[0].blocks
+                              if b.kind == "paragraph")
+            for term in ("3,394", sha, "Draft", "Published", verified, pending,
+                         "--common-guidance", "17.9"):
+                self.assertIn(term, prose)
+            for obsolete in ("separate candidate", "別候補", "unmeasured common", "未評価の共通"):
+                self.assertNotIn(obsolete, prose)
+        for term in ("3,394", sha, "--common-guidance", "公開設定の読み戻しは確認済み",
+                     "回答品質の測定は未実施", "configuration readbacks have been verified",
+                     "Answer-quality measurement is pending", "Metrics", "GQL"):
+            self.assertIn(term, readme)
+
     def test_common_routing_precedence_and_legitimate_clarification(self):
         guidance = (ROOT / PAYLOAD / "agent-instructions.txt").read_text("utf-8")
         for term in (

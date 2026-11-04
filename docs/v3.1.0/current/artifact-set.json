@@ -2,7 +2,7 @@
   "schemaVersion": "furusato-v3-artifact-set/v1",
   "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
-  "sourceCommit": "37e4e50fbbba07ba6f6901d02eb97d33475327b0",
+  "sourceCommit": "3371e681ad7e67e823b57fb0550ee3ed34d09e0a",
   "edition": {
     "schemaVersion": "furusato-workshop-edition/v1",
     "workshopVersionFile": "WORKSHOP_VERSION",
@@ -21,7 +21,7 @@
     "internalPublicationKeysChanged": false,
     "releaseTagsRewritten": false
   },
-  "sourceTreeSha256": "190c9af6490aa09fd7fb2ed70147fb31a7078ef2d5438e03aca3c1a5e3e49c90",
+  "sourceTreeSha256": "9afe13831f1dd2149730748702a48f9aad475a226b4ec4863036f0a618aafff7",
   "candidateSourceSha256": "858697b9701ed4df90ec85271cfdd3a4046ca456b0b7b01318b6cb0b7120d7db",
   "files": {
     "VERSION": "f972084131b8c2eba9339f5bc95cf6d85183eb1b1af87c723f12c48542f84445",
@@ -117,7 +117,7 @@
     "docs/assets/readme/video-ja.svg": "dff060a851209cc6f6cc76634cdb662cb049c2ef1399d00a975a48235115120d",
     "tools/data-agent/agent_service_check.py": "c1b90d6916885f8a72cb8ae62ec4cb28622e7c64d35664c9764d514179d67635",
     "tools/data-agent/answer_contract_profile.py": "6f08ea0a1edf02d2d5f30af229ae8b68edeefc3eefb28617c7b1c68cff56b7fb",
-    "tools/data-agent/current_profile.py": "5b8ef98a41048ea5432c7a3848e1d8a883b7b050ec84352067912f1e185dca88",
+    "tools/data-agent/current_profile.py": "7488769eb5288a5643b002f4e7ebb9102a9259860e9b3be898614026a46510aa",
     "tools/data-agent/decomposition_candidate.py": "e27c706b47586b46d1c37eefe9f1208cca39df65a2f95835dcaf5cd47bba704d",
     "tools/data-agent/dependency_candidate.py": "09f88d7a22419fd958982565f5958483c4cb2993d9a5f1ff86cd862917d75a63",
     "tools/data-agent/evaluate_native.py": "52d80309582a5c8b70cc72011a483fea70af1f338bad5ec77e4d297f7c5c8a26",
@@ -159,7 +159,7 @@
     "tools/data-agent/source_grounded_profile.py": "28e1b0ef07ca69bace9a0e1247c6da0a16ae696142594ef3b5ba940d3f407f13",
     "tools/data-agent/source_metadata_candidate.py": "fb2180110af22fb297b075a94f13d98db1e1070fddee53f2f2710d941a014056",
     "tools/data-agent/standard_contract_restoration.py": "51e16114e8f7cbf40906d366ae3fb4bd109d49cc1bfea72ff2b9a8c567ba9474",
-    "tools/data-agent/test_current_profile.py": "51b6e60b48c8bc166976503a8e7a529be57c76733c313c688a01085b8dc47334",
+    "tools/data-agent/test_current_profile.py": "ae9f19b91d6e500fd27d7b358f0b1e782ed250d5606cd07540622a63d80cfe09",
     "tools/data-agent/tests/candidate_source_fixtures.py": "116ab8f1addae3f1b95dde000ed609f3b55c0cdd891da196b4e732af4b8d0469",
     "tools/data-agent/tests/fixtures/candidate-source-profile-v1/definition/kusto.json": "88e50f84c7498de1a581cbcb87ee8be9bd2395706838495df39c36c225c81fbf",
     "tools/data-agent/tests/fixtures/candidate-source-profile-v1/definition/lakehouse_tables.json": "a1c6bbc9242b7e763768d24527c5e7c841f51f61910c17dfe5bade5785c59024",
@@ -246,9 +246,9 @@
     "tools/docs/furusato_docs/participant30_figures.py": "fb294bac54931c37245f03be5d0c408504d34575f051bbc130c755f4ee066b43",
     "tools/docs/furusato_docs/participant30_text.py": "82c2847df8fe2fb1a89f8adefddfc8c9d1fd9610115d450ed8d49b2f6c9a08a9",
     "tools/docs/furusato_docs/participant30_tuning.py": "b5456fe357005efc2733dccc0b313e3dd344d61ce0314a00cfd63318521b78a4",
-    "tools/docs/furusato_docs/participant_current_tuning.py": "1dd7dcc5d0509770f0699e1b8d6e21c8e5c73c19baaa7ce8a65c9e0c5acb2f7a",
+    "tools/docs/furusato_docs/participant_current_tuning.py": "339d63681a312d4dfa0717aba2f3e0e9c8409d175330b960e4f28f317aff6467",
     "tools/docs/furusato_docs/participant_guide.py": "ee9053eeea5569f544b1f975f4038a22a88371d48fc45ca99ae04bd741bae7a1",
-    "tools/docs/furusato_docs/participant_semantic_ai.py": "60ef474212879c2636cbfb0632a14ff0209f93460031231645a89405725722d0",
+    "tools/docs/furusato_docs/participant_semantic_ai.py": "3713c2828c4cc49cf317de9f46c7f6687ac2abad7c2af99b26181d6c2edbc38f",
     "tools/docs/furusato_docs/participant_word.py": "a530d0b14223209049fd7c5913ea3ad6f99fa9e4d03343514113c8aec5afadfc",
     "tools/docs/furusato_docs/preview30_acceptance.py": "664350aac41c530f75978562676f87998f0c5b25a0113eebacc3712edd01a88c",
     "tools/docs/furusato_docs/preview30_content.py": "66f051dddd2ebb0ad66a6cd026c6a6c52c64ae4d06d4cbc339d64c468889c155",
@@ -277,7 +277,7 @@
     "tools/docs/tests/test_capture_policy.py": "3ddeda1c7cb793af10e5fc7f1bfef68e7cd714a74a1a4438696f3b8717b0d1aa",
     "tools/docs/tests/test_capture_quality.py": "e1fa7d40222c5cea497f39d0d2c164397ce3aec714931358a0b0d06f1746569d",
     "tools/docs/tests/test_current_delivery.py": "950bf5d64ab9c3b40b3469c2c828a328951f2ebe2529284b22dedbeded75964c",
-    "tools/docs/tests/test_current_profile_guide.py": "d77788da9e77bab9e61ea4d70ee0520ffa2a5d95aec824b2d959e2f182c46f25",
+    "tools/docs/tests/test_current_profile_guide.py": "fe274b203457aef7ef1827d201e88e6f3b59c58286e73e04ef53e21a329a5ac4",
     "tools/docs/tests/test_current_validation_entries.py": "338f53a81f6130d72b6faabf0dd125d9d3a9a3b86cbfc19e5cbd86547f9630bf",
     "tools/docs/tests/test_data_agent_practice_gates.py": "b6295d8bd396d48ea59601886d1a107167283bd67b4421f4f1138e724508cbd5",
     "tools/docs/tests/test_deliverable_editions.py": "0b39032a0657b4bc3771d41a8950b58429c4ffbcf40c5aab407076a1ea1f0f23",
@@ -306,8 +306,8 @@
     "tools/docs/tests/test_preview_material_gates.py": "66eb579577867bc1a3884a278861a587df14e4cbb6389f0fc7f785d7429cfdd7",
     "tools/docs/tests/test_public_document_mode.py": "cc64d9009b2669d2cefa27519ea68b2612f996c8c5e88fe9de442c7dfa9f8d88",
     "tools/docs/tests/test_quality_iteration_content.py": "36acbb5409c614619d9545bfd58079f4b07470bf3beb9defb1434990763fd780",
-    "tools/docs/tests/test_semantic_ai_guidance.py": "181c4f7ee3ceb0ab7833698509262b6daf3d4de1c93052d8193b899f306f7f4e",
-    "tools/docs/tests/test_semantic_instruction_boundaries.py": "4110b931858bffdf92e0437d93ebf7193685e083ebe15a9e3367a3ac243d9ff6",
+    "tools/docs/tests/test_semantic_ai_guidance.py": "7ac15005458f7e410e846683c44859a93abb96110292ed3acfb0340cd2711a43",
+    "tools/docs/tests/test_semantic_instruction_boundaries.py": "ef602a616b064926a730cdf81d812f53bbed2487212ba9056368d91f5912e8c7",
     "tools/docs/tests/test_source_host_boundaries.py": "6d33d3013d0db5b7a15f6b423a90be96bde462c9396a2ccc40df8bc9d392ed6d",
     "tools/docs/tests/test_unified_guide_content.py": "dc16e1dd1f43e6bc74424a2fc52708a6513ecf4cc07fe2124f34b3ae957a7a90",
     "tools/docs/tests/test_unified_instruction_sources.py": "6f9d7e7aab3a2e4ac1602df7d2a6e209b9b1f9c61392953672f19dd42764af1d",
@@ -977,9 +977,9 @@
     "agentAnswerQualityAccepted": false
   },
   "documentationSourceRevision": {
-    "baseCommit": "37e4e50fbbba07ba6f6901d02eb97d33475327b0",
+    "baseCommit": "3371e681ad7e67e823b57fb0550ee3ed34d09e0a",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "190c9af6490aa09fd7fb2ed70147fb31a7078ef2d5438e03aca3c1a5e3e49c90"
+    "sourceTreeSha256": "9afe13831f1dd2149730748702a48f9aad475a226b4ec4863036f0a618aafff7"
   }
 }

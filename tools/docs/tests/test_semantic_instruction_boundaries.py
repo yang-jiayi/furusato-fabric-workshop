@@ -42,6 +42,54 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
             for language in ("ja", "en")
         }
 
+    def test_current_common_path_is_consistent_in_both_languages(self):
+        reference = self.prose(self.sections["chapter-17-6"])
+        prepare = self.prose(self.sections["chapter-17-9"])
+        review = self.prose(self.sections["chapter-17-10"])
+        for language in ("ja", "en"):
+            for prose in (reference, prepare, review):
+                self.assertIn("--common-guidance", prose[language])
+            self.assertIn("設定読み戻しは確認済み" if language == "ja"
+                          else "configuration readbacks of this text have been verified",
+                          reference[language])
+            self.assertIn("回答品質の測定は未実施" if language == "ja"
+                          else "answer-quality measurement is pending", reference[language])
+            for value in ("3,394", "UTF-16", "rawSha256", "lfSha256",
+                          "7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26",
+                          "baseline", "payload", "manifest", "Ontology context",
+                          "path/type/is_selected", "active few-shot file/example",
+                          "shared-field readbacks", "complete-stage", "dataSourceInstructions",
+                          "userDescription"):
+                self.assertIn(value, review[language])
+            for obsolete in ("9994", "9,994", "default lane", "既定経路", "両経路"):
+                self.assertNotIn(obsolete, review[language])
+            self.assertIn("fail-closed" if language == "ja" else "fails closed", review[language])
+            self.assertIn("停止" if language == "ja" else "Stop", review[language])
+            self.assertIn("同じ" if language == "ja" else "same complete", review[language])
+
+    def test_bound_candidate_continues_through_apply_publish_verify_without_quality_claims(self):
+        for suffix in (11, 12, 13):
+            prose = self.prose(self.sections[f"chapter-17-{suffix}"])
+            for language in ("ja", "en"):
+                self.assertIn("PrivateRoot", prose[language])
+                self.assertIn("固定された共通指示の候補" if language == "ja"
+                              else "bound common-guidance candidate", prose[language])
+                self.assertIn("17.9", prose[language])
+        verify = self.prose(self.sections["chapter-17-13"])
+        for language in ("ja", "en"):
+            for term in ("Graph/GQL", "Metrics", "readback"):
+                self.assertIn(term, verify[language])
+        for term in ("model Prep", "source readiness", "effective AI serving", "answer accuracy"):
+            self.assertIn(term, verify["en"])
+
+    def test_prepare_hash_wording_passes_existing_composition_terminology_guard(self):
+        from furusato_docs.participant30 import JARGON
+        prose = self.prose(self.sections["chapter-17-9"])
+        self.assertIn("元ファイル", prose["ja"])
+        self.assertIn("original-file", prose["en"])
+        for language in ("ja", "en"):
+            self.assertIsNone(JARGON.search(prose[language]))
+
     def test_source_reference_distinguishes_supported_metadata_and_agent_global_guidance(self):
         section = self.sections["chapter-17-7"]
         prose = self.prose(section)

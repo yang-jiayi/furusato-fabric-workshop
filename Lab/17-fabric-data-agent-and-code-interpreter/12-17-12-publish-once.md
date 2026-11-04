@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-Draft が完全に一致し、全ての事前条件と readback が通った場合に限り、同じ既存 Agent の公開を一度だけ実行します。明示的な --apply が必要です。publish intent を再利用・削除せず、応答不明や timeout のときは再送しません。
+17.9と同じ PrivateRoot と固定された共通指示の候補を使います。Draft が完全に一致し、全ての事前条件と readback が通った場合に限り、同じ既存 Agent の公開を一度だけ実行します。明示的な --apply が必要です。publish intent を再利用・削除せず、応答不明や timeout のときは再送しません。
 
 **PowerShell**
 
@@ -20,7 +20,7 @@ Draft が完全に一致し、全ての事前条件と readback が通った場�
 
 ## 17.12 Publish once
 
-Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout.
+Use the same PrivateRoot and bound common-guidance candidate from17.9. Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout.
 
 **PowerShell**
 

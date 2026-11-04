@@ -15,6 +15,9 @@ PROFILE = "current-experimental"
 PROFILE_REL = Path("workshop/v3.0.0-preview/data-agent/profiles") / PROFILE
 INSTRUCTION_LIMIT = 10_000
 TESTED_GLOBAL_UNITS = 9_994
+COMMON_GUIDANCE_REL = Path("workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt")
+COMMON_GUIDANCE_UNITS = 3_394
+COMMON_GUIDANCE_LF_SHA256 = "7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26"
 
 
 def _text(ja, en=None):
@@ -235,11 +238,15 @@ def append_current_tuning_sections(chapter: Section, root: Path):
         raise ValueError("Current-profile instructions belong to Chapter 17")
     assets = _assets(root)
     profile_rel = PROFILE_REL.as_posix()
+    common = (Path(root) / COMMON_GUIDANCE_REL).read_bytes().decode("utf-8").replace("\r\n", "\n")
+    if (len(common.encode("utf-16-le")) // 2 != COMMON_GUIDANCE_UNITS
+            or hashlib.sha256(common.encode("utf-8")).hexdigest() != COMMON_GUIDANCE_LF_SHA256):
+        raise ValueError("Current common guidance differs from the published reference")
 
     _append(chapter, 2, ("対象と準備", "Scope and prerequisites"), [
         _paragraph(
-            "同梱の portable profile は、現行の公開設定で確認した指示本文と170個の選択済みノードを保持し、配置先に必要な ID だけを置換します。自分が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent で Draft と Published を照合します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定してください。別の Agent を作成せず、source を追加したり selection や schema を広げたりしません。",
-            "The portable profile preserves the instruction text and 170 selected nodes verified in the current published configuration, substituting only IDs required by the target environment. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema."),
+            "同梱の portable profile は、ソース指示・選択・定義の不変な比較入力です。参加者経路は17.6の現行共通指示を17.9の --common-guidance で固定し、170個の選択済みノードとソース設定を保持します。自分が所有し利用を許可された Workspace とフォルダー内の既存 Gen2 Data Agent で Draft と Published を照合します。自分の Workspace ID、Folder ID、Agent ID、PrivateRoot を設定してください。別の Agent を作成せず、source を追加したり selection や schema を広げたりしません。",
+            "The supplied portable profile is immutable comparison input for source instructions, selections and definitions. The participant path binds the current common guidance in17.6 with --common-guidance in17.9, preserving the 170 selected nodes and source settings. Reconcile Draft and Published on an existing Gen2 Data Agent in a workspace and folder you own and are authorized to use. Set your own Workspace ID, Folder ID, Agent ID and PrivateRoot. Do not create another agent, add sources, expand selections or change the schema."),
         _steps([
             ("4章のアクセス・容量・権限の確認を済ませます。対象 Agent が既にあり、自分の担当する4つの論理ソース（Lakehouse、KQL Database、Semantic model、Ontology）を含むことを確認します。既存の公開版がある場合は、変更前の状態を PrivateRoot に保存できる手順を確認してから進みます。",
              "Complete the access, capacity and permission checks in Chapter 4. Confirm the existing agent has the four assigned logical sources: Lakehouse, KQL Database, semantic model and Ontology. If a published version exists, first confirm that the procedure can preserve its pre-change state under PrivateRoot."),
@@ -252,8 +259,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
     ], insert_at=1)
     _append(chapter, 4, ("プロファイル資産と事前確認", "Profile assets and preflight"), [
         _paragraph(
-            f"同梱の `{profile_rel}` にある `profile-manifest.json`、`global-instructions.txt`、`source-instructions.json`、`selection-contract.json`、定義と portable stage template を確認します。manifest の SHA-256 と実ファイルを照合し、プロファイル名が `current-experimental` であることを確認します。`global-instructions.txt` は末尾を含めてそのまま使用し、Trimや編集をしません。",
-            f"Inspect `profile-manifest.json`, `global-instructions.txt`, `source-instructions.json`, `selection-contract.json`, the definition and portable stage template under `{profile_rel}`. Compare manifest SHA-256 values with the files and confirm the profile name is `current-experimental`. Use `global-instructions.txt` exactly as stored, including its ending; do not trim or edit it."),
+            f"同梱の `{profile_rel}` にある `profile-manifest.json`、`global-instructions.txt`、`source-instructions.json`、`selection-contract.json`、定義と portable stage template を確認します。manifest の SHA-256 と実ファイルを照合し、プロファイル名が `current-experimental` であることを確認します。これらは全体を照合する必須の比較入力です。`global-instructions.txt` を含む profile は末尾も変更せず、現行共通指示は17.9の別ファイルで固定します。",
+            f"Inspect `profile-manifest.json`, `global-instructions.txt`, `source-instructions.json`, `selection-contract.json`, the definition and portable stage template under `{profile_rel}`. Compare manifest SHA-256 values with the files and confirm the profile name is `current-experimental`. These are required complete comparison inputs. Preserve the profile, including the ending of `global-instructions.txt`; bind the current common guidance from its separate file in17.9."),
         _table(
             [("論理ソース", "Logical source"), ("オブジェクト", "Objects"),
              ("列", "Columns"), ("メジャー", "Measures")],
@@ -262,8 +269,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "Manifest selection inventory",
         ),
         _paragraph(
-            f"definition few-shot file は {assets['manifest']['definitionFewshotFiles']} 件、実定義の active example は {assets['active_example_count']} 件です。Global instructions は実測 {assets['global_units']} UTF-16 単位で、上限 {INSTRUCTION_LIMIT} 単位以下です。",
-            f"The definition contains {assets['manifest']['definitionFewshotFiles']} definition few-shot files and {assets['active_example_count']} active examples. The global instructions measure {assets['global_units']} UTF-16 units, within the {INSTRUCTION_LIMIT}-unit maximum."),
+            f"definition few-shot file は {assets['manifest']['definitionFewshotFiles']} 件、実定義の active example は {assets['active_example_count']} 件です。不変な比較入力の global instructions は {assets['global_units']} UTF-16 単位です。適用する現行共通指示は3,394 UTF-16 単位で、上限 {INSTRUCTION_LIMIT} 単位以下です。",
+            f"The definition contains {assets['manifest']['definitionFewshotFiles']} definition few-shot files and {assets['active_example_count']} active examples. The immutable comparison input's global instructions measure {assets['global_units']} UTF-16 units. The current common guidance to apply measures 3,394 UTF-16 units, within the {INSTRUCTION_LIMIT}-unit maximum."),
     ])
     _append(chapter, 5, ("現在の Agent と選択契約を読み取る", "Read the current agent and selection contract"), [
         _paragraph(
@@ -285,12 +292,12 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "次の全体指示は参照用の正確な全文です。この段階では画面上の欄を変更しません。`prepare` で対象・差分・readback を確認してから、許可された `apply` 手順だけで適用します。本文・末尾の空白・改行を編集せず、readback は元ファイルと照合します。",
             "The global instructions below are the exact reference text. Do not edit the UI field at this step. After reviewing the target, diffs and readbacks in `prepare`, apply changes only through the authorized `apply` procedure. Do not edit the text or its trailing whitespace/line endings; compare readback with the source file."),
         _paragraph(
-            "冒頭の `You are the Furusato Workshop v3 Preview assistant.` は、同梱設定に保存された役割ラベルです。Workshop の版を示すものではありません。設定本文は正確に使い、参加者向け版は本書と `WORKSHOP_VERSION` で確認してください。",
-            "The opening `You are the Furusato Workshop v3 Preview assistant.` is the role label stored in the supplied configuration, not the Workshop edition. Use the instruction text exactly as supplied; identify the participant edition from this handbook and `WORKSHOP_VERSION`."),
-        _code(assets["global"], _text("Agent 全体への指示", "Agent-wide instructions"), canonical=True),
+            "次の本文は `workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt` のLF正規化後の全文で、3,394 UTF-16単位です。同じ本文の Draft と Published の設定読み戻しは確認済みです。これは公開設定の確認であり、回答品質の測定は未実施です。自分の環境では17.9〜17.13の対象・差分・公開・読み戻しを省略しません。",
+            "The text below is the complete LF-normalized `workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`, measuring 3,394 UTF-16 units. Draft and Published configuration readbacks of this text have been verified. This verifies the published configuration; answer-quality measurement is pending. Do not skip target, diff, publication or readback checks in17.9-17.13 for your own environment."),
+        _code(common, _text("Agent 全体への指示", "Agent-wide instructions"), canonical=True),
         _paragraph(
-            "全体指示の中にモデル固有の計算・フィルターの説明が含まれていても、Semantic model の DAX 生成ツールには渡されません。モデルの業務ルールと依存列を含む AI schema は12.6、設定後の DAX 検証は12.7を使います。12.6の共通 Agent 指示の候補へ切り替える場合は別の変更として差分・適用・公開・読み戻しを記録し、この portable profile の一部だけを書き換えて再利用しません。17.9〜17.13の current_profile.py は同梱 profile の全体指示を使い、12.6の別候補を読み込みません。この profile を適用すると、既存の別の共通指示を置き換えます。12.6の候補を使用・保持する場合は17.9以降の profile 適用経路へ進まず、担当者と別の変更手順・許可・評価を確認します。モデルの Prep 設定だけでは、この切替は行われません。",
-            "Even when global instructions contain model-specific calculation/filter text, it is not passed to the semantic-model DAX generation tool. Use 12.6 for model business rules and a dependency-inclusive AI schema, and 12.7 for DAX validation after configuration. Switching to the common Agent guidance candidate in 12.6 is a separate change requiring its own diff, application, publication and readback; do not partially rewrite and reuse this portable profile. current_profile.py in 17.9-17.13 uses the supplied profile's global instructions, not the separate text in 12.6. Applying that profile replaces other existing common guidance. To use or retain the 12.6 candidate, stop before the profile-application lane in 17.9 and confirm a separate change procedure, authorization and evaluation with the owner. Model Prep configuration alone does not switch Agent guidance."),
+            "全体指示の中にモデル固有の計算・フィルターの説明が含まれていても、Semantic model の DAX 生成ツールには渡されません。モデルの業務ルールと依存列を含む AI schema は12.6、設定後の DAX 検証は12.7を使います。参加者経路は17.9の --common-guidance でこの共通指示を固定し、17.10以降も同じ候補を使います。portable profile の一部だけを書き換えて再利用しません。公開設定の読み戻しは、モデルPrep・ソース準備完了・実効的なAI反映・回答精度を証明しません。モデルの Prep 設定だけでは Agent 共通指示は切り替わりません。",
+            "Even when global instructions contain model-specific calculation/filter text, it is not passed to the semantic-model DAX generation tool. Use 12.6 for model business rules and a dependency-inclusive AI schema, and 12.7 for DAX validation after configuration. The participant path binds this common guidance with --common-guidance in17.9 and retains the same candidate from17.10 onward; do not partially rewrite and reuse this portable profile. Published configuration readback does not establish model Prep, source readiness, effective AI serving or answer accuracy. Model Prep configuration alone does not switch Agent guidance."),
     ])
     _append(chapter, 7, ("ソース指示・説明と Ontology context を確認する", "Review source instructions, descriptions and Ontology context"), [
         _paragraph(
@@ -314,6 +321,12 @@ def append_current_tuning_sections(chapter: Section, root: Path):
     ])
     _append(chapter, 9, ("適用候補を安全に準備する", "Prepare the candidate safely"), [
         _paragraph(
+            "次の prepare コマンドは --common-guidance で17.6と12.6の現行共通指示を固定します。この参加者経路でも既存 profile とソース全体の照合は必須で、Draft の共通指示だけを変更します。他の部品は元の payload を保持し、stage JSON だけを再シリアライズします。照合に失敗したら停止し、ソースを直して通過させません。",
+            "The prepare command below binds the current common guidance in17.6 and12.6 with --common-guidance. This participant path still requires complete profile/source reconciliation and changes only Draft common instructions. Other parts retain their original payloads; only stage JSON is reserialized. Stop on reconciliation failure; do not alter sources to pass."),
+        _paragraph(
+            "候補ファイルはUTF-8 BOMなしで保持します。CRLFをLFに揃えた本文と元ファイルの両ハッシュ、UTF-16単位数、対象範囲が準備記録に固定されます。今回の本文はLFで3,394文字です。以降は同じファイルとPrivateRootを保持し、apply・publish・verifyにはオプションを繰り返さず、固定された候補で確認します。ファイルや候補の変更、同時変更では停止し、新しい準備と許可が必要です。モデルPrep、ソースの利用可能性、回答精度はこの操作では確認されません。",
+            "Keep the candidate as UTF-8 without BOM. Preparation binds both original-file and LF-normalized hashes, UTF-16 units and target scope; CRLF is normalized to LF. This text has3,394LF characters. Retain the same file and PrivateRoot for later phases; do not repeat the option on apply, publish or verify, which use the bound candidate. File/candidate or concurrent changes stop the operation and require new preparation and authorization. This operation verifies neither model Prep, source availability nor answer accuracy."),
+        _paragraph(
             "`prepare` はリモートの変更を行わず、対象の既存 Agent を読み取り、ID-only binding を実定義と照合して、候補と private evidence を作成します。shared-field の実際の readback と complete-stage を確認し、予期しない意味差分があれば失敗として止まることを確認します。`prepare` の結果を見ずに `apply` へ進みません。",
             "`prepare` makes no remote changes. It reads the existing agent, resolves ID-only bindings against its live definition and writes the candidate and private evidence. Check actual shared-field readback and complete-stage; verify unexpected semantic drift causes a fail-closed stop. Do not proceed to `apply` without inspecting `prepare` output."),
         _steps([
@@ -331,20 +344,21 @@ def append_current_tuning_sections(chapter: Section, root: Path):
             "PowerShell",
         ),
         _code(
-            _profile_command("prepare", "--routing-origin $RoutingOrigin"),
+            _profile_command("prepare", "--routing-origin $RoutingOrigin",
+                             "--common-guidance " + COMMON_GUIDANCE_REL.as_posix()),
             "PowerShell",
         ),
     ])
     _append(chapter, 10, ("指示・選択・定義の差分を確認する", "Review instruction, selection and definition diffs"), [
         _paragraph(
-            f"PrivateRoot 内の prepare receipt、candidate、definition/readback artifacts を確認し、manifest の全ファイルハッシュ、global の{assets['global_units']} UTF-16単位、各 source text/description、Ontology context、各 flat selection の path/type/is_selected、active few-shot file/example 数が資産に一致することを確かめます。semantic model source の instructions/description と semantic_model.json の dataSourceInstructions は、serialized definition の比較対象にすぎず、サポートされる編集欄や有効な DAX 設定とは扱いません。readback は文字列・定義の一致を示すだけで、実行時の効果を証明しません。readback では4つの論理ソースと3つの通常形式の物理 datasource record を区別し、native Ontology context を別に確認します。",
-            f"Inspect the prepare receipt, candidate and definition/readback artifacts under PrivateRoot. Verify all manifest hashes, the {assets['global_units']}-UTF-16-unit global text, each source text/description, Ontology context, every flat selection path/type/is_selected and active few-shot file/example counts against the assets. The semantic-model source instructions/description and `dataSourceInstructions` in `semantic_model.json` are serialized definition comparison references only, not supported editable fields or effective DAX configuration. A matching readback verifies serialized text/definition only; it does not prove runtime effect. Distinguish the four logical sources from three standard-format physical datasource records, and verify the natively serialized Ontology context separately."),
+            "PrivateRoot 内の prepare receipt、candidate、definition/readback artifacts を確認します。manifest の全ファイルハッシュ、各 source text/description、Ontology context、各 flat selection の path/type/is_selected、active few-shot file/example 数が不変な比較資産に一致することを確かめます。--common-guidance で固定されたファイルパス・元ファイルの rawSha256・LF正規化後の lfSha256・本文・UTF-16単位数を照合します。現行共通指示は3,394 UTF-16単位、LF正規化後の SHA256 は `7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26` です。元ファイルと候補のどちらかが異なれば停止します。semantic model source の instructions/description と semantic_model.json の dataSourceInstructions は、serialized definition の比較対象にすぎず、サポートされる編集欄や有効な DAX 設定とは扱いません。readback は文字列・定義の一致を示すだけで、実行時の効果を証明しません。readback では4つの論理ソースと3つの通常形式の物理 datasource record を区別し、native Ontology context を別に確認します。",
+            "Inspect the prepare receipt, candidate and definition/readback artifacts under PrivateRoot. Verify all manifest hashes, each source text/description, Ontology context, every flat selection path/type/is_selected and active few-shot file/example counts against the immutable comparison assets. Verify the file path bound by --common-guidance, rawSha256, LF-normalized lfSha256, text and UTF-16 units. The current common guidance has3,394 UTF-16 units and LF-normalized SHA256 `7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26`. Stop if either the source file or candidate differs. The semantic-model source instructions/description and `dataSourceInstructions` in `semantic_model.json` are serialized definition comparison references only, not supported editable fields or effective DAX configuration. A matching readback verifies serialized text/definition only; it does not prove runtime effect. Distinguish the four logical sources from three standard-format physical datasource records, and verify the natively serialized Ontology context separately."),
         _paragraph(
             "shared-field readbacks と complete-stage が全て一致し、停止条件がない場合だけ続行します。apply は対応欄だけの部分更新ではなく、Draft の compiled definition 全体を updateDefinition へ送ります。適用前に、現行 Draft と candidate の semantic model source の Instructions/Description（serialized `dataSourceInstructions`/`userDescription`）が同一であることを確認します。どちらかが異なる、または差分を確実に比較できない場合は apply せず、ここで停止してレビューを依頼します。readback で保持されていることだけでは apply 前後の不変性を保証しません。項目不足や意味差分を手で埋めず、Selection contractを書き換えて通過させません。",
             "Continue only when all shared-field readbacks and complete-stage checks match and no stop condition remains. Apply sends the entire compiled Draft definition to `updateDefinition`; it is not a selective update of supported fields only. Before applying, confirm that the current Draft and candidate have identical semantic-model-source Instructions/Description (`dataSourceInstructions`/`userDescription` in the serialized definition). If either differs, or the comparison cannot be made with certainty, do not apply: stop here and request review. A readback alone does not guarantee these fields will remain unchanged across apply. Do not manually fill missing items or edit the selection contract to make checks pass."),
         _paragraph(
-            "portable stage template は definition/ の5部品だけです。root・resource ID/name の token と、実際の path/type から解決する target token 以外は置き換えません。SQL の異なる列 path 間で native node ID が重複する場合があるため、UUID の一意性を前提にしません。schema、metadata、text、selection semantics の予期しない差分があれば helper は fail-closed で停止します。",
-            "The portable stage template contains only the five parts under definition/. Replace only root/resource ID/name tokens and target tokens resolved from actual path/type. Native SQL node IDs can repeat across different column paths, so do not assume globally unique UUIDs. The helper fails closed on unexpected schema, metadata, text or selection-semantic differences."),
+            "portable stage template は definition/ の5部品だけで、不変な baseline 比較入力です。root・resource ID/name の token と、実際の path/type から解決する target token を照合します。--common-guidance は同じ baseline・ソース全体の照合を要求し、固定された共通指示だけを元の Draft stage に設定し、その JSON を再シリアライズします。他の部品は元の payload を保持します。SQL の異なる列 path 間で native node ID が重複する場合があるため、UUID の一意性を前提にしません。schema、metadata、text、selection semantics の予期しない差分があれば helper は fail-closed で停止します。",
+            "The portable stage template contains only the five parts under definition/ as immutable baseline comparison input. Reconcile root/resource ID/name tokens and target tokens resolved from actual path/type. --common-guidance requires the same complete baseline/source reconciliation, sets only the bound common instructions in the original Draft stage and reserializes that JSON. Other parts retain their original payloads. Native SQL node IDs can repeat across different column paths, so do not assume globally unique UUIDs. The helper fails closed on unexpected schema, metadata, text or selection-semantic differences."),
         *[
             block
             for path in assets["definition_files"]
@@ -363,8 +377,8 @@ def append_current_tuning_sections(chapter: Section, root: Path):
     ])
     _append(chapter, 11, ("Draft へ一度だけ適用する", "Apply once to Draft"), [
         _paragraph(
-            "apply は対応欄だけを選んで更新せず、candidate の compiled Draft definition 全体を送信します。直前の prepare で対象・差分・readback を確認し、17.10 の semantic model source Instructions/Description の不変条件を候補と現行 Draft の比較で確認できた場合に限り、同じ既存 Agent の Draft に一度だけ適用します。不一致または確認不能なら --apply を実行せず、停止してレビューを依頼します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。",
-            "Apply sends the candidate's entire compiled Draft definition; it does not select and update only supported fields. After reviewing the target, diffs and readbacks from prepare, apply once to the same existing agent only if the comparison in 17.10 confirms the semantic-model-source Instructions/Description are unchanged between the candidate and current Draft. If they differ or cannot be confirmed, do not run `--apply`; stop and request review. No write occurs without explicit `--apply`. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify."),
+            "apply は17.9と同じ PrivateRoot と固定された共通指示の候補を使い、対応欄だけを選んで更新せず、candidate の compiled Draft definition 全体を送信します。直前の prepare で対象・差分・readback を確認し、17.10 の semantic model source Instructions/Description の不変条件を候補と現行 Draft の比較で確認できた場合に限り、同じ既存 Agent の Draft に一度だけ適用します。不一致または確認不能なら --apply を実行せず、停止してレビューを依頼します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。",
+            "Apply uses the same PrivateRoot and bound common-guidance candidate from17.9 and sends the candidate's entire compiled Draft definition; it does not select and update only supported fields. After reviewing the target, diffs and readbacks from prepare, apply once to the same existing agent only if the comparison in 17.10 confirms the semantic-model-source Instructions/Description are unchanged between the candidate and current Draft. If they differ or cannot be confirmed, do not run `--apply`; stop and request review. No write occurs without explicit `--apply`. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify."),
         _code(_profile_command("apply", "--apply"), "PowerShell"),
         _paragraph(
             "Draft の shared-field readback と complete-stage の結果を確認します。readback の文字列一致は、semantic model source の Instructions/Description がサポートされる、または DAX に作用することを意味しません。失敗や不一致がある場合は停止し、公開しません。既存の Agent、Schema、Selection を作成・拡張する回避策を試しません。",
@@ -372,14 +386,14 @@ def append_current_tuning_sections(chapter: Section, root: Path):
     ])
     _append(chapter, 12, ("公開を一度だけ実施する", "Publish once"), [
         _paragraph(
-            "Draft が完全に一致し、全ての事前条件と readback が通った場合に限り、同じ既存 Agent の公開を一度だけ実行します。明示的な --apply が必要です。publish intent を再利用・削除せず、応答不明や timeout のときは再送しません。",
-            "Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout."),
+            "17.9と同じ PrivateRoot と固定された共通指示の候補を使います。Draft が完全に一致し、全ての事前条件と readback が通った場合に限り、同じ既存 Agent の公開を一度だけ実行します。明示的な --apply が必要です。publish intent を再利用・削除せず、応答不明や timeout のときは再送しません。",
+            "Use the same PrivateRoot and bound common-guidance candidate from17.9. Only after Draft fully matches and all prerequisites and readbacks pass, publish the same existing agent once. Explicit --apply is required. Do not reuse or delete the publish intent, and never resend after an uncertain response or timeout."),
         _code(_profile_command("publish", "--apply"), "PowerShell"),
     ])
     _append(chapter, 13, ("Draft と公開版を読み取り専用で検証する", "Verify Draft and publication read-only"), [
         _paragraph(
-            "`verify` は read-only で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。`verify` の成功も、回答精度、Graph/GQL、時系列、mirror完全性を証明しません。",
-            "`verify` is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish answer accuracy, Graph/GQL, time-series support or mirror completeness."),
+            "`verify` は17.9と同じ PrivateRoot と固定された共通指示の候補を使う read-only 操作で、Draft または Published を明示して確認します。両方の段階を読み戻し、intent 結果、shared-field readbacks、complete-stage、4論理ソース、実指示全文・説明・Ontology context・全selectionを照合します。semantic model source の Instructions/Description は読み戻し文字列の比較であり、サポートや DAX への効果を証明しません。サポート対象の model/table/column/measure metadata は別に扱います。`verify` の成功も、モデルPrep・ソース準備完了・実効的なAI反映・回答精度、Graph/GQL、Metricsの利用可能性、時系列、mirror完全性を証明しません。",
+            "`verify` uses the same PrivateRoot and bound common-guidance candidate from17.9, is read-only and explicitly targets Draft or Published. Read back both stages and reconcile intent results, shared-field readbacks, complete-stage, four logical sources, exact instructions/descriptions/Ontology context and all selections. SemanticModel-source Instructions/Description are compared as serialized readback text; this does not prove support or an effect on DAX. Treat supported model/table/column/measure metadata separately. Successful `verify` does not establish model Prep, source readiness, effective AI serving, answer accuracy, Graph/GQL, Metrics availability, time-series support or mirror completeness."),
         _code(
             _profile_command("verify", "--stage draft") + "\n"
             + _profile_command("verify", "--stage published"),
@@ -403,7 +417,7 @@ def append_current_tuning_sections(chapter: Section, root: Path):
     ])
     return {
         "profile": PROFILE,
-        "globalUtf16Units": assets["global_units"],
+        "globalUtf16Units": COMMON_GUIDANCE_UNITS,
         "kqlFewshotCount": assets["active_example_count"],
         "selectionCount": len(assets["selection_rows"]),
         "logicalSources": assets["manifest"]["logicalSources"],

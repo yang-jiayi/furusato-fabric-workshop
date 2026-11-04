@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-apply は対応欄だけを選んで更新せず、candidate の compiled Draft definition 全体を送信します。直前の prepare で対象・差分・readback を確認し、17.10 の semantic model source Instructions/Description の不変条件を候補と現行 Draft の比較で確認できた場合に限り、同じ既存 Agent の Draft に一度だけ適用します。不一致または確認不能なら --apply を実行せず、停止してレビューを依頼します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。
+apply は17.9と同じ PrivateRoot と固定された共通指示の候補を使い、対応欄だけを選んで更新せず、candidate の compiled Draft definition 全体を送信します。直前の prepare で対象・差分・readback を確認し、17.10 の semantic model source Instructions/Description の不変条件を候補と現行 Draft の比較で確認できた場合に限り、同じ既存 Agent の Draft に一度だけ適用します。不一致または確認不能なら --apply を実行せず、停止してレビューを依頼します。明示的な --apply がなければ書き込みません。apply intent は使い切りです。送信後に失敗・timeout・不明状態が起きても再送せず、intentを保持して読み取り専用 verify で実状態を調べます。
 
 **PowerShell**
 
@@ -22,7 +22,7 @@ Draft の shared-field readback と complete-stage の結果を確認します�
 
 ## 17.11 Apply once to Draft
 
-Apply sends the candidate's entire compiled Draft definition; it does not select and update only supported fields. After reviewing the target, diffs and readbacks from prepare, apply once to the same existing agent only if the comparison in 17.10 confirms the semantic-model-source Instructions/Description are unchanged between the candidate and current Draft. If they differ or cannot be confirmed, do not run `--apply`; stop and request review. No write occurs without explicit `--apply`. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify.
+Apply uses the same PrivateRoot and bound common-guidance candidate from17.9 and sends the candidate's entire compiled Draft definition; it does not select and update only supported fields. After reviewing the target, diffs and readbacks from prepare, apply once to the same existing agent only if the comparison in 17.10 confirms the semantic-model-source Instructions/Description are unchanged between the candidate and current Draft. If they differ or cannot be confirmed, do not run `--apply`; stop and request review. No write occurs without explicit `--apply`. The apply intent is single-use. After a failed, timed-out or uncertain submission, do not resend; preserve the intent and inspect live state with read-only verify.
 
 **PowerShell**
 

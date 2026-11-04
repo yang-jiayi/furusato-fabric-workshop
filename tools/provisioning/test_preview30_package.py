@@ -10,9 +10,10 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import preview30_runtime as rt
+import preview30_notebooks
 from preview30_verify import assess_sources, source_queries
 from workshop_runtime import EXPECTED_TABLES
 from preview30_deploy import Deployment
@@ -20,6 +21,36 @@ from test_preview30_runtime import scope
 
 
 class PackageTests(unittest.TestCase):
+    def test_bundle_compression_os_byte_is_interpreter_independent(self):
+        compress = gzip.compress
+        for data in (False, True):
+            expected = preview30_notebooks.package(data=data)
+            self.assertEqual(expected[9], 0x0A)
+            for os_byte in (0x03, 0x0A, 0xFF):
+                with self.subTest(data=data, os_byte=os_byte):
+                    def platform_compress(raw, *, mtime):
+                        compressed = compress(raw, mtime=mtime)
+                        return compressed[:9] + bytes([os_byte]) + compressed[10:]
+
+                    with patch.object(preview30_notebooks.gzip, "compress", side_effect=platform_compress):
+                        actual = preview30_notebooks.package(data=data)
+                    self.assertEqual(actual, expected)
+                    self.assertEqual(gzip.decompress(actual), gzip.decompress(expected))
+
+    def test_generated_bundle_equals_committed_payload(self):
+        for number in ("02", "03", "04"):
+            with self.subTest(notebook=number):
+                notebook = rt.load(next((rt.PREVIEW / "notebooks").glob(f"Notebook_{number}_*.ipynb")))
+                chunks = [
+                    ast.literal_eval(ast.parse("".join(cell["source"])).body[0].value.args[0])
+                    for cell in notebook["cells"]
+                    if "furusato-preview30-payload" in cell["metadata"].get("tags", [])
+                ]
+                self.assertEqual(
+                    preview30_notebooks.package(data=number == "04"),
+                    base64.b64decode("".join(chunks), validate=True),
+                )
+
     def test_data_bytes_unchanged(self):
         for p in (rt.BASE / "data").rglob("*"):
             if p.is_file():

@@ -9,8 +9,40 @@ from urllib.parse import unquote, urlsplit
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[3]
+SOURCE_ROOT=ROOT
 HTML='furusato-workshop-v3-1-0-complete.html'
 PACKAGE='Furusato_Workshop_v3.1.0_current.zip'
+
+
+def source_model_block_counts(source_root=SOURCE_ROOT):
+    """Count blocks independently from the HTML and Lab source models."""
+    import sys
+    sys.path[:0]=[str(source_root/'tools/docs'),str(source_root/'tools/html')]
+    from current_delivery import load_model as load_current_model
+    from furusato_docs.lab import load_model as load_lab_model
+
+    current_document=load_current_model(source_root)[0]
+    lab_document=load_lab_model(source_root)[0]
+    return (
+        sum(len(section.blocks) for section in current_document.walk()),
+        sum(len(section.blocks) for section in lab_document.walk()),
+    )
+
+
+def assert_source_block_coverage(testcase, html_blocks, lab_blocks,
+                                 current_source_blocks, lab_source_blocks):
+    testcase.assertEqual(
+        current_source_blocks, lab_source_blocks,
+        'Current HTML and Lab source models disagree on block coverage',
+    )
+    testcase.assertEqual(
+        current_source_blocks, html_blocks,
+        'HTML model block coverage differs from the current source model',
+    )
+    testcase.assertEqual(
+        lab_source_blocks, lab_blocks,
+        'Lab source block coverage differs from the current Lab model',
+    )
 
 
 class ParticipantDistributionTests(unittest.TestCase):
@@ -72,8 +104,12 @@ class ParticipantDistributionTests(unittest.TestCase):
             self.assertTrue(receipt['static']['passed'])
             self.assertTrue(receipt['browser']['passed'])
             lab_receipt=json.loads(archive.read('LAB_VALIDATION.json'))
-            self.assertEqual(receipt['static']['modelBlocks'],640)
-            self.assertEqual(receipt['static']['modelBlocks'],lab_receipt['sourceBlocksChecked'])
+            current_source_blocks, lab_source_blocks=source_model_block_counts()
+            assert_source_block_coverage(
+                self, receipt['static']['modelBlocks'],
+                lab_receipt['sourceBlocksChecked'],
+                current_source_blocks, lab_source_blocks,
+            )
             self.assertEqual(receipt['static']['htmlSha256'],sha256(archive.read('guide/'+HTML)).hexdigest())
             manifest=json.loads(archive.read('PACKAGE_MANIFEST.json'))
             self.assertEqual(manifest['deliveryMode'],'html-lab')
@@ -93,6 +129,32 @@ class ParticipantDistributionTests(unittest.TestCase):
                         self.assertTrue(destination.exists(),str(page)+' -> '+target)
                         checked+=1
                 self.assertGreaterEqual(checked,655)
+
+    def test_source_block_coverage_rejects_omissions_and_model_disagreement(self):
+        current_source_blocks, lab_source_blocks=source_model_block_counts()
+        self.assertGreater(current_source_blocks,0)
+        self.assertGreater(lab_source_blocks,0)
+
+        with self.assertRaisesRegex(AssertionError, 'HTML model block coverage'):
+            assert_source_block_coverage(
+                self, current_source_blocks-1, lab_source_blocks,
+                current_source_blocks, lab_source_blocks,
+            )
+        with self.assertRaisesRegex(AssertionError, 'Lab source block coverage'):
+            assert_source_block_coverage(
+                self, current_source_blocks, lab_source_blocks-1,
+                current_source_blocks, lab_source_blocks,
+            )
+        with self.assertRaisesRegex(AssertionError, 'HTML model block coverage'):
+            assert_source_block_coverage(
+                self, current_source_blocks-1, lab_source_blocks-1,
+                current_source_blocks, lab_source_blocks,
+            )
+        with self.assertRaisesRegex(AssertionError, 'source models disagree'):
+            assert_source_block_coverage(
+                self, current_source_blocks, lab_source_blocks,
+                current_source_blocks+1, lab_source_blocks,
+            )
 
     def test_packaged_source_inventory_preserves_the_real_protected_baseline(self):
         with zipfile.ZipFile(ROOT/'docs'/PACKAGE) as archive:

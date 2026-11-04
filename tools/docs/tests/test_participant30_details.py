@@ -78,6 +78,10 @@ class ParticipantDetailSourceTests(unittest.TestCase):
             ["件数・時刻・イベント ID", "Subject・イベント種別・API", "ファイルサイズ・形式"],
             entry["annotations"]["labels"],
         )
+        self.assertEqual(
+            entry["sha256"],
+            hashlib.sha256(figure_path("p30-09-source-events").read_bytes()).hexdigest(),
+        )
         self.assertIn("editorial footer removed", entry["pixelEdits"][0])
         self.assertIn("Event table pixels unchanged", entry["pixelEdits"][0])
         with Image.open(figure_path("p30-09-source-events")) as image:

@@ -23,8 +23,8 @@ from furusato_docs import participant30_figures as figure_source
 from furusato_docs.participant30_deployment import append_deployment_sections
 from furusato_docs.participant30_text import PARAMETER_NOTES
 from furusato_docs.lab import write_lab
-from furusato_html.model import Section, Text
-from furusato_html.render import rich
+from furusato_html.model import Block, Section, Text
+from furusato_html.render import render_block, rich
 
 
 class CurrentDeliveryTests(unittest.TestCase):
@@ -543,7 +543,171 @@ class CurrentDeliveryTests(unittest.TestCase):
                 self.assertIn(phrase, caption)
             self.assertIn('Microsoft.Fabric.OneLake.FileCreated', caption)
             self.assertIn('PutBlob', caption)
+            for phrase in (
+                '(1) row count, time, and event ID',
+                '(2) subject, event type, and API',
+                '(3) file size and format',
+            ):
+                self.assertIn(phrase, caption)
+                lab_page = (
+                    ROOT / 'Lab/09-pipeline-and-onelake-event-integration/'
+                    '02-9-2-p30-09-source-events.md'
+                ).read_text(encoding='utf-8')
+                self.assertIn(phrase, lab_page)
             self.assertNotIn('期待状態ではありません', caption)
+
+    def test_generic_code_renderer_does_not_emit_preview_only_scroll_hint(self):
+        context = Mock()
+        context.ui = {
+            'copy.aria': {'ja': 'コードをコピー', 'en': 'Copy code'},
+            'copy.label': {'ja': 'コピー', 'en': 'Copy'},
+        }
+        context.context = Mock(agent_instructions='')
+        block = Block('code', {
+            'language': Text('PowerShell', 'PowerShell'),
+            'text': 'Write-Output "generic renderer"',
+        })
+
+        markup = render_block(block, context, {'code': 0})
+        self.assertNotIn('class="code-hint"', markup)
+
+        preview_markup = render_block(
+            block, context, {'code': 0}, include_code_scroll_hint=True
+        )
+        self.assertIn('class="code-hint"', preview_markup)
+
+    def test_code_scroll_cue_tracks_overflow_language_and_viewport_without_touching_code(self):
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError:
+            self.skipTest("Playwright is unavailable for code-scroll cue validation")
+
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp) / 'guide'
+            delivery.build(ROOT, output)
+            with sync_playwright() as playwright:
+                try:
+                    browser = playwright.chromium.launch()
+                except Exception as exc:
+                    self.skipTest(f"Chromium is unavailable for code-scroll cue validation: {exc}")
+                page = browser.new_page(viewport={'width': 390, 'height': 844})
+                try:
+                    page.goto((output / delivery.HTML_NAME).as_uri(), wait_until='load')
+                    page.wait_for_selector("html[data-ready='true']")
+                    original_code = page.evaluate(
+                        "() => [...document.querySelectorAll('.codeblock code')].map(node => [node.id, node.textContent])"
+                    )
+                    for width in (390, 768, 1440):
+                        page.set_viewport_size({'width': width, 'height': 900})
+                        for language, cue in (
+                            ('ja', '横方向にスクロールできます'),
+                            ('en', 'Scroll horizontally to view the full line'),
+                        ):
+                            page.locator(f'button[data-language="{language}"]').click()
+                            state = page.evaluate(
+                                """({language, cue}) => {
+                                  const blocks = [...document.querySelectorAll(".codeblock")]
+                                    .filter(block => block.getBoundingClientRect().width > 0 &&
+                                                     block.querySelector("pre").clientWidth > 0);
+                                  const rows = blocks.map(block => {
+                                    const pre = block.querySelector("pre");
+                                    const overflowing = pre.scrollWidth > pre.clientWidth + 2;
+                                    const hint = block.querySelector(".code-hint");
+                                    const languageHint = hint.querySelector(`[data-l="${language}"]`);
+                                    const hintStyle = getComputedStyle(hint);
+                                    const hintWidth = hint.getBoundingClientRect().width;
+                                    const blockContentWidth = block.clientWidth;
+                                    return {
+                                      overflowing,
+                                      cueShown: hintStyle.display !== "none",
+                                      selectedLanguageShown: getComputedStyle(languageHint).display !== "none",
+                                      cueText: languageHint.textContent,
+                                      widthMismatch: window.innerWidth >= 768 && overflowing &&
+                                        Math.abs(hintWidth - blockContentWidth) > 1,
+                                      fittingCueHasLayout: !overflowing &&
+                                        (hintStyle.display !== "none" ||
+                                         hint.getClientRects().length > 0)
+                                    };
+                                  });
+                                  return {
+                                    overflowing: rows.filter(row => row.overflowing).length,
+                                    fitting: rows.filter(row => !row.overflowing).length,
+                                    mismatches: rows.filter(row =>
+                                      row.overflowing !== row.cueShown ||
+                                      (row.overflowing && !row.selectedLanguageShown) ||
+                                      row.widthMismatch || row.fittingCueHasLayout),
+                                    wrongLanguage: rows.filter(row => row.overflowing && row.cueText !== cue)
+                                  };
+                                }""",
+                                {'language': language, 'cue': cue},
+                            )
+                            with self.subTest(width=width, language=language):
+                                self.assertGreater(state['overflowing'], 0, state)
+                                self.assertGreater(state['fitting'], 0, state)
+                                self.assertEqual([], state['mismatches'], state)
+                                self.assertEqual([], state['wrongLanguage'], state)
+                    self.assertEqual(
+                        original_code,
+                        page.evaluate(
+                            "() => [...document.querySelectorAll('.codeblock code')].map(node => [node.id, node.textContent])"
+                        ),
+                        'The visible cue and language toggle must not modify copied code bytes.',
+                    )
+
+                    def assert_visible_cues(width, language):
+                        state = page.evaluate(
+                            """() => {
+                              const blocks = [...document.querySelectorAll(".codeblock")]
+                                .filter(block => block.getBoundingClientRect().width > 0 &&
+                                                 block.querySelector("pre").clientWidth > 0);
+                              const rows = blocks.map(block => {
+                                const pre = block.querySelector("pre");
+                                const overflowing = pre.scrollWidth > pre.clientWidth + 2;
+                                const hint = block.querySelector(".code-hint");
+                                const hintStyle = getComputedStyle(hint);
+                                return {
+                                  overflowing,
+                                  cueShown: hintStyle.display !== "none" &&
+                                            hint.getClientRects().length > 0,
+                                  widthMismatch: window.innerWidth >= 768 && overflowing &&
+                                    Math.abs(hint.getBoundingClientRect().width - block.clientWidth) > 1,
+                                  fittingCueHasLayout: !overflowing &&
+                                    (hintStyle.display !== "none" ||
+                                     hint.getClientRects().length > 0)
+                                };
+                              });
+                              return {
+                                visible: rows.length,
+                                overflowing: rows.filter(row => row.overflowing).length,
+                                fitting: rows.filter(row => !row.overflowing).length,
+                                mismatches: rows.filter(row =>
+                                  row.overflowing !== row.cueShown ||
+                                  row.widthMismatch || row.fittingCueHasLayout)
+                              };
+                            }"""
+                        )
+                        with self.subTest(width=width, language=language, transition=True):
+                            self.assertGreater(state['overflowing'], 0, state)
+                            self.assertGreater(state['fitting'], 0, state)
+                            self.assertEqual([], state['mismatches'], state)
+
+                    page.set_viewport_size({'width': 390, 'height': 900})
+                    page.locator('#search').fill('no-matching-chapter-query')
+                    self.assertEqual(0, page.locator('main > .chapter:not([hidden])').count())
+                    page.set_viewport_size({'width': 1440, 'height': 900})
+                    page.locator('button[data-language="en"]').click()
+                    page.locator('#search-clear').click()
+                    assert_visible_cues(1440, 'en')
+
+                    page.locator('#search').fill('no-matching-chapter-query')
+                    self.assertEqual(0, page.locator('main > .chapter:not([hidden])').count())
+                    page.set_viewport_size({'width': 390, 'height': 900})
+                    page.locator('button[data-language="ja"]').click()
+                    page.locator('a[href="#ch-1"]').click()
+                    assert_visible_cues(390, 'ja')
+                finally:
+                    page.close()
+                    browser.close()
 
     def test_standalone_version_binding_is_independent_of_historical_word_approval(self):
         with tempfile.TemporaryDirectory() as temp:

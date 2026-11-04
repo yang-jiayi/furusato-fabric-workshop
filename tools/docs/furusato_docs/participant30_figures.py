@@ -140,7 +140,7 @@ FIGURES = {
     },
     'p30-09-source-events': {
         "caption": ('イベントソース画面の例。3件の行が表示され、donation_events_003.csv の行が選択されています。Subject はファイルのパス、Microsoft.Fabric.OneLake.FileCreated はイベントの種類、PutBlob は Blob への書き込み、content length はファイルサイズ、text/csv は形式を示します。手順では、自分が確認するファイルの行を開きます。',
-                    'Event-source example with three rows and donation_events_003.csv selected. Subject shows the file path; Microsoft.Fabric.OneLake.FileCreated is the event type; PutBlob is the Blob write operation; content length is the file size; and text/csv is the format. In the steps, open the row for the file you are checking.'),
+                    'Event-source example with three rows and donation_events_003.csv selected. Subject shows the file path; Microsoft.Fabric.OneLake.FileCreated is the event type; PutBlob is the Blob write operation; content length is the file size; and text/csv is the format. In the steps, open the row for the file you are checking. The numbered headings mean: (1) row count, time, and event ID; (2) subject, event type, and API; (3) file size and format.'),
         "alt": ('donation_events_003.csv の選択行と3件のイベント、FileCreated（ファイル作成）、PutBlob（Blob への書き込み）、content length（ファイルサイズ）、text/csv（CSV形式）を示すイベントソース画面。',
                 'Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.'),
     },

@@ -57,6 +57,6 @@
 
 ![Actual event-source view showing the selected donation_events_003.csv row among three events, FileCreated, PutBlob, content length and text/csv.](../assets/p30-09-source-events.png)
 
-Event-source example with three rows and donation_events_003.csv selected. Subject shows the file path; Microsoft.Fabric.OneLake.FileCreated is the event type; PutBlob is the Blob write operation; content length is the file size; and text/csv is the format. In the steps, open the row for the file you are checking.
+Event-source example with three rows and donation_events_003.csv selected. Subject shows the file path; Microsoft.Fabric.OneLake.FileCreated is the event type; PutBlob is the Blob write operation; content length is the file size; and text/csv is the format. In the steps, open the row for the file you are checking. The numbered headings mean: (1) row count, time, and event ID; (2) subject, event type, and API; (3) file size and format.
 
 </details>

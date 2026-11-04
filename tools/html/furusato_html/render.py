@@ -193,6 +193,14 @@ def plain_bilingual(text: Text, *, tag: str = "span") -> str:
     )
 
 
+def code_scroll_hint() -> str:
+    return (
+        '<p class="code-hint">'
+        + plain_bilingual(Text("横方向にスクロールできます", "Scroll horizontally to view the full line"))
+        + "</p>"
+    )
+
+
 @dataclass
 class RenderContext:
     ui: dict[str, dict[str, str]]
@@ -211,7 +219,10 @@ class RenderContext:
     def label(self, key: str, *, tag: str = "span") -> str:
         return plain_bilingual(self.ui_text(key), tag=tag)
 # ------------------------------------------------------------------- blocks
-def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> str:
+def render_block(
+    block: Block, ctx: RenderContext, counter: dict[str, int], *,
+    include_code_scroll_hint: bool = False,
+) -> str:
     kind = block.kind
     text_markup = lambda value: bilingual(value, verbatim=bool(block.get("canonicalLiteral")))
     if kind == "paragraph":
@@ -254,6 +265,7 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
         long_attr = ' data-long="true"' if rendered > PRINTABLE_CODE_LINES else ""
         code_text = (html.escape(block["text"], quote=True) if block.get("canonicalLiteral")
                      else esc(block["text"]))
+        scroll_hint = code_scroll_hint() if include_code_scroll_hint else ""
         return (
             f'<div class="codeblock codeblock--source"{long_attr}>'
             '<div class="codeblock__bar">'
@@ -262,7 +274,7 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
             f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"]["ja"])}">'
             f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(ctx.ui["copy.label"]["ja"])}</span>'
             "</button></div>"
-            f'<pre tabindex="0"><code id="{block_id}">{code_text}</code></pre>'
+            f'{scroll_hint}<pre tabindex="0"><code id="{block_id}">{code_text}</code></pre>'
             f"{integrity}"
             "</div>"
         )

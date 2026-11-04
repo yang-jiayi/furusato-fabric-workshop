@@ -16,7 +16,7 @@ from .assets import build_library, encode_screenshot, screenshot_size
 from .diagrams import load_map
 from .mirror import load_ui_strings
 from .model import Text
-from .render import ICONS, RenderContext, esc, plain_bilingual, render_block
+from .render import ICONS, RenderContext, code_scroll_hint, esc, plain_bilingual, render_block
 
 
 def register_reviewed_captures(assets, captures):
@@ -98,10 +98,10 @@ def render(
                     f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"][lang])}">'
                     f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(copy_label)}</span>'
                     '</button></div>'
-                    f'<pre tabindex="0"><code id="{ident}">{prompt}</code></pre></div>'
+                    f'{code_scroll_hint()}<pre tabindex="0"><code id="{ident}">{prompt}</code></pre></div>'
                 )
             return "".join(pieces)
-        return render_block(block, ctx, counter)
+        return render_block(block, ctx, counter, include_code_scroll_hint=True)
 
     def section_markup(section):
         heading = "h" + str(min(6, section.level + 1))

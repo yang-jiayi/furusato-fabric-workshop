@@ -10,6 +10,7 @@ import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import measured_contract_profile as measured
+from test_private_output import assert_private_file
 from source_grounded_profile import decoded_parts, inline_part
 
 
@@ -250,7 +251,8 @@ class MeasuredContractTests(unittest.TestCase):
             completed = subprocess.run(cmd, text=True, capture_output=True)
             self.assertEqual(completed.returncode, 0, completed.stderr)
             self.assertEqual(json.loads(completed.stdout)["cloudCalls"], 0)
-            self.assertEqual((root / "draft.json").stat().st_mode & 0o777, 0o600)
+            assert_private_file(self, root / "draft.json")
+            assert_private_file(self, root / "receipt.json")
             self.assertNotEqual(subprocess.run(cmd, capture_output=True).returncode, 0)
         with self.assertRaises(ValueError):
             measured.private_path(measured.REPO / "should-never-contain-live-definitions.json")

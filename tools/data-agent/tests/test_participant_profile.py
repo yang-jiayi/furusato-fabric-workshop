@@ -14,6 +14,7 @@ import participant_profile as app
 import measured_contract_profile as measured
 from source_grounded_profile import decoded_parts, inline_part
 from test_measured_contract_gen2 import fixture
+from test_private_output import assert_private_file
 
 W = "00000000-0000-0000-0000-000000000001"
 A = "00000000-0000-0000-0000-000000000009"
@@ -167,7 +168,7 @@ class ParticipantProfileTests(unittest.TestCase):
         (self.root / "alias").symlink_to(self.root, target_is_directory=True)
         with self.assertRaises(app.ProfileError):
             app.private_root(self.root / "alias/evidence", create=True)
-        self.assertEqual((self.root / "evidence.json").stat().st_mode & 0o777, 0o600)
+        assert_private_file(self, self.root / "evidence.json")
 
     def test_extracted_source_without_git_is_not_a_private_evidence_directory(self):
         extracted = self.root / "extracted" / "source"

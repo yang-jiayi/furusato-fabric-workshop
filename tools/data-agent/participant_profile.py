@@ -61,20 +61,25 @@ def private_root(path, *, create=False):
     path = Path(path)
     require(path.is_absolute(), "Use an absolute private directory outside every Git checkout.")
     require(not any(p.is_symlink() for p in (path, *path.parents)), "Private paths may not traverse symlinks.")
+    try:
+        measured.reject_links(path)
+    except ValueError as error:
+        raise ProfileError(str(error)) from error
     require(path.resolve() != REPO.resolve() and REPO.resolve() not in path.resolve().parents,
             "Keep actual definitions outside the source distribution, even when it has no .git directory.")
     require(not any((p / ".git").exists() for p in (path, *path.parents)), "Keep actual definitions outside Git.")
     if create:
         path.mkdir(parents=True, exist_ok=False, mode=0o700)
     require(path.is_dir(), "Private directory does not exist; run prepare first.")
-    path.chmod(0o700)
+    if os.name != "nt":
+        path.chmod(0o700)
     return path
 
 
 def save(root, name, value):
     path = root / name
     require(not path.is_symlink(), "Evidence path must not be a symlink.")
-    with os.fdopen(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600), "w", encoding="utf-8") as handle:
+    with measured.private_text(path) as handle:
         json.dump(value, handle, ensure_ascii=False, indent=2)
         handle.write("\n")
 

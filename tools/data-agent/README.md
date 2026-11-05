@@ -1,18 +1,97 @@
-# Current measured Data Agent profile
+# Data Agent tooling and current participant path
 
-現行Workshopでは [measured-contract-20261015](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
-を使います。4 個の論理的な接続先と Ontology 1 件を維持し、実在する native 要素・独立 SQL metadata・公開 model の
-10メジャー定義を照合してDraftを生成する可搬compilerです。作成だけではサービスへ公開しません。
-実回答で確認した改善と残件は [2026-10-10実測資料](../../docs/v3.0.0/tuning-20261010/README.md)、
-導入・比較評価・Word/HTML校正は [校正手順](../../docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md)
-を参照してください。これらは当該日付の記録です。新しい配置・評価は
-[2026-10-15 作業レポート](../../docs/v3.0.0/tuning-20261015/README.md) を参照してください。
+現行Workshopの参加者経路は `current_profile.py prepare` の `--common-guidance workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`
+で現行共通指示を固定し、同じ PrivateRoot の候補で apply・publish・verify を行います。
+`current-experimental` profile はソース・選択・定義の不変な必須比較入力であり、編集しません。
+参加者向けの手順と評価方法は、現行の[第17章](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md)、
+[第19章](../../Lab/19-evaluate-and-improve-ai-answer-quality/README.md)、
+[日英HTML手順書](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true)を参照してください。
+回答品質の判定には実際のソース、問い合わせ、結果を使用し、構成の再現だけで精度を受入済みにしません。
 
-Use the current measured profile linked above for the current course. It compiles
-locally from observed metadata, keeps one Ontology and all four logical source identities,
-and checks the actual ten model measures. Publication/readback and fresh answer
-validation are separate operator steps. Earlier reference-only and regression
-records below describe their own dated scopes; they are not the latest overall score.
+The current participant path binds the common guidance through
+`current_profile.py prepare --common-guidance workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`
+and retains the same PrivateRoot candidate for apply, publish and verify.
+The immutable `current-experimental` profile remains required comparison input
+for source settings, selections and definitions. Do not edit it. The separate
+[measured-profile compiler](../../workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md)
+is not this participant procedure. Configuration generation is not an
+answer-accuracy result.
+
+The bootstrap [`global-instructions.txt`](../../workshop/v3.0.0-preview/data-agent/global-instructions.txt)
+also keeps source-specific period defaults, raw/static population boundaries,
+event-identity limitations and native-query evidence requirements in the supported
+stage instructions. These safeguards cannot rely on legacy Ontology description
+fields surviving native serialization. For an instruction-only experiment, retain
+the actual source payloads and selections byte-for-byte; do not apply the full
+measured profile or create its SQL views merely to change a global instruction.
+Source edits and generated bundles are candidates, not proof of deployment or
+answer quality. Preserve the baseline and compare a separately registered fresh run.
+
+### Current common guidance: published configuration verified; quality measurement pending
+
+The current common-routing text
+[`powerbi/prep-for-ai/agent-instructions.txt`](../../workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt)
+resolves explicit population/source/period before workshop defaults and before
+clarification: ordinary workshop overview/static ranking uses the complete static
+2025 Lakehouse snapshot; explicit Gold/accepted/measure scope uses the direct
+semantic model; operational August without a year uses August 2026 UTC.
+Static popularity returns count and amount leaders; recipient-versus-residence
+and genuinely unresolved periods still require clarification. Source-owned query
+recipes and model Prep remain unchanged. The common text preserves requested
+fields/IDs, requires raw aggregates before the EventID limitation, forbids even
+repeating an unsupported cross-population sum, and retains actual execution and
+platform-block boundaries. Its LF-normalized text measures 3,394 UTF-16 units,
+SHA256 `7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26`.
+Draft and Published configuration readbacks have been verified; answer-quality
+measurement is pending, not accepted or improved. The participant prepare
+command binds the file path, rawSha256, LF-normalized lfSha256, text and units.
+Review the complete definition delta, unchanged semantic-model-source
+Instructions/Description, baseline/source reconciliation and all readback stops.
+Configuration verification does not establish model Prep, source readiness,
+effective AI serving, answer accuracy, Graph/GQL readiness or Metrics availability.
+It cannot supply missing execution evidence or turn a native content block into
+a successful business refusal. Use authorized target-specific preparation and
+publication; never reuse a consumed intent or evaluation campaign.
+
+`quality_candidate.compile_candidate(definition, model_definition)` is an offline-only follow-up
+experiment, not a replacement for the measured/current profile. It starts from a
+complete native Published definition, clones that stage to Draft, and changes only
+global instructions and the three direct-source instruction fields. It preserves
+Published/shared parts, source bindings/selections and native Ontology payloads;
+unexpected parts or changed instruction anchors stop compilation.
+The second input must be the fresh definition of the bound SemanticModel, not
+an assumed repository copy. Its ten observed TMDL measure expressions and authored
+descriptions are extracted into the semantic-model source instructions, with
+per-part hashes in the receipt. This preserves that historical experiment's
+construction, **not a supported NL2DAX tuning mechanism**: the
+[source-specific capability matrix](https://learn.microsoft.com/en-us/fabric/data-science/data-agent-add-datasources#tab/dax)
+marks semantic-model Data Source Instructions and source descriptions unsupported.
+Round-trip persistence does not establish consumption. Use supported model
+metadata or model-side Prep for AI instead; agent instructions support routing.
+
+The candidate targets UTC transcription, per-file versus whole-source aggregate
+grain, transaction-level payment filters, ID/name retention and explanations
+grounded in actual measure definitions. Its tests verify construction and
+preservation, **not query execution or improved answer accuracy**. It makes no
+service calls. Do not apply it through the frozen identity-only profile helper
+or reuse a previous write authorization. Fresh scoped preparation, exact Draft
+readback, separately authorized publication and a focused live diagnostic set
+must precede any acceptance or wider comparative campaign.
+
+`decomposition_candidate.compile_candidate(agent_definition, model_definition)`
+is a separate offline, unmeasured follow-up pinned by default to the reviewed
+`fbc6a414...` Agent state and owning model part. It replaces only the Draft global
+decomposition paragraph: applicable shared constraints must reach each delegated
+subquestion, including rankings, unless the user explicitly changes scope.
+It preserves every source instruction, selection, identity, native Ontology part
+and Published part. Its separate model candidate appends descriptions to the five
+existing KEEPFILTERS measures, deriving the quoted definitions from actual TMDL;
+all ten executable measures and every non-description model byte remain exact.
+This uses existing model metadata, not invented Prep for AI annotations or
+unsupported source instructions. The two definitions are **review-only**:
+supported placement does not prove runtime consumption, successful model import
+or improved answers. No service calls, data changes, refresh, publication or
+evaluation are performed or authorized by compilation.
 
 ### Native Ontology context check
 
@@ -162,6 +241,41 @@ metadata client nor qualifies a durable question journal.
 接続も行わず、使用済みの出力先・intentを上書きしません。NotebookのCompleted表示だけで
 成功とせず、実プロトコルの結果とcleanupを確認してください。
 
+For the SDK Responses transport, a diagnostics `HTTPStatusError` is preserved
+with its HTTP status and raw body. Only the exact `403` optional-diagnostics
+feature-disabled signature is treated as unavailable diagnostics; other HTTP,
+permission, and transport failures remain fail-closed. If a batch stopped after
+a terminal response for this narrow case, `recover-plan` can carry that single
+slot into a new plan without changing its suite, rubric, repetitions, or
+denominator. The continuation map hash-binds the original record, terminal
+response, before/after configuration, native error, and diagnostics readback.
+It writes a separate derived record; the original capture remains untouched,
+the carried question is not submitted again, and all review conditions remain
+`UNCLEAR` until independently adjudicated.
+
+When a later batch stops on another terminal but incomplete capture (for example
+an unfinished native tool item), use `continue-plan` to register every verified
+terminal slot from the source campaign and leave only untouched cases runnable.
+The map binds each source record, batch, response/configuration artifacts and
+review by hash. A carried record keeps its original status and review bytes;
+neither continuation nor transport normalization awards a score. A started
+case without a terminal record blocks plan creation to prevent a duplicate
+submission.
+
+```powershell
+python -B .\tools\data-agent\evaluate_native.py `
+  --private-root '<absolute private directory outside Git>' recover-plan `
+  --name '<new recovery campaign>' --source-plan 'campaigns/<prior>/plan.json' `
+  --configuration '<frozen label>' --suite original --repeat 1 --case-id T01 `
+  --diagnostics-receipt '<verified private diagnostics receipt.json>'
+```
+
+```powershell
+python -B .\tools\data-agent\evaluate_native.py `
+  --private-root '<absolute private directory outside Git>' continue-plan `
+  --name '<new continuation campaign>' --source-plan 'campaigns/<prior>/plan.json'
+```
+
 **MCP is an answer-only evidence surface.** The observed native reply exposes
 answer text, not the internal executed SQL/KQL/GQL or their result rows.
 Neither a JSON-RPC ID nor an MCP session ID is a backend conversation ID.
@@ -267,6 +381,20 @@ python -B .\tools\data-agent\evaluate_native.py run `
 # Review the private per-case review.json files; then create a new report file:
 python -B .\tools\data-agent\evaluate_native.py report `
   --plan campaigns\candidate-next\plan.json --out reports\review-001.json
+```
+
+For the established `extended-public-49` comparison, B01–B19 are public
+regression material, not a held-out set. Freeze them with `--regression`, then
+use `--without-heldout` to preregister T01–T10 three times plus B01–B19 once:
+49 fresh-conversation slots and 290 conditions. This does not change the
+questions, rubric, or acceptance policy.
+
+```powershell
+python -B .\tools\data-agent\evaluate_native.py freeze --regression
+python -B .\tools\data-agent\evaluate_native.py plan `
+  --name public-49 --deployment published-agent.json --transport sdk `
+  --without-heldout --regression-suite suites\regression.json `
+  --repeats 3 --regression-repeats 1
 ```
 
 Repeat only the predeclared slots (including the separately labelled held-out

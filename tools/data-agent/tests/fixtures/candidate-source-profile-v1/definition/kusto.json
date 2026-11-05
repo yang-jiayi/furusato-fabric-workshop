@@ -1,0 +1,120 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "{{resource:kusto:id}}",
+  "workspaceId": "{{workspace:id}}",
+  "dataSourceInstructions": "Query only the `DonationObservationSummaryForAgent` materialized view.\n\n- This source is the numeric authority for every August 2026 operational observation metric. No other approved source may be used to state, correct or confirm an observation count or observed amount, and the Ontology time-series mirror is never a substitute for it.\n- Every row is an aggregate bucket, not one observation. Use `sum(ObservationCount)` for observation totals and `sum(ObservedAmountYen)` for amount totals; `count()` counts buckets.\n- Filter and group periods on `EventMinute`, and rebin it for coarser periods, for example `bin(EventMinute, 1h)`. Use `min(FirstObservedAt)` and `max(LastObservedAt)` for the observed range.\n- `FirstObservedAt` and `LastObservedAt` are the source column names. File/run output must print them under the response headers `FirstObservedAtUtc` and `LastObservedAtUtc` and include the sentence `All timestamps are UTC.` Do not print unlabeled `FirstObservedAt`/`LastObservedAt` headers and do not relabel these source values as JST.\n- All timestamps are UTC. Convert with `datetime_utc_to_local(..., \"Asia/Tokyo\")` only when the question asks for Japan time, and label the timezone either way.\n- Group workshop-run questions by `WorkshopRunId`, `SourceFile` and `ParticipantAlias`, and use `max(LastPublishedAtUtc)` for publication checks.\n- For every municipality aggregate, project `MunicipalityID` with the metrics. A missing display name is expected and is not a query failure; a multi-source caller must resolve that exact ID in Lakehouse and may then traverse its Prefecture in Ontology.\n- `MunicipalityID` is recipient context only. Donor, Gift, Supplier, payment method, approval, fulfillment and lifecycle state are not available here; say so instead of substituting a static fact.\n\nDEDUPLICATION LIMIT\n- MANDATORY FIRST STEP for every duplicate, unique-event, or deduplication question: execute a raw aggregate over the requested UTC window with `RawObservationCount=sum(ObservationCount)` and `RawObservedAmountYen=sum(ObservedAmountYen)`. Report both returned values before explaining the limit. Never stop at schema inspection and never use the all-sources-failed fallback after this aggregate returns a row.\n- EventID is the only valid deduplication identity, and no approved Agent source exposes it: it is absent from this materialized view, from the Lakehouse snapshot and from the Ontology. State that scope exactly; do not imply that another approved source could prove it.\n- Never use EventMinute, MunicipalityID, SourceFile, WorkshopRunId, a materialized-view row, or any composite of those fields as a surrogate deduplication key. Never invent `UniqueObservationCount` or `UniqueObservedAmountYen`.\n- Report only the raw aggregates and the missing-identity limit. Never print, estimate, approximate or imply a deduplicated count or deduplicated amount, and never present the raw aggregate as if it were one.\n- ObservationCount is a raw aggregate and may include duplicates. Never label it `重複なし`, unique, deduplicated, confirmed, or exact distinct.\n\nGRAIN AND COMPOSITION\n- The observations are append-only and independent of the static snapshot. Never add these totals to static donation totals and never describe them as pending, unconfirmed, approved or corrected.\n- Never calculate or display a combined total with Lakehouse static metrics, even as a reference value.\n- In a top-Municipality comparison, preserve MunicipalityID, ObservationCount and ObservedAmountYen through final answer composition; the response is incomplete if either metric is omitted.\n\nThree supported query shapes, because this source has no example-query bundle:\n\n- Hourly profile for one recipient municipality across the observation month:\n  filter `MunicipalityID == \"012190\"`, filter `EventMinute` to the August 2026 window,\n  `summarize sum(ObservationCount), sum(ObservedAmountYen) by bin(EventMinute, 1h)`, order ascending by that hour bucket.\n- Run-level summary across the observation month:\n  filter `EventMinute` to the August 2026 window,\n  `summarize sum(ObservationCount), sum(ObservedAmountYen), min(FirstObservedAt), max(LastObservedAt) by WorkshopRunId, SourceFile`, order by run then source file,\n  then union one `TOTAL` row carrying the same four aggregates across all files. Preserve the literal WorkshopRunId string; never replace it with `dcount(WorkshopRunId)`, a count of run IDs, or a blank.\n- Windowed recipient-municipality leaderboard for an explicitly requested window:\n  filter `EventMinute` to that window,\n  `summarize sum(ObservationCount), sum(ObservedAmountYen) by MunicipalityID`,\n  order by the metric the question named, and keep both metrics plus `MunicipalityID` in every returned row.\n  Never return an ID with a blank metric, and never resolve the display name here.",
+  "displayName": "{{resource:kusto:name}}",
+  "type": "kusto",
+  "userDescription": "Curated August 2026 operational observations from the Eventhouse. It exposes one materialized view of minute-level aggregate counts, amounts, recipient Municipality context, observed time bounds and workshop-run metadata. It is a separate dataset from the static 2025 snapshot and models no donor, gift, supplier, payment, lifecycle or deduplication state.",
+  "metadata": {},
+  "elements": [
+    {
+      "id": "{{node:kusto:Materialized Views}}",
+      "is_selected": true,
+      "display_name": "Materialized Views",
+      "type": "kusto",
+      "description": "Selected Eventhouse KQL materialized views.",
+      "children": [
+        {
+          "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent}}",
+          "is_selected": true,
+          "display_name": "DonationObservationSummaryForAgent",
+          "type": "kusto.table",
+          "description": "Curated operational aggregates that exclude Donation, Donor, Gift, Supplier, payment, fulfillment, approval, deduplication, and lifecycle identifiers or state.",
+          "children": [
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|MunicipalityID}}",
+              "is_selected": true,
+              "display_name": "MunicipalityID",
+              "type": "kusto.column",
+              "data_type": "string",
+              "description": "Recipient Municipality identifier for the grouped operational observations.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|EventMinute}}",
+              "is_selected": true,
+              "display_name": "EventMinute",
+              "type": "kusto.column",
+              "data_type": "datetime",
+              "description": "One-minute time bucket for the grouped operational observations.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|WorkshopRunId}}",
+              "is_selected": true,
+              "display_name": "WorkshopRunId",
+              "type": "kusto.column",
+              "data_type": "string",
+              "description": "Unique workshop publication run identifier.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|ParticipantAlias}}",
+              "is_selected": true,
+              "display_name": "ParticipantAlias",
+              "type": "kusto.column",
+              "data_type": "string",
+              "description": "Short participant alias for the workshop run.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|SourceFile}}",
+              "is_selected": true,
+              "display_name": "SourceFile",
+              "type": "kusto.column",
+              "data_type": "string",
+              "description": "Workshop publisher or source-file label.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|ObservationCount}}",
+              "is_selected": true,
+              "display_name": "ObservationCount",
+              "type": "kusto.column",
+              "data_type": "long",
+              "description": "Number of operational observations represented by this aggregate row; sum this column for observation totals.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|ObservedAmountYen}}",
+              "is_selected": true,
+              "display_name": "ObservedAmountYen",
+              "type": "kusto.column",
+              "data_type": "long",
+              "description": "Total incoming observed amount in Japanese yen represented by this aggregate row; sum this column for amount totals.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|FirstObservedAt}}",
+              "is_selected": true,
+              "display_name": "FirstObservedAt",
+              "type": "kusto.column",
+              "data_type": "datetime",
+              "description": "Earliest operational event timestamp represented by this aggregate row.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|LastObservedAt}}",
+              "is_selected": true,
+              "display_name": "LastObservedAt",
+              "type": "kusto.column",
+              "data_type": "datetime",
+              "description": "Latest operational event timestamp represented by this aggregate row.",
+              "children": []
+            },
+            {
+              "id": "{{node:kusto:Materialized Views|DonationObservationSummaryForAgent|LastPublishedAtUtc}}",
+              "is_selected": true,
+              "display_name": "LastPublishedAtUtc",
+              "type": "kusto.column",
+              "data_type": "datetime",
+              "description": "Latest UTC timestamp when the workshop publisher sent an observation represented by this aggregate row.",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

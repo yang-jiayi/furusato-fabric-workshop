@@ -2,9 +2,9 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-残りの2ファイル（002 と 003）を1本ずつ取り込み、8月の観測データ全体（15,000行）を KQL で確認します。そのうえで、Municipality の時系列 Property を Eventhouse の DonationEvents にバインドします。
+KQL の集計結果と対象 OneLake Delta の内容を別々に確認します。参照 KQL 結果は3ファイル計15,000観測ですが、それだけでは対象 Delta の完全性を示しません。時系列 Property の定義・binding 表示、native query の利用可否、実行した query と結果も個別に確認します。
 
-配布データには、意図的な重複が 100件あります。DonationEvents と時系列 Property は重複を含んだまま扱い、重複を除いた値（14,900件）は、KQL での確認と Notebook 05 の Gold で別に扱います。
+KQL の DonationEvents は15,000観測・253,886,000円、EventID は14,900件が一意で、重複行は100件です。これは OneLake Delta の内容や Notebook 05 の Gold とは別の母集団です。
 
 準備するもの・確認すること
 
@@ -15,9 +15,9 @@
 
 ## 10.1 What you will do
 
-Ingest the remaining two files (002 and 003) one at a time and check the whole August observation data (15,000 rows) with KQL. Then bind the time-series property of Municipality to DonationEvents in the Eventhouse.
+Check the KQL summary and the target OneLake Delta contents separately. The reference KQL result covers 15,000 observations across three files, but does not establish that the target Delta is complete. Separately check the time-series property definition/binding, native-query availability, and any executed query and result.
 
-The distributed data contains 100 intentional duplicates. DonationEvents and the time-series property keep the duplicates; the deduplicated value (14,900) is handled separately in KQL checks and in Notebook 05 Gold.
+KQL DonationEvents has 15,000 observations / JPY 253,886,000, with 14,900 unique EventIDs and 100 duplicate rows. This is separate from OneLake Delta contents and Notebook 05 Gold.
 
 Before you start
 

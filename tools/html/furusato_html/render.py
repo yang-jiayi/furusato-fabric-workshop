@@ -35,6 +35,7 @@ ICONS = {
 }
 
 _CODE_SPAN = re.compile(r"`([^`]+)`")
+_MARKDOWN_LINK = re.compile(r"\[([^\]\r\n]+)\]\((https?://[^\s)]+)\)")
 _URL = re.compile(r"(https://[^\s、。（）()\]】]+)")
 
 #: Lines of code that still fit inside one A4 page at the print type size, and
@@ -80,17 +81,49 @@ def rich(text: str, *, verbatim: bool = False) -> str:
     """Render backtick code spans and bare URLs as HTML."""
     out: list[str] = []
     escape = (lambda value: html.escape(str(value), quote=True)) if verbatim else esc
+
+    def linked_text(value: str) -> str:
+        pieces: list[str] = []
+        cursor = 0
+        for match in _MARKDOWN_LINK.finditer(value):
+            plain = escape(value[cursor:match.start()])
+            pieces.append(_URL.sub(
+                lambda url: f'<a href="{url.group(1)}" rel="noreferrer noopener">{url.group(1)}</a>',
+                plain,
+            ))
+            pieces.append(
+                f'<a href="{escape(match.group(2))}" rel="noreferrer noopener">'
+                f'{escape(match.group(1))}</a>'
+            )
+            cursor = match.end()
+        tail = escape(value[cursor:])
+        pieces.append(_URL.sub(
+            lambda url: f'<a href="{url.group(1)}" rel="noreferrer noopener">{url.group(1)}</a>',
+            tail,
+        ))
+        return "".join(pieces)
+
     for index, segment in enumerate(str(text).split("`")):
         if index % 2 == 1:
-            out.append(f"<code>{escape(segment)}</code>")
+            if segment.startswith("--") and not any(char.isspace() for char in segment):
+                class_attr = ' class="cli-option"'
+            elif len(segment) <= 24 and not any(
+                char.isspace() for char in segment
+            ):
+                class_attr = ' class="inline-token"'
+            else:
+                class_attr = ""
+            out.append(f"<code{class_attr}>{escape(segment)}</code>")
             continue
-        escaped = escape(segment)
-        escaped = _URL.sub(
-            lambda match: f'<a href="{match.group(1)}" rel="noreferrer noopener">{match.group(1)}</a>',
-            escaped,
-        )
-        out.append(escaped)
+        out.append(linked_text(segment))
     return "".join(out)
+
+
+def soft_breaks_after_commas(markup: str) -> str:
+    parts = re.split(r"(<[^>]+>)", markup)
+    for index in range(0, len(parts), 2):
+        parts[index] = parts[index].replace(",", ",<wbr>")
+    return "".join(parts)
 
 
 SYNONYM_MARKERS = ("同義語（NB02 が登録）：", "Synonyms (registered by NB02): ")
@@ -160,6 +193,14 @@ def plain_bilingual(text: Text, *, tag: str = "span") -> str:
     )
 
 
+def code_scroll_hint() -> str:
+    return (
+        '<p class="code-hint">'
+        + plain_bilingual(Text("横方向にスクロールできます", "Scroll horizontally to view the full line"))
+        + "</p>"
+    )
+
+
 @dataclass
 class RenderContext:
     ui: dict[str, dict[str, str]]
@@ -178,7 +219,10 @@ class RenderContext:
     def label(self, key: str, *, tag: str = "span") -> str:
         return plain_bilingual(self.ui_text(key), tag=tag)
 # ------------------------------------------------------------------- blocks
-def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> str:
+def render_block(
+    block: Block, ctx: RenderContext, counter: dict[str, int], *,
+    include_code_scroll_hint: bool = False,
+) -> str:
     kind = block.kind
     text_markup = lambda value: bilingual(value, verbatim=bool(block.get("canonicalLiteral")))
     if kind == "paragraph":
@@ -221,15 +265,16 @@ def render_block(block: Block, ctx: RenderContext, counter: dict[str, int]) -> s
         long_attr = ' data-long="true"' if rendered > PRINTABLE_CODE_LINES else ""
         code_text = (html.escape(block["text"], quote=True) if block.get("canonicalLiteral")
                      else esc(block["text"]))
+        scroll_hint = code_scroll_hint() if include_code_scroll_hint else ""
         return (
-            f'<div class="codeblock"{long_attr}>'
+            f'<div class="codeblock codeblock--source"{long_attr}>'
             '<div class="codeblock__bar">'
             f'<span class="codeblock__lang">{language_html}</span>'
             f'<button type="button" class="codeblock__copy" data-copy-target="{block_id}" '
             f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"]["ja"])}">'
             f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(ctx.ui["copy.label"]["ja"])}</span>'
             "</button></div>"
-            f'<pre><code id="{block_id}">{code_text}</code></pre>'
+            f'{scroll_hint}<pre tabindex="0"><code id="{block_id}">{code_text}</code></pre>'
             f"{integrity}"
             "</div>"
         )
@@ -257,22 +302,29 @@ def render_table(block: Block, ctx: RenderContext) -> str:
     for row in block["rows"]:
         cells: list[str] = []
         for column, cell in enumerate(row):
+            markup = cell_markup(cell)
+            if "selection-contract" in str(block.get("tableClass", "")).split() and column == 5:
+                markup = soft_breaks_after_commas(markup)
             if column == 0:
-                cells.append(f'<th scope="row">{cell_markup(cell)}</th>')
+                cells.append(f'<th scope="row">{markup}</th>')
             else:
-                cells.append(f"<td>{cell_markup(cell)}</td>")
+                cells.append(f"<td>{markup}</td>")
         body_rows.append("<tr>" + "".join(cells) + "</tr>")
     hint = ctx.label("table.scroll")
+    table_class = f'cols-{len(block["headers"])}'
+    if block.get("tableClass"):
+        table_class += " " + esc(block["tableClass"])
+    top_hint = f'<p class="table-hint table-hint--top">{hint}</p>'
     return (
         '<div class="table-wrap" data-search-block>'
+        f'{top_hint}'
         f'<div class="table-scroll" tabindex="0" role="region" '
         f'aria-label="{esc(caption.ja)}">'
-        f'<table class="cols-{len(block["headers"])}">'
+        f'<table class="{table_class}">'
         f"<caption>{caption_html}</caption>"
         f"<thead><tr>{head}</tr></thead>"
         f"<tbody>{''.join(body_rows)}</tbody>"
         "</table></div>"
-        f'<p class="table-hint">{hint}</p>'
         "</div>"
     )
 
@@ -293,8 +345,12 @@ def render_figure(block: Block, ctx: RenderContext) -> str:
     alt = block["alt"]
     label = ctx.ui_text("figure.label")
     figure_label = f"{label.ja} {number} / {label.en} {number}"
-    kind_class = "figure--diagram" if block["source_kind"] == "diagram" else "figure--shot"
-    if block["source_kind"] == "diagram":
+    diagram = block["source_kind"] in {"diagram", "participant-diagram"}
+    kind_class = (
+        "figure--participant-diagram" if block["source_kind"] == "participant-diagram"
+        else "figure--diagram" if diagram else "figure--shot"
+    )
+    if diagram:
         key = block["source_key"]
         # One figure, two artworks. The Japanese SVG is the shipped asset; the
         # English one is derived at build time from the maintained translation

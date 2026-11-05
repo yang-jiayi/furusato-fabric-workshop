@@ -26,20 +26,23 @@ class MeasuredContractVersionTests(unittest.TestCase):
                 self.assertEqual(receipt["profile"], name)
                 self.assertEqual(receipt["profileManifestSha256"], measured.digest(json.loads((profile / "profile-manifest.json").read_bytes())))
                 self.assertEqual(decoded_parts(out)["Files/Config/draft/stage_config.json"]["aiInstructions"],
-                                 (profile / "global-instructions.txt").read_text().strip())
+                                 (profile / "global-instructions.txt").read_text(encoding="utf-8").strip())
                 if name == measured.CURRENT_PROFILE:
                     self.assertEqual((out, receipt), measured.compile_measured_draft(original, **inputs))
                 else:
                     self.assertEqual(receipt["instructionUtf16Units"],
                                      {"global": 9981, "lakehouse_tables": 9989, "kusto": 8665, "semantic_model": 6989})
 
-    def test_only_three_instruction_inputs_change_and_fewshot_identity_is_stable(self):
+    def test_only_measured_instruction_and_description_inputs_change_and_fewshot_identity_is_stable(self):
         legacy = measured.PROFILE_ROOT / "measured-contract-20261009"
         current_manifest = json.loads((measured.PROFILE / "profile-manifest.json").read_bytes())
         old_manifest = json.loads((legacy / "profile-manifest.json").read_bytes())
         changed = {name for name in current_manifest["sha256"]
                    if current_manifest["sha256"][name] != old_manifest["sha256"][name]}
-        self.assertEqual(changed, {"global-instructions.txt", "lakehouse-instructions.txt", "semantic-model-instructions.txt"})
+        self.assertEqual(changed, {
+            "global-instructions.txt", "lakehouse-instructions.txt",
+            "semantic-model-instructions.txt", "source-descriptions.json",
+        })
         for name in set(old_manifest["sha256"]) - changed | {"sql-schema-inventory.sql"}:
             self.assertEqual((measured.PROFILE / name).read_bytes(), (legacy / name).read_bytes())
         original, inputs, path = native_tests.fixture()
@@ -70,7 +73,7 @@ class MeasuredContractVersionTests(unittest.TestCase):
         edition = json.loads((measured.REPO / "workshop/v3.0.0-preview/edition.json").read_bytes())
         self.assertEqual(edition["correctedAgentProfile"], measured.CURRENT_PROFILE)
         for filename in ("preview30_runtime.py", "build_preview30.py"):
-            tree = ast.parse((measured.REPO / "tools/provisioning" / filename).read_text())
+            tree = ast.parse((measured.REPO / "tools/provisioning" / filename).read_text(encoding="utf-8"))
             declared = []
             for node in ast.walk(tree):
                 if isinstance(node, ast.Dict):

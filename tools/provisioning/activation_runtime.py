@@ -379,17 +379,36 @@ def verify_automatic_delivery(
     history: Mapping[str, Any], jobs_before: Sequence[Mapping[str, Any]],
     jobs_after: Sequence[Mapping[str, Any]], manual_job_ids: set[str],
 ) -> dict[str, Any]:
-    workspace_id, pipeline_id, rule_id = guid(workspace_id), guid(pipeline_id), guid(rule_id)
-    if uploaded_bytes_verified is not True or type(expected_bytes) is not int or expected_bytes <= 0:
-        raise ActivationError("Complete uploaded bytes are not proven.")
     matches = [event for event in events if event.get("___subject") == subject]
     if len(matches) != 1:
         raise ActivationError("Expected exactly one native file event for the exact subject.")
     event = matches[0]
+    return verify_automatic_delivery_fields(
+        workspace_id=workspace_id, pipeline_id=pipeline_id, rule_id=rule_id, subject=subject,
+        source=source, expected_bytes=expected_bytes, uploaded_bytes_verified=uploaded_bytes_verified,
+        event_id=event.get("___id"), event_type=event.get("___type"),
+        event_source=event.get("___source"), event_api=event.get("api"),
+        event_content_length=event.get("contentLength"), event_time=event.get("___time"),
+        history=history, jobs_before=jobs_before, jobs_after=jobs_after,
+        manual_job_ids=manual_job_ids,
+    )
+
+
+def verify_automatic_delivery_fields(
+    *, workspace_id: str, pipeline_id: str, rule_id: str, subject: str, source: str,
+    expected_bytes: int, uploaded_bytes_verified: bool, event_id: Any, event_type: Any,
+    event_source: Any, event_api: Any, event_content_length: Any, history: Mapping[str, Any],
+    jobs_before: Sequence[Mapping[str, Any]], jobs_after: Sequence[Mapping[str, Any]],
+    manual_job_ids: set[str], event_time: Any = None,
+) -> dict[str, Any]:
+    """Apply the shared activation/job gate to either native rows or tagged evidence fields."""
+    workspace_id, pipeline_id, rule_id = guid(workspace_id), guid(pipeline_id), guid(rule_id)
+    if uploaded_bytes_verified is not True or type(expected_bytes) is not int or expected_bytes <= 0:
+        raise ActivationError("Complete uploaded bytes are not proven.")
     if (
-        event.get("___type") != FILE_CREATED or event.get("___source") != source
-        or event.get("api") != "PutBlob" or str(event.get("contentLength")) != str(expected_bytes)
-        or not event.get("___id")
+        event_type != FILE_CREATED or event_source != source
+        or event_api != "PutBlob" or str(event_content_length) != str(expected_bytes)
+        or not isinstance(event_id, str) or not event_id
     ):
         raise ActivationError("The native event does not match the complete-file upload.")
     if history.get("isError") or not isinstance(history.get("activations"), list):
@@ -409,6 +428,8 @@ def verify_automatic_delivery(
     }
     if any(activation.get(key) != value for key, value in expected.items()) or not activation.get("___id"):
         raise ActivationError("The native activation target or event parameters differ.")
+    if event_time is not None and parse_time(activation_time := activations[0].get("activationTime")) != parse_time(event_time):
+        raise ActivationError("The activation time differs from the native event time.")
     if not isinstance(subject, str) or not subject.startswith("/Files/") or not subject.endswith(".csv"):
         raise ActivationError("The evidence subject is not a scoped CSV file.")
     if not isinstance(source, str) or f"/workspaces/{workspace_id}/items/" not in source:
@@ -427,7 +448,7 @@ def verify_automatic_delivery(
     if not -5 <= (started - activated).total_seconds() <= 900 or ended < started:
         raise ActivationError("Pipeline execution is outside the correlated activation window.")
     return {
-        "contract": CONTRACT, "state": "automatic_delivery_verified", "eventId": event["___id"],
+        "contract": CONTRACT, "state": "automatic_delivery_verified", "eventId": event_id,
         "activationId": activation["___id"], "pipelineJobId": job["id"],
         "subject": subject, "pipelineId": pipeline_id, "manualInvocation": False,
         "copyAndDataVerified": False,

@@ -1,15 +1,15 @@
 {
-  "schemaVersion": 1,
-  "profile": "measured-contract-20261015",
-  "instructionLimitUtf16Units": 10000,
-  "sha256": {
-    "global-instructions.txt": "ba8d702cd296d9782ea687a838c9d24c77b4258619db8f6e1006dc646f4e7bf3",
-    "kusto-examples.json": "c3ae79d002ddfdd21ffcd5f69d127fee0ed89e1b6aa5738b50947e52cd5ba362",
-    "kusto-instructions.txt": "b8066effb85542db9fafe3c50f5e74df34406dd71dc0ed0a493d3e4c407b1223",
-    "lakehouse-instructions.txt": "20e4f3c5fafa58c1929fa0c9e1a5db257155feb397fb7cc22f9a4c405c9933b8",
-    "ontology-instructions.txt": "a66b90a934a58601116dcde6faa2e3d904db51ce0583111e48b7dc709069d59c",
-    "selection-contract.json": "db5c79b6bb1189c3939eab72c9717bb1593be81bfe01a9dda5f26561b0fd6b92",
-    "semantic-model-instructions.txt": "304195df1b0b74d6d8bb90e4c035d9591bd9b0ecd993ccb1d2a32c2df3cc87d4",
-    "source-descriptions.json": "8142fd7d31016eaea66512860d824c1bae69bbfab3d202f7bdb0c4f5bf91ba16"
-  }
+    "schemaVersion":  1,
+    "profile":  "measured-contract-20261015",
+    "instructionLimitUtf16Units":  10000,
+    "sha256":  {
+                   "global-instructions.txt":  "02e6a2cae74832791099549f19147ae00f7fd385054a26054444d1dce100c051",
+                   "kusto-examples.json":  "c3ae79d002ddfdd21ffcd5f69d127fee0ed89e1b6aa5738b50947e52cd5ba362",
+                   "kusto-instructions.txt":  "b8066effb85542db9fafe3c50f5e74df34406dd71dc0ed0a493d3e4c407b1223",
+                   "lakehouse-instructions.txt":  "20e4f3c5fafa58c1929fa0c9e1a5db257155feb397fb7cc22f9a4c405c9933b8",
+                   "ontology-instructions.txt":  "a66b90a934a58601116dcde6faa2e3d904db51ce0583111e48b7dc709069d59c",
+                   "selection-contract.json":  "db5c79b6bb1189c3939eab72c9717bb1593be81bfe01a9dda5f26561b0fd6b92",
+                   "semantic-model-instructions.txt":  "304195df1b0b74d6d8bb90e4c035d9591bd9b0ecd993ccb1d2a32c2df3cc87d4",
+                   "source-descriptions.json":  "89e1786885b6bc5e6869a407934bbf909c0185130f470300627ee84f176b9a9f"
+               }
 }

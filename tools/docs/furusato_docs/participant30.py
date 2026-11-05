@@ -18,11 +18,12 @@ from pathlib import Path
 from furusato_html.model import Block, Section, Text
 
 from . import participant30_figures as figure_source
+from . import participant30_details as detail_source
 from . import participant30_text as text_source
 from . import participant30_tuning, participant30_evaluation, participant30_deployment
 
 LEARN_BASE = "https://learn.microsoft.com/en-us/fabric/iq/ontology/"
-PARTICIPANT_ASSETS = Path(__file__).resolve().parents[3] / "docs" / "assets" / "v3.0.0-participant"
+PARTICIPANT_ASSETS = Path(__file__).resolve().parents[3] / "docs" / "assets" / "current-participant"
 
 
 def participant_figures() -> dict:
@@ -126,15 +127,19 @@ def bullet_list(values, *, numbered=False, start=1) -> Block:
     return Block("list", payload)
 
 
-def text_table(headers, rows, caption, widths=None) -> Block:
+def text_table(headers, rows, caption, widths=None, class_name=None) -> Block:
     def cell(value):
         if isinstance(value, Text):
             return value
         if isinstance(value, tuple):
             return pair(value)
         return Text(str(value), str(value))
+    resolved_headers = [cell(h) for h in headers]
+    classes = [class_name] if class_name else []
+    if len(resolved_headers) >= 3 and resolved_headers[0].ja in {"項目", "フィールド", "Item", "Field"}:
+        classes.append("wide-reference")
     payload = {
-        "number": 0, "headers": [cell(h) for h in headers],
+        "number": 0, "headers": resolved_headers,
         "rows": [[cell(c) for c in row] for row in rows],
         "caption": cell(caption), "wide": len(headers) >= 5,
     }
@@ -142,6 +147,8 @@ def text_table(headers, rows, caption, widths=None) -> Block:
         if len(widths) != len(headers):
             raise ValueError("Table widths must match the number of columns")
         payload["widths"] = list(widths)
+    if classes:
+        payload["tableClass"] = " ".join(classes)
     return Block("table", payload)
 
 
@@ -193,7 +200,14 @@ class FigureFactory:
         spec = figure_source.FIGURES.get(ident)
         if spec is None:
             raise ValueError("Figure has no participant caption: " + ident)
-        if ident.startswith("diagram:"):
+        if ident in detail_source.DETAILS:
+            detail_source.crop_png(ident)
+            source_kind, source_key = "participant-detail", ident
+        elif ident == "pc-01-architecture":
+            figure_path(ident)
+            detail_source.architecture_svg_path()
+            source_kind, source_key = "participant-diagram", ident
+        elif ident.startswith("diagram:"):
             key = ident.split(":", 1)[1]
             if key not in self.context.diagrams:
                 raise ValueError("Unknown diagram: " + key)
@@ -211,6 +225,13 @@ class FigureFactory:
             "caption": pair(spec["caption"]), "alt": pair(spec["alt"]),
         })
 
+    def blocks(self, ident: str) -> list[Block]:
+        """Return the retained full image and any source-pixel detail supplements."""
+        blocks = [self.block(ident)]
+        for detail_id in detail_source.DETAILS_BY_PARENT.get(ident, ()):
+            blocks.append(self.block(detail_id))
+        return blocks
+
 
 def step_blocks(steps, figures: FigureFactory):
     blocks, pending, start = [], [], 1
@@ -227,7 +248,7 @@ def step_blocks(steps, figures: FigureFactory):
         if unknown:
             raise ValueError("Unknown step keys: " + ", ".join(sorted(unknown)))
         pending.append(step)
-        extras = [figures.block(ident) for ident in step.get("figures", ())]
+        extras = [block for ident in step.get("figures", ()) for block in figures.blocks(ident)]
         if step.get("code"):
             label, value = step["code"]
             extras.append(Block("code", {"text": value, "language": Text(label, label)}))
@@ -291,13 +312,45 @@ class Tables:
         rows = []
         for entity in self.context.entities:
             key_type = next(p.value_type for p in entity.properties if p.is_key)
-            rows.append([entity.name, entity.key_property, kinds[key_type],
-                         entity.static_binding.source_table if entity.static_binding else "—",
+            rows.append([f"`{entity.name}`", f"`{entity.key_property}`", f"`{kinds[key_type]}`",
+                         f"`{entity.static_binding.source_table}`" if entity.static_binding else "—",
                          str(len(entity.properties))])
         return [text_table(
             ["Entity type", ("キー", "Key"), ("キーの型", "Key type"), ("ソーステーブル", "Source table"),
              ("静的 Property の数", "Static properties")],
             rows, ("作成する10個の Entity type", "The ten entity types to create"))]
+
+    def entity_properties(self):
+        kinds = {"BigInt": "Integer", "DateTime": "DateTime", "String": "String"}
+        rows = []
+        for entity in self.context.entities:
+            binding = entity.static_binding
+            if binding is None:
+                raise ValueError(f"Static binding is missing for {entity.name}")
+            columns_by_property = {}
+            for source_column, property_name in binding.column_map:
+                if property_name in columns_by_property:
+                    raise ValueError(f"Duplicate static property mapping: {entity.name}.{property_name}")
+                columns_by_property[property_name] = source_column
+            if set(columns_by_property) != {prop.name for prop in entity.properties}:
+                raise ValueError(f"Static property mapping is incomplete for {entity.name}")
+            for prop in entity.properties:
+                try:
+                    value_type = kinds[prop.value_type]
+                except KeyError as error:
+                    raise ValueError(f"Unsupported property type for {entity.name}.{prop.name}") from error
+                rows.append([
+                    f"`{entity.name}`", f"`{binding.source_table}`", f"`{prop.name}`",
+                    f"`{columns_by_property[prop.name]}`", f"`{value_type}`",
+                ])
+        return [text_table(
+            [("Entity type", "Entity type"), ("ソーステーブル", "Source table"),
+             ("Property", "Property"), ("ソース列", "Source column"),
+             ("Property の型", "Property type")],
+            rows,
+            ("配布する ontology-full-definition-template.json から生成した静的 Property の期待マッピング。実際の Bind data 画面は別途確認します。",
+             "Expected static-property mappings generated from the distributed ontology-full-definition-template.json. Verify the actual Bind data screen separately."),
+        )]
 
     def relationships(self):
         rows = [[r.name, f"{r.origin} → {r.target}", r.mapping_table, f"{r.origin_key_column} / {r.target_key_column}"]
@@ -310,7 +363,8 @@ class Tables:
     def layer_measures(self):
         metrics = json.loads((self.root / "workshop" / "v3.0.0-preview" / "powerbi" / "native-metrics-contract.json")
                              .read_text(encoding="utf-8"))
-        rows = [[m["table"], m["name"], m["dax"], m["formatString"]] for m in metrics["measures"]]
+        rows = [[f'`{m["table"]}`', f'`{m["name"]}`', m["dax"], f'`{m["formatString"]}`']
+                for m in metrics["measures"]]
         return [text_table(
             [("テーブル", "Table"), ("メジャー", "Measure"), "DAX", ("書式", "Format")],
             rows, ("データの種類ごとのメジャー", "Measures for each kind of data"))]
@@ -431,7 +485,8 @@ class Tables:
                 rows.append([f"Notebook {number}", name, repr(value),
                              pair(meaning) if meaning else Text("—", "—")])
         return [text_table(["Notebook", ("パラメーター", "Parameter"), ("既定値", "Default"), ("意味", "Meaning")],
-                           rows, ("Notebook のパラメーター", "Notebook parameters"))]
+                           rows, ("Notebook のパラメーター", "Notebook parameters"),
+                           class_name="notebook-parameters")]
 
     def questions(self):
         rows = [[str(q.number), q.test_id, Text(q.question, q.question), str(len(q.evidence) + len(q.pass_criteria))]
@@ -458,7 +513,11 @@ def evaluation_sections(appendix: Section, legacy_chapter: Section, start: int):
         add_section(appendix, str(start + offset), (title_ja, title_en), blocks)
 
 
-def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, legacy_original):
+def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, legacy_original,
+            current_profile=False):
+    current_tuning = None
+    if current_profile:
+        from . import participant_current_tuning as current_tuning
     figures = FigureFactory(context, evidence)
     tables = Tables(root, context, facts, manifest)
     tables.tests = tests
@@ -469,30 +528,55 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
     for number, section in chapters.items():
         ja, en = text_source.CHAPTER_TITLES[number]
         section.title = Text(f"{number}. {ja}", f"{number}. {en}")
-        spec = text_source.CHAPTERS[number]
+        spec = (current_tuning.current_chapter_spec()
+                if current_tuning is not None and number == 17
+                else text_source.CHAPTERS[number])
         intro = [paragraph(value) for value in spec["intro"]]
         if spec.get("before"):
             intro.append(paragraph(("準備するもの・確認すること", "Before you start")))
             intro.append(bullet_list(spec["before"]))
         add_section(section, "1", SECTION_TITLES["intro"], intro)
         steps = step_blocks(spec["steps"], figures) + [callout(value) for value in spec.get("tips", ())]
-        add_section(section, "2", SECTION_TITLES["steps"], steps)
+        steps_number = "3" if current_profile and number == 17 else "2"
+        add_section(section, steps_number, SECTION_TITLES["steps"], steps)
         suffix = 3
-        if spec.get("checks"):
+        if spec.get("checks") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["checks"], [text_table(
                 [("確認すること", "What to check"), ("うまくいかないとき", "If it does not work")],
                 [[pair(check), pair(fix)] for check, fix in spec["checks"]],
                 ("この章の完了条件", "Completion checks for this chapter"), widths=(2.4, 4.2))])
             suffix += 1
-        if spec.get("tables"):
+        if spec.get("tables") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["tables"],
                         [block for name in spec["tables"] for block in tables.build(name)])
             suffix += 1
-        if spec.get("links"):
+        if spec.get("links") and number != 17:
             add_section(section, str(suffix), SECTION_TITLES["links"], [link_list(spec["links"])])
-    participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
+    if current_profile:
+        from . import participant_semantic_ai
+        participant_semantic_ai.append_sections(chapters[12], root, figures=figures)
+        current_tuning.append_current_tuning_sections(chapters[17], root)
+    else:
+        participant30_tuning.append_tuning_sections(chapters[17], root, figures=figures)
+    chapter17_spec = (current_tuning.current_chapter_spec() if current_tuning is not None
+                      else text_source.CHAPTERS[17])
+    suffix = 15 if current_profile else 17
+    if chapter17_spec.get("checks"):
+        add_section(chapters[17], str(suffix), SECTION_TITLES["checks"], [text_table(
+            [("確認すること", "What to check"), ("うまくいかないとき", "If it does not work")],
+            [[pair(check), pair(fix)] for check, fix in chapter17_spec["checks"]],
+            ("この章の完了条件", "Completion checks for this chapter"), widths=(2.4, 4.2))])
+        suffix += 1
+    if chapter17_spec.get("tables"):
+        add_section(chapters[17], str(suffix), SECTION_TITLES["tables"],
+                    [block for name in chapter17_spec["tables"] for block in tables.build(name)])
+        suffix += 1
+    if chapter17_spec.get("links"):
+        add_section(chapters[17], str(suffix), SECTION_TITLES["links"], [link_list(chapter17_spec["links"])])
     participant30_evaluation.append_chapter_sections(chapters[19], root)
-    participant30_deployment.append_deployment_sections(chapters[24], root)
+    participant30_deployment.append_deployment_sections(
+        chapters[24], root, current_profile=current_profile
+    )
     for letter, section in appendices.items():
         ja, en = text_source.APPENDIX_TITLES[letter]
         section.title = Text(f"付録 {letter}　{ja}", f"Appendix {letter} — {en}")
@@ -512,11 +596,18 @@ def compose(roots, *, root: Path, context, facts, tests, evidence, manifest, leg
         for name in table_names:
             blocks.extend(tables.build(name))
         blocks.extend(callout(value) for value in spec.get("tips", ()))
-        if spec.get("links"):
+        if spec.get("links") and letter != "E":
+            blocks.append(paragraph(("Microsoft Learn の参考資料", "Microsoft Learn references")))
             blocks.append(link_list(spec["links"]))
         add_section(section, "1", ({"A": ("期待値", "Expected values"), "B": ("パラメーター", "Parameters"),
                                     "C": ("使い方", "How to use this appendix"), "D": ("一覧", "List"),
                                     "E": ("確認と対処", "Checks and fixes")}[letter]), blocks)
+        if letter == "E" and spec.get("links"):
+            add_section(section, "2", ("Microsoft Learn の参考資料", "Microsoft Learn references"),
+                        [link_list(spec["links"])])
+        if letter == "E" and spec.get("credits"):
+            add_section(section, "3", ("クレジットとアイコン利用条件", "Credits and icon terms"),
+                        [paragraph(value) for value in spec["credits"]])
         if letter == "C" and "criteria" in spec.get("tables", ()):
             participant30_evaluation.append_rubric_sections(section, root, start=2)
     leftovers = []

@@ -32,6 +32,8 @@ class CalibrationTests(unittest.TestCase):
         return calibration.build(self.source, output or self.root / 'out', report_date='2026-10-15',
                                  source_date_epoch=1792022400, repo=calibration.REPO)
 
+    @unittest.skipUnless(callable(getattr(os, 'getuid', None)),
+                         'Requires POSIX owner identity and 0700 mode checks for private output.')
     def test_shared_markdown_renders_both_formats_and_public_links(self):
         value = self.build()
         self.assertTrue(value['markdownWordHtmlParity'])
@@ -39,7 +41,7 @@ class CalibrationTests(unittest.TestCase):
         self.assertFalse(value['procedureIsEvaluationEvidence'])
         self.assertFalse(value['microsoftWordRenderChecked'])
         self.assertFalse(value['htmlBrowserChecked'])
-        web = (self.root / 'out/calibration-and-proofreading.html').read_text()
+        web = (self.root / 'out/calibration-and-proofreading.html').read_text(encoding='utf-8')
         self.assertIn(value['outputs']['calibration-and-proofreading.docx'], web)
         self.assertIn('https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/docs/v3.0.0/tuning-20261015/README.md', web)
         with zipfile.ZipFile(self.root / 'out/calibration-and-proofreading.docx') as archive:
@@ -51,6 +53,8 @@ class CalibrationTests(unittest.TestCase):
             self.assertNotIn(str(self.root), relationships)
             self.assertIn('https://github.com/', relationships)
 
+    @unittest.skipUnless(callable(getattr(os, 'getuid', None)),
+                         'Requires POSIX owner identity and 0700 mode checks for private output.')
     def test_existing_output_is_never_replaced(self):
         self.build()
         old = (self.root / 'out/calibration-and-proofreading.docx').read_bytes()
@@ -62,7 +66,8 @@ class CalibrationTests(unittest.TestCase):
         for unsafe in ('/workspace/private', 'PRIVATE DRAFT — NOT PUBLISHABLE',
                        'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee', 'Bearer ' + 'x' * 45):
             with self.subTest(value=unsafe):
-                self.source.write_text('# 校正 / Calibration and proofreading\n\n' + unsafe)
+                self.source.write_text('# 校正 / Calibration and proofreading\n\n' + unsafe,
+                                       encoding='utf-8')
                 with self.assertRaises(ValueError):
                     self.build()
                 self.assertFalse((self.root / 'out').exists())
@@ -75,7 +80,8 @@ class CalibrationTests(unittest.TestCase):
                     calibration.link_target(target, calibration.DEFAULT_PUBLIC_SOURCE)
 
     def test_bad_table_shape_is_not_silently_dropped(self):
-        self.source.write_text('# 校正 / Calibration and proofreading\n\n| a | b |\n|---|---|\n|one|two|three|\n')
+        self.source.write_text('# 校正 / Calibration and proofreading\n\n| a | b |\n|---|---|\n|one|two|three|\n',
+                               encoding='utf-8')
         with self.assertRaises(ValueError):
             self.build()
 

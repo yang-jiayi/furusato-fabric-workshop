@@ -15,11 +15,13 @@ python .\tools\preview30-attachments\build_attachments.py
 python .\tools\preview30-attachments\test_attachments.py
 ```
 
-Generation needs the packages in `requirements.txt` and an embeddable Japanese
-TrueType font. Windows Meiryo is selected by default; use `--font` elsewhere.
-PDF font subsets are embedded. The manifest records the font hash for exact
-regeneration. PNG labels use the same font. No full font file is distributed.
-Outputs are only `workshop\v3.0.0-preview\attachments`; no source data is rewritten.
+The first-party business requirements attachment is generated as UTF-8
+`business-requirements.txt` from the bilingual `REQUIREMENTS` source in
+`build_attachments.py`. The Japanese font is used only for labels in
+`domain-model.png`; Windows Meiryo is selected by default, or supply `--font`
+elsewhere. Its hash is recorded for exact PNG regeneration. No font file is
+distributed. Outputs are only `workshop\v3.0.0-preview\attachments`; no source
+data is rewritten.
 
 ## 操作 / Exercise
 
@@ -28,7 +30,7 @@ Outputs are only `workshop\v3.0.0-preview\attachments`; no source data is rewrit
 2. In a fresh **Plan** conversation, request scoped discovery, a draft, validation
    and read-only preview without attachments. Save the transcript privately.
 3. Start a separate conversation on the same unchanged baseline. Attach
-   `business-requirements.pdf`, `data-dictionary.txt`, `domain-model.png`. Refer to
+   `business-requirements.txt`, `data-dictionary.txt`, `domain-model.png`. Refer to
    each filename and repeat the same prompt. At most ten files / conversation,
    each at most 5 MB. Refresh/closing the tab ends current preview conversations.
 4. Compare geography, key types, relationship direction, layer/denominator,

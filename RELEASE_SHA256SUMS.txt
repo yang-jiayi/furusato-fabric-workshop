@@ -1,2 +1,0 @@
-5c0e8bc355dbbac47a0c3f4c37016bb2ea3183c527db55c66b03a9a844a8fd31 *docs/Fabric_IQ_Ontology_Workshop_Furusato_Participant_v2.7.0_unified-20260923.docx
-3de8bc77fc71418dd522c01b85e29e2b6b2090db4d94a10956631553320e722e *docs/furusato-workshop-v2-7-0-complete_unified-20260923.html

@@ -1,0 +1,57 @@
+Furusato 業務要件 / Business requirements
+
+3.1.0 · Synthetic training context · 2026-10-31
+
+1. 目的と合成データ / Purpose and synthetic data
+
+架空の寄付・寄付者・事業者を使い、自治体の受入、寄付者の居住地、返礼品の登録関係を説明する。自治体名・コードのみ実在する参照ラベルであり、現実の人物や自治体の業績ではない。
+
+Explain recipient geography, donor residence, and registered gift-supplier relationships using synthetic donations, donors and businesses. Only municipality names and codes are real reference labels, not evidence about real people or performance.
+
+2. 静的データと運用観測 / Static facts and operational observations
+
+静的 Donation は80,000件。8月の運用観測はraw 15,000行、一意EventID 14,900件、重複100件。別レイヤーなので無条件に加算しない。rawと重複除去後の件数・金額を同じ分母で比較する。
+
+Static Donation contains 80,000 records. August observations have 15,000 raw rows, 14,900 unique EventID values and 100 duplicates. These are separate layers: never add them blindly. Use the same raw or deduplicated denominator for counts and amounts.
+
+3. Goldと品質受入の意味 / Gold and quality acceptance
+
+GoldはNotebook05が入力ファイルの品質検証・EventID重複除去を行って作る別の分析層。DataSource=StaticSeedは静的データ、RealtimeIncrementは品質チェックを通過した増分で、直接接続したSemantic ModelのDAXで区別する。Goldの品質受入は決済・発送の確定や手動承認を意味しない。Goldの完成だけではFileCreatedからPipelineへの自動取り込み成功を証明しない。
+
+Gold is a separate analytical layer produced by Notebook05 after validating the input files and deduplicating EventID. DataSource=StaticSeed identifies static data; RealtimeIncrement identifies quality-accepted increments. Keep these scopes explicit in the directly connected Semantic Model's source-owned DAX. Quality acceptance is not payment, shipment confirmation or manual business approval. A completed Gold build does not prove automatic FileCreated-to-Pipeline ingestion.
+
+4. 地理的な意味 / Geographic meaning
+
+DonorLivesInPrefectureは寄付者の居住地。DonationToMunicipalityからMunicipalityInPrefectureは受入地域。SupplierInPrefectureは事業者の登録地域。「東京の寄付」には居住地か受入地かを確認する。
+
+DonorLivesInPrefecture is donor residence. DonationToMunicipality followed by MunicipalityInPrefecture is recipient geography. SupplierInPrefecture is supplier registration. Clarify residence versus recipient when asked about donations in Tokyo.
+
+5. 関係の根拠 / Relationship evidence
+
+DonationSelectedGiftは選択された返礼品、SupplierProvidesGiftは登録された供給関係。配送済み・受領済み・実際の発送者と解釈しない。寄付金額から所得・資産・富裕度を推定しない。
+
+DonationSelectedGift means a selected gift; SupplierProvidesGift means a registered supply relationship. Neither proves delivery, receipt or the actual fulfiller. Donation amounts do not establish income, assets or wealth.
+
+6. モデルと同一性 / Model and identity
+
+公開辞書の10 Entity・72 static Property・1 time-series Property・15 Relationshipを基準にする。キーと型を保持し、MunicipalityIdの文字列と先頭ゼロを守る。計算結果のMetric EntityとDAXのMetricsを区別する。新定義はTMDL/TMSL++であり、旧EntityTypes JSONを新形式とみなさない。
+
+Use the public dictionary's 10 entity types, 72 static properties, one time-series property and 15 relationships as the baseline. Preserve keys and types, including string MunicipalityId and leading zeroes. Distinguish aggregate Metric entities from source-owned DAX Metrics. The new definition uses TMDL/TMSL++; old EntityTypes JSON is not the new format.
+
+7. Planから明示Actへ / Plan before explicit Act
+
+講師が別途指定したソースIDだけを調べる。Planで発見、draft、validate、previewし、追加・変更・削除を示す。安定IDを保ち、既存本番や比較用モデルを変更しない。承認したlab-copyに限りActし、その後定義を読み戻す。
+
+Inspect only the source IDs supplied separately by the instructor. Discover, draft, validate and preview in Plan; list additions, edits and deletions. Preserve stable IDs and leave production and comparison items untouched. Act only on the approved lab copy, then read the definition back.
+
+8. 添付の境界 / Attachment boundary
+
+この教材は会話内の設計文脈であり、データ取り込み・RDF import・アクセス許可ではない。1会話10ファイル以下、各5MB以下。ファイル名を明示して利用を依頼し、新しい会話には再添付する。
+
+These files are conversation context, not ingestion, RDF import or access grants. Use at most 10 files per conversation, each at most 5 MB. Name each file in the prompt and attach it again in a new conversation.
+
+9. 検証と限界 / Validation and limits
+
+出典、query、返却値、警告を記録する。キーなし・semantic-model-backed EntityはGraph対象にしない。Business Rulesは自然言語文脈で、制約強制やActivator動作ではない。生成した質問だけで独立評価に合格したと主張しない。
+
+Record sources, executed queries, results and warnings. Do not project keyless or semantic-model-backed entities into graph. Business Rules provide natural-language context, not enforced constraints or Activator actions. Agent-generated questions are not independent evaluation.

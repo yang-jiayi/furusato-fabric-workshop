@@ -17,6 +17,16 @@
 
 ローカルCLIを利用する場合の計画開始例です。導入済みのバージョンが各オプションを提供することを--helpで確認してから実行します。
 
+**Readable wrapped view — PowerShell**
+
+<div>
+copilot --plan --prompt "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+claude --permission-mode plan "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+codex --sandbox read-only --ask-for-approval on-request "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
+
 **PowerShell**
 
 ```powershell
@@ -49,6 +59,8 @@ RUN_NOTEBOOK01 = False
 - プレビューで実際の配置先、競合、作成対象とplanSha256を確認し、24.5の計画に対応する承認記録を使います。適用時だけAPPLY_CHANGESをTrueにし、CONFIRMED_PLAN_SHA256に実際の値を設定します。Jobs APIによる自動適用を承認した場合だけALLOW_AUTOMATED_APPLYも有効にします。
 - 成功したNotebook 01や増分取り込みを再実行しません。CLIで完了した工程をNotebookで重ねません。FileCreatedの設定、実配送、Copy結果、KQL件数、停止状態は24.7と9〜10章でそれぞれ確かめます。
 
+各クライアントの公式資料
+
 - https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli
 - https://code.claude.com/docs/en/cli-reference
 - https://developers.openai.com/codex/cli/reference/
@@ -77,6 +89,16 @@ Every client uses the same distributed files, scope, plan and approval records f
 | Microsoft 365 Copilot Cowork | Inspect available Fabric/Power BI connections and supported operations. Procedure assistance does not establish a local shell or deployment permission; run required commands in your authenticated terminal. |
 
 These examples start local CLI planning. Before use, confirm with --help that your installed version provides each option.
+
+**Readable wrapped view — PowerShell**
+
+<div>
+copilot --plan --prompt "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+claude --permission-mode plan "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."<br>
+codex --sandbox read-only --ask-for-approval on-request "Read Lab/README.md and Chapter 24. Inspect the source and propose the scoped deployment plan. Do not create or run resources yet."
+</div>
+
+**Verbatim source follows; copy from the canonical block.**
 
 **PowerShell**
 
@@ -109,6 +131,8 @@ RUN_NOTEBOOK01 = False
 
 - Inspect the actual destination, conflicts, resource list and planSha256 in preview and use the matching approval record from 24.5. Set APPLY_CHANGES=True and the actual CONFIRMED_PLAN_SHA256 only for apply. Enable ALLOW_AUTOMATED_APPLY only for explicitly authorized Jobs API automation.
 - Do not rerun a successful Notebook 01 or increment ingestion, or repeat a CLI-completed stage through a Notebook. Check FileCreated configuration, actual delivery, Copy results, KQL counts and stopped state separately with 24.7 and Chapters 9–10.
+
+Official documentation for each client
 
 - https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli
 - https://code.claude.com/docs/en/cli-reference

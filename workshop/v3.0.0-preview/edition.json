@@ -1,7 +1,7 @@
 {
   "schemaVersion": "furusato-workshop-edition/v1",
   "workshopVersionFile": "WORKSHOP_VERSION",
-  "workshopVersion": "3.0.0",
+  "workshopVersion": "3.1.0",
   "runtimeProfile": "v3.0.0-preview",
   "baselineRuntimeVersion": "2.7.0",
   "datasetVersion": "2.7.0-realistic.1",

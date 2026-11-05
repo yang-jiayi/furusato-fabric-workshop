@@ -1,0 +1,100 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/ontology/1.0.0/schema.json",
+  "artifactId": "{{resource:ontology:id}}",
+  "workspaceId": "{{workspace:id}}",
+  "displayName": "{{resource:ontology:name}}",
+  "elements": [
+    {
+      "id": "{{node:ontology:Prefecture}}",
+      "is_selected": true,
+      "display_name": "Prefecture",
+      "type": "ontology.entity",
+      "description": "PrefectureId,PrefectureName,PrefectureNameEn,PrefReceivedStaticCount,PrefReceivedTotalYen,PrefReceivedAmountRank,PrefResidentStaticCount,PrefResidentTotalYen,PrefResidentAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:Municipality}}",
+      "is_selected": true,
+      "display_name": "Municipality",
+      "type": "ontology.entity",
+      "description": "MunicipalityId,MunicipalityName,MunicipalityDisplayName,MunicipalityStaticCount,MunicipalityStaticTotalYen,MunicipalityAmountRank,MunicipalityPrefAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:Donor}}",
+      "is_selected": true,
+      "display_name": "Donor",
+      "type": "ontology.entity",
+      "description": "DonorId,DonorName,DonorDisplayName,DonorAge,DonorOccupation,DonorOccupationEn,DonorStaticCount,DonorStaticTotalYen,DonorStaticMaxYen,DonorOverallAmountRank,DonorResidenceAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:GiftCategory}}",
+      "is_selected": true,
+      "display_name": "GiftCategory",
+      "type": "ontology.entity",
+      "description": "CategoryId,CategoryName,CategoryNameEn,CategorySearchTerms,CategoryStaticCount,CategoryStaticTotalYen,CategoryAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:Gift}}",
+      "is_selected": true,
+      "display_name": "Gift",
+      "type": "ontology.entity",
+      "description": "GiftId,GiftName,GiftDisplayName,GiftSearchTerms,GiftNotes,GiftStaticCount,GiftStaticTotalYen,GiftAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:Supplier}}",
+      "is_selected": true,
+      "display_name": "Supplier",
+      "type": "ontology.entity",
+      "description": "SupplierId,SupplierName,SupplierDisplayName,SupplierType,SupplierTypeEn,SupplierProvidedGiftCount",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:Donation}}",
+      "is_selected": true,
+      "display_name": "Donation",
+      "type": "ontology.entity",
+      "description": "DonationId,DonationDisplayName,DonationAmountYen,DonatedAtUtc,DonatedAtJstText,DonationDateJst,DonationYearMonthJst,DonationYearMonthJaShort,DonationPaymentMethod,DonationPaymentMethodEn,DonationDataLayer",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:MunicipalityCategoryMetric}}",
+      "is_selected": true,
+      "display_name": "MunicipalityCategoryMetric",
+      "type": "ontology.entity",
+      "description": "MunCategoryMetricId,MunCategoryStaticCount,MunCategoryTotalYen,MunCategoryAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:PrefectureCategoryMetric}}",
+      "is_selected": true,
+      "display_name": "PrefectureCategoryMetric",
+      "type": "ontology.entity",
+      "description": "PrefCategoryMetricId,PrefCategoryStaticCount,PrefCategoryTotalYen,PrefCategoryAmountRank",
+      "children": []
+    },
+    {
+      "id": "{{node:ontology:PrefectureDonationFlow}}",
+      "is_selected": true,
+      "display_name": "PrefectureDonationFlow",
+      "type": "ontology.entity",
+      "description": "PrefDonationFlowId,PrefFlowStaticCount,PrefFlowTotalYen,PrefFlowOriginRank,PrefFlowDestinationRank",
+      "children": []
+    }
+  ],
+  "entitiesWithUserAuthoredDescriptions": [
+    "{{node:ontology:Prefecture}}",
+    "{{node:ontology:Municipality}}",
+    "{{node:ontology:Donor}}",
+    "{{node:ontology:GiftCategory}}",
+    "{{node:ontology:Gift}}",
+    "{{node:ontology:Supplier}}",
+    "{{node:ontology:Donation}}",
+    "{{node:ontology:MunicipalityCategoryMetric}}",
+    "{{node:ontology:PrefectureCategoryMetric}}",
+    "{{node:ontology:PrefectureDonationFlow}}"
+  ]
+}

@@ -18,10 +18,10 @@ Timing is a recording guide, not a claim about an assembled video.
 
 | Order | Focus | Visual cue / 画面で示すこと |
 |---|---|---|
-| 1 | **Overview / 全体像** | Business question; one Agent and three sources / 業務の問い、主 Agent と 3 ソース |
+| 1 | **Overview / 全体像** | Business question; one Agent and four logical sources / 業務の問い、主 Agent と4つの論理ソース |
 | 2 | **01 Facts & meaning / 事実と意味** | Seed → Notebook 01 → SQL and full Ontology / 静的データから事実と意味へ |
 | 3 | **02 Observations / 運用の観測** | FileCreated signal versus CSV Copy; stopped-trigger note / イベント通知と CSV 本体を区別 |
-| 4 | **03 One Agent / 1 件の Agent** | SQL, KQL, GQL; returned results → optional Code Interpreter / 照会の根拠と任意の後処理 |
+| 4 | **03 One Agent / 1 件の Agent** | Lakehouse, KQL Database, semantic model and Ontology; actual query evidence → optional Code Interpreter / 4論理ソースと実行証拠、任意の後処理 |
 | 5 | **04 Quality & BI / 品質と BI** | Actual Lakehouse inputs → quality / Gold → Direct Lake / 入力、品質、BI の独立経路 |
 | 6 | **00 Approved setup / 承認付き構築** | Separate preview / hash / consent control strip / データ経路から分けた承認ゲート |
 | 7 | **Learning outcomes / 学びのまとめ** | Positive conclusion with the complete architecture still visible / 全体像を保ったまま価値で締める |
@@ -54,8 +54,9 @@ Eventhouse へ入ります。ここで扱うのは、再送を含む raw の観�
 
 ### 4 — 1 件の Agent
 
-主 Data Agent は SQL・KQL・ネイティブ GQL の 3 ソースを使い分けます。
-Code Interpreter は、取得した結果を計算や図へ広げる、同じ Agent の追加ツールです。
+主 Data Agent は Lakehouse、KQL Database、Semantic model、Ontology の4つの論理ソースを使います。
+各質問で実際に使われたソースと query/result を確認し、Ontology の grounding だけで
+GQL 実行を推定しません。Code Interpreter は取得結果を扱う同じ Agent のツールです。
 出典、対象、指標、単位をそろえることで、回答の根拠をたどれます。
 
 ### 5 — 品質と BI
@@ -98,9 +99,10 @@ The diagram shows the design route; the demo trigger was stopped after ingestion
 
 ### 4 — One Agent
 
-One primary Data Agent uses three sources: SQL, KQL and native GQL.
-Code Interpreter is an additional tool in that same Agent, turning returned results into
-calculations, charts and files. Source, scope, metric and unit make the answer traceable.
+One primary Data Agent uses four logical sources: Lakehouse, KQL Database, semantic model
+and Ontology. Verify each question's actual source and query/result; ontology grounding alone
+does not establish that GQL ran. Code Interpreter is a tool in the same Agent for processing
+returned results. Source, scope, metric and unit make the answer traceable.
 
 ### 5 — Quality and BI
 

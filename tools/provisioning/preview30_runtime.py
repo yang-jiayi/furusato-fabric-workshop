@@ -40,9 +40,11 @@ RUNTIME_INPUT_FILES = (
     "tools/provisioning/preview30_runtime.py", "tools/provisioning/preview30_deploy.py",
     "tools/provisioning/preview30_verify.py", "tools/provisioning/preview30_ontology.py",
     "tools/provisioning/preview30_activation.py", "tools/provisioning/preview30_agent.py",
+    "tools/provisioning/native_ui_observation.py",
     "tools/provisioning/preview30_activation_readiness.py",
     "tools/provisioning/workshop_runtime.py", "tools/provisioning/activation_runtime.py",
-    "tools/provisioning/reference_kql.py", "tools/data-agent/native_evaluation.py",
+    "tools/provisioning/reference_kql.py",     "tools/provisioning/requirements-preview30.txt",
+    "tools/data-agent/native_evaluation.py",
     "tools/data-agent/native_mcp.py",
     "tools/data-agent/source_grounded_profile.py", "tools/data-agent/answer_contract_profile.py",
     "tools/data-agent/time_layer_isolation.py", "tools/data-agent/fresh_grounded_profile.py",
@@ -92,7 +94,8 @@ def save(path: Path, value: Any) -> None:
 
 def private_directory(path: Path) -> Path:
     path = path.resolve()
-    if path == REPO or REPO in path.parents:
+    repo = REPO.resolve()
+    if path == repo or repo in path.parents:
         raise SafetyError("Evidence must be outside the source checkout.")
     path.mkdir(parents=True, exist_ok=True)
     return path
@@ -526,6 +529,23 @@ def build_plan(scope: dict[str, Any], inventory: dict[str, Any],
 def preflight(args: argparse.Namespace) -> dict[str, Any]:
     evidence = private_directory(args.evidence_dir)
     scope = scope_from_document(load(args.scope), args.environment)
+    scope_sha256 = scope_fingerprint(scope)
+    prior_result_path = evidence / "result.json"
+    prior_result = load(prior_result_path) if prior_result_path.exists() else {}
+    if not isinstance(prior_result, dict):
+        raise SafetyError("Existing result evidence is not an object; preserve it and inspect before preflight.")
+    for key in ("workspaceId", "folderId", "participantId"):
+        if key in prior_result and prior_result[key] != scope[key]:
+            raise SafetyError("Existing result evidence belongs to a different frozen scope.")
+    prior_scope_verified = prior_result.get("scopeSha256") == scope_sha256
+    if prior_result.get("scopeSha256") not in (None, scope_sha256):
+        raise SafetyError("Existing result evidence has a different scope fingerprint.")
+
+    state_file = evidence / "deployment-state.json"
+    owned_state = load(state_file) if state_file.exists() else None
+    if owned_state and owned_state.get("scopeSha256") != scope_sha256:
+        raise SafetyError("Owned-item receipts belong to a different frozen scope.")
+
     baseline = immutable_baseline()
     if args.online:
         client = EvidenceClient(scope, evidence)
@@ -551,8 +571,6 @@ def preflight(args: argparse.Namespace) -> dict[str, Any]:
         raise SafetyError("Inventory is not for the requested workspace.")
     if not any(f["id"] == scope["folderId"] for f in inventory["folders"]):
         raise SafetyError("Candidate folder GUID is not present in inventory.")
-    state_file = evidence / "deployment-state.json"
-    owned_state = load(state_file) if state_file.exists() else None
     plan = build_plan(scope, inventory, baseline, owned_state,
                       include_relationships=getattr(args, "include_relationships", False))
     save(evidence / "immutable-baseline.json", baseline)
@@ -565,11 +583,37 @@ def preflight(args: argparse.Namespace) -> dict[str, Any]:
     }
     save(evidence / "write-gate.template.json", gate_template)
     status = "blocked" if plan["blockers"] else "preflight-passed-write-gated"
-    prior_result_path = evidence / "result.json"
-    prior_result = load(prior_result_path) if prior_result_path.exists() else {}
+    preflight_timestamp = now()
+    preflight_summary = {
+        "status": status, "planSha256": plan["planSha256"],
+        "resourcePlanPath": str(evidence / "resource-plan.json"),
+        "blockers": plan["blockers"],
+    }
+    result_base = (
+        prior_result if prior_scope_verified else
+        {"unverifiedPriorResult": prior_result} if prior_result else {}
+    )
+    prior_deployment = {
+        key: prior_result[key] for key in ("deployed", "items", "jobs")
+        if key in prior_result
+    }
+    has_prior_deployment_claims = (
+        prior_result.get("deployed") is True
+        or bool(prior_result.get("items"))
+        or bool(prior_result.get("jobs"))
+    )
+    if prior_scope_verified and has_prior_deployment_claims and (
+        not owned_state
+        or prior_result.get("items", {}) != (owned_state or {}).get("items", {})
+        or prior_result.get("jobs", {}) != (owned_state or {}).get("jobs", {})
+        or prior_result.get("deployed") != bool((owned_state or {}).get("items"))
+    ):
+        result_base = {**result_base, "unverifiedPriorDeployment": prior_deployment}
     result = {
-        **prior_result,
-        "timestampUtc": now(), "edition": EDITION, "status": status,
+        **result_base,
+        "timestampUtc": preflight_timestamp, "edition": EDITION, "status": status,
+        **{key: scope[key] for key in ("workspaceId", "folderId", "participantId")},
+        "scopeSha256": scope_sha256,
         "implemented": ["read-only preflight", "immutable baseline verification",
                         "externalized environment/scope", "per-write evidence client",
                         "exact scope/plan write gate"],
@@ -577,12 +621,27 @@ def preflight(args: argparse.Namespace) -> dict[str, Any]:
         "deployed": bool((owned_state or {}).get("items")),
         "items": (owned_state or {}).get("items", {}),
         "jobs": (owned_state or {}).get("jobs", {}),
-        "observed": {**prior_result.get("observed", {}), "onlineDiscovery": bool(args.online)},
+        "observed": {
+            **(prior_result.get("observed", {}) if prior_scope_verified else {}),
+            "onlineDiscovery": bool(args.online),
+        },
         "planSha256": plan["planSha256"],
         "resourcePlanPath": str(evidence / "resource-plan.json"),
         "blockers": plan["blockers"], "compatibilityGaps": plan["compatibilityGaps"],
-        "actualReadiness": ("Read-only preflight completed; existing owned deployment receipts retained. "
-                            "New writes require the exact revised plan gate; remaining native features are not inferred."),
+        "phases": {
+            **(prior_result.get("phases", {}) if prior_scope_verified else {}),
+            "preflight": {
+                "timestampUtc": preflight_timestamp,
+                "status": status,
+                "result": preflight_summary,
+            },
+        },
+        "actualReadiness": (
+            "Read-only preflight is blocked; preserve earlier receipts and resolve blockers before writes."
+            if plan["blockers"] else
+            "Read-only preflight completed; current deployment facts derive only from scope-bound deployment-state.json. "
+            "New writes require the exact revised plan gate; remaining native features are not inferred."
+        ),
     }
     result.update(live_receipt_summary(owned_state or {}))
     result.pop("cloudMutationCount", None)
@@ -688,10 +747,20 @@ def main() -> int:
     parser.add_argument("--increment", type=int, choices=[1, 2, 3])
     parser.add_argument("--native-events", type=Path)
     parser.add_argument("--native-copy", type=Path)
+    parser.add_argument("--native-ui-receipt-root", type=Path)
+    parser.add_argument("--native-ui-control-classification", type=Path)
+    parser.add_argument("--native-ui-correlation", type=Path)
+    parser.add_argument("--gold-method", choices=["sql-mcp", "onelake-delta-parquet"], default="sql-mcp")
+    parser.add_argument("--gold-job-receipt", type=Path)
     args = parser.parse_args()
     try:
         if args.include_relationships and args.command != "preflight":
             raise SafetyError("--include-relationships belongs to preflight; approve its new exact plan first.")
+        if args.gold_method != "sql-mcp" and args.command != "verify-gold":
+            raise SafetyError("--gold-method is only valid for verify-gold.")
+        if args.gold_job_receipt and (
+                args.command != "verify-gold" or args.gold_method != "onelake-delta-parquet"):
+            raise SafetyError("--gold-job-receipt is only valid with the OneLake verify-gold method.")
         if args.command == "preflight":
             result = preflight(args)
         elif args.command in {"start-activator", "stop-activator", "check-activator-readiness", "deliver-increment", "verify-delivery"}:
@@ -703,8 +772,10 @@ def main() -> int:
                           "verify-delivery": verify_delivery}[args.command](args)
         elif args.command.startswith("verify-"):
             from preview30_verify import verify_sources, verify_gold, verify_model
-            result = {"verify-sources": verify_sources, "verify-gold": verify_gold,
-                      "verify-model": verify_model}[args.command](args)
+            if args.command == "verify-gold":
+                result = verify_gold(args, method=args.gold_method)
+            else:
+                result = {"verify-sources": verify_sources, "verify-model": verify_model}[args.command](args)
         else:
             from preview30_deploy import (
                 deploy_sources, deploy_notebooks, deploy_realtime, deploy_core, deploy_relationships,

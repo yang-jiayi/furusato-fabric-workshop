@@ -460,70 +460,66 @@ class NativeCaseAggregateTests(unittest.TestCase):
             public.suite_runs([run])
 
 
-class ReviewedGoldCaptureTests(unittest.TestCase):
-    def test_checked_in_subset_is_private_free_and_not_final_course_projection(self):
-        directory = ROOT / "docs" / "assets" / "v3-preview-gold-attachments"
-        loaded = public.load(directory / "manifest.json", root=ROOT)
-        self.assertFalse(loaded["complete"])
-        self.assertEqual({"p30-15-attachments", "p30-15-attachment-response"}, set(loaded["captures"]))
-        self.assertEqual("observed", loaded["labs"]["copilot-attachments"]["status"])
-        self.assertNotEqual(directory / "manifest.json", ROOT / public.DEFAULT_RELATIVE)
-        review = json.loads((directory / "capture-review.json").read_text(encoding="utf-8"))
-        for row in review["captures"]:
-            with self.subTest(capture=row["id"]):
-                self.assertTrue(row["originalUnchanged"])
-                self.assertTrue(row["onlyDeclaredCropApplied"])
-                self.assertFalse(row["uiValuesOrStatesChanged"])
-                self.assertFalse(row["internalReasoningContentVisible"])
-                self.assertEqual([], row["opaqueMasks"])
-                left, top, right, bottom = row["cropBox"]
-                with Image.open(directory / row["sanitizedFile"]) as image:
-                    self.assertEqual((right - left, bottom - top), image.size)
-                    self.assertEqual(row["sanitizedSha256"], private.digest(directory / row["sanitizedFile"]))
-                    self.assertFalse(image.info)
-                self.assertRegex(row["originalSha256"], r"^[0-9a-f]{64}$")
-
-    def test_checked_in_subset_can_supply_the_shared_model_without_raw_files(self):
-        path = ROOT / "docs" / "assets" / "v3-preview-gold-attachments" / "manifest.json"
-        _, _, _, _, loaded, metadata = content.build(ROOT, public_evidence_path=path)
-        self.assertTrue(loaded["publicProjection"])
-        self.assertEqual(2, metadata["currentUICaptures"])
-        self.assertFalse(metadata["newDeploymentReadinessCertified"])
-
-
-class FullHistoricalProjectionTests(unittest.TestCase):
-    def test_full_default_projection_preserves_history_and_failure_lanes(self):
-        path = ROOT / public.DEFAULT_RELATIVE
+class CurrentParticipantCaptureTests(unittest.TestCase):
+    def test_current_projection_contains_only_reviewed_participant_captures(self):
+        path = ROOT / "docs" / "assets" / "current-participant-captures" / "manifest.json"
         raw = json.loads(path.read_text(encoding="utf-8"))
-        loaded = public.load(path, root=ROOT)
-        self.assertIn(loaded["freezeStatus"], public.FREEZE_STATUSES)
-        self.assertFalse(loaded["complete"])
-        self.assertGreaterEqual(len(loaded["captures"]), 23)
-        self.assertLessEqual(len({entry["sha256"] for entry in loaded["captures"].values()}), len(loaded["captures"]))
-        self.assertIn("p30-15-historical-attachments", loaded["captures"])
-        self.assertIn("p30-15-historical-response", loaded["captures"])
-        self.assertEqual("failed", loaded["labs"]["copilot-act"]["status"])
-        self.assertTrue(loaded["labs"]["copilot-act"]["knownIssue"]["rollbackVerified"])
-        self.assertEqual("passed", loaded["labs"]["copilot-additive-entity"]["status"])
-        self.assertEqual("add-unbound-keyless-entity", raw["labs"]["copilot-additive-entity"]["intent"]["kind"])
-        for ident in ("p30-15-attachments", "p30-15-attachment-response"):
-            with Image.open(loaded["captures"][ident]["path"]) as image:
-                if image.width < 600:
-                    self.assertFalse(loaded["captures"][ident]["completionEvidence"])
-        runs = {run["id"]: run for run in loaded["originalSuiteRuns"]}
-        for ident, expected in (("main-baseline", (9, 23, 1, 51, 0)), ("static-first", (22, 10, 1, 51, 0)), ("context-published-mcp", (39, 38, 4, 0, 3))):
-            self.assertEqual(expected, tuple(runs[ident]["counts"][key] for key in ("pass", "fail", "executionUnverified", "blocked", "notApplicable")))
+        self.assertEqual(
+            {"schemaVersion", "reviewedAt", "reviewer", "captures"},
+            set(raw),
+        )
+        self.assertNotIn("labs", raw)
+        self.assertNotIn("evaluationReport", raw)
+        self.assertNotIn("originalSuiteRuns", raw)
+        loaded = public.load_current_captures(path, root=ROOT)
+        self.assertTrue(loaded["currentParticipantCaptures"])
+        self.assertEqual(20, len(loaded["captures"]))
+        graph_capture = loaded["captures"]["p30-07-relationships"]
+        self.assertEqual("2026-11-03T20:09:45.607Z", graph_capture["capturedAt"])
+        self.assertEqual(
+            "369d1834b2fbd3bafc8239cfa053c0404a6610fd93c2d2030aeb2cc4ef036677",
+            graph_capture["originalSha256"],
+        )
+        self.assertEqual(
+            "6530af1754ccbece89dfd4d353ed036dbd395c4da4961c906086812dac6fee64",
+            graph_capture["sha256"],
+        )
+        with Image.open(graph_capture["path"]) as image:
+            self.assertEqual((1010, 1165), image.size)
+        self.assertFalse(
+            (path.parent / "captures" / "266d349c6b8ba139869e89cc6e0cc321911ff60b4fac72a6c87884e55bdf9f83.png").exists()
+        )
+        for capture in loaded["captures"].values():
+            self.assertTrue(capture["path"].is_relative_to(path.parent))
+            self.assertTrue(capture["path"].is_relative_to(ROOT / "docs" / "assets" / "current-participant-captures"))
 
-    def test_full_default_model_needs_no_private_originals_or_overlay(self):
-        with patch.object(private, "_private_file", side_effect=AssertionError("No private files allowed")):
-            document, _, _, _, loaded, metadata = content.build(ROOT)
-        self.assertTrue(loaded["publicProjection"])
-        self.assertGreaterEqual(metadata["currentUICaptures"], 23)
-        self.assertEqual(metadata["currentUICaptures"] + 6, len(document.figures))
-        self.assertEqual((24, 5, 10, 84), tuple(metadata["counts"][key] for key in ("chapters", "appendices", "tests", "conditions")))
-        self.assertIn(metadata["releaseFreezeStatus"], public.FREEZE_STATUSES)
-        self.assertFalse(metadata["newDeploymentReadinessCertified"])
-        self.assertFalse(metadata["allFeaturesPassedClaimed"])
+    def test_current_projection_rejects_unreviewed_or_historical_fields(self):
+        path = ROOT / "docs" / "assets" / "current-participant-captures" / "manifest.json"
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            directory = root / "docs/assets/current-participant-captures"
+            directory.mkdir(parents=True)
+            source = json.loads(path.read_text(encoding="utf-8"))
+            capture = copy.deepcopy(source["captures"][0])
+            capture["file"] = "captures/" + Path(capture["file"]).name
+            image_dir = directory / "captures"
+            image_dir.mkdir()
+            (image_dir / Path(capture["file"]).name).write_bytes(
+                (path.parent / capture["file"]).read_bytes())
+            source["captures"] = [capture]
+            manifest = directory / "manifest.json"
+            dump(manifest, source)
+            with patch.object(private, "requests", return_value=[{"id": capture["id"]}]):
+                self.assertEqual(1, len(public.load_current_captures(manifest, root=root)["captures"]))
+                source["legacyEvaluation"] = {"pass": 84}
+                dump(manifest, source)
+                with self.assertRaisesRegex(ValueError, "unknown/private"):
+                    public.load_current_captures(manifest, root=root)
+                source.pop("legacyEvaluation")
+                source["captures"][0]["actualUI"] = False
+                dump(manifest, source)
+                with self.assertRaisesRegex(ValueError, "reviewed actual UI"):
+                    public.load_current_captures(manifest, root=root)
 
 
 class AdditiveIntentTests(unittest.TestCase):

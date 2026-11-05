@@ -9,7 +9,7 @@
 準備するもの・確認すること
 
 - 講習では割り当てられたワークスペース、作業フォルダー、参加者IDを使います。自習では、自分が作成・編集を許可されたワークスペースで空の作業フォルダーを用意し、他のアイテムと重ならない001〜999の参加者IDを選びます。権限や容量が不足する場合はワークスペース管理者へ依頼します。
-- ZIP の source/workshop/v3.0.0-preview 一式と source/tools を用意します。フォルダー割当や権限の確認後、初回は24.4〜24.6の手順で参加者自身が配置します。
+- ZIP の source/workshop/v3.0.0-preview 一式と source/tools を用意します。これは現行ZIP内の実際のパスです。フォルダー名の v3.0.0-preview は教材の版を示しません。教材版は ZIP の source/WORKSHOP_VERSION で確認し、フォルダー名を変更せず同じZIPのファイルだけを使います。フォルダー割当や権限の確認後、初回は24.4〜24.6の手順で参加者自身が配置します。
 
 <details>
 <summary>English</summary>
@@ -23,6 +23,6 @@ This lab requires available Fabric capacity, permission to create/edit items, re
 Before you start
 
 - For a class, use the assigned workspace, folder and participant ID. For self-study, prepare an empty folder in a workspace where you are authorized to create/edit resources and choose an unused participant ID from 001 to 999. Ask the workspace administrator to resolve missing access or capacity.
-- Have the ZIP’s complete source/workshop/v3.0.0-preview and source/tools directories available. After confirming folder assignment and access, perform the first deployment yourself using 24.4–24.6.
+- Have the ZIP’s complete source/workshop/v3.0.0-preview and source/tools directories available. These are actual paths in the current ZIP. The directory label v3.0.0-preview is not the course edition; check source/WORKSHOP_VERSION. Do not rename the directories or mix files from different packages. After confirming folder assignment and access, perform the first deployment yourself using 24.4–24.6.
 
 </details>

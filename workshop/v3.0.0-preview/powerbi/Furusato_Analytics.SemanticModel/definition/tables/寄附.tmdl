@@ -3,22 +3,22 @@ table 寄附
 	lineageTag: bf6c34fa-2f0c-4ba0-9296-ed5906d905e6
 
 
-	/// 静的データ（StaticSeed）の寄附だけを集計します。Eventhouse の観測データや受入済みの増分は含めません。
+	/// 静的データ（StaticSeed）の寄附だけを集計します。Eventhouse の観測データや受入済みの増分は含めません。 KEEPFILTERS は同じ列の既存条件との共通部分を取り、条件が矛盾する場合の BLANK を0に読み替えません。
 	measure 静的寄附総額 = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
 		formatString: ¥#,##0
 		displayFolder: Metrics検証
 
-	/// 静的データ（StaticSeed）の寄附件数です。現在のディメンションのフィルターを保ちます。
+	/// 静的データ（StaticSeed）の寄附件数です。現在のディメンションのフィルターを保ちます。 KEEPFILTERS は同じ列の既存条件との共通部分を取り、条件が矛盾する場合の BLANK を0に読み替えません。
 	measure 静的寄附件数 = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "StaticSeed"))
 		formatString: #,##0
 		displayFolder: Metrics検証
 
-	/// Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）だけを集計します。Eventhouse の観測データ（重複を含む）とは別です。
+	/// Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）だけを集計します。Eventhouse の観測データ（重複を含む）とは別です。 KEEPFILTERS は同じ列の既存条件との共通部分を取り、条件が矛盾する場合の BLANK を0に読み替えません。
 	measure 受入増分寄附総額 = CALCULATE([寄附総額], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
 		formatString: ¥#,##0
 		displayFolder: Metrics検証
 
-	/// Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）の件数です。
+	/// Notebook05 で品質を確認し、重複を除いた受入済みの増分（RealtimeIncrement）の件数です。 KEEPFILTERS は同じ列の既存条件との共通部分を取り、条件が矛盾する場合の BLANK を0に読み替えません。
 	measure 受入増分寄附件数 = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = "RealtimeIncrement"))
 		formatString: #,##0
 		displayFolder: Metrics検証
@@ -75,7 +75,7 @@ table 寄附
 		isNullable: false
 		formatString: ¥#,##0
 		lineageTag: 2b4bc90f-a2f7-40bb-9c78-c0d009e97003
-		summarizeBy: sum
+		summarizeBy: none
 		sourceColumn: DonationAmountYen
 
 	/// 寄附が発生したUTC日時。詳細調査用です。

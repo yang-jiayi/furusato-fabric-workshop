@@ -14,7 +14,7 @@ import json
 import time
 from urllib.parse import urlsplit
 
-from activation_runtime import guid, parse_time
+from activation_runtime import ActivationError, guid, parse_time
 from preview30_runtime import SafetyError, digest, now, save
 
 PBI_SCOPE = "https://analysis.windows.net/powerbi/api/.default"
@@ -77,13 +77,24 @@ def check_responses(state_body, health_body, action_body, rule_id, delay):
 
 
 def capture_readiness(d, activator, rule_id):
-    """Fresh reads only; no configured-state substitute, sleep or automatic retry."""
+    """Fresh reads only; a CLI start receipt adds provenance but is not a readback substitute."""
     wid, aid, rule_id = guid(d.scope["workspaceId"]), guid(activator["id"]), guid(rule_id)
-    receipt = d.state.get("nativeLifecycle", {})
-    require(receipt.get("action") == "start" and receipt.get("status") == "verified"
-            and receipt.get("result", {}).get("state") == "armed_unverified",
-            "Formal native Start must precede backend readiness capture.")
-    require(parse_time(receipt.get("timestampUtc")) <= parse_time(now()), "Formal Start time is invalid.")
+    receipt = None
+    if "nativeLifecycle" in d.state:
+        receipt = d.state["nativeLifecycle"]
+        require(isinstance(receipt, dict), "Recorded native lifecycle receipt is malformed.")
+        lifecycle_result = receipt.get("result")
+        require(receipt.get("action") == "start" and receipt.get("status") == "verified"
+                and isinstance(lifecycle_result, dict)
+                and lifecycle_result.get("state") == "armed_unverified",
+                "Recorded native lifecycle receipt is not a verified Start.")
+        timestamp = receipt.get("timestampUtc")
+        require(isinstance(timestamp, str), "Formal Start time is missing or invalid.")
+        try:
+            start_at = parse_time(timestamp)
+        except ActivationError as error:
+            raise SafetyError("Formal Start time is invalid.") from error
+        require(start_at <= parse_time(now()), "Formal Start time is in the future.")
     private = d.evidence / "activation" / ("readiness-" + str(time.time_ns()))
     definition = d.definition(aid, skill="activator-cli")
     parts = [p for p in definition["parts"] if p["path"] == "ReflexEntities.json"]
@@ -167,7 +178,11 @@ def capture_readiness(d, activator, rule_id):
             "Native rule definition changed during readiness capture. No file uploaded.")
     result = {"atUtc": now(), "contract": CONTRACT, "scopeSha256": d.state["scopeSha256"],
               "workspaceId": wid, "activatorId": aid, "ruleId": rule_id,
-              "formalStartAtUtc": receipt["timestampUtc"], "definitionSha256": digest(definition),
+              "formalStartAtUtc": receipt["timestampUtc"] if receipt else None,
+              "cliStartReceiptPresent": receipt is not None,
+              "readbackBasis": ("fresh-native-readback-plus-cli-start-receipt" if receipt
+                                else "fresh-native-readback-only; start origin unattributed"),
+              "definitionSha256": digest(definition),
               **checked, "automaticDeliveryVerified": False, "cloudMutationsPerformed": False,
               "tokenPersisted": False, "priorEventExhaustionProven": False,
               "evidence": str(private),

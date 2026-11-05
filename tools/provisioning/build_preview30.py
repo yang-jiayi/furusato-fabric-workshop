@@ -72,7 +72,56 @@ V3_FACT_DESCRIPTIONS = (
 )
 
 
-def build() -> dict:
+def _alignment_version(path: Path) -> str:
+    text = path.read_text(encoding="utf-8").strip()
+    if path.suffix.lower() == ".json":
+        value = json.loads(text)
+        if not isinstance(value, dict) or not isinstance(value.get("workshopVersion"), str):
+            raise ValueError("Alignment source must contain a workshopVersion string.")
+        return value["workshopVersion"]
+    return text
+
+
+def build_preview_contract(baseline: dict, *, contract_path: Path | None = None,
+                           align_preview_contract_from: Path | None = None) -> dict:
+    contract_path = contract_path or PREVIEW / "provisioning" / "preview-contract.json"
+    if contract_path.is_file():
+        existing = load(contract_path)
+        if not isinstance(existing, dict) or existing.get("edition") != "v3.0.0-preview":
+            raise ValueError("Existing preview contract has an unexpected runtime edition.")
+        if existing.get("workshopVersion") != WORKSHOP_VERSION:
+            if align_preview_contract_from is None:
+                raise ValueError(
+                    "Existing preview contract workshopVersion is stale; "
+                    "supply --align-preview-contract-from with the canonical version source."
+                )
+            aligned_version = _alignment_version(align_preview_contract_from)
+            if aligned_version != WORKSHOP_VERSION:
+                raise ValueError(
+                    "Preview contract alignment source does not match WORKSHOP_VERSION."
+                )
+    elif align_preview_contract_from is not None:
+        aligned_version = _alignment_version(align_preview_contract_from)
+        if aligned_version != WORKSHOP_VERSION:
+            raise ValueError(
+                "Preview contract alignment source does not match WORKSHOP_VERSION."
+            )
+
+    return {
+        "edition": "v3.0.0-preview", "workshopVersion": WORKSHOP_VERSION, "baselineEdition": "2.7.0",
+        "baselineTreeSha256": baseline["treeSha256"],
+        "dataContract": {k: v for k, v in baseline.items() if k not in {"files", "treeSha256"}},
+        "generation2": True, "legacyFallback": False,
+        "ontologyContract": "../ontology/generation2-contract.json",
+        "environmentParameterRequired": ["dev", "test", "prod"],
+        "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
+        "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
+        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261015",
+        "attachmentsOwner": "documents-workstream",
+    }
+
+
+def build(*, align_preview_contract_from: Path | None = None) -> dict:
     baseline = immutable_baseline()
     # No recursive destination delete/copy: attachments is another workstream's.
     for folder in ("data", "kql", "powerbi"):
@@ -99,6 +148,7 @@ def build() -> dict:
         fact = fact.replace(old, new)
     measure_text = ""
     for name, dax, fmt, text in native_metrics:
+        text += " KEEPFILTERS は同じ列の既存条件との共通部分を取り、条件が矛盾する場合の BLANK を0に読み替えません。"
         measure_text += (f"\t/// {text}\n\tmeasure {name} = {dax}\n"
                          f"\t\tformatString: {fmt}\n\t\tdisplayFolder: Metrics検証\n\n")
     insertion = fact.index("\n\t///")
@@ -109,6 +159,12 @@ def build() -> dict:
     if fact.count(amount) != 1:
         raise ValueError("Expected exactly one inherited amount visibility declaration")
     fact = fact.replace(amount, "\tcolumn 寄附金額\n\t\tdataType: int64\n")
+    # Business totals use explicit measures; the visible amount remains a filter.
+    amount_summary = "\t\tsummarizeBy: sum\n\t\tsourceColumn: DonationAmountYen"
+    if fact.count(amount_summary) != 1:
+        raise ValueError("Expected exactly one inherited amount summarization")
+    fact = fact.replace(amount_summary,
+                        "\t\tsummarizeBy: none\n\t\tsourceColumn: DonationAmountYen")
     write(fact_path, fact.encode("utf-8"))
     save(PREVIEW / "powerbi" / "native-metrics-contract.json", {
         "source": "Furusato_Analytics.SemanticModel",
@@ -146,6 +202,47 @@ def build() -> dict:
                 f'NOTEBOOK_VERSION = "{WORKSHOP_VERSION}"\n' if line == 'NOTEBOOK_VERSION = "2.7.0"\n' else line
                 for line in parameters[0]["source"]
             ]
+        if number == "05":
+            final_cell = notebook["cells"][-1]
+            source = final_cell["source"]
+            if "IS_INTERACTIVE = bool(context.get(\"isForInteractive\", False))\n" not in source:
+                marker = 'workspace_name = context["currentWorkspaceName"]\n'
+                if source.count(marker) != 1:
+                    raise ValueError("Notebook05 runtime context changed; cannot add the noninteractive result contract.")
+                source.insert(source.index(marker) + 1,
+                              'IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n')
+            old_gate = '    is_interactive=bool(context.get("isForInteractive", False)),\n'
+            new_gate = "    is_interactive=IS_INTERACTIVE,\n"
+            if old_gate in source:
+                if source.count(old_gate) != 1:
+                    raise ValueError("Notebook05 interactive gate is ambiguous.")
+                source[source.index(old_gate)] = new_gate
+            elif source.count(new_gate) != 1:
+                raise ValueError("Notebook05 interactive gate changed unexpectedly.")
+            if not any("notebookutils.notebook.exit" in line for line in source):
+                if source and not source[-1].endswith("\n"):
+                    source[-1] += "\n\n"
+                source.extend([
+                    "if not IS_INTERACTIVE:\n",
+                    "    notebookutils.notebook.exit(json.dumps(\n",
+                    "        ANALYTICS_RESULT, ensure_ascii=False, sort_keys=True, allow_nan=False,\n",
+                    "    ))\n",
+                ])
+            if sum("notebookutils.notebook.exit" in line for line in source) != 1:
+                raise ValueError("Notebook05 noninteractive exit-value emission is ambiguous.")
+            preview = notebook["cells"][-2]
+            note = (
+                "A successful noninteractive run returns the unchanged `ANALYTICS_RESULT`\n"
+                "JSON through the Notebook Public API job `exitValue`; interactive runs\n"
+                "continue to show the printed summary below.\n"
+            )
+            if note not in "".join(preview["source"]):
+                insertion = "the interactive default and all other apply gates remain unchanged.\n"
+                text = "".join(preview["source"])
+                if text.count(insertion) != 1:
+                    raise ValueError("Notebook05 apply instructions changed; cannot document its result contract.")
+                text = text.replace(insertion, insertion + note)
+                preview["source"] = text.splitlines(keepends=True)
         write(PREVIEW / "notebooks" / path.name,
               (json.dumps(notebook, ensure_ascii=False, indent=1) + "\n").encode("utf-8"))
         if number == "05":
@@ -170,18 +267,8 @@ def build() -> dict:
     for path, content in agent_files.items():
         save(PREVIEW / "data-agent/definition" / path, content)
     save(PREVIEW / "data-agent/candidate-contract.json", agent_contract)
-    save(PREVIEW / "provisioning" / "preview-contract.json", {
-        "edition": "v3.0.0-preview", "workshopVersion": WORKSHOP_VERSION, "baselineEdition": "2.7.0",
-        "baselineTreeSha256": baseline["treeSha256"],
-        "dataContract": {k: v for k, v in baseline.items() if k not in {"files", "treeSha256"}},
-        "generation2": True, "legacyFallback": False,
-        "ontologyContract": "../ontology/generation2-contract.json",
-        "environmentParameterRequired": ["dev", "test", "prod"],
-        "privateEvidenceRequired": True, "cloudStatus": "not-deployed-by-build",
-        "productionPlacement": "specified-folder-direct", "createTempByDefault": False,
-        "correctedAgentProfile": "data-agent/candidates/measured-contract-20261015",
-        "attachmentsOwner": "documents-workstream",
-    })
+    save(PREVIEW / "provisioning" / "preview-contract.json",
+         build_preview_contract(baseline, align_preview_contract_from=align_preview_contract_from))
     from preview30_notebooks import build_notebooks
     notebook_manifest = build_notebooks()
     save(PREVIEW / "provisioning/notebook-bundle-manifest.json", notebook_manifest)
@@ -199,7 +286,12 @@ if __name__ == "__main__":
                        help="Build only the opt-in static companion TMDL and contract.")
     group.add_argument("--agent-compat-only", action="store_true",
                        help="Build only the explicit generation1 consumer-bridge inputs.")
+    parser.add_argument("--align-preview-contract-from", type=Path,
+                        help="Explicitly align a stale preview contract using WORKSHOP_VERSION or a contract JSON.")
     args = parser.parse_args()
+    if args.align_preview_contract_from and (args.relationships_only or args.agent_compat_only):
+        parser.error("--align-preview-contract-from applies only to a full preview build.")
     action = build_relationships if args.relationships_only else build_agent_compatibility if args.agent_compat_only else build
-    print(json.dumps(action(),
+    result = build(align_preview_contract_from=args.align_preview_contract_from) if action is build else action()
+    print(json.dumps(result,
                      ensure_ascii=False, indent=2))

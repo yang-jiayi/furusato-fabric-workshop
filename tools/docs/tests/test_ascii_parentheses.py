@@ -111,7 +111,7 @@ class AsciiParenthesesTests(unittest.TestCase):
         markup = rich("See https://learn.microsoft.com/test\uff08note\uff09 and `X\uff08Y\uff09`")
         self.assertIn('href="https://learn.microsoft.com/test"', markup)
         self.assertIn("(note)", markup)
-        self.assertIn("<code>X(Y)</code>", markup)
+        self.assertIn('<code class="inline-token">X(Y)</code>', markup)
         self.assertNotRegex(markup, "[\uff08\uff09]")
 
     def test_section_boundaries_remain_exact_across_display_punctuation(self):

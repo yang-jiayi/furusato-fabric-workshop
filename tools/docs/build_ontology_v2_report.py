@@ -435,7 +435,10 @@ def private_output(path, repo):
     ancestor = path
     while not ancestor.exists():
         ancestor = ancestor.parent
-    if ancestor.stat().st_uid != os.getuid() or ancestor.stat().st_mode & 0o077:
+    getuid = getattr(os, "getuid", None)
+    if not callable(getuid):
+        fail("Private report output requires POSIX os.getuid() to verify storage ownership; this platform cannot safely build these artifacts.")
+    if ancestor.stat().st_uid != getuid() or ancestor.stat().st_mode & 0o077:
         fail("The output parent must be owned private storage with mode 0700.")
     return path
 

@@ -1,6 +1,6 @@
 """Bilingual diagram artwork.
 
-The diagrams under ``docs/assets/v2.7.0`` are authored in Japanese. Some
+The current workshop diagrams under ``docs/assets/current-diagrams`` are authored in Japanese. Some
 labels already carry an English sibling line, but the bullets, decision
 questions and boundary labels inside the artwork are Japanese only, so an
 English reader switching the page to English still met a Japanese diagram.

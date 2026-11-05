@@ -3,6 +3,7 @@
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph
+- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph#limitations
 
 <details>
 <summary>English</summary>
@@ -10,5 +11,6 @@
 ## 16.4 References
 
 - https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph
+- https://learn.microsoft.com/en-us/fabric/iq/ontology/how-to-use-ontology-graph#limitations
 
 </details>

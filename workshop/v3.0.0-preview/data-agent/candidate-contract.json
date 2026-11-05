@@ -19,7 +19,7 @@
   "ontologyGenerationRequired": 2,
   "nativeMetricProjectionInherited": false,
   "graphRequiredByDefault": false,
-  "globalInstructionsCharacters": 4236,
+  "globalInstructionsCharacters": 8109,
   "sourceOwnedMeasures": [
     {
       "table": "寄附",

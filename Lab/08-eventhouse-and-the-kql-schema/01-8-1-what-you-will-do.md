@@ -9,7 +9,7 @@ KQL の管理コマンドが成功しても、データが届いたことには�
 準備するもの・確認すること
 
 - 標準経路では24.6で作成した Eventhouse（EH_Furusato_&lt;PID&gt;）と同名の KQL Database を確認します。管理オブジェクトは配置済みなので定義を読み、再作成しません。手動構築を行う場合だけ、作業フォルダーの New item → Eventhouse でこの名前を指定します。同名の KQL Database も作成されます。
-- 配布フォルダーの kql/Furusato_Eventhouse_Setup_v2.7.0.kql を開いておきます。
+- 現行ZIPの source/workshop/v3.0.0-preview/kql/Furusato_Eventhouse_Setup_v2.7.0.kql を開いておきます。Git checkout では先頭の source/ を除きます。v2.7.0 は現行配布物の実際のファイル名の一部で、教材版ではありません。ファイル名を変更せず、同じZIPのスクリプトを使います。
 
 <details>
 <summary>English</summary>
@@ -23,6 +23,6 @@ A successful KQL management command does not mean that data has arrived. You che
 Before you start
 
 - In the standard route, inspect the Eventhouse (EH_Furusato_&lt;PID&gt;) and same-named KQL database created in 24.6. The management objects are already deployed; inspect their definitions without recreating them. Only for manual construction, use New item → Eventhouse in your work folder with this name; its same-named KQL database is created too.
-- Open kql/Furusato_Eventhouse_Setup_v2.7.0.kql from the distribution.
+- Open source/workshop/v3.0.0-preview/kql/Furusato_Eventhouse_Setup_v2.7.0.kql from the current ZIP. In a Git checkout, omit the leading source/. The v2.7.0 suffix is part of the actual current filename, not the course edition. Do not rename it or substitute a script from another package.
 
 </details>

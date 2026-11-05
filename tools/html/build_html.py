@@ -1,9 +1,9 @@
-"""Build docs/furusato-workshop-v2-7-0-complete.html.
+"""Build an isolated processing-baseline mirror from Office source files.
 
-The HTML is a complete bilingual mirror of the canonical Word participant guide.
-It is produced from the same content model the Word build uses, so the two can
-never drift: an unmirrored Japanese string is a hard failure, and every number,
-name and instruction still comes from the shipped v2.7.0 runtime.
+This compatibility builder is not the current participant-edition builder.
+Use ``tools/docs/current_delivery.py`` for the Workshop 3.1 HTML, Lab and ZIP.
+The output is named ``furusato-workshop-processing-baseline.html`` and must be
+written to an explicit staging directory, not the public ``docs/`` directory.
 
 The build is deterministic. No wall-clock time enters the output; the recorded
 build stamp is a digest of the runtime inputs plus the builder sources.
@@ -45,7 +45,7 @@ from furusato_html.model import build_document  # noqa: E402
 from furusato_html.page import render_page  # noqa: E402
 from furusato_html.render import RenderContext  # noqa: E402
 
-OUTPUT_NAME = "furusato-workshop-v2-7-0-complete.html"
+OUTPUT_NAME = "furusato-workshop-processing-baseline.html"
 SUPERSEDED = ("furusato-workshop-v2-6-0-complete.html",)
 
 #: HTML sources and the shared Word content/build helpers.
@@ -306,7 +306,7 @@ def parse_pairs(items: list[str], flag: str) -> dict[str, str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", default=None, help="output directory (default: docs/)")
+    parser.add_argument("--out", required=True, help="isolated staging directory for the baseline mirror")
     parser.add_argument(
         "--edition", default="", type=validate_edition,
         help="Mirror the separately named Office edition and preserve the original HTML",

@@ -9,30 +9,14 @@ import json
 from furusato_docs.preview30_content import HTML_NAME, VERSION, WORD_NAME
 from furusato_docs import preview30_release as release
 from furusato_docs.participant30 import TAGLINE, figure_path as participant_figure_path
+from furusato_docs.participant30_details import (
+    architecture_svg_variants, crop_png as participant_detail_crop,
+)
 from .assets import build_library, encode_screenshot, screenshot_size
+from .diagrams import load_map
 from .mirror import load_ui_strings
 from .model import Text
-from .render import RenderContext, esc, plain_bilingual, render_block
-
-
-# Keep terminal references with preceding content at print size.
-# Compact only affected chapters 7/15/19/22; preserve font sizes and the earlier MCP fix.
-RELEASE_PRINT_CSS = """
-@media print {
- html[data-lang="en"] #ch-20-10 > .callout:last-of-type { margin-bottom:2mm; }
- html[data-lang="en"] #ch-20-10 > p:nth-last-child(-n+2) { margin-block:0; }
-}
-@media print {
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child { margin-bottom:0; }
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) { break-inside:avoid; }
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > h3 { margin:1mm 0 0; }
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:last-child:has(> ul > li > span > a[href]) > ul { margin-block:0; }
-}
-@media print {
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child th,
- .chapter:is(#ch-7,#ch-15,#ch-19,#ch-22) > .section:has(+ .section:last-child > ul > li > span > a[href]) > .table-wrap:last-child td { padding-block:1mm; }
-}
-"""
+from .render import ICONS, RenderContext, code_scroll_hint, esc, plain_bilingual, render_block
 
 
 def register_reviewed_captures(assets, captures):
@@ -62,12 +46,8 @@ def render(
     if delivery_mode not in {"paired", "html-lab"}:
         raise ValueError("Unknown document delivery mode")
     if delivery_mode == "html-lab":
-        profile = release.get_profile(release_profile)
-        if (profile != release.V300 or metadata.get("participantEdition") is not True
-                or metadata.get("version") != "3.0.0" or word_sha is not None
-                or not metadata.get("currentArtifactSet")
-                or metadata.get("deliveryMode") != "html-lab"):
-            raise ValueError("HTML+Lab delivery requires the current participant model and artifact binding")
+        from furusato_docs.current_publication import publication_for_model
+        profile = publication_for_model(root, metadata, word_sha, release_profile)
     else:
         profile = release.require_metadata_profile(metadata, release_profile)
     participant = bool(metadata.get("participantEdition"))
@@ -80,6 +60,18 @@ def render(
             assets.register_digest("participant-capture:" + block["source_key"], blob)
             assets.screenshots[block["source_key"]] = encode_screenshot(blob)
             assets.screenshot_sizes[block["source_key"]] = screenshot_size(blob)
+        elif block["source_kind"] == "participant-detail":
+            blob = participant_detail_crop(block["source_key"])
+            assets.register_digest("participant-detail:" + block["source_key"], blob)
+            assets.screenshots[block["source_key"]] = encode_screenshot(blob)
+            assets.screenshot_sizes[block["source_key"]] = screenshot_size(blob)
+        elif block["source_kind"] == "participant-diagram":
+            japanese, english = architecture_svg_variants(load_map())
+            source = japanese.encode("utf-8")
+            assets.register_digest("participant-diagram:" + block["source_key"], source)
+            assets.register_digest("participant-diagram-en:" + block["source_key"], english.encode("utf-8"))
+            assets.diagrams[block["source_key"]] = japanese
+            assets.diagrams_en[block["source_key"]] = english
     ctx = RenderContext(
         ui=load_ui_strings(public_documents_only=True, context=context), assets=assets,
         version=profile.version, fingerprint=metadata["contentSha256"][:16], runtime_fingerprint="",
@@ -96,13 +88,20 @@ def render(
                 ident = f"prompt-{index}-{lang}"
                 prompt = (html.escape(block["text"].get(lang), quote=True) if block.get("canonicalLiteral")
                           else esc(block["text"].get(lang)))
+                label = "プロンプト" if lang == "ja" else "Prompt"
+                copy_label = ctx.ui["copy.label"][lang]
                 pieces.append(
-                    f'<div class="codeblock" data-l="{lang}" lang="{lang}">'
-                    f'<button type="button" data-copy-target="{ident}">{"コピー" if lang == "ja" else "Copy"}</button>'
-                    f'<pre><code id="{ident}">{prompt}</code></pre></div>'
+                    f'<div class="codeblock codeblock--prompt" data-l="{lang}" lang="{lang}">'
+                    '<div class="codeblock__bar">'
+                    f'<span class="codeblock__lang">{label}</span>'
+                    f'<button type="button" class="codeblock__copy" data-copy-target="{ident}" '
+                    f'data-i18n-label="copy.aria" aria-label="{esc(ctx.ui["copy.aria"][lang])}">'
+                    f'{ICONS["copy"]}<span data-copy-label data-i18n="copy.label">{esc(copy_label)}</span>'
+                    '</button></div>'
+                    f'{code_scroll_hint()}<pre tabindex="0"><code id="{ident}">{prompt}</code></pre></div>'
                 )
             return "".join(pieces)
-        return render_block(block, ctx, counter)
+        return render_block(block, ctx, counter, include_code_scroll_hint=True)
 
     def section_markup(section):
         heading = "h" + str(min(6, section.level + 1))
@@ -132,7 +131,11 @@ def render(
     toc = "".join(f'<li><a href="#{s.ident}">{plain_bilingual(s.title)}</a></li>' for s in document.sections)
     content = "".join(section_markup(s) for s in document.sections)
     notice = TAGLINE if participant else release.presentation(metadata, profile)
-    state = Text(notice["ja"], notice["en"])
+    hero_status = ""
+    if delivery_mode != "html-lab":
+        state = Text(notice["ja"], notice["en"])
+        hero_status = f'<p class="hero__status" role="status">{plain_bilingual(state)}</p>'
+    hero_status_line = f" {hero_status}" if hero_status else ""
     public_metadata = {
         **metadata,
         "htmlFilename": profile.html_name,
@@ -146,14 +149,13 @@ def render(
         public_metadata.update(deliveryMode="html-lab", labPath="../Lab/README.md")
     encoded_metadata = json.dumps(public_metadata, ensure_ascii=False).replace("<", "\\u003c")
     css = (root / "tools" / "html" / "assets" / "preview30.css").read_text(encoding="utf-8")
-    if profile.is_release:
-        css += RELEASE_PRINT_CSS
     js = (root / "tools" / "html" / "assets" / "preview30.js").read_text(encoding="utf-8")
     if participant:
         description = f"Bilingual participant guide for {profile.title}: 24 chapters and 5 appendices."
-        hero_line = Text("24章・5付録／Word版と同じ内容の日英版", "24 chapters · 5 appendices · the same content as the Word guide, in Japanese and English")
+        hero_line = Text("24章・5付録／日英HTML教科書", "24 chapters · 5 appendices · bilingual HTML textbook")
         if delivery_mode == "html-lab":
-            hero_line = Text("24章・5付録／Labと同じ内容の日英版", "24 chapters · 5 appendices · the same content as Lab, in Japanese and English")
+            hero_line = Text("24章・5付録／GitHub Labと連携する日英HTML教科書",
+                             "24 chapters · 5 appendices · bilingual HTML textbook with a GitHub Lab companion")
         digest_line = ""
         legacy_button = ""
         footer_note = Text(
@@ -162,17 +164,17 @@ def render(
         footer_hash = ""
     else:
         description = f"Complete 24-chapter bilingual {profile.title}; honest per-lab evidence status."
-        hero_line = Text("24章・5付録／Wordと同じ共有原稿／全19章の旧教材も保持", "24 chapters · 5 appendices · shared Word source · complete 19-chapter baseline retained")
+        hero_line = Text("24章・5付録／日英HTML教科書", "24 chapters · 5 appendices · bilingual HTML textbook")
         digest_line = f'<p class="digest">Word SHA-256: <code>{word_sha}</code></p>'
         legacy_button = f'<button type="button" id="legacy-toggle">{plain_bilingual(Text("旧版参考をすべて開閉", "Toggle all baseline references"))}</button>'
         footer_note = Text("Microsoft Learn確認日: 2026-09-29。Previewは段階展開。未実施を合格にしません。", "Microsoft Learn reviewed: 2026-09-29. Preview is rolling out. Unperformed is not passed.")
         footer_hash = f'<p>Furusato Fabric Workshop · Content SHA-256: <code>{metadata["contentSha256"]}</code></p>'
+    digest_line_markup = f" {digest_line}" if digest_line else ""
+    legacy_button_markup = f" {legacy_button}" if legacy_button else ""
     guide_link = (
-        '<p><a href="https://github.com/yang-jiayi/furusato-fabric-workshop/tree/main/Lab" id="lab-guide">'
-        + plain_bilingual(Text("GitHubのLab手順書", "Lab instructions on GitHub")) + '</a></p>'
-        if delivery_mode == "html-lab" else
-        f'<p><a download href="{profile.word_name}" id="word-download">'
-        + plain_bilingual(Text("対応するWordをダウンロード", "Download the matching Word guide")) + '</a></p>'
+        '<a class="button-link button-link--secondary" href="https://github.com/yang-jiayi/furusato-fabric-workshop/blob/main/Lab/README.md" id="lab-guide">'
+        + plain_bilingual(Text("GitHub Labの補助手順へ", "Open the companion GitHub Lab")) + '</a>'
+        if delivery_mode == "html-lab" else ""
     )
     return f"""<!doctype html>
 <html lang="ja" data-lang="ja">
@@ -185,23 +187,28 @@ def render(
  <a href="#top" class="brand">Furusato / Fabric IQ · {profile.display_version}</a>
  <nav aria-label="Language"><button type="button" data-language="ja" aria-pressed="true">日本語</button>
  <button type="button" data-language="en" aria-pressed="false">English</button></nav>
- <button type="button" id="print">{plain_bilingual(Text("印刷", "Print"))}</button>
 </header>
 <div id="top" class="hero"><p class="eyebrow">MICROSOFT FABRIC · SYNTHETIC HANDS-ON WORKSHOP</p>
  <h1>Furusato Workshop<br>{profile.display_version}</h1>
- <p>{plain_bilingual(hero_line)}</p>
- <p class="status" role="status">{plain_bilingual(state)}</p>
- {guide_link}
- {digest_line}
+ <p class="hero__edition">{plain_bilingual(hero_line)}</p>
+ <p class="hero__lead">{plain_bilingual(Text(
+     "合成データを使い、Lakehouse・Eventhouse・Ontology・Data Agentを順に構築して確かめるハンズオン教材です。",
+     "Build and inspect a Microsoft Fabric solution with synthetic data, from Lakehouse and Eventhouse through Ontology and a Data Agent."))}</p>
+{hero_status_line}
+ <div class="hero__actions">
+  <a class="button-link" href="#contents">{plain_bilingual(Text("目次から読む", "Start with the contents"))}</a>
+  {guide_link}
+ </div>
+{digest_line_markup}
 </div>
 <aside class="controls"><label for="search">{plain_bilingual(Text("この言語の全文を検索", "Search the full text in this language"))}</label>
  <input id="search" type="search" autocomplete="off"><button type="button" id="search-clear">{plain_bilingual(Text("検索解除", "Clear search"))}</button>
  <p id="search-status" role="status" aria-live="polite"></p>
- {legacy_button}
+{legacy_button_markup}
  <button type="button" id="progress-reset">{plain_bilingual(Text("学習記録をリセット", "Reset learning progress"))}</button>
  <p id="progress" role="status"></p>
 </aside>
-<nav class="toc" aria-label="Contents"><h2>{plain_bilingual(Text("目次", "Contents"))}</h2><ol>{toc}</ol></nav>
+<nav class="toc" id="contents" aria-label="Contents"><h2>{plain_bilingual(Text("目次", "Contents"))}</h2><ol>{toc}</ol></nav>
 <main id="main">{content}</main>
 <footer><p>{plain_bilingual(footer_note)}</p>
  {footer_hash}</footer>

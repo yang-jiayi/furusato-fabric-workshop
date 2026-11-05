@@ -1,11 +1,21 @@
 # 参加者の評価キット / Participant evaluation kit
 
-Word / HTML の第19章と付録Cで、準備、操作、採点、前後比較を説明します。
+Git checkout では、GitHub Lab の `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と、現行 HTML ガイド
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html` の第19章・付録Cを
+参照します。配布 ZIP を展開した場合は、ZIP ルートの `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と `guide/furusato-workshop-v3-1-0-complete.html` を開きます。付録Cの Lab は
+`Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/` です。
 このフォルダーは公開の質問・採点基準と空の記録用紙です。採点基準や期待値を
 Data Agent の指示、例、ソース説明へコピーしません。実際の回答、実環境のID、
 クエリ、画面、認証は Git 外の作業用フォルダーへ保存します。
 
-Chapter 19 and Appendix C of Word / HTML contain the complete manual procedure.
+In a Git checkout, use the GitHub Lab at
+`Lab/19-evaluate-and-improve-ai-answer-quality/` and Chapter 19 and Appendix C in
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html`. After extracting
+the distribution ZIP, open `Lab/19-evaluate-and-improve-ai-answer-quality/` and
+`guide/furusato-workshop-v3-1-0-complete.html` from the ZIP root. The Appendix C
+Lab is `Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/`.
 This folder supplies public questions, scoring criteria and blank records. Never
 put questions, answer keys or grading criteria in Agent instructions, examples or
 source descriptions. Save actual answers, live identifiers, queries, screenshots
@@ -24,6 +34,21 @@ and authentication outside Git.
 
 ## 手順 / Steps
 
+`configurationLayer` に Agent-routing-formatting または model-prep を記録します。
+モデルを変える場合は baseline/finalModelDefinitionFile、
+baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に
+別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。
+
+Record Agent-routing-formatting or model-prep as `configurationLayer`. For model
+changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile
+and applicationApprovalFile / rollbackApprovalFile to separately frozen private
+records. A blank template is not authorization to change anything.
+
+モデル変更後は12.7の LSDL 同期・Direct Lake 索引と pane の開き直しを確認してから
+評価を登録します。同期状態未確認は「適用済み」の根拠になりません。
+After a model change, verify the LSDL sync, Direct Lake indexing and reopened pane
+in 12.7 before registering evaluation. Unverified sync is not proof of effective application.
+
 1. フォルダーを Git 外へコピーします。各 template を複製し、ファイル名の
    `-template` を外します。用紙には実測値を記入し、元の空用紙は保持します。
 2. 完全評価は T01–T10 を3周（毎回別の会話）、続いて B01–B19 を1周です。
@@ -33,7 +58,7 @@ and authentication outside Git.
    空用紙から他の予定行を開始前に除きます。途中で短縮しません。
 3. 現在の公開済み設定を baseline として保存し、データ、ソース、選択列、例、
    スキーマ、メジャー、公開版、実行方法、タイムアウトを記録します。
-   今回の採用済み構成を初めて適用した後の確認は「再現確認」です。
+   同梱の構成は実験用・回答品質未承認です。初回の確認は「再現確認」です。
    過去のbaselineに戻す必要はなく、同じ構成を2回測って「改善」と呼びません。
 4. 1枠ごとに Clear chat / 新しい会話で、questions.csv の質問セルだけを1回送信。
    600秒まで待ち、タイムアウト・送信不明・フィルタ停止もその枠で記録します。
@@ -44,10 +69,16 @@ and authentication outside Git.
    により適用外となる3条件だけです。T10 のサービスブロックは7条件ともFAIL。
    内容と実行の根拠は別々に判定します。HTTP200、完成した文章、提示したクエリだけで
    実行成功とはしません。クエリや結果が見えなければ実行根拠をUNCLEARにします。
-6. 失敗をソース・期間・粒度・意味・実行に分類し、1つの原因に対する指示変更を
-   決めます。変更前後の全文を保存し、Draftの対象指示欄だけを変更してSave、Publish、
-   公開版を開き直して確認します。配布Globalは10,000 UTF-16単位の上限のため、
-   追記でなく対象の文を置き換え、長さを確認します。固定profile用helperは独自候補を
+6. 失敗をソース・期間・粒度・意味・実行に分類し、変更する層を事前登録します。
+   Agent共通の振り分け・応答形式だけなら、変更前後の全文を保存し、許可された
+   Draftの対象欄を変更してSave、Publish、公開版を開き直して確認します。
+   モデルのDAX・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側
+   Prep for AIで扱います。別のモデル・ソース候補、変更前定義とnative設定、
+   適用・復元の許可を固定し、native Apply後に開き直して読み戻します。
+   指示だけの既存49枠planやwrite gateはモデル変更に再利用しません。
+   Global指示欄の上限は10,000 UTF-16単位です。
+   選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は
+   対象の文を置き換えます。固定profile用helperは独自候補を
    配布設定へ戻すか一致確認に失敗するため、候補の適用・認定に使いません。同じ全49枠を
    final として実施します。データや選択を変えた比較は別の実験として扱います。
 7. suite / repeat / case_id / condition_id をキーに前後を結合します。質問、条件、
@@ -57,8 +88,10 @@ and authentication outside Git.
    改善・退行・不明から新たな根拠が得られた条件をすべて報告します。
 8. 登録した採用条件を満たす場合だけ新しい変更を採用します。推奨の初期条件は、
    FAIL→PASSが1件以上、PASS→FAILが0件、実行根拠と事実の正しさが悪化しないことです。
-   満たさなければ候補を採用せず、今回のbaselineの全文を同じDraft欄へ戻して
-   Save、Publish、公開版の確認をします。固定helperで戻すのは、baselineが配布profileと
+   満たさなければ候補を採用しません。Agent指示だけの変更なら、今回のbaselineの
+   全文を同じDraft欄へ戻してSave、Publish、公開版を確認します。モデル変更は
+   別途承認した復元手順で保存済み定義・native設定を戻し、読み戻します。
+   固定helperで戻すのは、baselineが配布profileと
    同一と確認済みの場合だけです。
    採用条件を結果を見てから緩めません。次の案は別の版として登録します。
 
@@ -69,8 +102,9 @@ and authentication outside Git.
    preregister practice-10, 10 slots and 84 conditions, and retain only original /
    repeat=1 rows before beginning. Do not shorten a campaign after seeing results.
 3. Save the current publication as baseline. Freeze data, source IDs, selections,
-   examples, schema, measures, interface and timeout. Verifying the already adopted
-   configuration is reproduction testing; two runs of unchanged instructions do
+   examples, schema, measures, interface and timeout. The supplied configuration is
+   experimental and answer quality is unaccepted. Initial verification is reproduction
+   testing; two runs of unchanged instructions do
    not establish an improvement. Restoring a historical baseline is unnecessary.
 4. Start a fresh chat for every slot and send only its question once. Wait up to
    600 seconds; retain timeouts, uncertain submissions and content blocks. Preserve
@@ -81,11 +115,17 @@ and authentication outside Git.
    by a valid clarification branch. A service block on T10 is seven FAILs. Score
    content and actual execution separately; HTTP200, prose or displayed query
    text alone is not execution proof. Missing execution details are UNCLEAR.
-6. Classify source, time, grain, meaning or execution failures. Propose one scoped
-   instruction change and save both complete texts. Edit only the intended Draft
-   field, Save, Publish, reopen and inspect the publication. The distributed global
-   instructions already use 10,000 UTF-16 units; replace wording rather than append
-   notes, and check length. Do not use the fixed-profile helper to apply or certify
+6. Classify source, time, grain, meaning or execution failures and preregister the
+   configuration layer. For Agent-wide routing/formatting only, preserve both texts,
+   edit the authorized Draft field, Save, Publish, reopen and inspect the publication.
+   For model DAX/filter semantics, use metadata, AI schema and model-level Prep for AI
+   in 12.6–12.7. Bind a separate model/source candidate, baseline definitions/native
+   settings and application/rollback approvals; use native Apply, reopen and read back.
+   Never reuse an instruction-only 49-slot plan or write gate for a changed model.
+   The global instruction
+   field supports up to 10,000 UTF-16 units. Measure the selected profile's actual
+   length and confirm it is within the limit; replace wording if it exceeds the limit.
+   Do not use the fixed-profile helper to apply or certify
    a custom candidate: it restores the distributed profile or reports mismatch. Run all 49
    final slots. A changed dataset or selection constitutes a different experiment.
 7. Pair suite / repeat / case_id / condition_id. Confirm equal questions, criteria
@@ -95,8 +135,10 @@ and authentication outside Git.
    UNCLEAR, every gain, regression and unknown-to-pass transition.
 8. Adopt a new candidate only if the preregistered rule holds. Suggested defaults:
    at least one FAIL→PASS, no PASS→FAIL and no deterioration in query execution records
-   or factual correctness. Otherwise restore this baseline's full text in the same
-   Draft fields, Save, Publish and inspect the publication. Use the fixed helper for
+   or factual correctness. Otherwise do not adopt the candidate. For Agent-instruction-only
+   changes, restore this baseline's full text in the same Draft fields, Save, Publish
+   and inspect the publication. Model changes require a separately approved rollback
+   of saved definitions/native settings and readback. Use the fixed helper for
    restoration only if that baseline is confirmed identical to its distributed
    profile. Do not relax the rule after observing outcomes.
 
@@ -128,24 +170,18 @@ and authentication outside Git.
   selected quality-processing tables contain it. Retain the original criterion,
   record the caveat and do not substitute the quality population for observations.
 
-## 過去結果との関係 / Relation to historical results
+## 評価結果の扱い / Interpreting evaluation results
 
-2026-10-15の51枠・296条件には非公開の未使用2問・6条件が含まれました。
-このキットは公開49枠・290条件を再現します。過去の対応比較281条件の
-189→217 PASS（67.26→77.22%）は補助条件充足率で、一般的な正答率や保証値では
-ありません。今回の分岐、失敗、製品状態で分母と結果は変わります。
-公開済みの29問を新しい「未使用問題」と呼びません。未知の問題への一般化を
-調べる場合は、別の人が新しい問題と基準を事前固定し、調整者に見せず実施し、
-その結果はこの49枠と別に報告します。過去の非公開問題は配布しません。
+公開29問はすでに既知の問題であり、未知の問題への一般化を示すものでは
+ありません。対応比較の共通分母は、290条件から実際に適用外となった条件を
+除いて求めます。未知の問題への一般化を調べる場合は、別の人が新しい質問と
+基準を事前固定し、調整者に開示せず実施し、その結果を公開評価と別に報告します。
 
-The historical 51-slot / 296-condition phases included two private unused
-questions with six conditions. This kit reproduces the public 49-slot / 290-condition
-portion. The historical 189→217 PASS on 281 paired applicable conditions
-(67.26→77.22%) is supplemental condition fulfillment, not general accuracy or a
-guarantee. Your branches, failures and service state determine your denominator
-and result. Published questions are not new unseen tests. For generalization,
-have another person freeze new private questions and keys before tuning and report
-them separately. Historical private questions are not distributed.
+The 29 public questions are already known and do not establish generalization to unseen
+questions. Calculate the matched denominator from the 290 conditions minus actual
+inapplicable conditions. To test generalization, have another person preregister new
+questions and criteria, withhold them from the tuner and report the results separately
+from the public evaluation.
 
 ## 保守担当者向けの確認 / Maintainer verification
 

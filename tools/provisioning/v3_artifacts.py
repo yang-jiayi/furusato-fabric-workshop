@@ -17,7 +17,7 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def verify_notebook(notebook, baseline=None):
+def verify_notebook(notebook, baseline=None, *, number=None):
     metadata = notebook["metadata"]["furusato"]
     if (metadata.get("version") != rt.WORKSHOP_VERSION
             or metadata.get("edition") != "v" + rt.WORKSHOP_VERSION
@@ -44,7 +44,30 @@ def verify_notebook(notebook, baseline=None):
             parameters["source"] = [
                 'NOTEBOOK_VERSION = "2.7.0"\n' if line == current else line for line in parameters["source"]]
         code = lambda value: [c["source"] for c in value["cells"] if c["cell_type"] == "code"]
-        if code(normalized) != code(baseline):
+        current_code, baseline_code = code(normalized), code(baseline)
+        if number == "05":
+            if len(current_code) != len(baseline_code):
+                raise ValueError("Notebook05 code-cell count differs from the immutable baseline.")
+            final = current_code[-1]
+            additions = {
+                'IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n',
+                "if not IS_INTERACTIVE:\n",
+                "    notebookutils.notebook.exit(json.dumps(\n",
+                "        ANALYTICS_RESULT, ensure_ascii=False, sort_keys=True, allow_nan=False,\n",
+                "    ))\n",
+            }
+            if (final.count('IS_INTERACTIVE = bool(context.get("isForInteractive", False))\n') != 1
+                    or final.count("    is_interactive=IS_INTERACTIVE,\n") != 1
+                    or final.count("if not IS_INTERACTIVE:\n") != 1
+                    or sum("notebookutils.notebook.exit" in line for line in final) != 1):
+                raise ValueError("Notebook05 result exit contract is missing or ambiguous.")
+            current_code[-1] = [
+                '    is_interactive=bool(context.get("isForInteractive", False)),\n'
+                if line == "    is_interactive=IS_INTERACTIVE,\n" else line
+                for line in final if line not in additions
+            ]
+            current_code[-1][-1] = current_code[-1][-1].rstrip("\n")
+        if current_code != baseline_code:
             raise ValueError("A data-processing code cell changed beyond the declared audit/display version.")
     return True
 
@@ -73,7 +96,32 @@ def verify_bundle(notebook):
     if not required.issubset(files):
         raise ValueError("The sealed package lacks current correction-profile inputs.")
     return {"fileCount": len(files), "payloadSha256": sha(compressed),
+            "compressedBytes": len(compressed),
             "currentCorrectionProfilesIncluded": True}
+
+
+def verify_preview_contract(contract):
+    if (not isinstance(contract, dict)
+            or contract.get("edition") != rt.EDITION
+            or contract.get("workshopVersion") != rt.WORKSHOP_VERSION):
+        raise ValueError("Preview contract runtime edition and workshop version are inconsistent.")
+    return True
+
+
+def verify_notebook_bundle_manifest(manifest, notebooks):
+    if not isinstance(manifest, dict):
+        raise ValueError("Notebook bundle manifest must be an object.")
+    for number in ("02", "03", "04"):
+        expected = notebooks.get(number)
+        actual = manifest.get(number)
+        if not isinstance(expected, dict) or not isinstance(actual, dict):
+            raise ValueError("Notebook bundle manifest is missing Notebook " + number + ".")
+        bundle = expected["bundle"]
+        if (actual.get("path") != expected.get("bundlePath", expected["path"])
+                or actual.get("payloadSha256") != bundle["payloadSha256"]
+                or actual.get("compressedBytes") != bundle["compressedBytes"]):
+            raise ValueError("Notebook bundle manifest differs from embedded payload " + number + ".")
+    return True
 
 
 def snapshot():
@@ -99,11 +147,15 @@ def snapshot():
         path = next((rt.PREVIEW / "notebooks").glob(f"Notebook_{number}_*.ipynb"))
         value = rt.load(path)
         old = rt.load(next((rt.BASE / "notebooks").glob(f"Notebook_{number}_*.ipynb"))) if number in {"01", "05"} else None
-        verify_notebook(value, old)
+        verify_notebook(value, old, number=number)
         notebooks[number] = {"path": path.relative_to(rt.REPO).as_posix(), "sha256": sha(path.read_bytes()),
                              "workshopVersion": rt.WORKSHOP_VERSION}
         if number in {"02", "03", "04"}:
+            notebooks[number]["bundlePath"] = path.relative_to(rt.PREVIEW).as_posix()
             notebooks[number]["bundle"] = verify_bundle(value)
+    verify_preview_contract(rt.load(rt.PREVIEW / "provisioning/preview-contract.json"))
+    verify_notebook_bundle_manifest(
+        rt.load(rt.PREVIEW / "provisioning/notebook-bundle-manifest.json"), notebooks)
     paths = {rt.REPO / name for name in rt.RUNTIME_INPUT_FILES}
     paths.update({Path(__file__), rt.REPO / "tools/provisioning/build_preview30.py",
                   rt.REPO / "tools/provisioning/preview30_notebooks.py",
@@ -134,26 +186,7 @@ def snapshot():
         "workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261009/README.md",
         "workshop/v3.0.0-preview/data-agent/candidates/measured-contract-20261015/README.md",
         "tools/data-agent/README.md",
-        "docs/v3.0.0/tuning-20261010/calibration-and-proofreading.md",
-        "docs/v3.0.0/tuning-20261010/README.md",
-        "docs/v3.0.0/tuning-20261010/result-20261010.json",
-        "docs/v3.0.0/tuning-20261010/furusato-data-agent-tuning-20261010.docx",
-        "docs/v3.0.0/tuning-20261010/furusato-data-agent-tuning-20261010.html",
-        "docs/v3.0.0/tuning-20261010/artifact-validation.json",
-        "docs/v3.0.0/tuning-20261010/SHA256SUMS.txt",
         "tools/docs/build_measured_tuning_report.py",
-        "docs/v3.0.0/tuning-20261015/README.md",
-        "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.md",
-        "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.docx",
-        "docs/v3.0.0/tuning-20261015/calibration-and-proofreading.html",
-        "docs/v3.0.0/tuning-20261015/calibration-artifact-validation.json",
-        "docs/v3.0.0/tuning-20261015/calibration-render-validation.json",
-        "docs/v3.0.0/tuning-20261015/result-20261015.json",
-        "docs/v3.0.0/tuning-20261015/furusato-ontology-v2-evaluation-20261015.docx",
-        "docs/v3.0.0/tuning-20261015/furusato-ontology-v2-evaluation-20261015.html",
-        "docs/v3.0.0/tuning-20261015/artifact-validation.json",
-        "docs/v3.0.0/tuning-20261015/report-render-validation.json",
-        "docs/v3.0.0/tuning-20261015/SHA256SUMS.txt",
         "tools/docs/build_ontology_v2_report.py",
         "tools/docs/build_ontology_v2_calibration.py",
         "tools/docs/README.md", "tools/html/README.md",
@@ -161,9 +194,14 @@ def snapshot():
     for folder in ("data", "kql", "notebooks", "ontology", "powerbi", "data-agent", "provisioning"):
         paths.update(p for p in (rt.PREVIEW / folder).rglob("*")
                      if p.is_file() and p.suffix != ".md" and p.name != "artifact-set.json")
-    participant_assets = rt.REPO / "docs" / "assets" / "v3.0.0-participant"
-    if participant_assets.is_dir():
-        paths.update(p for p in participant_assets.rglob("*") if p.is_file())
+    for relative in (
+        "docs/assets/current-participant",
+        "docs/assets/current-participant-captures",
+        "docs/assets/current-diagrams",
+    ):
+        asset_root = rt.REPO / relative
+        if asset_root.is_dir():
+            paths.update(p for p in asset_root.rglob("*") if p.is_file())
     paths.update(p for p in rt.BASE.rglob("*") if p.is_file())
     protected_files = {}
     for relative in rt.BASELINE_PROTECTED_PATHS:
@@ -193,9 +231,9 @@ def snapshot():
             "dataChecks": {key: baseline[key] for key in (
                 "staticDonationRows", "staticDonationYen", "rawIncrementRows", "acceptedUniqueRows", "duplicateRows")},
             "productionPlacement": "specified-folder-direct", "tempRequired": False,
-            "declaredCodeDelta": "Notebook01 audit/display NOTEBOOK_VERSION only; Notebook01/05 data-processing code is otherwise unchanged.",
+            "declaredCodeDelta": "Notebook01 audit/display NOTEBOOK_VERSION and Notebook05 noninteractive ANALYTICS_RESULT exitValue transport only; data-processing logic and preview/apply gates are unchanged.",
             "historicalRunMetadataMustNotBeRewritten": True, "cloudDeploymentProvenByThisManifest": False,
-            "documentationBinding": "Paired Word/HTML must embed this manifest SHA; an outer package inventory hashes the documents separately."}
+            "documentationBinding": "HTML/Lab delivery binds this manifest SHA; the outer package inventory hashes participant artifacts separately."}
 
 
 if __name__ == "__main__":

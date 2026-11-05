@@ -2,7 +2,7 @@
 
 [Lab 目次](../README.md) · [この章の目次](README.md)
 
-15の Relationship を作り、向き（Origin → Target）とキー列を実際のデータに合わせます。14の関係は外部キーで直接つなぎ、SupplierProvidesGift だけが対応表（mapping table）を使います。
+24.6で配置済みの15の Relationship は読み取りだけで確認し、向き（Origin → Target）とキー列を実際のデータに照合します。不完全な対象で不足がある場合だけ、その関係を作成します。14の関係は外部キーで直接つなぎ、SupplierProvidesGift だけが対応表（mapping table）を使います。
 
 最後に、居住地・受入地・登録地の3つの経路を、別々に説明できる状態にします。図がつながって見えるだけでは完了ではありません。
 
@@ -16,7 +16,7 @@
 
 ## 7.1 What you will do
 
-Create the 15 relationships and match their direction (Origin → Target) and key columns to the actual data. Fourteen relationships use a foreign key directly; only SupplierProvidesGift uses a mapping table.
+Inspect the fifteen relationships already deployed in 24.6 without editing them, checking their direction (Origin → Target) and key columns against the actual data. Create a relationship only if it is missing from an incomplete target. Fourteen relationships use a foreign key directly; only SupplierProvidesGift uses a mapping table.
 
 By the end, you should be able to explain the residence, recipient and registration paths separately. A connected picture alone does not mean you are done.
 

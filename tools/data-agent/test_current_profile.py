@@ -1,0 +1,431 @@
+"""Offline identity binding and single-write/readback tests; never authenticate."""
+import copy
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+from unittest.mock import Mock, patch
+from uuid import NAMESPACE_URL, uuid5
+
+import current_profile as current
+from source_grounded_profile import decoded_parts, inline_part
+
+WORKSPACE = "00000000-0000-0000-0000-000000000001"
+AGENT = "00000000-0000-0000-0000-000000000002"
+FOLDER = "00000000-0000-0000-0000-000000000003"
+
+
+def fixture():
+    _, stage, templates = current.load_profile()
+    identities = {"{{workspace:id}}": WORKSPACE}
+    for kind, source in templates.items():
+        identities["{{resource:" + kind + ":id}}"] = str(uuid5(NAMESPACE_URL, kind))
+        identities["{{resource:" + kind + ":name}}"] = "Participant_" + kind
+        for path, _ in current.native.walk(source["elements"]):
+            token = current.node_token(kind, path)
+            identities[token] = str(uuid5(NAMESPACE_URL, token))
+    stage = {**stage, "aiInstructions": "Existing participant instructions"}
+    parts = [inline_part("Files/Config/data_agent.json", {"shared": "keep"}),
+             inline_part(".platform", {"identity": AGENT})]
+    for status in ("draft", "published"):
+        prefix = "Files/Config/" + status + "/"
+        parts.append(inline_part(prefix + "stage_config.json", stage))
+        for kind, template in templates.items():
+            source = current.substitute(template, identities)
+            dirname = ("ontologies/" if kind == "ontology" else kind + "-") + source["displayName"]
+            parts.append(inline_part(prefix + dirname + ("/ontology.json" if kind == "ontology" else "/datasource.json"), source))
+    return {"parts": parts}
+
+
+def changed(definition, path, callback):
+    parts = decoded_parts(definition)
+    callback(parts[path])
+    return {"parts": [inline_part(name, value) for name, value in parts.items()]}
+
+
+class CurrentProfileTests(unittest.TestCase):
+    def test_common_guidance_rejects_direct_link_and_linked_ancestor(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            real = root / "real"
+            real.mkdir()
+            regular = real / "common.txt"
+            regular.write_bytes(b"Explicit routing\n")
+            self.assertEqual(current.guidance_binding(regular)["text"], "Explicit routing\n")
+            direct = root / "direct.txt"
+            direct.symlink_to(regular)
+            try:
+                with self.assertRaisesRegex(ValueError, "links or reparse"):
+                    current.guidance_binding(direct)
+            finally:
+                direct.unlink()
+            alias = root / "alias"
+            if os.name == "nt":
+                subprocess.run([os.environ["ComSpec"], "/c", "mklink", "/J", str(alias), str(real)],
+                               check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            else:
+                alias.symlink_to(real, target_is_directory=True)
+            try:
+                with self.assertRaisesRegex(ValueError, "links or reparse"):
+                    current.guidance_binding(alias / "common.txt")
+            finally:
+                if os.name == "nt":
+                    alias.rmdir()
+                else:
+                    alias.unlink()
+            self.assertEqual(regular.read_bytes(), b"Explicit routing\n")
+
+    def test_common_only_preserves_every_other_raw_part_and_default(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "common.txt"
+            path.write_bytes(b"Explicit routing\r\n")
+            binding = current.guidance_binding(path)
+            self.assertEqual(binding["text"], "Explicit routing\n")
+            candidate, receipt = current.compile_prepared(fixture(), WORKSPACE, binding)
+            self.assertFalse(receipt["identitySubstitutionOnly"])
+            for old, new in zip(fixture()["parts"], candidate["parts"]):
+                if old["path"] != "Files/Config/draft/stage_config.json":
+                    self.assertEqual(old, new)
+            self.assertEqual(decoded_parts(candidate)["Files/Config/draft/stage_config.json"]["aiInstructions"],
+                             "Explicit routing\n")
+            self.assertEqual(current.compile_prepared(fixture(), WORKSPACE),
+                             current.compile_draft(fixture(), WORKSPACE))
+
+    def test_common_binding_file_and_candidate_tampering_and_scope_stop(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / "evidence"
+            root.mkdir()
+            path = Path(temp) / "common.txt"
+            path.write_bytes(b"Explicit routing\n")
+            client = Mock(workspace=WORKSPACE, agent=AGENT, origin="https://example.analysis.windows.net")
+            with patch.object(current, "gather", return_value={"definition": fixture()}):
+                current.prepare(client, root, FOLDER, path)
+            current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            with self.assertRaisesRegex(ValueError, "scope/profile"):
+                current.prepared(root, WORKSPACE, AGENT, WORKSPACE)
+            original = (root / "candidate.json").read_bytes()
+            value = json.loads(original)
+            value["parts"].pop()
+            (root / "candidate.json").write_text(json.dumps(value))
+            with self.assertRaises(ValueError):
+                current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            (root / "candidate.json").write_bytes(original)
+            path.write_bytes(b"Changed\n")
+            with self.assertRaisesRegex(ValueError, "file changed"):
+                current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            client.request.assert_not_called()
+
+    def test_common_limit_and_invalid_encoding_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp) / "common.txt"
+            for raw in (b"", b"\xef\xbb\xbftext", b"a\rb", ("\U0001f600" * 5001).encode()):
+                path.write_bytes(raw)
+                with self.subTest(raw=raw[:12]), self.assertRaises(ValueError):
+                    current.guidance_binding(path)
+
+    def test_common_apply_once_concurrency_and_readback_drift(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "common.txt"
+            path.write_bytes(b"Explicit routing\n")
+            binding = current.guidance_binding(path)
+            definition = fixture()
+            candidate, _ = current.compile_prepared(definition, WORKSPACE, binding)
+            inputs = {"definition": definition, "commonGuidance": binding}
+            client = Mock(workspace=WORKSPACE)
+            client.base = "https://example.invalid"
+            client.definition.return_value = candidate
+            with patch.object(current, "gather", return_value={"definition": definition}), \
+                    patch.object(current, "verify", return_value={"status": "draft-matches"}):
+                current.apply(client, root, FOLDER, inputs, candidate)
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.apply(client, root, FOLDER, inputs, candidate)
+            self.assertEqual(client.request.call_count, 1)
+            with self.assertRaises(ValueError):
+                current.compare_stage(definition, candidate, "draft")
+            with tempfile.TemporaryDirectory() as other, \
+                    patch.object(current, "gather", return_value={"definition": candidate}):
+                with self.assertRaisesRegex(ValueError, "changed since prepare"):
+                    current.apply(client, Path(other), FOLDER, inputs, candidate)
+            self.assertEqual(client.request.call_count, 1)
+
+    def test_common_publish_file_drift_and_uncertain_submission_never_retry(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "common.txt"
+            path.write_bytes(b"Explicit routing\n")
+            binding = current.guidance_binding(path)
+            definition = fixture()
+            candidate, _ = current.compile_prepared(definition, WORKSPACE, binding)
+            inputs = {"definition": definition, "commonGuidance": binding}
+            client = Mock(workspace=WORKSPACE)
+            client.base = "https://example.invalid"
+            client.definition.return_value = candidate
+            path.write_bytes(b"Changed\n")
+            with self.assertRaisesRegex(ValueError, "file changed"):
+                current.publish(client, root, FOLDER, inputs, candidate)
+            client.request.assert_not_called()
+            path.write_bytes(b"Explicit routing\n")
+            client.completed.side_effect = ValueError("uncertain")
+            with patch.object(current, "verify", return_value={"status": "draft-matches"}):
+                with self.assertRaisesRegex(ValueError, "uncertain"):
+                    current.publish(client, root, FOLDER, inputs, candidate)
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.publish(client, root, FOLDER, inputs, candidate)
+            self.assertEqual(client.request.call_count, 1)
+
+    def setUp(self):
+        self.definition = fixture()
+        self.candidate, self.receipt = current.compile_draft(self.definition, WORKSPACE)
+
+    def test_exact_global_and_four_logical_sources(self):
+        manifest, stage, templates = current.load_profile()
+        docs, sources, serialization = current.native.stage_sources(self.candidate, "draft")
+        self.assertEqual(serialization, "native-ontology-context")
+        self.assertEqual(len(sources), 4)
+        text = docs["Files/Config/draft/stage_config.json"]["aiInstructions"]
+        self.assertEqual(text.encode(), (current.PROFILE / "global-instructions.txt").read_bytes())
+        self.assertEqual(len(text.encode("utf-16-le")) // 2, 9994)
+        self.assertEqual(len(text.encode("utf-16-le")) // 2, manifest["instructionUtf16Units"])
+        self.assertFalse(self.receipt["answerAccuracyAccepted"])
+        self.assertEqual(self.receipt["counts"]["lakehouse_tables"]["lakehouse_tables.table"], 11)
+        self.assertEqual(self.receipt["counts"]["lakehouse_tables"]["lakehouse_tables.column"], 88)
+        expected = {
+            "kusto": "827c9b8f4271c67ac4f503b642cbfb9aaaa4b329b00889169d93500654a77596",
+            "lakehouse_tables": "4b69a02bd33dd33c5a8890d49ee6473997a0d57f6a3f416a9d745b0fa759e338",
+            "semantic_model": "aae23783d24b0f518482681cde6012e1a82c24bf13278611e84b436015d3041e",
+        }
+        self.assertEqual(manifest["sourcePublishedCanonicalSha256"],
+                         current.PUBLISHED_BASELINE_CANONICAL_SHA256)
+        self.assertEqual(manifest["sourceSemanticModelCanonicalSha256"],
+                         current.PUBLISHED_MODEL_CANONICAL_SHA256)
+        self.assertNotIn("sourceCandidateCanonicalSha256", manifest)
+        for kind, expected_sha in expected.items():
+            instruction = templates[kind]["dataSourceInstructions"]
+            self.assertEqual(hashlib.sha256(instruction.encode("utf-8")).hexdigest(), expected_sha)
+            self.assertLessEqual(current.instruction_units(instruction), manifest["instructionLimitUtf16Units"])
+            self.assertEqual(sources[kind][1]["dataSourceInstructions"], instruction)
+        selected_nodes = sum(
+            1 for source in templates.values()
+            for _, node in current.native.walk(source["elements"])
+            if node.get("is_selected") is True
+        )
+        self.assertEqual(selected_nodes, 170)
+        ontology_names = {
+            node["display_name"] for _, node in current.native.walk(templates["ontology"]["elements"])
+        }
+        authored_names = set(templates["ontology"]["entitiesWithUserAuthoredDescriptions"])
+        self.assertTrue(authored_names)
+        self.assertTrue(authored_names.issubset(ontology_names))
+        self.assertEqual(
+            {
+                node["display_name"] for _, node in current.native.walk(templates["semantic_model"]["elements"])
+                if node.get("type") == "semantic_model.measure"
+            },
+            {
+                "寄附総額", "寄附件数", "静的寄附総額", "静的寄附件数",
+                "受入増分寄附総額", "受入増分寄附件数", "平均寄附額",
+                "寄附総額 前年同期間", "自治体別シェア (%)", "高額寄附件数",
+            },
+        )
+
+    def test_instruction_limit_counts_utf16_units_exactly(self):
+        self.assertEqual(current.instruction_units("a" * 9994), 9994)
+        self.assertEqual(current.instruction_units("\U0001f600" * 5000), 10000)
+        self.assertEqual(current.instruction_units("a" * 10001), 10001)
+        _, _, templates = current.load_profile()
+        manifest = json.loads((current.PROFILE / "profile-manifest.json").read_bytes())
+        self.assertTrue(all(
+            current.instruction_units(source["dataSourceInstructions"])
+            <= manifest["instructionLimitUtf16Units"]
+            for kind, source in templates.items()
+            if source.get("dataSourceInstructions") is not None
+        ))
+
+    def test_target_identity_nodes_and_published_shared_parts_are_preserved(self):
+        before, after = decoded_parts(self.definition), decoded_parts(self.candidate)
+        for path, value in before.items():
+            if not path.startswith("Files/Config/draft/"):
+                self.assertEqual(after[path], value)
+        _, initial, _ = current.native.stage_sources(self.definition, "draft")
+        _, actual, _ = current.native.stage_sources(self.candidate, "draft")
+        for kind, (_, source) in actual.items():
+            self.assertEqual(source["artifactId"], initial[kind][1]["artifactId"])
+            self.assertEqual(source["displayName"], initial[kind][1]["displayName"])
+            self.assertEqual([node["id"] for _, node in current.native.walk(source["elements"])],
+                             [node["id"] for _, node in current.native.walk(initial[kind][1]["elements"])])
+        self.assertNotIn("{{node:", json.dumps(after))
+        self.assertNotIn("dataSourceInstructions", actual["ontology"][1])
+        self.assertEqual(
+            actual["ontology"][1]["entitiesWithUserAuthoredDescriptions"],
+            initial["ontology"][1]["entitiesWithUserAuthoredDescriptions"],
+        )
+
+    def test_unknown_selection_and_schema_drift_stop(self):
+        _, sources, _ = current.native.stage_sources(self.definition, "draft")
+        path = sources["lakehouse_tables"][0]
+        for mutation in (
+            lambda value: value["elements"].clear(),
+            lambda value: value["elements"][0].update(is_selected=False),
+            lambda value: value.update(metadata={"unknown": True}),
+            lambda value: value["elements"][0].update(newServiceField=True),
+            lambda value: value.update(workspaceId=AGENT),
+            lambda value: value.update(dataSourceInstructions=value["dataSourceInstructions"] + " drift"),
+            lambda value: value.update(userDescription=value["userDescription"] + " drift"),
+        ):
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                current.compile_draft(changed(self.definition, path, mutation), WORKSPACE)
+        stage_path = "Files/Config/draft/stage_config.json"
+        def change_shared_stage(value):
+            value["experimental"]["codeInterpreterEnabled"] = not value["experimental"]["codeInterpreterEnabled"]
+        with self.assertRaisesRegex(ValueError, "Non-instruction stage fields"):
+            current.compile_draft(changed(self.definition, stage_path, change_shared_stage), WORKSPACE)
+        extra = copy.deepcopy(self.definition)
+        extra["parts"].append(inline_part("Files/Config/draft/unreviewed/fewshots.json", {"fewShots": []}))
+        with self.assertRaisesRegex(ValueError, "Unexpected Draft"):
+            current.compile_draft(extra, WORKSPACE)
+
+    def test_semantically_identical_duplicate_ids_at_different_paths_are_bound(self):
+        _, sources, _ = current.native.stage_sources(self.definition, "draft")
+        path = sources["lakehouse_tables"][0]
+        def duplicate(value):
+            for _, node in current.native.walk(value["elements"]):
+                node["id"] = WORKSPACE
+        candidate, _ = current.compile_draft(changed(self.definition, path, duplicate), WORKSPACE)
+        _, actual, _ = current.native.stage_sources(candidate, "draft")
+        self.assertTrue(all(node["id"] == WORKSPACE
+                            for _, node in current.native.walk(actual["lakehouse_tables"][1]["elements"])))
+
+    def test_profile_hash_tamper_stops(self):
+        with tempfile.TemporaryDirectory() as temp:
+            import shutil
+            profile = Path(temp) / "profile"
+            shutil.copytree(current.PROFILE, profile)
+            (profile / "global-instructions.txt").write_text("different", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Profile input changed"):
+                current.compile_draft(self.definition, WORKSPACE, profile=profile)
+
+    def test_complete_readback_rejects_source_or_shared_drift(self):
+        current.compare_stage(self.candidate, self.candidate, "draft")
+        for path in ("Files/Config/draft/stage_config.json", "Files/Config/data_agent.json"):
+            with self.subTest(path=path), self.assertRaises(ValueError):
+                current.compare_stage(changed(self.candidate, path, lambda value: value.update(unexpected=True)),
+                                      self.candidate, "draft")
+        extra = copy.deepcopy(self.candidate)
+        extra["parts"].append(inline_part("Files/Config/unknown.json", {}))
+        with self.assertRaises(ValueError):
+            current.compare_stage(extra, self.candidate, "draft")
+
+    def test_apply_single_submission_and_exclusive_recovery_intent(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            inputs = {"definition": self.definition}
+            client = Mock(workspace=WORKSPACE)
+            client.base = "https://api.fabric.microsoft.com/v1/workspaces/" + WORKSPACE + "/dataAgents/" + AGENT
+            client.definition.return_value = self.candidate
+            with patch.object(current, "gather", return_value=inputs), patch.object(current, "verify", return_value={"status": "draft-matches"}):
+                current.apply(client, root, FOLDER, inputs, self.candidate)
+                self.assertEqual(client.request.call_count, 1)
+                self.assertTrue((root / "apply-backup.json").is_file())
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.apply(client, root, FOLDER, inputs, self.candidate)
+                self.assertEqual(client.request.call_count, 1)
+
+    def test_apply_blocks_concurrent_changes_without_submission(self):
+        with tempfile.TemporaryDirectory() as temp:
+            client = Mock()
+            with patch.object(current, "gather", return_value={"definition": self.candidate}):
+                with self.assertRaisesRegex(ValueError, "changed since prepare"):
+                    current.apply(client, Path(temp), FOLDER, {"definition": self.definition}, self.candidate)
+            client.request.assert_not_called()
+
+    def test_prepare_bundle_is_scope_and_source_bound(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            client = Mock(workspace=WORKSPACE, agent=AGENT, origin="https://example.analysis.windows.net")
+            inputs = {"definition": self.definition}
+            with patch.object(current, "gather", return_value=inputs):
+                result = current.prepare(client, root, FOLDER)
+            self.assertEqual(result["cloudWrites"], 0)
+            current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            with self.assertRaisesRegex(ValueError, "scope/profile differs"):
+                current.prepared(root, WORKSPACE, AGENT, WORKSPACE)
+            value = json.loads((root / "inputs.json").read_bytes())
+            value["unknown"] = True
+            (root / "inputs.json").write_text(json.dumps(value), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "changed"):
+                current.prepared(root, WORKSPACE, AGENT, FOLDER)
+            client.request.assert_not_called()
+
+    def test_verification_requires_exact_public_instructions_and_no_extra_examples(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, client = Path(temp), Mock()
+            client.base = "https://api.fabric.microsoft.com/v1/workspaces/" + WORKSPACE + "/dataAgents/" + AGENT
+            _, sources, _ = current.native.stage_sources(self.candidate, "draft")
+            public = {kind: {"id": kind, "instructions": source["dataSourceInstructions"],
+                             "description": source["userDescription"]}
+                      for kind, (_, source) in sources.items() if kind != "ontology"}
+            inputs = {"definition": self.candidate, "publicSources": public}
+            with patch.object(current, "gather", return_value=inputs):
+                client.pages.return_value = []
+                result = current.verify(client, root, self.candidate, FOLDER, "draft")
+                self.assertTrue(result["completeStageReadbackVerified"])
+                self.assertFalse(result["sourceAvailabilityVerified"])
+                self.assertFalse(result["answerAccuracyAccepted"])
+                self.assertEqual(client.pages.call_count, 3)
+                client.pages.return_value = [{"id": "unreviewed-example"}]
+                with self.assertRaisesRegex(ValueError, "Unexpected active examples"):
+                    current.verify(client, root, self.candidate, FOLDER, "draft")
+                client.pages.return_value = []
+                public["kusto"]["instructions"] = "changed"
+                with self.assertRaisesRegex(ValueError, "Public instructions"):
+                    current.verify(client, root, self.candidate, FOLDER, "draft")
+
+    def test_uncertain_write_keeps_intent_and_is_never_replayed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, client = Path(temp), Mock(workspace=WORKSPACE)
+            client.base = "https://api.fabric.microsoft.com/v1/workspaces/" + WORKSPACE + "/dataAgents/" + AGENT
+            client.completed.side_effect = ValueError("outcome uncertain")
+            inputs = {"definition": self.definition}
+            with patch.object(current, "gather", return_value=inputs):
+                with self.assertRaisesRegex(ValueError, "outcome uncertain"):
+                    current.apply(client, root, FOLDER, inputs, self.candidate)
+                self.assertTrue((root / "apply-intent.json").exists())
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.apply(client, root, FOLDER, inputs, self.candidate)
+            self.assertEqual(client.request.call_count, 1)
+
+    def test_publish_single_submission_and_full_readback(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root, client = Path(temp), Mock()
+            client.base = "https://api.fabric.microsoft.com/v1/workspaces/" + WORKSPACE + "/dataAgents/" + AGENT
+            client.definition.return_value = self.candidate
+            with patch.object(current, "verify", return_value={"status": "matches"}) as verify:
+                current.publish(client, root, FOLDER, {"definition": self.definition}, self.candidate)
+                self.assertEqual(client.request.call_count, 1)
+                self.assertEqual([call.args[-1] for call in verify.call_args_list], ["draft", "published"])
+                with self.assertRaisesRegex(ValueError, "intent exists"):
+                    current.publish(client, root, FOLDER, {"definition": self.definition}, self.candidate)
+                self.assertEqual(client.request.call_count, 1)
+
+    def test_actual_folder_and_item_type_are_required_before_compile(self):
+        client = Mock()
+        client.agent, client.workspace = AGENT, WORKSPACE
+        client.get.side_effect = [{"id": FOLDER}, {"id": AGENT, "type": "DataAgent", "folderId": WORKSPACE}]
+        with self.assertRaisesRegex(ValueError, "explicitly scoped folder"):
+            current.gather(client, FOLDER)
+        client.definition.assert_not_called()
+
+    def test_write_authorization_is_checked_before_client_or_auth(self):
+        with tempfile.TemporaryDirectory() as temp, patch.object(current.safety, "Client") as client:
+            args = ["apply", "--workspace-id", WORKSPACE, "--folder-id", FOLDER,
+                    "--agent-id", AGENT, "--private-root", temp]
+            self.assertEqual(current.main(args), 2)
+            client.assert_not_called()
+
+
+if __name__ == "__main__":
+    unittest.main()

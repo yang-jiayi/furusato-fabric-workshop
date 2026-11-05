@@ -1,27 +1,35 @@
-# Furusato Workshop — ダウンロード
+# Furusato Workshop 3.1.0 — downloads
 
-最新版の操作手順は [Lab](../Lab/README.md) と、保存して使える日英HTMLで提供します。実行資産は同じ版の参加者用ZIPを使用してください。
+The bilingual [HTML textbook](furusato-workshop-v3-1-0-complete.html?raw=true) is the primary participant manual. The numbered [GitHub Lab](../Lab/README.md) is its Markdown companion. Download the matching [participant ZIP](Furusato_Workshop_v3.1.0_current.zip?raw=true) for runtime assets and offline use.
 
-| ファイル | ダウンロード | 内容 |
+| File | Download | Contents |
 |---|---|---|
-| 日英HTML手順書 | [HTMLを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/furusato-workshop-v3-0-0-complete.html) | 24章・5付録の全手順。日英切替、検索、進捗チェック、印刷に対応 |
-| 参加者用ZIP | [ZIPを保存](https://github.com/yang-jiayi/furusato-fabric-workshop/raw/refs/heads/main/docs/Furusato_Workshop_v3.0.0_current.zip) | HTML・Lab、Notebook、CSV、SQL、モデル、ツール、添付資料、評価用紙 |
-| 配布SHA-256 | [SHA256SUMS.txt](SHA256SUMS.txt) | HTMLとZIPの取得後の照合用 |
+| HTML textbook | [Save the HTML](furusato-workshop-v3-1-0-complete.html?raw=true) | All 24 chapters and five appendices; Japanese/English switch, search, progress checklist and responsive layout |
+| Participant ZIP | [Save the ZIP](Furusato_Workshop_v3.1.0_current.zip?raw=true) | HTML, Lab, notebooks, data, configuration, tools and text-based reference attachments |
+| SHA-256 | [SHA256SUMS.txt](SHA256SUMS.txt) | Verify the downloaded HTML and ZIP |
+| HTML validation | [DOCUMENT_VALIDATION.json](DOCUMENT_VALIDATION.json) | Static and browser checks for the exact HTML bytes; not Fabric deployment or AI-answer certification |
+| Lab validation | [LAB_VALIDATION.json](LAB_VALIDATION.json) | Source-text, image and link coverage for the numbered Lab |
 
-## 始め方
+The current participant delivery contains no Word or PDF manuals or exports. The Chapter 15 business requirements attachment is plain text. The upstream icon terms are preserved in the [source notice](assets/architecture/upstream/NOTICE.txt); the upstream terms PDF is not included in the participant package.
 
-1. 保存したZIPのSHA-256を、上の配布一覧にある同じファイル名の値と照合します。
-2. ZIPをすべて展開します。GitHubで読む場合は[Labの目次](../Lab/README.md)、ファイルで読む場合はHTMLを開きます。
-3. 第4章の前提確認を終え、第24.4〜24.6節で自分の作業フォルダーへ配置します。
-4. 第5〜8章でデータと設定を確認し、第24.7節と第9〜11章で取り込みと品質処理を進めます。
-5. 第24.8節と第17章でモデルとAgentを構成・公開し、第19章と付録Cで回答を評価します。
+## Get started
 
-まず標準10問で操作と採点方法を確認し、その後、公開29問による改善前後の比較へ進みます。回答、実際の問い合わせ、返された値、未確認の内容を区別して記録します。同じ設定を適用しても、回答精度の再現を保証するものではありません。
+1. Compare the downloaded ZIP's SHA-256 with the value for the same filename in `SHA256SUMS.txt`.
+2. Extract the ZIP. Use the GitHub [Lab index](../Lab/README.md), or open the HTML textbook locally for offline reading.
+3. Begin with Chapter 4 to verify prerequisites, authorized scope and safe execution.
+4. Follow Chapters 24 and 5–13 to deploy or inspect resources, data and models without duplicating successful work.
+5. Configure and read back the Data Agent in Chapter 17, then evaluate it using Chapter 19 and Appendix C.
 
-Labはキャプチャごとの操作ページに、準備、設定の全文、コマンド、参照表、完了条件を収録しています。キャプチャがない操作も手順を省略していません。HTMLはブラウザーで直接開ける単一ファイルです。
+Run commands from the repository root in a Git checkout. In the participant ZIP, use its extracted `source/` directory. Feature availability depends on the Fabric tenant, region, capacity and permissions. Configuration alone does not establish execution or answer quality; record actual sources, queries and results.
 
-## English
+All workshop data is synthetic. Keep static donations separate from operational observations and quality-processed Gold. The published guide and package do not guarantee AI accuracy or live Fabric behavior.
 
-Use the current [Lab guide](../Lab/README.md) on GitHub or save the standalone bilingual HTML. Download the matching participant ZIP above and verify it against [SHA256SUMS.txt](SHA256SUMS.txt) before extraction.
+## 日本語
 
-The complete procedure covers 24 chapters and five appendices. Start with Chapters 4/24 for deployment, inspect data and models in Chapters 5–13, configure and publish the same Data Agent in Chapter 17, then evaluate and improve answers in Chapter 19 and Appendix C. Start with ten practice questions before the public 29-question comparison. Record actual queries and results separately from unsupported or unobserved behavior; matching configuration does not guarantee matching accuracy.
+日英HTMLの[手順書](furusato-workshop-v3-1-0-complete.html?raw=true)を参加者向けの主教材として提供します。番号付きの[GitHub Lab](../Lab/README.md)は各手順のMarkdown版です。Notebook・データ・設定・ツールなどを含む[参加者用ZIP](Furusato_Workshop_v3.1.0_current.zip?raw=true)も利用できます。ダウンロード後は同じファイル名の値を[SHA256SUMS.txt](SHA256SUMS.txt)で照合してください。
+
+現在の参加者向け配布物にはWordやPDFの手順書・出力を含めません。第15章の業務要件資料はテキスト形式です。上流アイコンの利用条件は[ソース通知](assets/architecture/upstream/NOTICE.txt)に残し、利用条件の原本PDFは参加者用パッケージに含めません。
+
+最初に第4章で前提条件、許可された範囲、安全な実行を確認します。第24章と第5〜13章で配置・データ・モデルを確認し、第17章でData Agentの構成を読み戻した後、第19章と付録Cで回答を評価します。コマンドはGitリポジトリのルート、ZIP利用時は展開先の`source/`から実行してください。
+
+Fabricの機能提供はテナント、リージョン、容量、権限によって異なります。設定表示だけで実行や回答精度が確認できたとは判断せず、実際のソース、問い合わせ、結果を記録してください。データは合成データです。静的寄付、運用観測、品質処理後のGoldを混同しません。

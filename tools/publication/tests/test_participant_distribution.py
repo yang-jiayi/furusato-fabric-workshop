@@ -9,15 +9,50 @@ from urllib.parse import unquote, urlsplit
 import zipfile
 
 ROOT=Path(__file__).resolve().parents[3]
-HTML='furusato-workshop-v3-0-0-complete.html'
-PACKAGE='Furusato_Workshop_v3.0.0_current.zip'
+SOURCE_ROOT=ROOT
+HTML='furusato-workshop-v3-1-0-complete.html'
+PACKAGE='Furusato_Workshop_v3.1.0_current.zip'
+
+
+def source_model_block_counts(source_root=SOURCE_ROOT):
+    """Count blocks independently from the HTML and Lab source models."""
+    import sys
+    sys.path[:0]=[str(source_root/'tools/docs'),str(source_root/'tools/html')]
+    from current_delivery import load_model as load_current_model
+    from furusato_docs.lab import load_model as load_lab_model
+
+    current_document=load_current_model(source_root)[0]
+    lab_document=load_lab_model(source_root)[0]
+    return (
+        sum(len(section.blocks) for section in current_document.walk()),
+        sum(len(section.blocks) for section in lab_document.walk()),
+    )
+
+
+def assert_source_block_coverage(testcase, html_blocks, lab_blocks,
+                                 current_source_blocks, lab_source_blocks):
+    testcase.assertEqual(
+        current_source_blocks, lab_source_blocks,
+        'Current HTML and Lab source models disagree on block coverage',
+    )
+    testcase.assertEqual(
+        current_source_blocks, html_blocks,
+        'HTML model block coverage differs from the current source model',
+    )
+    testcase.assertEqual(
+        lab_source_blocks, lab_blocks,
+        'Lab source block coverage differs from the current Lab model',
+    )
 
 
 class ParticipantDistributionTests(unittest.TestCase):
     def test_active_entrypoints_offer_only_current_guides(self):
-        for relative in ('README.md','docs/README.md','docs/v3.0.0/current/README.md'):
+        japanese_readme=(ROOT/'README.md').read_text(encoding='utf-8')
+        self.assertIn('[日英HTML手順書をダウンロード](docs/furusato-workshop-v3-1-0-complete.html?raw=true)して',japanese_readme)
+        self.assertNotIn('**[日英HTML手順書をダウンロード]',japanese_readme)
+        for relative in ('README.md','docs/README.md','docs/v3.1.0/current/README.md'):
             with self.subTest(path=relative):
-                text=(ROOT/relative).read_text()
+                text=(ROOT/relative).read_text(encoding='utf-8')
                 self.assertIn('Lab',text)
                 self.assertIn(HTML,text)
                 self.assertIn(PACKAGE,text)
@@ -25,11 +60,18 @@ class ParticipantDistributionTests(unittest.TestCase):
                 self.assertNotRegex(text,r'189/281|217/281|2026-09-17|参考実績|Historical evaluations')
 
     def test_current_html_and_checksums_match_distribution_bytes(self):
-        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(ROOT/'docs/v3.0.0/current/guide'/HTML).read_bytes())
-        for relative in ('docs/SHA256SUMS.txt','docs/v3.0.0/current/SHA256SUMS.txt'):
+        versioned=ROOT/'docs/v3.1.0/current'
+        self.assertEqual((ROOT/'docs'/HTML).read_bytes(),(versioned/'guide'/HTML).read_bytes())
+        self.assertEqual((ROOT/'docs'/PACKAGE).read_bytes(),(versioned/PACKAGE).read_bytes())
+        for name in ('DOCUMENT_VALIDATION.json','LAB_VALIDATION.json'):
+            self.assertEqual((ROOT/'docs'/name).read_bytes(),(versioned/name).read_bytes())
+        with zipfile.ZipFile(ROOT/'docs'/PACKAGE) as archive:
+            self.assertEqual((versioned/'artifact-set.json').read_bytes(),
+                             archive.read('source/artifact-set.json'))
+        for relative in ('docs/SHA256SUMS.txt','docs/v3.1.0/current/SHA256SUMS.txt'):
             path=ROOT/relative
             entries={}
-            for line in path.read_text().splitlines():
+            for line in path.read_text(encoding='utf-8').splitlines():
                 digest,name=line.split('  ',1)
                 self.assertNotIn(name,entries)
                 entries[name]=digest
@@ -44,7 +86,13 @@ class ParticipantDistributionTests(unittest.TestCase):
             names=archive.namelist()
             self.assertEqual(len(names),len(set(names)))
             self.assertFalse(any(name.lower().endswith('.docx') for name in names))
-            self.assertFalse(any(name.startswith(('reports/','source/docs/v3.0.0/tuning-')) for name in names))
+            self.assertFalse(any(name.lower().endswith('.pdf') for name in names))
+            self.assertFalse(any(name.startswith(('reports/', 'source/docs/v3.0.0/',
+                                                  'source/docs/v3-preview/',
+                                                  'source/docs/assets/v2.7.0/',
+                                                  'source/docs/assets/v3.0.0-',
+                                                  'source/docs/assets/v3-preview-'))
+                                 for name in names))
             for name in ('Lab/README.md','guide/'+HTML,'source/artifact-set.json','START_HERE.txt','DOCUMENT_VALIDATION.json','LAB_VALIDATION.json'):
                 self.assertIn(name,names)
             for path in (ROOT/'Lab').rglob('*'):
@@ -55,7 +103,13 @@ class ParticipantDistributionTests(unittest.TestCase):
             receipt=json.loads(archive.read('DOCUMENT_VALIDATION.json'))
             self.assertTrue(receipt['static']['passed'])
             self.assertTrue(receipt['browser']['passed'])
-            self.assertGreaterEqual(receipt['static']['modelBlocks'],704)
+            lab_receipt=json.loads(archive.read('LAB_VALIDATION.json'))
+            current_source_blocks, lab_source_blocks=source_model_block_counts()
+            assert_source_block_coverage(
+                self, receipt['static']['modelBlocks'],
+                lab_receipt['sourceBlocksChecked'],
+                current_source_blocks, lab_source_blocks,
+            )
             self.assertEqual(receipt['static']['htmlSha256'],sha256(archive.read('guide/'+HTML)).hexdigest())
             manifest=json.loads(archive.read('PACKAGE_MANIFEST.json'))
             self.assertEqual(manifest['deliveryMode'],'html-lab')
@@ -63,10 +117,11 @@ class ParticipantDistributionTests(unittest.TestCase):
                 self.assertEqual(expected,sha256(archive.read(name)).hexdigest(),name)
             with tempfile.TemporaryDirectory() as temp:
                 archive.extractall(temp)
-                extracted=Path(temp)
+                extracted=Path(temp).resolve()
                 checked=0
                 for page in (extracted/'Lab').rglob('*.md'):
-                    for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',page.read_text()):
+                    for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',
+                                             page.read_text(encoding='utf-8')):
                         parsed=urlsplit(target)
                         if parsed.scheme or not parsed.path:continue
                         destination=(page.parent/unquote(parsed.path)).resolve()
@@ -74,6 +129,32 @@ class ParticipantDistributionTests(unittest.TestCase):
                         self.assertTrue(destination.exists(),str(page)+' -> '+target)
                         checked+=1
                 self.assertGreaterEqual(checked,655)
+
+    def test_source_block_coverage_rejects_omissions_and_model_disagreement(self):
+        current_source_blocks, lab_source_blocks=source_model_block_counts()
+        self.assertGreater(current_source_blocks,0)
+        self.assertGreater(lab_source_blocks,0)
+
+        with self.assertRaisesRegex(AssertionError, 'HTML model block coverage'):
+            assert_source_block_coverage(
+                self, current_source_blocks-1, lab_source_blocks,
+                current_source_blocks, lab_source_blocks,
+            )
+        with self.assertRaisesRegex(AssertionError, 'Lab source block coverage'):
+            assert_source_block_coverage(
+                self, current_source_blocks, lab_source_blocks-1,
+                current_source_blocks, lab_source_blocks,
+            )
+        with self.assertRaisesRegex(AssertionError, 'HTML model block coverage'):
+            assert_source_block_coverage(
+                self, current_source_blocks-1, lab_source_blocks-1,
+                current_source_blocks, lab_source_blocks,
+            )
+        with self.assertRaisesRegex(AssertionError, 'source models disagree'):
+            assert_source_block_coverage(
+                self, current_source_blocks, lab_source_blocks,
+                current_source_blocks+1, lab_source_blocks,
+            )
 
     def test_packaged_source_inventory_preserves_the_real_protected_baseline(self):
         with zipfile.ZipFile(ROOT/'docs'/PACKAGE) as archive:
@@ -92,10 +173,11 @@ class ParticipantDistributionTests(unittest.TestCase):
             self.assertEqual(manifest['documentationBinding']['deliveryMode'],'html-lab')
 
     def test_current_local_markdown_links_resolve(self):
-        paths=[ROOT/'README.md',ROOT/'docs/README.md',ROOT/'docs/v3.0.0/current/README.md']
+        paths=[ROOT/'README.md',ROOT/'docs/README.md',ROOT/'docs/v3.1.0/current/README.md']
         paths.extend((ROOT/'Lab').rglob('*.md'))
         for path in paths:
-            for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text()):
+            for target in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',
+                                     path.read_text(encoding='utf-8')):
                 parsed=urlsplit(target)
                 if parsed.scheme or not parsed.path:continue
                 with self.subTest(path=path.relative_to(ROOT),target=target):

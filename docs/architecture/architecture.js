@@ -19,10 +19,10 @@
       focusOverview: "全体像 · クリックして経路を選択", focusPrefix: "フォーカス",
       diagramHint: "経路とカードをクリック。Tab / Enter / Space で操作できます。",
       fullGuide: "詳しい解説", sourceLink: "実装の根拠", iconLink: "アイコン出典・利用条件", helpLink: "使い方",
-      footerScope: "現行 v2.7.0 · 説明用の構成図 · サービスへの接続なし",
+      footerScope: "参加者向け版 3.1.0 · 説明用の構成図 · サービスへの接続なし",
       shortcuts: "0–6: 経路 · J/E: 言語 · Esc: 全体像", evidence: "実装の参照",
       diagramTitle: "Furusato Fabric Workshop の全体アーキテクチャ",
-      diagramDesc: "単一の Lakehouse に静的データと任意の分析スキーマ。FileCreated、Activator、Pipeline が Eventhouse へ増分を取り込み、主 Data Agent は SQL、KQL、完全な Ontology の GQL を照会します。Notebook 05 は Lakehouse のテーブルと CSV を読み、Gold から Direct Lake と Power BI へつなぎます。構築制御と任意の Code Interpreter は別に示します。",
+      diagramDesc: "単一の Lakehouse に静的データと分析スキーマ。主 Data Agent は Lakehouse、KQL Database、Semantic model、Ontology の4つの論理ソースから質問に必要な根拠を使います。Ontology の grounding は GQL 実行の証拠ではありません。Code Interpreter はソースではなく同じ Agent のツールです。",
     },
     en: {
       skip: "Skip to explanation", appTitle: "Explore the architecture",
@@ -32,10 +32,10 @@
       focusOverview: "Overview · select a flow to explore", focusPrefix: "Focus",
       diagramHint: "Select a flow or diagram card. Keyboard: Tab / Enter / Space.",
       fullGuide: "Full explanation", sourceLink: "Implementation evidence", iconLink: "Icon source & terms", helpLink: "How to use",
-      footerScope: "Current v2.7.0 · explanatory architecture · no service connection",
+      footerScope: "Participant edition 3.1.0 · explanatory architecture · no service connection",
       shortcuts: "0–6: flows · J/E: language · Esc: overview", evidence: "Source anchors",
       diagramTitle: "Furusato Fabric Workshop overall architecture",
-      diagramDesc: "One Lakehouse contains the static teaching data and optional analytics schemas. FileCreated, Activator and Pipeline ingest incremental CSVs into Eventhouse. One primary Data Agent queries SQL, KQL and the full teaching Ontology with GQL. Notebook 05 reads Lakehouse tables and CSV files directly and feeds Gold, Direct Lake and Power BI. Provisioning controls and optional Code Interpreter are shown separately.",
+      diagramDesc: "One Lakehouse contains static teaching data and analytics schemas. The primary Data Agent uses four logical sources: Lakehouse, KQL Database, semantic model and Ontology. Ontology grounding does not prove a GQL query ran. Code Interpreter is a tool in the same Agent, not a source.",
     }
   };
 
@@ -44,9 +44,9 @@
       overview: {
         kicker: "BUSINESS FIRST", title: "寄付の事実を、意味と根拠でつなぐ",
         lead: "誰が、どこへ寄付し、どの返礼品を選んだか。登録事業者と運用の状況まで、問いに合う根拠で読み解きます。",
-        stat: "主 Agent 1 件 · 選択ソース 3 件",
+        stat: "主 Agent 1 件 · 4 論理ソース",
         points: [
-          "静的データは SQL、関係の意味は Ontology / GQL、運用観測は KQL で確認。",
+          "SQL・KQL・semantic model・Ontology の4論理ソースを区別。GQL は実際の query/result がある場合だけ実行証拠。",
           "単一のスキーマ対応 Lakehouse に、教材データと任意の分析レイヤーを整理。",
           "品質を確認した Gold は、Direct Lake の Power BI 分析へ。",
         ],
@@ -60,7 +60,7 @@
         points: [
           "Donation が寄付の単位。Donor の居住地と、受取 Municipality の地理を分けます。",
           "Supplier → Gift は登録の関係。ot_supplier_gift が多対多の橋渡しを担います。",
-          "GQL で経路・方向・関係件数を確認。返礼品の選択と受領・配送は、それぞれ別の業務事実です。",
+          "Ontology は関係の文脈を示します。GQL が実際に実行された場合に限り、query/result で経路・方向を確認します。",
         ],
         note: "11 個の ot_* のうち、10 個が Entity の入力、1 個が登録関係の入力です。11 Binding は静的 10 件と時系列 1 件。",
         evidence: "S2 · S3 · S4 · S6",
@@ -78,15 +78,16 @@
         evidence: "S2 · S4 · S5 · S10",
       },
       agent: {
-        kicker: "03 / ONE AGENT, THREE SOURCES", title: "問いに合うエンジンと根拠",
-        lead: "主 Data Agent は、SQL・KQL・ネイティブ GQL の役割を保ち、必要なソースを照会して回答します。",
+        kicker: "03 / ONE AGENT, FOUR LOGICAL SOURCES", title: "問いに合う根拠を確認",
+        lead: "主 Data Agent は Lakehouse、KQL Database、Semantic model、Ontology の4論理ソースを使います。質問ごとに実際の照会と結果を確認します。",
         stat: "Source · Scope · Metric · Unit\n順位には RankScope",
         points: [
-          "SQL：11 ot_* と agent_ref の view 1 件・TVF 2 件。静的属性・件数・金額の根拠。",
-          "KQL：承認済み MV と 3 関数。GQL：完全な教材用 Ontology の経路と関係。",
-          "Code Interpreter は同じ Agent の照会後ツール。取得した結果から計算・図・CSV／JSON を作成。",
+          "Lakehouse SQL：静的属性・件数・金額。KQL Database：raw 観測と期間。",
+          "Semantic model：選択モデルの実際の列・メジャーと DAX 結果。",
+          "Ontology：業務関係の context。GQL は実際の query/result があるときだけ照会証拠。",
+          "Code Interpreter はソースではなく同じ Agent のツール。取得済み結果だけを処理。",
         ],
-        note: "Gold と Power BI は独立した分析経路です。統合 Agent のソース数は 3 件。各質問で必要な照会と、実際の実行結果を確認します。",
+        note: "Gold・Direct Lake・Power BI の分析経路を、Agent の4論理ソースと区別します。Ontology grounding だけで GQL 実行を主張しません。",
         evidence: "S1 · S6",
       },
       analytics: {
@@ -119,7 +120,7 @@
         stat: "正しい範囲で読み、関係をたどり、\n確かな根拠で伝える。",
         points: [
           "業務の役割と、データの粒度をモデル化する。",
-          "SQL・KQL・GQL を、問いに合わせて使い分ける。",
+          "SQL・KQL・Semantic model・Ontology の実際の使用を確認する。",
           "品質検査と公開ゲートを、分析の信頼につなぐ。",
           "指標・図・回答を、出典と対象範囲で説明する。",
         ],
@@ -131,9 +132,9 @@
       overview: {
         kicker: "BUSINESS FIRST", title: "Connect facts, meaning and evidence",
         lead: "Who donated, where did it go, and which gift was selected? Follow registered suppliers and operational observations with the right evidence.",
-        stat: "One primary Agent · three selected sources",
+        stat: "One primary Agent · four logical sources",
         points: [
-          "SQL for static facts, Ontology / GQL for modeled relationships, KQL for operational observations.",
+          "Distinguish Lakehouse, KQL Database, semantic model and Ontology; verify actual queries and results.",
           "One schema-enabled Lakehouse organizes teaching data and optional analytics layers.",
           "Quality-checked Gold feeds the Direct Lake Power BI branch.",
         ],
@@ -147,7 +148,7 @@
         points: [
           "Donation is the transaction grain. Donor residence and recipient Municipality geography have separate roles.",
           "Supplier → Gift means registration. The ot_supplier_gift bridge supplies the many-to-many edges.",
-          "GQL verifies paths, direction and relationship counts. Gift selection, receipt and delivery are distinct business facts.",
+          "Ontology supplies relationship context. Treat GQL as execution evidence only when the actual query and result are recorded.",
         ],
         note: "Ten ot_* tables supply entities; the eleventh supplies the registration edges. Eleven bindings means ten static entity bindings plus one time-series binding.",
         evidence: "S2 · S3 · S4 · S6",
@@ -165,15 +166,16 @@
         evidence: "S2 · S4 · S5 · S10",
       },
       agent: {
-        kicker: "03 / ONE AGENT, THREE SOURCES", title: "Use the engine that owns the evidence",
-        lead: "The primary Data Agent chooses the relevant SQL, KQL and native GQL sources while preserving their different roles.",
+        kicker: "03 / ONE AGENT, FOUR LOGICAL SOURCES", title: "Verify evidence from the relevant source",
+        lead: "The primary Data Agent uses four logical sources: Lakehouse, KQL Database, semantic model and Ontology. Verify the actual query and result for each question.",
         stat: "Source · Scope · Metric · Unit\nAdd RankScope for rankings",
         points: [
-          "SQL: eleven ot_* tables and agent_ref's one view plus two TVFs for static facts and exact lookups.",
-          "KQL: the approved MV and three functions. GQL: the full teaching Ontology's paths and relationships.",
-          "Code Interpreter is a post-query tool in the same Agent: calculate, chart and export actual returned data.",
+          "Lakehouse SQL: static attributes, counts and amounts. KQL Database: raw observations and time windows.",
+          "Semantic model: verify the selected model's actual columns, measures and DAX results.",
+          "Ontology: relationship context. Count GQL as query evidence only when its actual query and result are recorded.",
+          "Code Interpreter is a tool, not a source; it processes returned results.",
         ],
-        note: "Gold and Power BI form the separate analytics branch. The unified Agent selects three sources. Verify the queries and results actually used for each answer.",
+        note: "Keep the Gold / Direct Lake / Power BI analytics path distinct from the Agent's four logical sources. Ontology grounding alone does not establish GQL execution.",
         evidence: "S1 · S6",
       },
       analytics: {
@@ -206,7 +208,7 @@
         stat: "Read the right scope. Follow the relationships.\nCommunicate with evidence.",
         points: [
           "Model business roles and data grain.",
-          "Choose SQL, KQL and GQL for the question.",
+          "Verify the actual use of SQL, KQL, semantic model and Ontology for the question.",
           "Turn quality checks and publication gates into trustworthy analytics.",
           "Explain metrics, charts and answers with source and scope.",
         ],
@@ -284,9 +286,9 @@
     txt(64, 151, choose("寄付データから、根拠のある回答へ", "From donation data to evidence-backed answers"), 48, "bold");
     txt(66, 192, choose("事実・業務のつながり・運用の観測を、目的に合うエンジンで読み解く。", "Static facts, business relationships and operational observations—each with the right engine."), 28, "muted");
     rect(1982, 42, 504, 46, "#e8f3eb", "none", 23);
-    txt(2006, 74, choose("合成データ · 主 Agent 1 件 / 3 ソース", "Synthetic data · 1 Agent / 3 sources"), 26, "bold", 'style="fill:#366342"');
-    txt(2484, 130, "v2.7.0 / unified-20260923", 24, "muted", 'text-anchor="end"');
-    txt(2484, 169, choose("制御手順を更新 · 2026-09-23", "Lifecycle updated · 2026-09-23"), 24, "muted", 'text-anchor="end"');
+    txt(2006, 74, choose("合成データ · 主 Agent 1 件 / 4 論理ソース", "Synthetic data · 1 Agent / 4 logical sources"), 24, "bold", 'style="fill:#366342"');
+    txt(2484, 130, choose("参加者向け版 3.1.0", "Participant edition 3.1.0"), 24, "muted", 'text-anchor="end"');
+    txt(2484, 169, choose("実際のランタイムパスはリポジトリ内で維持", "Actual runtime paths are retained in the repository"), 24, "muted", 'text-anchor="end"');
 
     // Provisioning has its own visual lane and uses control, not data, arrows.
     start("control", ui[lang].navControl);
@@ -327,6 +329,7 @@
     edge("M1184 574 H1326", "binding", "static");
     edge("M1184 495 H1250 V383 H1964 V490 H2004", "query", "agent");
     edge("M1872 550 H2004", "query", "agent");
+    edge("M1452 1060 V1022 H1912 V840 H2004", "query", "agent");
     edge("M298 779 H654", "data", "events");
     edge("M1150 713 V687 H1444 V714", "control", "events");
     edge("M1562 758 H1640", "control", "events");
@@ -437,21 +440,23 @@
     txt(1660, 1150, choose("レポート", "Report"), 28, "muted");
     end();
 
-    start("agent", choose("主 Data Agent 1 件、3 ソース", "One primary Data Agent, three sources"));
+    start("agent", choose("主 Data Agent 1 件・4 論理ソース", "One primary Data Agent · four logical sources"));
     card(2004, 466, 456, 491);
     rect(2005, 467, 454, 490, "#f7f3fc", "none", 15);
     image("fabric-data-agent.svg", 2036, 494, 62);
     txt(2120, 539, "Data Agent", 38, "bold");
     txt(2036, 588, "DA_Furusato_{PID}", 27, "purple mono");
-    ["SQL", "KQL", "GQL"].forEach((name, index) => {
-      rect(2036 + index * 130, 618, 116, 52, "#ffffff", "#d9cde9", 12);
-      txt(2094 + index * 130, 654, name, 30, "purple bold", 'text-anchor="middle"');
+    ["Lakehouse", "KQL DB", "Semantic model", "Ontology"].forEach((name, index) => {
+      const x = 2036 + (index % 2) * 206;
+      const y = 618 + Math.floor(index / 2) * 59;
+      rect(x, y, 190, 48, "#ffffff", "#d9cde9", 12);
+      txt(x + 95, y + 32, name, name === "Semantic model" ? 22 : 25, "purple bold", 'text-anchor="middle"');
     });
-    txt(2036, 717, choose("根拠をそろえて回答", "Evidence-backed answers"), 30, "bold");
-    txt(2036, 765, "Source · Scope", 29, "purple");
-    txt(2036, 807, "Metric · Unit · RankScope", 27, "purple");
-    txt(2036, 861, choose("質問に合うソースを照会", "Query the relevant sources"), 27, "muted");
-    txt(2036, 918, choose("主 Agent 1 件 · 選択ソース 3 件", "1 primary · 3 selected sources"), 26, "bold");
+    txt(2036, 755, choose("根拠をそろえて回答", "Evidence-backed answers"), 30, "bold");
+    txt(2036, 798, "Source · Scope", 29, "purple");
+    txt(2036, 840, "Metric · Unit · RankScope", 27, "purple");
+    txt(2036, 884, choose("質問に合うソースを照会", "Query relevant sources"), 27, "muted");
+    txt(2036, 923, choose("主 Agent 1 件 · 4 論理ソース", "1 primary · 4 logical sources"), 24, "bold");
     end();
     start("agent", choose("照会後の任意ツール Code Interpreter", "Code Interpreter, optional post-query tool"));
     card(2004, 1031, 456, 137, true);
@@ -462,7 +467,7 @@
 
     label(1645, 373, choose("SQL · 静的な事実", "SQL · static facts"), 25, "#634892", 267);
     label(1223, 561, choose("静的", "Static"), 23, "#3c719d", 87);
-    label(1890, 539, "GQL", 26, "#634892", 76);
+    label(1789, 539, choose("GQL は実行時のみ", "GQL only if invoked"), 22, "#634892", 205);
     label(364, 759, choose("OneLake へ配置", "Upload to OneLake"), 26, "#086f68", 250);
     label(1218, 677, "FileCreated", 24, "#8d5716", 154);
     label(1375, 862, choose("CSV 本体", "CSV bytes"), 23, "#086f68", 148);
@@ -525,8 +530,7 @@
       ? ui[lang].focusOverview
       : `${ui[lang].focusPrefix}: ${content.kicker}`;
     document.getElementById("guide-link").href = `overview.${lang}.md`;
-    document.getElementById("svg-link").href = `../assets/architecture/furusato-architecture.${lang}.svg`;
-    document.getElementById("png-link").href = `../assets/architecture/furusato-architecture.${lang}.png`;
+    document.getElementById("svg-link").href = `../../Lab/assets/pc-01-architecture-${lang}.svg`;
   }
 
   function highlight() {

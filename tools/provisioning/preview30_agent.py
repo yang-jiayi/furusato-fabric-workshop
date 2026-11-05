@@ -31,7 +31,19 @@ def build_profile() -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     files["Files/Config/draft/stage_config.json"] = stage
     for path in source_root.rglob("datasource.json"):
         relative = path.relative_to(source_root).as_posix()
-        files["Files/Config/draft/" + relative] = load(path)
+        source = load(path)
+        if relative.startswith("ontology-"):
+            template_path = PREVIEW / "data-agent/definition/Files/Config/draft" / relative
+            template = load(template_path)
+            source["userDescription"] = template["userDescription"]
+            template_municipality = next(
+                element for element in template["elements"] if element.get("id") == "Municipality"
+            )
+            municipality = next(
+                element for element in source["elements"] if element.get("id") == "Municipality"
+            )
+            municipality["description"] = template_municipality["description"]
+        files["Files/Config/draft/" + relative] = source
     metrics = load(PREVIEW / "powerbi/native-metrics-contract.json")
     model_source = {
         "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",

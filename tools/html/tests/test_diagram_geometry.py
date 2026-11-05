@@ -23,9 +23,12 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "tools" / "html"))
+sys.path.insert(0, str(ROOT / "tools" / "docs"))
 from furusato_html import diagrams
+from furusato_docs.participant30_details import architecture_svg_variants
 
-ASSETS = ROOT / "docs" / "assets" / "v2.7.0"
+ASSETS = ROOT / "docs" / "assets" / "current-diagrams"
+PARTICIPANT_ARCHITECTURE = ROOT / "docs" / "assets" / "current-participant" / "architecture.svg"
 
 SOURCE_GEOMETRY = r"""() => {
     const svg = document.querySelector('svg');
@@ -228,10 +231,92 @@ class DiagramGeometryTests(unittest.TestCase):
             for path in ASSETS.glob("*.svg")
             for text in diagrams.units(path.read_text(encoding="utf-8"))
         }
+        architecture = PARTICIPANT_ARCHITECTURE.read_text(encoding="utf-8")
+        architecture_root = ET.fromstring(architecture)
+        used.update(
+            (node.text or "").strip()
+            for node in architecture_root.iter()
+            if node.tag.endswith("text") and diagrams.JAPANESE.search(node.text or "")
+        )
+        used.update(diagrams.units(architecture))
         self.assertEqual(set(diagrams.load_map()), used)
+        english, missing = diagrams.to_english(architecture, diagrams.load_map())
+        self.assertEqual([], missing)
+        self.assertEqual([], diagrams.residual_japanese(english))
         for name, row in self.report.items():
             with self.subTest(diagram=name):
                 self.assertEqual(row["missing"], [])
+
+    def test_participant_architecture_summary_clears_its_lane_border_in_both_languages(self):
+        japanese, english = architecture_svg_variants(diagrams.load_map())
+        views = (
+            (japanese, "静的データと観測データは別です。合算しません。"),
+            (english, "Static data and observations are separate. Do not add them."),
+        )
+        with sync_playwright() as driver:
+            browser = driver.chromium.launch()
+            page = browser.new_page()
+            try:
+                for svg, label in views:
+                    with self.subTest(label=label):
+                        page.set_content(svg)
+                        gaps = page.evaluate("""label => {
+                          const note=[...document.querySelectorAll('text')]
+                            .find(node=>node.textContent.trim()===label);
+                          const lanes=[...document.querySelectorAll('rect.lane')];
+                          const noteBox=note.getBoundingClientRect();
+                          const previous=lanes[1].getBoundingClientRect();
+                          const next=lanes[2].getBoundingClientRect();
+                          return {
+                            below: noteBox.top-(previous.top+previous.height),
+                            above: next.top-noteBox.bottom
+                          };
+                        }""", label)
+                        self.assertGreaterEqual(gaps["below"], 12)
+                        self.assertGreaterEqual(gaps["above"], 12)
+            finally:
+                browser.close()
+
+    def test_increment_connector_is_painted_above_background_and_reaches_notebook05(self):
+        with sync_playwright() as driver:
+            browser = driver.chromium.launch()
+            page = browser.new_page(viewport={"width": 1600, "height": 1770})
+            try:
+                for svg in architecture_svg_variants(diagrams.load_map()):
+                    page.set_content('<style>body{margin:0}</style>' + svg)
+                    result = page.evaluate("""() => {
+                      const edge=document.getElementById('increment-to-notebook05');
+                      const box=[...document.querySelectorAll('rect.box')]
+                        .find(node=>node.getAttribute('x')==='460');
+                      const target=box.getBoundingClientRect();
+                      const end=edge.getPointAtLength(edge.getTotalLength());
+                      const samples=[];
+                      for(let distance=6; distance<edge.getTotalLength(); distance+=21) {
+                        const point=edge.getPointAtLength(distance);
+                        samples.push(document.elementFromPoint(point.x,point.y)===edge);
+                      }
+                      const edges=[...document.querySelectorAll('text')].map(node=>{
+                        const box=node.getBoundingClientRect();
+                        return {left:box.left,right:box.right,top:box.top,bottom:box.bottom};
+                      });
+                      const collision=edges.some(box=>
+                        (box.left<610 && box.right>45 && box.top<802 && box.bottom>798) ||
+                        (box.left<612 && box.right>608 && box.top<844 && box.bottom>800));
+                      return {allVisible:samples.every(Boolean),collision,
+                        targetGap:target.top-end.y,
+                        targetContainsX:target.left<end.x && end.x<target.right,
+                        route:edge.getAttribute('d'),
+                        from:edge.getAttribute('data-from'),to:edge.getAttribute('data-to')};
+                    }""")
+                    self.assertTrue(result["allVisible"], result)
+                    self.assertFalse(result["collision"], result)
+                    self.assertTrue(result["targetContainsX"], result)
+                    self.assertEqual(6, result["targetGap"])
+                    self.assertEqual("M60 600 H45 V800 H610 V844", result["route"])
+                    self.assertEqual("increment-files", result["from"])
+                    self.assertEqual("notebook05", result["to"])
+            finally:
+                browser.close()
 
     def test_english_labels_stay_inside_their_own_shapes(self):
         for name, row in self.report.items():

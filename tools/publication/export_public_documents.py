@@ -1,11 +1,10 @@
-"""Validate and copy exactly one named participant Word/HTML pair. No publishing."""
+"""Read-only validation for retired participant Word/HTML pairs."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
 import json
-import shutil
 import sys
 from pathlib import Path
 
@@ -21,7 +20,6 @@ from furusato_docs.publication import (  # noqa: E402
     outside_repo,
     public_word_errors,
     require_public_edition,
-    safe_path,
 )
 from validate_html import (  # noqa: E402
     Report,
@@ -101,54 +99,10 @@ def _manifest_text(digests: dict[str, str]) -> str:
 def export(
     root: Path, source: Path, output: Path, edition: str, *, manifest: Path | None = None
 ) -> dict[str, object]:
-    """Fail closed on existing files; never delete, replace or repack any original."""
-    require_public_edition(edition)
-    version = (root / "VERSION").read_text(encoding="utf-8").strip()
-    names = deliverable_names(version, edition)
-    source = outside_repo(source, root)
-    output = outside_repo(output, root)
-    if source.is_relative_to(output) or output.is_relative_to(source):
-        raise PublicationError("source staging and export output must be disjoint directories")
-    check_directory(output, names)
-    if output.exists() and any(output.iterdir()):
-        raise PublicationError("refusing to overwrite an export; use a fresh output or --validate-only")
-    manifest = _manifest_path(root, manifest, source, output)
-    if manifest is not None and manifest.exists():
-        raise PublicationError("refusing to overwrite an existing hash manifest")
-
-    digests = validate_pair_policy(root, source, version, edition)
-    _validate_content(root, source, edition)
-    check_directory(source, names, required=names.public_pair)
-    if _hashes(source, names) != digests:
-        raise PublicationError("source files changed during validation; freeze them and retry")
-
-    safe_path(output)
-    output.mkdir(parents=True, exist_ok=True)
-    check_directory(output, names)
-    if any(output.iterdir()):
-        raise PublicationError("export output changed during validation; nothing will be overwritten")
-    for name in names.public_pair:
-        safe_path(output / name)
-        safe_path(source / name)
-        # Exclusive creation, not copy2/replace: a concurrent file is never overwritten.
-        with (output / name).open("xb") as target, (source / name).open("rb") as original:
-            shutil.copyfileobj(original, target)
-    observed = validate_pair_policy(root, output, version, edition)
-    if observed != digests:
-        raise PublicationError("export bytes differ from the validated source; export is not ready")
-    if manifest is not None:
-        safe_path(manifest)
-        manifest.parent.mkdir(parents=True, exist_ok=True)
-        with manifest.open("x", encoding="utf-8", newline="\n") as handle:
-            handle.write(_manifest_text(observed))
-    return {
-        "mode": PUBLIC_MODE,
-        "edition": edition,
-        "output": str(output),
-        "files": observed,
-        "manifest": str(manifest) if manifest else None,
-        "published": False,
-    }
+    """Keep the former API importable, but prevent every write/export path."""
+    raise PublicationError(
+        "Word/HTML pair export is retired; use the current HTML+Lab delivery workflow"
+    )
 
 
 def validate_export(
@@ -189,11 +143,13 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--validate-only uses --out only; omit --source")
     if not args.validate_only and args.source is None:
         parser.error("export requires --source")
+    if not args.validate_only:
+        parser.error(
+            "Word/HTML pair export is retired; use the current HTML+Lab delivery workflow"
+        )
     try:
         if args.validate_only:
             report = validate_export(ROOT, args.out, args.edition, manifest=args.manifest)
-        else:
-            report = export(ROOT, args.source, args.out, args.edition, manifest=args.manifest)
     except (PublicationError, OSError, UnicodeError, ValueError) as error:
         print(f"publication refused: {error}", file=sys.stderr)
         return 1

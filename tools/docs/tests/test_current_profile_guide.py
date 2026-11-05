@@ -1,0 +1,371 @@
+import hashlib
+import json
+import sys
+import unittest
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path[:0] = [str(ROOT / "tools" / "docs"), str(ROOT / "tools" / "html")]
+
+from furusato_docs.participant_current_tuning import (  # noqa: E402
+    COMMON_GUIDANCE_REL,
+    _assets,
+    _profile_command,
+    append_current_tuning_sections,
+    current_chapter_spec,
+)
+from furusato_docs.participant30_deployment import append_deployment_sections  # noqa: E402
+from furusato_html.model import Section, Text  # noqa: E402
+
+
+class CurrentProfileGuideTests(unittest.TestCase):
+    def test_powershell_commands_break_between_complete_arguments(self):
+        for action, extra in (
+            ("prepare", "--routing-origin $RoutingOrigin"),
+            ("apply", "--apply"),
+            ("publish", "--apply"),
+            ("verify", "--stage draft"),
+            ("verify", "--stage published"),
+        ):
+            command = _profile_command(action, extra)
+            lines = command.splitlines()
+            self.assertTrue(all(len(line) <= 90 for line in lines))
+            self.assertTrue(all(line.endswith(" `") for line in lines[:-1]))
+            self.assertFalse(lines[-1].endswith("`"))
+            joined = command.replace(" `\n", " ")
+            self.assertIn(f"current_profile.py {action}", joined)
+            for flag in ("workspace-id", "folder-id", "agent-id", "private-root"):
+                self.assertEqual(1, joined.count("--" + flag + " "))
+            self.assertEqual(1, joined.count(extra))
+
+    @classmethod
+    def setUpClass(cls):
+        cls.assets = _assets(ROOT)
+        cls.chapter = Section(
+            "chapter-17",
+            1,
+            "17",
+            Text("17. Agent", "17. Agent"),
+            chapter=17,
+        )
+        cls.chapter.children.extend([
+            Section(
+                "chapter-17-1",
+                2,
+                "17.1",
+                Text("17.1 この章で行うこと", "17.1 What you will do"),
+                chapter=17,
+            ),
+            Section(
+                "chapter-17-3",
+                2,
+                "17.3",
+                Text("17.3 操作手順", "17.3 Steps"),
+                chapter=17,
+            ),
+        ])
+        cls.summary = append_current_tuning_sections(cls.chapter, ROOT)
+
+    def test_assets_match_current_experimental_contract(self):
+        manifest = self.assets["manifest"]
+        self.assertEqual("current-experimental", manifest["profile"])
+        self.assertEqual("experimental", manifest["status"])
+        self.assertFalse(manifest["answerAccuracyAccepted"])
+        self.assertEqual(9_994, self.assets["global_units"])
+        self.assertEqual(0, self.assets["active_example_count"])
+        self.assertEqual(0, manifest["definitionFewshotFiles"])
+        self.assertEqual(5, len(self.assets["definition_files"]))
+        self.assertEqual(170, len(self.assets["selection_rows"]))
+        self.assertEqual(
+            {
+                "lakehouse_tables.table": 11,
+                "lakehouse_tables.column": 88,
+                "kusto.table": 1,
+                "kusto.column": 10,
+                "semantic_model.table": 5,
+                "semantic_model.column": 31,
+                "semantic_model.measure": 10,
+                "ontology.entity": 10,
+            },
+            {
+                kind: sum(
+                    1 for row in self.assets["selection_rows"]
+                    if row[2] == kind
+                )
+                for kind in (
+                    "lakehouse_tables.table",
+                    "lakehouse_tables.column",
+                    "kusto.table",
+                    "kusto.column",
+                    "semantic_model.table",
+                    "semantic_model.column",
+                    "semantic_model.measure",
+                    "ontology.entity",
+                )
+            },
+        )
+        self.assertEqual(
+            {"instructions": None, "description": None},
+            self.assets["source_instructions"]["ontology"],
+        )
+
+    def test_contiguous_chapter_sections_and_exact_current_common_text(self):
+        self.assertEqual(
+            [f"chapter-17-{index}" for index in range(1, 15)],
+            [section.ident for section in self.chapter.children],
+        )
+        self.assertEqual(1, len(current_chapter_spec()["intro"]))
+        self.assertIn("Scope and prerequisites", self.chapter.children[1].title.en)
+        self.assertEqual("17.2", self.chapter.children[1].number)
+        self.assertEqual("17.3", self.chapter.children[2].number)
+        self.assertIn("Steps", self.chapter.children[2].title.en)
+        sections = {section.ident: section for section in self.chapter.children}
+        global_code = next(
+            block["text"]
+            for block in sections["chapter-17-6"].blocks
+            if block.kind == "code"
+        )
+        global_block = next(
+            block
+            for block in sections["chapter-17-6"].blocks
+            if block.kind == "code"
+        )
+        self.assertTrue(global_block.get("canonicalLiteral"))
+        self.assertIs(global_block, sections["chapter-17-6"].blocks[2])
+        self.assertEqual(3_394, len(global_code.encode("utf-16-le")) // 2)
+        common = (ROOT / COMMON_GUIDANCE_REL).read_bytes().decode("utf-8").replace("\r\n", "\n")
+        self.assertEqual(common, global_code)
+        self.assertEqual(
+            "7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26",
+            hashlib.sha256(global_code.encode("utf-8")).hexdigest(),
+        )
+        self.assertNotEqual(self.assets["global"], global_code)
+        self.assertEqual(3_394, self.summary["globalUtf16Units"])
+        global_reference = " ".join(
+            part
+            for block in sections["chapter-17-6"].blocks
+            if block.kind == "paragraph"
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("設定読み戻しは確認済み", global_reference)
+        self.assertIn("configuration readbacks of this text have been verified", global_reference)
+        self.assertIn("回答品質の全体評価と採用判定は未完了です", global_reference)
+        self.assertIn("Full answer-quality evaluation and an adoption decision remain incomplete", global_reference)
+        source_block = next(
+            block
+            for block in sections["chapter-17-7"].blocks
+            if block.kind == "code"
+        )
+        self.assertTrue(source_block.get("canonicalLiteral"))
+        source_code = source_block["text"]
+        self.assertEqual(
+            json.dumps(self.assets["source_instructions"], ensure_ascii=False, indent=2),
+            source_code,
+        )
+        self.assertEqual(self.assets["source_instructions"], json.loads(source_code))
+        selection_table = next(
+            block
+            for block in sections["chapter-17-5"].blocks
+            if block.kind == "table"
+        )
+        self.assertTrue(selection_table.get("canonicalLiteral"))
+        self.assertEqual(170, len(selection_table["rows"]))
+        expected_descriptions = [
+            str(item.get("description") or "")
+            for entries in self.assets["selection_contract"].values()
+            for item in entries
+        ]
+        self.assertEqual(
+            expected_descriptions,
+            [row[5].ja for row in selection_table["rows"]],
+        )
+        template_codes = [
+            block["text"]
+            for block in sections["chapter-17-10"].blocks
+            if block.kind == "code"
+        ]
+        self.assertEqual(
+            [path.read_text(encoding="utf-8") for path in self.assets["definition_files"]],
+            template_codes,
+        )
+        self.assertEqual(0, self.summary["kqlFewshotCount"])
+        preflight = " ".join(
+            part
+            for block in sections["chapter-17-4"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("definition few-shot file は 0 件", preflight)
+        self.assertIn("0 active examples", preflight)
+        self.assertNotIn("Do not assume nine examples", preflight)
+        self.assertNotIn("この版の", preflight)
+        self.assertIn("`profile-manifest.json`", preflight)
+        intro = current_chapter_spec()["intro"][0]
+        self.assertNotIn("four logical sources", intro[1])
+
+    def test_actual_prepare_command_binds_current_common_guidance_and_later_commands_keep_scope(self):
+        sections = {section.ident: section for section in self.chapter.children}
+        commands = [block["text"] for block in sections["chapter-17-9"].blocks
+                    if block.kind == "code" and "current_profile.py prepare" in block["text"]]
+        self.assertEqual(1, len(commands))
+        expected = _profile_command(
+            "prepare", "--routing-origin $RoutingOrigin",
+            "--common-guidance workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt",
+        )
+        self.assertEqual(expected, commands[0])
+        self.assertEqual(1, commands[0].count("--common-guidance "))
+        self.assertTrue(all(line.endswith(" `") for line in commands[0].splitlines()[:-1]))
+        for suffix, expected_commands in (
+            (11, [_profile_command("apply", "--apply")]),
+            (12, [_profile_command("publish", "--apply")]),
+            (13, [_profile_command("verify", "--stage draft") + "\n"
+                  + _profile_command("verify", "--stage published")]),
+        ):
+            codes = [block["text"] for block in sections[f"chapter-17-{suffix}"].blocks
+                     if block.kind == "code"]
+            self.assertEqual(expected_commands, codes)
+
+    def test_cli_and_durable_limitations_are_documented(self):
+        def strings(value):
+            if isinstance(value, Text):
+                yield value.ja
+                yield value.en
+            elif isinstance(value, str):
+                yield value
+            elif isinstance(value, dict):
+                for child in value.values():
+                    yield from strings(child)
+            elif isinstance(value, (tuple, list)):
+                for child in value:
+                    yield from strings(child)
+
+        content = "\n".join(
+            part
+            for section in self.chapter.children
+            for block in section.blocks
+            for part in strings(block.payload)
+        )
+        for action in ("prepare", "apply", "publish", "verify"):
+            self.assertIn(f"current_profile.py {action}", content)
+        for flag in (
+            "--workspace-id $WorkspaceId",
+            "--folder-id $FolderId",
+            "--agent-id $AgentId",
+            "--private-root $PrivateRoot",
+            "--routing-origin $RoutingOrigin",
+            "--stage draft",
+            "--stage published",
+        ):
+            self.assertIn(flag, content)
+        self.assertIn("全ての Git checkout の外", content)
+        self.assertIn("SQL・KQL・DAX・GQL は実際の source", content)
+        self.assertIn("11:54:30 UTC", content)
+        self.assertIn("14:18:14 UTC", content)
+        self.assertIn("11:54:30 AM", content)
+        self.assertIn("2:18:14 PM", content)
+        self.assertNotIn("23:54:30", content)
+        self.assertNotIn("02:18:14", content)
+        self.assertIn("> 57,000", content)
+        self.assertIn("KEEPFILTERS", content)
+        self.assertIn("define the period, denominator and grouping", content)
+        self.assertNotIn("current experimental responses", content.lower())
+        self.assertNotIn("fixture", content.lower())
+        self.assertNotIn("51-slot", content)
+        self.assertNotIn("296-condition", content)
+        self.assertNotIn("127", content)
+        self.assertNotIn("170→192", content)
+
+    def test_instruction_sections_are_reference_only_until_apply(self):
+        sections = {section.ident: section for section in self.chapter.children}
+        self.assertIn("review the global instructions", sections["chapter-17-6"].title.en.lower())
+        self.assertIn("review source instructions", sections["chapter-17-7"].title.en.lower())
+        for ident in ("chapter-17-6", "chapter-17-7"):
+            content = " ".join(
+                part
+                for block in sections[ident].blocks
+                if block.kind in {"paragraph", "list", "callout"}
+                for part in self._strings(block.payload)
+            ).lower().replace("`", "")
+            self.assertTrue(
+                "do not edit the ui field at this step" in content
+                or "do not edit ui instructions" in content
+            )
+            self.assertIn("authorized apply procedure", content)
+
+    def test_current_profile_deployment_handoff_matches_chapter_17(self):
+        def chapter():
+            return Section(
+                "chapter-24",
+                1,
+                "24",
+                Text("24. 配置", "24. Deployment"),
+                chapter=24,
+            )
+
+        current = chapter()
+        append_deployment_sections(current, ROOT, current_profile=True)
+        current_sections = {section.ident: section for section in current.children}
+        current_setup_text = " ".join(
+            part
+            for block in current_sections["chapter-24-4"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertNotIn("17.16", current_setup_text)
+        current_handoff_text = " ".join(
+            part
+            for block in current_sections["chapter-24-8"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("experimental current profile", current_handoff_text)
+        self.assertIn("start at Chapter 17.2", current_handoff_text)
+        self.assertIn("17.2以降", current_handoff_text)
+        self.assertNotIn("six SQL views", current_handoff_text)
+        self.assertNotIn("measured-contract-20261015", current_handoff_text)
+
+        historical = chapter()
+        append_deployment_sections(historical, ROOT)
+        historical_sections = {section.ident: section for section in historical.children}
+        historical_setup_text = " ".join(
+            part
+            for block in historical_sections["chapter-24-4"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("17.16", historical_setup_text)
+        historical_handoff_text = " ".join(
+            part
+            for block in historical_sections["chapter-24-8"].blocks
+            for part in self._strings(block.payload)
+        )
+        self.assertIn("six SQL views", historical_handoff_text)
+        self.assertIn("measured-contract-20261015", historical_handoff_text)
+
+    @staticmethod
+    def _strings(value):
+        if isinstance(value, Text):
+            yield value.ja
+            yield value.en
+        elif isinstance(value, str):
+            yield value
+        elif isinstance(value, dict):
+            for child in value.values():
+                yield from CurrentProfileGuideTests._strings(child)
+        elif isinstance(value, (tuple, list)):
+            for child in value:
+                yield from CurrentProfileGuideTests._strings(child)
+
+    def test_first_four_sections_do_not_reintroduce_historical_tuning(self):
+        text = current_chapter_spec()
+        joined = " ".join(
+            value
+            for key in ("intro", "before", "steps", "checks")
+            for part in text.get(key, [])
+            for value in (part if isinstance(part, tuple) else part.get("text", ()))
+            if isinstance(value, str)
+        )
+        self.assertIn("four logical sources", joined)
+        self.assertNotIn("measured-contract-20261015", joined)
+        self.assertNotIn("143 columns", joined)
+        self.assertNotIn("nine KQL examples", joined)
+
+
+if __name__ == "__main__":
+    unittest.main()

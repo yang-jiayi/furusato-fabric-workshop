@@ -1,0 +1,385 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "{{resource:semantic_model:id}}",
+  "workspaceId": "{{workspace:id}}",
+  "dataSourceInstructions": "Use source-owned DAX measures. Preserve current dimension filters and label StaticSeed versus RealtimeIncrement. Do not infer raw Eventhouse counts from Gold.",
+  "displayName": "{{resource:semantic_model:name}}",
+  "type": "semantic_model",
+  "userDescription": "Governed source-owned DAX over Notebook05 Gold. StaticSeed and accepted RealtimeIncrement remain explicitly separated.",
+  "metadata": {},
+  "elements": [
+    {
+      "id": "{{node:semantic_model:寄附}}",
+      "is_selected": true,
+      "display_name": "寄附",
+      "type": "semantic_model.table",
+      "description": null,
+      "children": [
+        {
+          "id": "{{node:semantic_model:寄附|静的寄附総額}}",
+          "is_selected": true,
+          "display_name": "静的寄附総額",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|静的寄附件数}}",
+          "is_selected": true,
+          "display_name": "静的寄附件数",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|受入増分寄附総額}}",
+          "is_selected": true,
+          "display_name": "受入増分寄附総額",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|受入増分寄附件数}}",
+          "is_selected": true,
+          "display_name": "受入増分寄附件数",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附総額}}",
+          "is_selected": true,
+          "display_name": "寄附総額",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附件数}}",
+          "is_selected": true,
+          "display_name": "寄附件数",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|平均寄附額}}",
+          "is_selected": true,
+          "display_name": "平均寄附額",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附総額 前年同期間}}",
+          "is_selected": true,
+          "display_name": "寄附総額 前年同期間",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|自治体別シェア (%)}}",
+          "is_selected": true,
+          "display_name": "自治体別シェア (%)",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|高額寄附件数}}",
+          "is_selected": true,
+          "display_name": "高額寄附件数",
+          "type": "semantic_model.measure",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附ID}}",
+          "is_selected": true,
+          "display_name": "寄附ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附金額}}",
+          "is_selected": true,
+          "display_name": "寄附金額",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附日時 UTC}}",
+          "is_selected": true,
+          "display_name": "寄附日時 UTC",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附日}}",
+          "is_selected": true,
+          "display_name": "寄附日",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|決済方法}}",
+          "is_selected": true,
+          "display_name": "決済方法",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|データソース}}",
+          "is_selected": true,
+          "display_name": "データソース",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|高額寄附フラグ}}",
+          "is_selected": true,
+          "display_name": "高額寄附フラグ",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|寄附者ID}}",
+          "is_selected": true,
+          "display_name": "寄附者ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|自治体ID}}",
+          "is_selected": true,
+          "display_name": "自治体ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附|返礼品ID}}",
+          "is_selected": true,
+          "display_name": "返礼品ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "{{node:semantic_model:寄附者}}",
+      "is_selected": true,
+      "display_name": "寄附者",
+      "type": "semantic_model.table",
+      "description": null,
+      "children": [
+        {
+          "id": "{{node:semantic_model:寄附者|寄附者ID}}",
+          "is_selected": true,
+          "display_name": "寄附者ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附者|寄附者名}}",
+          "is_selected": true,
+          "display_name": "寄附者名",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附者|寄附者表示名}}",
+          "is_selected": true,
+          "display_name": "寄附者表示名",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附者|年齢}}",
+          "is_selected": true,
+          "display_name": "年齢",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附者|職業}}",
+          "is_selected": true,
+          "display_name": "職業",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:寄附者|居住都道府県}}",
+          "is_selected": true,
+          "display_name": "居住都道府県",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "{{node:semantic_model:日付}}",
+      "is_selected": true,
+      "display_name": "日付",
+      "type": "semantic_model.table",
+      "description": null,
+      "children": [
+        {
+          "id": "{{node:semantic_model:日付|日付キー}}",
+          "is_selected": true,
+          "display_name": "日付キー",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:日付|日付}}",
+          "is_selected": true,
+          "display_name": "日付",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:日付|年}}",
+          "is_selected": true,
+          "display_name": "年",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:日付|四半期}}",
+          "is_selected": true,
+          "display_name": "四半期",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:日付|月番号}}",
+          "is_selected": true,
+          "display_name": "月番号",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:日付|月}}",
+          "is_selected": true,
+          "display_name": "月",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:日付|年月}}",
+          "is_selected": true,
+          "display_name": "年月",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "{{node:semantic_model:自治体}}",
+      "is_selected": true,
+      "display_name": "自治体",
+      "type": "semantic_model.table",
+      "description": null,
+      "children": [
+        {
+          "id": "{{node:semantic_model:自治体|自治体ID}}",
+          "is_selected": true,
+          "display_name": "自治体ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:自治体|自治体名}}",
+          "is_selected": true,
+          "display_name": "自治体名",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:自治体|自治体表示名}}",
+          "is_selected": true,
+          "display_name": "自治体表示名",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:自治体|寄附先都道府県}}",
+          "is_selected": true,
+          "display_name": "寄附先都道府県",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "{{node:semantic_model:返礼品}}",
+      "is_selected": true,
+      "display_name": "返礼品",
+      "type": "semantic_model.table",
+      "description": null,
+      "children": [
+        {
+          "id": "{{node:semantic_model:返礼品|返礼品ID}}",
+          "is_selected": true,
+          "display_name": "返礼品ID",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:返礼品|返礼品名}}",
+          "is_selected": true,
+          "display_name": "返礼品名",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:返礼品|返礼品表示名}}",
+          "is_selected": true,
+          "display_name": "返礼品表示名",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "{{node:semantic_model:返礼品|カテゴリ}}",
+          "is_selected": true,
+          "display_name": "カテゴリ",
+          "type": "semantic_model.column",
+          "description": null,
+          "children": []
+        }
+      ]
+    }
+  ]
+}

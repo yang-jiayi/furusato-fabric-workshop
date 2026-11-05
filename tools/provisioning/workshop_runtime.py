@@ -1384,22 +1384,26 @@ class WorkshopFabricClient:
             "nodeTables": 10, "edgeTables": 15,
         }
         deadline = self.clock() + timedelta(seconds=self.timeout_seconds)
-        counts: dict[str, int] = {}
+        counts: dict[str, int | None] = {}
         while self.clock() < deadline:
             parts = decode_definition_parts(self.get_definition(workspace_id, graph_model_id))
             documents = {
                 path: json.loads(parts.get(path, b"{}"))
                 for path in ("graphType.json", "dataSources.json", "graphDefinition.json")
             }
+            collections = {
+                "nodeTypes": documents["graphType.json"].get("nodeTypes"),
+                "edgeTypes": documents["graphType.json"].get("edgeTypes"),
+                "dataSources": documents["dataSources.json"].get("dataSources"),
+                "nodeTables": documents["graphDefinition.json"].get("nodeTables"),
+                "edgeTables": documents["graphDefinition.json"].get("edgeTables"),
+            }
             counts = {
-                "nodeTypes": len(documents["graphType.json"].get("nodeTypes", [])),
-                "edgeTypes": len(documents["graphType.json"].get("edgeTypes", [])),
-                "dataSources": len(documents["dataSources.json"].get("dataSources", [])),
-                "nodeTables": len(documents["graphDefinition.json"].get("nodeTables", [])),
-                "edgeTables": len(documents["graphDefinition.json"].get("edgeTables", [])),
+                key: len(value) if isinstance(value, list) else None
+                for key, value in collections.items()
             }
             if counts == expected:
-                return counts
+                return dict(expected)
             self.sleeper(self.poll_interval_seconds)
         raise OperationTimeoutError(
             "Ontology graph compilation did not produce the complete model; "

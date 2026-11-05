@@ -1,4 +1,4 @@
-"""Build, verify and package the current standalone HTML and GitHub Lab guide.
+"""Build, verify, package and publish the current standalone HTML and GitHub Lab guide.
 
 The historical paired-document pipeline remains separate. This pipeline never
 creates an Office document or claims live Fabric validation.
@@ -11,6 +11,7 @@ from dataclasses import asdict
 from hashlib import sha256
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -24,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / 'tools/docs'), str(ROOT / 'tools/html'), str(ROOT / 'tools/provisioning')]
 from furusato_docs.lab import load_model, write_lab, validate_lab
 from furusato_docs.preview30_content import verify_artifact_manifest
-from furusato_docs import preview30_release as release
+from furusato_docs.current_publication import current_publication
 from furusato_docs.typography import ascii_parentheses
 from furusato_html.preview30 import render
 from furusato_html.model import Text
@@ -32,17 +33,45 @@ from lxml import html as html_parser
 import preview30_runtime as runtime
 import v3_artifacts
 
-HTML_NAME = 'furusato-workshop-v3-0-0-complete.html'
-PACKAGE_NAME = 'Furusato_Workshop_v3.0.0_current.zip'
+PUBLICATION = current_publication(ROOT)
+MARKDOWN_LINK = re.compile(r"\[([^\]\r\n]+)\]\((https?://[^\s)]+)\)")
+HTML_NAME = PUBLICATION.html_name
+PACKAGE_NAME = PUBLICATION.package_name
 SOURCE_MANIFEST = 'SOURCE_ARTIFACT_SET.json'
 NEW_AUTHORING_FILES = {
     'tools/docs/current_delivery.py', 'tools/docs/CURRENT_HTML_LAB.md',
     'tools/docs/build_lab.py', 'tools/docs/furusato_docs/lab.py',
     'tools/docs/furusato_docs/lab_clients.py', 'tools/docs/tests/test_lab.py',
     'tools/docs/tests/test_current_delivery.py',
+    'tools/docs/tests/test_semantic_instruction_boundaries.py',
+    'tools/docs/furusato_docs/current_publication.py',
+    'tools/provisioning/check_current_ontology.py',
+    'tools/docs/tests/test_current_validation_entries.py',
+    'tools/html/tests/test_reference_pagination.py',
+    'tools/html/tests/test_reference_table_tokens.py',
+    'tools/docs/furusato_docs/participant30_details.py',
+    'tools/docs/tests/test_participant30_details.py',
+    'tools/docs/tests/test_semantic_instruction_boundaries.py',
+    'docs/assets/current-participant/graph-eligibility-controls-crop.png',
+    'docs/assets/current-participant/activator-001-row-parameters-crop.png',
 }
-DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg','.pdf'}
+PARTICIPANT_VALIDATION_FILES = {
+    'tools/data/Test-IncrementConsistency.ps1',
+    'tools/provisioning/check_current_ontology.py',
+}
+DOC_SOURCE_SUFFIXES = {'.py','.json','.ps1','.md','.txt','.zip','.css','.js','.png','.svg'}
 PRIVATE_NAMES = {'storage-state.json','cookies.json','credentials.json','msal_token_cache.json','msal_token_cache.bin'}
+MAINTAINER_ONLY_DOCS = {
+    'tools/docs/README.md',
+    'tools/data-agent/README.md',
+    'workshop/v3.0.0-preview/README-runtime.md',
+}
+CURRENT_ASSET_PREFIXES = (
+    'docs/assets/current-participant/',
+    'docs/assets/current-participant-captures/',
+    'docs/assets/current-diagrams/',
+)
+CURRENT_PROFILE_DIR = 'workshop/v3.0.0-preview/data-agent/profiles/current-experimental'
 
 
 def digest(value):
@@ -74,22 +103,51 @@ def approved_doc_files(root, tracked):
             if not path.is_file() or '__pycache__' in path.parts:
                 continue
             relative=path.relative_to(root).as_posix()
+            if path.suffix.lower() == '.pdf':
+                continue
+            if relative in MAINTAINER_ONLY_DOCS:
+                continue
             if path.name.startswith('.env') or path.name.lower() in PRIVATE_NAMES:
                 raise ValueError('Private configuration is not a publication input: ' + relative)
             if path.suffix in {'.pyc','.docx'}:
                 continue
-            if path.suffix not in DOC_SOURCE_SUFFIXES or relative not in tracked | NEW_AUTHORING_FILES:
+            is_current_asset = relative.startswith(CURRENT_ASSET_PREFIXES)
+            if path.suffix not in DOC_SOURCE_SUFFIXES or (
+                    relative not in tracked | NEW_AUTHORING_FILES and not is_current_asset):
                 raise ValueError('Unapproved authoring source file: ' + relative)
             names.add(relative)
     return names
+
+
+def current_profile_files(root):
+    profile = root / CURRENT_PROFILE_DIR
+    manifest_path = profile / 'profile-manifest.json'
+    manifest = json.loads(manifest_path.read_bytes())
+    expected = {'global-instructions.txt', 'source-instructions.json', 'selection-contract.json',
+                'definition/stage_config.json', 'definition/lakehouse_tables.json',
+                'definition/kusto.json', 'definition/semantic_model.json', 'definition/ontology.json'}
+    if (manifest.get('profile') != 'current-experimental' or manifest.get('status') != 'experimental'
+            or manifest.get('answerAccuracyAccepted') is not False
+            or set(manifest.get('sha256', {})) != expected):
+        raise ValueError('Unknown or incomplete current experimental profile.')
+    for name in expected:
+        path = profile / name
+        if path.is_symlink() or digest(path.read_bytes()) != manifest['sha256'][name]:
+            raise ValueError('Current experimental profile hash mismatch: ' + name)
+    if manifest_path.is_symlink():
+        raise ValueError('Current profile manifest must not be a symlink.')
+    return {CURRENT_PROFILE_DIR + '/' + name for name in expected | {'profile-manifest.json'}}
 
 
 def current_source_manifest(root):
     """Freeze a bounded actual source inventory before composing either guide."""
     manifest=v3_artifacts.snapshot()
     tracked=set(subprocess.check_output(['git','-C',str(root),'ls-files','-z']).decode().split('\0'))
-    names={name for name in manifest['files'] if not name.startswith('docs/') and not name.endswith('.docx')}
+    names={name for name in manifest['files'] if not name.startswith('docs/')
+           and Path(name).suffix.lower() not in {'.docx','.pdf'}}
     names.update(runtime.RUNTIME_INPUT_FILES)
+    names.update(PARTICIPANT_VALIDATION_FILES)
+    names.update(current_profile_files(root))
     names.add('workshop/v3.0.0-preview/provisioning/baseline-hashes.json')
     names.add('tools/provisioning/unified_agent.py')
     # Public CLI helpers load adjacent schemas, SQL and evaluation resources.
@@ -104,9 +162,12 @@ def current_source_manifest(root):
     if names - (tracked | NEW_AUTHORING_FILES):
         raise ValueError('Unapproved runtime source files: ' + ', '.join(sorted(names - (tracked | NEW_AUTHORING_FILES))))
     names.update(approved_doc_files(root,tracked))
+    names.difference_update(MAINTAINER_ONLY_DOCS)
     manifest['files']={name:digest((root/name).read_bytes()) for name in sorted(names)}
     manifest['sourceTreeSha256']=runtime.digest(manifest['files'])
-    manifest['documentationBinding']={'deliveryMode':'html-lab','guide':'guide/'+HTML_NAME,'lab':'Lab/README.md'}
+    manifest['documentationBinding']={'deliveryMode':'html-lab','guide':'guide/'+HTML_NAME,'lab':'Lab/README.md',
+                                      'experimentalAgentProfile':CURRENT_PROFILE_DIR,
+                                      'agentAnswerQualityAccepted':False}
     manifest['documentationSourceRevision']=source_revision(root,manifest)
     return manifest
 
@@ -126,6 +187,12 @@ def checked_lab_files(lab, expected):
     return sorted(actual)
 
 
+def validate_participant_validation_entries(manifest):
+    missing = PARTICIPANT_VALIDATION_FILES - set(manifest.get('files', {}))
+    if missing:
+        raise ValueError('Missing current participant validation entries: ' + ', '.join(sorted(missing)))
+
+
 def validate_source_manifest_paths(root, manifest, *, require_git=False):
     observed=subprocess.run(['git','-C',str(root),'ls-files','-z'],capture_output=True)
     if require_git and observed.returncode != 0:
@@ -136,15 +203,15 @@ def validate_source_manifest_paths(root, manifest, *, require_git=False):
         if (path.is_absolute() or '..' in path.parts or '\\' in name
                 or {'private','.private','qa'} & set(path.parts)
                 or path.name.startswith('.env') or path.name.lower() in PRIVATE_NAMES
-                or path.suffix.lower() in {'.pem','.key','.pfx','.token','.secret'}):
+                or path.suffix.lower() in {'.pem','.key','.pfx','.token','.secret','.docx','.pdf'}):
             raise ValueError('Private or unsafe publication input: '+name)
-        if tracked is not None and name not in tracked | NEW_AUTHORING_FILES:
+        if tracked is not None and name not in tracked | NEW_AUTHORING_FILES and not name.startswith(CURRENT_ASSET_PREFIXES):
             raise ValueError('Unapproved publication input: '+name)
 
 
 def markdown_links(lab):
     for path in sorted(lab.rglob('*.md')):
-        for value in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text()):
+        for value in re.findall(r'\[[^\]\n]*\]\(([^)\s]+)\)',path.read_text(encoding='utf-8')):
             parsed=urlsplit(value)
             if not parsed.scheme and parsed.path:
                 yield path,unquote(parsed.path)
@@ -152,6 +219,8 @@ def markdown_links(lab):
 
 def add_lab_aliases(files, root, lab, source_files, html_blob):
     """Keep GitHub-relative Lab links valid in the portable package too."""
+    root = Path(root).resolve()
+    lab = Path(lab).resolve()
     for page,target in markdown_links(lab):
         virtual_lab=(root/'Lab').resolve()
         destination=(virtual_lab/page.relative_to(lab).parent/target).resolve()
@@ -193,6 +262,21 @@ def text_values(value):
             yield from text_values(child)
 
 
+def retired_guide_reference(text):
+    # Native source descriptions can use the ordinary English noun "word".
+    return bool(re.search(r'\bWord\b', text)
+                or re.search(r'\.docx|\bmicrosoft\s+word\b|\bword\s+(?:guide|document|file)\b', text, re.I))
+
+
+def validate_retired_document_inventory(files):
+    retired = [name for name in files
+               if name.lower().endswith(('.docx', '.pdf'))]
+    if retired:
+        raise ValueError('The current package must not contain retired document exports: '
+                         + ', '.join(sorted(retired)))
+    return 0
+
+
 def inspect_html(path, document, metadata):
     raw = path.read_bytes()
     tree = html_parser.fromstring(raw)
@@ -204,8 +288,12 @@ def inspect_html(path, document, metadata):
         raise ValueError('The HTML does not bind the current standalone participant model')
     main = tree.get_element_by_id('main')
     body = tree.find('body')
-    if re.search(r'\bWord\b|\.docx', body.text_content(), re.I) or tree.xpath('//*[@id="word-download"]'):
+    if retired_guide_reference(body.text_content()) or tree.xpath('//*[@id="word-download"]'):
         raise ValueError('Retired guide references remain in the current participant HTML')
+    styles = '\n'.join(tree.xpath('//style/text()'))
+    if ('@media print' in styles or 'window.print' in raw.decode('utf-8')
+            or tree.xpath('//*[@id="print"]')):
+        raise ValueError('Print/PDF export controls are retired from the current participant HTML')
     sections = list(document.walk())
     if len(main.xpath('./section')) != 29:
         raise ValueError('The guide must contain 24 chapters and five appendices')
@@ -222,11 +310,22 @@ def inspect_html(path, document, metadata):
                 raise ValueError('Missing section title: ' + section.ident)
         for block in section.blocks:
             for value in text_values(block.payload):
-                if normalized(value) and normalized(value) not in visible:
+                expected_visible = MARKDOWN_LINK.sub(r"\1", value)
+                if normalized(expected_visible) and normalized(expected_visible) not in visible:
                     # Alternate text is an image accessibility attribute.
                     alts = ' '.join(target.xpath('.//@aria-label | .//@alt'))
-                    if normalized(value) not in normalized(alts):
+                    if normalized(expected_visible) not in normalized(alts):
                         raise ValueError('Missing bilingual model text: ' + section.ident + ': ' + value[:90])
+                for match in MARKDOWN_LINK.finditer(value):
+                    expected_label, expected_url = match.groups()
+                    if not any(
+                        anchor.get('href') == expected_url
+                        and normalized(anchor.text_content()) == normalized(expected_label)
+                        for anchor in target.xpath('.//a')
+                    ):
+                        raise ValueError(
+                            'Missing rendered Markdown link: ' + section.ident + ': ' + expected_label
+                        )
                 values_checked += 1
             if block.kind == 'code':
                 expected = block['text'] if block.get('canonicalLiteral') else ascii_parentheses(block['text'])
@@ -243,6 +342,8 @@ def inspect_html(path, document, metadata):
                     code_checked += 1
     if len(main.xpath('.//figure')) != len(document.figures):
         raise ValueError('Figure coverage differs from the model')
+    if main.xpath('.//figure/@id') != ['figure-' + str(block['number']) for block in document.figures]:
+        raise ValueError('Figure anchors differ from the stable model numbering')
     for node in tree.xpath('//*[@src] | //link[@href] | //script[@src]'):
         uri = node.get('src') or node.get('href')
         if not uri.startswith(('data:', '#')):
@@ -271,7 +372,7 @@ def build(root, out, artifact_manifest=None):
     metadata.update(deliveryMode='html-lab')
     metadata['sourceRevision'] = source_revision(root, metadata['currentArtifactSet'])
     text = render(document, context, facts, carrier, evidence, metadata, None, root,
-                  release_profile=release.V300, delivery_mode='html-lab')
+                  release_profile=None, delivery_mode='html-lab')
     path = out / HTML_NAME
     path.write_text(text, encoding='utf-8', newline='\n')
     receipt = {'schemaVersion': 'furusato-current-html-lab-validation/v1', 'deliveryMode': 'html-lab',
@@ -283,10 +384,26 @@ def build(root, out, artifact_manifest=None):
     return receipt
 
 
-def browser_check(path, out, executable=Path('/usr/bin/chromium')):
+def select_browser_executable(chromium, executable=None):
+    if executable is not None:
+        selected = Path(executable)
+        if not selected.is_file():
+            raise FileNotFoundError('Browser executable must be an existing file: ' + str(selected))
+        return selected.resolve()
+    system = Path('/usr/bin/chromium')
+    if sys.platform.startswith('linux') and system.is_file():
+        return system
+    selected = Path(chromium.executable_path)
+    if not selected.is_file():
+        raise FileNotFoundError(
+            'Playwright Chromium is not installed. Run "python -m playwright install chromium" '
+            'with this Python environment, or use --browser-executable with an existing browser file.')
+    return selected
+
+
+def browser_check(path, out, executable=None):
     """Exercise the standalone guide; serve only its exact HTML bytes locally."""
     from playwright.sync_api import sync_playwright
-    from pypdf import PdfReader
     raw = path.read_bytes()
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
@@ -304,10 +421,11 @@ def browser_check(path, out, executable=Path('/usr/bin/chromium')):
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     origin = 'http://127.0.0.1:' + str(server.server_port)
-    checks, print_pages, errors, external = [], {}, [], []
+    checks, errors, external = [], [], []
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(executable_path=str(executable), headless=True, args=['--no-sandbox'])
+            selected = select_browser_executable(p.chromium, executable)
+            browser = p.chromium.launch(executable_path=str(selected), headless=True, args=['--no-sandbox'])
             version = browser.version
             context = browser.new_context(viewport={'width':1440,'height':1000})
             def route_request(route):
@@ -324,6 +442,8 @@ def browser_check(path, out, executable=Path('/usr/bin/chromium')):
             page.wait_for_selector('html[data-ready=true]')
             assert page.locator('main > section').count() == 29
             checks.append('all29chaptersAndAppendices')
+            assert page.locator('#print').count() == 0
+            checks.append('noPrintOrPdfExport')
             for lang in ('ja', 'en'):
                 page.locator(f'button[data-language="{lang}"]').click()
                 assert page.locator('html').get_attribute('data-lang') == lang
@@ -333,17 +453,80 @@ def browser_check(path, out, executable=Path('/usr/bin/chromium')):
                 assert page.locator('main > section:not([hidden])').count() > 0
                 page.locator('#search-clear').click()
                 assert page.locator('main > section:not([hidden])').count() == 29
+                for width in (320,390,768,1440):
+                    page.set_viewport_size({'width':width,'height':844})
+                    assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                    if width in (320,390):
+                        assert page.evaluate("""() => {
+                            const tokens = [...document.querySelectorAll(
+                                'p code.inline-token, li code.inline-token')]
+                                .filter(node => node.getClientRects().length > 0);
+                            const atomic = tokens.length > 0 && tokens.every(node => {
+                                const range = document.createRange();
+                                range.selectNodeContents(node);
+                                const rects = [...range.getClientRects()]
+                                    .filter(rect => rect.width > 0);
+                                const box = node.getBoundingClientRect();
+                                return rects.length === 1 && box.left >= 0
+                                    && box.right <= innerWidth + 1;
+                            });
+                            const dax = [...document.querySelectorAll('.codeblock--source > pre > code')]
+                                .find(node => node.textContent.includes("SUM('寄附'[寄附金額])")
+                                && node.getClientRects().length > 0);
+                            if (!atomic || !dax || !dax.firstChild) return false;
+                            const codeText = dax.firstChild;
+                            const token = "SUM('寄附'[寄附金額])";
+                            const start = codeText.textContent.indexOf(token);
+                            if (start < 0) return false;
+                            const range = document.createRange();
+                            range.setStart(codeText, start);
+                            range.setEnd(codeText, start + token.length);
+                            return range.getClientRects().length === 1;
+                        }""")
                 page.set_viewport_size({'width':390,'height':844})
-                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
+                checks.append(f'{lang}.shortInlineTokensStayWhole320_390')
+                assert page.evaluate("""() => {
+                    const tables = [...document.querySelectorAll('table')];
+                    return tables.length > 0 && tables.every(table => {
+                        const wrap = table.closest('.table-wrap');
+                        const hint = wrap && wrap.querySelector('.table-hint--top');
+                        const region = wrap && wrap.querySelector('.table-scroll');
+                        return hint && region
+                            && (hint.compareDocumentPosition(region) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
+                            && region.scrollWidth > region.clientWidth;
+                    });
+                }""")
+                checks.append(f'{lang}.everyOverflowingTableHasCueBeforeScroller390')
+                assert page.evaluate("""() => {
+                    const tokens = [...document.querySelectorAll('table code')]
+                        .filter(node => node.getClientRects().length);
+                    return tokens.every(node => {
+                        const range = document.createRange();
+                        range.selectNodeContents(node);
+                        return getComputedStyle(node).whiteSpace === 'nowrap'
+                            && range.getClientRects().length === 1;
+                    });
+                }""")
+                for selector in ('#ch-6-4 .table-scroll', '#ch-12-4 .table-scroll'):
+                    regions = page.locator(selector)
+                    assert regions.evaluate_all(
+                        'nodes => nodes.length > 0 && nodes.some(node => node.scrollWidth > node.clientWidth)'
+                    )
+                code_check = page.evaluate("""() => {
+                    const blocks = [...document.querySelectorAll(
+                        '#ch-9-2 .codeblock--source pre, #ch-10-2 .codeblock--source pre')];
+                    const text = blocks.map(node => node.textContent).join('\\n');
+                    return blocks.length > 0
+                        && blocks.every(node => getComputedStyle(node).whiteSpace === 'pre')
+                        && blocks.some(node => node.scrollWidth > node.clientWidth)
+                        && ['EventID', 'DonationID', 'DonationAmountYen']
+                            .every(token => text.includes(token));
+                }""")
+                assert code_check
+                checks.append(f'{lang}.referenceTokensStayWholeWithHorizontalScroll')
                 page.set_viewport_size({'width':1440,'height':1000})
-                checks.extend([f'{lang}.languagePersists', f'{lang}.searchAndReset', f'{lang}.mobile390'])
-                page.emulate_media(media='print')
-                pdf = out / f'html-{lang}.pdf'
-                page.pdf(path=str(pdf), print_background=True, prefer_css_page_size=True)
-                print_pages[lang] = len(PdfReader(pdf).pages)
-                assert print_pages[lang] > 0
-                page.emulate_media(media='screen')
-                checks.append(f'{lang}.printPdf')
+                checks.extend([f'{lang}.languagePersists', f'{lang}.searchAndReset',
+                               f'{lang}.responsive320_390_768_1440'])
             checkbox = page.locator('input[data-step]').first
             checkbox.check()
             page.reload(wait_until='load')
@@ -364,10 +547,6 @@ def browser_check(path, out, executable=Path('/usr/bin/chromium')):
             page.locator('#lightbox-close').click()
             assert not page.locator('#lightbox').is_visible()
             checks.append('figureZoom')
-            page.evaluate('window.print=()=>{window.__printInvoked=true}')
-            page.locator('#print').click()
-            assert page.evaluate('window.__printInvoked === true')
-            checks.append('printButton')
             assert not errors, errors
             assert not external, external
             checks.extend(['noScriptErrors','noExternalRequests'])
@@ -377,7 +556,7 @@ def browser_check(path, out, executable=Path('/usr/bin/chromium')):
         server.server_close()
         thread.join(timeout=5)
     return {'passed':True, 'performed':True, 'browserVersion':version, 'htmlSha256':digest(raw),
-            'checks':checks, 'printedPages':print_pages, 'allPrintedPagesVisuallyReviewed':False}
+            'checks':checks}
 
 
 def require_validated(path, receipt):
@@ -393,11 +572,12 @@ def require_validated(path, receipt):
 def package(root, path, lab, receipt_path, output):
     if output.exists():
         raise ValueError('Refusing to overwrite an existing package')
-    receipt = json.loads(receipt_path.read_text())
+    receipt = json.loads(receipt_path.read_text(encoding='utf-8'))
     require_validated(path, receipt)
     if not (lab / 'README.md').is_file():
         raise ValueError('The complete Lab guide is required')
     manifest_path=receipt_path.parent/SOURCE_MANIFEST
+    validate_participant_validation_entries(json.loads(manifest_path.read_bytes()))
     validate_source_manifest_paths(root,json.loads(manifest_path.read_bytes()),require_git=True)
     manifest,binding=verify_artifact_manifest(root,manifest_path)
     if binding != receipt.get('currentArtifactSet'):
@@ -414,8 +594,8 @@ def package(root, path, lab, receipt_path, output):
     files = {'guide/' + path.name:path.read_bytes(), 'DOCUMENT_VALIDATION.json':json_bytes(receipt)}
     files['LAB_VALIDATION.json']=json_bytes(lab_validation)
     attachment_root=root/'workshop/v3.0.0-preview/attachments'
-    attachment_manifest=json.loads((attachment_root/'manifest.json').read_text())
-    for name in ('business-requirements.pdf','data-dictionary.txt','domain-model.png',
+    attachment_manifest=json.loads((attachment_root/'manifest.json').read_text(encoding='utf-8'))
+    for name in ('business-requirements.txt','data-dictionary.txt','domain-model.png',
                  'revision-requirements.txt','manifest.json','SHA256SUMS.txt'):
         blob=(attachment_root/name).read_bytes()
         if name in attachment_manifest['files']:
@@ -432,7 +612,7 @@ def package(root, path, lab, receipt_path, output):
     files['source/artifact-set.json'] = manifest_path.read_bytes()
     add_lab_aliases(files,root,lab,source_files,path.read_bytes())
     files['START_HERE.txt'] = (
-        'Furusato Workshop 3.0.0\n\n'
+        PUBLICATION.title + '\n\n' +
         'guide/ の日英HTML、または Lab/README.md の全手順を開き、第4章の準備から進めます。\n'
         'Open the standalone bilingual HTML in guide/ or the complete Lab/README.md; start with Chapter 4.\n'
         'source/ からNotebook・データ・配置ツールを実行します。\n'
@@ -443,11 +623,12 @@ def package(root, path, lab, receipt_path, output):
         'Check file integrity with SHA256SUMS.txt.\n'
     ).encode('utf-8')
     files['PACKAGE_MANIFEST.json'] = json_bytes({'schemaVersion':'furusato-current-html-lab-package/v1',
-        'deliveryMode':'html-lab','files':{name:digest(blob) for name,blob in sorted(files.items())},
+        'deliveryMode':'html-lab','workshopVersion':PUBLICATION.version,
+        'participantManualFormat':'html','retiredManualFormats':['.docx','.pdf'],
+        'files':{name:digest(blob) for name,blob in sorted(files.items())},
         'liveFabricValidationClaimed':False})
     files['SHA256SUMS.txt'] = ''.join(digest(blob)+'  '+name+'\n' for name,blob in sorted(files.items())).encode()
-    if any(name.endswith('.docx') for name in files):
-        raise ValueError('The current participant package must not contain a retired guide')
+    validate_retired_document_inventory(files)
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as archive:
         for name,blob in sorted(files.items()):
@@ -457,22 +638,169 @@ def package(root, path, lab, receipt_path, output):
     with zipfile.ZipFile(output) as archive:
         if archive.testzip() is not None:
             raise ValueError('Package CRC verification failed')
+        validate_retired_document_inventory(archive.namelist())
         for name,blob in files.items():
             if archive.read(name) != blob:
                 raise ValueError('Packaged bytes differ: ' + name)
         with tempfile.TemporaryDirectory(prefix='furusato-package-links-') as temp:
             archive.extractall(temp)
             links=validate_packaged_links(Path(temp))
+    (receipt_path.parent/'LAB_VALIDATION.json').write_bytes(json_bytes(lab_validation))
     return {'entries':len(files),'sha256':digest(output.read_bytes()),'deliveryMode':'html-lab','packagedLabLinksChecked':links}
 
 
-def main():
+def tree_bytes(directory):
+    if directory.is_symlink() or not directory.is_dir():
+        raise ValueError('Refusing to publish an unsafe or missing Lab directory: ' + str(directory))
+    files = {}
+    for path in directory.rglob('*'):
+        if path.is_symlink():
+            raise ValueError('Refusing to publish symbolic links: ' + str(path))
+        if path.is_file():
+            files[path.relative_to(directory).as_posix()] = path.read_bytes()
+    return files
+
+
+def atomic_write(path, content):
+    if path.is_symlink() or not path.parent.is_dir():
+        raise ValueError('Refusing to write outside the current publication directories: ' + str(path))
+    descriptor, temporary_name = tempfile.mkstemp(prefix=path.name+'.', suffix='.tmp', dir=path.parent)
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, 'wb') as stream:
+            stream.write(content)
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def publish(root, out, lab, package_path):
+    root = root.resolve()
+    out = out.resolve()
+    lab = lab.resolve()
+    package_path = package_path.resolve()
+    if out.is_relative_to(root) or package_path.is_relative_to(root):
+        raise ValueError('Build and package staging must remain outside the repository')
+    if package_path != out.parent/PACKAGE_NAME or lab != out.parent/'Lab':
+        raise ValueError('Publish requires the staged package and Lab output in the selected build directory')
+
+    html_path = out/HTML_NAME
+    document_receipt_path = out/'DOCUMENT_VALIDATION.json'
+    lab_receipt_path = out/'LAB_VALIDATION.json'
+    artifact_manifest_path = out/SOURCE_MANIFEST
+    for path in (html_path, document_receipt_path, lab_receipt_path, artifact_manifest_path, package_path):
+        if not path.is_file() or path.is_symlink():
+            raise ValueError('Missing or unsafe staged publication file: ' + str(path))
+    html_blob = html_path.read_bytes()
+    document_receipt = json.loads(document_receipt_path.read_text(encoding='utf-8'))
+    require_validated(html_path, document_receipt)
+    lab_blob = lab_receipt_path.read_bytes()
+    manifest_blob = artifact_manifest_path.read_bytes()
+    lab_files = tree_bytes(lab)
+    if not lab_files or tree_bytes(root/'Lab') != lab_files:
+        raise ValueError('Staged Lab bytes must match the repository Lab before publication')
+
+    with zipfile.ZipFile(package_path) as archive:
+        if archive.testzip() is not None:
+            raise ValueError('Package CRC verification failed')
+        names = set(archive.namelist())
+        if archive.read('guide/'+HTML_NAME) != html_blob:
+            raise ValueError('Package HTML differs from the validated staged HTML')
+        if archive.read('DOCUMENT_VALIDATION.json') != document_receipt_path.read_bytes():
+            raise ValueError('Package document receipt differs from the staged receipt')
+        if archive.read('LAB_VALIDATION.json') != lab_blob:
+            raise ValueError('Package Lab receipt differs from the staged receipt')
+        if archive.read('source/artifact-set.json') != manifest_blob:
+            raise ValueError('Package artifact set differs from the staged manifest')
+        packaged_lab = {
+            name.removeprefix('Lab/'): archive.read(name)
+            for name in names if name.startswith('Lab/')
+        }
+        if packaged_lab != lab_files:
+            raise ValueError('Package Lab bytes differ from the staged Lab')
+        package_manifest = json.loads(archive.read('PACKAGE_MANIFEST.json'))
+        if (package_manifest.get('deliveryMode') != 'html-lab'
+                or package_manifest.get('workshopVersion') != PUBLICATION.version):
+            raise ValueError('Package manifest does not describe the current HTML+Lab edition')
+        package_files = package_manifest.get('files', {})
+        if not package_files:
+            raise ValueError('Package manifest has no file hashes')
+        if set(package_files) != names-{'PACKAGE_MANIFEST.json', 'SHA256SUMS.txt'}:
+            raise ValueError('Package manifest inventory does not match the ZIP')
+        for name, expected in package_files.items():
+            if name not in names or digest(archive.read(name)) != expected:
+                raise ValueError('Package manifest hash mismatch: ' + name)
+
+    docs = root/'docs'
+    versioned = docs/f'v{PUBLICATION.version}'/'current'
+    versioned_guide = versioned/'guide'
+    if not docs.is_dir() or not versioned_guide.is_dir():
+        raise ValueError('Root and versioned current publication directories must already exist')
+    package_blob = package_path.read_bytes()
+    targets = {
+        docs/HTML_NAME: html_blob,
+        docs/PACKAGE_NAME: package_blob,
+        docs/'DOCUMENT_VALIDATION.json': document_receipt_path.read_bytes(),
+        docs/'LAB_VALIDATION.json': lab_blob,
+        versioned_guide/HTML_NAME: html_blob,
+        versioned/PACKAGE_NAME: package_blob,
+        versioned/'DOCUMENT_VALIDATION.json': document_receipt_path.read_bytes(),
+        versioned/'LAB_VALIDATION.json': lab_blob,
+        versioned/'artifact-set.json': manifest_blob,
+    }
+    if not (versioned/'README.md').is_file():
+        raise ValueError('The versioned current README is required')
+    for path, content in targets.items():
+        atomic_write(path, content)
+
+    root_sums = {
+        HTML_NAME: digest((docs/HTML_NAME).read_bytes()),
+        PACKAGE_NAME: digest((docs/PACKAGE_NAME).read_bytes()),
+    }
+    versioned_sums = {
+        'README.md': digest((versioned/'README.md').read_bytes()),
+        'DOCUMENT_VALIDATION.json': digest((versioned/'DOCUMENT_VALIDATION.json').read_bytes()),
+        'LAB_VALIDATION.json': digest((versioned/'LAB_VALIDATION.json').read_bytes()),
+        'artifact-set.json': digest((versioned/'artifact-set.json').read_bytes()),
+        'guide/'+HTML_NAME: digest((versioned_guide/HTML_NAME).read_bytes()),
+        PACKAGE_NAME: digest((versioned/PACKAGE_NAME).read_bytes()),
+    }
+    atomic_write(docs/'SHA256SUMS.txt', ''.join(
+        root_sums[name]+'  '+name+'\n' for name in sorted(root_sums)
+    ).encode('ascii'))
+    atomic_write(versioned/'SHA256SUMS.txt', ''.join(
+        versioned_sums[name]+'  '+name+'\n' for name in sorted(versioned_sums)
+    ).encode('ascii'))
+    return {
+        'deliveryMode': 'html-lab',
+        'published': True,
+        'htmlSha256': digest(html_blob),
+        'packageSha256': digest(package_blob),
+        'versionedHtmlMatches': (docs/HTML_NAME).read_bytes() == (versioned_guide/HTML_NAME).read_bytes(),
+        'versionedPackageMatches': (docs/PACKAGE_NAME).read_bytes() == (versioned/PACKAGE_NAME).read_bytes(),
+    }
+
+
+def parse_args(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='command',required=True)
     p=sub.add_parser('build');p.add_argument('--out',type=Path,required=True);p.add_argument('--artifact-manifest',type=Path)
     p=sub.add_parser('validate');p.add_argument('--out',type=Path,required=True);p.add_argument('--browser',action='store_true');p.add_argument('--artifact-manifest',type=Path)
+    p.add_argument('--browser-executable',type=Path,help='Existing Chromium executable (requires --browser); otherwise use Linux system Chromium or Playwright Chromium')
     p=sub.add_parser('package');p.add_argument('--out',type=Path,required=True);p.add_argument('--lab',type=Path,default=ROOT/'Lab');p.add_argument('--package',type=Path,required=True)
-    args=parser.parse_args()
+    p=sub.add_parser('publish');p.add_argument('--out',type=Path,required=True);p.add_argument('--lab',type=Path,required=True);p.add_argument('--package',type=Path,required=True)
+    args=parser.parse_args(argv)
+    if args.command=='validate' and args.browser_executable is not None:
+        if not args.browser:
+            parser.error('--browser-executable requires --browser')
+        if not args.browser_executable.is_file():
+            parser.error('--browser-executable must be an existing file')
+    return args
+
+
+def main():
+    args=parse_args()
     if args.command=='build':
         result=build(ROOT,args.out,args.artifact_manifest)
     elif args.command=='validate':
@@ -484,10 +812,12 @@ def main():
         result['static']=inspect_html(args.out/HTML_NAME,document,metadata)
         result['sourceRevision']=source_revision(ROOT, metadata['currentArtifactSet'])
         if args.browser:
-            result['browser']=browser_check(args.out/HTML_NAME,args.out)
+            result['browser']=browser_check(args.out/HTML_NAME,args.out,args.browser_executable)
         receipt_path.write_bytes(json_bytes(result))
-    else:
+    elif args.command=='package':
         result=package(ROOT,args.out/HTML_NAME,args.lab,args.out/'DOCUMENT_VALIDATION.json',args.package)
+    else:
+        result=publish(ROOT,args.out,args.lab,args.package)
     print(json.dumps(result,ensure_ascii=False,indent=2))
 
 

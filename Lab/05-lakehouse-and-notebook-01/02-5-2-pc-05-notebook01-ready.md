@@ -7,11 +7,11 @@
 3. アップロードしたファイルのサイズを data フォルダーの dataset-manifest.json と比べ、8ファイルがそろっていることを確認します。
 4. Notebook 01 を作業フォルダーにインポートし、LH_Furusato_&lt;PID&gt; を接続（attach）します。
 5. 先頭のパラメーターセルで PARTICIPANT_ID を自分の &lt;PID&gt; に変更します。ほかの値は変更しません（INPUT_DIR は "Files/furusato/seed" のままにします）。
-6. すべてのセルを先頭から順に実行します（Run all）。最後に「READY: Furusato ontology data v3.0.0」で始まる行と、20テーブルの確認が出力されれば完了です。
+6. すべてのセルを先頭から順に実行します（Run all）。最後に「READY: Furusato ontology data v」に NOTEBOOK_VERSION の値が続く行と、20テーブルの確認が出力されれば完了です。
 
-![Notebook 01 の最終コードセルと成功のチェック、READY v3.0.0・20テーブルの検査完了・利用前の再確認を示す実行出力。](../assets/pc-05-notebook01-ready.png)
+![Notebook 01 最終セルのコード部分。READY、20テーブルと利用前の再確認を表示するコード。実行結果は含まれない。](../assets/pc-05-notebook01-ready.png)
 
-Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 load audit の計20テーブルの検査完了が表示されます。利用前に Ready の根拠を再確認し、SQL endpoint での同期も次の手順で確認します。
+Notebook 01 の最終セルのコード部分を示す実画面の抜粋です。READY、8 staging・11 Ontology・1 load audit の計20テーブル、利用前の再確認に関する表示処理を確認できます。実行結果や現在の成功を示す図ではありません。自分の実行出力で Ready の根拠を確認し、次の手順で SQL endpoint の同期を確認します。
 
 <details>
 <summary>English</summary>
@@ -23,10 +23,10 @@ Notebook 01 の最終セル。READY v3.0.0 と、8 staging・11 Ontology・1 loa
 3. Compare the uploaded file sizes with dataset-manifest.json in the data folder and confirm that all eight files are present.
 4. Import Notebook 01 into your work folder and attach LH_Furusato_&lt;PID&gt;.
 5. In the first parameter cell, change PARTICIPANT_ID to your &lt;PID&gt;. Leave all other values unchanged (INPUT_DIR stays "Files/furusato/seed").
-6. Run all cells from the top (Run all). It is complete when the output ends with a line starting "READY: Furusato ontology data v3.0.0" and a confirmation for all 20 tables.
+6. Run all cells from the top (Run all). It is complete when the output ends with "READY: Furusato ontology data v" followed by the NOTEBOOK_VERSION value and a confirmation for all 20 tables.
 
-![Notebook 01 final code cell with a successful execution tick and output showing READY v3.0.0, checks for 20 tables, and the consumer recheck warning.](../assets/pc-05-notebook01-ready.png)
+![Code portion of the final Notebook 01 cell, printing READY, the 20-table checks and consumer recheck warning; execution results are not included.](../assets/pc-05-notebook01-ready.png)
 
-Notebook 01 final cell. The output reports READY v3.0.0 and completed checks for 20 tables: 8 staging, 11 ontology, and 1 load audit. Recheck Ready evidence before use, then verify SQL endpoint synchronization in the next steps.
+Actual UI excerpt showing the code in the final Notebook 01 cell: the READY message, 20 tables (8 staging, 11 ontology and 1 load audit), and the consumer recheck warning. This is not an execution result or evidence of current success. Check Ready evidence in your own run output, then verify SQL endpoint synchronization in the next steps.
 
 </details>

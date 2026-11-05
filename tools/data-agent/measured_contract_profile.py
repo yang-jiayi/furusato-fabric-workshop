@@ -15,8 +15,10 @@ import base64
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import stat
 import uuid
 
 from source_grounded_profile import decoded_parts, inline_part
@@ -381,9 +383,135 @@ def compile_measured_draft(original, *, input_stage, sql_columns, native_model, 
     return result, receipt
 
 
+def reject_links(path):
+    for candidate in (Path(path), *Path(path).parents):
+        try:
+            attributes = candidate.lstat()
+        except FileNotFoundError:
+            continue
+        if stat.S_ISLNK(attributes.st_mode) or (
+            getattr(attributes, "st_file_attributes", 0)
+            & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+        ):
+            raise ValueError("Private output paths may not traverse links or reparse points.")
+
+
+def _windows_create(path):
+    import ctypes
+    from ctypes import wintypes as w
+    import msvcrt
+
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    security = ctypes.WinDLL("advapi32", use_last_error=True)
+
+    def api(library, name, args, result):
+        function = getattr(library, name)
+        function.argtypes, function.restype = args, result
+        return function
+
+    close = api(kernel, "CloseHandle", [w.HANDLE], w.BOOL)
+    free = api(kernel, "LocalFree", [w.HLOCAL], w.HLOCAL)
+    process = api(kernel, "GetCurrentProcess", [], w.HANDLE)
+    token_open = api(security, "OpenProcessToken", [w.HANDLE, w.DWORD, ctypes.POINTER(w.HANDLE)], w.BOOL)
+    token_info = api(security, "GetTokenInformation",
+                     [w.HANDLE, ctypes.c_int, w.LPVOID, w.DWORD, ctypes.POINTER(w.DWORD)], w.BOOL)
+    sid_string = api(security, "ConvertSidToStringSidW", [w.LPVOID, ctypes.POINTER(w.LPWSTR)], w.BOOL)
+    from_sddl = api(security, "ConvertStringSecurityDescriptorToSecurityDescriptorW",
+                    [w.LPCWSTR, w.DWORD, ctypes.POINTER(w.LPVOID), ctypes.POINTER(w.DWORD)], w.BOOL)
+    to_sddl = api(security, "ConvertSecurityDescriptorToStringSecurityDescriptorW",
+                  [w.LPVOID, w.DWORD, w.DWORD, ctypes.POINTER(w.LPWSTR), ctypes.POINTER(w.DWORD)], w.BOOL)
+    get_security = api(security, "GetSecurityInfo",
+                       [w.HANDLE, ctypes.c_int, w.DWORD, w.LPVOID, w.LPVOID,
+                        ctypes.POINTER(w.LPVOID), w.LPVOID, ctypes.POINTER(w.LPVOID)], w.DWORD)
+
+    class Attributes(ctypes.Structure):
+        _fields_ = [("length", w.DWORD), ("descriptor", w.LPVOID), ("inherit", w.BOOL)]
+
+    create = api(kernel, "CreateFileW",
+                 [w.LPCWSTR, w.DWORD, w.DWORD, ctypes.POINTER(Attributes), w.DWORD, w.DWORD, w.HANDLE], w.HANDLE)
+
+    def checked(value):
+        if not value:
+            raise ctypes.WinError(ctypes.get_last_error())
+        return value
+
+    def descriptor_text(descriptor):
+        text = w.LPWSTR()
+        checked(to_sddl(descriptor, 1, 4, ctypes.byref(text), None))
+        try:
+            return text.value
+        finally:
+            free(ctypes.cast(text, w.HLOCAL))
+
+    token = w.HANDLE()
+    checked(token_open(process(), 0x0008, ctypes.byref(token)))  # TOKEN_QUERY
+    try:
+        size = w.DWORD()
+        token_info(token, 1, None, 0, ctypes.byref(size))  # TokenUser
+        if ctypes.get_last_error() != 122:
+            raise ctypes.WinError(ctypes.get_last_error())
+        buffer = ctypes.create_string_buffer(size.value)
+        checked(token_info(token, 1, buffer, size, ctypes.byref(size)))
+        sid = ctypes.cast(buffer, ctypes.POINTER(w.LPVOID))[0]
+        text = w.LPWSTR()
+        checked(sid_string(sid, ctypes.byref(text)))
+        try:
+            sddl = "D:P(A;;FA;;;" + text.value + ")"
+        finally:
+            free(ctypes.cast(text, w.HLOCAL))
+    finally:
+        close(token)
+
+    descriptor = w.LPVOID()
+    checked(from_sddl(sddl, 1, ctypes.byref(descriptor), None))
+    try:
+        expected_dacl = descriptor_text(descriptor)
+        attributes = Attributes(ctypes.sizeof(Attributes), descriptor, False)
+        # CREATE_NEW applies the protected DACL atomically, before any content exists.
+        handle = create(str(path), 0x40000000 | 0x00020000, 0, ctypes.byref(attributes), 1, 0x80, None)
+        create_error = ctypes.get_last_error()
+    finally:
+        free(descriptor)
+    if handle == w.HANDLE(-1).value:
+        error = create_error
+        if error in (80, 183):
+            raise FileExistsError(error, "Private output already exists", str(path))
+        raise ctypes.WinError(error)
+    try:
+        actual = w.LPVOID()
+        dacl = w.LPVOID()
+        error = get_security(handle, 1, 4, None, None, ctypes.byref(dacl), None, ctypes.byref(actual))
+        if error:
+            raise ctypes.WinError(error)
+        try:
+            if descriptor_text(actual) != expected_dacl:
+                raise PermissionError("The filesystem did not preserve the current-user-only protected DACL.")
+        finally:
+            free(actual)
+        fd = msvcrt.open_osfhandle(handle, os.O_WRONLY)
+    except BaseException:
+        close(handle)
+        raise
+    return fd
+
+
+def private_text(path):
+    """Create exclusively with POSIX0600 or a verified current-user-only Windows DACL."""
+    path = Path(path)
+    reject_links(path)
+    fd = (_windows_create(path) if os.name == "nt" else
+          os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600))
+    try:
+        return os.fdopen(fd, "w", encoding="utf-8")
+    except BaseException:
+        os.close(fd)
+        raise
+
+
 def private_path(path):
     if not path.is_absolute() or path.is_symlink():
         raise ValueError("Use absolute private output paths outside Git.")
+    reject_links(path)
     resolved = path.resolve()
     if resolved == REPO or REPO in resolved.parents or any((parent / ".git").exists() for parent in resolved.parents):
         raise ValueError("Actual definitions and receipts must remain outside Git checkouts.")
@@ -413,8 +541,7 @@ def main():
         profile=PROFILE_ROOT / args.profile)
     for path, value in ((out, definition), (receipt_path, receipt)):
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        with path.open("x", encoding="utf-8") as handle:
-            path.chmod(0o600)
+        with private_text(path) as handle:
             json.dump(value, handle, ensure_ascii=False, indent=2)
             handle.write("\n")
     print(json.dumps({"status": "local-draft-only", "instructionUtf16Units": receipt["instructionUtf16Units"],

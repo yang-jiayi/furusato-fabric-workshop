@@ -25,6 +25,8 @@ class ArtifactConsistencyDocumentTests(unittest.TestCase):
 
     def test_shared_sections_bind_real_notebooks_and_no_temp_policy(self):
         manifest = v3_artifacts.snapshot()
+        self.assertFalse(any(Path(name).suffix.lower() in {".docx", ".pdf"} for name in manifest["files"]))
+        workshop_version = (ROOT / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip()
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "artifact-set.json"
             raw = json.dumps(manifest, ensure_ascii=False).encode("utf-8")
@@ -41,7 +43,7 @@ class ArtifactConsistencyDocumentTests(unittest.TestCase):
         self.assertIn("NOTEBOOK_VERSION", text)
         self.assertIn("3.0.0", text)
         for item in manifest["notebooks"].values():
-            self.assertEqual(load_notebook(ROOT / item["path"], ROOT).version, "3.0.0")
+            self.assertEqual(load_notebook(ROOT / item["path"], ROOT).version, workshop_version)
 
     def test_stale_artifact_manifest_is_rejected_before_rendering(self):
         manifest = v3_artifacts.snapshot()

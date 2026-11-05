@@ -90,11 +90,11 @@ This independent workshop does not imply Microsoft sponsorship or endorsement.
 For traceability, unchanged copies of the upstream
 [LICENSE](../assets/architecture/upstream/LICENSE.txt),
 [NOTICE](../assets/architecture/upstream/NOTICE.txt),
-[Microsoft Terms of Use PDF](../assets/architecture/upstream/Microsoft_Terms_of_Use.pdf) and
 [Fabric manifest](../assets/architecture/upstream/fabric-manifest.json) are retained.
 Their source paths and SHA-256 values are in the local icon manifest.
-The PDF comes from the collection; the Fabric-specific permitted use was additionally
-verified against the official Fabric page.
+The source terms PDF is not distributed. The retained notice records the
+applicable restrictions and links to the canonical official Azure icon guidance.
+Fabric-specific permitted use is separately linked from that notice.
 
 ## Rendering / 描画
 

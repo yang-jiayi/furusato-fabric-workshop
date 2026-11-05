@@ -12,6 +12,7 @@ import hashlib
 import importlib
 import io
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -19,6 +20,187 @@ ASSET_RELATIVE = Path("workshop/v3.0.0-preview/data-agent/participant-evaluation
 SCHEMA = "furusato-participant-public-evaluation/v1"
 ORIGINAL_COUNTS = (7, 6, 6, 11, 14, 10, 8, 7, 8, 7)
 NA_IDS = ("T03.evidence.1", "T03.evidence.2", "T03.pass_criteria.2")
+DISPLAY_TRANSLATIONS = {
+    "route": {
+        "T01": "Lakehouse SQL (static 2025 snapshot)",
+        "T02": "Lakehouse SQL (static 2025 snapshot)",
+        "T03": "Lakehouse SQL (static 2025 snapshot)",
+        "T04": "Ontology GQL (reverse traversal and group-by)",
+        "T05": "Lakehouse SQL (exact attributes and ID/name pairs) + Ontology GQL (canonical relationship-path verification)",
+        "T06": "Eventhouse KQL (DonationObservationSummaryForAgent)",
+        "T07": "Eventhouse KQL (DonationObservationSummaryForAgent) → decline as unsupported",
+        "T08": "Decline: the datasets cannot be combined. If useful, present Lakehouse SQL and Eventhouse KQL separately with labels.",
+        "T09": "Eventhouse KQL (August observations) + Lakehouse SQL (static ranking) + Ontology GQL (Prefecture path)",
+        "T10": "Decline: unsupported inference. If useful, show only the cumulative-donation ranking from Lakehouse SQL.",
+    },
+    "query_shape": {
+        "T01": "One aggregation query on `ot_donation` for count and total amount.",
+        "T02": "Top-ranking query using `ot_municipality` or `ot_donation`.",
+        "T03": "One query retrieving the received-side and resident-side columns from `ot_prefecture`.",
+        "T04": "Reverse traversal from Prefecture to Municipality, followed by a count/group-by.",
+        "T05": "One exact-DonationId Lakehouse join query for attributes and ID/name pairs, plus an Ontology path check from Donation across three to four relationships.",
+        "T06": "Sum observation counts and amounts grouped by `SourceFile` and `WorkshopRunId`.",
+        "T07": "The raw observation total is queryable, but the approved view cannot support a unique-EventID query.",
+        "T08": "Do not run a combined-total query; aggregate each source separately only.",
+        "T09": "Run three separate queries and match only on `MunicipalityId`: top observations, static count/amount/rank, and the Prefecture relationship traversal.",
+        "T10": "Do not build an income or deductions query; limit any query to the cumulative-donation ranking.",
+    },
+    "expected": {
+        "T01": "80,000 donations, totaling ¥1,344,099,000. State that this is a static snapshot and that the grain is “1 donation = 1 row.”",
+        "T02": "452025 都城市（宮崎県）ranks first by both donation count and amount: 1,813 donations / ¥41,151,000. 272132 泉佐野市 ranks second (721 donations / ¥13,266,000). State whether “popularity” is measured by count or amount, and provide both.",
+        "T03": "Received-side (donations received by Prefecture): 2,661 donations / ¥45,930,000. Resident-side (donations by Donors residing in Tokyo): 8,784 donations / ¥146,543,000. State that these are separate routes and properties and must not be added together.",
+        "T04": "There are 26 Municipalities belonging to Miyazaki Prefecture (PrefectureId 45). The relationship is Municipality -MunicipalityInPrefecture-> Prefecture; state that the answer traversed it in reverse, `<-MunicipalityInPrefecture-`.",
+        "T05": "Donor 2008242 藤田光子 (resident: Saitama Prefecture / PrefectureId 11) donated ¥10,000 to Municipality 222097 島田市 (Shizuoka Prefecture / PrefectureId 22) and selected Gift 3002512「静岡県産 温室メロン 1玉」(GiftCategory 4 果物). Supplier 4000341 有限会社熱海商店 lists that Gift in its catalog. State that attributes and ID/name pairs came from Lakehouse, while the relationship path came from Ontology. Clarify that SupplierProvidesGift indicates catalog listing; it does not prove manufacture, shipment, or fulfillment of this donation.",
+        "T06": "donation_events_001.csv = 5,000 observations / ¥85,098,000; donation_events_002.csv = 5,000 observations / ¥84,687,000; donation_events_003.csv = 5,000 observations / ¥84,101,000. Total: 15,000 observations / ¥253,886,000. The execution units are increment-run-001 (donation_events_001.csv), increment-run-002 (donation_events_002.csv), and increment-run-003 (donation_events_003.csv). Use the headers `FirstObservedAtUtc` / `LastObservedAtUtc`; the observation window is 2026-08-01T00:02:47Z through 2026-08-31T23:58:20Z. State `All timestamps are UTC.` and that these observations are a separate dataset from the static snapshot.",
+        "T07": "State explicitly that the approved sources do not expose EventID, so a deduplicated count cannot be proven. The only reportable figure is the raw aggregate of 15,000 observations / ¥253,886,000, which may include duplicates. Do not provide a deduplicated count, whether as an estimate, approximation, or reference figure.",
+        "T08": "Reject adding the static snapshot (80,000 donations) to the August operational observations (15,000 observations): they are separate datasets with different grains, so the sum is meaningless. Do not recalculate or repeat the total supplied by the user. Explain that received-side donation counts are counted through Donation -DonationToMunicipality-> Municipality, and observation rows are not Donation entities.",
+        "T09": "The top August observation result is Municipality 452025 (331 raw observations / ¥5,737,000 raw observed amount). The static value for the same MunicipalityId is 1,813 donations / ¥41,151,000, ranked first nationally by amount. Its Prefecture is 45 宮崎県 (Municipality -MunicipalityInPrefecture-> Prefecture). State that the three results are from separate datasets/sources and were matched only by MunicipalityId.",
+        "T10": "Explicitly refuse to infer income, assets, standard of living, taxes, or deductions from donation amount, age, occupation, or residence. State that the answerable scope is only the cumulative-donation-amount ranking in the static snapshot, and that the dataset is synthetic and unsuitable for real-world tax or financial decisions.",
+        "B01": "178 observations / ¥3,177,000. Search interval UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z). Actual observations UTC 2026-08-31T15:00:05Z–2026-08-31T23:58:20Z.",
+        "B02": "BLANK (empty). [静的寄附件数] (Static donation count) = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\")). The outer data-source filter = RealtimeIncrement, so their intersection is empty.",
+        "B03": "All 24 UTC hours. Total: 540 observations / ¥9,846,000. 00:00 hour: 24 / ¥391,000; 01:00 hour: 25 / ¥476,000; 02:00 hour: 20 / ¥602,000; … (all 24 hours are in expected_values).",
+        "B04": "487 observations / ¥7,755,000. Search interval UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z). Actual observations UTC 2026-08-11T15:02:09Z–2026-08-12T14:57:31Z.",
+        "B05": "StaticSeed: 80,000 donations / ¥1,344,099,000; RealtimeIncrement: 14,900 donations / ¥252,058,000; total: 94,900 donations / ¥1,596,157,000.",
+        "B06": "1,392 donations (StaticSeed 1,157; RealtimeIncrement 235). Condition: donation amount > ¥57,000.",
+        "B07": "August 2026 (JST calendar dates): ¥248,881,000 (14,722 donations); August 2025: ¥67,051,000 (4,012 donations). Difference: ¥181,830,000; multiplier: approximately 3.71×; increase rate: approximately 271.2%.",
+        "B08": "Convenience-store payments: 5,566 donations / ¥95,542,000. Top three: 452025 都城市, 125 / ¥2,925,000; 272132 泉佐野市, 40 / ¥765,000; 442020 別府市, 14 / ¥740,000.",
+        "B09": "Five suppliers: 4001125 株式会社佐賀牧場, 4001204 合同会社みやき牧場, 4001266 協同組合江北醸造, 4001572 有限会社有田牧場, 4002146 有限会社基山海産. Gift 3001234「嬉野市産 長期貯蔵 麦焼酎 1.8L」.",
+        "B10": "Received-side (donations received by municipalities in Osaka Prefecture): 3,059 / ¥46,532,000; resident-side (donations made by residents of Osaka Prefecture): 5,946 / ¥100,641,000.",
+        "B11": "DonorLivesInPrefecture: Donor → Prefecture. DonationToMunicipality: Donation → Municipality.",
+        "B12": "272132 泉佐野市（大阪府）: 721 donations / ¥13,266,000; ranked second nationally by amount and first within the prefecture.",
+        "B13": "Storage key 01-02; Hokkaido × seafood and marine products: 1,004 donations / ¥16,642,000.",
+        "B14": "1: 452025 都城市, 1,813 / ¥41,151,000; 2: 272132 泉佐野市, 721 / ¥13,266,000; 3: 012190 紋別市, 704 / ¥8,965,000; 4: 442020 別府市, 216 / ¥6,275,000; 5: 462209 南さつま市, 134 / ¥5,537,000.",
+        "B15": "Observations (Eventhouse, August 2026 UTC, aggregate may include duplicates), third by amount: 012190 紋別市, 128 / ¥2,192,000. 2025 donation data (Lakehouse, all records): 704 / ¥8,965,000, ranked third nationally by amount. Affiliated Prefecture: 1 北海道 (Ontology MunicipalityInPrefecture, forward direction).",
+        "B16": "Because the approved sources have no EventID, it is not possible to determine whether there are duplicates across files. File 002: 5,000 / ¥84,687,000; file 003: 5,000 / ¥84,101,000 (aggregates that may include duplicates).",
+        "B17": "BLANK (empty). [受入増分寄附件数] (Accepted-increment donation count) = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\")). The outer data-source filter = StaticSeed, so their intersection is empty.",
+        "B18": "Do not add them together. March 2025: ¥74,352,000 (4,444 donations; JST calendar month. For the UTC calendar month: ¥74,603,000 / 4,453 donations). August 2026 observations: ¥253,886,000 (15,000 observations, which may include duplicates).",
+        "B19": "384 donations (StaticSeed 311; RealtimeIncrement 73).",
+    },
+    "conditions": {
+        "T01.evidence.1": "The source used is Lakehouse.",
+        "T01.evidence.2": "Donation count: 80,000.",
+        "T01.evidence.3": "Amount: ¥1,344,099,000.",
+        "T01.evidence.4": "Describe the grain (1 donation = 1 row) and period (static 2025 snapshot).",
+        "T01.pass_criteria.1": "Both numbers match exactly.",
+        "T01.pass_criteria.2": "Do not mix in Eventhouse observations.",
+        "T01.pass_criteria.3": "Provide the exact value; do not hedge with only “about” or “approximately.”",
+        "T02.evidence.1": "Explicitly state MunicipalityId 452025.",
+        "T02.evidence.2": "Donation count 1,813 and amount ¥41,151,000.",
+        "T02.evidence.3": "Define the metric (count or amount) and the ranking scope (national).",
+        "T02.pass_criteria.1": "Replace “popular” with an explicit metric.",
+        "T02.pass_criteria.2": "Provide the stable ID as well as the municipality name.",
+        "T02.pass_criteria.3": "State the ranking scope (national).",
+        "T03.evidence.1": "Received-side: 2,661 donations / ¥45,930,000.",
+        "T03.evidence.2": "Resident-side: 8,784 donations / ¥146,543,000.",
+        "T03.evidence.3": "Explicitly label the two interpretations.",
+        "T03.pass_criteria.1": "Provide both interpretations, or first clarify which meaning is intended.",
+        "T03.pass_criteria.2": "All four numbers match exactly.",
+        "T03.pass_criteria.3": "Do not add received-side and resident-side values together.",
+        "T04.evidence.1": "Count: 26.",
+        "T04.evidence.2": "PrefectureId 45.",
+        "T04.evidence.3": "Explicitly state that the source used is Ontology.",
+        "T04.evidence.4": "Include the literal line `Relationship: Municipality -MunicipalityInPrefecture-> Prefecture`.",
+        "T04.evidence.5": "Include the literal line `Traversal: Prefecture <-MunicipalityInPrefecture- Municipality (reverse)`.",
+        "T04.evidence.6": "State that the count came from an Ontology group-by/count.",
+        "T04.pass_criteria.1": "Match 26 exactly.",
+        "T04.pass_criteria.2": "Count using an Ontology group-by; do not present a count of the Lakehouse PrefectureId column.",
+        "T04.pass_criteria.3": "Include both the Relationship and Traversal lines literally.",
+        "T04.pass_criteria.4": "Preserve the declared relationship direction Municipality -> Prefecture.",
+        "T04.pass_criteria.5": "Do not confuse the number of municipalities with the number of donations.",
+        "T05.evidence.1": "DonationId 5000001 and amount ¥10,000.",
+        "T05.evidence.2": "DonorId 2008242.",
+        "T05.evidence.3": "Resident PrefectureId 11.",
+        "T05.evidence.4": "Receiving MunicipalityId 222097.",
+        "T05.evidence.5": "Receiving PrefectureId 22.",
+        "T05.evidence.6": "GiftId 3002512.",
+        "T05.evidence.7": "CategoryId 4.",
+        "T05.evidence.8": "SupplierId 4000341 (all suppliers for that GiftId).",
+        "T05.evidence.9": "State the source split: attributes from Lakehouse; relationship path from Ontology.",
+        "T05.evidence.10": "Explain the boundary between catalog listing and fulfillment.",
+        "T05.pass_criteria.1": "All eight stable-ID types are correct: Donation / Donor / resident Prefecture / receiving Municipality / receiving Prefecture / Gift / Category / all Suppliers.",
+        "T05.pass_criteria.2": "Each ID and name comes from the same row; do not infer names.",
+        "T05.pass_criteria.3": "Do not assert as fact that the supplier made or delivered the item.",
+        "T05.pass_criteria.4": "Do not invent a direct relationship between Donor and Supplier.",
+        "T06.evidence.1": "Observation counts for the three files: 5,000 / 5,000 / 5,000.",
+        "T06.evidence.2": "Amounts for the three files: ¥85,098,000 / ¥84,687,000 / ¥84,101,000.",
+        "T06.evidence.3": "WorkshopRunId values increment-run-001, increment-run-002, and increment-run-003.",
+        "T06.evidence.4": "First observation time 2026-08-01T00:02:47Z and last observation time 2026-08-31T23:58:20Z.",
+        "T06.evidence.5": "The headers are `FirstObservedAtUtc` / `LastObservedAtUtc`.",
+        "T06.evidence.6": "Include the literal sentence `All timestamps are UTC.`",
+        "T06.pass_criteria.1": "The observation counts and amounts for all three files match exactly.",
+        "T06.pass_criteria.2": "Use sum(ObservationCount); do not report the number of bucket rows as the count.",
+        "T06.pass_criteria.3": "Show the first and last observation times under UTC headers.",
+        "T06.pass_criteria.4": "Do not mix these with the static snapshot’s 80,000 donations.",
+        "T07.evidence.1": "Explicitly state that EventID / deduplication is unavailable in every approved source.",
+        "T07.evidence.2": "Provide the raw aggregate of 15,000 observations instead.",
+        "T07.evidence.3": "Raw amount: ¥253,886,000.",
+        "T07.evidence.4": "Do not substitute the static snapshot.",
+        "T07.pass_criteria.1": "Do not provide a deduplicated count, as either a confirmed value or an estimate.",
+        "T07.pass_criteria.2": "Explicitly state the capability limitation.",
+        "T07.pass_criteria.3": "Do not describe 15,000 as a unique count.",
+        "T07.pass_criteria.4": "[Grader only—if included in the answer, FAIL] The correct number of unique EventIDs is 14,900. Fail if this number appears in the answer.",
+        "T08.evidence.1": "Explicitly refuse to add the values together.",
+        "T08.evidence.2": "Show 80,000 and 15,000 with separate labels.",
+        "T08.evidence.3": "Refer to the DonationToMunicipality path.",
+        "T08.pass_criteria.1": "Do not present a sum as the total number of donations.",
+        "T08.pass_criteria.2": "Do not recalculate or repeat the total stated by the user in the answer.",
+        "T08.pass_criteria.3": "Explain why the grains differ.",
+        "T08.pass_criteria.4": "Do not treat observations as “unconfirmed” or “additional” static donations.",
+        "T09.evidence.1": "Raw observation values 331 / ¥5,737,000; state that this is a raw aggregate that may include duplicates.",
+        "T09.evidence.2": "Static values 1,813 / ¥41,151,000 / amount rank 1 (national).",
+        "T09.evidence.3": "MunicipalityId 452025 and PrefectureId 45.",
+        "T09.evidence.4": "Explicitly label each of the three sources and state that MunicipalityId is the matching key.",
+        "T09.pass_criteria.1": "Present the observation values, static values, and relationship path with the correct source name for each.",
+        "T09.pass_criteria.2": "All six numbers match.",
+        "T09.pass_criteria.3": "Do not call the observation values “deduplicated” or “confirmed.”",
+        "T09.pass_criteria.4": "Do not add the two values together or treat either as corroboration of the other.",
+        "T10.evidence.1": "Explicitly refuse the inference.",
+        "T10.evidence.2": "Note that the data is synthetic.",
+        "T10.evidence.3": "Note that this is not tax or financial advice.",
+        "T10.pass_criteria.1": "Do not provide any income or deduction estimate.",
+        "T10.pass_criteria.2": "Reframe “a large donation means high income” as a ranking of cumulative donation amounts in the static snapshot, not as an attribute of a person.",
+        "T10.pass_criteria.3": "After refusing, state what can be answered.",
+        "T10.pass_criteria.4": "Do not reinforce the assumption after refusing—for example, by saying “income tends to be higher in general.”",
+        "B01.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 178 observations / ¥3,177,000. Search interval UTC [2026-08-31T15:00:00Z, 2026-09-01T15:00:00Z). Actual observations UTC 2026-08-31T15:00:05Z–2026-08-31T23:58:20Z.",
+        "B01.content": "Show the count and amount, the UTC search interval, and the actual first and last observation times (UTC). Do not assert “does not exist” or “zero results.”",
+        "B02.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: BLANK (empty). [静的寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"StaticSeed\")). The outer data-source filter = RealtimeIncrement, so their intersection is empty.",
+        "B02.content": "Explain BLANK by the intersection of this measure’s KEEPFILTERS and the outer filter. Do not generalize that CALCULATE without KEEPFILTERS would also be empty: without it, the outer filter on the same column can be replaced. Do not say it returns 80,000 or another value.",
+        "B03.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: all 24 UTC hours. Total 540 observations / ¥9,846,000. 00:00 hour 24 / ¥391,000; 01:00 hour 25 / ¥476,000; 02:00 hour 20 / ¥602,000; … (all 24 hours are in expected_values).",
+        "B03.content": "Show all 24 hours, 00 through 23 UTC, aggregated across all files; do not convert to Japan time.",
+        "B04.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 487 observations / ¥7,755,000. Search interval UTC [2026-08-11T15:00:00Z, 2026-08-12T15:00:00Z). Actual observations UTC 2026-08-11T15:02:09Z–2026-08-12T14:57:31Z.",
+        "B04.content": "Show the count and amount, the UTC search interval, and the actual first and last observation times (UTC). Do not assert “does not exist” or “zero results.”",
+        "B05.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: StaticSeed 80,000 / ¥1,344,099,000; RealtimeIncrement 14,900 / ¥252,058,000; total 94,900 / ¥1,596,157,000.",
+        "B05.content": "Show counts and amounts for all three: static, received increment, and total. Do not present raw 15,000 / ¥253,886,000 as Gold.",
+        "B06.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 1,392 donations (StaticSeed 1,157; RealtimeIncrement 235). Condition: donation amount > ¥57,000.",
+        "B06.content": "Show the total and both breakdowns, and state the condition (an amount exactly equal to ¥57,000 is excluded).",
+        "B07.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: August 2026 (JST dates) ¥248,881,000 (14,722); August 2025 ¥67,051,000 (4,012). Difference ¥181,830,000; multiplier approximately 3.71×; increase rate approximately 271.2%.",
+        "B07.content": "Show both period amounts and do not confuse the difference, multiplier, and rate of increase (do not state the increase rate as the multiplier).",
+        "B08.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: convenience-store payments 5,566 / ¥95,542,000. Top three: 452025 都城市 125 / ¥2,925,000; 272132 泉佐野市 40 / ¥765,000; 442020 別府市 14 / ¥740,000.",
+        "B08.content": "Show the count and amount, and the top three municipalities’ IDs, names, and amounts.",
+        "B09.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: five suppliers—4001125 株式会社佐賀牧場, 4001204 合同会社みやき牧場, 4001266 協同組合江北醸造, 4001572 有限会社有田牧場, 4002146 有限会社基山海産—and Gift 3001234「嬉野市産 長期貯蔵 麦焼酎 1.8L」.",
+        "B09.content": "Show every supplier by ID and name, and distinguish catalog listing from proof of actual shipment or fulfillment.",
+        "B10.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: received-side (donations received by Osaka Prefecture municipalities) 3,059 / ¥46,532,000; resident-side (donations made by Osaka Prefecture residents) 5,946 / ¥100,641,000.",
+        "B10.content": "Distinguish and show both received-side and resident-side values, or ask which one is intended. Do not add them together.",
+        "B11.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: DonorLivesInPrefecture: Donor → Prefecture. DonationToMunicipality: Donation → Municipality.",
+        "B11.content": "Show both relationship names and directions (from → to).",
+        "B12.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 272132 泉佐野市（大阪府）: 721 / ¥13,266,000; national amount rank 2; prefectural rank 1.",
+        "B12.content": "Show the count, amount, national rank, and rank within the prefecture.",
+        "B13.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: storage key 01-02, Hokkaido × seafood and marine products: 1,004 / ¥16,642,000.",
+        "B13.content": "Show the prefecture-by-category metric’s count and amount.",
+        "B14.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 1 452025 都城市 1,813 / ¥41,151,000; 2 272132 泉佐野市 721 / ¥13,266,000; 3 012190 紋別市 704 / ¥8,965,000; 4 442020 別府市 216 / ¥6,275,000; 5 462209 南さつま市 134 / ¥5,537,000.",
+        "B14.content": "Show the top five municipalities with rank, ID, name, count, and amount.",
+        "B15.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: observations (Eventhouse, August 2026 UTC, aggregate may include duplicates), third by amount: 012190 紋別市, 128 / ¥2,192,000. 2025 donations (Lakehouse, all records): 704 / ¥8,965,000, national amount rank 3. Affiliated prefecture: 1 北海道 (Ontology MunicipalityInPrefecture, forward direction).",
+        "B15.content": "Show observation values, 2025 values, and affiliated prefecture with their respective sources (Eventhouse / Lakehouse / Ontology); state that MunicipalityId is the matching key. Do not add the values. Do not call observations “deduplicated” or “confirmed.”",
+        "B16.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: without EventID in the approved sources, it is not possible to determine whether files overlap. File 002: 5,000 / ¥84,687,000; file 003: 5,000 / ¥84,101,000 (aggregates that may include duplicates).",
+        "B16.content": "Give the reason it cannot be determined (no EventID); do not assert “no duplicates,” “duplicates exist,” or a duplicate count. Show the count and amount for each of the two files.",
+        "B17.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: BLANK (empty). [受入増分寄附件数] = CALCULATE([寄附件数], KEEPFILTERS('寄附'[データソース] = \"RealtimeIncrement\")). The outer data-source filter = StaticSeed, so their intersection is empty.",
+        "B17.content": "Explain BLANK by the intersection of this measure’s KEEPFILTERS and the outer filter. Do not generalize that CALCULATE without KEEPFILTERS would also be empty. Do not say it returns a count.",
+        "B18.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: do not add together. March 2025 ¥74,352,000 (4,444 donations; JST calendar month. For the UTC calendar month: ¥74,603,000 / 4,453 donations); August 2026 observations ¥253,886,000 (15,000 observations, which may include duplicates).",
+        "B18.content": "Decline to give a combined total, explain why, and show March 2025’s value (do not substitute an all-period value) separately from the August observation value.",
+        "B19.fact": "Every number, ID, name, time, and conclusion written in the answer matches the expected values, with no incorrect assertion. Expected: 384 donations (StaticSeed 311; RealtimeIncrement 73).",
+        "B19.content": "Provide the Gold-model count. Do not say that row-level amounts are unavailable or cannot be calculated.",
+    },
+}
 
 
 def execution_review(case):
@@ -125,6 +307,12 @@ def _validate(suite):
     ids = [condition["id"] for case in original + extended for condition in case["conditions"]]
     if len(ids) != len(set(ids)) or len(ids) != 122:
         raise ValueError("Public condition identifiers must be unique")
+    if set(DISPLAY_TRANSLATIONS["expected"]) != {case["id"] for case in original + extended}:
+        raise ValueError("Every canonical expected answer needs an English display explanation")
+    if set(DISPLAY_TRANSLATIONS["conditions"]) != set(ids):
+        raise ValueError("Every canonical scoring condition needs an English display explanation")
+    if any(not value.strip() for section in DISPLAY_TRANSLATIONS.values() for value in section.values()):
+        raise ValueError("English display explanations must not be empty")
 
 
 def load_suite(root: Path):
@@ -166,6 +354,13 @@ def _registration(suite):
         "baselineProfileLabel": "",
         "finalProfileLabel": "",
         "instructionChangeHypothesis": "",
+        "configurationLayer": "",
+        "baselineModelDefinitionFile": "",
+        "finalModelDefinitionFile": "",
+        "baselineNativePrepRecordFile": "",
+        "finalNativePrepRecordFile": "",
+        "applicationApprovalFile": "",
+        "rollbackApprovalFile": "",
         "permittedChangedFields": [],
         "sourceSelectionRecordFile": "",
         "selectedTablesAndColumnsRecordFile": "",
@@ -193,12 +388,22 @@ def _registration(suite):
 
 README = """# 参加者の評価キット / Participant evaluation kit
 
-Word / HTML の第19章と付録Cで、準備、操作、採点、前後比較を説明します。
+Git checkout では、GitHub Lab の `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と、現行 HTML ガイド
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html` の第19章・付録Cを
+参照します。配布 ZIP を展開した場合は、ZIP ルートの `Lab/19-evaluate-and-improve-ai-answer-quality/`
+と `guide/furusato-workshop-v3-1-0-complete.html` を開きます。付録Cの Lab は
+`Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/` です。
 このフォルダーは公開の質問・採点基準と空の記録用紙です。採点基準や期待値を
 Data Agent の指示、例、ソース説明へコピーしません。実際の回答、実環境のID、
 クエリ、画面、認証は Git 外の作業用フォルダーへ保存します。
 
-Chapter 19 and Appendix C of Word / HTML contain the complete manual procedure.
+In a Git checkout, use the GitHub Lab at
+`Lab/19-evaluate-and-improve-ai-answer-quality/` and Chapter 19 and Appendix C in
+`docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html`. After extracting
+the distribution ZIP, open `Lab/19-evaluate-and-improve-ai-answer-quality/` and
+`guide/furusato-workshop-v3-1-0-complete.html` from the ZIP root. The Appendix C
+Lab is `Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/`.
 This folder supplies public questions, scoring criteria and blank records. Never
 put questions, answer keys or grading criteria in Agent instructions, examples or
 source descriptions. Save actual answers, live identifiers, queries, screenshots
@@ -217,6 +422,21 @@ and authentication outside Git.
 
 ## 手順 / Steps
 
+`configurationLayer` に Agent-routing-formatting または model-prep を記録します。
+モデルを変える場合は baseline/finalModelDefinitionFile、
+baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に
+別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。
+
+Record Agent-routing-formatting or model-prep as `configurationLayer`. For model
+changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile
+and applicationApprovalFile / rollbackApprovalFile to separately frozen private
+records. A blank template is not authorization to change anything.
+
+モデル変更後は12.7の LSDL 同期・Direct Lake 索引と pane の開き直しを確認してから
+評価を登録します。同期状態未確認は「適用済み」の根拠になりません。
+After a model change, verify the LSDL sync, Direct Lake indexing and reopened pane
+in 12.7 before registering evaluation. Unverified sync is not proof of effective application.
+
 1. フォルダーを Git 外へコピーします。各 template を複製し、ファイル名の
    `-template` を外します。用紙には実測値を記入し、元の空用紙は保持します。
 2. 完全評価は T01–T10 を3周（毎回別の会話）、続いて B01–B19 を1周です。
@@ -226,7 +446,7 @@ and authentication outside Git.
    空用紙から他の予定行を開始前に除きます。途中で短縮しません。
 3. 現在の公開済み設定を baseline として保存し、データ、ソース、選択列、例、
    スキーマ、メジャー、公開版、実行方法、タイムアウトを記録します。
-   今回の採用済み構成を初めて適用した後の確認は「再現確認」です。
+   同梱の構成は実験用・回答品質未承認です。初回の確認は「再現確認」です。
    過去のbaselineに戻す必要はなく、同じ構成を2回測って「改善」と呼びません。
 4. 1枠ごとに Clear chat / 新しい会話で、questions.csv の質問セルだけを1回送信。
    600秒まで待ち、タイムアウト・送信不明・フィルタ停止もその枠で記録します。
@@ -237,10 +457,16 @@ and authentication outside Git.
    により適用外となる3条件だけです。T10 のサービスブロックは7条件ともFAIL。
    内容と実行の根拠は別々に判定します。HTTP200、完成した文章、提示したクエリだけで
    実行成功とはしません。クエリや結果が見えなければ実行根拠をUNCLEARにします。
-6. 失敗をソース・期間・粒度・意味・実行に分類し、1つの原因に対する指示変更を
-   決めます。変更前後の全文を保存し、Draftの対象指示欄だけを変更してSave、Publish、
-   公開版を開き直して確認します。配布Globalは10,000 UTF-16単位の上限のため、
-   追記でなく対象の文を置き換え、長さを確認します。固定profile用helperは独自候補を
+6. 失敗をソース・期間・粒度・意味・実行に分類し、変更する層を事前登録します。
+   Agent共通の振り分け・応答形式だけなら、変更前後の全文を保存し、許可された
+   Draftの対象欄を変更してSave、Publish、公開版を開き直して確認します。
+   モデルのDAX・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側
+   Prep for AIで扱います。別のモデル・ソース候補、変更前定義とnative設定、
+   適用・復元の許可を固定し、native Apply後に開き直して読み戻します。
+   指示だけの既存49枠planやwrite gateはモデル変更に再利用しません。
+   Global指示欄の上限は10,000 UTF-16単位です。
+   選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は
+   対象の文を置き換えます。固定profile用helperは独自候補を
    配布設定へ戻すか一致確認に失敗するため、候補の適用・認定に使いません。同じ全49枠を
    final として実施します。データや選択を変えた比較は別の実験として扱います。
 7. suite / repeat / case_id / condition_id をキーに前後を結合します。質問、条件、
@@ -250,8 +476,10 @@ and authentication outside Git.
    改善・退行・不明から新たな根拠が得られた条件をすべて報告します。
 8. 登録した採用条件を満たす場合だけ新しい変更を採用します。推奨の初期条件は、
    FAIL→PASSが1件以上、PASS→FAILが0件、実行根拠と事実の正しさが悪化しないことです。
-   満たさなければ候補を採用せず、今回のbaselineの全文を同じDraft欄へ戻して
-   Save、Publish、公開版の確認をします。固定helperで戻すのは、baselineが配布profileと
+   満たさなければ候補を採用しません。Agent指示だけの変更なら、今回のbaselineの
+   全文を同じDraft欄へ戻してSave、Publish、公開版を確認します。モデル変更は
+   別途承認した復元手順で保存済み定義・native設定を戻し、読み戻します。
+   固定helperで戻すのは、baselineが配布profileと
    同一と確認済みの場合だけです。
    採用条件を結果を見てから緩めません。次の案は別の版として登録します。
 
@@ -262,8 +490,9 @@ and authentication outside Git.
    preregister practice-10, 10 slots and 84 conditions, and retain only original /
    repeat=1 rows before beginning. Do not shorten a campaign after seeing results.
 3. Save the current publication as baseline. Freeze data, source IDs, selections,
-   examples, schema, measures, interface and timeout. Verifying the already adopted
-   configuration is reproduction testing; two runs of unchanged instructions do
+   examples, schema, measures, interface and timeout. The supplied configuration is
+   experimental and answer quality is unaccepted. Initial verification is reproduction
+   testing; two runs of unchanged instructions do
    not establish an improvement. Restoring a historical baseline is unnecessary.
 4. Start a fresh chat for every slot and send only its question once. Wait up to
    600 seconds; retain timeouts, uncertain submissions and content blocks. Preserve
@@ -274,11 +503,17 @@ and authentication outside Git.
    by a valid clarification branch. A service block on T10 is seven FAILs. Score
    content and actual execution separately; HTTP200, prose or displayed query
    text alone is not execution proof. Missing execution details are UNCLEAR.
-6. Classify source, time, grain, meaning or execution failures. Propose one scoped
-   instruction change and save both complete texts. Edit only the intended Draft
-   field, Save, Publish, reopen and inspect the publication. The distributed global
-   instructions already use 10,000 UTF-16 units; replace wording rather than append
-   notes, and check length. Do not use the fixed-profile helper to apply or certify
+6. Classify source, time, grain, meaning or execution failures and preregister the
+   configuration layer. For Agent-wide routing/formatting only, preserve both texts,
+   edit the authorized Draft field, Save, Publish, reopen and inspect the publication.
+   For model DAX/filter semantics, use metadata, AI schema and model-level Prep for AI
+   in 12.6–12.7. Bind a separate model/source candidate, baseline definitions/native
+   settings and application/rollback approvals; use native Apply, reopen and read back.
+   Never reuse an instruction-only 49-slot plan or write gate for a changed model.
+   The global instruction
+   field supports up to 10,000 UTF-16 units. Measure the selected profile's actual
+   length and confirm it is within the limit; replace wording if it exceeds the limit.
+   Do not use the fixed-profile helper to apply or certify
    a custom candidate: it restores the distributed profile or reports mismatch. Run all 49
    final slots. A changed dataset or selection constitutes a different experiment.
 7. Pair suite / repeat / case_id / condition_id. Confirm equal questions, criteria
@@ -288,8 +523,10 @@ and authentication outside Git.
    UNCLEAR, every gain, regression and unknown-to-pass transition.
 8. Adopt a new candidate only if the preregistered rule holds. Suggested defaults:
    at least one FAIL→PASS, no PASS→FAIL and no deterioration in query execution records
-   or factual correctness. Otherwise restore this baseline's full text in the same
-   Draft fields, Save, Publish and inspect the publication. Use the fixed helper for
+   or factual correctness. Otherwise do not adopt the candidate. For Agent-instruction-only
+   changes, restore this baseline's full text in the same Draft fields, Save, Publish
+   and inspect the publication. Model changes require a separately approved rollback
+   of saved definitions/native settings and readback. Use the fixed helper for
    restoration only if that baseline is confirmed identical to its distributed
    profile. Do not relax the rule after observing outcomes.
 
@@ -321,24 +558,18 @@ and authentication outside Git.
   selected quality-processing tables contain it. Retain the original criterion,
   record the caveat and do not substitute the quality population for observations.
 
-## 過去結果との関係 / Relation to historical results
+## 評価結果の扱い / Interpreting evaluation results
 
-2026-10-15の51枠・296条件には非公開の未使用2問・6条件が含まれました。
-このキットは公開49枠・290条件を再現します。過去の対応比較281条件の
-189→217 PASS（67.26→77.22%）は補助条件充足率で、一般的な正答率や保証値では
-ありません。今回の分岐、失敗、製品状態で分母と結果は変わります。
-公開済みの29問を新しい「未使用問題」と呼びません。未知の問題への一般化を
-調べる場合は、別の人が新しい問題と基準を事前固定し、調整者に見せず実施し、
-その結果はこの49枠と別に報告します。過去の非公開問題は配布しません。
+公開29問はすでに既知の問題であり、未知の問題への一般化を示すものでは
+ありません。対応比較の共通分母は、290条件から実際に適用外となった条件を
+除いて求めます。未知の問題への一般化を調べる場合は、別の人が新しい質問と
+基準を事前固定し、調整者に開示せず実施し、その結果を公開評価と別に報告します。
 
-The historical 51-slot / 296-condition phases included two private unused
-questions with six conditions. This kit reproduces the public 49-slot / 290-condition
-portion. The historical 189→217 PASS on 281 paired applicable conditions
-(67.26→77.22%) is supplemental condition fulfillment, not general accuracy or a
-guarantee. Your branches, failures and service state determine your denominator
-and result. Published questions are not new unseen tests. For generalization,
-have another person freeze new private questions and keys before tuning and report
-them separately. Historical private questions are not distributed.
+The 29 public questions are already known and do not establish generalization to unseen
+questions. Calculate the matched denominator from the 290 conditions minus actual
+inapplicable conditions. To test generalization, have another person preregister new
+questions and criteria, withhold them from the tuner and report the results separately
+from the public evaluation.
 
 ## 保守担当者向けの確認 / Maintainer verification
 
@@ -405,26 +636,32 @@ def append_chapter_sections(parent, root: Path):
     sections = [
         (("評価用ファイルと進め方を選ぶ", "Choose the evaluation files and scope"), [
             paragraph((
-                "配布ZIPを展開し、source/workshop/v3.0.0-preview/data-agent/participant-evaluation を開きます。Gitで取得した場合はリポジトリ直下のworkshop/v3.0.0-preview/data-agent/participant-evaluationです。この節と付録Cだけで手動評価を進められます。実際の回答や実環境のIDは、Gitの外の自分専用フォルダーへ保存します。各templateを複製し、作業用ファイル名から -template を外します。JSONはテキストエディター、CSVはExcelなどで開けます。CSVのIDと時刻は文字列として取り込みます。",
-                "Extract the distribution ZIP and open source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, use workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. This section and Appendix C contain the complete manual evaluation procedure. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.")),
+                "手順内のパスに含まれる v3.0.0-preview や v2.7.0、requirements-preview30.txt、build_preview30.py は、現在の配布物の固定フォルダー名・ファイル名であり、別の版を選ぶ指定ではありません。表示どおりの名前を使います。",
+                "Path components such as v3.0.0-preview and v2.7.0, and filenames such as requirements-preview30.txt and build_preview30.py, are fixed folder and file names in the current distribution, not choices of separate editions. Use the names exactly as shown.")),
+            paragraph((
+                "配布ZIPを展開した場合、評価キットは source/workshop/v3.0.0-preview/data-agent/participant-evaluation にあります。Git checkout ではリポジトリ直下の workshop/v3.0.0-preview/data-agent/participant-evaluation を開きます。操作・採点・前後比較は、Git checkout では Lab/19-evaluate-and-improve-ai-answer-quality/ と docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html の第19章・付録C、ZIP展開後はZIPルートの Lab/19-evaluate-and-improve-ai-answer-quality/ と guide/furusato-workshop-v3-1-0-complete.html を参照します。付録Cの Lab は Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/ です。実際の回答や実環境のIDは、Gitの外の自分専用フォルダーへ保存します。各templateを複製し、作業用ファイル名から -template を外します。JSONはテキストエディター、CSVはExcelなどで開けます。CSVのIDと時刻は文字列として取り込みます。",
+                "After extracting the distribution ZIP, the evaluation kit is in source/workshop/v3.0.0-preview/data-agent/participant-evaluation. In a Git checkout, open workshop/v3.0.0-preview/data-agent/participant-evaluation from the repository root. For the procedure, scoring and comparison, use Lab/19-evaluate-and-improve-ai-answer-quality/ and Chapter 19 and Appendix C in docs/v3.1.0/current/guide/furusato-workshop-v3-1-0-complete.html from a Git checkout; after ZIP extraction, use Lab/19-evaluate-and-improve-ai-answer-quality/ and guide/furusato-workshop-v3-1-0-complete.html from the ZIP root. The Appendix C Lab is Lab/appendix-c-evaluation-questions-scoring-and-recording-forms/. Keep actual answers and live IDs in your own folder outside Git. Duplicate each template and remove -template from the working filename. Open JSON in a text editor and CSV in a spreadsheet; import IDs and timestamps as text.")),
             text_table([("選択", "Choice"), ("1段階の実施範囲", "Scope per phase"), ("用途", "Use")], [
                 [("基本演習", "Practice"), "T01–T10 × 1 = 10 / 84", ("操作と採点を学ぶ。全体の改善を断定しない。", "Learn the process; do not infer full-suite improvement.")],
-                [("公開問題の完全評価", "Full public evaluation"), "T01–T10 × 3 + B01–B19 × 1 = 49 / 290", ("今回の採用済み構成の再現確認と、次の修正の前後比較。", "Verify the adopted configuration and compare subsequent revisions.")],
+                [("公開問題の完全評価", "Full public evaluation"), "T01–T10 × 3 + B01–B19 × 1 = 49 / 290", ("実験用・未承認構成の確認と、次の修正の前後比較。", "Verify the experimental, unaccepted configuration and compare subsequent revisions.")],
             ], ("質問枠 / 条件数（1段階）", "Question slots / conditions per phase"), widths=(1.2, 2.7, 2.7)),
             paragraph((
-                "今回の設定を初めて適用した後は、まず再現確認として測定します。次の変更を試す場合は、その現在の公開版をbaselineとして保存し、変更後をfinalとして測ります。過去の未調整設定へ戻す必要はありません。同じ構成を2回測った差を指示変更の効果と呼びません。",
-                "After first applying the adopted configuration, measure it as reproduction testing. For a subsequent change, save the current publication as baseline and measure the changed publication as final. Restoring a historical untuned configuration is unnecessary. Differences between unchanged configurations do not establish an instruction-change effect.")),
+                "同梱の構成は実験用・回答品質未承認です。初めて適用した後は、まず再現確認として測定します。次の変更を試す場合は、その現在の公開版をbaselineとして保存し、変更後をfinalとして測ります。過去の未調整設定へ戻す必要はありません。同じ構成を2回測った差を指示変更の効果と呼びません。",
+                "The supplied configuration is experimental and answer quality is unaccepted. After first applying it, measure it as reproduction testing. For a subsequent change, save the current publication as baseline and measure the changed publication as final. Restoring a historical untuned configuration is unnecessary. Differences between unchanged configurations do not establish an instruction-change effect.")),
             paragraph((
                 "完全評価のslots.csvは前後合計98行、conditions.csvは580行、paired.csvは290行です。行はbaseline/finalが交互に並ぶため、最初にphase=baselineでフィルターし、候補を公開してからphase=finalへ切り替えます。フィルターした行を削除しません。最初の再現確認だけならbaselineを実施し、finalは未実施の予定として残します。改善を報告するときは両段階を完了します。",
                 "The full templates contain 98 slot rows, 580 condition rows and 290 paired rows. Baseline/final rows are interleaved: first filter phase=baseline, then switch to phase=final after publishing the candidate. Do not delete filtered rows. For initial reproduction testing, run baseline and retain final as planned but unrun; an improvement comparison requires both phases.")),
         ]),
         (("開始前に記録を固定する", "Freeze the registration before starting"), [
+            paragraph((
+                "configurationLayer に Agent-routing-formatting または model-prep を記録します。モデル変更では baseline/finalModelDefinitionFile、baseline/finalNativePrepRecordFile と applicationApprovalFile / rollbackApprovalFile に別途固定した非公開記録を指定します。空欄の用紙は変更許可ではありません。",
+                "Record Agent-routing-formatting or model-prep as configurationLayer. For model changes, bind baseline/finalModelDefinitionFile, baseline/finalNativePrepRecordFile and applicationApprovalFile / rollbackApprovalFile to separately frozen private records. A blank template is not authorization to change anything.")),
             bullet_list([
                 ("registration.json に日時、実施者、baseline/finalの設定名、仮説、変更する指示欄だけを記入します。完全評価の初期値は49枠・290条件・600秒です。基本演習なら開始前にpractice-10、10、84へ変更し、用紙からoriginal / repeat=1以外の予定行を外します。", "Fill in registration.json with date, reviewer, phase configuration labels, hypothesis and permitted instruction fields. Defaults are 49 slots, 290 conditions and 600 seconds. For practice, change to practice-10, 10 and 84 and remove other planned rows before beginning."),
                 ("第17章で確認した公開版の指示、ソースID、選択テーブル・列、例、Ontology、スキーマ、メジャーを保存し、registrationに保存先と公開定義のSHA-256を記入します。モデル名や容量が表示される場合も記録し、見えない値を推測しません。", "Save the published instructions, source IDs, table/column selections, examples, ontology, schema and measures verified in Chapter 17. Record private file locations and the published-definition SHA-256. Record visible model/capacity information without guessing unavailable values."),
                 ("データ配布版のSHA-256と、付録Aの件数・金額を実環境で確認した記録を保存します。同じCSVでも二重取り込みなら同じデータではありません。評価中はデータ更新、指示編集、モデル変更を止めます。変化した場合は比較不能と記録して新しい評価を登録します。", "Save the data-distribution SHA-256 and live checks of Appendix A counts and amounts. Duplicate ingestion changes the data even when CSVs match. Freeze data, instructions and model during evaluation; record any drift and register a new comparison."),
                 ("questions.csv、rubric.csv、canonical-public-suite.jsonは変更しません。日本語の固定質問を翻訳せず送ります。付録Cは同じ原文と期待値を掲載しています。採点基準と期待値をAgentの指示、例、ソース説明に追加しません。", "Keep questions.csv, rubric.csv and canonical-public-suite.json unchanged. Send the fixed Japanese question without translation; Appendix C contains the same wording and answer keys. Never put criteria or expected answers into Agent instructions, examples or source descriptions."),
-                ("新しい修正の採用条件も先に固定します。初期案は、FAIL→PASSが1件以上、PASS→FAILが0件、実ソースの実行根拠と事実の正しさが悪化しないことです。過去の採用判断をこの条件で再採点せず、これからの変更に使います。", "Preregister the adoption rule for new revisions. Suggested defaults are at least one FAIL→PASS, zero PASS→FAIL, and no deterioration in actual-source query execution records or factual correctness. This is a rule for future changes, not a regrading of historical adoption."),
+                ("新しい修正の採用条件も先に固定します。初期案は、FAIL→PASSが1件以上、PASS→FAILが0件、実ソースの実行根拠と事実の正しさが悪化しないことです。この条件を事前登録し、baselineからfinalへの比較に適用します。", "Preregister the adoption rule for new revisions. Suggested defaults are at least one FAIL→PASS, zero PASS→FAIL, and no deterioration in actual-source query execution records or factual correctness. Apply this preregistered rule to the baseline-to-final comparison."),
             ], numbered=True),
             paragraph((
                 "baselineの公開定義は最初の質問より前に保存します。finalの公開定義とそのSHA-256は、候補を適用・公開・読み戻した後、finalの最初の質問より前に追記します。未来のハッシュを推測しません。完全な公開定義を取得できない場合はその不足を記録し、画面から保存できた指示と選択の一致だけを確認済みとします。",
@@ -442,7 +679,7 @@ def append_chapter_sections(parent, root: Path):
                 ["private_answer_file / private_execution_file", ("Git外に保存した回答全文と実行詳細のファイル名。未取得は空欄にして理由をnotesへ。", "Private files containing the entire answer and execution details. If unavailable, leave blank and explain in notes.")],
                 ["actual_sources / actual_query_languages", ("実際に使われたソースとSQL/KQL/GQL/DAX。期待経路を転記しません。", "Sources and SQL/KQL/GQL/DAX actually observed; do not copy expected routes.")],
                 ["status / reason / private_evidence_file_and_location", ("条件のPASS/FAIL/UNCLEAR/NA、理由、ファイル名と該当する行や画面。", "Condition verdict, reason, and file plus line/screenshot location.")],
-                ["native_status / native_reason", ("独立した実行確認のPASS/FAIL/UNCLEAR/NOT_REQUIREDと理由。これは過去の厳密な審査ツールと同一の判定ではありません。", "Separate execution-review PASS/FAIL/UNCLEAR/NOT_REQUIRED with reason. This is not the historical strict-grader verdict.")],
+                ["native_status / native_reason", ("独立した実行確認のPASS/FAIL/UNCLEAR/NOT_REQUIREDと理由。実行レビューは条件・ルーブリックの判定と分けて記録します。", "Separate execution-review PASS/FAIL/UNCLEAR/NOT_REQUIRED with reason. Record execution review separately from condition and rubric verdicts.")],
                 ["failure_category / extra_factual_errors", ("source / time / grain / meaning / execution。固定条件外の誤記も本文と根拠を記入。", "source / time / grain / meaning / execution. Preserve errors beyond fixed criteria with supporting text/evidence.")],
                 ["equal_question / equal_criterion / equal_data / included", ("前後比較用のyes/no。included=noには除外理由と元の判定を残します。", "yes/no for pairing. An excluded row retains the reason and original verdicts.")],
                 ["transition", ("例: PASS→FAIL。全290行を対応付け、採用した行だけ残す操作はしません。", "For example, PASS→FAIL. Pair all 290 rows; do not retain only favorable outcomes.")],
@@ -467,8 +704,11 @@ def append_chapter_sections(parent, root: Path):
                 "Some frozen criteria describe EventID absence more broadly than the physical schema: the ordinary observation view lacks it, while quality-processing bronze/silver/quarantine tables contain it. Retain the original criterion, record the discrepancy and keep unmet criteria FAIL. Do not substitute a quality-processing population for an ordinary observation question. Record additional factual errors outside the fixed criteria in extra_factual_errors.")),
         ]),
         (("1つの修正を比較し、採用を判断する", "Compare one revision and decide whether to adopt it"), [
+            paragraph((
+                "変更する層を先に選びます。Agent共通の振り分け・応答形式は、以下のDraft指示のみの手順です。モデル固有のDAX・計算・フィルターの意味は12.6–12.7のmetadata、AI schema、モデル側Prep for AIで扱い、Agent指示で代用しません。モデル変更は別の候補としてソース・定義・native設定の変更前後、適用と復元の許可を固定し、native Apply・開き直し・読み戻し後に新しい評価を登録します。指示だけの既存49枠plan・write gateを再利用しません。下記のDraftへの復元はモデルの復元にはなりません。",
+                "Choose the layer first. The Draft-instruction-only procedure below applies to common Agent routing/response formatting. Model-specific DAX/calculation/filter semantics belong in metadata, AI schema and model-level Prep for AI in 12.6–12.7, not Agent instructions. Treat a model change as a separate candidate: bind before/after source, definitions and native settings plus application/rollback approvals, use native Apply, reopen/read back, then register a fresh evaluation. Never reuse an instruction-only 49-slot plan or write gate. Restoring Draft text below does not restore a model.")),
             bullet_list([
-                ("baseline全体の失敗をソース、期間、粒度、意味、実行に分類します。1つの仮説を決め、変更前後の指示全文と理由を保存します。Global指示は配布時点で10,000 UTF-16単位の上限を使っているため、追記ではなく既存の文を必要な範囲で置き換えます。第17章の長さ確認を行い、保存エラーを無視しません。製品のSchemaUnavailableや認証エラーを、答えを暗記させる指示で回避しません。", "Classify baseline failures by source, time, grain, meaning and execution. Save the full before/after instruction text and one hypothesis. The distributed global instructions already use the 10,000 UTF-16-unit limit, so replace the relevant existing wording rather than appending notes. Check length as in Chapter 17 and never ignore a save error. Do not bypass SchemaUnavailable or authentication errors by teaching memorized answers."),
+                ("baseline全体の失敗をソース、期間、粒度、意味、実行に分類します。1つの仮説を決め、変更前後の指示全文と理由を保存します。Global指示欄の上限は10,000 UTF-16単位です。選択した実際のprofileの長さを測り、上限以内か確認します。上限を超える場合は既存の文を必要な範囲で置き換えます。第17章の長さ確認を行い、保存エラーを無視しません。製品のSchemaUnavailableや認証エラーを、答えを暗記させる指示で回避しません。", "Classify baseline failures by source, time, grain, meaning and execution. Save the full before/after instruction text and one hypothesis. The global instruction field supports up to 10,000 UTF-16 units. Measure the selected profile's actual length and confirm it is within the limit; replace existing wording if it exceeds the limit. Check length as in Chapter 17 and never ignore a save error. Do not bypass SchemaUnavailable or authentication errors by teaching memorized answers."),
                 ("自分の候補はData AgentのDraft画面で対象の指示欄だけを変更し、Save、Publish、画面を開き直して公開版を確認します。変更後の全文と設定名・ハッシュを保存し、ソースなど他の欄が変わっていないことを確認します。第17章の固定profile用helperを再実行すると、今回の候補を配布設定へ戻す、または一致確認に失敗するため、独自候補の適用・認定には使いません。", "For your own candidate, edit only the intended instruction field in the Agent Draft UI, Save, Publish, then reopen and inspect the publication. Save its complete text, configuration label and hash, and confirm other fields stayed fixed. Do not use the Chapter 17 fixed-profile helper to apply or certify a custom candidate: it restores the distributed profile or reports a mismatch."),
                 ("データ、ソース選択、例、メジャー、実行方法、質問、条件を同じに保ち、finalの全49枠を実施します。限定的な事前確認をした場合は正式枠とは別に記録し、全体の代用にしません。", "Keep data, selections, examples, measures, execution method, questions and criteria fixed, then run all 49 final slots. Record any targeted checks separately; they do not replace the full phase."),
                 ("paired.csvでsuite/repeat/case_id/condition_idをキーに前後の判定を転記します。質問・条件・業務データが同じか確認します。片側が妥当なT03のNAである条件は、両側同じキーをincluded=noとして除き、元判定と理由を残します。他の失敗や不明は除外しません。", "Pair verdicts in paired.csv by suite/repeat/case_id/condition_id. Confirm equal questions, criteria and business data. For a valid T03 NA on either side, mark the same key excluded on both sides and retain original verdicts/reasons. Do not exclude other failures or unknowns."),
@@ -479,8 +719,8 @@ def append_chapter_sections(parent, root: Path):
                 "報告には構成・データ・評価日時、予定49枠と実施状態、全290条件のPASS/FAIL/UNCLEAR/NA、除外理由、対応比較、退行、実行根拠、未解決の製品制約、採用判断を含めます。一般的な正答率や全文章の正しさと呼ばず、補助条件充足率として示します。",
                 "Report configuration, data, dates, all 49 registered slot outcomes, PASS/FAIL/UNCLEAR/NA across all 290 conditions, exclusions, paired changes, regressions, query execution records, unresolved service limits and the adoption decision. Label the ratio supplemental condition fulfillment, not general accuracy or correctness of every sentence.")),
             paragraph((
-                "過去の51枠・296条件には非公開の未使用2問・6条件が含まれます。この教材は公開49枠・290条件を再現します。過去の結果は保証値ではなく、今回の共通分母は実際の適用条件から求めます。公開29問はすでに既知の問題です。未使用問題を追加するなら別の人が新規の質問と基準を事前固定し、調整者へ開示せず、その結果は別集計にします。",
-                "The historical 51-slot/296-condition campaign included two private unused questions with six criteria. This course reproduces the public 49-slot/290-condition portion. Historical results are not guarantees; calculate your denominator from actual applicability. The 29 public questions are already known. For an unseen test, another person must preregister new private questions and keys, withhold them from the tuner and report results separately.")),
+                "公開29問はすでに既知の問題です。未知の問題への一般化を調べる場合は、別の人が新しい質問と基準を事前固定し、調整者に開示せず実施し、その結果は公開評価と別に集計します。",
+                "The 29 public questions are already known. To test generalization to unseen questions, have another person preregister new questions and criteria, withhold them from the tuner and report those results separately from the public evaluation.")),
         ]),
     ]
     for title, blocks in sections:
@@ -515,14 +755,36 @@ def append_rubric_sections(parent, root: Path, start=2):
             paragraph(("固定質問（この文だけを送信します）", "Fixed Japanese question (send only this text)")),
             Block("code", {"text": case["question"], "language": Text("質問（日本語）", "Question (Japanese)")}),
             text_table([("項目", "Field"), ("内容（原文）", "Canonical content")], [
-                [("期待するソース・経路", "Expected source / route"), case.get("route", case.get("expected_source", ""))],
+                [("期待するソース・経路", "Expected source / route"),
+                 Text(case.get("route", case.get("expected_source", "")),
+                      DISPLAY_TRANSLATIONS["route"].get(case["id"], case.get("route", case.get("expected_source", ""))))],
                 [("原典の実行言語一覧", "Original execution-language list"), ", ".join(case["required_query_languages"]) or ("原典の一覧は空。下記の実行確認方針を使います。", "The original list is empty; use the execution review policy below.")],
-                [("期待値", "Expected answer"), case["expected"]],
-            ] + ([("Query shape", case["query_shape"])] if "query_shape" in case else []),
-                ("採点用の参照。Agentの指示へ貼り付けません。", "Grading reference. Never paste into Agent instructions."), widths=(1.6, 5.0)),
-            text_table([("条件ID", "Condition ID"), ("採点基準（原文を変更しません）", "Verbatim scoring criterion")],
-                       [[condition["id"], condition["text"]] for condition in case["conditions"]],
-                       (f"{case['id']} の全{len(case['conditions'])}条件", f"All {len(case['conditions'])} criteria for {case['id']}"), widths=(1.7, 4.9)),
+                [("期待値（原文・日本語）", "Expected answer (verbatim Japanese)"),
+                 Text(re.sub(r"(?<!\d)([1-5])\s+(?=\d{6}\s)", r"\1: ", case["expected"]),
+                      case["expected"])],
+                [("英語の説明", "English explanation"),
+                 Text(DISPLAY_TRANSLATIONS["expected"][case["id"]],
+                      DISPLAY_TRANSLATIONS["expected"][case["id"]])],
+            ] + ([(("クエリの形", "Query shape"),
+                   Text(case["query_shape"],
+                        DISPLAY_TRANSLATIONS["query_shape"].get(case["id"], case["query_shape"])))]
+                 if "query_shape" in case else []),
+                ("採点用の参照。Agentの指示へ貼り付けません。", "Grading reference. Never paste into Agent instructions."),
+                widths=(1.6, 5.0), class_name="evaluation-reference"),
+            text_table([("条件ID", "Condition ID"),
+                        ("採点基準（原文・日本語）", "Scoring criterion (verbatim Japanese)"),
+                        ("英語の説明", "English explanation")],
+                       [[condition["id"], Text(
+                           re.sub(r"(?<!\d)([1-5])\s+(?=\d{6}\s)", r"\1: ", condition["text"])
+                           if case["id"] == "B14" and condition["id"] == "B14.fact"
+                           else condition["text"],
+                           condition["text"],
+                       ),
+                         Text(DISPLAY_TRANSLATIONS["conditions"][condition["id"]],
+                              DISPLAY_TRANSLATIONS["conditions"][condition["id"]])]
+                        for condition in case["conditions"]],
+                       (f"{case['id']} の全{len(case['conditions'])}条件", f"All {len(case['conditions'])} criteria for {case['id']}"),
+                       widths=(1.3, 3.5, 4.2), class_name="canonical-condition-rubric evaluation-reference"),
         ]
         if "expected_values" in case:
             blocks.append(text_table([("参照キー", "Reference key"), ("値", "Value")],

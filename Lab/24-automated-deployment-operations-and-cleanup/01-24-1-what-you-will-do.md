@@ -9,7 +9,7 @@
 準備するもの・確認すること
 
 - 4章のワークスペース、容量、権限、作業フォルダー、参加者IDの確認を終えます。
-- 同じ版のLabまたはHTMLと参加者用ZIPを使います。ZIPのsourceからコマンドを実行します。
+- 日英HTMLを主な手順書として使い、GitHubのLabを参照します。参加者用ZIPを展開した場合は、そのsourceからコマンドを実行します。
 
 <details>
 <summary>English</summary>
@@ -23,6 +23,6 @@ This procedure does not adopt manually created items under the same participant 
 Before you start
 
 - Complete Chapter 4 checks for workspace, capacity, permissions, work folder and participant ID.
-- Use Lab or HTML and the participant ZIP of the same version. Run commands from the ZIP’s source directory.
+- Use the bilingual HTML as the primary handbook and the GitHub Lab as its companion. If using the participant ZIP, run commands from its extracted source directory.
 
 </details>

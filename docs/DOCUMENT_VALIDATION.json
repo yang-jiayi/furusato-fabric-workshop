@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "furusato-current-html-lab-validation/v1",
+  "deliveryMode": "html-lab",
+  "contentSha256": "a0cb63774b8d1d4e2a3d8d6ab7d27ff307a754921b0fc803880cb8c7ba3000e2",
+  "static": {
+    "passed": true,
+    "chaptersAndAppendices": 29,
+    "sections": 189,
+    "modelBlocks": 668,
+    "bilingualValuesChecked": 9142,
+    "literalCodeAndPromptsChecked": 106,
+    "figures": 42,
+    "standaloneResources": true,
+    "retiredGuideReferences": 0,
+    "htmlSha256": "0e0323be4f4fbd86b40afe52aeed6229b1781b7be9cf309b41e504b02e54ff7c"
+  },
+  "sourceRevision": {
+    "baseCommit": "d24b99f2e911bebddbbd31b8c8a3b19c7b5b8981",
+    "workingTreeMatchesCommit": false,
+    "gitMetadataAvailable": true,
+    "sourceTreeSha256": "af65000b834c82e98cb51e3d9272d2898e5680c5f4b4eda690eacaeb6d971e50"
+  },
+  "currentArtifactSet": {
+    "manifestSha256": "7c46199a0fc4ab7ae38f294810a6b541029b9442efe55572584c8e366f12abfa",
+    "sourceCommit": "d24b99f2e911bebddbbd31b8c8a3b19c7b5b8981",
+    "sourceTreeSha256": "af65000b834c82e98cb51e3d9272d2898e5680c5f4b4eda690eacaeb6d971e50",
+    "workshopVersion": "3.1.0",
+    "csvFiles": 11,
+    "notebookCount": 5,
+    "tempRequired": false
+  },
+  "browser": {
+    "passed": true,
+    "performed": true,
+    "browserVersion": "156.0.8078.4",
+    "htmlSha256": "0e0323be4f4fbd86b40afe52aeed6229b1781b7be9cf309b41e504b02e54ff7c",
+    "checks": [
+      "all29chaptersAndAppendices",
+      "noPrintOrPdfExport",
+      "ja.shortInlineTokensStayWhole320_390",
+      "ja.everyOverflowingTableHasCueBeforeScroller390",
+      "ja.referenceTokensStayWholeWithHorizontalScroll",
+      "ja.languagePersists",
+      "ja.searchAndReset",
+      "ja.responsive320_390_768_1440",
+      "en.shortInlineTokensStayWhole320_390",
+      "en.everyOverflowingTableHasCueBeforeScroller390",
+      "en.referenceTokensStayWholeWithHorizontalScroll",
+      "en.languagePersists",
+      "en.searchAndReset",
+      "en.responsive320_390_768_1440",
+      "progressPersistsAndResets",
+      "tocNavigation",
+      "copyFeedback",
+      "figureZoom",
+      "noScriptErrors",
+      "noExternalRequests"
+    ]
+  },
+  "liveFabricValidationClaimed": false
+}

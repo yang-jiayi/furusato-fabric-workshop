@@ -176,7 +176,9 @@ def package(*, data: bool) -> bytes:
     path = PREVIEW / "powerbi/native-metrics-contract.json"
     files[path.relative_to(REPO).as_posix()] = base64.b64encode(path.read_bytes()).decode("ascii")
     raw = json.dumps(files, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
-    return gzip.compress(raw, mtime=0)
+    compressed = gzip.compress(raw, mtime=0)
+    # Preserve the accepted bundle's OS header across Python/zlib versions.
+    return compressed[:9] + b"\x0a" + compressed[10:]
 
 
 def build_notebooks() -> dict:

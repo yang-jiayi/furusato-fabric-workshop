@@ -32,6 +32,7 @@
     });
     document.getElementById("search-status").textContent = query
       ? text(`${found} 章・付録に一致`,`${found} chapters/appendices match`) : "";
+    markScrollableCodeblocks();
   }
   function setLanguage(value) {
     language = value === "en" ? "en" : "ja";
@@ -50,6 +51,17 @@
     const url = new URL(location.href); url.searchParams.set("lang",language);
     try { history.replaceState(null,"",url); } catch (_) {}
   }
+  function markScrollableCodeblocks() {
+    document.querySelectorAll(".codeblock").forEach(block => {
+      const scroller = block.querySelector("pre");
+      if (!scroller) return;
+      block.classList.toggle(
+        "is-scrollable",
+        scroller.clientWidth > 0 && scroller.scrollWidth > scroller.clientWidth + 2
+      );
+    });
+  }
+  window.addEventListener("resize",markScrollableCodeblocks);
   document.querySelectorAll("[data-language]").forEach(button => button.addEventListener("click",() => setLanguage(button.dataset.language)));
   search.addEventListener("input",performSearch);
   document.getElementById("search-clear").addEventListener("click",() => { search.value=""; performSearch(); search.focus(); });
@@ -60,6 +72,10 @@
   if(legacyToggle) legacyToggle.addEventListener("click",() => {
     const details=[...document.querySelectorAll("details.legacy")], open=details.some(d => !d.open);
     details.forEach(d => { d.open=open; });
+    markScrollableCodeblocks();
+  });
+  document.querySelectorAll("details.legacy").forEach(details => {
+    details.addEventListener("toggle",markScrollableCodeblocks);
   });
   document.querySelectorAll("a[href^='#']").forEach(link => link.addEventListener("click",() => {
     const target=document.getElementById(link.hash.slice(1));
@@ -67,6 +83,7 @@
       search.value=""; performSearch();
       let node=target.parentElement;
       while(node) { if(node.tagName === "DETAILS") node.open=true; node=node.parentElement; }
+      markScrollableCodeblocks();
     }
   }));
   document.querySelectorAll("[data-copy-target]").forEach(button => button.addEventListener("click",async () => {
@@ -98,14 +115,6 @@
     dialog.showModal();
   }));
   document.getElementById("lightbox-close").addEventListener("click",() => dialog.close());
-  let printState=[];
-  window.addEventListener("beforeprint",() => {
-    printState=[...document.querySelectorAll("details")].map(d => [d,d.open]);
-    printState.forEach(([d]) => { d.open=true; });
-    document.querySelectorAll("main > .chapter").forEach(s => { s.hidden=false; });
-  });
-  window.addEventListener("afterprint",() => { printState.forEach(([d,open]) => {d.open=open;}); performSearch(); });
-  document.getElementById("print").addEventListener("click",() => window.print());
   setLanguage(new URL(location.href).searchParams.get("lang") || "ja");
   root.dataset.ready="true";
 })();

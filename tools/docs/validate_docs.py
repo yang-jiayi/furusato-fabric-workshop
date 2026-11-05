@@ -3528,7 +3528,7 @@ def _validate_authoring_source_provenance(root: Path, names: list[str], report: 
         if name.startswith("docs/assets/") and Path(name).suffix.lower() == ".svg"
     )
     orphans = sorted(
-        stem for stem in pairs if f"docs/assets/v2.7.0/{stem}.png" not in set(names)
+        stem for stem in pairs if f"docs/assets/current-diagrams/{stem}.png" not in set(names)
     )
     if raster or orphans:
         report.fail(

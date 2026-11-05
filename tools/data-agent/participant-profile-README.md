@@ -1,8 +1,13 @@
 # Participant profile reproduction
 
-`participant_profile.py` configures one **existing** workshop Data Agent with the fixed `measured-contract-20261015` profile. The participant Word/HTML, chapter 17, contains the complete preparation, SQL view definitions, instructions, examples and evaluation steps. Run this helper from the extracted package's `source/` directory, or the repository root. It does not require the instructor's private scripts, approval files or credentials.
+現行の参加者向け手順は、既存の完全版 [Labの17章](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md) と
+[currentの日英HTML](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true) です。
+このヘルパーは構成を再現するだけで、回答品質を保証しません。
+参加者自身の実行履歴・実クエリ・結果による評価が必要です。この手順の掲載は実環境への変更の承認ではありません。
 
-This reproduces a configuration. It does not establish Ontology availability, successful business query execution or an answer-quality score. The recorded 77.22% was a supplemental condition-fulfillment result from a specific comparison, not a guaranteed accuracy target.
+`participant_profile.py` configures one **existing** workshop Data Agent with the fixed `measured-contract-20261015` profile. The participant [complete Lab, chapter 17](../../Lab/17-fabric-data-agent-and-code-interpreter/README.md) and [current bilingual HTML](../../docs/furusato-workshop-v3-1-0-complete.html?raw=true) contain the preparation, SQL view definitions, instructions, examples and evaluation steps. Run this helper from the extracted package's `source/` directory, or the repository root. It does not require the instructor's private scripts, approval files or credentials. These instructions do not authorize live changes; apply and publish require separate approval.
+
+This reproduces a configuration. It does not establish Ontology availability, successful business query execution or an answer-quality score. No quality guarantee or score can be inferred without the participant's own actual queries and results.
 
 ## Before running
 
@@ -55,7 +60,7 @@ Publication checks Draft again, refuses a concurrent Published change, saves `pu
 python tools/data-agent/participant_profile.py verify --workspace-id YOUR_WORKSPACE_ID --agent-id YOUR_AGENT_ID --profile measured-contract-20261015 --private-root PRIVATE_DIRECTORY --stage published
 ```
 
-This final command is read-only and may be repeated. The receipt deliberately reports `ontologyContextAvailabilityVerified: false` and `answerAccuracyVerified: false`: a retained native Ontology configuration is not execution proof. Finish the Word/HTML's Ontology connection checks and fresh-chat evaluation, retaining unsupported/failed/unknown cases in the denominator.
+This final command is read-only and may be repeated. The receipt deliberately reports `ontologyContextAvailabilityVerified: false` and `answerAccuracyVerified: false`: a retained native Ontology configuration is not execution proof. Finish the current Lab/HTML's Ontology connection checks and fresh-chat evaluation, retaining unsupported/failed/unknown cases in the denominator.
 
 ## If a step stops
 

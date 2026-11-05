@@ -8,8 +8,8 @@ Ontology agent（Ontology Copilot）は Ontology に組み込まれた AI で、
 
 準備するもの・確認すること
 
-- 主 Ontology（ONT_Furusato_&lt;PID&gt;）を開き、10 Entity・15 Relationship、キー、バインドを確認します。
-- 配布フォルダーの attachments にある4つのファイル（business-requirements.pdf、data-dictionary.txt、domain-model.png、revision-requirements.txt）を用意します。
+- 主 Ontology（ONT_Furusato_&lt;PID&gt;）の実際の定義を読み取り、10 Entity・15 Relationship の件数と、既存 Entity・Property・Relationship の ID、型、関係の始点・終点と向き、キー、バインド、共有参照、継承を比較用に保存します。DonationQualityScope が既にある場合や基準と一致しない場合は停止し、この演習のために削除・別 Ontology の作成は行いません。
+- 配布フォルダーの attachments にある4つのファイル（`business-requirements.txt`、`data-dictionary.txt`、`domain-model.png`、`revision-requirements.txt`）を用意します。
 - 改善や適用には、ワークスペースの共同作成者（Contributor）以上の権限が必要です。閲覧者（Viewer）は説明と照会だけができます。
 
 <details>
@@ -23,8 +23,8 @@ Use the main ontology to compare explanations and unapplied proposals without at
 
 Before you start
 
-- Open the main ontology (ONT_Furusato_&lt;PID&gt;) and check its ten entities, 15 relationships, keys and bindings.
-- Prepare the four files in the attachments folder of the distribution (business-requirements.pdf, data-dictionary.txt, domain-model.png and revision-requirements.txt).
+- Read the actual main ontology definition (ONT_Furusato_&lt;PID&gt;) and retain its ten entities, fifteen relationships and the existing entity/property/relationship IDs, types, relationship endpoints/directions, keys, bindings, shared references and inheritance for comparison. Stop if DonationQualityScope already exists or the baseline does not match; do not delete items or create another ontology for this exercise.
+- Prepare the four files in the attachments folder of the distribution (`business-requirements.txt`, `data-dictionary.txt`, `domain-model.png` and `revision-requirements.txt`).
 - Improving the ontology and applying changes require Contributor or higher in the workspace. Viewers can only explain and query.
 
 </details>

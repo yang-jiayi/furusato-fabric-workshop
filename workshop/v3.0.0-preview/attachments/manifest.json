@@ -1,6 +1,6 @@
 {
   "schemaVersion": "furusato-attachments/v1",
-  "edition": "3.0.0-preview",
+  "edition": "3.1.0",
   "synthetic": true,
   "conversationScoped": true,
   "dataIngestion": false,
@@ -18,13 +18,14 @@
   "maxBytesPerFile": 5242880,
   "sourceDatasetVersion": "2.7.0-realistic.1",
   "font": {
+    "purpose": "Japanese labels in domain-model.png",
     "name": "meiryo.ttc",
     "sha256": "457b306f719a002f1d037b2a3942f2abfa8a55d7bb109bf8950341a3129adb46"
   },
   "files": {
-    "business-requirements.pdf": {
-      "bytes": 106640,
-      "sha256": "114eb260fc49d3e8d617545e230f6b119f8aefac9a22870316d5803bb6fd57b7"
+    "business-requirements.txt": {
+      "bytes": 5780,
+      "sha256": "55b5f55179ddf3846c071c28d5c7824238b835bcf6cce08aa02546b2281b7062"
     },
     "data-dictionary.txt": {
       "bytes": 36755,

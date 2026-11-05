@@ -39,5 +39,5 @@ def deliverable_names(version: str, edition: str = "") -> DeliverableNames:
         participant=f"Fabric_IQ_Ontology_Workshop_Furusato_Participant_v{version}{suffix}.docx",
         validation=f"Furusato_Data_Agent_Validation_10_v{version}{suffix}.docx",
         workbook=f"Furusato_Notebook_01-05_Processing_Specification_v{version}{suffix}.xlsx",
-        html=f"furusato-workshop-v{version.replace('.', '-')}-complete{suffix}.html",
+        html=f"furusato-workshop-processing-baseline{suffix}.html",
     )

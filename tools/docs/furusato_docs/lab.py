@@ -18,9 +18,11 @@ from .facts import compute_facts
 from .tests10 import build_tests
 from .participant30 import compose, figure_path
 from .participant30_text import CHAPTER_TITLES, APPENDIX_TITLES
-from .preview30_public_evidence import load as load_evidence
+from .preview30_public_evidence import load_current_captures
 from .preview30_content import verify_artifact_manifest
 from .docx_kit import StyleCarrier
+from .current_publication import current_publication
+from .participant_current_tuning import PROFILE_REL
 from furusato_html.model import Section, Text, Document
 
 def digest(value):
@@ -73,12 +75,51 @@ def current_text(value, language, block_id, changes=None):
     return text
 
 
-def prose(value, language, block_id, *, table=False):
-    text = current_text(value, language, block_id)
-    text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
-    if table:
-        text = text.replace('|', '&#124;').replace('\n', '<br>')
-    return text
+def prose(value, language, block_id, *, table=False, canonical=False):
+    text = value.get(language) if canonical and isinstance(value, Text) else current_text(value, language, block_id)
+
+    def escape_plain(value):
+        value = value.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+        if table:
+            value = value.replace('|', '&#124;').replace('\n', '<br>')
+        return value
+
+    runs = [
+        match for match in re.finditer(r'`+', text)
+        if len(re.search(r'\\*$', text[:match.start()]).group()) % 2 == 0
+    ]
+    spans = []
+    index = 0
+    while index < len(runs):
+        opener = runs[index]
+        closer_index = next(
+            (i for i in range(index + 1, len(runs))
+             if len(runs[i].group()) == len(opener.group())),
+            None,
+        )
+        if closer_index is None:
+            index += 1
+            continue
+        closer = runs[closer_index]
+        spans.append((opener.start(), closer.end(), text[opener.end():closer.start()]))
+        index = closer_index + 1
+
+    result = []
+    position = 0
+    for start, end, content in spans:
+        result.append(escape_plain(text[position:start]))
+        if table and any(char in content for char in '|\r\n'):
+            normalized = content.replace('\r\n', '\n').replace('\r', '\n').replace('\n', ' ')
+            if (normalized.startswith(' ') and normalized.endswith(' ')
+                    and normalized.strip(' ')):
+                normalized = normalized[1:-1]
+            escaped = html.escape(normalized, quote=False).replace('|', '&#124;')
+            result.append('<code>' + escaped + '</code>')
+        else:
+            result.append(text[start:end])
+        position = end
+    result.append(escape_plain(text[position:]))
+    return ''.join(result)
 
 
 def fence(value, language='text'):
@@ -86,6 +127,16 @@ def fence(value, language='text'):
     runs = [len(m.group()) for m in re.finditer(r'`+', value)]
     ticks = '`' * max([3, *[n + 1 for n in runs]])
     return f'{ticks}{language}\n{value}\n{ticks}\n'
+
+
+SELECTION_CONTRACT_BLOCK_ID = 'ch-17-5:1'
+READABLE_CODE_LINE_LIMIT = 80
+
+
+def readable_literal(value):
+    """Render literal source text as escaped, naturally wrapping HTML prose."""
+    value = value.replace('\r\n', '\n').replace('\r', '\n')
+    return '<div>\n' + html.escape(value, quote=False).replace('\n', '<br>\n') + '\n</div>'
 
 
 
@@ -98,6 +149,7 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
     committed artifact manifest. No release-approval record is manufactured.
     """
     root = Path(root).resolve()
+    publication = current_publication(root)
     if artifact_manifest_path is None:
         sys.path.insert(0, str(root / "tools/provisioning"))
         import v3_artifacts
@@ -112,14 +164,16 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
     context = load_context(root, document_edition="unified-20260923", source_version="2.7.0")
     facts = compute_facts(context)
     tests = build_tests(context, facts)
-    evidence = load_evidence(root / "docs/assets/v3.0.0-evidence/manifest.json", root=root)
+    evidence = load_current_captures(
+        root / "docs/assets/current-participant-captures/manifest.json", root=root)
     roots = [Section(f"ch-{n}", 1, str(n), Text(f"{n}. {v[0]}", f"{n}. {v[1]}"), chapter=n)
              for n, v in CHAPTER_TITLES.items()]
     roots += [Section(f"appendix-{letter.lower()}", 1, letter,
                       Text(f"付録 {letter} {v[0]}", f"Appendix {letter} {v[1]}"), appendix=letter)
               for letter, v in APPENDIX_TITLES.items()]
     composition = compose(roots, root=root, context=context, facts=facts, tests=tests,
-                          evidence=evidence, manifest=manifest, legacy_original={})
+                          evidence=evidence, manifest=manifest, legacy_original={},
+                          current_profile=True)
     from .lab_clients import append_sections
     append_sections(next(section for section in roots if section.chapter == 24))
     changes = []
@@ -131,7 +185,7 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
         if isinstance(value, dict):
             return {key: normalize(item, block_id) for key, item in value.items()}
         if isinstance(value, str) and "Furusato_Workshop_v3.0.0_current-20261015.zip" in value:
-            updated = value.replace("Furusato_Workshop_v3.0.0_current-20261015.zip", "Furusato_Workshop_v3.0.0_current.zip")
+            updated = value.replace("Furusato_Workshop_v3.0.0_current-20261015.zip", publication.package_name)
             changes.append({"block": block_id, "before": value, "after": updated,
                             "reason": "Use the current HTML+Lab package filename."})
             return updated
@@ -143,20 +197,29 @@ def load_model(root: Path, artifact_manifest_path: Path | None = None):
                 block.payload = normalize(block.payload, f"{section.ident}:{index}")
                 if block.kind == "figure":
                     figures.append(block)
-                    block.payload["number"] = len(figures)
                 elif block.kind == "table":
                     tables.append(block)
                     block.payload["number"] = len(tables)
-            if section.level == 2 and section.number.endswith(".2") and (section.chapter or 0) >= 4:
+            is_steps_section = (
+                section.title.en.endswith(" Steps")
+                or section.title.ja.endswith(" 操作手順")
+            )
+            if (
+                section.level == 2
+                and is_steps_section
+                and (section.chapter or 0) >= 4
+            ):
                 section.checklist_id = section.ident
                 checklist.append((section.ident, section))
+    from .participant30_details import number_figures
+    number_figures(figures)
     document = Document(roots, figures, tables, checklist)
     counts = {"chapters": 24, "appendices": 5, "headings": sum(1 for _ in document.walk()),
               "tables": len(tables), "figures": len(figures), "tests": len(tests),
               "conditions": sum(len(test.evidence) + len(test.pass_criteria) for test in tests)}
     if counts["conditions"] != 84:
         raise ValueError("Original evaluation conditions changed")
-    metadata = {"version": (root / "WORKSHOP_VERSION").read_text().strip(), "counts": counts,
+    metadata = {"version": (root / "WORKSHOP_VERSION").read_text(encoding="utf-8").strip(), "counts": counts,
                 "participantEdition": True, "delivery": "html-lab", "contentSha256": digest(asdict(document)),
                 "participantFigures": composition["figures"], "participantEvaluation": composition["evaluation"],
                 "currentArtifactSet": binding, "currentDeliveryChanges": changes,
@@ -172,8 +235,11 @@ class LabWriter:
         self.root, self.out, self.context, self.evidence = root, out, context, evidence
         self.assets = {}
 
-    def asset(self, block):
+    def asset(self, block, language='ja'):
         key, kind = block['source_key'], block['source_kind']
+        asset_key = key
+        provenance = {}
+        raw = None
         if kind == 'participant-capture':
             path = figure_path(key)
         elif kind == 'reviewed-capture':
@@ -181,19 +247,103 @@ class LabWriter:
         elif kind == 'diagram':
             paths = self.context.diagrams[key]
             path = paths.get('svg') or paths['png']
+        elif kind == 'participant-diagram':
+            from .participant30_details import architecture_svg_path, architecture_svg_variants
+            from furusato_html.diagrams import load_map
+            path = architecture_svg_path()
+            raw = architecture_svg_variants(load_map())[0 if language == 'ja' else 1].encode('utf-8')
+            asset_key = key + '-' + language
+            provenance = {'sourceSha256': sha256(path.read_bytes()).hexdigest(),
+                          'language': language, 'transform': 'architecture-svg-translation/v1'}
+        elif kind == 'participant-detail':
+            from .participant30_details import DETAILS, detail_source_path, crop_png
+            recipe = DETAILS[key]
+            path = detail_source_path(key)
+            raw = crop_png(key)
+            provenance = {
+                'sourceSha256': recipe['sha256'],
+                'cropBox': list(recipe['crop']),
+            }
         else:
             raise ValueError('Unreviewed image source: ' + kind)
-        name = slug(key) + path.suffix.lower()
-        raw = path.read_bytes()
+        name = slug(asset_key) + path.suffix.lower()
+        raw = raw if raw is not None else path.read_bytes()
         target = self.out / 'assets' / name
         target.parent.mkdir(parents=True, exist_ok=True)
         if target.exists() and target.read_bytes() != raw:
             raise ValueError('Asset name collision: ' + name)
         target.write_bytes(raw)
-        self.assets[key] = {'file': target.relative_to(self.out).as_posix(), 'kind': kind,
-                       'source': path.relative_to(self.root).as_posix(), 'sha256': sha256(raw).hexdigest()}
+        self.assets[asset_key] = {
+            'file': target.relative_to(self.out).as_posix(), 'kind': kind,
+            'source': path.relative_to(self.root).as_posix(), 'sha256': sha256(raw).hexdigest(),
+            **provenance,
+        }
         return '../assets/' + name
 
+    def profile_ref(self, filename):
+        return f'{PROFILE_REL.as_posix()}/{filename}'
+
+    def readable_instruction_views(self, block, block_id):
+        if block_id == 'ch-17-6:1':
+            return [(self.profile_ref('global-instructions.txt'), 'global instructions',
+                     block['text'])]
+        if block_id == 'ch-17-7:1':
+            source = json.loads(block['text'])
+            ref = self.profile_ref('source-instructions.json')
+            return [(ref, f'{name}.instructions', source[name]['instructions'])
+                    for name in ('kusto', 'lakehouse_tables', 'semantic_model')]
+        definition_files = {
+            'ch-17-10:4': 'definition/kusto.json',
+            'ch-17-10:6': 'definition/lakehouse_tables.json',
+            'ch-17-10:10': 'definition/semantic_model.json',
+            'ch-17-10:12': 'definition/stage_config.json',
+        }
+        filename = definition_files.get(block_id)
+        if filename is None:
+            return []
+        source = json.loads(block['text'])
+        key = 'aiInstructions' if 'aiInstructions' in source else 'dataSourceInstructions'
+        return [(self.profile_ref(filename), key, source[key])]
+
+    def render_readable_instruction_views(self, block, block_id, language):
+        views = []
+        for reference, field, value in self.readable_instruction_views(block, block_id):
+            if block_id == 'ch-17-10:10' and field == 'dataSourceInstructions':
+                views.append(
+                    '注意: これは experimental definition の比較用 serialized reference です。'
+                    'Data Agent がサポートする編集欄ではなく、有効な DAX 設定でもありません。'
+                    'UI に転記せず、効果を推定しないでください。'
+                    if language == 'ja' else
+                    'Note: this is a serialized reference for comparing the experimental definition. '
+                    'It is not a Data Agent-supported editable field or effective DAX configuration. '
+                    'Do not paste it into a UI field or infer an effect from it.'
+                )
+            views.append(
+                f'**Readable instruction view — `{reference}` (`{field}`)**\n\n'
+                f'{readable_literal(value)}'
+            )
+        return '\n\n'.join(views)
+
+    def render_selection_contract(self, block, language, block_id):
+        canonical = bool(block.get('canonicalLiteral'))
+        p = lambda value: prose(value, language, block_id, table=True, canonical=canonical)
+        reference = self.profile_ref('selection-contract.json')
+        record_label = 'レコード' if language == 'ja' else 'Record'
+        records = []
+        for number, row in enumerate(block['rows'], 1):
+            fields = [
+                f'<strong>{p(header)}:</strong>' + (f' {p(value)}' if p(value) else '')
+                for header, value in zip(block['headers'], row)
+            ]
+            records.append(
+                f'<p><strong>{record_label} {number}</strong><br>\n' +
+                '<br>\n'.join(fields) +
+                '\n</p>'
+            )
+        return (
+            f'**Readable field list — source order from `{reference}`**\n\n' +
+            '\n\n'.join(records) + '\n'
+        )
 
     def render_block(self, block, language, block_id):
         p = lambda v, **kw: prose(v, language, block_id, **kw)
@@ -217,28 +367,47 @@ class LabWriter:
             label = label.get(language) if isinstance(label, Text) else str(label or '')
             syntax = next((v for v in ('python', 'sql', 'kql', 'dax', 'json', 'powershell', 'bash', 'gql')
                            if v in label.lower()), 'text')
-            return (('**' + html.escape(label) + '**\n\n') if label else '') + fence(block['text'], syntax)
+            readable = self.render_readable_instruction_views(block, block_id, language)
+            if not readable and syntax != 'json' and any(
+                    len(line) > READABLE_CODE_LINE_LIMIT for line in block['text'].splitlines()):
+                readable = (
+                    f'**Readable wrapped view — {html.escape(label) or "literal source"}**\n\n'
+                    f'{readable_literal(block["text"])}'
+                )
+            if readable:
+                readable += '\n\n**Verbatim source follows; copy from the canonical block.**\n\n'
+            return readable + (('**' + html.escape(label) + '**\n\n') if label else '') + fence(block['text'], syntax)
         if kind == 'prompt':
             # Prompts are canonical literal source text: do not translate or rewrite.
-            return fence(block['text'].get(language))
+            label = '日本語' if language == 'ja' else 'English'
+            return (f'**Readable prompt — {label}**\n\n' +
+                    readable_literal(block['text'].get(language)) +
+                    '\n\n**Verbatim prompt follows.**\n\n' +
+                    fence(block['text'].get(language)))
         if kind == 'table':
-            headers = [p(value, table=True) for value in block['headers']]
+            canonical = bool(block.get('canonicalLiteral'))
+            if block_id == SELECTION_CONTRACT_BLOCK_ID:
+                return '**' + p(block['caption'], canonical=canonical) + '**\n\n' + self.render_selection_contract(block, language, block_id)
+            headers = [p(value, table=True, canonical=canonical) for value in block['headers']]
             rows = ['| ' + ' | '.join(headers) + ' |', '| ' + ' | '.join('---' for _ in headers) + ' |']
-            rows += ['| ' + ' | '.join(p(cell, table=True) for cell in row) + ' |' for row in block['rows']]
-            return '**' + p(block['caption']) + '**\n\n' + '\n'.join(rows) + '\n'
+            rows += ['| ' + ' | '.join(p(cell, table=True, canonical=canonical) for cell in row) + ' |' for row in block['rows']]
+            return '**' + p(block['caption'], canonical=canonical) + '**\n\n' + '\n'.join(rows) + '\n'
         if kind == 'figure':
-            image = self.asset(block)
+            image = self.asset(block, language)
             alt = p(block['alt']).replace('[', '\\[').replace(']', '\\]')
             return f'![{alt}]({image})\n\n' + p(block['caption']) + '\n'
         raise ValueError('Unknown participant model block: ' + kind)
 
 
 def grouped(blocks):
-    """Preserve model order and keep one screenshot/diagram per file."""
+    """Keep a retained image and its detail supplements on the original Lab page."""
+    from .participant30_details import DETAILS
     segments, segment = [], []
     has_figure = False
     for index, block in enumerate(blocks):
-        if segment and has_figure and (block.kind == 'figure' or
+        if segment and has_figure and (block.kind == 'figure' and
+                (block['source_kind'] != 'participant-detail' or
+                 DETAILS.get(block['source_key'], {}).get('primary')) or
                 block.kind == 'list' and block['numbered']):
             segments.append(segment)
             segment, has_figure = [], False
@@ -293,30 +462,46 @@ def write_lab(root: Path, out: Path, *, model=None):
                           'tables': sum(b.kind == 'table' for _, b in segment)}
                 coverage.append(record)
                 all_pages.append(page)
-                if figure:
-                    inventory.append({'id': figure['source_key'], 'page': record['path'],
-                                      'captionJa': figure['caption'].ja, 'captionEn': figure['caption'].en})
+                for _, image in segment:
+                    if image.kind == 'figure':
+                        inventory.append({'id': image['source_key'], 'page': record['path'],
+                                          'captionJa': image['caption'].ja, 'captionEn': image['caption'].en})
         nav = f'# {chapter.title.ja}\n\n[Lab 目次](../README.md)\n\n{chapter.title.en}\n\n'
         nav += '\n'.join(f'- [{title}]({quote(path)})' for path, title in section_links) + '\n'
         (chapter_dir / 'README.md').write_text(nav, encoding='utf-8', newline='\n')
     expected_ids = [f'{s.ident}:{i}' for s in document.walk() for i, b in enumerate(s.blocks)]
     if model_ids != expected_ids:
         raise ValueError('Source block ordering, omission or duplication detected')
-    index = '# Furusato Workshop Lab\n\n'
+    index = f'# Furusato Workshop {metadata["version"]} Lab\n\n'
     index += ('Microsoft Fabric の Lakehouse・Eventhouse・Ontology・Semantic model・Data Agent を、合成データで順に構築して確かめます。'
-              'この Lab と [HTML 手順書](../docs/furusato-workshop-v3-0-0-complete.html) は、最新版の操作手順を提供します。\n\n'
+              f'この Lab と [HTML 手順書](../docs/{current_publication(root).html_name}) は、最新版の操作手順を提供します。\n\n'
               '初回は **4章 → 24.4〜24.6 → 5〜8章の確認 → 24.7と9〜11章 → 24.8 → 17章 → 19章・付録C** の順で進めます。'
               '作成済みのデータやアイテムを重複して作成・取り込みしません。各章の目次から操作ページへ進み、完了条件を確認してください。\n\n'
               '各画面キャプチャは1つの操作ページにまとめ、キャプチャが不要な説明・コマンド・参照表も省略せずに収録しています。'
               '各ページ末尾の **English** を開くと同じ内容を英語で読めます。\n\n')
+    index += '## 日本語の目次\n\n'
     index += '\n'.join(f'- [{title.ja}]({quote(folder)}/README.md)' for folder, title in root_links) + '\n\n'
-    index += ('Notebook・CSV・モデル・Agent 設定は [`workshop/v3.0.0-preview/`](../workshop/v3.0.0-preview/) にあります。'
-              'ローカルコマンドはリポジトリのルート、参加者用 ZIP では展開先の `source/` を起点に実行します。\n')
+    publication = current_publication(root)
+    index += (f'Notebook・CSV・モデル・Agent 設定は、リポジトリの README で案内する同じ版の参加者用 ZIP に収録されています。'
+              f'[日英 HTML](../docs/{publication.html_name})も利用できます。'
+              'コマンドは Git リポジトリのルート、ZIP を使う場合は展開先の `source/` を起点に実行します。\n\n')
+    index += ('## English\n\n'
+              'Build and verify Microsoft Fabric Lakehouse, Eventhouse, Ontology, semantic model and Data Agent step by step with synthetic data. '
+              f'This Lab and the [HTML guide](../docs/{publication.html_name}) provide the current workshop procedures.\n\n'
+              'For your first deployment, follow **Chapter 4 → 24.4–24.6 → checks in Chapters 5–8 → 24.7 and Chapters 9–11 → 24.8 → Chapter 17 → Chapter 19 and Appendix C**. '
+              'Do not recreate existing items or ingest the same data again. Open each chapter index to reach the steps and verify its completion checks.\n\n'
+              'Each screenshot and its related steps are grouped on one page. Explanations, commands and reference tables are included even when no screenshot is needed. '
+              'Open **English** at the end of each step page for the equivalent English content.\n\n')
+    index += '\n'.join(f'- [{title.en}]({quote(folder)}/README.md)' for folder, title in root_links) + '\n\n'
+    index += ('Use the participant ZIP of the same version, linked from the repository README, for Notebooks, CSVs, model definitions and Agent configuration. '
+              f'The [bilingual HTML guide](../docs/{publication.html_name}) is also available. '
+              'Run commands from the Git checkout root, or from the extracted ZIP’s `source/` directory when using the ZIP.\n')
     (out / 'README.md').write_text(index, encoding='utf-8', newline='\n')
     counts = Counter(b.kind for s in document.walk() for b in s.blocks)
     receipt = {'schemaVersion': 'furusato-lab-source-coverage/v1', 'chapters': 24, 'appendices': 5,
                'sections': len(list(document.walk())), 'modelBlocks': sum(counts.values()), 'blocksByKind': dict(counts),
-               'pages': len(coverage), 'capturePages': len(inventory), 'uniqueAssets': len(writer.assets),
+               'pages': len(coverage), 'capturePages': sum(bool(page['capture']) for page in coverage),
+               'uniqueAssets': len(writer.assets),
                'allSourceBlocksPresentOnceInOrder': model_ids == expected_ids,
                'wordDeliveryChanges': metadata['retiredWordDeliveryChanges'], 'sourceTextChanges': metadata['currentDeliveryChanges'], 'pagesCoverage': coverage,
                'captures': inventory, 'assets': writer.assets,
@@ -324,6 +509,43 @@ def write_lab(root: Path, out: Path, *, model=None):
     receipt["contentSha256"] = metadata["contentSha256"]
     receipt["currentArtifactSet"] = metadata["currentArtifactSet"]
     return receipt
+
+
+def validate_lab_assets(root: Path, out: Path, assets: dict):
+    """Verify originals, deterministic crops and both derived vector languages."""
+    for ident, asset in assets.items():
+        local = (out / asset['file']).resolve()
+        original = (root / asset['source']).resolve()
+        if not local.is_relative_to(out.resolve()) or not original.is_relative_to(root.resolve()):
+            raise ValueError('Lab image path escapes its declared root')
+        if sha256(local.read_bytes()).hexdigest() != asset['sha256']:
+            raise ValueError('Lab image digest mismatch: ' + ident)
+        if asset['kind'] == 'participant-detail':
+            from .participant30_details import DETAILS, crop_png, detail_source_path
+            recipe = DETAILS[ident]
+            if (original != detail_source_path(ident).resolve()
+                    or asset.get('cropBox') != list(recipe['crop'])
+                    or asset.get('sourceSha256') != recipe['sha256']
+                    or sha256(original.read_bytes()).hexdigest() != recipe['sha256']
+                    or crop_png(ident) != local.read_bytes()):
+                raise ValueError(ident)
+        elif asset['kind'] == 'participant-diagram':
+            from .participant30_details import architecture_svg_path, architecture_svg_variants
+            from furusato_html.diagrams import load_map
+            language = asset.get('language')
+            if (original != architecture_svg_path()
+                    or language not in ('ja', 'en')
+                    or ident != 'pc-01-architecture-' + language
+                    or asset.get('transform') != 'architecture-svg-translation/v1'
+                    or asset.get('sourceSha256') != sha256(original.read_bytes()).hexdigest()
+                    or local.read_bytes() != architecture_svg_variants(load_map())[
+                        0 if language == 'ja' else 1].encode('utf-8')):
+                raise ValueError(ident)
+        elif asset['kind'] in {'participant-capture', 'reviewed-capture', 'diagram'}:
+            if original.read_bytes() != local.read_bytes():
+                raise ValueError(ident)
+        else:
+            raise ValueError('Unknown Lab image kind: ' + asset['kind'])
 
 
 def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
@@ -353,7 +575,7 @@ def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
         path = (out / page['path']).resolve()
         if not path.is_relative_to(out):
             raise ValueError('Lab page path escapes output')
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         if not text.count('<details>') == text.count('</details>') == 1:
             raise ValueError(path)
         if not len(re.findall('^#{1,2} ', text, re.M)) >= 2:
@@ -374,27 +596,47 @@ def validate_lab(root: Path, out: Path, receipt: dict, *, model=None):
                 checked_literals += 1
             for value in values(block):
                 for lang in ('ja', 'en'):
-                    wanted = prose(value, lang, ident, table=block.kind == 'table')
+                    wanted = prose(
+                        value,
+                        lang,
+                        ident,
+                        table=block.kind == 'table',
+                        canonical=bool(block.get('canonicalLiteral')),
+                    )
                     if block.kind == 'figure':
                         wanted = wanted.replace('[', '\\[').replace(']', '\\]')
                     if not same_space(wanted) in same_space(text):
                         raise ValueError((ident, lang, wanted[:90]))
                     checked_texts += 1
         if page['capture']:
-            if not len(re.findall('^!\\[', text, re.M)) == 2:
-                raise ValueError((path, 'one image per language required'))
+            expected_images = sum(source[ident].kind == 'figure' for ident in page['sourceBlockIds'])
+            if len(re.findall('^!\\[', text, re.M)) != 2 * expected_images:
+                raise ValueError((path, 'each retained image and supplement requires both languages'))
     if not actual_ids == list(source):
         raise ValueError('Model block omission, duplication or ordering change')
-    for ident, asset in receipt['assets'].items():
-        local = out / asset['file']
-        original = root / asset['source']
-        if not sha256(local.read_bytes()).hexdigest() == asset['sha256']:
-            raise ValueError('Lab validation failed')
-        if not original.read_bytes() == local.read_bytes():
-            raise ValueError(ident)
+    expected_assets = set()
+    for block in document.figures:
+        key = block['source_key']
+        expected_assets.update((key + '-ja', key + '-en') if
+                               block['source_kind'] == 'participant-diagram' else (key,))
+    if set(receipt['assets']) != expected_assets:
+        raise ValueError('Lab image inventory differs from the participant model')
+    validate_lab_assets(root, out, receipt['assets'])
+    literal_writer = LabWriter(root, out, context, evidence)
     for path in out.rglob('*.md'):
-        text = path.read_text()
-        if not not re.search('\\bWord\\b|\\.docx|76 PASS|48 PASS|\\bholdout\\b|\\bR8\\b', text, re.I):
+        text = path.read_text(encoding="utf-8")
+        prose_text = text
+        page = next((entry for entry in receipt['pagesCoverage']
+                     if (out / entry['path']).resolve() == path.resolve()), None)
+        if page:
+            for ident in page['sourceBlockIds']:
+                block = source[ident]
+                if block.get('canonicalLiteral'):
+                    for language in ('ja', 'en'):
+                        prose_text = prose_text.replace(
+                            literal_writer.render_block(block, language, ident), ''
+                        )
+        if not not re.search('\\bWord\\b|\\.docx|76 PASS|48 PASS|\\bholdout\\b|\\bR8\\b', prose_text, re.I):
             raise ValueError(path)
         in_fence = False
         fence_len = 0

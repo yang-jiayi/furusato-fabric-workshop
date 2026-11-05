@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import csv
 import copy
 import hashlib
 import json
@@ -14,8 +15,9 @@ from unittest.mock import patch
 from activation_runtime import (
     ActivationError, ActivatorLifecycle, AmbiguousActivationError, FILE_CREATED,
     PrivateStore, complete_blob_url, put_complete_increment, tool_result,
-    verify_automatic_delivery,
+    verify_automatic_delivery, verify_automatic_delivery_fields,
 )
+from native_ui_observation import validate_control_classification, validate_observation
 from manage_activation import main, resolve_scope
 
 
@@ -218,6 +220,357 @@ class DeliveryTests(unittest.TestCase):
                 mutate(value)
                 with self.assertRaises(ActivationError):
                     verify_automatic_delivery(**value)
+
+
+class NativeUiObservationTests(unittest.TestCase):
+    model = "00000000-0000-0000-0000-000000000011"
+    source_entity = "00000000-0000-0000-0000-000000000012"
+    def build(self, root: Path, *, field_bindings=None, activation_source=SOURCE,
+              activation_time="2026-09-01T00:00:00Z", duplicate_activations=False,
+              increment=1):
+        screenshot_root = root / "screens"
+        receipt_root = root / "receipts"
+        screenshot_root.mkdir()
+        receipt_root.mkdir()
+        filename = f"donation_events_{increment:03d}.csv"
+        subject = f"/Files/increment/{filename}"
+        field_bindings = field_bindings or {
+            "Source": "___source", "Subject": "___subject", "Type": "___type",
+        }
+
+        def argument(name, value):
+            return {"name": name, "type": "string", "value": value}
+
+        def native_parameter(name, field):
+            return {
+                "kind": "FabricItemParameter",
+                "arguments": [
+                    argument("parameterName", name),
+                    {"name": "parameterValue", "type": "complexArray", "values": [{
+                        "kind": "EventFieldReference",
+                        "arguments": [argument("fieldName", field)],
+                    }]},
+                ],
+            }
+
+        source = {
+            "uniqueIdentifier": self.source_entity,
+            "type": "realTimeHubSource-v1",
+            "payload": {"connection": {"workspaceId": WORKSPACE, "artifactId": LAKEHOUSE}},
+        }
+        model = {
+            "uniqueIdentifier": self.model,
+            "type": "timeSeriesView-v1",
+            "payload": {"definition": {"type": "Event", "instance": json.dumps({
+                "steps": [{"rows": [{"kind": "SourceReference", "arguments": [
+                    argument("entityId", self.source_entity),
+                ]}]}],
+            })}},
+        }
+        rule = {
+            "uniqueIdentifier": RULE,
+            "type": "timeSeriesView-v1",
+            "payload": {"definition": {"type": "Rule", "settings": {"shouldRun": True},
+                "instance": json.dumps({"steps": [
+                    {"rows": [{"kind": "EventReference", "arguments": [
+                        argument("entityId", self.model),
+                    ]}]},
+                    {"rows": [{"kind": "FabricItemInvocation", "arguments": [
+                        argument("workspaceId", WORKSPACE), argument("itemId", PIPELINE),
+                        argument("itemType", "Pipeline"), argument("jobType", "Pipeline"),
+                        {"name": "parameters", "values": [
+                            native_parameter(name, field) for name, field in field_bindings.items()
+                        ]},
+                    ]}]},
+                ]})}},
+        }
+        definition = {"parts": [{
+            "path": "ReflexEntities.json", "payloadType": "InlineBase64",
+            "payload": base64.b64encode(json.dumps([source, model, rule]).encode()).decode(),
+        }]}
+        activation = {
+            "activationTime": activation_time,
+            "properties": {
+                "System.RuleId": RULE, "System.RuleVersion": "1", "___id": "activation",
+                PREFIX + "WorkspaceId": WORKSPACE, PREFIX + "ItemId": PIPELINE,
+                PREFIX + "ItemType": "Pipeline", PREFIX + "JobType": "Pipeline",
+                PREFIX + "Parameters.Subject.String": subject,
+                PREFIX + "Parameters.Type.String": FILE_CREATED,
+                PREFIX + "Parameters.Source.String": activation_source,
+            },
+        }
+        history = {"totalCount": 1, "activations": [activation]}
+        if duplicate_activations:
+            history = {"totalCount": 2, "activations": [activation, copy.deepcopy(activation)]}
+        upload = {"state": "uploaded_unverified", "filename": filename, "atUtc": "2026-09-01T00:00:30Z",
+                  "bytes": 43, "uploadedBytesVerified": True, "sha256": "a" * 64}
+        copy_receipt = {"pipelineRunId": "pipeline-run", "activityRunId": "copy-run",
+                        "activityType": "Copy", "status": "Succeeded",
+                        "activityRunEnd": "2026-09-01T00:01:00Z",
+                        "output": {"rowsRead": 5000, "rowsCopied": 5000, "dataRead": 43}}
+        history_path = (
+            f"increments/{filename}/observation-01/history.json" if increment == 1
+            else f"increments/{filename}/event-capture-01/activation-history.json"
+        )
+        copy_path = (
+            f"increments/{filename}/bounded-monitor-01/native-copy-001.json" if increment == 1
+            else f"increments/{filename}/event-capture-01/native-copy.json"
+        )
+        source_docs = {
+            "activation/readiness-1793506889686561800/definition.json": definition,
+            history_path: history,
+            f"increments/{filename}/upload/upload-result.json": upload,
+            copy_path: copy_receipt,
+        }
+        if increment > 1:
+            prior_files = [f"donation_events_{index:03d}.csv" for index in range(1, increment)]
+            prior_rows = []
+            for prior in prior_files:
+                with (ROOT / "workshop" / "v3.0.0-preview" / "data" / "increment" / prior).open(
+                    encoding="utf-8", newline="",
+                ) as handle:
+                    prior_rows.extend(csv.DictReader(handle))
+            current_path = ROOT / "workshop" / "v3.0.0-preview" / "data" / "increment" / filename
+            with current_path.open(encoding="utf-8", newline="") as handle:
+                current_rows = list(csv.DictReader(handle))
+            source_docs[f"increments/{filename}/observation-01/kql-before-preflight.json"] = {
+                "capturedUtc": "2026-08-31T23:59:00Z",
+                "kqlTotals": {
+                    "RawRows": len(prior_rows),
+                    "RawYen": sum(int(row["DonationAmountYen"]) for row in prior_rows),
+                    "Files": prior_files,
+                },
+            }
+            source_docs[f"increments/{filename}/event-capture-01/kql-totals.json"] = [
+                {"RawRows": len(current_rows),
+                 "RawYen": sum(int(row["DonationAmountYen"]) for row in current_rows)},
+            ]
+        receipts = []
+        for relative, value in source_docs.items():
+            path = receipt_root / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            content = json.dumps(value, sort_keys=True).encode()
+            path.write_bytes(content)
+            receipts.append({"path": relative, "sha256": hashlib.sha256(content).hexdigest()})
+        screenshots = []
+        for number, supports in enumerate((
+            ["rowCount", "timeUtc", "eventId"],
+            ["subject", "type"],
+            ["subject", "type", "api"],
+            ["api", "contentLength", "contentType"],
+            ["rowCount", "timeUtc", "eventId", "subject", "type", "api", "contentLength", "contentType"],
+        ), 1):
+            relative = f"{number}.png"
+            content = b"\x89PNG\r\n\x1a\noriginal-pixels-" + str(number).encode()
+            (screenshot_root / relative).write_bytes(content)
+            screenshots.append({"path": relative, "sha256": hashlib.sha256(content).hexdigest(),
+                                "supports": supports})
+        observation = {
+            "kind": "native-ui-observation-not-csv-export",
+            "workspaceId": WORKSPACE, "activatorId": ACTIVATOR, "modelId": self.model,
+            "visibleRowCount": 1 if increment == 1 else increment,
+            "observations": {"timeUtc": activation_time, "eventId": "00000000-0000-0000-0000-000000000013",
+                            "subject": subject, "type": FILE_CREATED, "api": "PutBlob",
+                            "contentLength": 43, "contentType": "text/csv"},
+            "captureMethod": {"originalDisplayRestored": True, "cloudWrites": False,
+                              "eventReplayed": False, "valuesInferredFromOtherReceipts": False},
+            "visualReview": {"observedFieldsMatchOriginalPixels": True, "humanAttestationObtained": False,
+                             "unseenFieldsReconstructed": False},
+            "screenshots": screenshots,
+            "correlationCandidate": {
+                "nativeRuleId": RULE, "eventReferenceEntityId": self.model, "pipelineId": PIPELINE,
+                "activationHistoryTotalCount": 1, "activationId": "activation",
+                "activationTimeUtc": activation_time, "uploadedFileSha256": "a" * 64,
+                "eventId": "00000000-0000-0000-0000-000000000013",
+                "pipelineRunId": "pipeline-run", "copyActivityRunId": "copy-run",
+                "kqlAfterCapturedUtc": "2026-09-01T00:02:00Z",
+                "sourceParameterBinding": {"kind": "EventFieldReference", "fieldName": field_bindings.get("Source"), "constant": False},
+                "subjectParameterBinding": {"kind": "EventFieldReference", "fieldName": field_bindings.get("Subject"), "constant": False},
+                "typeParameterBinding": {"kind": "EventFieldReference", "fieldName": field_bindings.get("Type"), "constant": False},
+                "receipts": receipts,
+            },
+        }
+        return observation, definition, screenshot_root, receipt_root, copy_receipt
+
+    def validate(self, observation, definition, screenshot_root, receipt_root):
+        receipt_files = {
+            entry["path"].replace("\\", "/").split("/")[1]
+            for entry in observation["correlationCandidate"]["receipts"]
+            if entry["path"].replace("\\", "/").startswith("increments/")
+        }
+        filename = next(iter(receipt_files))
+        expected_number = int(filename.removeprefix("donation_events_").removesuffix(".csv"))
+        return validate_observation(
+            observation, screenshot_root=screenshot_root, receipt_root=receipt_root,
+            workspace_id=WORKSPACE, tenant_id=TENANT, activator_id=ACTIVATOR,
+            model_id=self.model, rule_id=RULE, pipeline_id=PIPELINE,
+            lakehouse_id=LAKEHOUSE, subject=f"/Files/increment/{filename}", expected_bytes=43,
+            expected_upload_sha256="a" * 64,
+            current_definition=definition,
+            expected_filename=filename, expected_visible_row_count=expected_number,
+        )
+
+    def test_hash_bound_ui_observation_passes_without_constructing_event_array(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory))
+            proof = self.validate(observation, definition, screenshots, receipts)
+            self.assertEqual(proof["eventId"], observation["observations"]["eventId"])
+            self.assertFalse(proof["directEventIdInActivation"])
+            self.assertEqual(proof["fieldBindings"], {
+                "Source": "___source", "Subject": "___subject", "Type": "___type",
+            })
+
+    def test_increment_002_requires_its_own_hash_bound_receipts_and_two_row_context(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory), increment=2)
+            proof = self.validate(observation, definition, screenshots, receipts)
+            self.assertEqual(proof["eventId"], observation["observations"]["eventId"])
+            self.assertEqual(proof["kqlBefore"]["kqlTotals"]["RawRows"], 5000)
+            self.assertEqual(proof["kqlAfter"][0]["RawRows"], 5000)
+            self.assertIn("increments/donation_events_002.csv/event-capture-01/native-copy.json",
+                          proof["receiptSha256"])
+
+    def test_increment_002_rejects_cross_file_or_mismatched_event_evidence(self):
+        mutations = (
+            ("wrong filename", lambda value: value["observations"].update(
+                subject="/Files/increment/donation_events_001.csv")),
+            ("wrong bytes", lambda value: value["observations"].update(contentLength=44)),
+            ("wrong time", lambda value: value["observations"].update(timeUtc="2026-09-02T00:00:00Z")),
+            ("wrong event", lambda value: value["observations"].update(
+                eventId="00000000-0000-0000-0000-000000000099")),
+            ("wrong binding", lambda value: value["correlationCandidate"]["sourceParameterBinding"].update(
+                fieldName="constant")),
+        )
+        for label, mutate in mutations:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                observation, definition, screenshots, receipts, _ = self.build(Path(directory), increment=2)
+                mutate(observation)
+                with self.assertRaises(ActivationError):
+                    self.validate(observation, definition, screenshots, receipts)
+
+    def test_increment_002_rejects_reused_001_receipts_and_stale_screenshot_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory), increment=2)
+            observation["correlationCandidate"]["receipts"][0]["path"] = (
+                "increments/donation_events_001.csv/upload/upload-result.json"
+            )
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory), increment=2)
+            observation["screenshots"][0]["sha256"] = "0" * 64
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+
+    def test_native_ui_negative_matrix(self):
+        cases = (
+            ("wrong tag", lambda x, *_: x.update(kind="invented-export")),
+            ("multiple UI rows", lambda x, *_: x.update(visibleRowCount=2)),
+            ("replayed event", lambda x, *_: x["captureMethod"].update(eventReplayed=True)),
+            ("human assertion", lambda x, *_: x["visualReview"].update(humanAttestationObtained=True)),
+            ("missing event id", lambda x, *_: x["observations"].update(eventId="")),
+            ("wrong timestamp", lambda x, *_: x["observations"].update(timeUtc="2026-09-02T00:00:00Z")),
+            ("wrong subject", lambda x, *_: x["observations"].update(subject="/Files/increment/other.csv")),
+            ("wrong type", lambda x, *_: x["observations"].update(type="other")),
+            ("wrong API", lambda x, *_: x["observations"].update(api="CreateFile")),
+            ("wrong bytes", lambda x, *_: x["observations"].update(contentLength=44)),
+            ("wrong content type", lambda x, *_: x["observations"].update(contentType="application/json")),
+            ("duplicate activation", lambda x, *_: None),
+        )
+        for label, mutate in cases:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                observation, definition, screenshots, receipts, _ = self.build(
+                    Path(directory), duplicate_activations=(label == "duplicate activation"),
+                )
+                mutate(observation, definition, screenshots, receipts)
+                with self.assertRaises(ActivationError):
+                    self.validate(observation, definition, screenshots, receipts)
+
+    def test_hash_and_definition_drift_fail_closed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory))
+            (screenshots / "1.png").write_bytes(b"\x89PNG\r\n\x1a\nchanged")
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory))
+            stale = copy.deepcopy(definition)
+            entities = json.loads(base64.b64decode(stale["parts"][0]["payload"]))
+            entities[-1]["payload"]["definition"]["settings"]["shouldRun"] = False
+            stale["parts"][0]["payload"] = base64.b64encode(json.dumps(entities).encode()).decode()
+            with self.assertRaises(ActivationError):
+                self.validate(observation, stale, screenshots, receipts)
+
+    def test_ui_upload_hash_must_match_the_owned_uploaded_file(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory))
+            with self.assertRaises(ActivationError):
+                validate_observation(
+                    observation, screenshot_root=screenshots, receipt_root=receipts,
+                    workspace_id=WORKSPACE, tenant_id=TENANT, activator_id=ACTIVATOR,
+                    model_id=self.model, rule_id=RULE, pipeline_id=PIPELINE,
+                    lakehouse_id=LAKEHOUSE, subject=SUBJECT, expected_bytes=43,
+                    expected_upload_sha256="b" * 64, current_definition=definition,
+                )
+
+    def test_hard_coded_or_changed_event_field_binding_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(
+                Path(directory), field_bindings={"Source": "constant", "Subject": "___subject", "Type": "___type"},
+            )
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+
+    def test_wrong_activation_source_fails_even_when_receipt_hash_is_current(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(
+                Path(directory), activation_source="foreign-source",
+            )
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+
+    def test_receipt_tampering_and_missing_screenshot_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory))
+            receipt = receipts / "increments/donation_events_001.csv/upload/upload-result.json"
+            receipt.write_text("{}", encoding="utf-8")
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+        with tempfile.TemporaryDirectory() as directory:
+            observation, definition, screenshots, receipts, _ = self.build(Path(directory))
+            (screenshots / "2.png").unlink()
+            with self.assertRaises(ActivationError):
+                self.validate(observation, definition, screenshots, receipts)
+
+    def test_control_classification_is_explicit_and_never_uses_invoke_type(self):
+        value = {
+            "kind": "coordinator-operational-attestation", "scope": "coordinator-session-only",
+            "coordinatorSessionId": "00000000-0000-0000-0000-000000000021",
+            "sourceMessageId": "message-1", "manualPipelineRunTriggered": False,
+            "incrementUploadOrReplayPerformed": False, "readOnlyInspectionOnly": True,
+            "humanAttestation": False, "manualControlIdsReviewed": True,
+            "knownManualControlJobIds": [],
+        }
+        self.assertEqual(validate_control_classification(value, known_manual_job_ids=set())[
+            "knownManualControlJobIds"], [])
+        value["manualControlIdsReviewed"] = False
+        with self.assertRaises(ActivationError):
+            validate_control_classification(value, known_manual_job_ids=set())
+
+    def test_shared_delivery_gate_rejects_classified_manual_control(self):
+        values = evidence()
+        event = values["events"][0]
+        with self.assertRaises(ActivationError):
+            verify_automatic_delivery_fields(
+                workspace_id=values["workspace_id"], pipeline_id=values["pipeline_id"],
+                rule_id=values["rule_id"], subject=values["subject"], source=values["source"],
+                expected_bytes=values["expected_bytes"], uploaded_bytes_verified=True,
+                event_id=event["___id"], event_type=event["___type"],
+                event_source=event["___source"], event_api=event["api"],
+                event_content_length=event["contentLength"], event_time="2026-09-01T00:00:00Z",
+                history=values["history"], jobs_before=values["jobs_before"],
+                jobs_after=values["jobs_after"], manual_job_ids={"automatic"},
+            )
 
 
 class UploadTests(unittest.TestCase):

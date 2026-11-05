@@ -4,7 +4,7 @@
 
 次の全体指示は参照用の正確な全文です。この段階では画面上の欄を変更しません。`prepare` で対象・差分・readback を確認してから、許可された `apply` 手順だけで適用します。本文・末尾の空白・改行を編集せず、readback は元ファイルと照合します。
 
-次の本文は `workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt` のLF正規化後の全文で、3,394 UTF-16単位です。同じ本文の Draft と Published の設定読み戻しは確認済みです。これは公開設定の確認であり、回答品質の測定は未実施です。自分の環境では17.9〜17.13の対象・差分・公開・読み戻しを省略しません。
+次の本文は `workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt` のLF正規化後の全文で、3,394 UTF-16単位です。同じ本文の Draft と Published の設定読み戻しは確認済みです。これは公開設定の確認です。回答品質の全体評価と採用判定は未完了です。自分の環境では17.9〜17.13の対象・差分・公開・読み戻しを省略しません。
 
 **Readable wrapped view — Agent 全体への指示**
 
@@ -49,7 +49,7 @@ Use tables for comparisons and keep explanations concise. JPY means Japanese yen
 
 The global instructions below are the exact reference text. Do not edit the UI field at this step. After reviewing the target, diffs and readbacks in `prepare`, apply changes only through the authorized `apply` procedure. Do not edit the text or its trailing whitespace/line endings; compare readback with the source file.
 
-The text below is the complete LF-normalized `workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`, measuring 3,394 UTF-16 units. Draft and Published configuration readbacks of this text have been verified. This verifies the published configuration; answer-quality measurement is pending. Do not skip target, diff, publication or readback checks in17.9-17.13 for your own environment.
+The text below is the complete LF-normalized `workshop/v3.0.0-preview/powerbi/prep-for-ai/agent-instructions.txt`, measuring 3,394 UTF-16 units. Draft and Published configuration readbacks of this text have been verified. This verifies the published configuration. Full answer-quality evaluation and an adoption decision remain incomplete. Do not skip target, diff, publication or readback checks in17.9-17.13 for your own environment.
 
 **Readable wrapped view — Agent-wide instructions**
 

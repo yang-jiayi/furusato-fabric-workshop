@@ -1,7 +1,7 @@
 {
   "schemaVersion": "furusato-current-html-lab-validation/v1",
   "deliveryMode": "html-lab",
-  "contentSha256": "6666ecc625523783f388997a3e75670dc9453e74a039b7d38376f8a4ae0f0b64",
+  "contentSha256": "a0cb63774b8d1d4e2a3d8d6ab7d27ff307a754921b0fc803880cb8c7ba3000e2",
   "static": {
     "passed": true,
     "chaptersAndAppendices": 29,
@@ -12,18 +12,18 @@
     "figures": 42,
     "standaloneResources": true,
     "retiredGuideReferences": 0,
-    "htmlSha256": "41aa29cd60bdabe86a9fc2e06f37e02fb8676c7235048576a943d1c49a974c34"
+    "htmlSha256": "0e0323be4f4fbd86b40afe52aeed6229b1781b7be9cf309b41e504b02e54ff7c"
   },
   "sourceRevision": {
-    "baseCommit": "3371e681ad7e67e823b57fb0550ee3ed34d09e0a",
+    "baseCommit": "d24b99f2e911bebddbbd31b8c8a3b19c7b5b8981",
     "workingTreeMatchesCommit": false,
     "gitMetadataAvailable": true,
-    "sourceTreeSha256": "9afe13831f1dd2149730748702a48f9aad475a226b4ec4863036f0a618aafff7"
+    "sourceTreeSha256": "af65000b834c82e98cb51e3d9272d2898e5680c5f4b4eda690eacaeb6d971e50"
   },
   "currentArtifactSet": {
-    "manifestSha256": "440bcb87cdfc3cb7a604cbcf611ea16531cfc1fbd01611d9170308c313cca9db",
-    "sourceCommit": "3371e681ad7e67e823b57fb0550ee3ed34d09e0a",
-    "sourceTreeSha256": "9afe13831f1dd2149730748702a48f9aad475a226b4ec4863036f0a618aafff7",
+    "manifestSha256": "7c46199a0fc4ab7ae38f294810a6b541029b9442efe55572584c8e366f12abfa",
+    "sourceCommit": "d24b99f2e911bebddbbd31b8c8a3b19c7b5b8981",
+    "sourceTreeSha256": "af65000b834c82e98cb51e3d9272d2898e5680c5f4b4eda690eacaeb6d971e50",
     "workshopVersion": "3.1.0",
     "csvFiles": 11,
     "notebookCount": 5,
@@ -33,7 +33,7 @@
     "passed": true,
     "performed": true,
     "browserVersion": "156.0.8078.4",
-    "htmlSha256": "41aa29cd60bdabe86a9fc2e06f37e02fb8676c7235048576a943d1c49a974c34",
+    "htmlSha256": "0e0323be4f4fbd86b40afe52aeed6229b1781b7be9cf309b41e504b02e54ff7c",
     "checks": [
       "all29chaptersAndAppendices",
       "noPrintOrPdfExport",

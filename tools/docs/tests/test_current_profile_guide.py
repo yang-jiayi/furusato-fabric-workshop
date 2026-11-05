@@ -149,8 +149,8 @@ class CurrentProfileGuideTests(unittest.TestCase):
         )
         self.assertIn("設定読み戻しは確認済み", global_reference)
         self.assertIn("configuration readbacks of this text have been verified", global_reference)
-        self.assertIn("回答品質の測定は未実施", global_reference)
-        self.assertIn("answer-quality measurement is pending", global_reference)
+        self.assertIn("回答品質の全体評価と採用判定は未完了です", global_reference)
+        self.assertIn("Full answer-quality evaluation and an adoption decision remain incomplete", global_reference)
         source_block = next(
             block
             for block in sections["chapter-17-7"].blocks

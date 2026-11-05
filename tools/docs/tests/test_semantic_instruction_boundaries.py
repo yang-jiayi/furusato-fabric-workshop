@@ -52,8 +52,8 @@ class SemanticInstructionBoundaryTests(unittest.TestCase):
             self.assertIn("設定読み戻しは確認済み" if language == "ja"
                           else "configuration readbacks of this text have been verified",
                           reference[language])
-            self.assertIn("回答品質の測定は未実施" if language == "ja"
-                          else "answer-quality measurement is pending", reference[language])
+            self.assertIn("回答品質の全体評価と採用判定は未完了です" if language == "ja"
+                          else "Full answer-quality evaluation and an adoption decision remain incomplete", reference[language])
             for value in ("3,394", "UTF-16", "rawSha256", "lfSha256",
                           "7edbd1657c49f19db27dfeeaa23a1d9b720717cdb22b90263017aa2c3f238f26",
                           "baseline", "payload", "manifest", "Ontology context",

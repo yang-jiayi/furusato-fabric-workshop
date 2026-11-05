@@ -26,9 +26,9 @@ class SemanticAIGuidanceTests(unittest.TestCase):
         self.assertEqual(sha, hashlib.sha256(common.encode("utf-8")).hexdigest())
         readme = (ROOT / "README.md").read_text("utf-8")
         for language, verified, pending in (
-            ("ja", "設定読み戻しは確認済み", "回答品質の測定は未実施"),
+            ("ja", "設定読み戻しは確認済み", "回答品質の全体評価と採用判定は未完了です"),
             ("en", "configuration readbacks of this text have been verified",
-             "answer-quality measurement is pending"),
+             "Full answer-quality evaluation and an adoption decision remain incomplete"),
         ):
             prose = "\n".join(b["text"].get(language) for b in semantic.children[0].blocks
                               if b.kind == "paragraph")
@@ -38,8 +38,8 @@ class SemanticAIGuidanceTests(unittest.TestCase):
             for obsolete in ("separate candidate", "別候補", "unmeasured common", "未評価の共通"):
                 self.assertNotIn(obsolete, prose)
         for term in ("3,394", sha, "--common-guidance", "公開設定の読み戻しは確認済み",
-                     "回答品質の測定は未実施", "configuration readbacks have been verified",
-                     "Answer-quality measurement is pending", "Metrics", "GQL"):
+                     "回答品質の全体評価と採用判定は未完了です", "configuration readbacks have been verified",
+                     "Full answer-quality evaluation and an adoption decision remain incomplete", "Metrics", "GQL"):
             self.assertIn(term, readme)
 
     def test_common_routing_precedence_and_legitimate_clarification(self):
